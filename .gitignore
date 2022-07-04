@@ -47,7 +47,6 @@ _ide_helper.php
 /lib/tdLib
 /tests/Browser
 
-/tests/Feature
 test.json
 /videos/donate-success.mp4
 composer.json
