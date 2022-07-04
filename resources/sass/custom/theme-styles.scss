@@ -1,0 +1,176 @@
+/*html .content {
+    transition: none !important;
+}
+
+.horizontal-layout.navbar-floating:not(.blank-page) .app-content {
+    padding: 170px 28px 0 28px;
+}
+
+.horizontal-menu .header-navbar {
+    min-height: 62px;
+}
+
+.nav {
+    border-radius: 3.5px !important;
+}
+
+.horizontal-menu .header-navbar.navbar-brand-center .navbar-header .navbar-brand .brand-text {
+    padding-left: 14px !important;;
+    letter-spacing: 0.14px !important;;
+    font-size: 24.36px !important;;
+}
+
+.horizontal-menu .navbar.header-navbar .navbar-container {
+    padding: 11.2px 28px !important;
+}
+
+.horizontal-menu .header-navbar .navbar-container {
+    border-radius: 5px !important;
+}
+
+.header-navbar .navbar-container {
+    transition: none !important;
+}
+
+.header-navbar .navbar-container ul.navbar-nav li > a.nav-link {
+    padding: 0 7px !important;
+}
+
+.header-navbar .navbar-container ul.navbar-nav li a.dropdown-user-link .user-nav {
+    margin-right: 11.2px !important;;
+}
+
+.header-navbar .navbar-container ul.navbar-nav li a.dropdown-user-link .user-name {
+    margin-bottom: 6.1px !important;;
+    margin-left: 2.8px !important;
+}
+
+.avatar .avatar-content {
+    font-size: 12px !important;
+}
+
+.header-navbar .navbar-container ul.navbar-nav li.dropdown-user .dropdown-menu {
+    width: 168px !important;
+}
+
+.dropdown-item {
+    padding: 9px 18px !important;
+}
+
+.horizontal-menu .header-navbar.navbar-horizontal.floating-nav {
+    width: 96% !important;
+}
+
+.horizontal-menu .horizontal-menu-wrapper .header-navbar {
+    min-height: 62px !important;
+}
+
+.horizontal-menu .header-navbar.navbar-horizontal ul#main-menu-navigation > li > a {
+    padding: 10px 17.5px !important;
+    margin-right: 10px !important;
+}*/
+
+html .content .content-wrapper .content-header-title {
+    font-weight: 500;
+    color: #636363;
+    padding-right: 1rem;
+    border-right: 1px solid #d6dce1;
+}
+
+.horizontal-menu .header-navbar.navbar-horizontal ul#main-menu-navigation > li.active > a,
+.main-menu.menu-light .navigation > li.active > a {
+    //border: 1px solid #7367F0!important;
+    background: transparent !important;
+    color: #7367F0 !important;
+    box-shadow: none;
+}
+
+.nav-pills .nav-link {
+    border: 1px solid $custom-1-color !important;
+    box-shadow: none !important;
+
+    &.active {
+        border-color: $primary !important;
+    }
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #7367F0 !important;
+    background: transparent !important;
+}
+
+.btn-outline-primary.custom {
+    border: 1px solid $custom-1-color !important;
+}
+
+// MENU HEADER STYLES
+.header-navbar ul#main-menu-navigation > li.active > a, .main-menu.menu-light .navigation > li.active > a {
+    background: transparent !important;
+    color: #7367F0 !important;
+    box-shadow: none;
+}
+
+.header-navbar ul#main-menu-navigation > li svg {
+    margin-right: 0.5rem;
+    height: 17px;
+    width: 17px;
+    font-size: 1.2rem;
+}
+
+.header-navbar ul#main-menu-navigation > li {
+    padding-top: 0.857rem;
+    padding-bottom: 0.857rem;
+}
+
+.header-navbar ul#main-menu-navigation > li > a {
+    padding: 0.715rem 1.25rem;
+    display: flex;
+    margin-right: 0.715rem;
+}
+
+.horizontal-layout.navbar-floating:not(.blank-page) .app-content {
+    padding: calc(2rem + 4.45rem + 1.3rem + 2rem) 2rem 0 2rem;
+}
+
+.header-container {
+    max-width: 1525px;   
+}
+
+// Avatar header
+.avatar .avatar-content {
+
+    &.size-50 {
+        width: 50px;
+        height: 50px;
+    }
+
+    &.size-100 {
+        width: 100px;
+        height: 100px;
+    }    
+}
+
+.toast-custom-position {
+    top: 10%;
+    left: 20%;
+}
+
+.nav-item {
+    &:hover .nav-link {
+        color: $primary !important;
+    }
+}
+
+.nav-link {
+    &:hover {
+        color: red;
+    }
+}
+
+.table > :not(caption) > * > * {
+    padding: 0.5rem 1rem;
+}
+
+.header-navbar .navbar-container ul.navbar-nav li.dropdown-user .dropdown-menu {
+    width: auto !important;
+}

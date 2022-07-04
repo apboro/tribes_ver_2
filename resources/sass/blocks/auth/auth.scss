@@ -1,0 +1,102 @@
+.auth {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    padding: $indent-4-m;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: $shadow-1;
+    
+    @media (min-width: $sm) {
+        padding: $indent-4;
+    }
+
+    &__title {
+        @include font($title-color, 18px, 22px, 500);
+    }
+
+    &__subtitle {
+        margin-top: $indent-1;
+        @include font($text-color, 12px, 21px, 400);
+    }
+
+    &__form {
+        margin-top: $indent-3;
+    }
+
+    &__label-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+    }
+
+    &__label {
+        margin-bottom: 0;
+    }
+
+    &__submit-btn {
+        width: 100%;
+        margin-top: $indent-3;
+    }
+
+    &__text {
+        margin-top: $indent-2;
+        @include font($text-color, 12px, 21px, 400);
+
+        &--center {
+            text-align: center;
+        }
+    }
+
+    &__link {
+        color: $link-color;
+    }
+
+    &__decor-block-1 {
+        @media(min-width: $sm) {
+            position: absolute;
+            z-index: -1;
+            bottom: -50px;
+            right: -50px;
+            width: 220px;
+            height: 220px;
+            background-color: #696CFF10;
+            border-radius: 20px;
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: -25px;
+                left: -25px;
+                width: 270px;
+                height: 270px;
+                border: 6px dashed #696CFF10;
+                border-radius: 20px;
+            }
+        }
+    }
+
+    &__decor-block-2 {
+        @media(min-width: $sm) {
+            position: absolute;
+            z-index: -1;
+            top: -50px;
+            left: -50px;
+            width: 220px;
+            height: 220px;
+            background-color: #696CFF10;
+            border-radius: 20px;
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: -25px;
+                left: 110px;
+                width: 140px;
+                height: 140px;
+                border: 1px solid #DADAFF60;
+                border-radius: 20px;
+            }
+        }
+    }
+}

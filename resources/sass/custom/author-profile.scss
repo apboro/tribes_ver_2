@@ -1,0 +1,27 @@
+.author-profile {
+
+
+    &-messenger {
+        &__head {
+            //min-height:40%;
+
+            &--telegram {
+                background-color: #3c96e4;
+            }
+
+            &--discord {
+                background-color: #5c6bc0;
+            }
+
+            &--bot {
+                background-color: #7367f0;
+            }
+        }
+
+        &__title {
+            pointer-events: none;
+            font-size:35px;
+            color: #fff;
+        }
+    }
+}

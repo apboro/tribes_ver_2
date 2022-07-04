@@ -1,0 +1,46 @@
+.button {
+    padding: 10px 20px;
+    @include font($button-text-color, 14px, 17px, 500);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .3s;
+
+    &--primary {
+        background-color: $primary-color;
+
+        &:hover,
+        &:focus {
+            box-shadow: 0 8px 25px -8px $primary-color;
+        }
+    }
+
+    &--success {
+        background-color: $success-color;
+
+        &:hover,
+        &:focus {
+            box-shadow: 0 8px 25px -8px $success-color;
+        }
+    }
+
+    &--danger {
+        background-color: $danger-color;
+
+        &:hover,
+        &:focus {
+            box-shadow: 0 8px 25px -8px $danger-color;
+        }
+    }
+
+    &--dark {
+        background-color: $btn-dark-bg;
+
+        &:hover {
+            background-color: $btn-dark-hover-bg;
+        }
+    }
+
+    &--disabled {
+        opacity: .3;
+    }
+}

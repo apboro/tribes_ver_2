@@ -1,0 +1,249 @@
+<?php
+
+namespace App\Models;
+
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Filters\QueryFilter;
+use App\Models\TelegramUser;
+use App\Services\SMTP\Mailer;
+use App\Services\TinkoffE2C;
+use Carbon\Carbon;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
+use App\Models\SmsConfirmations;
+
+/**
+ * @method UserFactory factory()
+ * @property mixed $id
+ */
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    public static $role = [
+        'author' => 0,
+        'follower' => 1
+    ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'hash',
+        'code',
+        'phone',
+        'password',
+        'locale',
+        'phone_confirmed',
+        'api_token',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    public function scopeFilter(Builder $builder, QueryFilter $filters)
+    {
+        return $filters->apply($builder);
+    }
+
+    function getFirstLettersOfName()
+    {
+        $letters = '';
+
+        $arr = explode(' ', $this->name);
+
+        foreach ($arr as $elem_name){
+            $letters .= mb_substr($elem_name, 0, 1);
+        }
+
+        return $letters;
+    }
+
+    function setLocale($locale)
+    {
+        $this->update(['locale' => $locale]);
+    }
+
+    public function hashMake()
+    {
+        $this->hash = Hash::make($this->id); //хаха
+        $this->save();
+    }
+
+    public function isConfirmed()
+    {
+        return $this->phone_confirmed;
+    }
+
+    public function getFormattedPhone()
+    {
+        return $this->phone;
+    }
+
+    public function getOwnCommunities()
+    {
+        return $this->communities()->get();
+    }
+
+    function getPhone()
+    {
+        return $this->phone ? $this->code . $this->phone : false;
+    }
+
+    function confirmation()
+    {
+        return $this->hasMany(SmsConfirmations::class, 'user_id');
+    }
+
+    function confirmationUserDate($format = 'time')
+    {
+        $time_stamp = $this->confirmation()->first()->updated_at;
+
+        $date = $time_stamp->translatedFormat('d F Y');
+        $time = $time_stamp->format('H:i');
+
+        return $format == 'time' ? $time : $date;
+    }
+
+    function telegramData()
+    {
+        return $this->telegramMeta()->first();
+    }
+
+    function hasTelegramAccount()
+    {
+        return $this->telegramMeta()->count();
+    }
+
+    function getTelegramAuthorizedDate()
+    {
+        return $this->telegramData() ? Carbon::createFromTimestamp($this->telegramData()->auth_date)->toDateTimeString() : null;
+    }
+
+    function telegramMeta()
+    {
+        return $this->hasOne(TelegramUser::class, 'user_id', 'id');
+    }
+
+    function communities()
+    {
+        return $this->hasMany(Community::class, 'owner', 'id');
+    }
+
+    function accumulation()
+    {
+        return $this->hasMany(Accumulation::class, 'user_id', 'id');
+    }
+
+    function tinkoffSync()
+    {
+        $e2c = new TinkoffE2C();
+        $e2c->AddCustomer(env('TINKOFF_PREFIX') . '_user_' . $this->id);
+    }
+
+    function getCustomerKey()
+    {
+        return env('TINKOFF_PREFIX') . '_user_' . $this->id;
+    }
+
+    function getActiveAccumulation()
+    {
+        $accumulation = $this->accumulation()
+            ->where('ended_at', '>', Carbon::now()->toDateTimeString())
+            ->where('started_at', '<', Carbon::now()->toDateTimeString())
+            ->where('status', 'active')
+            ->first();
+
+        return $accumulation;
+    }
+
+
+    function getBalance($rubbles = true)
+    {
+        $amount = $this->accumulation()
+            ->where('status', 'active')
+            ->sum('amount');
+
+        return $rubbles ? $amount / 100 : $amount;
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $v = view('mail.reset')->with(
+            [
+                'token' => $token,
+                'email' => $this->email,
+                'ip' => request()->ip()
+            ])->render();
+
+        new Mailer('Сервис ' . env('APP_NAME'), $v, 'Восстановление пароля', $this->email);
+    }
+
+    function course()
+    {
+        return $this->hasMany(Course::class, 'owner', 'id');
+    }
+
+    function tariffVariant()
+    {
+        return $this->belongsToMany(TariffVariant::class, 'users_tarif_variants', 'user_id', 'tarif_variants_id')->withPivot(['days', 'prompt_time']);
+    }
+
+    function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id')->withPivot(['byed_at', 'expired_at']);
+    }
+
+    public function phoneNumber($phone)
+    {
+        return "(".substr($phone, 0, 3).") ".substr($phone, 3, 3)." ".substr($phone,6);
+    }
+
+    public function getPhoneAttribute($phone)
+    {
+        return $phone ? '+7 ' . $this->phoneNumber($phone) : '-';
+    }
+
+    public function createTempToken()
+    {
+        if ($this->tokens()->count() !== 0) {
+            $this->tokens()->delete();
+        }
+
+        $token = $this->createToken('api-token');
+        return $this->withAccessToken($token->plainTextToken)
+            ->setTempToken($token->plainTextToken);
+    }
+
+    private function setTempToken($token) //todo при переходе на FullRest - Удалить
+    {
+        $this->api_token = $token;
+
+        return $this->save();
+    }
+}

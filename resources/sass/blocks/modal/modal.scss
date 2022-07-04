@@ -1,0 +1,66 @@
+.modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $modal-overlay-color;
+
+    &-container {
+        position: absolute;
+        z-index: 123;
+    }
+
+    &__wrapper {
+        max-width: 50%;
+        min-width: 300px;
+        //height: 50%;
+        background: #fff;
+    }
+
+    &__container {}
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 17px 20px;
+        background-color: $modal-header-color;
+
+        span {
+            @include font($title-color, 16px, 19px, 500);
+        }
+    }
+
+    &__close-btn {
+        cursor: pointer;
+    }
+
+    &__body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 25px;
+        @include font($text-color, 16px, 19px, 500);
+
+        &--crop {
+            height: 400px;
+        }
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: $indent-2;
+        padding-bottom: 25px;
+    }
+
+    &__save-btn {
+
+    }
+}

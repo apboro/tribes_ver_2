@@ -1,0 +1,38 @@
+.breadcrumbs {
+
+    &__list {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+    }
+
+    &__item {
+        position: relative;
+
+        & + & {
+            margin-left: 10px;
+
+            &:before {
+                content: "";
+                margin-right: 10px;
+                background-image: url("/ico/arrow-right.svg");
+                background-repeat: no-repeat;
+                background-position: center;
+                padding-right: 5px;
+            }
+        }
+    }
+
+    &__divider {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    &__link {
+        @include font(grey, 14px, 18px, 400);
+
+        &--last {
+            color:black;
+        }
+    }
+}

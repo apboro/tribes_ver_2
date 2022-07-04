@@ -1,0 +1,288 @@
+.course-settings {
+    position:absolute;
+    z-index: 5;
+    width: 100%;
+
+    &__overlay {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100vh;
+        background-color: #110E3090;
+    }
+
+    &__container {
+        height: calc(100vh - $header-height);
+        margin-left: $sidebar-width;
+        background-color: #fff;
+        padding-top: 20px;
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 20px;
+        border-bottom: 1px solid $editor-border-color;
+    }
+
+    &__main-title-wrapper {
+        display: flex;
+        align-items: center;
+        padding-left: 30px;
+    }
+
+    &__back-btn {
+    }
+
+    &__main-title {
+        margin-left: 30px;
+        @include font($title-color, 18px, 22px, 500);
+    }
+
+    &__auxiliary {
+        display: flex;
+        padding-right: 30px;
+    }
+
+    &__auxiliary-btn {
+        margin-left: 15px;
+    }
+
+    &__alert-wrapper {
+        max-width: 260px;
+        @include font($success-color, 14px, 17px, 500);
+    }
+
+    &__saving-spinner {
+        width: 15px;
+        height: 15px;
+        animation: .75s linear infinite spinner-border;   
+    }
+
+    &__content {
+        display: flex;
+        height: 100%;
+    }
+
+    &__item {
+        padding: 30px;
+        
+        &:first-child {
+            width: 32%;
+            min-width: 548px;
+        }
+
+        & + & {
+            border-left: 1px solid $editor-border-color;
+        }
+    }
+
+    &__subitem {
+        width: 420px;
+
+        & + & {
+            margin-left: 40px;
+        }
+    }
+
+    &__elem {
+        margin-top: $indent-2;
+    }
+
+    &__subitem-wrapper {
+        display: flex;
+    }
+
+    &__title {
+        @include font($title-color, 16px, 20px, 500);
+    }
+
+    &__label {
+        display: inline-block;
+        @include font($title-color, 12px, 18px, 400);
+        cursor: pointer;
+
+        &--first-item {
+            margin-top: $indent-3;
+        }
+    }
+    
+    &__group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: $indent-2;
+    }
+
+    &__group-item {
+        width: 45%;
+    }
+
+    &__toggle-switch {
+        display: flex;
+        align-items: center;
+    }
+
+    &__toggle-switch-label {
+        margin-left: 10px;
+        @include font($title-color, 14px, 24px, 400);
+    }
+
+    &__link-wrapper {
+        margin-top: $indent-3;
+        padding: 10px 20px;
+        background-color: $success-msg-color;
+        border-radius: 5px;
+    }
+
+    &__link-label {
+        @include font($success-color, 14px, 22px, 500);
+    }
+
+    &__link-group {
+        display: flex;
+        align-items: center;
+        @include font($success-color, 14px, 22px, 500);
+    }
+
+    &__link-text {
+        color: $link-color;
+        cursor: pointer;
+    }
+
+    &__link-divider {
+        display: inline-block;
+        width: 1px;
+        height: 15px;
+        margin-right: 6px;
+        margin-left: 6px;
+        background-color: $success-color;
+    }
+
+    &__image-container {
+        
+        
+    }
+
+    &__image-description {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: $indent-3;
+        text-align: center;
+        border: 1px dashed $title-color;
+        border-radius: 5px;
+    }
+
+    &__image-text {
+        @include font($title-color, 12px, 14px, 400);
+
+        & + & {
+            margin-top: $indent-2;
+        }
+
+        &--bold {
+            font-weight: 600;
+        }
+    }
+
+    &__editor {
+        h2 {
+            @include font($text-color, 25px, 30px, 500);
+        }
+
+        h3 {
+            @include font($text-color, 22px, 26px, 500);
+        }
+
+        h4 {
+            @include font($text-color, 18px, 22px, 500);
+        }
+
+        ol {
+            @include font($text-color, 14px, 17px, 400);
+        }
+
+        ul {
+            @include font($text-color, 14px, 17px, 400);
+        }
+
+        p {
+            @include font($text-color, 14px, 17px, 400);
+        }
+    }
+
+    &__preview {
+        //margin-top: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__preview-img {
+        max-width: 260px;
+
+        img {
+            display: block;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__preview-title {
+        margin-top: $indent-3;
+        @include font($title-color, 16px, 20px, 700);
+        text-align: center;
+    }
+
+    &__preview-text {
+        margin-top: $indent-2;
+
+        h2 {
+            @include font($text-color, 25px, 30px, 500);
+        }
+
+        h3 {
+            @include font($text-color, 22px, 26px, 500);
+        }
+
+        h4 {
+            @include font($text-color, 18px, 22px, 500);
+        }
+
+        ol {
+            @include font($text-color, 14px, 17px, 400);
+        }
+
+        ul {
+            @include font($text-color, 14px, 17px, 400);
+        }
+
+        p {
+            @include font($text-color, 14px, 17px, 400);
+        }
+    }
+
+    &__buy-btn {
+        width: 100%;
+        margin-top: $indent-2;
+    }
+
+    &__copied-msg {
+        display: flex;
+        align-items: center;
+        margin-top: $indent-2;
+        padding: 10px 20px;
+        @include font($success-color, 14px, 17px, 500);
+        background-color: $success-msg-color;
+
+        span {
+            margin-left: 10px;
+        }
+    }
+}

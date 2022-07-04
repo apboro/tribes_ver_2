@@ -1,0 +1,69 @@
+@import "~vue-advanced-cropper/dist/style.css";
+@import '~video.js/dist/video-js.css';
+
+@import './core/reset';
+@import './fonts';
+
+// Variables
+@import './core/variables';
+// Mixins
+@import './core/mixins';
+
+// Common styles
+@import "./core/common";
+@import "./core/animations";
+
+// import
+@import '../../node_modules/quill/dist/quill.bubble';
+@import '../../node_modules/quill/dist/quill.snow';
+
+// Components
+@import "./components/button/button";
+@import "./components/button/button-flat";
+@import "./components/input/input";
+@import "./components/dropdown-panel/dropdown-panel";
+@import "./components/editor/small-btn/small-btn";
+@import "./components/toggle-switch/toggle-switch";
+@import "./components/editor/button-light/button-light";
+@import "./components/button/button-outline";
+@import "./components/quill-editor/quill-editor-bubble/quill-editor-bubble";
+@import "./components/quill-editor/quill-editor-snow/quill-editor-snow";
+@import "./components/editor/scroll-bar/scroll-bar";
+@import "./components/media-content-text-formatting/media-content-text-formatting";
+@import "./components/editor/edit-img-btns/edit-img-btns";
+
+// Blocks
+@import "./blocks/main-header/main-header";
+@import "./blocks/main-nav/main-nav";
+@import "./blocks/editor/sidebar/sidebar";
+@import "./blocks/editor/tabs/tabs";
+@import "./blocks/editor/templates/templates";
+@import "./blocks/editor/uploads/uploads";
+@import "./blocks/editor/lesson-settings/lesson-settings";
+@import "./blocks/editor/course/course";
+@import "./blocks/editor/modules/modules";
+@import "./blocks/modal/modal";
+@import "./blocks/editor/course-settings/course-settings";
+
+body {
+    overflow: hidden;
+
+    .layout {
+        display: flex;
+        flex-direction: column;
+        //height: 100vh;
+        position: relative;
+        
+        .container {
+            height: auto;
+            flex-direction: row;
+            flex: 1 0 auto;
+            display: flex;
+        }
+
+    }
+}
+
+.bounce-enter-active {
+    animation: bounce-in .2s ease-out;
+}

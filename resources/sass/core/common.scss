@@ -1,0 +1,51 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #F8FAFC;
+    overflow-x: hidden;
+}
+
+.container {
+    /* width: 100%;
+    max-width: 1480px;
+    margin: 0 auto;
+    padding-right: 20px;
+    padding-left: 20px; */
+}
+
+.main {
+    flex: 1 1 100%;
+    padding-top: $header-height;
+}
+
+.auth-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+    background-color: #22292f;
+    opacity: 0;
+    transition: opacity .15s linear;
+
+    &.active {
+        opacity: .5;
+    }
+
+    @media (min-width: $xl) {
+        display: none;   
+    }
+}
+
+

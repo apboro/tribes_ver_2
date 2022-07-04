@@ -1,0 +1,208 @@
+.media-views {
+
+
+    &__product {
+        padding: 20px 30px;
+        max-height: 315px;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+            width: 8px;
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            background-color: #6E6B7B33 !important;
+            border: .5px solid $text-color !important;
+        }
+
+        &::-webkit-scrollbar-track {
+            border-radius: 5px;
+            background-color: transparent;
+        }
+
+        & {
+            scrollbar-color: #6E6B7B33 transparent; /*Цвет скролла, цвет ползунка*/
+            scrollbar-width: thin; /*Толщина скролла thin, auto*/
+        }
+    }
+
+    &__header {
+        @include font(#B6B2BF, 14px, 17px, 600);
+    }
+
+    &__title {
+        margin-top: $indent-1;
+        @include font($title-color, 16px, 20px, 500);
+    }
+
+    &__info {
+        margin-top: $indent-2;
+    }
+
+    &__info-item {
+        @include font($text-color, 14px, 17px, 400);
+        margin-bottom: 5px !important;
+
+        & + & {
+        }
+
+        b {
+            font-weight: 500;
+        }
+    }
+
+    &__product-list {
+        margin-top: $indent-2;
+        margin-left: $indent-1;
+    }
+
+    &__product-item {
+        position: relative;
+        padding-left: 10px;
+        @include font($text-color, 14px, 17px, 500);
+        transition: .3s;
+
+        & + & {
+            margin-top: $indent-1;
+        }
+
+        &:hover,
+        &:hover .media-views__product-link {
+            color: #3D3B43;
+        }
+
+        &.active {
+            &:before {
+                content: "";
+                position: absolute;
+                top: 9px;
+                left: -45px;
+                width: 20px;
+                height: 2px;
+                background-color: $link-color;
+                border-radius: 5px;
+            }
+        }
+
+        &.active,
+        &.active .media-views__product-link {
+            color: $link-color;
+            font-weight: 600;
+        }
+    }
+    
+    &__product-link {
+        display: inline-block;
+        color: $text-color;
+        transition: .3s;
+    }
+
+    &__content-wrapper {
+        max-height: calc(100vh - 85px - 168px);
+        padding: 15px;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+            width: 8px;
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            background-color: #6E6B7B33 !important;
+            border: .5px solid $text-color !important;
+        }
+
+        &::-webkit-scrollbar-track {
+            border-radius: 5px;
+            background-color: transparent;
+        }
+
+        & {
+            scrollbar-color: #6E6B7B33 transparent; /*Цвет скролла, цвет ползунка*/
+            scrollbar-width: thin; /*Толщина скролла thin, auto*/
+        }
+    }
+
+    &__content {
+        section + section {
+            margin-top: $indent-3;
+        }
+
+        .img_module,
+        .audio_module,
+        .video_module {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .img_module {
+            img {
+                max-width: 100%;
+            }
+        }
+    }
+
+    
+}
+
+.btn-outline-product {
+    border: 1px solid #D8D6DE !important;
+    background-color: #FFFFFF;
+}
+
+
+@media screen and (max-width: 576px) {
+    .media_panel {
+        width: 0;
+        transition-property: width;
+        transition-duration: 0.2s;
+        position: absolute;
+    }
+
+    .media_panel.block {
+        width: 100%;
+        max-height: 500px;
+        background-color: #F8F8F9;
+        position: absolute;
+    }
+}
+
+.mobile_panel {
+    position: absolute !important;
+    display: none;
+    right: -12px;
+    top: 50%;
+}
+
+.open_panel_btn {
+    border: none;
+    padding-left: 10px;
+    max-width: 40px !important;
+    border-radius: 50% !important;
+    background-color: #ECEEF0 !important;
+}
+
+@media screen and (max-width: 576px) {
+    .mobile_panel {
+        display: block;
+    }
+}
+
+.panel_arrow_left {
+    color: #6E6B7B;
+    display: block;
+}
+
+.panel_arrow_right {
+    display: none;
+}
+
+.panel_info {
+    width: 100%;
+    height: 600px;
+}
+

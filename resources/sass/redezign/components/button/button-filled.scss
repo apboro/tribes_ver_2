@@ -1,0 +1,59 @@
+$button-text-color-light: $white;
+$button-shadow: $shadow-2;
+
+$button-background-color-primary-1: $primary-1;
+$button-background-color-primary-2: $primary-4;
+
+$button-background-color-success-1: $success-1;
+$button-background-color-success-2: $success-4;
+
+$button-background-color-danger-1: $danger-1;
+$button-background-color-danger-2: $danger-4;
+
+.button-filled {
+    display: inline-block;
+    padding: 10px 40px;
+    @include font($button-text-color-light, 14px, 20px, 600);
+    border-radius: 66px;
+    cursor: pointer;
+    transition: $transition;
+
+    &--primary {
+        background-color: $button-background-color-primary-1;
+
+        &:hover,
+        &:focus {
+            background-color: $button-background-color-primary-2;
+            box-shadow: $button-shadow;
+        }
+
+        &:active {
+            background-color: $button-background-color-primary-1;
+        }
+    }
+
+    &--success {
+        background-color: $button-background-color-success-1;
+
+        &:hover,
+        &:focus {
+            background-color: $button-background-color-success-2;
+            box-shadow: $button-shadow;
+        }
+    }
+
+    &--danger {
+        background-color: $button-background-color-danger-1;
+
+        &:hover,
+        &:focus {
+            background-color: $button-background-color-danger-2;
+            box-shadow: $button-shadow;
+        }
+    }
+
+    &--disabled {
+        pointer-events: none;
+        opacity: .4;
+    }
+}

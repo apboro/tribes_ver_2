@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Models;
+
+use Database\Factories\TariffFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+/** @method TariffFactory factory() */
+class Tariff extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $with = ['variants'];
+    
+    function community()
+    {
+        return $this->belongsTo(Community::class, 'community_id');
+    }
+
+    function variants()
+    {
+        return $this->hasMany(TariffVariant::class, 'tariff_id', 'id');
+    }
+
+    public function getMainImage()
+    {
+        return $this->belongsTo(File::class,'main_image_id')->first();
+    }
+    public function getWelcomeImage()
+    {
+        return $this->belongsTo(File::class,'welcome_image_id')->first();
+    }
+    public function getReminderImage()
+    {
+        return $this->belongsTo(File::class,'reminder_image_id')->first();
+    }
+    public function getThanksImage()
+    {
+        return $this->belongsTo(File::class,'thanks_image_id')->first();
+    }
+
+    public function getPublicationImage()
+    {
+        return $this->belongsTo(File::class,'publication_image_id')->first();
+    }
+
+    public static $baseData = [
+        'test_period' => 0,
+    ];
+
+}

@@ -1,0 +1,87 @@
+.media-content-text-formatting {
+    .ql-editor {
+        overflow: hidden;
+    }
+
+    .ql-bubble .ql-editor h2,
+    h2 {
+        margin-bottom: $indent-3;
+        @include font($title-color, 25px, 30px, 600);
+    }
+
+    .ql-bubble .ql-editor h3,
+    h3 {
+        margin-bottom: $indent-3;
+        @include font($title-color, 18px, 22px, 600);
+    }
+
+    .ql-bubble .ql-editor h4,
+    h4 {
+        margin-bottom: $indent-2;
+        @include font($title-color, 14px, 17px, 600);
+    }
+
+    .ql-bubble .ql-editor p,
+    p {
+        margin-bottom: $indent-1;
+        @include font($text-color, 14px, 17px, 400);
+    }
+
+    .ql-bubble .ql-editor strong,
+    strong {
+        font-weight: 600;
+    }
+
+    .ql-bubble .ql-editor ul,
+    .ql-bubble .ql-editor ol,
+    ul,
+    ol {
+        margin-bottom: $indent-1;
+        padding-left: 35px;
+        @include font($text-color, 14px, 17px, 400);
+    }
+
+    .ql-editor li:not(.ql-direction-rtl)::before {
+        content: none;
+    }
+
+    .ql-editor ol li:not(.ql-direction-rtl), .ql-editor ul li:not(.ql-direction-rtl) {
+        padding-left: 0;
+    }
+
+    .ql-bubble .ql-editor ul,
+    ul {
+        li {
+            position: relative;
+
+            &::marker {
+                content: "— ";
+            }
+        }
+    }
+
+    .ql-bubble .ql-editor ol,
+    ol {
+        li {
+            list-style-type: decimal;
+        }
+    }
+
+    .ql-bubble .ql-editor a,
+    a {
+        @include font($link-color, 14px, 17px, 500);
+        text-decoration: underline;
+    }
+
+    .ql-align-left {
+        text-align: left;
+    }
+
+    .ql-align-center {
+        text-align: center;
+    }
+
+    .ql-align-right {
+        text-align: right;
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "status":"ok",
+    "id":45,
+    "lesson_meta":{
+      "title":"Философия стоиков 2",
+      "active":true,
+      "price":222
+    },
+    "templates":[
+        {
+            "id":1,
+            "template_id":2,
+            "text_1":"Содержимое текстового блока 2",
+            "video_1":"empty"
+        },
+        {
+            "id":2,
+            "template_id":3,
+            "text_1":"<h3><strong>Hello!</strong></h3><p>This only text block. And we have a list:</p><ol><li>one</li><li>two</li><li>three</li></ol><p><em><u>Ahhaha!</u></em></p>"
+        }
+    ]
+  }

@@ -1,0 +1,15 @@
+// === FONT ===
+@mixin font($color, $font-size, $line-height, $font-weight) {
+    font-family: $font-family-montserrat;
+    color: $color;
+    font-size: $font-size;
+    line-height: $line-height;
+    font-weight: $font-weight;
+}
+
+@mixin truncate($width) {
+    max-width: $width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

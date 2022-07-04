@@ -1,0 +1,33 @@
+.knowledge-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 30px;
+        row-gap: 10px;
+    }
+
+    &__group {
+        display: flex;
+        align-items: center;
+    }
+
+    &__title {
+        margin-right: 20px;
+    }
+
+    &__item {
+
+        & + & {
+            margin-left: 20px;
+        }
+    }
+
+    &__btn {
+        @include font(#7B7B7B, 14px, 17px, 500);
+        cursor: pointer;
+    }
+}

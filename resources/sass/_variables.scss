@@ -1,0 +1,119 @@
+// Body
+$body-bg: #f8fafc;
+
+// Typography
+//$font-family-sans-serif: 'Nunito', sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+
+// colors
+$custom-1-color: #ebe9f1;
+
+$enable-negative-margins: true;
+
+// === TYPOGRAPHY ===
+$font-family-montserrat: 'Montserrat', sans-serif;
+
+// === COLORS ===
+$blue-1: #00cfe8;
+$dark-1: #5e5873;
+$dark-2: #6e6b7b;
+$dark-3: #4b4b4b;
+$dark-4: #484458;
+$green-1: #28c76f;
+$green-2: #21c169;
+$grey-1: #b9b9c3;
+$grey-2: #d8d6de;
+$grey-3: #82868b;
+$grey-4: #e6e6e9;
+$grey-5: #f8f8f9;
+$light-1: #e5e5e8;
+$orange-1: #ff9f43;
+$violet-1: #7367f0;
+$violet-2: #5e50ee;
+$violet-3: #5d50e2;
+$violet-4: #584cd7;
+$white: #fff;
+$red-1: #ea5455;
+$red-2: #e24041;
+
+
+// Editor
+$editor-bg: $grey-5;
+$editor-border-color: $grey-2;
+$active-tab-bg: $grey-5;
+$inactive-tab-bg: $grey-4;
+$active-template-color: #B9B3F7;
+$active-template-color-2: #3A2A53;
+$active-template-color-3: #3A2A5350;
+
+$text-editor-text-color: #262626;
+
+
+$modal-header-color: $grey-4;
+$modal-overlay-color: #110E3090;
+
+$sidebar-width: 412px;
+
+
+$small-btn-hover-color: $violet-3;
+$small-btn-active-color: $violet-4;
+$btn-danger-hover-color: $red-2;
+$btn-light-action-bg: #5E587304;
+$btn-light-action-border-color: $dark-1;
+$btn-outline-success-bg:#28c76f04;
+$btn-outline-success-hover-bg:#28c76f30;
+$btn-outline-light-border-color: #28c76f20;
+$btn-dark-bg: $dark-2;
+$btn-dark-hover-bg: #484458;
+
+
+
+
+$danger-color: $red-1;
+$dark-color: $dark-3;
+$info-color: $blue-1;
+$primary-color: $violet-1;
+$secondary-color: $grey-3;
+$success-color: $green-1;
+$warning-color: $orange-1;
+
+$title-color: $dark-1;
+$text-color: $dark-2;
+$link-color: $primary-color;
+$placeholder-color: $grey-1;
+$button-text-color: $white;
+$header-color: $white;
+$panel-bg: $white;
+$main-hover-color: $primary-color;
+$secondary-hover-color: #7367f020;
+$avatar-color: $white;
+$avatar-bg: $grey-1;
+$avatar-status-color: $success-color;
+$overlay-color: #22292f;
+$success-msg-color: #28C76F1F;
+
+// === INDENTS ===
+$indent-1: 10px;
+$indent-2: 15px;
+$indent-3: 20px;
+$indent-4: 30px;
+$indent-2-m: 10px;
+$indent-3-m: 14px;
+$indent-4-m: 20px;
+
+$label-indent: 4px;
+
+// === BREAKPOINTS ===
+$xs: 0;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+$xxl: 1400px;
+
+// === SHADOWS ===
+$shadow-1: 0px 4px 24px rgba(0, 0, 0, 0.08);
+
+
+$header-height: 85px;

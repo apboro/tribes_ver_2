@@ -1,0 +1,262 @@
+body {
+    overflow-x: hidden;
+}
+
+#coursePage {
+    .course-container {
+        //margin-left: 30px;
+    }
+    .sideNav {
+        position: sticky;
+        top: 100px;
+        max-height: 70vh;
+
+        button:hover {
+            border: 1px solid rgba(123, 123, 123, 0.48);
+        }
+    }
+    .addTemplateContainer {
+        height: 20px;
+        //margin: 10px;
+        text-align: center;
+
+        button {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            color: #28c76f;
+            background-color: transparent; 
+            border: 1px solid #28c76f !important;
+            border-radius: 5px;
+        }
+    }
+    .addTemplate {
+        border-radius: 4px;
+        border: 1px solid #dadada;
+        background: #fff;
+        display: block;
+        margin: 0 auto;
+        height: 21px;
+        font-size: 13px;
+        padding: 2px 10px;
+        line-height: 11px;
+        text-align: center;
+        color: #a1a1a1;
+        margin-top: -3px;
+    }
+    .removeTab {
+        position: absolute;
+        top: -6px;
+        right: -10px;
+        font-size: 23px;
+        font-weight: bold;
+        line-height: 0px;
+        width: 20px!important;
+        height: 20px!important;
+        padding: 0!important;
+        border-radius: 50%!important;
+        background: #ffffff!important;
+    }
+    .courses-nav {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        max-height: 60vh;
+        margin-right: 15px;
+        padding: 15px;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+            width:  5px;
+            background-color: #f9f9fd;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background-color: #7367f0;
+        }
+
+        &::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            background-color: #f9f9fd;
+        }
+
+        & {
+            scrollbar-color: #7367f0 #f9f9fd; /*Цвет скролла, цвет ползунка*/
+            scrollbar-width: thin; /*Толщина скролла thin, auto*/
+        }
+
+        li {
+            position: relative;
+            margin-bottom: 10px;
+            &.active > button {
+                border: 1px solid #8867f1;
+            }
+        }
+
+        li > button {
+            white-space: nowrap;
+            padding: 6px 10px;
+            border: 1px solid transparent;
+            background: #ffffff;
+            border-radius: 3px;
+            box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+            width: 100%;
+            transition: all .2s;
+        }
+    }
+
+    .newTabContainer {
+        margin-top: 1rem;
+        margin-right: 15px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 10px;
+        
+        .newTab {
+            white-space: nowrap;
+            padding: 6px 10px;
+            border: 1px solid transparent;
+            background: #ffffff;
+            border-radius: 3px;
+            box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+            width: 100%;
+        }
+    }
+
+    .ml-auto {
+        margin-left: auto;
+    }
+
+    .baseTemplate {
+        display: flex;
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #dadada;
+        border-radius: 4px;
+
+        .video {
+            width: 300px;
+        }
+    }
+
+    #lessonContainer > div:not(.active) {
+        display: none;
+    }
+
+    #lessonContainer {
+        & > div > section{
+            position: relative;
+        }
+
+        .loading {
+            display: none;
+        }
+    }
+
+    .files-container {
+        position: sticky;
+        top: 100px;
+        max-height: 70vh;
+        overflow: hidden;
+    }
+
+    .files {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        max-height: 60vh;
+        //padding: 15px;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+            width:  5px;
+            background-color: #f9f9fd;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background-color: #7367f0;
+        }
+
+        &::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            background-color: #f9f9fd;
+        }
+
+        & {
+            scrollbar-color: #7367f0 #f9f9fd; /*Цвет скролла, цвет ползунка*/
+            scrollbar-width: thin; /*Толщина скролла thin, auto*/
+        }
+
+        .preview {
+            width: 48%;
+        }
+    }
+
+    .module-container {
+        position: relative;
+
+        button {}
+
+        .remove-module-btn {
+            position: absolute;
+            top: 0;
+            right: -15px;
+            width: 15px !important;
+            height: calc(100% - 30px);
+            padding: 0 !important;
+            color: #fff;
+            font-size: 23px;
+            font-weight: bold;
+            line-height: 0px;
+            border: 1px solid transparent;
+            border-radius: 0 50% 50% 0 !important;
+            background: #EA5455 !important;
+            box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+            opacity: 0.5;
+            transition: 0.3s;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &:hover + .baseTemplate {
+                background-color: #EA545520;
+            }
+        }
+
+        .draggable {
+            background-color: #00CFE820;
+        }
+
+        .drag-mode {
+            border: 1px solid black !important;
+        }
+    }
+
+    .template-img {
+        &.drag-img {
+            //border: 2px solid green;
+            box-shadow: 0 0 10px #28c76f50;
+        }
+    }
+
+    .template-video {
+        &.drag-img {
+            //border: 2px solid green;
+            box-shadow: 0 0 20px #28c76f80;
+        }
+    }
+
+    #tabNavs {
+        .saving {
+            background: #CCC;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+}

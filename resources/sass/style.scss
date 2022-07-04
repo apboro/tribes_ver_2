@@ -1,0 +1,211 @@
+@import "custom/theme-styles";
+@import "custom/icons";
+@import "custom/colors";
+@import "custom/communities";
+@import "custom/create-community";
+@import "custom/donate";
+@import "custom/footer-pages";
+@import "custom/form";
+@import "custom/author-profile";
+@import "custom/payments";
+@import "custom/editor";
+@import "custom/media-product";
+@import "./components/media-content-text-formatting/media-content-text-formatting";
+/* @import "../../node_modules/prosemirror-menu/style/menu.css"; */
+
+body.lock * {
+    pointer-events: none;
+}
+
+.hide {
+    display: none!important;
+}
+
+.inactive {
+    pointer-events: none;
+    filter: blur(2px);
+}
+
+.invisible {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.cursor-default {
+    cursor: default;
+}
+
+.list-none {
+    list-style: none;
+}
+
+#service_container {
+    z-index: 1000;
+}
+
+.modal-backdrop {
+    z-index: 990 !important;
+}
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &__header-name {
+        max-width: 200px;
+    }
+
+    &__profile-name {
+        max-width: 250px;
+    }
+}
+
+
+
+$icon-width: 16px;
+$icon-height: $icon-width;
+
+.content-editor {
+
+    &__list {
+        display: flex;
+        //flex-wrap: wrap;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    
+    &__item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 0 !important;
+        padding: 5px;
+        border: 1px solid transparent;
+        color: #6b7b8b;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: .2s;
+
+        &:hover {
+            border-color: rgba(120, 130, 140, 0.2);
+        }
+        
+        &:active {
+            background-color: #e5eaee;
+        }
+
+        &:hover &-icon {
+            background-position-y: -23px;
+        }
+
+        &.is-active {
+            background-color: #e5eaee;
+        }
+
+        &-icon {
+            width: 16px;
+            height: 16px;
+            background-image: url("/ico/editor-icons.svg");
+            background-size: 360px;
+            background-repeat: no-repeat;
+        
+            &--bold {
+                background-position: -2px -3px;
+            }
+        
+            &--italic {
+                background-position: -22px -3px;
+            }
+        
+            &--strike {
+                background-position: -42px -3px;
+            }
+        
+            &--code {
+                background-position: -62px -3px;
+            }
+
+            &--clear-marks {
+                background-position: -82px -3px;
+            }
+
+            &--clear-nodes {
+                background-position: -102px -3px;
+            }
+
+            &--paragraph {
+                background-position: -122px -3px;
+            }
+
+            &--h1 {
+                background-position: -142px -3px;
+            }
+            
+            &--h2 {
+                background-position: -162px -3px;
+            }
+
+            &--h3 {
+                background-position: -182px -3px;
+            }
+
+            &--bullet-list {
+                background-position: -202px -3px;
+            }
+
+            &--ordered-list {
+                background-position: -222px -3px;
+            }
+
+            &--code-block {
+                background-position: -242px -3px;
+            }
+
+            &--blockquote {
+                background-position: -262px -3px;
+            }
+
+            &--horizontal-line {
+                background-position: -282px -3px;
+            }
+
+            &--break {
+                background-position: -302px -3px;
+            }
+
+            &--undo {
+                background-position: -322px -3px;
+            }
+
+            &--redo {
+                background-position: -342px -3px;
+            }
+        }
+    }
+}
+
+/* #editor_container .ql-editor {
+    & p {
+        color: red;
+    }
+
+    & ul li {
+        position: relative;
+        
+        &:before {
+            content: "";
+            position: absolute;
+            left: -10px;
+            width: 10px;
+            height: 10px;
+            background-color: rgb(158, 48, 48);
+        }
+    }
+} */

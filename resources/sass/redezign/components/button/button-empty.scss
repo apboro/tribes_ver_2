@@ -1,0 +1,58 @@
+$button-background-color: $white;
+
+$button-text-color-primary-1: $primary-1;
+$button-border-color-primary: $primary-1;
+$button-background-color-primary: $primary-2;
+
+$button-text-color-success-1: $success-1;
+$button-border-color-success: $success-1;
+$button-background-color-success: $success-2;
+
+$button-text-color-danger-1: $danger-1;
+$button-border-color-danger: $danger-1;
+$button-background-color-danger: $danger-2;
+
+.button-empty {
+    display: inline-block;
+    padding: 10px 40px;
+    @include font($button-text-color-primary-1, 14px, 20px, 600);
+    background-color: $button-background-color;
+    border-radius: 66px;
+    cursor: pointer;
+    transition: $transition;
+
+    &--primary {
+        color: $button-text-color-primary-1;
+        border: 1px solid $button-border-color-primary;
+
+        &:hover,
+        &:focus {
+            background-color: $button-background-color-primary;
+        }
+    }
+
+    &--success {
+        color: $button-text-color-success-1;
+        border: 1px solid $button-border-color-success;
+
+        &:hover,
+        &:focus {
+            background-color: $button-background-color-success;
+        }
+    }
+
+    &--danger {
+        color: $button-text-color-danger-1;
+        border: 1px solid $button-border-color-danger;
+
+        &:hover,
+        &:focus {
+            background-color: $button-background-color-danger;
+        }
+    }
+
+    &--disabled {
+        pointer-events: none;
+        opacity: .4;
+    }
+}

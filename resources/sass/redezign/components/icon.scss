@@ -1,0 +1,28 @@
+.icon {
+    display: flex;
+    align-items: center;
+
+    &--success {
+        .fill-el {
+            fill: green;
+            transition: $transition;
+        }
+        .stroke-el {
+            stroke: #7B7B7B;
+            transition: $transition;
+        }
+
+        &:hover {
+            .fill-el {
+                fill: red;
+            }
+
+            .stroke-el {
+                stroke: red;
+            }
+        }
+    }
+
+
+    
+}

@@ -1,0 +1,42 @@
+.tabs {
+    height: 100%;
+
+    &__list {
+        display: flex;
+        list-style: none;
+        cursor: pointer;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        padding: 15px 18px;
+        @include font($text-color, 12px, 18px, 400);
+        text-transform: uppercase;
+        background: $inactive-tab-bg;
+        border-bottom: 1px solid $editor-border-color;
+        
+        & + & {
+            border-left: 1px solid $editor-border-color;
+        }
+
+        &.selected {
+            background-color: $active-tab-bg;
+            border-bottom: none;
+        }
+
+        span {
+            margin-left: 3px;
+        }
+    }
+
+    &__content {
+        position: relative;
+
+        & > div {
+            position: absolute;
+            width: 100%;
+        }
+    }
+}

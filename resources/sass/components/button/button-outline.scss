@@ -1,0 +1,58 @@
+.button-outline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    @include font($text-color, 14px, 17px, 500);
+    background-color: $white;
+    border: 1px solid $editor-border-color;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .3s;
+
+    &--success {
+        color: $success-color;
+        background-color: $btn-outline-success-bg;
+        border-color: $success-color;
+
+        &:hover {
+            color: $white;
+            background-color: $success-color;
+            opacity: .5;
+        }
+
+        &:active {
+            color: $white;
+            background-color: $success-color;
+            opacity: .6;
+        }
+
+        &:focus {
+            background-color: $btn-outline-success-bg;
+        }
+
+        
+    }
+
+    &--light {
+        color: $success-color;
+        background-color: $white;
+        border-color: $btn-outline-light-border-color;
+
+        &:hover {
+            color: $white;
+            background-color: $success-color;
+            opacity: .5;
+        }
+
+        &:active {
+            color: $white;
+            background-color: $success-color;
+            opacity: .6;
+        }
+    }
+
+    &--disabled {
+        opacity: .3;
+    }
+}

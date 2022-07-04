@@ -1,0 +1,23 @@
+{
+  "status":"ok",
+  "templates":[
+    {
+      "template_id":1,
+      "title":"Видео + описание",
+      "preview":23,
+      "html":"<section class='baseTemplate'>[[video_1]] [[text_1]]</section>"
+    },
+    {
+      "template_id":2,
+      "title":"Текст + аудио",
+      "preview":23,
+      "html":"<section class='baseTemplate'>[[text_1]] [[video_1]]</section>"
+    },
+    {
+        "template_id":3,
+        "title":"Текст",
+        "preview":23,
+        "html":"<section class='baseTemplate'>[[text_1]]</section>"
+      }
+  ]
+}

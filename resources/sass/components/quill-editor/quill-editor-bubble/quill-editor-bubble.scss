@@ -1,0 +1,47 @@
+.ql-bubble {
+    
+    .ql-picker.ql-expanded .ql-picker-options {
+        z-index: 2;
+    }
+    .ql-tooltip {
+        z-index: 2 !important;
+        background-color: #5E5873 !important;
+        border-radius: 5px !important;  
+    }
+
+    .ql-picker-options {
+        background-color: #5E5873 !important;
+    }
+
+    .ql-tooltip:not(.ql-flip) .ql-tooltip-arrow {
+        border-bottom: 6px solid #5E5873;
+    }
+
+    .ql-tooltip.ql-flip .ql-tooltip-arrow {
+        border-top: 6px solid #5E5873;
+    }
+
+    .ql-picker,
+    .ql-picker.ql-expanded .ql-picker-label {
+        color: $white !important;
+    }
+
+    .ql-toolbar button svg .ql-stroke,
+    .ql-picker.ql-expanded .ql-picker-label svg .ql-stroke,
+    .ql-icon-picker .ql-picker-item svg .ql-stroke,
+    .ql-stroke,
+    .ql-toolbar button svg .ql-fill {
+        stroke: $white !important;
+    }
+
+    .ql-fill {
+        stroke: $white !important;
+        fill: $white !important;
+    }
+
+    .ql-toolbar button:hover,
+    .ql-picker:hover,
+    .ql-toolbar button.ql-active {
+        background-color: #ffffff30;
+    }
+}

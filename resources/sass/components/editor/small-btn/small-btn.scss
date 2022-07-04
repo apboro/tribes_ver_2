@@ -1,0 +1,17 @@
+.small-btn {
+    padding: 4px;
+    background-color: $primary-color;
+    cursor: pointer;
+    
+    &:hover {
+        background-color: $small-btn-hover-color;
+    }
+
+    &:active {
+        background-color: $small-btn-active-color;
+    }
+
+    &--disabled {
+        overflow: .5;
+    }
+}

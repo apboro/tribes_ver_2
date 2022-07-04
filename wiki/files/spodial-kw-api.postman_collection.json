@@ -1,0 +1,621 @@
+{
+	"info": {
+		"_postman_id": "03d13310-152b-42bc-a6f1-6a935d8c4cc1",
+		"name": "spodial-kw-api",
+		"description": "запросы для обращения к АПИ базы знаний",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "6194295"
+	},
+	"item": [
+		{
+			"name": "вопросы список с фильтром",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "filter[with_answers]",
+							"value": "1",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[draft]",
+							"value": "0",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[published]",
+							"value": "0",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[enquiry_more_then]",
+							"value": "-1",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "filter[full_text]",
+							"value": "reru",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "id",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][rule]",
+							"value": "DESC",
+							"type": "text"
+						},
+						{
+							"key": "filter[page]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "filter[per_page]",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/questions/list",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "вопросы список",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "filter[page]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "filter[per_page]",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/questions/list",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "получить вопрос",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/questions/get",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "создать вопрос - ответ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "question[context]",
+							"value": "qwerty",
+							"type": "text"
+						},
+						{
+							"key": "question[is_draft]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "question[is_public]",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "question[answer][context]",
+							"value": "qweqwe",
+							"type": "text"
+						},
+						{
+							"key": "question[answer][is_draft]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/questions/add",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "редактировать вопрос - ответ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "question[id]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "question[context]",
+							"value": "some text question",
+							"type": "text"
+						},
+						{
+							"key": "question[is_draft]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "question[is_public]",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "question[answer][context]",
+							"value": "some text answer",
+							"type": "text"
+						},
+						{
+							"key": "question[answer][is_draft]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/questions/store",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "удалить вопроc!!!",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/questions/delete",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "массовые операции",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "command",
+							"value": "delete",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "command",
+							"value": "update_draft",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "command",
+							"value": "update_publish",
+							"type": "text"
+						},
+						{
+							"key": "ids[]",
+							"value": "9",
+							"type": "text"
+						},
+						{
+							"key": "ids[]",
+							"value": "8",
+							"type": "text"
+						},
+						{
+							"key": "ids[]",
+							"value": "7",
+							"type": "text"
+						},
+						{
+							"key": "ids[]",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "ids[]",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "params[mark]",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/questions/do",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "сообщества список",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "XDEBUG_SESSION_START",
+						"value": "PHPSTORM"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[type]",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/communities/list",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "сообщества получить",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/communities/get",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "получить токен ключ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/index",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "вебхук для бота",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "XDEBUG_SESSION_START",
+						"value": "PHPSTORM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"update_id\": 944984566,\n  \"message\": {\n    \"message_id\": 1840,\n    \"from\": {\n      \"id\": 416272404,\n      \"is_bot\": false,\n      \"first_name\": \"\\u0410\\u043d\\u0434\\u0440\\u0435\\u0439\",\n      \"last_name\": \"\\u0414\\u043e\\u043b\\u0433\\u043e\\u043f\\u043e\\u043b\\u043e\\u0432\",\n      \"username\": \"a_dolgopolov\",\n      \"language_code\": \"ru\"\n    },\n    \"chat\": {\n      \"id\": -608142614,\n      \"title\": \"@test1_group_for_main_bot\",\n      \"type\": \"group\",\n      \"all_members_are_administrators\": true\n    },\n    \"date\": 1654781088,\n    \"text\": \"\\u0442\\u0435\\u043a\\u0441\\u0442 \\u0434\\u043b\\u044f \\u0442\\u0435\\u0441\\u0442\\u0430\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/bot/webhook",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"bot",
+						"webhook"
+					],
+					"query": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"disabled": true
+						}
+					]
+				},
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "вебхук-бот реплика на сообщение",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "XDEBUG_SESSION_START",
+						"value": "PHPSTORM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"update_id\": 939281249,\n  \"message\": {\n    \"message_id\": 2530,\n    \"from\": {\n      \"id\": 416272404,\n      \"is_bot\": false,\n      \"first_name\": \"\\u0410\\u043d\\u0434\\u0440\\u0435\\u0439\",\n      \"last_name\": \"\\u0414\\u043e\\u043b\\u0433\\u043e\\u043f\\u043e\\u043b\\u043e\\u0432\",\n      \"username\": \"a_dolgopolov\",\n      \"language_code\": \"ru\"\n    },\n    \"chat\": {\n      \"id\": -608142614,\n      \"title\": \"@Unit_for_factory_bot\",\n      \"type\": \"group\",\n      \"all_members_are_administrators\": true\n    },\n    \"date\": 1653042023,\n    \"reply_to_message\": {\n      \"message_id\": 2528,\n      \"from\": {\n        \"id\": 507752964,\n        \"is_bot\": false,\n        \"first_name\": \"\\u0415\\u0432\\u0433\\u0435\\u043d\\u0438\\u0439\",\n        \"last_name\": \"\\u0421\\u0442\\u0440\\u043e\\u0439\",\n        \"username\": \"Strojevgen\",\n        \"language_code\": \"ru\"\n      },\n      \"chat\": {\n        \"id\": -608142614,\n        \"title\": \"@Unit_for_factory_bot\",\n        \"type\": \"group\",\n        \"all_members_are_administrators\": true\n      },\n      \"date\": 1653041981,\n      \"text\": \"\\u041f\\u043e\\u0442\\u043e\\u043c\\u0443 \\u0447\\u0442\\u043e \\u0438\\u043d\\u043b\\u0430\\u0439\\u043d \\u043a\\u043e\\u043c\\u0430\\u043d\\u0434\\u044b \\u0430\\u043a\\u0442\\u0438\\u0432\\u0438\\u0440\\u043e\\u0432\\u0430\\u043d\\u044b\"\n    },\n    \"text\": \"\\u0437\\u0430\\u0447\\u0435\\u043c \\u043e\\u043d\\u0438 \\u043d\\u0430\\u043c \\u0442\\u0430\\u043a \\u043d\\u0443\\u0436\\u043d\\u044b \\u0432 \\u043a\\u0430\\u043a\\u043e\\u043c \\u043c\\u0435\\u0441\\u0442\\u0435 \\u043a\\u043e\\u0434\\u0430 \\u0441\\u043c\\u043e\\u0442\\u0440\\u0435\\u0442\\u044c ?\"\n  }\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/bot/webhook?XDEBUG_SESSION_START=PHPSTORM",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"bot",
+						"webhook"
+					],
+					"query": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM"
+						}
+					]
+				},
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		}
+	]
+}

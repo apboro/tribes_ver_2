@@ -1,0 +1,112 @@
+.ol-deep {
+    list-style: none;
+    counter-reset: li;
+
+    li {
+        margin-bottom: 10px;
+
+        &:before {
+            counter-increment: li;
+        }
+    }
+
+    &[data-ol-num="1"] {
+        li {
+            &:before {
+                content: "1." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="2"] {
+        li {
+            &:before {
+                content: "2." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="3"] {
+        li {
+            &:before {
+                content: "3." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="4"] {
+        li {
+            &:before {
+                content: "4." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="5"] {
+        li {
+            &:before {
+                content: "5." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="6"] {
+        li {
+            &:before {
+                content: "6." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="7"] {
+        li {
+            &:before {
+                content: "7." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="8"] {
+        li {
+            &:before {
+                content: "8." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="9"] {
+        li {
+            &:before {
+                content: "9." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="10"] {
+        li {
+            &:before {
+                content: "10." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="11"] {
+        li {
+            &:before {
+                content: "11." counters(li, ".");
+            }
+        }
+    }
+
+    &[data-ol-num="1.1"] {
+        li {
+            &:before {
+                content: "1." counters(li, ".");
+            }
+        }
+    }
+}
+
+.ul-style-none {
+    list-style: none;
+}

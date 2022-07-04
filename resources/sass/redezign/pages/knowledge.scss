@@ -1,0 +1,82 @@
+.knowledge {
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        min-height: 86vh;
+    }
+
+    &__breadcrumbs {
+        margin-bottom: 30px;
+    }
+
+    &__title {
+        display: flex;
+        flex-wrap: wrap;
+        @include font(black, 21px, 25px, 600);
+        text-transform: uppercase;
+    }
+
+    &__name {
+        @include truncate(500px);  
+    }
+
+    &__auxiliary {
+        margin-top: 10px;
+
+        a,
+        button {
+            @include font(#7B7B7B, 12px, 14px, 500);
+        }
+    }
+
+    &__control {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 40px;
+    }
+
+    &__search {
+        max-width: 70%;
+    }
+
+    &__add-btn {
+        /* padding: 8px 30px;
+        @include font(#fff, 14px, 22px, 600);
+        background-color: #000;
+        border-radius: 5px; */
+    }
+
+    &__multiple-operations {
+        display: grid;
+        grid-template: auto / repeat(auto-fill, 100px);
+        column-gap: 30px;
+        height: 38px;
+        margin-top: 20px;
+    }
+
+    &__multiple-btn {
+        @include font(#7B7B7B, 14px, 17px, 500);
+        cursor: pointer;
+    }
+
+    &__filter {
+        margin-top: 20px;
+    }
+
+    &__table-wrapper {
+        flex: 1 0 100%;
+    }
+
+    &__table {
+        margin-top: 20px;
+    }
+
+    &__pagination {
+        flex: 0 0 auto;
+        margin-top: 30px;
+    }
+}

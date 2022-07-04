@@ -1,0 +1,141 @@
+<?php
+
+return [
+    // A
+    'active' => 'Active',
+    'add_community' => 'Add community',
+    'added' => 'Added',
+    'all' => 'All',
+    'all_rights_reserved' => 'All rights reserved',
+    'amount' => 'Amount',
+    'amount_min' => 'Min. amount',
+    'amount_max' => 'Max. amount',
+    'answer' => 'Answer',
+    'arbitrary_amount' => 'Arbitrary amount',
+    'audience' => 'Audience',
+    'avatar' => 'Avatar',
+    // B
+    'back' => 'Back',
+    'balance' => 'Balance',
+    'button' => 'Button',
+    // C
+    'cancel' => 'Cancel',
+    'card' => 'Card',
+    'change' => 'Change',
+    'comment' => 'Comment',
+    'common' => 'Common',
+    'communities' => 'Communities',
+    'community' => 'Community',
+    'community_name' => 'Community name',
+    'confirm' => 'Confirm',
+    'contact_phone' => 'Contact phone',
+    'content' => 'Content',
+    'copy' => 'copy',
+    'courses' => 'Courses',
+    'created' => 'Created',
+    'currency' => 'Currency',
+    // D
+    'date' => 'Date',
+    'day_low' => 'day',
+    'day_many_low' => 'days',
+    'days_rus_low' => 'days',
+    'days_low' => 'days',
+    'days_2' => 'Days',
+    'disable' => 'Disable',
+    'donation' => 'Donation',
+    'donations' => 'Donations',
+    // E
+    'empty_products' => 'You do not have any media product',
+    'edit' => 'Edit',
+    'edit_low' => 'edit',
+    'education' => 'Education',
+    'enable' => 'Enable',
+    'entries_rus_low' => 'entries',
+    'exit' => 'Exit',
+    // F
+    'follow' => 'Follow',
+    'finance' => 'Finance',
+    'from' => 'from',
+    'from_2' => 'from',
+    // G
+    'get_started' => 'Get started',
+    'go_telegram' => 'Go to telegram',
+    // H
+    'help' => 'Help',
+    'hide' => 'Hide',
+    // I
+    'image' => 'Image',
+    'inactive' => 'Inactive',
+    // K
+    'knowledge_base' => 'Knowledge base',
+    // L
+    'links' => 'Links',
+    'login' => 'Login',
+    // M
+    'media_product' => 'Media products',
+    'months' => 'Months',
+    'months_2_low' => 'months',
+    'months_3_low' => 'months',
+    // N
+    'name' => 'Name',
+    'next' => 'Next',
+    'no_entries' => 'No entries',
+    'not_available' => 'Not available',
+    'none' => 'None',
+    'number' => 'Number',
+    // P
+    'payout' => 'Payout',
+    'password' => 'Password',
+    'payment_period' => 'Payment period',
+    'phone' => 'Phone',
+    'price' => 'Price',
+    'profile' => 'Profile',
+    'profile_low' => 'profile',
+    'popular_name' => 'John Smith',
+    // R
+    'remove' => 'Remove',
+    // S
+    'save' => 'Save',
+    'search' => 'Search',
+    'select_image' => 'Select image',
+    'send' => 'Send',
+    'settings' => 'Settings',
+    'show' => 'Show',
+    'show_all' => 'Show to all',
+    'show_password' => 'Show password',
+    'shown_from' => 'Shown from',
+    'statistics' => 'Statistics',
+    'standart' => 'Standart',
+    'status' => 'Status',
+    'subscriptions' => 'Subscriptions',
+
+    'audience' => 'Audience',
+    'product' => 'Media products',
+    'panel_author' => 'Go to author panel',
+    'panel_follower' => 'Go to user panel',
+
+    // T
+    'tariff' => 'Tariff',
+    'tariffs' => 'Tariffs',
+    'time' => 'Time',
+    'total' => 'Total',
+    'title' => 'Title',
+    'to' => 'to',
+    'to_home' => 'To home',
+    'trial_period' => 'Trial period',
+    // U
+    'unavailable' => 'Unavailable',
+    'unsaved_data' => 'Unsaved data',
+    'user' => 'User',
+    'user_name' => 'User name',
+    // W
+    'welcome' => 'Welcome!',
+    'withdraw' => 'Withdraw',
+    'withdrawal' => 'Withdrawal',
+    'withdrawn' => 'Withdrawn',
+    // Y
+    'years' => 'Years',
+    'years_2_low' => 'years',
+    'your_name' => 'Your name',
+
+];

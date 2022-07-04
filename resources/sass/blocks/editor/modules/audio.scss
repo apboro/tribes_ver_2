@@ -1,0 +1,15 @@
+.audio {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    min-height: 54px;
+
+    & > div > div{
+        display: flex;
+        min-height: 54px;
+    }
+
+    &__canv {
+        margin-left: 30px;
+    }
+}

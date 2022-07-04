@@ -1,0 +1,18 @@
+.ql-snow {
+    .ql-picker,
+    .ql-picker.ql-expanded .ql-picker-label {
+        color: $title-color !important;
+    }
+    .ql-toolbar button svg .ql-stroke,
+    .ql-picker.ql-expanded .ql-picker-label svg .ql-stroke,
+    .ql-icon-picker .ql-picker-item svg .ql-stroke,
+    .ql-stroke,
+    .ql-toolbar button svg .ql-fill {
+        stroke: $title-color !important;
+    }
+
+    .ql-fill {
+        stroke: $title-color !important;
+        fill: $title-color !important;
+    }
+}

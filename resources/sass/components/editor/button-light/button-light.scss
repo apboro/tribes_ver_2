@@ -1,0 +1,21 @@
+.button-light {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    @include font($text-color, 14px, 17px, 500);
+    background-color: $white;
+    border: 1px solid $editor-border-color;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .3s;
+
+    &:active {
+        background-color: $btn-light-action-bg;
+        border-color: $btn-light-action-border-color;
+    }
+
+    &--disabled {
+        opacity: .5;
+    }
+}

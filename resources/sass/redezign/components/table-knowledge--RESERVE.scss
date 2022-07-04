@@ -1,0 +1,127 @@
+.table-knowledge {
+    display: block;
+    width: 100%;
+    max-height: calc(100vh - 430px);
+    border: 1px solid#eee;
+    border-radius: 5px;
+    border-collapse: collapse;
+    overflow: auto;
+
+    thead {
+        @include font(grey, 12px, 14px, 600);
+        text-transform: uppercase;
+        background-color: #eee;
+
+        /* th {
+            position: sticky; top: 0;
+        } */
+    }
+
+    th {
+        
+        padding: 17px 30px;
+        text-align: left;
+    }
+
+    &__row {
+        border-bottom: 1px solid#eee;
+    }
+
+    &__content {
+        display: contents;
+    }
+
+    &__item {
+        padding: 17px 30px;
+        @include font(grey, 14px, 21px, 400);
+        text-align: left;
+        
+    }
+
+    &__question-btn {
+        display: flex;
+        align-items: center;
+    }
+
+    &__question {
+        position: relative;
+        @include truncate(200px);
+        cursor: pointer;
+
+        &:after {
+            content: "⌄";
+            position: absolute;
+            top: calc(50% - 18px);
+            right: 0;
+            font-size: 20px;
+        }
+    }
+
+    &__status {
+        display: block;
+        @include font(#000, 12px, 18px, 600);
+    }
+
+    &__actions {
+        position: relative;
+        //text-align: center;
+    }
+
+    &__action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+    
+    &__action-icon {
+        position: relative;
+        display: block;
+        width: 5px;
+        height: 5px;
+        background-color: #6E6B7B;
+        border-radius: 50%;
+
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 5px;
+            height: 5px;
+            background-color: #6E6B7B;
+            border-radius: 50%;
+        }
+        
+        &:before {
+            top: -7px;
+        }
+
+        &:after {
+            top: 7px;
+        }
+    }
+
+    &__action-menu {
+        position: absolute;
+        left: -70px;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        border: 1px solid #000;
+    }
+
+    &__action-item {
+        padding: 10px 15px;
+        @include font(#000, 12px, 14px, 600);
+
+        & + & {
+            border-top: 1px solid #000;
+        }
+
+        
+    }
+}

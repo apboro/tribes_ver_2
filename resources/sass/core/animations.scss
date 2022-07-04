@@ -1,0 +1,19 @@
+@keyframes spinner-border {
+    from {
+        transform: rotate(0);
+    }
+    
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0.8);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+

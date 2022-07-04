@@ -1,0 +1,22 @@
+{
+  "update_id": 939281139,
+  "message": {
+    "message_id": 2389,
+    "from": {
+      "id": 416272404,
+      "is_bot": false,
+      "first_name": "\u0410\u043d\u0434\u0440\u0435\u0439",
+      "last_name": "\u0414\u043e\u043b\u0433\u043e\u043f\u043e\u043b\u043e\u0432",
+      "username": "a_dolgopolov",
+      "language_code": "ru"
+    },
+    "chat": {
+      "id": -608142614,
+      "title": "@Unit_for_factory_bot",
+      "type": "group",
+      "all_members_are_administrators": true
+    },
+    "date": 1653032511,
+    "text": "тестовое сообщение в группе"
+  }
+}

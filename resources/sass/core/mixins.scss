@@ -1,0 +1,40 @@
+// === FONT ===
+@mixin font($color, $font-size, $line-height, $font-weight) {
+    font-family: $font-family-montserrat;
+    color: $color;
+    font-size: $font-size;
+    line-height: $line-height;
+    font-weight: $font-weight;
+}
+
+@mixin truncate($width) {
+    max-width: $width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// === BUTTONS ===
+@mixin button($padding: false, $background-color, $border-radius) {
+    @if $padding {
+        padding: $padding;
+    }
+    
+    background-color: $background-color;
+    border-radius: $border-radius;
+    cursor: pointer;
+}
+
+// === ICONS ===
+@mixin icon($position) {
+    background: url("/icon/icons.svg");
+    background-position: $position;
+}
+
+// Placeholder
+@mixin placeholder {
+    &::-webkit-input-placeholder { @content; }
+    &:-moz-placeholder           { @content; }
+    &::-moz-placeholder          { @content; }
+    &:-ms-input-placeholder      { @content; }  
+}

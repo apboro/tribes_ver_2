@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Filters;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Str;
+
+abstract class QueryFilter
+{
+    protected $request;
+
+    protected $builder;
+
+    protected $splitter = ',';
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
+    public function filters()
+    {
+        return $this->request->wantsJson() ? $this->request->json()->all() : $this->request->query();
+    }
+
+    public function apply(Builder $builder)
+    {
+        $this->builder = $builder;
+        foreach ($this->filters() as $name => $value) {
+            $name = Str::camel($name);
+            if (method_exists($this, $name) && $value !== null) {
+                call_user_func_array([$this, $name], array_filter([$value],function($k) {
+                    return true;
+                } ,ARRAY_FILTER_USE_BOTH));
+            }
+        }
+
+        return $this->builder;
+    }
+
+    protected function paramToArray($param)
+    {
+        return explode($this->splitter, $param);
+    }
+}

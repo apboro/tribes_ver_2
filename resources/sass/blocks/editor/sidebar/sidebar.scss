@@ -1,0 +1,6 @@
+.sidebar {
+    max-width: $sidebar-width;
+    min-width: $sidebar-width;
+    background-color: $editor-bg;
+    border-right: 1px solid $editor-border-color;
+}

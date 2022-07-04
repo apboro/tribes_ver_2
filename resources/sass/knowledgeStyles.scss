@@ -1,0 +1,17 @@
+@import './core/variables';
+
+@import "./redezign/app"; // true style
+
+// Common styles
+@import "./core/common";
+@import "./core/animations";
+
+// Components
+@import "./components/dropdown-panel/dropdown-panel";
+
+// Blocks
+@import "./blocks/main-header/main-header";
+@import "./blocks/main-nav/main-nav";
+
+
+

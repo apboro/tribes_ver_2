@@ -1,0 +1,125 @@
+$button-background-color: $black-hover;
+
+$button-text-color-primary-1: $text-color-1;
+$button-text-color-primary-2: $primary-1;
+$button-background-color-primary: $primary-2;
+
+$button-text-color-success-1: $success-1;
+$button-text-color-success-2: $success-1;
+$button-background-color-success: $success-2;
+
+$button-text-color-danger-1: $danger-1;
+$button-text-color-danger-2: $danger-1;
+$button-background-color-danger: $danger-2;
+
+.button-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 20px;
+    @include font($button-text-color-primary-1, 14px, 20px, 400);
+    background-color: transparent;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover,
+    &:focus {
+        background-color: $button-background-color;
+    }
+    
+    &--primary {
+        color: $button-text-color-primary-1;
+
+        &:active {
+            color: $button-text-color-primary-2;
+            background-color: $button-background-color-primary;
+
+            .button-text__icon {
+                .fill-el {
+                    fill: $button-text-color-primary-2;
+                }
+    
+                .stroke-el {
+                    stroke: $button-text-color-primary-2;
+                }
+            }
+        }
+
+        .button-text__icon {
+            .fill-el {
+                fill: $button-text-color-primary-1;
+            }
+
+            .stroke-el {
+                stroke: $button-text-color-primary-1;
+            }
+        }
+    }
+
+    &--success {
+        color: $button-text-color-success-1;
+
+        &:active {
+            color: $button-text-color-success-2;
+            background-color: $button-background-color-success;
+        }
+
+        .button-text__icon {
+            .fill-el {
+                fill: $button-text-color-success-1;
+            }
+
+            .stroke-el {
+                stroke: $button-text-color-success-1;
+            }
+        }
+    }
+
+    &--danger {
+        color: $button-text-color-danger-1;
+
+        &:active {
+            color: $button-text-color-danger-2;
+            background-color: $button-background-color-danger;
+        }
+
+        .button-text__icon {
+            .fill-el {
+                fill: $button-text-color-danger-1;
+            }
+
+            .stroke-el {
+                stroke: $button-text-color-danger-1;
+            }
+        }
+    }
+
+    &--disabled {
+        pointer-events: none;
+        opacity: .4;
+    }
+
+    &--only-icon {
+        padding: 5px;
+        border-radius: 50%;
+    }
+
+    &__icon {
+        &--right {
+            margin-left: 10px;
+        }
+
+        &--left {
+            margin-right: 10px;
+        }
+
+        .fill-el {
+            transition: $transition;
+        }
+
+        .stroke-el {
+            transition: $transition;
+        }
+    }
+}

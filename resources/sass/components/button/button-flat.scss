@@ -1,0 +1,17 @@
+.button-flat {
+    @include font($primary-color, 14px, 17px, 500);
+    cursor: pointer;
+    transition: .3s;
+
+    &--danger {
+        color: $danger-color;
+
+        &:hover {
+            color: $btn-danger-hover-color;
+        }
+    }
+
+    &--disabled {
+        overflow: .5;
+    }
+}

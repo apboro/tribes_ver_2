@@ -1,0 +1,95 @@
+.course {
+    position: relative;
+    background: #F8FAFC;
+    display: flex;
+    flex: 1;
+    padding: $indent-1 $indent-2;
+
+    .content__scrl.ps {
+        width: 100%;
+        height: calc(100vh - $header-height - $indent-1);
+        margin: 0 auto;
+    }
+
+    .parts__scrl.ps {
+        min-width: 120px;
+        height: calc(100vh - $header-height - $indent-3 - 40px);
+        margin-top: 40px;
+    }
+
+    &__parts {
+        display: flex;
+        flex-direction: column;
+        gap: $indent-1;
+        padding-right: $indent-2;
+    }
+
+    &__part {
+           
+        width: 100%;
+
+        &.active{
+            background-color: $btn-outline-success-hover-bg;
+
+            &:hover {
+                color: $success-color;
+            }
+        }
+    }
+
+    &__add-btn {
+        width: 100%;
+        
+        svg {
+            path {
+                transition: .3s;
+            }
+        }
+
+        &:hover {
+            svg {
+                path {
+                    fill: $white;
+                }
+            }
+        }
+    }
+
+    &__container {
+        flex: 1;
+        padding: 30px 40px;
+        background-color: $white;
+        overflow: hidden;
+        
+    }
+
+    &__buttons {
+        width: 275px;
+        padding-left: $indent-2;
+    }
+
+    &__buttons-wrapper {
+        display: flex;
+        gap: $indent-1;
+    }
+
+    &__preview {
+        margin-top: $indent-2;
+    }
+
+    &__saving-wrapper {
+        display: flex;
+        margin-top: $indent-2;
+        @include font($success-color, 14px, 17px, 500);
+
+        span + span {
+            margin-left: 5px;
+        }
+    }
+
+    &__saving-spinner {
+        width: 15px;
+        height: 15px;
+        animation: .75s linear infinite spinner-border;   
+    }
+}
