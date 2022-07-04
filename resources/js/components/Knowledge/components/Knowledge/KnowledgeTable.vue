@@ -6,8 +6,9 @@
             <div class="knowledge-table__header-item">
                 <input
                     type="checkbox"
-                    v-model="isAll"
-                    
+                    :checked="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
+                    :value="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
+                    @input="toggleStateQuestions"
                 >
             </div>
 
@@ -111,8 +112,6 @@
                     update_at: 'off',
                     c_enquiry: 'off',
                 },
-
-                isAddedAllQuestions: false,
             }
         },
 
@@ -126,20 +125,13 @@
             isHasQuestions() {
                 return this.questions && this.questions.length ? true : false;
             },
-
-            isAll: {
-                get() {
-                    return this.GET_ALL_STATUS_MULTIPLE_OPERATION;
-                },
-                set(bool) {
-                    console.log(bool);
-                    this.CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS(bool);
-                }
-            },
         },
 
         methods: {
-            ...mapMutations(['SET_SORT', 'ADD_ID_FOR_OPERATIONS', 'REMOVE_ID_FOR_OPERATIONS', 'CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS']),
+            ...mapMutations([
+                'SET_SORT',
+                'CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS'
+            ]),
             ...mapActions(['LOAD_QUESTIONS']),
 
             selectSort(sortName, event) {
@@ -161,18 +153,7 @@
             },
 
             toggleStateQuestions() {
-                if (this.isAddedAllQuestions) {
-                    this.questions.forEach((question) => {
-                        // не добавляем элемент если такой уже был добавлен
-                        if (!this.IS_ADDED_QUESTIONS(question.id)) {
-                            this.ADD_ID_FOR_OPERATIONS(question.id);
-                        }
-                    });
-                } else {
-                    this.questions.forEach((question) => {
-                        this.REMOVE_ID_FOR_OPERATIONS(question.id);
-                    });
-                }
+                this.CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS(!this.GET_ALL_STATUS_MULTIPLE_OPERATIONS);
             }
         }
     }
