@@ -253,7 +253,7 @@
         },
 
         computed: {
-            ...mapGetters(['IS_ADDED_QUESTIONS']),
+            ...mapGetters('knowledge', ['IS_ADDED_QUESTIONS']),
 
             isAddedQuestion: {
                 // проверяем есть ли такая запись в массиве, и ставим чек в зависимости от ответа
@@ -274,8 +274,8 @@
         },
 
         methods: {
-            ...mapActions(['EDIT_QUESTION', 'REMOVE_QUESTION']),
-            ...mapMutations(['ADD_ID_FOR_OPERATIONS', 'REMOVE_ID_FOR_OPERATIONS']),
+            ...mapActions('knowledge', ['EDIT_QUESTION', 'REMOVE_QUESTION']),
+            ...mapMutations('knowledge', ['ADD_ID_FOR_OPERATIONS', 'REMOVE_ID_FOR_OPERATIONS']),
 
             toggleQuestion() {
                 this.isVisibleFullQuestion = !this.isVisibleFullQuestion;

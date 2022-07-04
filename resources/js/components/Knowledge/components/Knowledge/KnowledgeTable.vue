@@ -116,7 +116,7 @@
         },
 
         computed: {
-            ...mapGetters([
+            ...mapGetters('knowledge', [
                 'IS_LOADING',
                 'IS_ADDED_QUESTIONS',
                 'GET_ALL_STATUS_MULTIPLE_OPERATIONS'
@@ -128,11 +128,11 @@
         },
 
         methods: {
-            ...mapMutations([
+            ...mapMutations('knowledge', [
                 'SET_SORT',
                 'CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS'
             ]),
-            ...mapActions(['LOAD_QUESTIONS']),
+            ...mapActions('knowledge', ['LOAD_QUESTIONS']),
 
             selectSort(sortName, event) {
                 // выключаем все фильтры кроме того который включаем
