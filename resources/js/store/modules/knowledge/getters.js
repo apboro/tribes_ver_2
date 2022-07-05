@@ -32,8 +32,6 @@ export default ({
     },
 
     GET_ALL_STATUS_MULTIPLE_OPERATIONS(state) {
-        console.log(state._questions.length);
-        console.log(state._idsMultipleOperations.length);
         return state._questions.length === state._idsMultipleOperations.length;
     }
 });

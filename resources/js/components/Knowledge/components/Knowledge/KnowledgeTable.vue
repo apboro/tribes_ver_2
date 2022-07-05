@@ -14,7 +14,7 @@
 
             <!-- Вопрос -->
             <div class="knowledge-table__header-item">
-                Вопрос {{GET_ALL_STATUS_MULTIPLE_OPERATIONS}}
+                Вопрос
             </div>
 
             <!-- Дата -->
