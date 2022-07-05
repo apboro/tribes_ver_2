@@ -25,6 +25,11 @@
 
             <div class="knowledge__control">
                 <!-- Search -->
+                <search-field 
+                    :text="searchText"
+                    @search="searchFilter"
+                />
+
                 <input
                     type="text"
                     class="form-item knowledge__search"
@@ -113,13 +118,13 @@
 
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
-    import { copyText } from '../../core/functions';
     import VBreadcrumbs from './components/VBreadcrumbs.vue';
     import VPagination from './components/Knowledge/VPagination.vue';
     import VPopup from './components/VPopup.vue';
     import VOverlay from './components/VOverlay.vue';
     import VIcon from './components/VIcon.vue';
     import TextEditor from './components/TextEditor.vue';
+    import SearchField from './components/SearchField.vue';
     import KnowledgeFilter from './components/Knowledge/KnowledgeFilter.vue';
     import KnowledgeTable from './components/Knowledge/KnowledgeTable.vue';
     import KnowledgeMultipleOperations from './components/Knowledge/KnowledgeMultipleOperations.vue';
@@ -137,6 +142,7 @@
             VOverlay,
             VIcon,
             TextEditor,
+            SearchField,
             KnowledgeFilter,
             KnowledgeTable,
             KnowledgeMultipleOperations,
