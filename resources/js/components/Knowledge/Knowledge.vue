@@ -179,7 +179,7 @@
         },
 
         computed: {
-            ...mapGetters([
+            ...mapGetters('knowledge', [
                 'COMMUNITY_TITLE',
                 'GET_QUESTIONS',
                 'GET_META',
@@ -187,16 +187,15 @@
                 'GET_META_INFO',
                 'GET_IDS_MULTIPLE_OPERATIONS',
             ]),
-
         },
 
         methods: {
-            ...mapMutations([
+            ...mapMutations('knowledge', [
                 'SET_PAGINATION',
                 'SET_IDS_MULTIPLE_OPERATIONS',
             ]),
-
-            ...mapActions([
+            
+            ...mapActions('knowledge', [
                 'LOAD_QUESTIONS',
                 'FILTER_QUESTIONS',
                 'TO_MULTIPLE_OPERATIONS'

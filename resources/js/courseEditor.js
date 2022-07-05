@@ -18,6 +18,7 @@ if (window.token) {
 
 import { Cropper } from 'vue-advanced-cropper';
 import store from './courseStore';
+//import store from './store/store';
 import Text from "./components/Course/components/Media/Text";
 import Video from "./components/Course/components/Media/Video";
 import Audio from "./components/Course/components/Media/Audio";

@@ -76,7 +76,7 @@
         },
 
         methods: {
-            ...mapActions(['FILTER_QUESTIONS']),
+            ...mapActions('knowledge', ['FILTER_QUESTIONS']),
             
             resetFilters() {
                 this.filters = {
