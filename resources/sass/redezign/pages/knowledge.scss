@@ -1,6 +1,6 @@
 .knowledge {
     padding-top: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 60px;
 
     .container {
         display: flex;
@@ -8,27 +8,27 @@
         min-height: 86vh;
     }
 
-    &__breadcrumbs {
-        margin-bottom: 30px;
-    }
+    &__breadcrumbs {}
 
     &__title {
         display: flex;
         flex-wrap: wrap;
-        @include font(black, 21px, 25px, 600);
+        margin-top: $indent-4;
+        @include font(black, 24px, 32px, 700);
         text-transform: uppercase;
     }
 
     &__name {
-        @include truncate(500px);  
+        @include truncate(550px);  
     }
 
     &__auxiliary {
         margin-top: 10px;
+    }
 
-        a,
-        button {
-            @include font(#7B7B7B, 12px, 14px, 500);
+    &__auxiliary-link {
+        & + & {
+            margin-left: $indent-2;
         }
     }
 

@@ -1,0 +1,18 @@
+$link-color: $primary-1;
+$link-color-active: $blue-1;
+
+.link {
+    @include font($link-color, 14px, 20px, 400);
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+    }
+
+    &:active {
+        color: $link-color-active;
+        text-decoration: underline;
+    }
+}

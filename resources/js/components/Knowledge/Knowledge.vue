@@ -12,31 +12,16 @@
             <!-- Title -->
             <h1 class="knowledge__title">
                 База знаний сообщества «
-                <span class="knowledge__name">
+                <span
+                    class="knowledge__name"
+                    :title="COMMUNITY_TITLE"
+                >
                     {{ COMMUNITY_TITLE }}
                 </span>»
             </h1>
             
             <!-- Auxiliary -->
-            <div class="knowledge__auxiliary">
-                <a
-                    :href="GET_META_INFO.how_it_works_link"
-                    target="_blank"
-                >
-                    Как это работает?
-                </a>
-
-                <a
-                    :href="GET_META_INFO.public_list_link"
-                    target="_blank"
-                >
-                    Посмотреть как пользователь
-                </a>
-
-                <button @click="copyLink">
-                    Копировать ссылку
-                </button>
-            </div>
+            <knowledge-auxiliary :metaData="GET_META_INFO" />
 
             <div class="knowledge__control">
                 <!-- Search -->
@@ -140,6 +125,7 @@
     import KnowledgeMultipleOperations from './components/Knowledge/KnowledgeMultipleOperations.vue';
     import KnowledgeNewQuestionPopup from './components/Knowledge/KnowledgeNewQuestionPopup.vue';
     import KnowledgeConfirmPopup from './components/Knowledge/KnowledgeConfirmPopup.vue';
+    import KnowledgeAuxiliary from './components/Knowledge/KnowledgeAuxiliary.vue';
 
     export default {
         name: 'Knowledge',
@@ -155,7 +141,8 @@
             KnowledgeTable,
             KnowledgeMultipleOperations,
             KnowledgeNewQuestionPopup,
-            KnowledgeConfirmPopup
+            KnowledgeConfirmPopup,
+            KnowledgeAuxiliary
         },
 
         data() {
@@ -326,11 +313,6 @@
                 this.closeConfirmPopup();
                 this.setOperationType('hard_public');
             },
-
-            copyLink() {
-                copyText(this.GET_META_INFO.public_list_link);
-            },
-
         },
 
         mounted() {
