@@ -25,30 +25,17 @@
 
             <div class="knowledge__control">
                 <!-- Search -->
-                <search-field 
-                    :text="searchText"
-                    @search="searchFilter"
-                />
-
-                <input
-                    type="text"
-                    class="form-item knowledge__search"
-                    placeholder="Поиск"
-                    @input="searchFilter"
+                <search-field
                     v-model="searchText"
-                >
+                    @input="searchFilter"
+                />
                 
                 <!-- Add question -->
                 <button
-                    class="knowledge__add-btn button-text button-text--only-icon button-text--primary"
+                    class="knowledge__add-btn button-filled button-filled--primary"
                     @click="openNewQuestionPopup"
                 >
-                    
-                    <v-icon
-                        name="right-arrow"
-                        size="1"
-                        class="icon button-text__icon "
-                    />
+                    Добавить новый вопрос-ответ
                 </button>
             </div>
 
@@ -123,8 +110,8 @@
     import VPopup from './components/VPopup.vue';
     import VOverlay from './components/VOverlay.vue';
     import VIcon from './components/VIcon.vue';
-    import TextEditor from './components/TextEditor.vue';
     import SearchField from './components/SearchField.vue';
+    import TextEditor from './components/TextEditor.vue';
     import KnowledgeFilter from './components/Knowledge/KnowledgeFilter.vue';
     import KnowledgeTable from './components/Knowledge/KnowledgeTable.vue';
     import KnowledgeMultipleOperations from './components/Knowledge/KnowledgeMultipleOperations.vue';
@@ -141,8 +128,8 @@
             VPopup,
             VOverlay,
             VIcon,
-            TextEditor,
             SearchField,
+            TextEditor,
             KnowledgeFilter,
             KnowledgeTable,
             KnowledgeMultipleOperations,

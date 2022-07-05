@@ -1,12 +1,25 @@
+$icon-primary-color: $grey-6;
+
 .icon {
     display: flex;
     align-items: center;
+
+    &--primary {
+        .icon__fill {
+            fill: $icon-primary-color;
+        }
+
+        .icon__stroke {
+            stroke: $icon-primary-color;
+        }
+    }
 
     &--success {
         .fill-el {
             fill: green;
             transition: $transition;
         }
+
         .stroke-el {
             stroke: #7B7B7B;
             transition: $transition;
@@ -23,6 +36,8 @@
         }
     }
 
-
-    
+    .icon__fill,
+    .icon__stroke {
+        transition: $transition;
+    }
 }

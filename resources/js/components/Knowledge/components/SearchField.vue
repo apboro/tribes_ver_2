@@ -1,37 +1,51 @@
 <template>
-    <div class="search-field">
-        <input type="text" class="search-field__field" @input="inp">
-        <i>></i>
+    <div
+        class="search-field"
+        :class="{ 'active': isActiveSearch }"
+    >
+        <input
+            type="text"
+            class="search-field__field "
+            placeholder="Поиск"
+            :value="value"
+            @focus="isActiveSearch = true"
+            @blur="isActiveSearch = false"
+            @input="searchFilter"
+        >
+        
+        <v-icon
+            name="search"
+            size="2"
+            class="search-field__icon"
+        />
     </div>
 </template>
 
 <script>
+    import VIcon from "./VIcon.vue";
+
     export default {
         name: 'SearchField',
 
-        components: {},
+        components: { VIcon },
 
         props: {
-            text: {
+            value: {
                 type: String,
                 default: ''
             }
         },
 
-        /* data() {
+        data() {
             return {
-                text: ''
+                isActiveSearch: false,
             }
-        }, */
+        },
 
         methods: {
-            inp(event) {
-                this.$emit('search')
+            searchFilter(event) {
+                this.$emit('input', event.target.value);
             }
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

@@ -14,7 +14,7 @@
         display: flex;
         flex-wrap: wrap;
         margin-top: $indent-4;
-        @include font(black, 24px, 32px, 700);
+        @include font($text-color-2, 24px, 32px, 700);
         text-transform: uppercase;
     }
 
@@ -33,15 +33,13 @@
     }
 
     &__control {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        display: grid;
+        grid-template: 1fr / minmax(250px, 90%) auto;
+        column-gap: $indent-4;
         margin-top: 40px;
     }
 
-    &__search {
-        max-width: 70%;
-    }
+    
 
     &__add-btn {
         /* padding: 8px 30px;
