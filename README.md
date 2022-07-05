@@ -60,6 +60,9 @@
    ```shell
 
     php artisan base:fresh
+   
+    ## смена прав на папки и файлы для storage
+    chmod 777 -R storage/
 
    ```
 
