@@ -23,7 +23,6 @@ let actions = {
                 method: "post",
                 url: "/api/v2/auth"
             })
-            console.log(res);
             commit("SET_USER", res.data);
         } catch (error) {
             console.log(error);
