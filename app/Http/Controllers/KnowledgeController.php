@@ -8,32 +8,20 @@ use App\Models\Article;
 use App\Models\Community;
 use App\Models\Knowledge\Answer;
 use App\Models\Knowledge\Question;
-use Elasticsearch\Client;
-use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
-use Elasticsearch\Endpoints\Count;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
-use phpDocumentor\Reflection\Types\Collection;
 
 class KnowledgeController extends Controller
 {
-    public $elasticsearch;
     public $perPage = 15;
     private $community_id;
     private $follower_map = ['', 'К', 'M', 'B'];
 
-    public function __construct(Client $elasticsearch)
-    {
-        $this->elasticsearch = $elasticsearch;
-    }
 
     public function list(Request $request, QuestionFilter $filter, $hash)
     {
-        $community = Community::find((int)PseudoCrypt::unhash($hash));
-
-        $countFollowers = $this->modifiedCountFollowers($community);
+        $community = Community::find((int)PseudoCrypt::unhash($hash))->with('owner');
         $this->community_id = $community->id;
 
         if ($request->has('search') && $request['search'] !== null) {
@@ -48,7 +36,8 @@ class KnowledgeController extends Controller
         }
         return view('common.knowledge.list')
             ->withCommunity($community)
-            ->withCountFollowers($countFollowers)
+            ->withOwner(User::find($community->owner))
+            ->withCountFollowers($this->modifiedCountFollowers($community))
             ->withPopularQuestions($this->popularQuestions($community))
             ->withQuestions($questions);
     }

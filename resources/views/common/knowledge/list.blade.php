@@ -29,7 +29,10 @@
                     <div class="knowledge-list__avatar">
                         <img src="/images/no-image.svg" alt="">
                     </div>
-                    <span>Lucij Seneka</span>
+                    <span>
+                        {{ $owner->name}}<br>
+                        <span>{{ $countFollowers }}</span>
+                    </span>
                     <i class="knowledge-list__messenger">
                         <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M29.5 15C29.5 23.0081 23.0081 29.5 15 29.5C6.99187 29.5 0.5 23.0081 0.5 15C0.5 6.99187 6.99187 0.5 15 0.5C23.0081 0.5 29.5 6.99187 29.5 15Z" fill="url(#paint0_linear_29_1587)" stroke="white"/>
@@ -43,12 +46,16 @@
                         </svg>
                     </i>
                 </div>
-        
+
                 <div class="knowledge-list__control">
                     <div class="knowledge-list__search">
-                        <input type="text" placeholder="Search">
+                        <form action="{{ route('public.knowledge.list', ['hash' => $community->hash]) }}">
+                            @csrf
+                            <input type="text" name="search" placeholder="Search">
+                            <input type="submit" value="Find" >
+                        </form>
                     </div>
-        
+
                     <button
                         class="knowledge-list__question-btn"
                         onclick="KnowledgeList.showModal()"
@@ -56,13 +63,13 @@
                         ask
                     </button>
                 </div>
-        
+
                 <ul class="knowledge-list__list">
                     @forelse($questions as $question)
                     <li class="knowledge-list__item" data-id="{{ $loop->index }}">
                         <div class="knowledge-list__question">
                             <span>{{ $question -> context }}</span>
-                            
+
                             <i class="knowledge-list__help-icon">
                                 <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path class="stroke" fill-rule="evenodd" clip-rule="evenodd" d="M17.5003 32.0832C25.5545 32.0832 32.0837 25.554 32.0837 17.4998C32.0837 9.44568 25.5545 2.9165 17.5003 2.9165C9.44617 2.9165 2.91699 9.44568 2.91699 17.4998C2.91699 25.554 9.44617 32.0832 17.5003 32.0832Z" fill="white" stroke="#E1E1E1" stroke-width="3"/>
@@ -70,7 +77,7 @@
                                     <path class="fill" fill-rule="evenodd" clip-rule="evenodd" d="M17.5003 26.2502C18.3057 26.2502 18.9587 25.5972 18.9587 24.7918C18.9587 23.9864 18.3057 23.3335 17.5003 23.3335C16.6949 23.3335 16.042 23.9864 16.042 24.7918C16.042 25.5972 16.6949 26.2502 17.5003 26.2502Z" fill="#E1E1E1"/>
                                 </svg>
                             </i>
-        
+
                             <button onclick="KnowledgeList.toggleAnswerVisibility('{{ $loop->index }}')">
                                 arrow
                             </button>
@@ -119,7 +126,7 @@
                     <div class="dataTables_info" id="DataTables_Table_2_info" role="status" aria-live="polite">
                         {{ __('base.shown_from') }} {{ $questions->perPage() * $questions->currentPage() - $questions->perPage() + 1 }} {{ __('base.to') }} {{ $questions->lastItem() }} {{ __('base.from') }} {{ $questions->total() }} {{ __('base.entries_rus_low') }}
                     </div>
-                
+
                     <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_2_paginate">
                         {{ $questions->onEachSide(1)->appends(request()->input())->links(!Agent::isMobile() ? 'vendor.pagination.bootstrap-4' : 'vendor.pagination.table-links') }}
                     </div>
