@@ -31,8 +31,8 @@ class KnowledgeController extends Controller
 
     public function list(Request $request, QuestionFilter $filter, $hash)
     {
-//        $community = Community::find((int)PseudoCrypt::unhash($hash));
-        $community = Community::where('hash', $hash)->firstOrFail();
+        $community = Community::find((int)PseudoCrypt::unhash($hash));
+
         $countFollowers = $this->modifiedCountFollowers($community);
         $this->community_id = $community->id;
 
