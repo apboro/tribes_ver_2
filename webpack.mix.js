@@ -30,6 +30,7 @@ mix.sass('resources/admin/css/index.scss', 'public/admin/css');
 mix.sass('resources/tribes/scss/index.scss', 'public/admin/css'); */
 // mix.copyDirectory('resources/admin/img', 'public/admin/img');
 module.exports = {
+    
     module: {
         rules: [
             {
@@ -67,6 +68,7 @@ if(mix.inProduction() ) {
 } else {
     mix.webpackConfig({
         devtool:"inline-source-map",
+        
     });
     mix.sourceMaps();
 }

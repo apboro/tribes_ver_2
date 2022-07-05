@@ -78,7 +78,7 @@
         },
 
         methods: {
-            ...mapActions(['ADD_QUESTION']),
+            ...mapActions('knowledge', ['ADD_QUESTION']),
 
             closeNewQuestionPopup() {
                 this.$emit('closeNewQuestionPopup');

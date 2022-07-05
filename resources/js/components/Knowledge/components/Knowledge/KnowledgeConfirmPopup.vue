@@ -39,7 +39,7 @@
         <template #footer>
             <button
                 class="v-popup__footer-btn"
-                @click="cancelConfirm"
+                @click="closeConfirmPopup"
             >
                 Cancel
             </button>
@@ -73,7 +73,7 @@
 
         data() {
             return {
-                ids: this.questionsIds()
+                ids: this.questionsIds(),
             }
         },
 
@@ -82,24 +82,10 @@
                 this.$emit('closeConfirmPopup');
             },
 
-            onChangeQuestionCheck(event) {
-                console.log(event.target.value);
-            },
-
-            cancelConfirm() {
-                this.$emit('closeConfirmPopup');
-            },
-
             confirm() {
-                let arr = [];
-                
-                this.questions.forEach((question) => {
-                    arr.push(question.id);
-                });
+                // передаем ид которые должны остаться в статусе черновика
+                let arr = this.questionsIds();
                 const result = arr.filter(el => !this.ids.includes(el));
-                console.log(result);
-                
-               
                 this.$emit('confirm', result);
             },
             
@@ -111,9 +97,5 @@
                 return arr;
             }
         },
-
-        mounted() {
-            this.questions
-        }
     }
 </script>
