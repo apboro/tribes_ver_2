@@ -3,22 +3,26 @@
         <portal-target name="destination"></portal-target>
         
         <div class="container">
-            <!-- Breadcrumbs -->
-            <v-breadcrumbs
-                class="knowledge__breadcrumbs"
-                :links="breadcrumbsLinks"
-            />
+            <!-- <template v-if="COMMUNITY_TITLE"> -->
+                <!-- Breadcrumbs -->
+                <v-breadcrumbs
+                    class="knowledge__breadcrumbs"
+                    :links="breadcrumbsLinks"
+                />
+            <!-- </template> -->
 
             <!-- Title -->
-            <h1 class="knowledge__title">
-                База знаний сообщества «
-                <span
-                    class="knowledge__name"
-                    :title="COMMUNITY_TITLE"
-                >
-                    {{ COMMUNITY_TITLE }}
-                </span>»
-            </h1>
+            <!-- <template v-if="COMMUNITY_TITLE"> -->
+                <h1 class="knowledge__title">
+                    База знаний сообщества «
+                    <span
+                        class="knowledge__name"
+                        :title="COMMUNITY_TITLE"
+                    >
+                        {{ COMMUNITY_TITLE }}
+                    </span>»
+                </h1>
+            <!-- </template> -->
             
             <!-- Auxiliary -->
             <knowledge-auxiliary :metaData="GET_META_INFO" />
@@ -140,16 +144,6 @@
 
         data() {
             return {
-                breadcrumbsLinks: [
-                    {
-                        text: 'Главная',
-                        href: 'href-1'
-                    },
-                    {
-                        text: 'База знаний сообщества "Мудрость стоиков на каждый день"',
-                        href: 'href-2'
-                    },
-                ],
                 isVisibleNewQuestionPopup: false,
                 searchText: '',
 
@@ -167,6 +161,19 @@
                 'GET_META_INFO',
                 'GET_IDS_MULTIPLE_OPERATIONS',
             ]),
+
+            breadcrumbsLinks() {
+                return [
+                    {
+                        text: 'Главная',
+                        href: 'href-1'
+                    },
+                    {
+                        text: `База знаний сообщества "${ this.COMMUNITY_TITLE }"`,
+                        href: 'href-2'
+                    },
+                ]
+            }
         },
 
         methods: {

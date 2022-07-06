@@ -1,6 +1,6 @@
 export default ({
     COMMUNITY_TITLE(state) {
-        return state._communityTitle;
+        return state._metaInfo.community_title;
     },
 
     GET_QUESTIONS(state) {

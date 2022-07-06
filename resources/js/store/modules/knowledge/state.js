@@ -1,6 +1,6 @@
 export default ({
     _communityId: window.location.pathname.split('/')[2],
-    _communityTitle: 'Мудрость стоиков на каждый день',
+    _communityTitle: '',
     
     _questions: [],
     

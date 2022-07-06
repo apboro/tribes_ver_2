@@ -1,5 +1,5 @@
 $link-color: $primary-1;
-$link-color-active: $blue-1;
+$link-color-2: $blue-1;
 
 .link {
     @include font($link-color, 14px, 20px, 400);
@@ -12,7 +12,7 @@ $link-color-active: $blue-1;
     }
 
     &:active {
-        color: $link-color-active;
+        color: $link-color-2;
         text-decoration: underline;
     }
 }
