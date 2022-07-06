@@ -51,10 +51,13 @@ class MainBotEvents
     /** Добавление бота в уже существующую ГРУППУ */
     protected function newChatMember()
     {
+
         try {
             if (isset($this->data->message->new_chat_member->id)) {
                 $chatId = $this->data->message->chat->id;
+                $this->bot->logger()->debug('новый пользователь в группе',ArrayHelper::toArray($this->data->message->new_chat_member));
                 if ($this->data->message->new_chat_member->id == $this->bot->botId) {
+                    $this->bot->logger()->debug('Добавление бота в уже существующую ГРУППУ',ArrayHelper::toArray($this->data->message->chat));
                     Telegram::botEnterGroupEvent(
                         $this->data->message->from->id,
                         $chatId,
@@ -136,6 +139,7 @@ class MainBotEvents
                     $this->data->my_chat_member->chat->type == 'channel' and
                     $this->data->my_chat_member->new_chat_member->status !== 'left'
                 ) {
+                    $this->bot->logger()->debug('Добавление бота в новый канал',ArrayHelper::toArray($this->data));
                     $chatId = $this->data->my_chat_member->chat->id;
                     Telegram::botEnterGroupEvent(
                         $this->data->my_chat_member->from->id,
