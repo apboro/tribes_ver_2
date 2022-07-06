@@ -50,16 +50,13 @@
     }
 
     &__multiple-operations {
-        display: grid;
-        grid-template: auto / repeat(auto-fill, 100px);
-        column-gap: 30px;
-        height: 38px;
+        display: flex;
+        column-gap: 5px;
         margin-top: 20px;
     }
 
     &__multiple-btn {
-        @include font(#7B7B7B, 14px, 17px, 500);
-        cursor: pointer;
+        justify-self: start;
     }
 
     &__filter {
