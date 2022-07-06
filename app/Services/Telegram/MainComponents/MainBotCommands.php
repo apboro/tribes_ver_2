@@ -25,6 +25,7 @@ use Askoldex\Teletant\Exception\TeletantException;
 use App\Repositories\Knowledge\KnowledgeRepositoryContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 
 class MainBotCommands
@@ -76,7 +77,8 @@ class MainBotCommands
         'faq',
         'mySubscriptions',
         'subscriptionSearch',
-        'setTariffForUserByPayId'
+        'setTariffForUserByPayId',
+        'knowledgeSearch'
     ])
     {
         foreach ($methods as $method) {
@@ -84,15 +86,6 @@ class MainBotCommands
                 $this->{$method}();
             }
         }
-    }
-
-    function prepareQuestionsList(LengthAwarePaginator $paginateQuestionsCollection): string
-    {
-        $context = '';
-        foreach ($paginateQuestionsCollection as $question) {
-            $context .= "{$question->id} \n";
-        }
-        return $context;
     }
 
     protected function startBot()
@@ -431,11 +424,14 @@ class MainBotCommands
 
     protected function knowledgeSearch()
     {
+        $this->bot->logger()->debug('Поиск по БЗ');
         try {
-            $this->bot->onCommand('qa{search?}', function (Context $ctx) {
+            $this->bot->onText('/qa {search?}', function (Context $ctx) {
+
                 $searchText = $ctx->var('search');
                 $searchText = trim($searchText);
-                if (empty($searchText) || $searchText < 3) {
+                Log::debug(" search.$searchText");
+                if (empty($searchText) || strlen($searchText) <= 3) {
                     $ctx->replyHTML('Слишком короткий поисковый запрос.');
                     return;
                 }
@@ -447,6 +443,7 @@ class MainBotCommands
                 //todo рефакторить передачу фильтров в репозитории до примитивов
                 $filters = new QuestionsFilter(new Request(['filter' => [
                     'published' => 'public',
+                    'draft' => 'not_draft',
                     'per_page' => 3,
                     'page' => 1,
                     'full_text' => $searchText,
@@ -468,6 +465,17 @@ class MainBotCommands
     }
 
     //-------------------------------
+
+    private function prepareQuestionsList(LengthAwarePaginator $paginateQuestionsCollection): string
+    {
+        $context = '';
+        $this->bot->logger()->debug('Список вопросов в хтмл для реплики бота');
+        foreach ($paginateQuestionsCollection as $question) {
+            //todo написать список ответов со ссылкой на каждый ответ и ссылкой на веб версию БЗ
+            $context .= "/viewQuestion@{$this->bot->botFullName}{$question->id} \n";
+        }
+        return $context;
+    }
 
     private function subscription()
     {

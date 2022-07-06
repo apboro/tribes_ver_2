@@ -243,7 +243,7 @@ class Telegram extends Messenger
 
     public static function botEnterGroupEvent($userId, $chatId, $chatType, $chatTitle, $photo_url = null)
     {
-        Log::debug('new group add',compact($chatId,$chatTitle,$chatType));
+
         try {
             $isChannel = strpos($chatType, 'channel') !== false;
 
@@ -252,7 +252,7 @@ class Telegram extends Messenger
             $hash = self::hash($userId, $chatType);
 
             $tc = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
-            Log::debug('поиск группы $hash init',compact($chatId,$hash));
+            Log::debug('поиск группы $hash init',compact('chatId','hash'));
             if ($tc) {
                 $tc->chat_id = $chatId;
                 $tc->chat_title = $chatTitle;
@@ -264,7 +264,7 @@ class Telegram extends Messenger
 
                 $tc->photo_url = $photo_url ?? null;
                 $tc->save();
-                Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType',compact($chatId,$chatTitle,$chatType));
+                Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType',compact('chatId','chatTitle','chatType'));
             }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
