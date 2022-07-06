@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use App\Helper\PseudoCrypt;
 use App\Models\Statistic;
@@ -242,6 +243,8 @@ class Telegram extends Messenger
 
     public static function botEnterGroupEvent($userId, $chatId, $chatType, $chatTitle, $photo_url = null)
     {
+
+
         try {
             $isChannel = strpos($chatType, 'channel') !== false;
 
@@ -250,7 +253,7 @@ class Telegram extends Messenger
             $hash = self::hash($userId, $chatType);
 
             $tc = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
-
+            Log::debug('new group add',compact($chatId,$chatTitle,$chatType));
             if ($tc) {
                 $tc->chat_id = $chatId;
                 $tc->chat_title = $chatTitle;
@@ -270,7 +273,6 @@ class Telegram extends Messenger
 
     public static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id)
     {
-        /* @var $commRepo CommunityRepositoryContract */
 
         $tc = TelegramConnection::where('telegram_user_id', $telegram_user_id)
             ->where('chat_id', $chat_id)
