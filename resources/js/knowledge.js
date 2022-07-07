@@ -25,8 +25,7 @@ window['Dropdown'] = new Dropdown();
 window['Burger'] = new BurgerMenu();
 
 import Vue from 'vue';
-import store from './knowledgeStore';
-//import store from './store/modules/knowledge';
+import store from './store/store';
 import Knowledge from './components/Knowledge/Knowledge';
 import PortalVue from 'portal-vue'
 

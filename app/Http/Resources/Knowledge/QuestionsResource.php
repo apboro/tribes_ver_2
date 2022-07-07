@@ -37,7 +37,8 @@ class QuestionsResource extends ResourceCollection
         if($community){
             $additional['meta_info'] = [
                 'public_list_link' => $community->getPublicKnowledgeLink(),
-                'how_it_works_link' => $community->howItWorksLink()
+                'how_it_works_link' => $community->howItWorksLink(),
+                'community_title' => $community->title,
             ];
         }
         return $additional;

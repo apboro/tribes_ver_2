@@ -41,8 +41,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { Dropdown } from 'bootstrap';
 import { mapActions, mapGetters } from 'vuex';
 import Icon from "../ui/Icon";
 export default {
@@ -52,11 +50,7 @@ export default {
         ...mapGetters(["GET_USER"])
     },
     methods: {
-        ...mapActions(["LOAD_USER"]),
-        logout(){
-            localStorage.setItem('token', null);
-            window.location.href = '/login';
-        }
+        ...mapActions(["LOAD_USER"])
     },
     mounted(){
         this.LOAD_USER();

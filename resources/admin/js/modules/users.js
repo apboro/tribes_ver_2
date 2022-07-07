@@ -12,7 +12,7 @@ let getters = {
     getuserById : (state) => (id) => {
         return id === 0 ?
             [{
-                id : 0,
+                id : 0, 
                 name : '',
                 content : '',
                 link : '',
