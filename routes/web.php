@@ -52,8 +52,11 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     });
 
     // Публичные ссылки на вопросы
-    Route::get('/{hash}/questions', 'KnowledgeController@list')->name('public.knowledge.list');
-    Route::get('/{hash}/questions/{question}/view', 'KnowledgeController@get')->name('public.knowledge.view');
+    Route::namespace('App\Http\Controllers')->group(function () {
+        Route::get('/{hash}/questions', 'KnowledgeController@list')->name('public.knowledge.list');
+        Route::get('/{hash}/questions/{question}/view', 'KnowledgeController@get')->name('public.knowledge.view');
+    });
+
 
     // Авторизованные роуты
     Route::middleware('auth')->namespace('App\Http\Controllers')->group(function () {
