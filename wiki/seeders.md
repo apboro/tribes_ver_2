@@ -16,3 +16,7 @@ php artisan base:fresh
 **Покупатель**
 `Логин: pyatak@gmail.com`
 `Пароль: test123`
+
+```bash 
+php artisan db:seed --class=KnowledgeSeeder
+```

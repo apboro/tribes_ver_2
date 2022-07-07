@@ -24,41 +24,42 @@
             <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
                 <span class="avatar avatar-sm" ></span>
                 <div class="d-none d-xl-block ps-2">
-                    <div>Paweł Kuna</div>
+                    <div>{{GET_USER.name}}</div>
                     <div class="mt-1 small text-muted">UI Designer</div>
                 </div>
             </a>
             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <a href="#" class="dropdown-item">Set status</a>
+                <a href="#" class="dropdown-item">Profile &amp; account</a>
+                <a href="#" class="dropdown-item">Feedback</a>
                 <div class="dropdown-divider"></div>
-                <h3 class="dropdown-header">фвмфц</h3>
-                <a href="#" class="dropdown-item active">2323</a>
-                <a href="#" class="dropdown-item text-danger">фцввв</a>
-                <a href="#" class="dropdown-item">фцвв</a>
-                <label class="dropdown-item"><input class="form-check-input m-0 me-2" > фцв</label>
-                <a href="#" class="dropdown-item">фцвфцв</a>
-
-                <span class="dropdown-header">Dropdown header</span>
-                <a class="dropdown-item" href="#">
-                    Action
-                    <span class="badge bg-primary ms-auto">12</span>
-                </a>
-                <a class="dropdown-item" href="#">
-                    <span class="badge bg-green ms-auto"></span>
-                </a>
-                <a class="dropdown-item active" href="#">Active action</a>
-                <a class="dropdown-item disabled" href="#">Disabled action</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Separated link</a>
+                <a href="#" class="dropdown-item">Settings</a>
+                <a v-on:click='logout' href="#" class="dropdown-item">Logout</a>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Icon from "../ui/Icon";
 export default {
     name: "NavbarSide",
-    components:{Icon}
+    components:{Icon},
+    computed: {
+        ...mapGetters(["GET_USER"])
+    },
+    methods: {
+        ...mapActions(["LOAD_USER"]),
+        
+        logout(){
+            localStorage.setItem('token', null);
+            window.location.href = '/login';
+        },
+    },
+    mounted(){
+        this.LOAD_USER();
+    }
 }
 </script>
 

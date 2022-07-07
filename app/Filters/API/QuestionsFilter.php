@@ -62,6 +62,14 @@ class QuestionsFilter extends QueryFilter
     }
 
     /**
+     * @return Request
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+
+    /**
      * @note зарезервировано под пагинацию используется в репозитории
      * \App\Repositories\Knowledge\KnowledgeRepository::getQuestionsByCommunityId()
      * request('filter.per_page',15)
@@ -146,6 +154,20 @@ class QuestionsFilter extends QueryFilter
         } elseif ($value === self::QUESTION_NOT_PUBLIC) {
             $this->builder->where(['is_public' => false]);
         }
+        return $this->builder;
+    }
+
+    public function status($value): EloquentBuilder
+    {
+        $value = (string)$value;
+        if ($value === self::QUESTION_NOT_PUBLIC) {
+            $this->builder->where(['is_public' => false, 'is_draft' => false]);
+        } elseif ($value === self::QUESTION_IS_PUBLIC) {
+            $this->builder->where(['is_public' => true]);
+        } elseif ($value === self::QUESTION_IS_DRAFT) {
+            $this->builder->where(['is_public' => false, 'is_draft' => true]);
+        }
+
         return $this->builder;
     }
 
