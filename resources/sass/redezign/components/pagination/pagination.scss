@@ -1,11 +1,20 @@
-.v-pagination {
+.pagination {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    @include font(#333, 14px, 22px, 400);
+    
 
     &__item {
         display: flex;
+    }
+
+    &__description {
+        @include font($text-color-1, 14px, 22px, 400);
+    }
+
+    &__select {
+        margin-right: 8px;
+        margin-left: 8px;
     }
 
     &__page {

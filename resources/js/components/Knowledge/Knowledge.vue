@@ -112,7 +112,7 @@
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import VBreadcrumbs from './components/VBreadcrumbs.vue';
-    import VPagination from './components/Knowledge/VPagination.vue';
+    import VPagination from './components/VPagination.vue';
     import VPopup from './components/VPopup.vue';
     import VOverlay from './components/VOverlay.vue';
     import VIcon from './components/VIcon.vue';
