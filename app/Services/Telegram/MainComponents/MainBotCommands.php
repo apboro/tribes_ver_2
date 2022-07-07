@@ -422,29 +422,32 @@ class MainBotCommands
 
         try {
             $this->bot->onText('/qa {search?}', function (Context $ctx) {
+
+                $message = $ctx->update()->message();
                 $this->bot->logger()->debug('Поиск по БЗ');
-                $message = ArrayHelper::toArray($ctx->update()->message());
                 $searchText = $ctx->var('search');
-                $replyToUser = ArrayHelper::getValue($message, 'from.username', '');
-                if (!empty($reply = ArrayHelper::getValue($message, 'reply_to_message'))) {
+                $replyToUser = $message->from()->username();
+
+                if (!$message->replyToMessage()->isEmpty()) {
+                    $reply = $message->replyToMessage();
                     if (empty($searchText)) {
-                        $searchText = ArrayHelper::getValue($reply, 'text', '');
+                        $searchText = $reply->text();
                     }
-                    $replyToUser = ArrayHelper::getValue($reply, 'from.username', '');
-                    //"reply_to_message.message_id": 2528,
+                    $replyToUser = $reply->from()->username();
+                    //$reply->messageId()
                 }
                 $searchText = trim($searchText);
                 Log::debug(" search.$searchText");
                 if (empty($searchText) || strlen($searchText) <= 3) {
-                    $ctx->replyHTML('Слишком короткий поисковый запрос.');
+                    $ctx->replyHTML("@$replyToUser Слишком короткий поисковый запрос.");
                     return;
                 }
                 $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
                 if (!$community) {
-                    $ctx->replyHTML('Сообщество не подключено.');
+                    $ctx->replyHTML("@$replyToUser Сообщество не подключено.");
                     return;
                 }
-                //todo рефакторить передачу фильтров в репозитории до примитивов
+
                 $filters = new QuestionsFilter(new Request(['filter' => [
                     'published' => 'public',
                     'draft' => 'not_draft',
@@ -454,11 +457,11 @@ class MainBotCommands
                 ]]));
                 $paginateQuestionsCollection = $this->knowledgeRepository->getQuestionsByCommunityId($community->id, $filters);
                 if ($paginateQuestionsCollection->isEmpty()) {
-                    $ctx->replyHTML('Ответов не найдено.');
+                    $ctx->replyHTML("@$replyToUser Ответов не найдено.");
                     return;
                 }
-                $context = "Для @$replyToUser из Базы Знаний";
-                $context .= "--------------------------";
+                $context = "Для @$replyToUser из Базы Знаний \n";
+                $context .= "--------------------------\n";
                 $context .= $this->prepareQuestionsList($paginateQuestionsCollection);
                 if ($paginateQuestionsCollection->total() > $paginateQuestionsCollection->perPage()) {
                     $context .= '<a href="' . $community->getPublicKnowledgeLink() . '?search_text=' . $searchText . '">' .
