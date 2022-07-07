@@ -63,7 +63,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getDataFromFile($name = '', $asJson = false)
     {
-        $jsonData = Storage::disk('test_data')->get("feature/telegram/$name");
+        $jsonData = Storage::disk('test_data')->get("feature/$name");
         if ($asJson) {
             return $jsonData;
         }
