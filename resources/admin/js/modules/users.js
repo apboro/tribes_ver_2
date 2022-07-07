@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import axios from 'axios';
 
 let state = {
     users : [],
@@ -12,7 +12,7 @@ let getters = {
     getuserById : (state) => (id) => {
         return id === 0 ?
             [{
-                id : 0,
+                id : 0, 
                 name : '',
                 content : '',
                 link : '',

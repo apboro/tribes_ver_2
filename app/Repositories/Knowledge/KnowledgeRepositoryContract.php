@@ -17,6 +17,8 @@ interface KnowledgeRepositoryContract
 
     public function getQuestionsByCommunityId(int $community_id, QuestionsFilter $filters): LengthAwarePaginator;
 
+    //public function getQuestionsByCommunityId1(int $community_id, array $filters): LengthAwarePaginator;
+
     public function getAnswerById(int $answerId): ?Answer;
 
     public function getAnswerForQuestionId(int $questionId): ?Answer;
