@@ -11,12 +11,8 @@
         </div>
 
         <div class="d-none d-md-flex">
-            <a href="?theme=dark" class="nav-link px-0 hide-theme-dark" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                <Icon icon="moon" />
-            </a>
-
-            <a href="?theme=light" class="nav-link px-0 hide-theme-light" title="Enable light mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                <Icon icon="sun" />
+            <a @click="toggleThemeColor" class="nav-link px-0" href="javascript:void(0)" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
+               <Icon :icon="schema.theme_color === 'theme-light' ? 'moon' : 'sun'" />
             </a>
         </div>
 
@@ -48,6 +44,13 @@ import Icon from "../ui/Icon";
 export default {
     name: "NavbarSide",
     components:{Icon},
+    data() {
+        return {
+            schema:{
+                theme_color: 'theme-light'
+            }
+        }
+    },
     computed: {
         ...mapGetters(["GET_USER"])
     },
@@ -56,7 +59,22 @@ export default {
         logout(){
             localStorage.setItem('token', null);
             window.location.href = '/login';
-        }
+        },
+
+        toggleThemeColor() {
+            let apply_light = 
+                localStorage.getItem('theme-color') === 'theme-dark';    
+            let schema = apply_light ? 'theme-light' : 'theme-dark';
+            this.setThemeColor(schema);
+        },
+
+        setThemeColor(schema){
+            this.schema.theme_color = schema;
+            localStorage.setItem('theme-color', schema);
+            document.body.classList.remove('theme-dark');
+            document.body.classList.remove('theme-light');
+            document.body.classList.add(schema);
+        },
     },
     mounted(){
         this.LOAD_USER();
