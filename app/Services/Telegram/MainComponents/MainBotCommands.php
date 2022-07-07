@@ -7,6 +7,7 @@ use App\Helper\PseudoCrypt;
 use App\Jobs\CheckDaysForUsers;
 use App\Models\Community;
 use App\Models\Donate;
+use App\Models\Knowledge\Question;
 use App\Models\Payment;
 use App\Models\TelegramUser;
 use App\Repositories\Community\CommunityRepositoryContract;
@@ -456,7 +457,11 @@ class MainBotCommands
                 }
 
                 $context = $this->prepareQuestionsList($paginateQuestionsCollection);
-
+                if($paginateQuestionsCollection->total() > $paginateQuestionsCollection->perPage()) {
+                    $context .= '<a href="'. $community->getPublicKnowledgeLink().'?search_text='.$searchText .'">'.
+                        "Смотреть остальные вопросы - ответы" .
+                        "</a>"." \n";
+                }
                 $ctx->replyHTML($context);
 
             });
@@ -471,12 +476,17 @@ class MainBotCommands
     {
         $context = '';
         $this->bot->logger()->debug('Список вопросов в хтмл для реплики бота');
+        /** @var Question $question */
         foreach ($paginateQuestionsCollection as $question) {
             //todo написать список ответов со ссылкой на каждый ответ и ссылкой на веб версию БЗ
-            $context .= '<a href="'. "#/viewQuestion@{$this->bot->botFullName}-{$question->id}" .'">'.
+            $context .= '<a href="'. $question->getPublicLink() .'">'.
                 Str::limit($question->context,60,"...") .
-                "</a>" . " \n";
+                "</a>" .
+                '<span class="tg-spoiler">'.Str::limit($question->answer->context??"Нет ответа",120,"...").'</span>'.
+                " \n";
+            $context .= '<b>-----------------</b>'." \n";
         }
+
         return $context;
     }
 
