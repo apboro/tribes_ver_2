@@ -46,6 +46,40 @@ class FileRepository implements FileRepositoryContract
         'uploader_id',
     ];
 
+    public function get($id)
+    {
+        $file = File::find($id);
+
+        if(!$file) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Не найдено',
+                'details' => 'Файл не найден или у вас нет прав для редактирования',
+            ]);
+        } else {
+            return response()->json([
+                "status" => "ok",
+                "details" => "",
+                'file' => $file
+            ]);
+        }
+    }
+
+    public function delete($id)
+    {
+        $file = File::find($id);
+        if(!$file->isVideo){
+            unlink(storage_path('app/public/' . str_replace('/storage/', '', $file->url)));
+        }
+
+        $file->delete();
+
+        return response()->json([
+            "status" => "ok",
+            "details" => "Файл успешно удален"
+        ]);
+    }
+
     public function storeFile($data)
     {
 
@@ -87,10 +121,6 @@ class FileRepository implements FileRepositoryContract
         } elseif($isVideo){
             $this->validateVideo($data);
             $path = $this->prepareDirectory('video', true);
-            $file->storeAs($path, $this->filename);
-        } elseif($isAudio){
-            $this->validateAudio($data);
-            $path = $this->prepareDirectory('audio', true);
             $file->storeAs($path, $this->filename);
         } else {
             $this->validateDocument($data);
@@ -172,9 +202,9 @@ class FileRepository implements FileRepositoryContract
         return collect($data);
     }
 
-    private function validateImage($data)
+    private function validateImage($request)
     {
-        if($data['crop']){
+        if($request['crop']){
             $validated = $request->validate([
                 'file' => 'required|mimes:jpg,png,gif|max:2048',
                 'crop_data' => 'required_if:crop,true',
@@ -239,11 +269,11 @@ class FileRepository implements FileRepositoryContract
 
     private function storeImage(StoreImageRequest $request)
     {
-        dd($request);
+//        dd($request);
     }
 
     private function storeDocument(StoreDocumentRequest $request)
     {
-        dd(2);
+//        dd(2);
     }
 }

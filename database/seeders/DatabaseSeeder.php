@@ -27,13 +27,11 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Pyatak',
                 'email' => 'pyatak@gmail.com',
                 'phone' => 9155707971,
-                'password' => bcrypt('pyatak123'),
             ]);
 
         $userTest = User::factory()->createItem([
             'name' => 'Test Testov',
             'email' => 'test-dev@webstyle.top',
-            'password' => bcrypt('test123'),
         ]);
 
         //Auth::login($user);

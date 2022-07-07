@@ -15,7 +15,9 @@ use Symfony\Component\HttpFoundation\File\File as F;
 use App\Repositories\File\FileRepositoryContract;
 use App\Repositories\Video\VideoRepository;
 use App\Repositories\Video\VideoRepositoryContract;
+use App\Services\Files\FileUploadService;
 use Illuminate\Http\Request;
+use App\Http\Requests\File\FileUploadRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -23,14 +25,17 @@ class FileController extends Controller
 {
     private $fileRepo;
     private $videoRepo;
+    private $fileUploadService;
 
     public function __construct(
         FileRepositoryContract $fileRepo,
-        VideoRepositoryContract $videoRepo
+        VideoRepositoryContract $videoRepo,
+        FileUploadService $fileUploadService
     )
     {
        $this->fileRepo = $fileRepo;
        $this->videoRepo = $videoRepo;
+       $this->fileUploadService = $fileUploadService;
     }
 
     public function delete(Request $request){
@@ -63,13 +68,30 @@ class FileController extends Controller
 
     public function upload(Request $request)
     {
+
+//        dd($request['course_id']);
+//        $f = $this->fileUploadService->prepareStoreFile();
+
+//        return 'audio loaded';
+
+//        $this->fileRepo->storeFile(
+//            $this->FileUploadService->storeFiles() // [1, 2, 44]
+//        );
+//
+//        $this->fileRepo->storeFile(
+//            $this->FileUploadService->storeFiles() // [1, 2, 44]
+//        );
+//        $FileUploadService = new FileUploadService($request);
+//        $FileUploadService->init();
+
+
+
+
 //        dd(mime_content_type($request['file']));
-
-        if($request['course_id']){
-            $course = Course::find($request['course_id']);
-        }
+//dd($request->all());
 
 
+/*
         if($request['base_64_file']){
             $image = $request['base_64_file'];  // your base64 encoded
             $image = str_replace('data:image/png;base64,', '', $image);
@@ -107,7 +129,7 @@ class FileController extends Controller
 
             $webcaster = new WebcasterPro();
             $resp = $webcaster->uploads($file);
-            
+
             $ifarme = $this->videoRepo->getVideo($resp->event_id);
 
             $f = File::create([
@@ -131,15 +153,26 @@ class FileController extends Controller
                 "message" => "Загрузка не удалась",
                 "details" => "Файл не поддерживается для загрузки.",
             ]);
+        }*/
+//dd($f);
+//        dd($f);
+
+//        dd($request->storedFiles);
+//dd($request['course_id']);
+
+//        dd($request->storedFiles[0]);
+//        $filesId = $request->storedFiles;
+        if($request['course_id']){
+            $course = Course::find($request['course_id']);
+        }
+        if($course){
+            $course->attachments()->sync($request->storedFilesId);
         }
 
-        if($course){
-            $course->attachments()->attach($f);
-        }
         return response()->json([
             "status" => "ок",
             "message" => "Загрузка удалась",
-            "file" => $f,
+            "file" => $request->storedFiles,
         ]);
     }
 
