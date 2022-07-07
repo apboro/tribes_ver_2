@@ -55,8 +55,8 @@ class KnowledgeController extends Controller
 
     public function get(Request $request, $hash, Question $question)
     {
-//        $community = Community::findOrFail((int)PseudoCrypt::unhash($hash));
-        $community = Community::where('hash', $hash)->firstOrFail();
+        $community = Community::findOrFail((int)PseudoCrypt::unhash($hash));
+//        $community = Community::where('hash', $hash)->firstOrFail();
         Cache::forget($community->hash);
 
         if (!Cache::has('user_ip') || !Cache::has($question->id) || $request->ip() != Cache::get('user_ip')) {
