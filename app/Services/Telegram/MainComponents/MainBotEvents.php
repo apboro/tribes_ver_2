@@ -88,7 +88,7 @@ class MainBotEvents
                         $description = ($community->tariff) ? $community->tariff->welcome_description : 'добро пожаловать';
                         $image = ($community->tariff->getWelcomeImage()) ? '<a href="' . route('main') . $community->tariff->getWelcomeImage()->url . '">&#160</a>' : '';
 
-                        if ($this->data->message->new_chat_member->username) {
+                        if ($this->data->message->new_chat_member->username??null) {
                             $member = $this->data->message->new_chat_member;
 
                             $userName = ($member->username) ? $member->username : '';
