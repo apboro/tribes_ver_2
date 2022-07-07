@@ -41,6 +41,13 @@ class MainBotCommands
     protected array $availableBotCommands = [
         //todo здесь список команд, которые нужны боту, и должны быть доступны в реализации
         //  имя команды => описание
+        'start' => 'Начало работы с ботом' . "\n",
+        'myid' => 'Показывает ваш уникальный ID' . "\n",
+        'chatId' => 'Показывает уникальный ID текущего чата' . "\n",
+        'tafiff' => 'Список тарифов сообщества',
+        'donate' => 'Материальная помощь сообществу',
+        'qa' => 'Найти ответ в Базе Знаний сообщества',
+
     ];
 
 
@@ -103,9 +110,7 @@ class MainBotCommands
                             . 'Ссылка на сайт ' . route('main') . "\n"
                             . 'Создание и настройка проектов происходит в веб кабинете.' . "\n\n"
                             . 'Вот список доступных для вас команд:' . "\n"
-                            // todo выводить описание команд из MainBotCommands::$availableBotCommands
-                            . '/start - Начало работы с ботом' . "\n"
-                            . '/myid - показывает ваш уникальный ID', Menux::Get('main'));
+                            . $this->getCommandsListAsString(), Menux::Get('main'));
                     } else $ctx->reply('Здравствуйте, вас приветствует TestBot');
                 } else {
                     if (str_split($ctx->getChatID(), 1)[0] !== '-') {
@@ -131,8 +136,7 @@ class MainBotCommands
         $this->bot->onCommand('start' . $this->bot->botFullName, function (Context $ctx) {
             $ctx->reply('Здравствуйте, ' . $ctx->getFirstName() . "! \n"
                 . 'Список доступных для вас команд:' . "\n"
-                . '/start - Начало работы с ботом' . "\n"
-                . '/donate - если желаете оказать помощь сообществу');
+                . $this->getCommandsListAsString());
         });
     }
 
@@ -162,24 +166,13 @@ class MainBotCommands
     protected function setCommand()
     {
         $this->bot->onCommand('setCommand', function (Context $ctx) {
-            $this->bot->ExtentionApi()->setMyCommands(['commands' => [
-                // todo выводить описание команд из MainBotCommands::$availableBotCommands
-                [
-                    'command' => '/start',
-                    'description' => 'Начало работы с ботом'
-                ],
-                [
-                    'command' => '/donate',
-                    'description' => 'Материальная помощь сообществу'
-                ],
-                [
-                    'command' => '/tariff',
-                    'description' => 'Доступные тарифы'
-                ],
-                /*[
+            $commands = [];
+            foreach($this->availableBotCommands as $command=> $description){
+                $commands['command'] = '/'.$command;
+                $commands['description'] = $description;
+            }
 
-                ]*/
-            ]]);
+            $this->bot->ExtentionApi()->setMyCommands(['commands' => $commands]);
             $ctx->reply('Команды зарегистрированы.');
         });
     }
@@ -426,10 +419,10 @@ class MainBotCommands
 
     protected function knowledgeSearch()
     {
-        $this->bot->logger()->debug('Поиск по БЗ');
+
         try {
             $this->bot->onText('/qa {search?}', function (Context $ctx) {
-
+                $this->bot->logger()->debug('Поиск по БЗ');
                 $searchText = $ctx->var('search');
                 $searchText = trim($searchText);
                 Log::debug(" search.$searchText");
@@ -862,5 +855,14 @@ class MainBotCommands
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
+    }
+
+    private function getCommandsListAsString(): string
+    {
+        $text = '';
+        foreach ($this->availableBotCommands as $command => $description) {
+            $text.= $command.' - '.$description. "\n";
+        }
+        return $text;
     }
 }
