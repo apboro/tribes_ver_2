@@ -62,13 +62,29 @@
 
             <!-- Статус -->
             <div class="knowledge-table__item">
-                <span
-                    class="knowledge-table__status"
-                    v-for="label in getStatus()"
-                    :key="label"
-                >
-                    {{ label }}
-                </span>
+                <template v-if="question.is_public">
+                    <span
+                        class="knowledge-table__status knowledge-table__status--public"
+                    >
+                        Опубликовано
+                    </span>
+                </template>
+
+                <template v-if="!question.is_public && !question.is_draft">
+                    <span
+                        class="knowledge-table__status knowledge-table__status--not-public"
+                    >
+                        Не опубликовано
+                    </span>
+                </template>
+
+                <template v-if="question.is_draft">
+                    <span
+                        class="knowledge-table__status knowledge-table__status--draft"
+                    >
+                        Черновик
+                    </span>
+                </template>
             </div>
 
             <!-- Действия -->
@@ -414,7 +430,7 @@
                 });
             },
 
-            getStatus() {
+            /* getStatus() {
                 const statuses = [];
                 if (!this.question.is_public) {
                     statuses.push('Непублик');
@@ -426,7 +442,7 @@
                 }
                 
                 return statuses;
-            },
+            }, */
 
             toggleFullAnswerVisibility() {
                 this.isLongAnswer = !this.isLongAnswer;

@@ -1,4 +1,4 @@
-$table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(140px, 12%) minmax(120px, 10%) minmax(90px, 10%);
+$table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(140px, 12%) minmax(135px, 10%) minmax(90px, 10%);
 
 .knowledge-table {
     display: grid;
@@ -161,8 +161,6 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
             visibility: hidden;
         }
 
-        
-
         ol, ul {
             padding-left: 20px;
         }
@@ -218,6 +216,28 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
             .icon__stroke {
                 stroke: $grey-8;
             }
+        }
+    }
+
+    &__status {
+        padding: 4px 10px;
+        white-space: nowrap;
+        @include font(#fff, 12px, 16px, 600);
+        border-radius: 17px;
+
+        &--public {
+            color: $green-1;
+            background-color: $green-2;
+        }
+
+        &--not-public {
+            color: $red-1;
+            background-color: $red-2;
+        }
+
+        &--draft {
+            color: $orange-1;
+            background-color: $orange-2;
         }
     }
 

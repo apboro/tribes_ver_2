@@ -223,8 +223,8 @@
                 filters: {
                     with_answers: 'all',
                     status: 'all',
-                    published: 'all',
-                    draft: 'all',
+                    /* published: 'all',
+                    draft: 'all', */
                 },
             }
         },
@@ -238,8 +238,9 @@
             resetFilters() {
                 this.filters = {
                     with_answers: 'all',
-                    published: 'all',
-                    draft: 'all',
+                    status: 'all',
+                    /* published: 'all',
+                    draft: 'all', */
                 };
                 
                 this.$emit('resetFilters', this.filters);

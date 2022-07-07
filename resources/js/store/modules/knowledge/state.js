@@ -11,8 +11,9 @@ export default ({
     _filters: {
         full_text: '',
         with_answers: 'all',
-        published: 'all',
-        draft: 'all',
+        /* published: 'all',
+        draft: 'all', */
+        status: 'all'
     },
 
     _sort: {
