@@ -17,6 +17,7 @@ class ImageService {
 
     public function startService($file)
     {
+//        dd($file->getClientOriginalName());
 //        dd($this->request['file']);
 //        dd($this->request['file']);
 //        dd($this->request['crop']);
@@ -30,9 +31,9 @@ class ImageService {
     {
 //        dd($this->request['file']);
         $validated = $this->request->validate([
-//            'file' => 'required|mimes:jpg,png,gif|max:2048'
+            'file' => 'required|mimes:jpg,png,gif|max:2048'
         
-            'file' => 'image'
+//            'file' => 'image'
         ]);
 
 

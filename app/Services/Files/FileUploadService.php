@@ -93,14 +93,29 @@ class FileUploadService
             $image = $this->request['base_64_file'];  // your base64 encoded
             $image = str_replace('data:image/png;base64,', '', $image);
             $image = str_replace(' ', '+', $image);
+//            dd(base64_decode($image));
             $imageName = 'temp.png';
 
-            FileFacade::put($imageName, base64_decode($image));
+            FileFacade::put($imageName, base64_decode($image), $lock = true);
 
-            $file = $this->pathToUploadedFile($imageName, false);
+//            dd(1111111111111);
+dd(storage_path($imageName));
+            $file = $this->pathToUploadedFile(public_path($imageName), false);
+
+            dd($file);
+
 
             $this->request['file'] = $file;
 
+            dd($this->request['file']);
+
+
+            $validated = $this->request->validate([
+                'file' => 'required|mimes:jpg,png,gif|max:2048'
+
+//            'file' => 'image'
+            ]);
+            dd(1234);
 //            dd($file->guessClientExtension());
 
             $this->prepareFile($file);
@@ -121,7 +136,7 @@ class FileUploadService
                 $this->prepareFile($file);
             }
         } elseif($files) {
-//            dd($files->extension());
+            dd($files);
             $this->prepareFile($files);
         }
 
@@ -133,10 +148,11 @@ class FileUploadService
     ////////////////////////////////////////////////////////////////////
     public static function pathToUploadedFile( $path, $public = false )
     {
+//        dd($path);
         $name = FileFacade::name( $path );
 
         $extension = FileFacade::extension( $path );
-
+//dd($extension);
         $originalName = $name . '.' . $extension;
 
         $mimeType = FileFacade::mimeType( $path );
@@ -146,9 +162,9 @@ class FileUploadService
         $error = null;
 
         $test = $public;
-
+//dd($path);
         $object = new UploadedFile($path, $originalName, $mimeType, $error, false);
-
+dd($object);
         return $object;
     }
     ////////////////////////////////////////////////////////////////////
