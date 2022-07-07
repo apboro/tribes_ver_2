@@ -25,6 +25,7 @@ export default {
         },
     },
     methods: {
+
         addBodyClassForSwitchThemeOnLoad(){
             let localStoreThemeColor = localStorage.getItem('theme-color');
             if(localStoreThemeColor === 'theme-light') {

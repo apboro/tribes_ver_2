@@ -69,6 +69,7 @@ export default {
         },
 
         setThemeColor(schema){
+            
             this.schema.theme_color = schema;
             localStorage.setItem('theme-color', schema);
             document.body.classList.remove('theme-dark');
