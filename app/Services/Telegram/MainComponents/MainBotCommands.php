@@ -26,6 +26,7 @@ use App\Repositories\Knowledge\KnowledgeRepositoryContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 
 class MainBotCommands
@@ -472,7 +473,9 @@ class MainBotCommands
         $this->bot->logger()->debug('Список вопросов в хтмл для реплики бота');
         foreach ($paginateQuestionsCollection as $question) {
             //todo написать список ответов со ссылкой на каждый ответ и ссылкой на веб версию БЗ
-            $context .= "/viewQuestion@{$this->bot->botFullName}{$question->id} \n";
+            $context .= '<a href="'. "#/viewQuestion@{$this->bot->botFullName}-{$question->id}" .'">'.
+                Str::limit($question->context,60,"...") .
+                "</a>" . " \n";
         }
         return $context;
     }
