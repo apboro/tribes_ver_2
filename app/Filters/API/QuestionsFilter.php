@@ -62,6 +62,14 @@ class QuestionsFilter extends QueryFilter
     }
 
     /**
+     * @return Request
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+
+    /**
      * @note зарезервировано под пагинацию используется в репозитории
      * \App\Repositories\Knowledge\KnowledgeRepository::getQuestionsByCommunityId()
      * request('filter.per_page',15)
