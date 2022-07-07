@@ -61,18 +61,17 @@ let router =  new Router({
     ]
 });
 
-// router.beforeEach((to, from, next) => {
-//     const publicPages = ['/login'];
-//     const authRequired = !publicPages.includes(to.path);
-//     const loggedIn = localStorage.getItem('token');
-//     console.log(authRequired && !loggedIn)
-//     if (authRequired && !loggedIn) {
-//         return next('/login');
-//     } else if(to.path === '/login') {
-//         return next('/');
-//     }
-//
-//     next();
-// });
+router.beforeEach((to, from, next) => {
+    const publicPages = ['/login'];
+    const authRequired = !publicPages.includes(to.path);
+    const loggedIn = localStorage.getItem('token');
+    // console.log(authRequired && !loggedIn)
+    if (authRequired && !loggedIn) {
+        return next('/login');
+    } else if(to.path === '/login') {
+        return next('/');
+    }
+    next();
+});
 
 export default router;
