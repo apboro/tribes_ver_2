@@ -29,10 +29,7 @@
                     <div class="knowledge-list__avatar">
                         <img src="/images/no-image.svg" alt="">
                     </div>
-                    <span>
-                        {{ $owner->name}}<br>
-                        <span>{{ $countFollowers }}</span>
-                    </span>
+                    <span>Lucij Seneka</span>
                     <i class="knowledge-list__messenger">
                         <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M29.5 15C29.5 23.0081 23.0081 29.5 15 29.5C6.99187 29.5 0.5 23.0081 0.5 15C0.5 6.99187 6.99187 0.5 15 0.5C23.0081 0.5 29.5 6.99187 29.5 15Z" fill="url(#paint0_linear_29_1587)" stroke="white"/>
@@ -49,11 +46,7 @@
 
                 <div class="knowledge-list__control">
                     <div class="knowledge-list__search">
-                        <form action="{{ route('public.knowledge.list', ['hash' => $community->hash]) }}">
-                            @csrf
-                            <input type="text" name="search" placeholder="Search">
-                            <input type="submit" value="Find" >
-                        </form>
+                        <input type="text" placeholder="Search">
                     </div>
 
                     <button

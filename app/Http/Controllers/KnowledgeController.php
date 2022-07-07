@@ -16,12 +16,10 @@ class KnowledgeController extends Controller
 {
     public $perPage = 15;
     private $community_id;
-    private $follower_map = ['', 'К', 'M', 'B'];
-
 
     public function list(Request $request, QuestionFilter $filter, $hash)
     {
-        $community = Community::find((int)PseudoCrypt::unhash($hash))->with('owner');
+        $community = Community::find((int)PseudoCrypt::unhash($hash));
         $this->community_id = $community->id;
 
         if ($request->has('search') && $request['search'] !== null) {
@@ -34,25 +32,22 @@ class KnowledgeController extends Controller
                 ->where('community_id', $community->id)
                 ->paginate($this->perPage);
         }
+
+        $community->load('owner');
+
         return view('common.knowledge.list')
             ->withCommunity($community)
-            ->withOwner(User::find($community->owner))
-            ->withCountFollowers($this->modifiedCountFollowers($community))
-            ->withPopularQuestions($this->popularQuestions($community))
             ->withQuestions($questions);
     }
 
     public function get(Request $request, $hash, Question $question)
     {
-//        $community = Community::findOrFail((int)PseudoCrypt::unhash($hash));
-        $community = Community::where('hash', $hash)->firstOrFail();
-        Cache::forget($community->hash);
+        $community = Community::find((int)PseudoCrypt::unhash($hash));
 
         if (!Cache::has('user_ip') || !Cache::has($question->id) || $request->ip() != Cache::get('user_ip')) {
-            $question->c_enquiry += 1;
-            $question->save();
+            $question->increment('c_enquiry');
             Cache::put('user_ip', $request->ip(), 900);
-            Cache::put($question->id, $community->hash, 900);
+            Cache::put($question->id, $question->uri_hash, 900);
         }
 
         $question->load('answer');
@@ -106,47 +101,5 @@ class KnowledgeController extends Controller
 
         return redirect()->route('knowledge.list', $community)
             ->withMessage(__('knowledge.knowledge_form_success'));
-    }
-
-    private function modifiedCountFollowers($community)
-    {
-        $countFollowers = $community->followers()->count();
-        $string = $this->getString($countFollowers);
-
-        for ($rank = 0; $countFollowers > 999; $rank++) {
-            $countFollowers = round($countFollowers / 1000, 1);
-        }
-
-        return $countFollowers . $this->follower_map[$rank] . $string;
-    }
-
-    private function getString($number)
-    {
-        $string = ' подписчиков';
-
-        if ($number === 1) {
-            $string = ' подписчик';
-        } elseif ($number > 1 && $number < 5) {
-            $string = ' подписчика';
-        }
-
-        return $string;
-    }
-
-    private function popularQuestions($community)
-    {
-        if ($community->questions()->count() === 0) {
-            return null;
-        }
-
-        return Question::where([
-            ['community_id', $this->community_id],
-            ['is_public', true],
-            ['is_draft', false]
-        ])->orderBy('c_enquiry', 'DESC')
-            ->limit(20)
-            ->get()
-            ->shuffle()
-            ->slice(0, 5);
     }
 }
