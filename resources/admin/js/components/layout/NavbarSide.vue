@@ -24,7 +24,7 @@
             <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
                 <span class="avatar avatar-sm" ></span>
                 <div class="d-none d-xl-block ps-2">
-                    <div>Paweł Kuna</div>
+                    <div>{{GET_USER.name}}</div>
                     <div class="mt-1 small text-muted">UI Designer</div>
                 </div>
             </a>
@@ -55,10 +55,20 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Icon from "../ui/Icon";
 export default {
     name: "NavbarSide",
-    components:{Icon}
+    components:{Icon},
+    computed: {
+        ...mapGetters(["GET_USER"])
+    },
+    methods: {
+        ...mapActions(["LOAD_USER"])
+    },
+    mounted(){
+        this.LOAD_USER();
+    }
 }
 </script>
 
