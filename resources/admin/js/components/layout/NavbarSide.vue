@@ -50,7 +50,12 @@ export default {
         ...mapGetters(["GET_USER"])
     },
     methods: {
-        ...mapActions(["LOAD_USER"])
+        ...mapActions(["LOAD_USER"]),
+        
+        logout(){
+            localStorage.setItem('token', null);
+            window.location.href = '/login';
+        },
     },
     mounted(){
         this.LOAD_USER();
