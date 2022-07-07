@@ -5,6 +5,7 @@ namespace App\Filters;
 
 use Elasticsearch\Client;
 use App\Models\Knowledge\Question;
+use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -20,8 +21,9 @@ class QuestionFilter extends QueryFilter
 
     public function search($query)
     {
-        $questions = $this->buildCollection($this->searchOnElasticsearch($query, new Question));
-        if (!isset($questions)) {
+        try {
+            $questions = $this->buildCollection($this->searchOnElasticsearch($query, new Question));
+        } catch (NoNodesAvailableException $e) {
             $questions = $this->fullTextSearch($query);
         }
 
@@ -59,14 +61,12 @@ class QuestionFilter extends QueryFilter
     private function buildCollection(array $items)
     {
         $ids = Arr::pluck($items['hits']['hits'], '_id');
-        if (!empty($ids)) {
-            return $this->builder = Question::whereIn('id', $ids)
-                ->where([
-                    ['is_draft', false],
-                    ['is_public', true],
-                ]);//findMany($ids)->paginate($this->perPage)
-        }
 
-        return null;
+        return $this->builder = Question::whereIn('id', $ids)
+            ->where([
+                ['is_draft', false],
+                ['is_public', true],
+            ]);//findMany($ids)->paginate($this->perPage)
+
     }
 }

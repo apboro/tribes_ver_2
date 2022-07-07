@@ -37,8 +37,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { Dropdown } from 'bootstrap';
 import { mapActions, mapGetters } from 'vuex';
 import Icon from "../ui/Icon";
 export default {
@@ -56,6 +54,7 @@ export default {
     },
     methods: {
         ...mapActions(["LOAD_USER"]),
+        
         logout(){
             localStorage.setItem('token', null);
             window.location.href = '/login';

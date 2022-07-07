@@ -20,7 +20,7 @@ class KnowledgeObserverTest extends TestCase
     {
         $response = $this->post(
             '/bot/webhook',
-            $this->getDataFromFile('text_message.json')
+            $this->getDataFromFile('telegram/text_message.json')
         );
         $response->assertStatus(200);
         $this->assertTrue(
@@ -43,7 +43,7 @@ class KnowledgeObserverTest extends TestCase
     {
         $response = $this->post(
             '/bot/webhook',
-            $this->getDataFromFile('reply_text_message.json')
+            $this->getDataFromFile('telegram/reply_text_message.json')
         );
         $response->assertStatus(200);
 
@@ -129,7 +129,7 @@ class KnowledgeObserverTest extends TestCase
      */
     protected function prepareDBCommunity(?array $data = [])
     {
-        $data = $this->getDataFromFile('reply_text_message.json');
+        $data = $this->getDataFromFile('telegram/reply_text_message.json');
         $user = User::factory()->createItem([
             'name' => 'Test Testov',
             'email' => 'test-dev@webstyle.top',

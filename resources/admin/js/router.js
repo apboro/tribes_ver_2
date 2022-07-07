@@ -70,7 +70,6 @@ let router =  new Router({
 //     } else if(to.path === '/login') {
 //         return next('/');
 //     }
-//
 //     next();
 // });
 
