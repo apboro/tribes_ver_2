@@ -3,6 +3,7 @@
 namespace App\Services\Telegram\MainComponents;
 
 use App\Filters\API\QuestionsFilter;
+use App\Helper\ArrayHelper;
 use App\Helper\PseudoCrypt;
 use App\Jobs\CheckDaysForUsers;
 use App\Models\Community;
@@ -51,12 +52,11 @@ class MainBotCommands
     ];
 
 
-
     public function __construct(
         TelegramConnectionRepositoryContract $connectionRepo,
-        CommunityRepositoryContract $communityRepo,
-        PaymentRepositoryContract $paymentRepo,
-        KnowledgeRepositoryContract $knowledgeRepository
+        CommunityRepositoryContract          $communityRepo,
+        PaymentRepositoryContract            $paymentRepo,
+        KnowledgeRepositoryContract          $knowledgeRepository
     )
     {
         $this->paymentRepo = $paymentRepo;
@@ -167,8 +167,8 @@ class MainBotCommands
     {
         $this->bot->onCommand('setCommand', function (Context $ctx) {
             $commands = [];
-            foreach($this->availableBotCommands as $command=> $description){
-                $commands['command'] = '/'.$command;
+            foreach ($this->availableBotCommands as $command => $description) {
+                $commands['command'] = '/' . $command;
                 $commands['description'] = $description;
             }
 
@@ -288,7 +288,7 @@ class MainBotCommands
     {
         try {
             $this->bot->onHears('🔍Найти подписку', function (Context $ctx) {
-               $ctx->reply('Пожалуйста введите идентификатор платежа. Пример: payment-1111');
+                $ctx->reply('Пожалуйста введите идентификатор платежа. Пример: payment-1111');
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -422,20 +422,32 @@ class MainBotCommands
 
         try {
             $this->bot->onText('/qa {search?}', function (Context $ctx) {
+
+                $message = $ctx->update()->message();
                 $this->bot->logger()->debug('Поиск по БЗ');
                 $searchText = $ctx->var('search');
+                $replyToUser = $message->from()->username();
+
+                if (!$message->replyToMessage()->isEmpty()) {
+                    $reply = $message->replyToMessage();
+                    if (empty($searchText)) {
+                        $searchText = $reply->text();
+                    }
+                    $replyToUser = $reply->from()->username();
+                    //$reply->messageId()
+                }
                 $searchText = trim($searchText);
                 Log::debug(" search.$searchText");
                 if (empty($searchText) || strlen($searchText) <= 3) {
-                    $ctx->replyHTML('Слишком короткий поисковый запрос.');
+                    $ctx->replyHTML("@$replyToUser Слишком короткий поисковый запрос.");
                     return;
                 }
                 $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
                 if (!$community) {
-                    $ctx->replyHTML('Сообщество не подключено.');
+                    $ctx->replyHTML("@$replyToUser Сообщество не подключено.");
                     return;
                 }
-                //todo рефакторить передачу фильтров в репозитории до примитивов
+
                 $filters = new QuestionsFilter(new Request(['filter' => [
                     'published' => 'public',
                     'draft' => 'not_draft',
@@ -444,16 +456,17 @@ class MainBotCommands
                     'full_text' => $searchText,
                 ]]));
                 $paginateQuestionsCollection = $this->knowledgeRepository->getQuestionsByCommunityId($community->id, $filters);
-                if($paginateQuestionsCollection->isEmpty()) {
-                    $ctx->replyHTML('Ответов не найдено.');
-                    return ;
+                if ($paginateQuestionsCollection->isEmpty()) {
+                    $ctx->replyHTML("@$replyToUser Ответов не найдено.");
+                    return;
                 }
-
-                $context = $this->prepareQuestionsList($paginateQuestionsCollection);
-                if($paginateQuestionsCollection->total() > $paginateQuestionsCollection->perPage()) {
-                    $context .= '<a href="'. $community->getPublicKnowledgeLink().'?search_text='.$searchText .'">'.
+                $context = "Для @$replyToUser из Базы Знаний \n";
+                $context .= "<b>--------------------------</b> \n";
+                $context .= $this->prepareQuestionsList($paginateQuestionsCollection);
+                if ($paginateQuestionsCollection->total() > $paginateQuestionsCollection->perPage()) {
+                    $context .= '<a href="' . $community->getPublicKnowledgeLink() . '?search_text=' . $searchText . '">' .
                         "Смотреть остальные вопросы - ответы" .
-                        "</a>"." \n";
+                        "</a>" . " \n";
                 }
                 $ctx->replyHTML($context);
 
@@ -472,12 +485,12 @@ class MainBotCommands
         /** @var Question $question */
         foreach ($paginateQuestionsCollection as $question) {
             //todo написать список ответов со ссылкой на каждый ответ и ссылкой на веб версию БЗ
-            $context .= '<a href="'. $question->getPublicLink() .'">'.
-                Str::limit($question->context,60,"...") .
-                "</a>" .
-                '<span class="tg-spoiler">'.Str::limit($question->answer->context??"Нет ответа",120,"...").'</span>'.
+            $context .= '<a href="' . $question->getPublicLink() . '">' .
+                Str::limit(strip_tags($question->context), 60, "...") .
+                "</a>" . " \n" .
+                '<span class="tg-spoiler">' . Str::limit(strip_tags($question->answer->context ?? "Нет ответа"), 120, "...") . '</span>' .
                 " \n";
-            $context .= '<b>-----------------</b>'." \n";
+            $context .= '<b>--------------------------</b>' . " \n";
         }
 
         return $context;
@@ -861,7 +874,7 @@ class MainBotCommands
     {
         $text = '';
         foreach ($this->availableBotCommands as $command => $description) {
-            $text.= $command.' - '.$description. "\n";
+            $text .= $command . ' - ' . $description . "\n";
         }
         return $text;
     }
