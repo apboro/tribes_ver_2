@@ -3,6 +3,7 @@
 namespace App\Services\Telegram\MainComponents;
 
 use App\Filters\API\QuestionsFilter;
+use App\Helper\ArrayHelper;
 use App\Helper\PseudoCrypt;
 use App\Jobs\CheckDaysForUsers;
 use App\Models\Community;
@@ -51,12 +52,11 @@ class MainBotCommands
     ];
 
 
-
     public function __construct(
         TelegramConnectionRepositoryContract $connectionRepo,
-        CommunityRepositoryContract $communityRepo,
-        PaymentRepositoryContract $paymentRepo,
-        KnowledgeRepositoryContract $knowledgeRepository
+        CommunityRepositoryContract          $communityRepo,
+        PaymentRepositoryContract            $paymentRepo,
+        KnowledgeRepositoryContract          $knowledgeRepository
     )
     {
         $this->paymentRepo = $paymentRepo;
@@ -167,8 +167,8 @@ class MainBotCommands
     {
         $this->bot->onCommand('setCommand', function (Context $ctx) {
             $commands = [];
-            foreach($this->availableBotCommands as $command=> $description){
-                $commands['command'] = '/'.$command;
+            foreach ($this->availableBotCommands as $command => $description) {
+                $commands['command'] = '/' . $command;
                 $commands['description'] = $description;
             }
 
@@ -288,7 +288,7 @@ class MainBotCommands
     {
         try {
             $this->bot->onHears('🔍Найти подписку', function (Context $ctx) {
-               $ctx->reply('Пожалуйста введите идентификатор платежа. Пример: payment-1111');
+                $ctx->reply('Пожалуйста введите идентификатор платежа. Пример: payment-1111');
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -423,7 +423,16 @@ class MainBotCommands
         try {
             $this->bot->onText('/qa {search?}', function (Context $ctx) {
                 $this->bot->logger()->debug('Поиск по БЗ');
+                $message = ArrayHelper::toArray($ctx->update()->message());
                 $searchText = $ctx->var('search');
+                $replyToUser = ArrayHelper::getValue($message, 'from.username', '');
+                if (!empty($reply = ArrayHelper::getValue($message, 'reply_to_message'))) {
+                    if (empty($searchText)) {
+                        $searchText = ArrayHelper::getValue($reply, 'text', '');
+                    }
+                    $replyToUser = ArrayHelper::getValue($reply, 'from.username', '');
+                    //"reply_to_message.message_id": 2528,
+                }
                 $searchText = trim($searchText);
                 Log::debug(" search.$searchText");
                 if (empty($searchText) || strlen($searchText) <= 3) {
@@ -444,16 +453,17 @@ class MainBotCommands
                     'full_text' => $searchText,
                 ]]));
                 $paginateQuestionsCollection = $this->knowledgeRepository->getQuestionsByCommunityId($community->id, $filters);
-                if($paginateQuestionsCollection->isEmpty()) {
+                if ($paginateQuestionsCollection->isEmpty()) {
                     $ctx->replyHTML('Ответов не найдено.');
-                    return ;
+                    return;
                 }
-
-                $context = $this->prepareQuestionsList($paginateQuestionsCollection);
-                if($paginateQuestionsCollection->total() > $paginateQuestionsCollection->perPage()) {
-                    $context .= '<a href="'. $community->getPublicKnowledgeLink().'?search_text='.$searchText .'">'.
+                $context = "Для @$replyToUser из Базы Знаний";
+                $context .= "--------------------------";
+                $context .= $this->prepareQuestionsList($paginateQuestionsCollection);
+                if ($paginateQuestionsCollection->total() > $paginateQuestionsCollection->perPage()) {
+                    $context .= '<a href="' . $community->getPublicKnowledgeLink() . '?search_text=' . $searchText . '">' .
                         "Смотреть остальные вопросы - ответы" .
-                        "</a>"." \n";
+                        "</a>" . " \n";
                 }
                 $ctx->replyHTML($context);
 
@@ -472,12 +482,12 @@ class MainBotCommands
         /** @var Question $question */
         foreach ($paginateQuestionsCollection as $question) {
             //todo написать список ответов со ссылкой на каждый ответ и ссылкой на веб версию БЗ
-            $context .= '<a href="'. $question->getPublicLink() .'">'.
-                Str::limit($question->context,60,"...") .
+            $context .= '<a href="' . $question->getPublicLink() . '">' .
+                Str::limit($question->context, 60, "...") .
                 "</a>" .
-                '<span class="tg-spoiler">'.Str::limit($question->answer->context??"Нет ответа",120,"...").'</span>'.
+                '<span class="tg-spoiler">' . Str::limit($question->answer->context ?? "Нет ответа", 120, "...") . '</span>' .
                 " \n";
-            $context .= '<b>-----------------</b>'." \n";
+            $context .= '<b>-----------------</b>' . " \n";
         }
 
         return $context;
@@ -861,7 +871,7 @@ class MainBotCommands
     {
         $text = '';
         foreach ($this->availableBotCommands as $command => $description) {
-            $text.= $command.' - '.$description. "\n";
+            $text .= $command . ' - ' . $description . "\n";
         }
         return $text;
     }
