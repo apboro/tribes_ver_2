@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "03d13310-152b-42bc-a6f1-6a935d8c4cc1",
+		"_postman_id": "b2686980-1248-4b78-8dd4-c291e6530150",
 		"name": "spodial-kw-api",
 		"description": "запросы для обращения к АПИ базы знаний",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "6194295"
+		"_exporter_id": "21036434"
 	},
 	"item": [
 		{
@@ -77,11 +77,18 @@
 						{
 							"key": "filter[page]",
 							"value": "2",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "filter[per_page]",
 							"value": "3",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[status]",
+							"value": "draft",
 							"type": "text"
 						}
 					]
