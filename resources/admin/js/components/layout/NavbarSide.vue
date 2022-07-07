@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import { Dropdown } from 'bootstrap';
 import { mapActions, mapGetters } from 'vuex';
 import Icon from "../ui/Icon";
 export default {
@@ -53,8 +54,12 @@ export default {
         ...mapActions(["LOAD_USER"]),
         
         logout(){
+            // localStorage.setItem('token', null);
+            // window.location.href = '/login';
+
+
             localStorage.setItem('token', null);
-            window.location.href = '/login';
+            this.$router.push({name: 'login'})
         },
     },
     mounted(){

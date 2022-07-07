@@ -14,6 +14,7 @@ export default new Vuex.Store({
         loading : state => {
             return state.loading
         },
+        // isAuthenticated: state => !!state.user,
     },
     mutations: {
         loading(state, val){
