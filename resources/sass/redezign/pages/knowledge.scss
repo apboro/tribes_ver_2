@@ -52,7 +52,7 @@
     &__multiple-operations {
         display: flex;
         column-gap: 5px;
-        margin-top: 20px;
+        margin-top: $indent-4;
     }
 
     &__multiple-btn {
@@ -60,7 +60,7 @@
     }
 
     &__filter {
-        margin-top: 20px;
+        margin-top: $indent-4;
     }
 
     &__table-wrapper {
@@ -68,7 +68,7 @@
     }
 
     &__table {
-        margin-top: 20px;
+        margin-top: $indent-2;
     }
 
     &__pagination {

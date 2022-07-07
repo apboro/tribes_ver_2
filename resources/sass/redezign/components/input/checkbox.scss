@@ -1,0 +1,75 @@
+$icon-width: 18px;
+$icon-height: $icon-width;
+
+$icon-color-1: $grey-5;
+$icon-color-2: $grey-7;
+$icon-color-3: $primary-1;
+$icon-bg-1: $white;
+
+.checkbox {
+    position: relative;
+    width: $icon-width;
+    height: $icon-height;
+
+    &:hover,
+    &:focus {
+        .checkbox__label:before {
+            border-color: $icon-color-2;
+        }
+
+        &:checked + .checkbox__label:before {
+            border-color: $icon-color-3;
+        }
+    }
+
+    &__input {
+        display: none;
+
+        &:checked + .checkbox__label:before {
+            background-color: $icon-color-3;
+            border-color: $icon-color-3;
+        }
+
+        &:checked + .checkbox__label:after {
+            top: 50%;
+            left: 50%;
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+
+    &__label {
+        cursor: pointer;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            display: block;
+            width: $icon-width;
+            height: $icon-height;
+            border: 1px solid $icon-color-1;
+            background-color: $icon-bg-1;
+            border-radius: 2px;
+            transition: .2s linear;
+        }
+
+        &:after {
+            content: "";
+            position: absolute;
+            top: 30%;
+            left: 79%;
+            z-index: 1;
+            width: 15px;
+            height: 15px;
+            background-image: url("/ico/check.svg");
+            background-size: cover;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            visibility: hidden;
+            transition: .2s linear;
+        }
+    }
+}

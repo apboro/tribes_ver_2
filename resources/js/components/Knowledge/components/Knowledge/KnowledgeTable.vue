@@ -4,12 +4,21 @@
         <div class="knowledge-table__header">
             <!-- Multiple operations -->
             <div class="knowledge-table__header-item">
-                <input
-                    type="checkbox"
-                    :checked="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
-                    :value="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
-                    @input="toggleStateQuestions"
-                >
+                <div class="checkbox">
+                    <input
+                        type="checkbox"
+                        id="all_fields"
+                        class="checkbox__input"
+                        :checked="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
+                        :value="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
+                        @input="toggleStateQuestions"
+                    >
+
+                    <label
+                        for="all_fields"
+                        class="checkbox__label"
+                    ></label>
+                </div>
             </div>
 
             <!-- Вопрос -->

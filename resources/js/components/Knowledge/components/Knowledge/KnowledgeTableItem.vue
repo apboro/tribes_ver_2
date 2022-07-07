@@ -4,10 +4,19 @@
         <div class="knowledge-table__row">
             <!-- Выделить -->
             <div class="knowledge-table__item">
-                <input
-                    type="checkbox"
-                    v-model="isAddedQuestion"
-                >
+                <div class="checkbox">
+                    <input
+                        type="checkbox"
+                        :id="`field_${ question.id }`"
+                        class="checkbox__input"
+                        v-model="isAddedQuestion"
+                    >
+
+                    <label
+                        :for="`field_${ question.id }`"
+                        class="checkbox__label"
+                    ></label>
+                </div>
             </div>
 
             <!-- Вопрос -->

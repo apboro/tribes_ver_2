@@ -4,7 +4,7 @@
     grid-template: 50px 1fr / 1fr;
     
     //max-height: calc(100vh - 430px);
-    border: 1px solid #eee;
+    border: 1px solid $grey-3;
     border-radius: 5px;
     //overflow: auto;
 
@@ -15,10 +15,10 @@
         display: grid;
         grid-template: 50px / minmax(50px, 5%) auto repeat(4, minmax(130px, 10%));
         align-items: center;
-        @include font(grey, 12px, 14px, 600);
+        @include font($grey-8, 14px, 20px, 600);
         text-transform: uppercase;
-        background-color: #eee;
-        border-bottom: 1px solid #eee;
+        background-color: $grey-2;
+        //border-bottom: 1px solid #eee;
     }
 
     &__header-item {
