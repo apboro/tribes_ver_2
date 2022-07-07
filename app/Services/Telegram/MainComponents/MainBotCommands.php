@@ -461,7 +461,7 @@ class MainBotCommands
                     return;
                 }
                 $context = "Для @$replyToUser из Базы Знаний \n";
-                $context .= "--------------------------\n";
+                $context .= "<b>--------------------------</b> \n";
                 $context .= $this->prepareQuestionsList($paginateQuestionsCollection);
                 if ($paginateQuestionsCollection->total() > $paginateQuestionsCollection->perPage()) {
                     $context .= '<a href="' . $community->getPublicKnowledgeLink() . '?search_text=' . $searchText . '">' .
@@ -486,11 +486,11 @@ class MainBotCommands
         foreach ($paginateQuestionsCollection as $question) {
             //todo написать список ответов со ссылкой на каждый ответ и ссылкой на веб версию БЗ
             $context .= '<a href="' . $question->getPublicLink() . '">' .
-                Str::limit($question->context, 60, "...") .
-                "</a>" .
-                '<span class="tg-spoiler">' . Str::limit($question->answer->context ?? "Нет ответа", 120, "...") . '</span>' .
+                Str::limit(strip_tags($question->context), 60, "...") .
+                "</a>" . " \n" .
+                '<span class="tg-spoiler">' . Str::limit(strip_tags($question->answer->context ?? "Нет ответа"), 120, "...") . '</span>' .
                 " \n";
-            $context .= '<b>-----------------</b>' . " \n";
+            $context .= '<b>--------------------------</b>' . " \n";
         }
 
         return $context;
