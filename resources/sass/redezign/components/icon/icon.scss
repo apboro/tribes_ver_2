@@ -4,6 +4,10 @@ $icon-primary-color: $grey-6;
     display: flex;
     align-items: center;
 
+    &--spinner {
+        animation: .75s linear infinite spinner;
+    }
+
     &--primary {
         .icon__fill {
             fill: $icon-primary-color;
@@ -39,5 +43,15 @@ $icon-primary-color: $grey-6;
     .icon__fill,
     .icon__stroke {
         transition: $transition;
+    }
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }

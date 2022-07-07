@@ -63,12 +63,14 @@
             />
             
             <!-- Pagination -->
-            <v-pagination
-                class="knowledge__pagination"
-                :data="GET_META"
-                @onPageClick="setPage"
-                @onChangePerPage="setPerPage"
-            />
+            <template v-if="GET_QUESTIONS && GET_QUESTIONS.length || !IS_LOADING">
+                <v-pagination
+                    class="knowledge__pagination"
+                    :data="GET_META"
+                    @onPageClick="setPage"
+                    @onChangePerPage="setPerPage"
+                />
+            </template>
 
             <!-- Модальное окно нового вопроса --> 
             <transition name="a-overlay">
@@ -159,6 +161,7 @@
                 'GET_META',
                 'HAS_QUESTION_FOR_OPERATIONS',
                 'GET_META_INFO',
+                'IS_LOADING',
                 'GET_IDS_MULTIPLE_OPERATIONS',
             ]),
 

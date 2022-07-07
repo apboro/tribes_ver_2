@@ -1,7 +1,10 @@
 <template>
-    <div class="knowledge-table__item-wrapper">
+    <div
+        class="knowledge-table__item-wrapper"
+        :class="{ 'open': isVisibleFullQuestion }"
+    >
         <!-- Строка -->
-        <div class="knowledge-table__row">
+        <div class="knowledge-table__row" :class="{ 'active': isAddedQuestion }">
             <!-- Выделить -->
             <div class="knowledge-table__item">
                 <div class="checkbox">
@@ -21,19 +24,39 @@
 
             <!-- Вопрос -->
             <div
-                class="knowledge-table__item knowledge-table__question"
+                class="knowledge-table__item knowledge-table__item--question"
                 @click="toggleQuestion"
             >
                 {{ question.context }}
+                
+                <!-- <transition name="a-arrow"> -->
+                    <template v-if="isVisibleFullQuestion">
+                        <v-icon
+                            key="0"
+                            name="arrow-up"
+                            size="1"
+                            class="knowledge-table__item-icon"
+                        />
+                    </template>
+
+                    <template v-else>
+                        <v-icon
+                            key="1"
+                            name="arrow-down"
+                            size="1"
+                            class="knowledge-table__item-icon"
+                        />
+                    </template>
+                <!-- </transition> -->
             </div>
 
             <!-- Дата -->
-            <div class="knowledge-table__item">
+            <div class="knowledge-table__item knowledge-table__item--date">
                 {{ formatDate(question.created_at) }}
             </div>
 
             <!-- Обращений -->
-            <div class="knowledge-table__item">
+            <div class="knowledge-table__item knowledge-table__item--enquery">
                 {{ question.c_enquiry }}
             </div>
 
@@ -49,14 +72,18 @@
             </div>
 
             <!-- Действия -->
-            <div class="knowledge-table__item">
+            <div class="knowledge-table__item knowledge-table__item--center">
                 <v-dropdown>
                     <template #tooglePanel="{ toggleDropdownVisibility }">
                         <button
-                            class="knowledge-table__action-btn"
+                            class="button-text button-text--primary button-text--only-icon"
                             @click="toggleDropdownVisibility"
                         >
-                            <span class="knowledge-table__action-icon"></span>
+                            <v-icon
+                                name="vertical-dots"
+                                size="1"
+                                class="button-text__icon"
+                            />
                         </button>
                     </template>
 
@@ -122,16 +149,42 @@
                 class="knowledge-table__row"
                 v-if="isVisibleFullQuestion"
             >
-                <div class="knowledge-table__item knowledge-table__item--full">
-                    <p>Вопрос</p>
-                    <p>{{ question.context }}</p>
-                    <p>Ответ</p>
-                    <template v-if="question.answer">
-                        <div v-html="question.answer.context"></div>
-                    </template>
-                    <template v-else>
-                        <p></p>
-                    </template>
+                <div class="knowledge-table__item knowledge-table__full">
+                    <div class="knowledge-table__full-question">
+                        <p class="knowledge-table__full-title">
+                            Вопрос:
+                        </p>
+                        <p>{{ question.context }}</p>
+                    </div>
+
+                    <div
+                        class="knowledge-table__full-answer"
+                        :class="{ 'hide': isLongAnswer }"
+                        ref="answer"
+                    >
+                        <p class="knowledge-table__full-title">
+                            Ответ:
+                        </p>
+                        
+                        <template v-if="question.answer">
+                            <div class="knowledge-table__answer-block" v-html="question.answer.context"></div>
+                            
+                            <template v-if="isVisibleFullAnswerBtn">
+                                <button
+                                    class="button-text knowledge-table__open-answer-btn button-text--primary"
+                                    @click="toggleFullAnswerVisibility"
+                                >
+                                    {{ isLongAnswer ? 'Читать полностью' : 'Скрыть ответ' }}
+                                </button>
+                            </template>
+                        </template>
+                        
+                        <template v-else>
+                            <p></p>
+                        </template>
+
+
+                    </div>
                 </div>
             </div>
         </transition>
@@ -225,6 +278,7 @@
     import TextEditor from '../TextEditor.vue';
     import VOverlay from '../VOverlay.vue';
     import VDropdown from '../VDropdown.vue';
+    import VIcon from '../VIcon.vue';
     import { mapActions, mapGetters, mapMutations } from 'vuex';
     import {timeFormatting} from '../../../../core/functions';
     
@@ -233,6 +287,7 @@
 
         components: {
             VPopup,
+            VIcon,
             TextEditor,
             VOverlay,
             VDropdown,
@@ -258,6 +313,9 @@
 
                 draft: this.question.is_draft,
                 isPublic: this.question.is_public,
+
+                isLongAnswer: false,
+                isVisibleFullAnswerBtn: false,
             }
         },
 
@@ -288,6 +346,16 @@
 
             toggleQuestion() {
                 this.isVisibleFullQuestion = !this.isVisibleFullQuestion;
+                
+                this.$nextTick(() => {
+                    if (this.$refs.answer) {
+                        if (this.$refs.answer.getBoundingClientRect().height > 100) {
+                            this.isLongAnswer = true;
+                            this.isVisibleFullAnswerBtn = true;
+                            //this.$refs.answer.classList.add('close');
+                        }
+                    }
+                })
             },
 
             openQuestionPopup() {
@@ -360,9 +428,22 @@
                 return statuses;
             },
 
+            toggleFullAnswerVisibility() {
+                this.isLongAnswer = !this.isLongAnswer;
+            },
+
             copyLink() {
                 copyText(this.question.public_link);
             }
         },
+
+        mounted() {
+            if (this.question.answer) {
+                
+              
+                //console.log(htmlDoc.body.children);
+                
+            }
+        }
     }
 </script>

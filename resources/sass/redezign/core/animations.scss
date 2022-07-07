@@ -26,16 +26,18 @@
         animation: cell-bounce-in .3s;
     }
     &-leave-active {
-        animation: cell-bounce-in .2s reverse;
+        animation: cell-bounce-in .3s reverse;
     }
 }
 
 @keyframes cell-bounce-in {
     0% {
         opacity: 0;
+        transform: translateY(-3px);
     }
     100% {
         opacity: 1;
+        transform: translateY(0px);
     }
 }
 
@@ -65,5 +67,28 @@
     100% {
         transform: translate(-50%, -50%);
         opacity: 1;
+    }
+}
+
+.a-arrow {
+    .fade-enter-active,
+    .fade-leave-active {
+        animation: arrow 1.3s;
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+        animation: arrow .3s reverse;
+    }
+}
+
+@keyframes arrow {
+    0% {
+        transform: rotate(50deg);
+        //opacity: 0;
+    }
+    100% {
+        transform: rotate(180deg);
+        //opacity: 1;
     }
 }

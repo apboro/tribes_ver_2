@@ -186,7 +186,7 @@
                         for="status_draft"
                         class="knowledge-filter__label"
                     >
-                        Опубликовано
+                        Черновик
                     </label>
                 </div>
             </div>

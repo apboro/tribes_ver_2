@@ -1,3 +1,5 @@
+$table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(140px, 12%) minmax(120px, 10%) minmax(90px, 10%);
+
 .knowledge-table {
     display: grid;
     //grid-template: 50px calc(100vh - 482px) / 1fr;
@@ -13,8 +15,9 @@
         top: 85px;
         z-index: 10;
         display: grid;
-        grid-template: 50px / minmax(50px, 5%) auto repeat(4, minmax(130px, 10%));
+        grid-template: $table-grid-template;
         align-items: center;
+        padding: 10px 20px;
         @include font($grey-8, 14px, 20px, 600);
         text-transform: uppercase;
         background-color: $grey-2;
@@ -22,15 +25,20 @@
     }
 
     &__header-item {
-        padding: 10px 20px;
+        
 
         &--sortable {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            //flex-direction: column;
 
             span {
                 display: inline-block;
             }
+        }
+
+        &--center {
+            text-align: center;
         }
     }
 
@@ -42,20 +50,131 @@
         
     }
 
+    &__item-wrapper {
+        &.open {
+            .knowledge-table__row {
+                background-color: $blue-3;
+                border-color: transparent;
+            }
+        }
+    }
+
     &__row {
         display: grid;
-        grid-template: auto / minmax(50px, 5%) auto repeat(4, minmax(130px, 10%));
+        grid-template: $table-grid-template;
         align-items: center;
+        padding: 15px 20px;
+        background-color: $white;
         border-bottom: 1px solid #eee;
+        transition: $transition;
 
         &--special {
             grid-template: auto / auto;
             justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            @include font($grey-5, 18px, 24px, 500);
+        }
+
+        &:hover {
+            background-color: $primary-3;
+
+            .knowledge-table__item {
+                &--question,
+                &--date,
+                &--enquery {
+                    color: $primary-1;
+                }
+
+                &-icon {
+                    .icon__fill {
+                        fill: $primary-1;
+                    }
+        
+                    .icon__stroke {
+                        stroke: $primary-1;
+                    }
+                }
+            }
+        }
+
+        &.active {
+            .knowledge-table__item {
+                &--question,
+                &--date,
+                &--enquery {
+                    color: $primary-1;
+                }
+
+                &-icon {
+                    .icon__fill {
+                        fill: $primary-1;
+                    }
+        
+                    .icon__stroke {
+                        stroke: $primary-1;
+                    }
+                }
+            }
         }
     }
 
     &__full {
+        grid-column: 2 / 3;
+
+        @include font($text-color-2, 14px, 20px, 400);
+    }
+
+    &__full-question {
         
+    }
+
+    &__full-answer {
+        margin-top: $indent-3;
+        
+        &.hide {
+            .knowledge-table__answer-block {
+                max-height: 100px;
+                overflow: hidden;
+    
+                &:before {
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+        }
+    }
+
+    &__answer-block {
+        position: relative;
+        
+        &:before {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 20px;
+            background:  linear-gradient(180deg, rgba(244, 251, 255, 0) 0%, #F4FBFF 100%);;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        
+
+        ol, ul {
+            padding-left: 20px;
+        }
+    }
+
+    &__open-answer-btn {
+        margin-top: $indent-3;
+        margin-left: auto;
+    }
+
+    &__full-title {
+        margin-bottom: $indent-1;
     }
 
     &__item-wrapper {
@@ -69,25 +188,36 @@
     }
 
     &__item {
-        padding: 15px 20px;
-        @include font(grey, 14px, 21px, 400);
-        
-        &--full {
-            grid-column: 1 / 3;
+
+        &--center {
+            display: flex;
+            justify-content: center;
         }
-    }
 
-    &__question {
-        position: relative;
-        @include truncate(100%);
-        cursor: pointer;
+        &--question {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            @include truncate(100%);
+            cursor: pointer;
+        }
 
-        &:after {
-            content: "⌄";
-            position: absolute;
-            top: calc(50% - 18px);
-            right: 0;
-            font-size: 20px;
+        &--question,
+        &--date,
+        &--enquery {
+            @include font($grey-9, 14px, 20px, 400);
+        }
+
+        &-icon {
+            padding-right: $indent-2;
+
+            .icon__fill {
+                fill: $grey-8;
+            }
+
+            .icon__stroke {
+                stroke: $grey-8;
+            }
         }
     }
 
@@ -100,59 +230,31 @@
         cursor: pointer;
     }
 
-    &__action-icon {
-        position: relative;
-        display: block;
-        width: 5px;
-        height: 5px;
-        background-color: #6E6B7B;
-        border-radius: 50%;
-
-        &:before,
-        &:after {
-            content: "";
-            position: absolute;
-            left: 0;
-            width: 5px;
-            height: 5px;
-            background-color: #6E6B7B;
-            border-radius: 50%;
-        }
-        
-        &:before {
-            top: -7px;
-        }
-
-        &:after {
-            top: 7px;
-        }
-    }
-
     &__action-menu {
         position: absolute;
-        left: -70px;
+        right: 100%;
         z-index: 5;
         display: flex;
         flex-direction: column;
-        background-color: #fff;
-        border: 1px solid #000;
+        min-width: 185px;
+        background-color: $white;
+        border: 1px solid $grey-3;
     }
 
     &__action-item {
         display: inline-block;
         padding: 10px 15px;
         text-align: center;
-        @include font(#000, 12px, 14px, 600);
+        @include font($text-color-1, 14px, 20px, 400);
         cursor: pointer;
-        transition: .3s;
+        transition: $transition;
 
         & + & {
-            border-top: 1px solid #000;
+            border-top: 1px solid $grey-3;
         }
 
         &:hover {
-            color: #fff;
-            background-color: #6E6B7B;
+            color: $primary-1;
         }
     }
 }
