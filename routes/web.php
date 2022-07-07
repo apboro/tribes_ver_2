@@ -51,6 +51,9 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::any('/tinkoff/notify', 'PaymentController@notify')->name('tinkoff.notify');
     });
 
+    // Публичные ссылки на вопросы
+    Route::get('/{hash}/questions', 'KnowledgeController@list')->name('public.knowledge.list');
+    Route::get('/{hash}/questions/{question}/view', 'KnowledgeController@get')->name('public.knowledge.view');
 
     // Авторизованные роуты
     Route::middleware('auth')->namespace('App\Http\Controllers')->group(function () {
@@ -151,8 +154,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
             });
         });
 
-        Route::get('/{hash}/questions', 'KnowledgeController@list')->name('public.knowledge.list');
-        Route::get('/{hash}/questions/{question}/view', 'KnowledgeController@get')->name('public.knowledge.view');
+
         Route::get('/{hash}/knowledge/help', 'KnowledgeController@help')->name('public.knowledge.help');
 
         Route::get('/community/add', function () {
