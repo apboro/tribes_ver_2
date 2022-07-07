@@ -77,7 +77,7 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
         Route::post('do', 'QuestionController@do')->name('question.do');
     });
     Route::group(['prefix' => 'communities'], function () {
-        Route::post('list', 'CommunityController@list')->name('community.list');
+        Route::post('list', 'CommunityController@list')->name('community.list.api');
         Route::post('get', 'CommunityController@get')->name('community.get');
         /*Route::post('add', 'CommunityController@add')->name('community.add');
         Route::post('store', 'CommunityController@store')->name('community.store');
