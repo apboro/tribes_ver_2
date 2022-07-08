@@ -172,7 +172,7 @@ class FileController extends Controller
         return response()->json([
             "status" => "ок",
             "message" => "Загрузка удалась",
-            "file" => $request->storedFiles,
+            "file" => $request->storedFiles[0],
         ]);
     }
 

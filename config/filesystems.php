@@ -49,6 +49,10 @@ return [
             'driver' => 'local',
             'root' => base_path('tests/data'),
         ],
+        'tpm_file'=> [
+            'driver' => 'local',
+            'root' => base_path('storage/app/public/temp'),
+        ],
         'telegram_data'=> [
             'driver' => 'local',
             'root' => storage_path('app/telegram'),

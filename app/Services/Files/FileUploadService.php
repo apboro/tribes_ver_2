@@ -5,14 +5,18 @@ namespace App\Services\Files;
 use App\Models\File;
 use App\Models\User;
 use App\Repositories\File\FileRepositoryContract;
+use App\Repositories\Video\VideoRepositoryContract;
 use App\Services\Files\AudioService;
 use App\Services\Files\ImageService;
 use App\Services\Files\VideoService;
+use App\Services\WebcasterPro;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File as FileFacade;
+
+use Illuminate\Support\Facades\Storage;
 
 class FileUploadService
 {
@@ -56,12 +60,14 @@ class FileUploadService
     private $imageService;
     private $videoService;
     private $request;
+    private $videoRepo;
 
     private $storedCollection;
     private $storedCollectionId;
 
     public function __construct(
         FileRepositoryContract $fileRepo,
+        VideoRepositoryContract $videoRepo,
         AudioService $audioService,
         ImageService $imageService,
         VideoService $videoService,
@@ -69,6 +75,7 @@ class FileUploadService
     )
     {
         $this->fileRepo = $fileRepo;
+        $this->videoRepo = $videoRepo;
         $this->audioService = $audioService;
         $this->imageService = $imageService;
         $this->request = $request;
@@ -81,62 +88,27 @@ class FileUploadService
 
     public function prepareStoreFile()
     {
-
         $files = $this->request->file('file');
 
         if( $this->request->has('base_64_file')){
-//            $this->checkBase64($this->request->base_64_file);
-
-
-//            dd($this->request['base_64_file']);
+            $this->checkBase64($this->request->base_64_file);
 
             $image = $this->request['base_64_file'];  // your base64 encoded
             $image = str_replace('data:image/png;base64,', '', $image);
             $image = str_replace(' ', '+', $image);
-//            dd(base64_decode($image));
-            $imageName = 'temp.png';
 
-            FileFacade::put($imageName, base64_decode($image), $lock = true);
-
-//            dd(1111111111111);
-dd(storage_path($imageName));
-            $file = $this->pathToUploadedFile(public_path($imageName), false);
-
-            dd($file);
-
-
-            $this->request['file'] = $file;
-
-            dd($this->request['file']);
-
-
-            $validated = $this->request->validate([
-                'file' => 'required|mimes:jpg,png,gif|max:2048'
-
-//            'file' => 'image'
-            ]);
-            dd(1234);
-//            dd($file->guessClientExtension());
+            Storage::disk('tpm_file')->put('temp.png', base64_decode($image));
+            $pathTempFile = Storage::disk('tpm_file')->path('temp.png');
+            $file = $this->pathToUploadedFile($pathTempFile, false);
 
             $this->prepareFile($file);
 
-//
-
-
-
-
-
-
-
-//            $this->prepareFile($this->request->base_64_file);
-//            dd(1);
-            //todo Действия, если base_64
-        } elseif (is_array($files)){
+        }
+        elseif (is_array($files)){
             foreach ($files as $file){
                 $this->prepareFile($file);
             }
         } elseif($files) {
-            dd($files);
             $this->prepareFile($files);
         }
 
@@ -145,26 +117,23 @@ dd(storage_path($imageName));
         $this->request->storedFilesId = $this->readyFilesId();
     }
 
+
+
     ////////////////////////////////////////////////////////////////////
     public static function pathToUploadedFile( $path, $public = false )
     {
-//        dd($path);
         $name = FileFacade::name( $path );
 
         $extension = FileFacade::extension( $path );
-//dd($extension);
+
         $originalName = $name . '.' . $extension;
 
         $mimeType = FileFacade::mimeType( $path );
 
-        $size = FileFacade::size( $path );
-
         $error = null;
 
-        $test = $public;
-//dd($path);
         $object = new UploadedFile($path, $originalName, $mimeType, $error, false);
-dd($object);
+
         return $object;
     }
     ////////////////////////////////////////////////////////////////////
@@ -179,14 +148,20 @@ dd($object);
         return $this->storedCollectionId;
     }
 
-    private function prepareFile($file) : void
+    private function prepareFile(UploadedFile $file) : void
     {
 //        dd($file);
         $isImage = $this->isImage($file);
         $isVideo = $this->isVideo($file);
         $isAudio = $this->isAudio($file);
 
-//dd($isImage, $isVideo, $isAudio);
+        $this->setMime($file);
+        $this->setSize($file);
+        $this->setRank($file);
+        $this->setDescription();
+        $this->setUploader();
+        $this->setExtension($file);
+        $this->setFilename($file);
 
         if ($isAudio) {
             $type = 'audio';
@@ -195,21 +170,33 @@ dd($object);
             $type = 'image';
             $file = $this->imageService->startService($file);
         } elseif ($isVideo) {
-            $type = 'video';
-            $file = $this->videoService->startService($file);
+//            $type = 'video';
+//            $file = $this->videoService->startService($file);
+
+            $webcaster = new WebcasterPro();
+            $resp = $webcaster->uploads($file);
+
+            $ifarme = $this->videoRepo->getVideo($resp->event_id);
+
+            $file = File::create([
+                'isVideo' => true,
+                'filename' => $resp->file_name,
+                'size' => 0,
+                'mime' => $this->mime,
+                'description' => json_encode($resp->previews),
+                'uploader_id' => Auth::user()->id,
+                'url' => $resp->manifest,
+                'remoteFrame' => $resp->event_id,
+                'iframe' => $ifarme->event->embed
+            ]);
         }
-//dd($file->getMimeType());
-dd('Валидация прошла');
 
-        $this->setMime($file);
-        $this->setSize($file);
-        $this->setRank($file);
-        $this->setDescription();
-        $this->setUploader();
+        if(!$isVideo) {
+            $this->storeFile($file, $type, true);
 
-        $this->storeFile($file, $type, true);
+            $file = $this->storeFileToDB();
+        }
 
-        $file = $this->storeFileToDB();
         $this->storedCollection->push($file);
         $this->storedCollectionId->push($file->id);
     }
@@ -290,14 +277,11 @@ dd('Валидация прошла');
 
     private function storeFile($file, $type, $local = false)
     {
-        $this->setExtension($file);
-        $this->setFilename($file);
-
         $absolutPath = $type . '/' . Carbon::now()->format('d_m_y') . '/';
         $this->setUrl($absolutPath);
 
         $path = $local ? 'public/' . $absolutPath : storage_path('app/public/') . $absolutPath;
-//dd($path);
+
         if (!file_exists(storage_path('app/public/') . $absolutPath)) {
             mkdir(storage_path('app/public/') . $absolutPath, 0755, true);
         }
