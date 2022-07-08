@@ -14,14 +14,12 @@ export default new Vuex.Store({
         loading : state => {
             return state.loading
         },
-        // isAuthenticated: state => !!state.user,
+        isLogged: state => !!state.userU
     },
     mutations: {
         loading(state, val){
             state.loading = val;
         },
-    },
-    actions:{
     },
     modules: {
         user,

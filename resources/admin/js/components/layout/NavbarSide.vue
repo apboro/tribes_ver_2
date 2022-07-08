@@ -34,7 +34,7 @@
                 <a href="#" class="dropdown-item">Feedback</a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">Settings</a>
-                <a v-on:click='logout' href="#" class="dropdown-item">Logout</a>
+                <a @click.prevent='logout' href="#" class="dropdown-item">Logout</a>
             </div>
         </div>
     </div>
@@ -51,16 +51,11 @@ export default {
         ...mapGetters(["GET_USER"])
     },
     methods: {
-        ...mapActions(["LOAD_USER"]),
-        
         logout(){
-            // localStorage.setItem('token', null);
-            // window.location.href = '/login';
 
-
-            localStorage.setItem('token', null);
-            this.$router.push({name: 'login'})
+            this.$router.push({name: 'login'}).catch(() => {});
         },
+        ...mapActions(["LOAD_USER"]),
     },
     mounted(){
         this.LOAD_USER();

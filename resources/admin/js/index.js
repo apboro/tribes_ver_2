@@ -4,22 +4,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['Accept'] = 'application/json';
 window.axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-//ADD******************************************
-axios.defaults.withCredentials = true;
-
-// axios.interceptors.response.use(undefined, function(error) {
-//     if (error) {
-//       const originalRequest = error.config;
-//       if (error.response.status === 401 && !originalRequest._retry) {
-//         originalRequest._retry = true;
-//         store.dispatch("LogOut");
-//         return router.push("/login");
-//       }
-//     }
-// });
-//End ADD******************************************
-
-// window.token = document.head.querySelector('meta[name="csrf-token"]');
 let api_token = document.querySelector('[name="api-token"]');
 
 if(api_token){
@@ -45,6 +29,7 @@ import Vue from 'vue';
 import store from './store';
 import App from './components/App';
 import router from './router';
+import axios from 'axios';
 
 let app = new Vue({
     router,
