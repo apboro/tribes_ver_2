@@ -42,6 +42,8 @@
    ```shell
 
     npm install
+   
+   npm run prod
 
    ```
 
@@ -60,6 +62,9 @@
    ```shell
 
     php artisan base:fresh
+   
+    ## смена прав на папки и файлы для storage
+    chmod 777 -R storage/
 
    ```
 
@@ -95,4 +100,4 @@
 итерация (опционально): подход к выполнению задачи, при разработке - это первая итерация, если к задаче вернулись позднее или задача после merge ушла на доработку - вторая.
 
 [Записки программиста](wiki/reglament.md)
-https://github.com/CoderYooda/Community/invitations
+

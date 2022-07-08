@@ -1,7 +1,10 @@
 <template>
+<!-- <body v-bind:class="currentTheme">
+    {{currentTheme}} -->
     <div class="loading" v-bind:class="{'load' : this.$store.getters.loading}">
         <component :is="layout" />
     </div>
+<!-- </body> -->
 </template>
 
 <script>
@@ -21,6 +24,20 @@ export default {
             return (this.$route.meta.layout || 'main') + '-layout'
         },
     },
+    methods: {
+
+        addBodyClassForSwitchThemeOnLoad(){
+            let localStoreThemeColor = localStorage.getItem('theme-color');
+            if(localStoreThemeColor === 'theme-light') {
+                document.body.classList.toggle('theme-light');
+            } else if(localStoreThemeColor === 'theme-dark') {
+                document.body.classList.toggle('theme-dark');
+            }
+        }
+    },
+    mounted(){
+        this.addBodyClassForSwitchThemeOnLoad();
+    }
 }
 </script>
 
