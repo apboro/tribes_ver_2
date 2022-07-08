@@ -85,19 +85,19 @@ class MainBotEvents
 
                     if ($community) {
 
-                        $description = ($community->tariff) ? $community->tariff->welcome_description : 'добро пожаловать';
-                        $image = ($community->tariff->getWelcomeImage()) ? '<a href="' . route('main') . $community->tariff->getWelcomeImage()->url . '">&#160</a>' : '';
+                        $description = $community->tariff->welcome_description ?? 'добро пожаловать';
+                        $image = !empty($community->tariff->getWelcomeImage()->url) ? '<a href="' . route('main') . $community->tariff->getWelcomeImage()->url . '">&#160</a>' : '';
 
-                        if ($this->data->message->new_chat_member->username??null) {
-                            $member = $this->data->message->new_chat_member;
+                        $member = $this->data->message->new_chat_member;
+                        if (!empty($member->username) || !empty($member->first_name)) {
 
-                            $userName = ($member->username) ? $member->username : '';
-                            $firstName = ($member->first_name) ? $member->first_name : '';
-                            $lastName = ($member->last_name) ? $member->last_name : '';
+                            $userName = !empty($member->username) ? $member->username : '';
+                            $firstName = !empty($member->first_name) ? $member->first_name : '';
+                            $lastName = !empty($member->last_name) ? $member->last_name : '';
 
                             $ty = Telegram::registerTelegramUser($member->id, NULL, $userName, $firstName, $lastName);
                             $ty->communities()->attach($community);
-                            $text = $this->data->message->new_chat_member->username
+                            $text = ($userName ?: $firstName)
                                 . ', ' . $description . $image;
                             $this->bot->getExtentionApi()->sendMess($chatId, $text);
                         }

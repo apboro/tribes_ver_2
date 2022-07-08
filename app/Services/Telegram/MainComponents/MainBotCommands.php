@@ -426,14 +426,14 @@ class MainBotCommands
                 $message = $ctx->update()->message();
                 $this->bot->logger()->debug('Поиск по БЗ');
                 $searchText = $ctx->var('search');
-                $replyToUser = $message->from()->username();
+                $replyToUser = $message->from()->username()??$message->from()->firstName();
 
                 if (!$message->replyToMessage()->isEmpty()) {
                     $reply = $message->replyToMessage();
                     if (empty($searchText)) {
                         $searchText = $reply->text();
                     }
-                    $replyToUser = $reply->from()->username();
+                    $replyToUser = $reply->from()->username()??$reply->from()->firstName();
                     //$reply->messageId()
                 }
                 $searchText = trim($searchText);
