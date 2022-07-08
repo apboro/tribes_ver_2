@@ -16,9 +16,11 @@
                             Пароль
                         </label>
                         <div class="input-group input-group-flat">
-                            <input type="password" class="form-control" name="password" v-model="password"  placeholder="Введите пароль"  autocomplete="off">
+                            <!-- <input :type="fieldType" class="form-control" name="password" v-model="password"  placeholder="Введите пароль"  autocomplete="off"> -->
+                            <input v-if="showPassword" name="password" type="text" class="form-control" v-model="password" placeholder="Введите пароль"  autocomplete="off"/>
+                            <input v-else type="password" name="password" class="form-control" v-model="password" placeholder="Введите пароль"  autocomplete="off">
                             <span class="input-group-text">
-                                <a href="#" class="link-secondary" title="Показать пароль" data-bs-toggle="tooltip"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
+                                <a @click.prevent="toggleShow" href="javascript:viol(0)" class="link-secondary" title="Показать пароль" data-bs-toggle="tooltip"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                         <circle cx="12" cy="12" r="2" />
@@ -34,12 +36,14 @@
                             <span class="form-check-label">Запомнить меня на этом устройстве</span>
                         </label>
                     </div>
+                    <p v-if="showError" id="error" style="color:red">Email или пароль неверны</p>
+                    <p v-else style="color:red"></p>
                     <div class="form-footer">
                         <button type="submit" class="btn btn-primary w-100">Войти</button>
                     </div>
+                    
                 </div>
             </form>
-            <p v-if="showError" id="error" style="color:red">Email или пароль неверны</p>
         </div>
     </div>
 </template>
@@ -55,25 +59,54 @@ export default {
             email: '',
             password: '',
             showError: false,
+            showPassword: false,
+            // fieldType: "password",
         };
     },
     computed: {
         ...mapGetters(['isLogged'])
     },
     methods: {
+        toggleShow() {
+            this.showPassword = !this.showPassword;
+        },
         async login() {
-            let result = await axios(
-                {
+            try {
+                let result = await axios({
                     method: 'POST',
                     data: {email : this.email, password : this.password},
                     url:'/api/login'
+                })
+            
+                if(result.status == 200 && result.data.token) {
+                    localStorage.setItem('token', result.data.token)
+                    this.$router.push({name: 'users'}).catch((err) => {console.warn(err)})
                 }
-            );
-            if(result.status == 200 && result.data.token) {
-                localStorage.setItem('token', result.data.token)
-                this.$router.push({name: 'users'}).catch((err) => {console.warn(err)})
+            }catch(err) {
+                if (err.response && err.response.status === 422){
+                    console.log(err.response.data.message);
+                    this.showError === !this.showError;
+                    console.log(!this.showError);
+                }
             }
+            // let result = await axios(
+            //     {
+            //         method: 'POST',
+            //         data: {email : this.email, password : this.password},
+            //         url:'/api/login'
+            //     }
+            // )
+            
+            // if(result.status == 200 && result.data.token) {
+            //     localStorage.setItem('token', result.data.token)
+            //     this.$router.push({name: 'users'}).catch((err) => {console.warn(err)})
+            // }
         },
+
+        // switchField() {
+        //     this.fieldType = 
+        //     this.fieldType === "password" ? "text" : "password";
+        // },
     }
 }
 </script>
