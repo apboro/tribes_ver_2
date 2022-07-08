@@ -43,18 +43,20 @@
                 </button>
             </div>
 
-            <template v-if="HAS_QUESTION_FOR_OPERATIONS">
-                <!-- Multiple operations -->
-                <knowledge-multiple-operations @setOperationType="setOperationType" />
-            </template>
+            <keep-alive>
+                <template v-if="HAS_QUESTION_FOR_OPERATIONS">
+                    <!-- Multiple operations -->
+                    <knowledge-multiple-operations @setOperationType="setOperationType" />
+                </template>
 
-            <template v-else>
-                <!-- Filter -->
-                <knowledge-filter
-                    class="knowledge__filter"
-                    @resetFilters="resetFilters"
-                />
-            </template>
+                <template v-else>
+                    <!-- Filter -->
+                    <knowledge-filter
+                        class="knowledge__filter"
+                        @resetFilters="resetFilters"
+                    />
+                </template>
+            </keep-alive>
 
             <!-- Table -->
             <knowledge-table
@@ -66,7 +68,8 @@
             <template v-if="GET_QUESTIONS && GET_QUESTIONS.length || !IS_LOADING">
                 <v-pagination
                     class="knowledge__pagination"
-                    :data="GET_META"
+                    :paginateData="GET__LINKS"
+                    :selectOptions="paginationSelectedOptions"
                     @onPageClick="setPage"
                     @onChangePerPage="setPerPage"
                 />
@@ -124,6 +127,7 @@
     import KnowledgeNewQuestionPopup from './components/Knowledge/KnowledgeNewQuestionPopup.vue';
     import KnowledgeConfirmPopup from './components/Knowledge/KnowledgeConfirmPopup.vue';
     import KnowledgeAuxiliary from './components/Knowledge/KnowledgeAuxiliary.vue';
+    import VSelect from './components/VSelect.vue';
 
     export default {
         name: 'Knowledge',
@@ -141,7 +145,8 @@
             KnowledgeMultipleOperations,
             KnowledgeNewQuestionPopup,
             KnowledgeConfirmPopup,
-            KnowledgeAuxiliary
+            KnowledgeAuxiliary,
+            VSelect
         },
 
         data() {
@@ -151,6 +156,12 @@
 
                 needConfirmationQuestions: [],
                 isVisibleConfirmPopup: false,
+
+                paginationSelectedOptions: [
+                    { label: 15, value: 15 },
+                    { label: 30, value: 30 },
+                    { label: 45, value: 45 }
+                ],
             }
         },
 
@@ -163,6 +174,7 @@
                 'GET_META_INFO',
                 'IS_LOADING',
                 'GET_IDS_MULTIPLE_OPERATIONS',
+                'GET__LINKS',
             ]),
 
             breadcrumbsLinks() {

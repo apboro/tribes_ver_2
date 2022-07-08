@@ -7,8 +7,9 @@
 
             <v-select
                 class="pagination__select"
-                :options="[{ label: 15, value: 15 }, { label: 30, value: 30 }, { label: 45, value: 45 }]"
-                :defaultValue="15"
+                :options="selectOptions"
+                defaultValue="15"
+                @getSelectedValue="onChangePerPage"
             />
 
             <!-- <select
@@ -25,13 +26,47 @@
 
         <div class="pagination__item">
             <div
-                class="pagination__page"
-                :class="{ 'active': page === data.current_page }"
-                v-for="page in data.last_page"
-                :key="page"
-                @click="onPageClick(page)"
+                class="pagination__control"
+                :class="{ 'active': item.active }"
+                v-for="(item, i) in paginateData"
+                :key="i"
             >
-                {{ page }}
+                <template v-if="item.label == 'Назад'">
+                    <button
+                        class="button-text button-text--primary button-text--only-icon"
+                        :class="{ 'button-text--disabled': item.disabled }"
+                        @click="onPageClick(item.page)"
+                    >
+                        <v-icon
+                            name="arrow-left"
+                            size="1"
+                            class=""
+                        />
+                    </button>
+                </template>
+
+                <template v-else-if="item.label == 'Далее'">
+                    <button
+                        class="button-text button-text--primary button-text--only-icon"
+                        :class="{ 'button-text--disabled': item.disabled }"
+                        @click="onPageClick(item.page)"
+                    >
+                        <v-icon
+                            name="arrow-right"
+                            size="1"
+                            class="pagination__btn"
+                        />
+                    </button>
+                </template>
+
+                <template v-else>
+                    <button
+                        class="pagination__page"
+                        @click="onPageClick(item.page)"
+                    >
+                        {{ item.label }}
+                    </button>
+                </template>
             </div>
         </div>
     </div>
@@ -39,21 +74,29 @@
 
 <script>
     import VSelect from "./VSelect";
+    import VIcon from "./VIcon";
 
     export default {
         name: 'KnowledgePagination',
 
-        components: { VSelect },
+        components: { VSelect, VIcon },
 
         props: {
-            data: {
-                type: Object,
-                default: {}
+            paginateData: {
+                type: Array,
+                default: []
+            },
+
+            selectOptions: {
+                type: Array,
+                default: []
             },
         },
 
         data() {
-            return {}
+            return {
+                data: []
+            }
         },
 
         methods: {

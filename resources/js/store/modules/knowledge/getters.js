@@ -15,6 +15,21 @@ export default ({
         return state._meta;
     },
 
+    GET__LINKS(state) {
+        if (state._meta.links) {
+            return state._meta.links.map((link) => {
+                return {
+                    active: link.active,
+                    disabled: link.url ? false : true,
+                    page: link.url ? new URL(link.url).search.split('=')[1] : false,
+                    label: link.label,
+                };
+            });
+        } else {
+            return [];
+        }
+    },
+
     GET_META_INFO(state) {
         return state._metaInfo;
     },

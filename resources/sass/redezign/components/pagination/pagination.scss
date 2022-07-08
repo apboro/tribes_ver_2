@@ -6,6 +6,7 @@
 
     &__item {
         display: flex;
+        align-items: center;
     }
 
     &__description {
@@ -17,14 +18,36 @@
         margin-left: 8px;
     }
 
-    &__page {
-        padding: 10px 15px;
-        background-color: #fff;
-        border: 1px solid grey;
-        cursor: pointer;
+    &__control {
+        
 
         &.active {
-            background-color: grey;
+            .pagination__page {
+                font-weight: 600;
+            }
+        }
+    }
+
+    &__page {
+        padding: 2px 5px;
+        @include font($grey-9, 14px, 20px, 400);
+        border-bottom: 1px solid transparent;
+        cursor: pointer;
+        transition: $transition;
+
+        &:hover {
+            color: $primary-1;
+            border-color: $primary-1;
+        }
+    }
+
+    &__btn {
+        .icon__fill {
+            fill: $grey-8;
+        }
+
+        .icon__stroke {
+            stroke: $grey-8;
         }
     }
 }
