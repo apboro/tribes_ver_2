@@ -196,7 +196,7 @@ class Payment
             if($this->charged){
                 $chargeRes = $this->tinkoff->payTerminal->Charge([
                     'PaymentId' => $this->payment->paymentId,
-                    'RebillId' => $rebildPayment->RebillId,
+                    'RebillId' => !empty($rebildPayment->RebillId) ? $rebildPayment->RebillId : null,
                 ]);
                 $chargeRes = json_decode($chargeRes);
 
