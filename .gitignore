@@ -45,6 +45,7 @@ _ide_helper.php
 /lib/session.madeline.safe.php.lock
 /lib/tdLib
 /tests/Browser
+/tdLib
 
 test.json
 /videos/donate-success.mp4

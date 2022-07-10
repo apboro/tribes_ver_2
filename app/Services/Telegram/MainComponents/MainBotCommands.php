@@ -229,7 +229,7 @@ class MainBotCommands
     protected function setCommand()
     {
         $this->bot->onCommand('setCommand', function (Context $ctx) {
-            $this->bot->ExtentionApi()->setMyCommands(['commands' => [
+            $this->bot->getExtentionApi()->setMyCommands(['commands' => [
                 [
                     'command' => '/start',
                     'description' => 'Начало работы с ботом'
