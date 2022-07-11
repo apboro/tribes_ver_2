@@ -79,7 +79,7 @@ class KnowledgeObserver
 
     public function detectUserQuestion($data)
     {
-        //$this->logger->debug('user custom question handler',$data);
+        $this->logger->debug('user custom question handler',$data);
         //todo реализовать если надо вытягивать вопросы из текстового сообщения пользователя
         //  по каким то признакам в самом тексте
         //dd($data);
