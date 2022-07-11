@@ -44,6 +44,7 @@ _ide_helper.php
 /lib/session.madeline.safe.php
 /lib/session.madeline.safe.php.lock
 /lib/tdLib
+/tdLib
 /tests/Browser
 
 test.json
