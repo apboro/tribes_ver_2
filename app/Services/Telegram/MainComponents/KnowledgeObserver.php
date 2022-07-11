@@ -49,25 +49,26 @@ class KnowledgeObserver
         $community = $this->communityRepository->getCommunityByChatId($chatId);
         $question = ArrayHelper::getValue($data, 'message.reply_to_message.text');
         $answer = ArrayHelper::getValue($data, 'message.text');
-        if (Str::startsWith($answer, '/qas')) {
-            $answer = trim(str_replace('/qas', '', $answer));
-            $this->logger->debug('create qa pair on reply', compact('question','answer'));
-            $this->manageQuestionService->setUserId($community->owner);
-        }
 
         try {
-            $this->manageQuestionService->createFromArray([
-                'community_id' => $community->id,
-                'question' => [
-                    'context' => $question,
-                    'is_public' => false,
-                    'is_draft' => false,
-                    'answer' => [
-                        'context' => $answer,
+            if (Str::startsWith($answer, '/qas')) {
+                $answer = trim(str_replace('/qas', '', $answer));
+                $this->logger->debug('create qa pair on reply', compact('question','answer'));
+                $this->manageQuestionService->setUserId($community->owner);
+                $this->manageQuestionService->createFromArray([
+                    'community_id' => $community->id,
+                    'question' => [
+                        'context' => $question,
+                        'is_public' => false,
                         'is_draft' => false,
+                        'answer' => [
+                            'context' => $answer,
+                            'is_draft' => false,
+                        ],
                     ],
-                ],
-            ]);
+                ]);
+            }
+
         } catch (Throwable $e) {
             $telegramException = new TelegramException($e->getMessage(), $data);
             $telegramException->report();
