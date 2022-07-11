@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 
 class KnowledgeException extends Exception
 {
+    use PrettyArrayToString;
+
     public $status = 423;
     private array $context;
 

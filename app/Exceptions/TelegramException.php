@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 
 class TelegramException extends Exception
 {
+    use PrettyArrayToString;
+
     protected array $context = [];
 
     /**
@@ -36,7 +38,11 @@ class TelegramException extends Exception
 
         ];
 
-        Log::channel('telegram-bot-log')->debug($this->message,$data);
+        Log::channel('telegram-bot-log')->debug($this->message, $data);
+        Log::channel('single')->error(
+            $this->getExceptionTraceAsString($this) . PHP_EOL
+        /*.$this->arrayToPrettyString($_SERVER)*/
+        );
 
         Http::post('https://api.telegram.org/bot' . env('TELEGRAM_BOT_TOKEN') . '/sendMessage', [
             'chat_id' => env('TELEGRAM_LOG_CHAT', 507752964),
