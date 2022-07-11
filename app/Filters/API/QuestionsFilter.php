@@ -157,6 +157,20 @@ class QuestionsFilter extends QueryFilter
         return $this->builder;
     }
 
+    public function status($value): EloquentBuilder
+    {
+        $value = (string)$value;
+        if ($value === self::QUESTION_NOT_PUBLIC) {
+            $this->builder->where(['is_public' => false, 'is_draft' => false]);
+        } elseif ($value === self::QUESTION_IS_PUBLIC) {
+            $this->builder->where(['is_public' => true]);
+        } elseif ($value === self::QUESTION_IS_DRAFT) {
+            $this->builder->where(['is_public' => false, 'is_draft' => true]);
+        }
+
+        return $this->builder;
+    }
+
     /**
      * filter[full_text]
      * @param string $value
