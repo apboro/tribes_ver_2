@@ -1,40 +1,81 @@
 <template>
     <v-popup
+        theme="primary"
+        title="Новый вопрос-ответ"
         @close="closeNewQuestionPopup"
     >
-        <template #title>
-            <h2 class="v-popup__title">Новый вопрос-ответ</h2>
-        </template>
-
         <template #body>
-            <label for="new_question">Вопрос</label>
-            <input
-                type="text"
-                id="new_question"
-                class="form-item"
-                v-model="newQuestionText"
-            >
+            <div class="form-item">
+                <label
+                    class="form-label form-item__label"
+                    for="new_question"
+                >
+                    Вопрос
+                </label>
 
-            <label for="">Ответ</label>
-            <text-editor
-                :text="newAnswerText"
-                @edit="setAnswer"
-            />
+                <input
+                    type="text"
+                    id="new_question"
+                    class="form-control"
+                    placeholder="Что такое Tribes?"
+                    v-model="newQuestionText"
+                >
+                
+                <span
+                    class="form-message form-message--danger form-item__message"
+                    v-if="false"
+                ></span>
+            </div>
+
+            <div class="form-item">
+                <label class="form-label form-item__label">
+                    Ответ
+                </label>
+
+                <text-editor
+                    :text="newAnswerText"
+                    @edit="setAnswer"
+                />
+            </div>
 
             <div class="knowledge-modal__controls">
-                <div class="knowledge-filter__item">
-                    <input type="checkbox" id="question_draft" v-model="draft">
-                    <label for="question_draft">Черновик</label>
+                <div class="checkbox-group">
+                    <div class="checkbox">
+                        <input
+                            type="checkbox"
+                            id="new_question_draft"
+                            class="checkbox__input"
+                            v-model="draft"
+                        >
+
+                        <label
+                            for="new_question_draft"
+                            class="checkbox__label"
+                        ></label>
+                    </div>
+
+                    <label
+                        for="new_question_draft"
+                        class="checkbox-group__label"
+                    >
+                        Черновик
+                    </label>
                 </div>
 
                 <div class="toggle-switch">
                     <label class="toggle-switch__switcher">
-                        <input type="checkbox" id="is_published_question" v-model="isPublic">
+                        <input
+                            type="checkbox"
+                            id="is_published_new_question"
+                            class="toggle-switch__input"
+                            v-model="isPublic"
+                        >
+
                         <span class="toggle-switch__slider"></span>
                     </label>
 
-                    <label for="is_published_question" class="toggle-switch__label">
-                        Опубликовано
+                    <label for="is_published_new_question" class="toggle-switch__label">
+                        {{ isPublic ? 'Опубликовано' : 'Не опубликовано' }}
                     </label>
                 </div>
             </div>
@@ -42,17 +83,17 @@
 
         <template #footer>
             <button
-                class="v-popup__footer-btn"
+                class="button-empty button-empty--primary"
                 @click="cancelNewQuestion"
             >
-                Cancel
+                Отмена
             </button>
             
             <button
-                class="v-popup__footer-btn"
+                class="button-filled button-filled--primary"
                 @click="sendNewQuestion"
             >
-                Submit
+                Создать
             </button>
         </template>
     </v-popup>

@@ -86,7 +86,7 @@
                         <input
                             type="text"
                             id="question"
-                            class="form-item"
+                            class="form-control"
                             v-model="questionText"
                         >
 

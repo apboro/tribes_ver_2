@@ -48,3 +48,17 @@ export function copyText(value) {
 
     alert('Copied')
 }
+
+export function bodyLock() {
+    const lockPaddingValue = window.innerWidth - document.body.offsetWidth + 'px';
+    document.body.style.paddingRight = lockPaddingValue;
+    document.body.classList.add('locked');
+
+    document.querySelector('.main-header').style.paddingRight = lockPaddingValue;
+}
+
+export function bodyUnLock() {
+    document.body.style.paddingRight = 0;
+    document.body.classList.remove('locked');
+    document.querySelector('.main-header').style.paddingRight = 0;
+}

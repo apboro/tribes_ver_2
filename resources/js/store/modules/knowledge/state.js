@@ -17,8 +17,8 @@ export default ({
     },
 
     _sort: {
-        name: 'id',
-        rule: 'asc'
+        name: '',
+        rule: ''
     },
 
     _pagination: {

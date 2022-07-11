@@ -27,7 +27,7 @@
                 class="knowledge-table__item knowledge-table__item--question"
                 @click="toggleQuestion"
             >
-                {{ question.context }}
+                <p class="knowledge-table__item-question">{{ question.context }}</p>
                 
                 <!-- <transition name="a-arrow"> -->
                     <template v-if="isVisibleFullQuestion">
@@ -198,8 +198,6 @@
                         <template v-else>
                             <p></p>
                         </template>
-
-
                     </div>
                 </div>
             </div>
@@ -215,55 +213,85 @@
 
         <transition name="a-popup">
             <v-popup
+                theme="primary"
+                title="Редактировать вопрос-ответ"
                 @close="closeQuestionPopup"
                 v-if="isVisibleQuestionPopup"
             >
-                <template #title>
-                    <h2 class="v-popup__title">
-                        Редактировать вопрос-ответ
-                    </h2>
-                </template>
-
                 <template #body>
-                    <label for="question">Вопрос</label>
-                    <input
-                        type="text"
-                        id="question"
-                        class="form-item"
-                        v-model="questionText"
-                    >
+                    <div class="form-item">
+                        <label
+                            class="form-label form-item__label"
+                            for="question"
+                        >
+                            Вопрос
+                        </label>
 
-                    <label for="">Ответ</label>
-                    <text-editor
-                        :text="answerText"
-                        @edit="setAnswer"
-                    />
+                        <input
+                            type="text"
+                            id="question"
+                            class="form-control"
+                            placeholder="Что такое Tribes?"
+                            v-model="questionText"
+                        >
+
+                        <span
+                            class="form-message form-message--danger form-item__message"
+                            v-if="false"
+                        ></span>
+                    </div>
+
+                    <div class="form-item">
+                        <label
+                            class="form-label form-item__label"
+                        >
+                            Ответ
+                        </label>
+
+                        <text-editor
+                            :text="answerText"
+                            @edit="setAnswer"
+                        />
+                    </div>
 
                     <div class="knowledge-modal__controls">
-                        <div class="knowledge-filter__item">
-                            <input
-                                type="checkbox"
-                                id="new_question_draft"
-                                v-model="draft"
+                        <div class="checkbox-group">
+                            <div class="checkbox">
+                                <input
+                                    type="checkbox"
+                                    id="question_draft"
+                                    class="checkbox__input"
+                                    v-model="draft"
+                                >
+
+                                <label
+                                    for="question_draft"
+                                    class="checkbox__label"
+                                ></label>
+                            </div>
+
+                            <label
+                                for="question_draft"
+                                class="checkbox-group__label"
                             >
-                            <label for="new_question_draft">Черновик</label>
+                                Черновик
+                            </label>
                         </div>
 
                         <div class="toggle-switch">
                             <label class="toggle-switch__switcher">
                                 <input
                                     type="checkbox"
-                                    id="is_published_new_question"
+                                    id="is_published_question"
+                                    class="toggle-switch__input"
                                     v-model="isPublic"
                                 >
+
                                 <span class="toggle-switch__slider"></span>
                             </label>
 
-                            <label
-                                for="is_published_new_question"
-                                class="toggle-switch__label"
-                            >
-                                Опубликовано
+                            <label for="is_published_question" class="toggle-switch__label">
+                                {{ isPublic ? 'Опубликовано' : 'Не опубликовано' }}
                             </label>
                         </div>
                     </div>
@@ -271,17 +299,17 @@
 
                 <template #footer>
                     <button
-                        class="v-popup__footer-btn"
+                        class="button-empty button-empty--primary"
                         @click="cancelQuestion"
                     >
-                        Cancel
+                        Отмена
                     </button>
                     
                     <button
-                        class="v-popup__footer-btn"
+                        class="button-filled button-filled--primary"
                         @click="editQuestion"
                     >
-                        Submit
+                        Сохранить
                     </button>
                 </template>
             </v-popup>
@@ -296,7 +324,7 @@
     import VDropdown from '../VDropdown.vue';
     import VIcon from '../VIcon.vue';
     import { mapActions, mapGetters, mapMutations } from 'vuex';
-    import {timeFormatting} from '../../../../core/functions';
+    import {bodyLock, bodyUnLock, timeFormatting} from '../../../../core/functions';
     
     export default {
         name: 'KnowledgeTableItem',
@@ -376,10 +404,12 @@
 
             openQuestionPopup() {
                 this.isVisibleQuestionPopup = true;
+                bodyLock();
             },
 
             closeQuestionPopup() {
                 this.isVisibleQuestionPopup = false;
+                bodyUnLock();
             },
 
             setAnswer(answer) {

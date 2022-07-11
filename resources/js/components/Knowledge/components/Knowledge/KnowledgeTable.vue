@@ -226,7 +226,7 @@
                 if (sortRule != 'off') {
                     this.SET_SORT({ name: sortName, rule: sortRule });
                 } else {
-                    this.SET_SORT({ name: 'id', rule: 'asc' });
+                    this.SET_SORT({ name: '', rule: '' });
                 }
                 
                 this.LOAD_QUESTIONS();

@@ -1,0 +1,46 @@
+.knowledge-confirm {
+    &__text {
+        text-align: center;
+        @include font($text-color-2, 16px, 22px, 400);
+    }
+
+    &__table {
+        margin-top: $indent-3;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    &__table-header {
+        display: flex;
+        align-items: center;
+        padding: 5px 10px;
+        background-color: $primary-2;
+    }
+
+    &__table-header-title {
+        @include font($text-color-2, 14px, 20px, 600);
+    }
+
+    &__table-body {
+        padding: 10px;
+        background-color: $primary-3;
+    }
+    
+    &__table-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        & + & {
+            margin-top: $indent-1;
+        }
+    }
+
+    &__question {
+        display: block;
+        width: 100%;
+        @include font($text-color-1, 14px, 20px, 400);
+        @include truncate(100%);
+        cursor: pointer;
+    }
+}

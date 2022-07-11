@@ -90,23 +90,38 @@
                 />
             </transition>
 
-            <!-- Модальное окно подтверждения -->
-            
-                <transition name="a-overlay">
-                    <v-overlay
-                        v-if="isVisibleConfirmPopup"
-                        @onClick="closeConfirmPopup"
-                    />
-                </transition>
+            <!-- Модальное окно подтверждения удаления -->
+            <transition name="a-overlay">
+                <v-overlay
+                    v-if="isVisibleConfirmDeletePopup"
+                    @onClick="closeConfirmDeletePopup"
+                />
+            </transition>
 
-                <transition name="a-popup">
-                    <knowledge-confirm-popup
-                        v-if="isVisibleConfirmPopup"
-                        :questions="needConfirmationQuestions"
-                        @closeConfirmPopup="closeConfirmPopup"
-                        @confirm="confirmDraftQuestions"
-                    />
-                </transition>
+            <transition name="a-popup">
+                <knowledge-confirm-delete-popup
+                    v-if="isVisibleConfirmDeletePopup"
+                    @closeConfirmDeletePopup="closeConfirmDeletePopup"
+                    @confirm="confirmDeleteQuestions"
+                />
+            </transition>
+
+            <!-- Модальное окно подтверждения черновиков -->
+            <transition name="a-overlay">
+                <v-overlay
+                    v-if="isVisibleConfirmDraftPopup"
+                    @onClick="closeConfirmDraftPopup"
+                />
+            </transition>
+
+            <transition name="a-popup">
+                <knowledge-confirm-draft-popup
+                    v-if="isVisibleConfirmDraftPopup"
+                    :questions="needConfirmationQuestions"
+                    @closeConfirmDraftPopup="closeConfirmDraftPopup"
+                    @confirm="confirmDraftQuestions"
+                />
+            </transition>
             
         </div>
     </div>
@@ -125,9 +140,11 @@
     import KnowledgeTable from './components/Knowledge/KnowledgeTable.vue';
     import KnowledgeMultipleOperations from './components/Knowledge/KnowledgeMultipleOperations.vue';
     import KnowledgeNewQuestionPopup from './components/Knowledge/KnowledgeNewQuestionPopup.vue';
-    import KnowledgeConfirmPopup from './components/Knowledge/KnowledgeConfirmPopup.vue';
+    import KnowledgeConfirmDraftPopup from './components/Knowledge/KnowledgeConfirmDraftPopup.vue';
+    import KnowledgeConfirmDeletePopup from './components/Knowledge/KnowledgeConfirmDeletePopup'
     import KnowledgeAuxiliary from './components/Knowledge/KnowledgeAuxiliary.vue';
     import VSelect from './components/VSelect.vue';
+    import { bodyLock, bodyUnLock } from '../../core/functions';
 
     export default {
         name: 'Knowledge',
@@ -144,7 +161,8 @@
             KnowledgeTable,
             KnowledgeMultipleOperations,
             KnowledgeNewQuestionPopup,
-            KnowledgeConfirmPopup,
+            KnowledgeConfirmDraftPopup,
+            KnowledgeConfirmDeletePopup,
             KnowledgeAuxiliary,
             VSelect
         },
@@ -155,7 +173,9 @@
                 searchText: '',
 
                 needConfirmationQuestions: [],
-                isVisibleConfirmPopup: false,
+                isVisibleConfirmDraftPopup: false,
+
+                isVisibleConfirmDeletePopup: false,
 
                 paginationSelectedOptions: [
                     { label: 15, value: 15 },
@@ -205,19 +225,35 @@
 
             openNewQuestionPopup() {
                 this.isVisibleNewQuestionPopup = true;
+                bodyLock();
             },
 
             closeNewQuestionPopup() {
                 this.isVisibleNewQuestionPopup = false;
+                bodyUnLock();
             },
 
-            openConfirmPopup() {
-                this.isVisibleConfirmPopup = true;
+            openConfirmDraftPopup() {
+                this.isVisibleConfirmDraftPopup = true;
+                bodyLock();
             },
 
-            closeConfirmPopup() {
-                this.isVisibleConfirmPopup = false;
+            closeConfirmDraftPopup() {
+                this.isVisibleConfirmDraftPopup = false;
+                bodyUnLock();
             },
+
+            openConfirmDeletePopup() {
+                this.isVisibleConfirmDeletePopup = true;
+                bodyLock();
+            },
+
+            closeConfirmDeletePopup() {
+                this.isVisibleConfirmDeletePopup = false;
+                bodyUnLock();
+            },
+
+            
 
             // переключение страницы пагинации
             setPage(value) {
@@ -257,6 +293,10 @@
                 // по типу операции вызываем экшн и получаем ответ
                 switch (type) {
                     case 'delete': 
+                        this.openConfirmDeletePopup();
+                        break;
+
+                    case 'hard_delete':
                         message = await this.TO_MULTIPLE_OPERATIONS({
                             command: 'delete',
                             params: { mark: 0 }
@@ -270,12 +310,11 @@
                             .map((id) => this.GET_QUESTIONS.find((question) => question.id == id))
                             .filter((question) => question.is_draft == true);
                         
-                        
                         // если есть черновики
                         if (draftItems.length) {
                             // отображаем их для подтверждения в окне
                             this.needConfirmationQuestions = draftItems;
-                            this.openConfirmPopup();
+                            this.openConfirmDraftPopup();
                             return false;
                         }
 
@@ -316,7 +355,7 @@
 
                 /* if (message.type === 'error') {
                     this.needConfirmationQuestions = message.items;
-                    this.openConfirmPopup();
+                    this.openConfirmDraftPopup();
                 } */
             },
 
@@ -325,8 +364,12 @@
                     const idsToSend = this.GET_IDS_MULTIPLE_OPERATIONS.filter(el => !notChangeableQuestions.includes(el));
                     this.SET_IDS_MULTIPLE_OPERATIONS(idsToSend);
                 }
-                this.closeConfirmPopup();
+                this.closeConfirmDraftPopup();
                 this.setOperationType('hard_public');
+            },
+
+            confirmDeleteQuestions() {
+                this.setOperationType('hard_delete');
             },
         },
 

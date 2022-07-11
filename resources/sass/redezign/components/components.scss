@@ -7,14 +7,14 @@
 @import "./link/link";
 @import "./breadcrumbs/breadcrumbs";
 @import "./icon/icon";
+@import "./form/form";
 @import "./input/input";
+@import "./label/label";
 @import "./text-editor/text-editor";
 @import "./overlay/overlay";
 @import "./pagination/pagination";
-@import "./v-popup";
+@import "./popup/popup";
 
 // Page components
 // Knowledge
-@import "./knowledge/knowledge-filter";
-@import "./knowledge/knowledge-modal";
-@import "./knowledge/knowledge-table";
+@import "./knowledge/knowledge-components";

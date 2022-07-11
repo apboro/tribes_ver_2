@@ -194,9 +194,8 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
 
         &--question {
             position: relative;
-            display: flex;
-            justify-content: space-between;
-            @include truncate(100%);
+            display: grid;
+            grid-template: 1fr / auto 31px;
             cursor: pointer;
         }
 
@@ -217,6 +216,10 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
                 stroke: $grey-8;
             }
         }
+    }
+
+    &__item-question {
+        @include truncate(100%);
     }
 
     &__status {
