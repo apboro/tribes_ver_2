@@ -26,6 +26,13 @@ class KnowledgeObserver
         $this->logger = $logger;
     }
 
+    /**
+     * ответ автора на сообщение другого пользователя в чате инициируети создание пары вопрос ответ
+     * ограничивается командой /qas
+     * @param $data
+     * @return bool
+     * @throws \Exception
+     */
     public function handleAuthorReply($data): bool
     {
         $this->logger->debug('author replay',$data);
@@ -41,7 +48,10 @@ class KnowledgeObserver
         $community = $this->communityRepository->getCommunityByChatId($chatId);
         $question = ArrayHelper::getValue($data, 'message.reply_to_message.text');
         $answer = ArrayHelper::getValue($data, 'message.text');
-        $this->manageQuestionService->setUserId($community->owner);
+        if(str_replace('/qas','',$answer)) {
+            $this->manageQuestionService->setUserId($community->owner);
+        }
+
         try{
             $this->manageQuestionService->createFromArray([
                 'community_id' => $community->id,
@@ -65,7 +75,7 @@ class KnowledgeObserver
 
     public function detectUserQuestion($data)
     {
-        $this->logger->debug('user custom question handler',$data);
+        //$this->logger->debug('user custom question handler',$data);
         //todo реализовать если надо вытягивать вопросы из текстового сообщения пользователя
         //  по каким то признакам в самом тексте
         //dd($data);
