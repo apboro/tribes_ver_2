@@ -15,9 +15,8 @@ use Symfony\Component\HttpFoundation\File\File as F;
 use App\Repositories\File\FileRepositoryContract;
 use App\Repositories\Video\VideoRepository;
 use App\Repositories\Video\VideoRepositoryContract;
-use App\Services\Files\FileUploadService;
+use App\Services\File\FileUploadService;
 use Illuminate\Http\Request;
-use App\Http\Requests\File\FileUploadRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -162,6 +161,9 @@ class FileController extends Controller
 
 //        dd($request->storedFiles[0]);
 //        $filesId = $request->storedFiles;
+
+        $files = $this->fileUploadService->procRequest($request);
+
         if($request['course_id']){
             $course = Course::find($request['course_id']);
         }
