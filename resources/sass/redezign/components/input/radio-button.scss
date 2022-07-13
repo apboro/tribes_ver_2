@@ -12,11 +12,11 @@ $radio-bg-1: $white;
 
     &:hover,
     &:focus {
-        .radio-button__label:before {
+        .radio-button__decor:before {
             border-color: $radio-color-2;
         }
 
-        .radio-button__input:checked + .radio-button__label:before {
+        .radio-button__input:checked + .radio-button__decor:before {
             border-color: $radio-color-3;
         }
     }

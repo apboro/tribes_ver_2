@@ -1,9 +1,9 @@
 <template>
-    <div class="knowledge__auxiliary">
+    <div class="auxiliary-knowledge">
         <a
             :href="metaData.how_it_works_link"
             target="_blank"
-            class="link knowledge__auxiliary-link"
+            class="link auxiliary-knowledge__link"
         >
             Как это работает?
         </a>
@@ -11,13 +11,13 @@
         <a
             :href="metaData.public_list_link"
             target="_blank"
-            class="link knowledge__auxiliary-link"
+            class="link auxiliary-knowledge__link"
         >
             Посмотреть как пользователь
         </a>
 
         <button
-            class="link knowledge__auxiliary-link"
+            class="link auxiliary-knowledge__link"
             @click="copyLink"
         >
             Копировать ссылку

@@ -5,7 +5,7 @@
             <!-- Multiple operations -->
             <div class="knowledge-table__header-item">
                 <v-checkbox
-                    id="new_question_draft"
+                    id="all_question"
                     :value="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
                     :modelValue="GET_ALL_STATUS_MULTIPLE_OPERATIONS"    
                     @change="toggleStateQuestions"
@@ -165,7 +165,11 @@
     export default {
         name: 'KnowledgeTable',
 
-        components: { KnowledgeTableItem, VIcon, VCheckbox },
+        components: {
+            KnowledgeTableItem,
+            VIcon,
+            VCheckbox
+        },
 
         props: {
             questions: {
@@ -199,6 +203,7 @@
                 'SET_SORT',
                 'CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS'
             ]),
+
             ...mapActions('knowledge', ['LOAD_QUESTIONS']),
 
             toSort(sortName, sortRule) {
@@ -211,9 +216,8 @@
                 // записываем текущее значение фильтра
                 this.sort[sortName] = sortRule;
 
-                // если значение "не выключен" передаем данные сортировки в состояние
+                // если значение не "выключен" передаем данные сортировки в состояние
                 // иначе задаем дефолтное
-
                 if (sortRule != 'off') {
                     this.SET_SORT({ name: sortName, rule: sortRule });
                 } else {

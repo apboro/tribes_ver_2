@@ -81,7 +81,7 @@
         </div>
 
         <button
-            class="button-text button-text--primary knowledge-filter__btn"
+            class="button-text button-text--primary"
             @click="resetFilters"
         >
             Сбросить фильтры
@@ -103,8 +103,6 @@
                 filters: {
                     with_answers: 'all',
                     status: 'all',
-                    /* published: 'all',
-                    draft: 'all', */
                 },
             }
         },

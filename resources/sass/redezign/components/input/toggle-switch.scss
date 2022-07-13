@@ -55,5 +55,6 @@
         display: inline-block;
         margin-left: $indent-2;
         @include font($text-color-1, 14px, 20px, 400);
+        cursor: pointer;
     }
 }

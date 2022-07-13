@@ -1,6 +1,6 @@
 <template>
     <div class="knowledge">
-        <portal-target name="destination"></portal-target>
+        <!-- <portal-target name="destination"></portal-target> -->
         
         <div class="container">
             <!-- <template v-if="COMMUNITY_TITLE"> -->
@@ -25,7 +25,10 @@
             <!-- </template> -->
             
             <!-- Auxiliary -->
-            <knowledge-auxiliary :metaData="GET_META_INFO" />
+            <knowledge-auxiliary
+                class="knowledge__auxiliary"
+                :metaData="GET_META_INFO"
+            />
 
             <div class="knowledge__control">
                 <!-- Search -->
@@ -36,7 +39,7 @@
                 
                 <!-- Add question -->
                 <button
-                    class="knowledge__add-btn button-filled button-filled--primary"
+                    class="button-filled knowledge__add-btn button-filled--primary"
                     @click="openNewQuestionPopup"
                 >
                     Добавить новый вопрос-ответ
@@ -122,7 +125,6 @@
                     @confirm="confirmDraftQuestions"
                 />
             </transition>
-            
         </div>
     </div>
 </template>
@@ -135,7 +137,6 @@
     import VOverlay from './components/VOverlay.vue';
     import VIcon from './components/VIcon.vue';
     import SearchField from './components/SearchField.vue';
-    import TextEditor from './components/TextEditor.vue';
     import KnowledgeFilter from './components/Knowledge/KnowledgeFilter.vue';
     import KnowledgeTable from './components/Knowledge/KnowledgeTable.vue';
     import KnowledgeMultipleOperations from './components/Knowledge/KnowledgeMultipleOperations.vue';
@@ -143,7 +144,6 @@
     import KnowledgeConfirmDraftPopup from './components/Knowledge/KnowledgeConfirmDraftPopup.vue';
     import KnowledgeConfirmDeletePopup from './components/Knowledge/KnowledgeConfirmDeletePopup.vue';
     import KnowledgeAuxiliary from './components/Knowledge/KnowledgeAuxiliary.vue';
-    import VSelect from './components/VSelect.vue';
     import { bodyLock, bodyUnLock } from '../../core/functions';
 
     export default {
@@ -156,7 +156,6 @@
             VOverlay,
             VIcon,
             SearchField,
-            TextEditor,
             KnowledgeFilter,
             KnowledgeTable,
             KnowledgeMultipleOperations,
@@ -164,7 +163,6 @@
             KnowledgeConfirmDraftPopup,
             KnowledgeConfirmDeletePopup,
             KnowledgeAuxiliary,
-            VSelect
         },
 
         data() {
@@ -174,7 +172,6 @@
 
                 needConfirmationQuestions: [],
                 isVisibleConfirmDraftPopup: false,
-
                 isVisibleConfirmDeletePopup: false,
 
                 paginationSelectedOptions: [
@@ -252,9 +249,7 @@
                 this.isVisibleConfirmDeletePopup = false;
                 bodyUnLock();
             },
-
             
-
             // переключение страницы пагинации
             setPage(value) {
                 this.SET_PAGINATION({ page: value });

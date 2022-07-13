@@ -80,73 +80,14 @@
 
             <!-- Действия -->
             <div class="knowledge-table__item knowledge-table__item--center">
-                <v-dropdown>
-                    <template #tooglePanel="{ toggleDropdownVisibility }">
-                        <button
-                            class="button-text button-text--primary button-text--only-icon"
-                            @click="toggleDropdownVisibility"
-                        >
-                            <v-icon
-                                name="vertical-dots"
-                                size="1"
-                                class="button-text__icon"
-                            />
-                        </button>
-                    </template>
-
-                    <!-- Меню действий -->
-                    <template #body="{ toggleDropdownVisibility }" class="">
-                        <div
-                            class="knowledge-table__action-menu"
-                            @click="toggleDropdownVisibility"
-                        >
-                            <button
-                                class="knowledge-table__action-item"
-                                v-if="isPublic"
-                                @click="removeFromPublication"
-                            >
-                                Снять с публикации
-                            </button>
-
-                            <button
-                                class="knowledge-table__action-item"
-                                v-else
-                                @click="publish"
-                            >
-                                Опубликовать
-                            </button>
-                            
-                            <a
-                                :href="question.public_link"
-                                target="_blank"
-                                class="knowledge-table__action-item"
-                            >
-                                Предпросмотр
-                            </a>
-
-                            <button
-                                class="knowledge-table__action-item"
-                                @click="openQuestionPopup"
-                            >
-                                Редактировать
-                            </button>
-
-                            <button
-                                class="knowledge-table__action-item"
-                                @click="copyLink"
-                            >
-                                Скопировать ссылку
-                            </button>
-                            
-                            <button
-                                class="knowledge-table__action-item"
-                                @click="removeQuestion"
-                            >
-                                Удалить
-                            </button>
-                        </div>
-                    </template>
-                </v-dropdown>
+                <knowledge-actions-dropdown
+                    :question="question"
+                    :isPublic="isPublic"
+                    @removeFromPublication="removeFromPublication"
+                    @publish="publish"
+                    @openQuestionPopup="openQuestionPopup"
+                    @removeQuestion="removeQuestion"
+                />
             </div>
         </div>
         
@@ -249,25 +190,14 @@
                         <v-checkbox
                             id="question_draft"
                             label="Черновик"
-                            v-model="draft"
+                            v-model="changeDraft"
                         />
 
-                        <div class="toggle-switch">
-                            <label class="toggle-switch__switcher">
-                                <input
-                                    type="checkbox"
-                                    id="is_published_question"
-                                    class="toggle-switch__input"
-                                    v-model="isPublic"
-                                >
-
-                                <span class="toggle-switch__slider"></span>
-                            </label>
-
-                            <label for="is_published_question" class="toggle-switch__label">
-                                {{ isPublic ? 'Опубликовано' : 'Не опубликовано' }}
-                            </label>
-                        </div>
+                        <toggle-switch
+                            id="is_published_question"
+                            :label="isPublic ? 'Опубликовано' : 'Не опубликовано'"
+                            v-model="changePublic"
+                        />
                     </div>
                 </template>
 
@@ -288,18 +218,35 @@
                 </template>
             </v-popup>
         </transition>
+
+        <!-- Модальное окно подтверждения удаления -->
+        <!-- <transition name="a-overlay">
+            <v-overlay
+                v-if="isVisibleConfirmDeleteKnowledgeQuestionPopup"
+                @onClick="closeConfirmDeleteKnowledgeQuestionPopup"
+            />
+        </transition>
+
+        <transition name="a-popup">
+            <knowledge-confirm-delete-popup
+                v-if="isVisibleConfirmDeleteKnowledgeQuestionPopup"
+                @closeConfirmDeletePopup="closeConfirmDeleteKnowledgeQuestionPopup"
+                @confirm="confirmDeleteKnowledgeQuestion"
+            />
+        </transition> -->
     </div>
 </template>
 
 <script>
+    import { mapActions, mapGetters, mapMutations } from 'vuex';
+    import { bodyLock, bodyUnLock, timeFormatting } from '../../../../core/functions';
     import VPopup from '../VPopup.vue';
     import TextEditor from '../TextEditor.vue';
     import VOverlay from '../VOverlay.vue';
-    import VDropdown from '../VDropdown.vue';
     import VIcon from '../VIcon.vue';
     import VCheckbox from '../VCheckbox.vue';
-    import { mapActions, mapGetters, mapMutations } from 'vuex';
-    import {bodyLock, bodyUnLock, timeFormatting} from '../../../../core/functions';
+    import ToggleSwitch from '../ToggleSwitch.vue';
+    import KnowledgeActionsDropdown from './KnowledgeActionsDropdown.vue';
     
     export default {
         name: 'KnowledgeTableItem',
@@ -309,8 +256,9 @@
             VIcon,
             TextEditor,
             VOverlay,
-            VDropdown,
+            ToggleSwitch,
             VCheckbox,
+            KnowledgeActionsDropdown,
          },
 
         props: {
@@ -349,7 +297,6 @@
                 },
 
                 set(isAdded) {
-                    console.log(132);
                     // при изменении добавляем или удалеяем элемент из массива
                     if (isAdded) {
                         this.ADD_ID_FOR_OPERATIONS(this.question.id);
@@ -357,7 +304,30 @@
                         this.REMOVE_ID_FOR_OPERATIONS(this.question.id);
                     }
                 },
-                
+            },
+
+            changeDraft: {
+                get() {
+                    return this.draft;
+                },
+                set(bool) {
+                    if (bool) {
+                        this.isPublic = false;
+                    }
+                    this.draft = bool;
+                }
+            },
+
+            changePublic: {
+                get() {
+                    return this.isPublic;
+                },
+                set(bool) {
+                    if (bool) {
+                        this.draft = false;
+                    }
+                    this.isPublic = bool;
+                }
             },
         },
 
@@ -373,7 +343,6 @@
                         if (this.$refs.answer.getBoundingClientRect().height > 100) {
                             this.isLongAnswer = true;
                             this.isVisibleFullAnswerBtn = true;
-                            //this.$refs.answer.classList.add('close');
                         }
                     }
                 })
@@ -440,10 +409,6 @@
             toggleFullAnswerVisibility() {
                 this.isLongAnswer = !this.isLongAnswer;
             },
-
-            copyLink() {
-                copyText(this.question.public_link);
-            }
         },
     }
 </script>

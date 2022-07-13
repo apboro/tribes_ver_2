@@ -16,7 +16,7 @@
 
         <template #footer>
             <button
-                class="button-empty button-empty--danger"
+                class="button-empty button-empty--primary"
                 @click="closeConfirmDeletePopup"
             >
                 Отмена

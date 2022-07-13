@@ -1,3 +1,5 @@
+$select-color-1: $primary-1;
+
 .select {
     position: relative;
     display: inline-block;
@@ -6,21 +8,20 @@
 
     &.open {
         .select__head {
-            border-color: $primary-1;
+            border-color: $select-color-1;
 
             .select__arrow {
                 .icon__fill {
-                    fill: $primary-1;
+                    fill: $select-color-1;
                 }
         
                 .icon__stroke {
-                    stroke: $primary-1;
+                    stroke: $select-color-1;
                 }
             }
         }
 
         .select__body {
-            
             visibility: visible;
             opacity: 1;
         }
@@ -108,13 +109,13 @@
         transition: $transition;
 
         &:hover {
-            color: $primary-1;
+            color: $select-color-1;
             background-color: $primary-2;
         }
 
         &.selected {
             color: $white;
-            background-color: $primary-1;
+            background-color: $select-color-1;
         }
     }
 }

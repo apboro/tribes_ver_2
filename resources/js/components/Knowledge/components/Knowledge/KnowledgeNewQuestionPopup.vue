@@ -42,25 +42,14 @@
                 <v-checkbox
                     id="new_question_draft"
                     label="Черновик"
-                    v-model="draft"
+                    v-model="changeDraft"
                 />
 
-                <div class="toggle-switch">
-                    <label class="toggle-switch__switcher">
-                        <input
-                            type="checkbox"
-                            id="is_published_new_question"
-                            class="toggle-switch__input"
-                            v-model="isPublic"
-                        >
-
-                        <span class="toggle-switch__slider"></span>
-                    </label>
-
-                    <label for="is_published_new_question" class="toggle-switch__label">
-                        {{ isPublic ? 'Опубликовано' : 'Не опубликовано' }}
-                    </label>
-                </div>
+                <toggle-switch
+                    id="is_published_new_question"
+                    :label="isPublic ? 'Опубликовано' : 'Не опубликовано'"
+                    v-model="changePublic"
+                />
             </div>
         </template>
 
@@ -87,22 +76,52 @@
     import VPopup from '../VPopup.vue';
     import TextEditor from '../TextEditor.vue';
     import VCheckbox from '../VCheckbox.vue';
+    import ToggleSwitch from '../ToggleSwitch.vue';
 
     export default {
         name: 'KnowledgeNewQuestionPopup',
 
-        components: { VPopup, TextEditor, VCheckbox },
+        components: {
+            VPopup,
+            TextEditor,
+            VCheckbox,
+            ToggleSwitch,
+        },
 
         data() {
             return {
                 newQuestionText: '',
                 newAnswerText: '',
                 draft: false,
-                isPublic: true
+                isPublic: true,
             }
         },
 
-        
+        computed: {
+            changeDraft: {
+                get() {
+                    return this.draft;
+                },
+                set(bool) {
+                    if (bool) {
+                        this.isPublic = false;
+                    }
+                    this.draft = bool;
+                }
+            },
+
+            changePublic: {
+                get() {
+                    return this.isPublic;
+                },
+                set(bool) {
+                    if (bool) {
+                        this.draft = false;
+                    }
+                    this.isPublic = bool;
+                }
+            },
+        },
 
         methods: {
             ...mapActions('knowledge', ['ADD_QUESTION']),

@@ -1,11 +1,13 @@
+$title-color: $text-color-2;
+
 .knowledge {
     padding-top: 20px;
     padding-bottom: 60px;
 
     .container {
-        display: flex;
+       /*  display: flex;
         flex-direction: column;
-        min-height: 86vh;
+        min-height: 86vh; */
     }
 
     &__breadcrumbs {}
@@ -14,7 +16,7 @@
         display: flex;
         flex-wrap: wrap;
         margin-top: $indent-4;
-        @include font($text-color-2, 24px, 32px, 700);
+        @include font($title-color, 24px, 32px, 700);
         text-transform: uppercase;
     }
 
@@ -26,12 +28,6 @@
         margin-top: $indent-1;
     }
 
-    &__auxiliary-link {
-        & + & {
-            margin-left: $indent-2;
-        }
-    }
-
     &__control {
         display: grid;
         grid-template: 1fr / minmax(250px, 70%) auto;
@@ -39,24 +35,12 @@
         margin-top: 40px;
     }
 
-    
-
     &__add-btn {
         justify-self: end;
-        /* padding: 8px 30px;
-        @include font(#fff, 14px, 22px, 600);
-        background-color: #000;
-        border-radius: 5px; */
     }
 
     &__multiple-operations {
-        display: flex;
-        column-gap: 5px;
         margin-top: $indent-4;
-    }
-
-    &__multiple-btn {
-        justify-self: start;
     }
 
     &__filter {
@@ -75,5 +59,4 @@
         flex: 0 0 auto;
         margin-top: 30px;
     }
-
 }

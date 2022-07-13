@@ -1,35 +1,35 @@
 <template>
-    <div class="knowledge__multiple-operations">
+    <div class="multiple-operations-knowledge knowledge__multiple-operations">
         <button
-            class="button-text button-text--danger knowledge__multiple-btn"
+            class="button-text multiple-operations-knowledge__btn button-text--danger"
             @click="setOperationType('delete')"
         >
             Удалить
         </button>
         
         <button
-            class="button-text button-text--primary knowledge__multiple-btn"
+            class="button-text multiple-operations-knowledge__btn button-text--primary"
             @click="setOperationType('no_public')"
         >
             Снять с публикации
         </button>
 
         <button
-            class="button-text button-text--primary knowledge__multiple-btn"
+            class="button-text multiple-operations-knowledge__btn button-text--primary"
             @click="setOperationType('public')"
         >
             Опубликовать
         </button>
         
         <button
-            class="button-text button-text--primary knowledge__multiple-btn"
+            class="button-text multiple-operations-knowledge__btn button-text--primary"
             @click="setOperationType('draft')"
         >
             В черновик
         </button>
         
         <button
-            class="button-text button-text--primary knowledge__multiple-btn"
+            class="button-text multiple-operations-knowledge__btn button-text--primary"
             @click="setOperationType('no_draft')"
         >
             Не черновик

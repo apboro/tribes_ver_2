@@ -1,3 +1,5 @@
+$form-control-color-1: $grey-7;
+
 .form-control {
     width: 100%;
     padding: 10px 20px;
@@ -7,11 +9,11 @@
     transition: $transition;
 
     &::placeholder {
-        @include font($grey-7, 14px, 20px, 400);
+        @include font($form-control-color-1, 14px, 20px, 400);
     }
 
     &:hover {
-        border-color: $grey-7;
+        border-color: $form-control-color-1;
     }
 
     &:focus {

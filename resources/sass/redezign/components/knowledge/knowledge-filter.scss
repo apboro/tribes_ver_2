@@ -31,34 +31,5 @@
         & + & {
             margin-left: 20px;
         }
-
-        &:hover {
-            .knowledge-filter__radio-button {
-                .radio-button__label:before {
-                    border-color: $grey-7;
-                }
-            }
-
-            .knowledge-filter__radio-button {
-                .radio-button__input:checked + .radio-button__label:before {
-                    border-color: #7367F0;
-                }
-            }
-        }
-    }
-
-    &__radio-button {
-
-    }
-
-    &__label {
-        margin-left: 8px;
-        @include font($text-color-1, 14px, 20px, 400);
-        cursor: pointer;
-    }
-
-    &__btn {
-        /* @include font(#7B7B7B, 14px, 17px, 500);
-        cursor: pointer; */
     }
 }

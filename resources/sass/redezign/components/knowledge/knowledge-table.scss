@@ -2,17 +2,13 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
 
 .knowledge-table {
     display: grid;
-    //grid-template: 50px calc(100vh - 482px) / 1fr;
     grid-template: 50px 1fr / 1fr;
-    
-    //max-height: calc(100vh - 430px);
     border: 1px solid $grey-3;
     border-radius: 5px;
-    //overflow: auto;
 
     &__header {
         position: sticky;
-        top: 85px;
+        top: $header-height;
         z-index: 10;
         display: grid;
         grid-template: $table-grid-template;
@@ -21,20 +17,12 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
         @include font($grey-8, 14px, 20px, 600);
         text-transform: uppercase;
         background-color: $grey-2;
-        //border-bottom: 1px solid #eee;
     }
 
     &__header-item {
-        
-
         &--sortable {
             display: flex;
             align-items: center;
-            //flex-direction: column;
-
-            span {
-                display: inline-block;
-            }
         }
 
         &--center {
@@ -43,12 +31,10 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
     }
 
     &__icon-sort {
-        margin-left: 10px;
+        margin-left: $indent-1;
     }
 
-    &__body {
-        
-    }
+    &__body {}
 
     &__item-wrapper {
         &.open {
@@ -65,17 +51,8 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
         align-items: center;
         padding: 15px 20px;
         background-color: $white;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid $white;
         transition: $transition;
-
-        &--special {
-            grid-template: auto / auto;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            text-align: center;
-            @include font($grey-5, 18px, 24px, 500);
-        }
 
         &:hover {
             background-color: $primary-3;
@@ -118,17 +95,23 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
                 }
             }
         }
+
+        &--special {
+            grid-template: auto / auto;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            @include font($grey-5, 18px, 24px, 500);
+        }
     }
 
     &__full {
         grid-column: 2 / 3;
-
         @include font($text-color-2, 14px, 20px, 400);
     }
 
-    &__full-question {
-        
-    }
+    &__full-question {}
 
     &__full-answer {
         margin-top: $indent-3;
@@ -242,15 +225,6 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
             color: $orange-1;
             background-color: $orange-2;
         }
-    }
-
-    &__action-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
     }
 
     &__action-menu {
