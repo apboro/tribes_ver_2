@@ -172,7 +172,7 @@ class MainBotCommands
                 $commands['description'] = $description;
             }
 
-            $this->bot->ExtentionApi()->setMyCommands(['commands' => $commands]);
+            $this->bot->getExtentionApi()->setMyCommands(['commands' => $commands]);
             $ctx->reply('Команды зарегистрированы.');
         });
     }
@@ -218,9 +218,9 @@ class MainBotCommands
     protected function donateOnChat()
     {
         try {
-            $this->bot->onCommand('donate' . $this->bot->botFullName, function (Context $ctx) {
+            $this->bot->onText('/donate-{index?}' . $this->bot->botFullName, function (Context $ctx) {
                 $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
-                $donate = $community->donate()->first();
+                $donate = $community->donate()->where('index', $ctx->var('index'))->first();
 
                 if ($community) {
                     $menu = Menux::Create('links')->inline();
@@ -254,7 +254,7 @@ class MainBotCommands
                         $description = ($donate->description !== NULL) ? $donate->description : 'Описания нет!';
                         $text = $description . $image;
                         $ctx->replyHTML($text, $menu);
-                    } else $ctx->reply('В сообществе не определены донаты');
+                    } else $ctx->reply('В сообществе не определен донат с указанным индексом');
                 } else $ctx->reply('Сообщество не подключено.');
             });
         } catch (\Exception $e) {
