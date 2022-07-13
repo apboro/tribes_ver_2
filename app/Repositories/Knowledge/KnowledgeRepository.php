@@ -3,13 +3,14 @@
 namespace App\Repositories\Knowledge;
 
 use App\Filters\API\QuestionsFilter;
+use App\Helper\ArrayHelper;
 use App\Models\Knowledge\Answer;
 use App\Models\Knowledge\Question;
 use DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class KnowledgeRepository implements KnowledgeRepositoryContract
 {
@@ -30,9 +31,17 @@ class KnowledgeRepository implements KnowledgeRepositoryContract
 
     public function getQuestionsByCommunityId($community_id, QuestionsFilter $filters): LengthAwarePaginator
     {
+        $filterData = $filters->getRequest()->get('filter');
+        Log::debug("KnowledgeRepository::getQuestionsByCommunityId",[
+            'community_id' => $community_id,
+            'filter' => $filterData,
+        ]);
         return Question::filter($filters)->where(['community_id' => $community_id])
             ->with('community')->with('answer')->
-            paginate(request('filter.per_page', 15), ['*'], 'page', request('filter.page', 1));
+            paginate(ArrayHelper::getValue($filterData,'per_page', 15),
+                ['*'],
+                'page',
+                ArrayHelper::getValue($filterData,'page', 1));
     }
 
     public function getAnswerById(int $answerId): ?Answer

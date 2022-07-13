@@ -30,6 +30,8 @@ class Community extends Model
      */
     private $tariff;
 
+    private $followerMap = ['', 'K', 'M', 'B'];
+
     protected static function boot()
     {
         parent::boot();
@@ -151,6 +153,24 @@ class Community extends Model
         return $this->hasMany(Question::class, 'community_id', 'id');
     }
 
+    public function getPopularQuestionsAttribute()
+    {
+        $questions = $this->questions();
+
+        if ($questions->count() === 0)
+        {
+            return null;
+        }
+
+        return $questions->where([
+            'is_public' => true,
+            'is_draft' => false,
+        ])->limit(20)
+            ->get()
+            ->shuffle()
+            ->slice(0, 5);
+    }
+
     function tariff()
     {
         return $this->hasOne(Tariff::class, 'community_id', 'id');
@@ -160,7 +180,7 @@ class Community extends Model
     {
         return $this->hasManyThrough(TariffVariant::class, Tariff::class);
     }
-    
+
     function donate()
     {
         return $this->hasMany(Donate::class, 'community_id', 'id');
@@ -214,6 +234,18 @@ class Community extends Model
         return $this->belongsToMany(TelegramUser::class, 'telegram_users_community', 'community_id', 'telegram_user_id', 'id', 'telegram_id')->withPivot(['excluded']);
     }
 
+    public function getCountFollowersAttribute()
+    {
+        $countFollowers = $this->followers()->count();
+        $string = $this->getFollowerString($countFollowers);
+
+        for ($rank = 0; $countFollowers > 999; $rank++) {
+            $countFollowers = round($countFollowers / 1000, 1);
+        }
+
+        return $countFollowers . $this->followerMap[$rank] . $string;
+    }
+
     /**
      *   Взять ссылку на публичный список вопросов сообщества
      */
@@ -229,5 +261,18 @@ class Community extends Model
     {
         $hash = PseudoCrypt::hash($this->id);
         return route('public.knowledge.help', compact('hash'));
+    }
+
+    private function getFollowerString($number)
+    {
+        $string = ' подписчиков';
+
+        if ($number === 1) {
+            $string = ' подписчик';
+        } elseif ($number > 1 && $number < 5) {
+            $string = ' подписчика';
+        }
+
+        return $string;
     }
 }

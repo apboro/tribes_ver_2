@@ -2,10 +2,13 @@
 
 namespace App\Services\Telegram\MainComponents;
 
+use App\Filters\API\QuestionsFilter;
+use App\Helper\ArrayHelper;
 use App\Helper\PseudoCrypt;
 use App\Jobs\CheckDaysForUsers;
 use App\Models\Community;
 use App\Models\Donate;
+use App\Models\Knowledge\Question;
 use App\Models\Payment;
 use App\Models\TelegramUser;
 use App\Repositories\Community\CommunityRepositoryContract;
@@ -21,26 +24,45 @@ use Askoldex\Teletant\Entities\Inline\Result;
 use Askoldex\Teletant\Entities\Inline\InputTextMessageContent;
 use Askoldex\Teletant\Exception\MenuxException;
 use Askoldex\Teletant\Exception\TeletantException;
+use App\Repositories\Knowledge\KnowledgeRepositoryContract;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 
 class MainBotCommands
 {
     protected MainBot $bot;
-    protected CommunityRepositoryContract $communityRepo;
-    protected TelegramConnectionRepositoryContract $connectionRepo;
-    protected PaymentRepositoryContract $paymentRepo;
+    private CommunityRepositoryContract $communityRepo;
+    private TelegramConnectionRepositoryContract $connectionRepo;
+    private PaymentRepositoryContract $paymentRepo;
+    private KnowledgeRepositoryContract $knowledgeRepository;
+
+    protected array $availableBotCommands = [
+        //todo здесь список команд, которые нужны боту, и должны быть доступны в реализации
+        //  имя команды => описание
+        'start' => 'Начало работы с ботом' . "\n",
+        'myid' => 'Показывает ваш уникальный ID' . "\n",
+        'chatId' => 'Показывает уникальный ID текущего чата' . "\n",
+        'tafiff' => 'Список тарифов сообщества',
+        'donate' => 'Материальная помощь сообществу',
+        'qa' => 'Найти ответ в Базе Знаний сообщества',
+
+    ];
 
 
     public function __construct(
         TelegramConnectionRepositoryContract $connectionRepo,
-        CommunityRepositoryContract $communityRepo,
-        PaymentRepositoryContract $paymentRepo
-
+        CommunityRepositoryContract          $communityRepo,
+        PaymentRepositoryContract            $paymentRepo,
+        KnowledgeRepositoryContract          $knowledgeRepository
     )
     {
         $this->paymentRepo = $paymentRepo;
         $this->connectionRepo = $connectionRepo;
         $this->communityRepo = $communityRepo;
+        $this->knowledgeRepository = $knowledgeRepository;
     }
 
     public function initBot(MainBot $bot)
@@ -64,7 +86,8 @@ class MainBotCommands
         'faq',
         'mySubscriptions',
         'subscriptionSearch',
-        'setTariffForUserByPayId'
+        'setTariffForUserByPayId',
+        'knowledgeSearch'
     ])
     {
         foreach ($methods as $method) {
@@ -87,8 +110,7 @@ class MainBotCommands
                             . 'Ссылка на сайт ' . route('main') . "\n"
                             . 'Создание и настройка проектов происходит в веб кабинете.' . "\n\n"
                             . 'Вот список доступных для вас команд:' . "\n"
-                            . '/start - Начало работы с ботом' . "\n"
-                            . '/myid - показывает ваш уникальный ID', Menux::Get('main'));
+                            . $this->getCommandsListAsString(), Menux::Get('main'));
                     } else $ctx->reply('Здравствуйте, вас приветствует TestBot');
                 } else {
                     if (str_split($ctx->getChatID(), 1)[0] !== '-') {
@@ -109,97 +131,12 @@ class MainBotCommands
         });
     }
 
-    private function connectionTariff(Context $ctx)
-    {
-        try {
-            Telegram::paymentUser(
-                $ctx->getUserID(),
-                $ctx->getUsername(),
-                $ctx->getFirstName(),
-                $ctx->getLastName(),
-                $ctx->var('paymentId'),
-                $this->bot->getExtentionApi()
-            );
-
-            $trial = strpos($ctx->var('paymentId'), 'trial');
-            $payId = PseudoCrypt::unhash($ctx->var('paymentId'));
-            $payment = $this->paymentRepo->getPaymentById($payId);
-            if ($trial === false) {
-                if ($payment && $payment->type == 'tariff') {
-                    $link = $this->createAndSaveInviteLink($payment->community->connection);
-                    $invite = ($link)
-                        ? "\n" . 'Пригласительная ссылка на ресурс: <a href="' . $link . '">Подписаться</a>' : '';
-
-                    $message = $payment->community->tariff->thanks_description ?? '';
-
-                    $image = ($payment->community->tariff->getThanksImage()) ? ' <a href="' . route('main') . $payment->community->tariff->getThanksImage()->url . '">&#160</a>' : '';
-                    $variant = $payment->community->tariff->variants()->find($payment->payable_id);
-                    if ($variant->isActive === true) {
-                        $variantName = $variant->title ?? '{Название тарифа}';
-                        $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
-                    }
-
-                    $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
-                    $ctx->replyHTML($image . $message . $defMassage . $invite);
-                }
-            } else {
-                $communityId = str_replace('trial', '', $ctx->var('paymentId'));
-                $community = $this->communityRepo->getCommunityById($communityId);
-                if ($community) {
-                    $link = $this->createAndSaveInviteLink($community->connection);
-                    $invite = ($link) ? "\n" . 'Пригласительная ссылка на ресурс: <a href="' . $link . '">Подписаться</a>' : '';
-
-                    $message = $community->tariff->thanks_description ?? '';
-
-                    $image = ($community->tariff->getThanksImage()) ? ' <a href="' . route('main') . $community->tariff->getThanksImage()->url . '">&#160</a>' : '';
-                    foreach ($community->tariff->variants as $variant) {
-                        if ($variant->price == 0 && $variant->isActive == true) {
-                            $variantName = $variant->title ?? 'Пробный период';
-                            $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
-                        }
-                    }
-                    $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
-
-                    $ctx->replyHTML($image . $message . $defMassage . $invite);
-                } else $ctx->replyHTML('Сообщество не существует');
-            }
-        } catch (TeletantException $e) {
-            return $ctx->reply('Что-то пошло не так, пожалуйста обратитесь в службу поддержки.' . 'Ошибка:'
-                . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
-    }
-
-    private function createAndSaveInviteLink($telegramConnection)
-    {
-        $invite = $this->bot->getExtentionApi()->createInviteLink($telegramConnection->chat_id);
-        $telegramConnection->update([
-            'chat_invite_link' => $invite
-        ]);
-        return $invite;
-    }
-
-    private function createMenu()
-    {
-        try {
-            Menux::Create('menu', 'main')
-                ->row()->btn('🚀Личный кабинет')->btn('🔧Помощь')
-                ->row()->btn('❗Оказать материальную помощь')->btn('📂Мои подписки')
-                ->row()->btn('🔍Найти подписку');
-
-            Menux::Create('menuCustom', 'custom')
-                ->row()->btn('🚀Личный кабинет')->btn('🔧Помощь')
-                ->row()->btn('❗Оказать материальную помощь')->btn('📂Мои подписки');
-        } catch (MenuxException $e) {
-        }
-    }
-
     protected function startOnGroup()
     {
         $this->bot->onCommand('start' . $this->bot->botFullName, function (Context $ctx) {
             $ctx->reply('Здравствуйте, ' . $ctx->getFirstName() . "! \n"
                 . 'Список доступных для вас команд:' . "\n"
-                . '/start - Начало работы с ботом' . "\n"
-                . '/donate - если желаете оказать помощь сообществу');
+                . $this->getCommandsListAsString());
         });
     }
 
@@ -229,20 +166,13 @@ class MainBotCommands
     protected function setCommand()
     {
         $this->bot->onCommand('setCommand', function (Context $ctx) {
-            $this->bot->getExtentionApi()->setMyCommands(['commands' => [
-                [
-                    'command' => '/start',
-                    'description' => 'Начало работы с ботом'
-                ],
-                [
-                    'command' => '/donate',
-                    'description' => 'Материальная помощь сообществу'
-                ],
-                [
-                    'command' => '/tariff',
-                    'description' => 'Доступные тарифы'
-                ]
-            ]]);
+            $commands = [];
+            foreach ($this->availableBotCommands as $command => $description) {
+                $commands['command'] = '/' . $command;
+                $commands['description'] = $description;
+            }
+
+            $this->bot->getExtentionApi()->setMyCommands(['commands' => $commands]);
             $ctx->reply('Команды зарегистрированы.');
         });
     }
@@ -267,34 +197,6 @@ class MainBotCommands
         });
     }
 
-    private function tariffButton($community, $userId = NULL)
-    {
-        try {
-            $menu = Menux::Create('links')->inline();
-            $text = 'Доступные тарифы';
-            if ($community->tariff->variants->first() == NULL) {
-                return ['Тарифы не установлены для сообщества', ''];
-
-            }
-            foreach ($community->tariff->variants as $variant) {
-                if ($variant->price !== 0 && $variant->isActive == true) {
-                    $price = ($variant->price) ? $variant->price . '₽' : '';
-                    $title = ($variant->title) ? $variant->title . ' — ' : '';
-                    $period = ($variant->period) ? '/Дней:' . $variant->period : '';
-                    $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
-                        'amount' => $variant->price,
-                        'currency' => 0,
-                        'type' => 'tariff',
-                        'telegram_user_id' => $userId
-                    ]));
-                }
-            }
-            return [$text, $menu];
-        } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
-    }
-
     protected function inlineCommand()
     {
         try {
@@ -313,73 +215,12 @@ class MainBotCommands
         }
     }
 
-    private function inlineQuery($donate)
-    {
-        $this->bot->onInlineQuery($donate->inline_link, function (Context $ctx) use ($donate) {
-            $result = new Result();
-            $article = new Article(1);
-            $message = new InputTextMessageContent();
-
-            $image = $donate->getMainImage() ? $donate->getMainImage()->url : '';
-            $description = $donate->description ? $donate->description : 'Описания нет!';
-            $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
-
-            $message->parseMode('HTML');
-            $article->title($donate->community->title);
-
-            if ($donate->description)
-                $article->description(mb_strimwidth($donate->description, 0, 55, "..."));
-
-            $article->inputMessageContent($message);
-            $article->thumbUrl('' . route('main') . $image);
-
-            $menu = Menux::Create('a')->inline();
-            foreach ($donate->variants as $variant) {
-                if ($variant->price && $variant->isActive !== false) {
-                    $key = array_search($variant->currency, Donate::$currency);
-
-                    $currencyLabel = Donate::$currency_labels[$key];
-                    $data = [
-                        'amount' => $variant->price,
-                        'currency' => $variant->currency,
-                        'donateId' => $donate->id
-                    ];
-
-                    if ($variant->description) {
-                        $menu->row()->uBtn(
-                            $variant->price . $currencyLabel . ' — ' . $variant->description,
-                            $donate->community->getDonatePaymentLink($data)
-                        );
-                    } else {
-                        $menu->row()->uBtn($variant->price . $currencyLabel, $donate->community->getDonatePaymentLink($data));
-                    }
-
-                } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
-                    $dataNull = [
-                        'amount' => 0,
-                        'currency' => 0,
-                        'donateId' => $donate->id
-                    ];
-                    $variantDesc = $variant->description ? $variant->description : 'Произвольная сумма';
-                    $menu->row()->uBtn($variantDesc, $donate->community->getDonatePaymentLink($dataNull));
-                }
-            }
-
-            $article->keyboard($menu->getAsObject());
-            $result->add($article);
-            $ctx->Api()->answerInlineQuery([
-                'inline_query_id' => $ctx->getInlineQueryID(),
-                'results' => (string)$result,
-            ]);
-        });
-    }
-
     protected function donateOnChat()
     {
         try {
-            $this->bot->onCommand('donate' . $this->bot->botFullName, function (Context $ctx) {
+            $this->bot->onText('/donate-{index?}' . $this->bot->botFullName, function (Context $ctx) {
                 $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
-                $donate = $community->donate()->first();
+                $donate = $community->donate()->where('index', $ctx->var('index'))->first();
 
                 if ($community) {
                     $menu = Menux::Create('links')->inline();
@@ -413,7 +254,7 @@ class MainBotCommands
                         $description = ($donate->description !== NULL) ? $donate->description : 'Описания нет!';
                         $text = $description . $image;
                         $ctx->replyHTML($text, $menu);
-                    } else $ctx->reply('В сообществе не определены донаты');
+                    } else $ctx->reply('В сообществе не определен донат с указанным индексом');
                 } else $ctx->reply('Сообщество не подключено.');
             });
         } catch (\Exception $e) {
@@ -447,7 +288,7 @@ class MainBotCommands
     {
         try {
             $this->bot->onHears('🔍Найти подписку', function (Context $ctx) {
-               $ctx->reply('Пожалуйста введите идентификатор платежа. Пример: payment-1111');
+                $ctx->reply('Пожалуйста введите идентификатор платежа. Пример: payment-1111');
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -576,6 +417,85 @@ class MainBotCommands
         }
     }
 
+    protected function knowledgeSearch()
+    {
+
+        try {
+            $this->bot->onText('/qa {search?}', function (Context $ctx) {
+
+                $message = $ctx->update()->message();
+                $this->bot->logger()->debug('Поиск по БЗ');
+                $searchText = $ctx->var('search');
+                $replyToUser = $message->from()->username()??$message->from()->firstName();
+
+                if (!$message->replyToMessage()->isEmpty()) {
+                    $reply = $message->replyToMessage();
+                    if (empty($searchText)) {
+                        $searchText = $reply->text();
+                    }
+                    $replyToUser = $reply->from()->username()??$reply->from()->firstName();
+                    //$reply->messageId()
+                }
+                $searchText = trim($searchText);
+                Log::debug(" search.$searchText");
+                if (empty($searchText) || strlen($searchText) <= 3) {
+                    $ctx->replyHTML("@$replyToUser Слишком короткий поисковый запрос.");
+                    return;
+                }
+                $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
+                if (!$community) {
+                    $ctx->replyHTML("@$replyToUser Сообщество не подключено.");
+                    return;
+                }
+
+                $filters = new QuestionsFilter(new Request(['filter' => [
+                    'published' => 'public',
+                    'draft' => 'not_draft',
+                    'per_page' => 3,
+                    'page' => 1,
+                    'full_text' => $searchText,
+                ]]));
+                $paginateQuestionsCollection = $this->knowledgeRepository->getQuestionsByCommunityId($community->id, $filters);
+                if ($paginateQuestionsCollection->isEmpty()) {
+                    $ctx->replyHTML("@$replyToUser Ответов не найдено.");
+                    return;
+                }
+                $context = "Для @$replyToUser из Базы Знаний \n";
+                $context .= "<b>--------------------------</b> \n";
+                $context .= $this->prepareQuestionsList($paginateQuestionsCollection);
+                if ($paginateQuestionsCollection->total() > $paginateQuestionsCollection->perPage()) {
+                    $context .= '<a href="' . $community->getPublicKnowledgeLink() . '?search_text=' . $searchText . '">' .
+                        "Смотреть остальные вопросы - ответы" .
+                        "</a>" . " \n";
+                }
+                $ctx->replyHTML($context);
+
+            });
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    //-------------------------------
+
+    private function prepareQuestionsList(LengthAwarePaginator $paginateQuestionsCollection): string
+    {
+        $context = '';
+        $this->bot->logger()->debug('Список вопросов в хтмл для реплики бота');
+        /** @var Question $question */
+        foreach ($paginateQuestionsCollection as $question) {
+            //todo написать список ответов со ссылкой на каждый ответ и ссылкой на веб версию БЗ
+            $context .= '<a href="' . $question->getPublicLink() . '">' .
+                Str::limit(strip_tags($question->context), 60, "...") .
+                "</a>" . " \n" .
+                '<span class="tg-spoiler">' . Str::limit(strip_tags($question->answer->context ?? "Нет ответа"), 120, "...") . '</span>' .
+                " \n";
+            $context .= '<b>--------------------------</b>' . " \n";
+        }
+
+        return $context;
+    }
+
     private function subscription()
     {
         try {
@@ -695,6 +615,179 @@ class MainBotCommands
         }
     }
 
+    private function connectionTariff(Context $ctx)
+    {
+        try {
+            Telegram::paymentUser(
+                $ctx->getUserID(),
+                $ctx->getUsername(),
+                $ctx->getFirstName(),
+                $ctx->getLastName(),
+                $ctx->var('paymentId'),
+                $this->bot->getExtentionApi()
+            );
+
+            $trial = strpos($ctx->var('paymentId'), 'trial');
+            $payId = PseudoCrypt::unhash($ctx->var('paymentId'));
+            $payment = $this->paymentRepo->getPaymentById($payId);
+            if ($trial === false) {
+                if ($payment && $payment->type == 'tariff') {
+                    $link = $this->createAndSaveInviteLink($payment->community->connection);
+                    $invite = ($link)
+                        ? "\n" . 'Пригласительная ссылка на ресурс: <a href="' . $link . '">Подписаться</a>' : '';
+
+                    $message = $payment->community->tariff->thanks_description ?? '';
+
+                    $image = ($payment->community->tariff->getThanksImage()) ? ' <a href="' . route('main') . $payment->community->tariff->getThanksImage()->url . '">&#160</a>' : '';
+                    $variant = $payment->community->tariff->variants()->find($payment->payable_id);
+                    if ($variant->isActive === true) {
+                        $variantName = $variant->title ?? '{Название тарифа}';
+                        $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
+                    }
+
+                    $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
+                    $ctx->replyHTML($image . $message . $defMassage . $invite);
+                }
+            } else {
+                $communityId = str_replace('trial', '', $ctx->var('paymentId'));
+                $community = $this->communityRepo->getCommunityById($communityId);
+                if ($community) {
+                    $link = $this->createAndSaveInviteLink($community->connection);
+                    $invite = ($link) ? "\n" . 'Пригласительная ссылка на ресурс: <a href="' . $link . '">Подписаться</a>' : '';
+
+                    $message = $community->tariff->thanks_description ?? '';
+
+                    $image = ($community->tariff->getThanksImage()) ? ' <a href="' . route('main') . $community->tariff->getThanksImage()->url . '">&#160</a>' : '';
+                    foreach ($community->tariff->variants as $variant) {
+                        if ($variant->price == 0 && $variant->isActive == true) {
+                            $variantName = $variant->title ?? 'Пробный период';
+                            $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
+                        }
+                    }
+                    $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
+
+                    $ctx->replyHTML($image . $message . $defMassage . $invite);
+                } else $ctx->replyHTML('Сообщество не существует');
+            }
+        } catch (TeletantException $e) {
+            return $ctx->reply('Что-то пошло не так, пожалуйста обратитесь в службу поддержки.' . 'Ошибка:'
+                . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    private function createAndSaveInviteLink($telegramConnection)
+    {
+        $invite = $this->bot->getExtentionApi()->createInviteLink($telegramConnection->chat_id);
+        $telegramConnection->update([
+            'chat_invite_link' => $invite
+        ]);
+        return $invite;
+    }
+
+    private function createMenu()
+    {
+        try {
+            Menux::Create('menu', 'main')
+                ->row()->btn('🚀Личный кабинет')->btn('🔧Помощь')
+                ->row()->btn('❗Оказать материальную помощь')->btn('📂Мои подписки')
+                ->row()->btn('🔍Найти подписку');
+
+            Menux::Create('menuCustom', 'custom')
+                ->row()->btn('🚀Личный кабинет')->btn('🔧Помощь')
+                ->row()->btn('❗Оказать материальную помощь')->btn('📂Мои подписки');
+        } catch (MenuxException $e) {
+        }
+    }
+
+    private function tariffButton($community, $userId = NULL)
+    {
+        try {
+            $menu = Menux::Create('links')->inline();
+            $text = 'Доступные тарифы';
+            if ($community->tariff->variants->first() == NULL) {
+                return ['Тарифы не установлены для сообщества', ''];
+
+            }
+            foreach ($community->tariff->variants as $variant) {
+                if ($variant->price !== 0 && $variant->isActive == true) {
+                    $price = ($variant->price) ? $variant->price . '₽' : '';
+                    $title = ($variant->title) ? $variant->title . ' — ' : '';
+                    $period = ($variant->period) ? '/Дней:' . $variant->period : '';
+                    $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
+                        'amount' => $variant->price,
+                        'currency' => 0,
+                        'type' => 'tariff',
+                        'telegram_user_id' => $userId
+                    ]));
+                }
+            }
+            return [$text, $menu];
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    private function inlineQuery($donate)
+    {
+        $this->bot->onInlineQuery($donate->inline_link, function (Context $ctx) use ($donate) {
+            $result = new Result();
+            $article = new Article(1);
+            $message = new InputTextMessageContent();
+
+            $image = $donate->getMainImage() ? $donate->getMainImage()->url : '';
+            $description = $donate->description ? $donate->description : 'Описания нет!';
+            $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
+
+            $message->parseMode('HTML');
+            $article->title($donate->community->title);
+
+            if ($donate->description)
+                $article->description(mb_strimwidth($donate->description, 0, 55, "..."));
+
+            $article->inputMessageContent($message);
+            $article->thumbUrl('' . route('main') . $image);
+
+            $menu = Menux::Create('a')->inline();
+            foreach ($donate->variants as $variant) {
+                if ($variant->price && $variant->isActive !== false) {
+                    $key = array_search($variant->currency, Donate::$currency);
+
+                    $currencyLabel = Donate::$currency_labels[$key];
+                    $data = [
+                        'amount' => $variant->price,
+                        'currency' => $variant->currency,
+                        'donateId' => $donate->id
+                    ];
+
+                    if ($variant->description) {
+                        $menu->row()->uBtn(
+                            $variant->price . $currencyLabel . ' — ' . $variant->description,
+                            $donate->community->getDonatePaymentLink($data)
+                        );
+                    } else {
+                        $menu->row()->uBtn($variant->price . $currencyLabel, $donate->community->getDonatePaymentLink($data));
+                    }
+
+                } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
+                    $dataNull = [
+                        'amount' => 0,
+                        'currency' => 0,
+                        'donateId' => $donate->id
+                    ];
+                    $variantDesc = $variant->description ? $variant->description : 'Произвольная сумма';
+                    $menu->row()->uBtn($variantDesc, $donate->community->getDonatePaymentLink($dataNull));
+                }
+            }
+
+            $article->keyboard($menu->getAsObject());
+            $result->add($article);
+            $ctx->Api()->answerInlineQuery([
+                'inline_query_id' => $ctx->getInlineQueryID(),
+                'results' => (string)$result,
+            ]);
+        });
+    }
+
     /** Отправляет сообщение в группу с донатами
      * @param int $chatId
      * @param int $donateId
@@ -775,5 +868,14 @@ class MainBotCommands
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
+    }
+
+    private function getCommandsListAsString(): string
+    {
+        $text = '';
+        foreach ($this->availableBotCommands as $command => $description) {
+            $text .= $command . ' - ' . $description . "\n";
+        }
+        return $text;
     }
 }

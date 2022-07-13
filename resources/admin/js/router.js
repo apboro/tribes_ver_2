@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store'
 
 Vue.use(Router);
 
@@ -11,13 +12,13 @@ let router =  new Router({
         {
             path: '/login',
             name: 'login',
-            meta: {layout: 'auth'},
+            meta: {layout: 'auth', requiresAuth: false},
             component: () => import(/* webpackChunkName: "Login" */ './components/auth/Login')
         },
         {
             path: '/',
             name: 'dashboard',
-            meta: {layout: 'main'},
+            meta: {layout: 'main', requiresAuth: true},
             component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Dashboard.vue')
         },
         {
@@ -37,6 +38,7 @@ let router =  new Router({
             path: '/payments',
             name: 'payments',
             meta: {layout: 'main'},
+            // meta: {layout: 'main', requiresAuth: true},
             component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Payments.vue')
         },
 
@@ -65,13 +67,12 @@ let router =  new Router({
 //     const publicPages = ['/login'];
 //     const authRequired = !publicPages.includes(to.path);
 //     const loggedIn = localStorage.getItem('token');
-//     console.log(authRequired && !loggedIn)
+//     console.log(loggedIn)
 //     if (authRequired && !loggedIn) {
 //         return next('/login');
 //     } else if(to.path === '/login') {
 //         return next('/');
 //     }
-//
 //     next();
 // });
 

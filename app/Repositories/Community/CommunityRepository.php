@@ -50,7 +50,7 @@ class CommunityRepository implements CommunityRepositoryContract
 //        return $community;
     }
 
-    public function getCommunityByChatId($chatId)
+    public function getCommunityByChatId($chatId): ?Community
     {
         return Community::whereHas('connection', function ($q) use ($chatId) {
             $q->where('chat_id', $chatId);
