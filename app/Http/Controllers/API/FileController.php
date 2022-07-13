@@ -164,12 +164,12 @@ class FileController extends Controller
 
         $files = $this->fileUploadService->procRequest($request);
 
-        if($request['course_id']){
+        /*if($request['course_id']){
             $course = Course::find($request['course_id']);
         }
         if($course){
             $course->attachments()->sync($request->storedFilesId);
-        }
+        }*/
 
         return response()->json([
             "status" => "ок",

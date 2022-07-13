@@ -4,6 +4,7 @@ namespace App\Services\File;
 
 use App\Models\Course;
 use App\Models\File;
+use App\Models\User;
 use App\Services\File\common\FileCollection;
 use App\Services\File\common\FileConfig;
 use App\Services\File\common\HandlerContract;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Storage;
@@ -47,11 +49,11 @@ class FileUploadService
 
         $entity = $request->get('entity',null);
         $entityId = $request->get('entityId',null);
-        $procedure = $request->get('procedure');
+//        $procedure = $request->get('procedure');
 //        dd($procedure);
         if($request['course_id']){
-//            dd(1);
             $entity = 'course';
+            $entityId = $request['course_id'];
 //            $course = Course::find($request['course_id']);
         }
 
@@ -59,19 +61,22 @@ class FileUploadService
             throw new Exception('Укажите entity в запросе');
         }
 
-        if(!$this->config->getConfig()[$entity]) {
+        $handlers = $this->config->getConfig()[$entity];
+        if(!$handlers) {
             throw new Exception('Данный entity не сконфигурирован');
         }
 
-//        if(!in_array([$entity][$procedure], $this->config->getConfig())) {
-//            $procedure = 'default';
-//        }
+        /*if(!in_array([$entity][$procedure], $this->config->getConfig())) {
+            $procedure = 'default';
+        }*/
 //        dd($procedure);
         //todo из $request перебрать все файлы
         //  и обработать их по ихнему mimeType
-        $files = $request->file();
+        $files = $request->file()['file'];
+//        dd($files);
         $collect = new FileCollection;
         if($files instanceof UploadedFile) {
+//            dd(1111);
             $collect->add($files);
         } elseif (is_array($files)){
             foreach ($files as $eachFile) {
@@ -85,13 +90,81 @@ class FileUploadService
         if($collect->isEmpty()) {
             throw new Exception('Пустой набор файлов');
         }
-
-        $this->processFileCollection($collect, $this->config->get("$entity.$procedure"));
+//dd($collect);
+//        $this->processFileCollection($collect, $this->config->get("$entity.$procedure"));
+        $this->processFileCollection($collect, $handlers);
 
         return $this->modelsFile;
     }
 
+    /**
+     * @param FileCollection $collect
+     * @return void
+     */
+    protected function processFileCollection(FileCollection $collect, $handlers): void
+    {
+        /** @var UploadedFile $file */
+        foreach ($collect as $file) {
+//            dd($file);
+            $type = $file->getMimeType();
+//dd($type);//"image/png"
+            if($this->checkImage($type)) {
+                $file_type = 'image';
+                $config = $handlers[$file_type . '_handler'];
 
+                $this->modelsFile->add($this->procFile($file, $config));
+            }
+        }
+    }
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function procFile(UploadedFile $file, array $config): File
+    {
+        /** @var HandlerContract $handler */
+        $class = $config['handler'];
+        unset($config['handler']);
+//        dd($config);
+        $handler = app()->make($class,$config);
+//        dd($handler);
+
+
+//        mime
+//        size
+//        filename
+//        rank
+//        isImage
+//        url
+//        hash
+//        uploader_id
+//        isVideo
+//        isAudio
+//        remoteFrame
+//        webcaster_event_id
+//        description
+//        iframe
+
+        $model = new File([
+            'mime' => null,
+            'size' => null,
+            'filename' => null,
+            'rank' => 0,
+            'isImage' => 0,
+            'url' => null,
+            'hash' => null,
+            'uploader_id' => $this->setUploader(),
+            'isVideo' => 0,
+            'isAudio' => 0,
+            'remoteFrame' => null,
+            'webcaster_event_id' => null,
+            'description' => null,
+            'iframe' => null
+        ]);
+        $model = $handler->startService($file, $model);
+
+        return $model;
+    }
 
     protected function procCollect(FileCollection $collection, array $entity): EloquentCollection
     {
@@ -118,43 +191,17 @@ class FileUploadService
         return new UploadedFile(Storage::disk('local')->path($imageName),'temporary_file_name',$mimeType);
     }
 
-    /**
-     * @param FileCollection $collect
-     * @return void
-     */
-    protected function processFileCollection(FileCollection $collect, array $config): void
-    {
-        /** @var UploadedFile $file */
-        foreach ($collect as $file) {
-            $type = $file->getMimeType();
-            if($this->checkImage($type)) {
-                $this->modelsFile->add($this->procFile($file, $config));
-            }
-        }
-    }
 
     protected function checkImage(string $mimeType): bool
     {
         return in_array($mimeType,$this->imageTypes);
     }
 
-    /**
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    protected function procFile(UploadedFile $file, array $config): File
+    private function setUploader()
     {
-        /** @var HandlerContract $handler */
-        $class = $config['handler'];
-        unset($config['handler']);
-        $handler = app()->make($class,$config);
-        /*'entity' => '',
-        'entity_id' => '',*/
-        $model = new File([
-            'file_name' => '',
-            'path' => '',
-        ]);
-        $model = $handler->startService($file, $model);
-
-        return $model;
+        return env('APP_DEBUG') ?
+            $this->uploader_id = User::where('email', 'test-dev@webstyle.top')->first()->id :
+            $this->uploader_id = Auth::id();
     }
+
 }

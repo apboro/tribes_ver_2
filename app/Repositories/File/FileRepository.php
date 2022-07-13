@@ -80,6 +80,23 @@ class FileRepository implements FileRepositoryContract
         ]);
     }
 
+    public function storeFileTest($file, $file_name, $path)
+    {
+dd($this->setFilename($file));
+        $absolutPath = 'public/' . $path . '/' . Carbon::now()->format('d_m_y');
+
+        if (!file_exists(storage_path('app/') . $absolutPath)) {
+            mkdir(storage_path('app/') . $absolutPath, 0755, true);
+        }
+//dd($this->setFilename($file));
+        //    /storage/audio/07_07_22/61012b44d33d3c518b72fbd827b6c08a.mp3
+//        dd($absolutPath); //   public/image/13_07_22
+        $url = $file->storeAs($absolutPath, $this->setFilename($file));
+//dd($url);
+        return $url;
+//        dd(1);
+    }
+
     public function storeFile($data)
     {
 
@@ -190,7 +207,7 @@ class FileRepository implements FileRepositoryContract
 
     private function setFilename($file)
     {
-        return $this->filename = $this->setHash($file) . '.' . $this->extension;
+        return $this->filename = $this->setHash($file) . '.' . $file->guessClientExtension();
     }
 
     private function collectFileData()
