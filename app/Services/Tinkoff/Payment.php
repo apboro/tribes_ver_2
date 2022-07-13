@@ -14,7 +14,7 @@ use App\Models\TariffVariant;
 use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
-use App\Services\TinkoffApi;
+use App\Services\Tinkoff\TinkoffApi;
 use phpDocumentor\Reflection\Types\False_;
 
 class Payment
