@@ -30,13 +30,14 @@
                 <a href="#" class="dropdown-item">Feedback</a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">Settings</a>
-                <a v-on:click='logout' href="#" class="dropdown-item">Logout</a>
+                <a @click.prevent='logout' href="#" class="dropdown-item">Logout</a>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { Dropdown } from 'bootstrap';
 import { mapActions, mapGetters } from 'vuex';
 import Icon from "../ui/Icon";
 export default {
@@ -53,12 +54,11 @@ export default {
         ...mapGetters(["GET_USER"])
     },
     methods: {
-        ...mapActions(["LOAD_USER"]),
-        
         logout(){
-            localStorage.setItem('token', null);
-            window.location.href = '/login';
+
+            this.$router.push({name: 'login'}).catch(() => {});
         },
+        ...mapActions(["LOAD_USER"]),
 
         toggleThemeColor() {
             let apply_light = 

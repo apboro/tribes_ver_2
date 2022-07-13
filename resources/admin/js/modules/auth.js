@@ -1,19 +1,24 @@
 import axios from 'axios';
 
 let state = {
-    _user: {}
+    _user: {},
 }
 
 let getters = {
     GET_USER (state){
         return state._user;
-    }
+    },
+    isAuthenticated: (state) => !!state._user,
 }
 
 let mutations = {
     SET_USER (state, userData) {
         state._user = userData;
-    }
+    },
+
+    setUser(state, email){
+        state._user = email
+    },
 }
 
 let actions = {
@@ -27,7 +32,7 @@ let actions = {
         } catch (error) {
             console.log(error);
         }
-    }
+    },
 }
 export default {
     state,
