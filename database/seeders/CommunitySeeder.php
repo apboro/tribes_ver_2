@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Helper\PseudoCrypt;
 use App\Models\Community;
 use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
@@ -33,11 +34,13 @@ class CommunitySeeder extends Seeder
             ]);
 
         foreach($connections as $eachConnection){
-
-            Community::factory()->for($eachConnection,'connection')->create([
+            $community = Community::factory()->for($eachConnection,'connection')->create([
                 'owner' => $userTest->id,
                 'title' => $eachConnection->chat_title,
             ]);
+
+            $community->hash = PseudoCrypt::hash($community->id);
+            $community->save();
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Repositories\Community;
 
 use App\Filters\API\CommunitiesFilter;
+use App\Models\Community;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -16,7 +17,7 @@ interface CommunityRepositoryContract
 
     public function update();
 
-    public function getCommunityByChatId($chatId);
+    public function getCommunityByChatId($chatId): ?Community;
 
     public function getOwnerIdByChatId(int $chatId): ?int;
 

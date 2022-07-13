@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('test123'),
         ]);
 
+
         //Auth::login($user);
 
 

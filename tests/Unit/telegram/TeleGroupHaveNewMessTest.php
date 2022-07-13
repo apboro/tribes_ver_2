@@ -39,7 +39,6 @@ class TeleGroupHaveNewMessTest extends BaseUnitTest
      */
     public function testWork()
     {
-        $this->assertTrue(true);
         //todo тестировать попадание сырых данных через сервис в определенные команды для обработки
         // с помощью фейкового обработчика логирования
         $botService = $this->app->make(TelegramMainBotService::class);
