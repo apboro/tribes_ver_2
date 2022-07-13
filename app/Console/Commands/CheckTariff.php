@@ -36,7 +36,7 @@ class CheckTariff extends Command
     public function __construct(
         TelegramMainBotService $telegramService,
         TelegramLogService $telegramLogService
-    )
+    ) 
     {
         parent::__construct();
         $this->telegramService = $telegramService;
@@ -73,28 +73,37 @@ class CheckTariff extends Command
                                     if ($payment) {
                                         $lastName = $user->last_name ?? '';
                                         $firstName = $user->first_name ?? '';
-                                        $this->telegramService->sendMessageFromBot(config('telegram_bot.bot.botName'), env('TELEGRAM_LOG_CHAT'),
-                                            "Рекуррентное списание от " . $firstName . $lastName . " в сообщетво ");
+                                        $this->telegramService->sendMessageFromBot(
+                                            config('telegram_bot.bot.botName'),
+                                            env('TELEGRAM_LOG_CHAT'),
+                                            "Рекуррентное списание от " . $firstName . $lastName . " в сообщетво "
+                                        );
                                         $user->tariffVariant()->updateExistingPivot($variant->id, [
                                             'days' => $variant->period,
                                             'prompt_time' => date('H:i')
                                         ]);
                                     } else {
-                                        $user->tariffVariant()->updateExistingPivot($variant->id, [
-                                            'days' => 0,
-                                            'isAutoPay' => false
-                                        ]);
 
-                                        $this->telegramService->kickUser(config('telegram_bot.bot.botName'),
-                                            $user->telegram_id, $variant->tariff->community->connection->chat_id);
-                                        $user->communities()->detach($variant->tariff->community->id);
+                                        if ($variant->pivot->isAutoPay === true) {
+                                            $user->tariffVariant()->updateExistingPivot($variant->id, [
+                                                'days' => 0,
+                                                'isAutoPay' => false
+                                            ]);
 
-                                        if ($variant->tariff->tariff_notification == true) {
-                                            $this->telegramService->sendMessageFromBot(
+                                            $this->telegramService->kickUser(
                                                 config('telegram_bot.bot.botName'),
-                                                $variant->tariff->community->connection->telegram_user_id,
-                                                'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа'
+                                                $user->telegram_id,
+                                                $variant->tariff->community->connection->chat_id
                                             );
+                                            $user->communities()->detach($variant->tariff->community->id);
+
+                                            if ($variant->tariff->tariff_notification == true) {
+                                                $this->telegramService->sendMessageFromBot(
+                                                    config('telegram_bot.bot.botName'),
+                                                    $variant->tariff->community->connection->telegram_user_id,
+                                                    'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа'
+                                                );
+                                            }
                                         }
                                     }
                                 }
