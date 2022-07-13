@@ -20,7 +20,7 @@
                 <option value="30">30</option>
                 <option value="45">45</option>
             </select> -->
-            <span> из {{ data.total }}</span>
+            <span> из {{ paginateData.total }}</span>
             <!-- <span>Показано записей с {{ data.from }} по {{ data.to }} из {{ data.total }}</span> -->
         </div>
 
@@ -28,7 +28,7 @@
             <div
                 class="pagination__control"
                 :class="{ 'active': item.active }"
-                v-for="(item, i) in paginateData"
+                v-for="(item, i) in paginateData.links"
                 :key="i"
             >
                 <template v-if="item.label == 'Назад'">
@@ -83,8 +83,8 @@
 
         props: {
             paginateData: {
-                type: Array,
-                default: []
+                type: Object,
+                default: {}
             },
 
             selectOptions: {

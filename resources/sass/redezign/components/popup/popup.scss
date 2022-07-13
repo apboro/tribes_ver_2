@@ -19,9 +19,33 @@
             color: $primary-1;
         }
 
-        .popup--no-title {
-            .popup__header {
-                background-color: transparent;
+        .popup__decor {
+            .icon__fill {
+                fill: $primary-1;
+            }
+
+            .icon__stroke {
+                stroke: $primary-1;
+            }
+        }
+    }
+
+    &--danger {
+        .popup__header {
+            background-color: $danger-2;
+        }
+
+        .popup__title {
+            color: $danger-1;
+        }
+
+        .popup__decor {
+            .icon__fill {
+                fill: $danger-1;
+            }
+
+            .icon__stroke {
+                stroke: $danger-1;
             }
         }
     }
@@ -58,6 +82,10 @@
     }
 
     &__body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 120px;
         padding: 30px 30px 20px 30px;
         border-bottom: 2px solid $grey-2;
     }

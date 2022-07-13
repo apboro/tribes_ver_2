@@ -1,7 +1,11 @@
 <template>
     <div
         class="popup"
-        :class="{ 'popup--primary': theme == 'primary', 'popup--confirm': confirmOptions }"
+        :class="{
+            'popup--primary': theme == 'primary',
+            'popup--danger': theme == 'danger',
+            'popup--confirm': confirmOptions
+        }"
     >
         <div class="popup__header">
             <h2 class="popup__title">
@@ -32,15 +36,30 @@
         </div>
 
         <template v-if="confirmOptions">
-            <v-icon
-                name="info"
-                :sizeParams="{
-                    width: 231,
-                    height: 231
-                }"
-                class="popup__decor"
-            />
+            <template v-if="confirmOptions.type == 'info'">
+                <v-icon
+                    name="info"
+                    :sizeParams="{
+                        width: 231,
+                        height: 231
+                    }"
+                    class="popup__decor"
+                />
+            </template>
+
+            <template v-else-if="confirmOptions.type == 'delete'">
+                <v-icon
+                    name="delete"
+                    :sizeParams="{
+                        width: 231,
+                        height: 231
+                    }"
+                    class="popup__decor"
+                />
+            </template>
         </template>
+
+
     </div>
 </template>
 

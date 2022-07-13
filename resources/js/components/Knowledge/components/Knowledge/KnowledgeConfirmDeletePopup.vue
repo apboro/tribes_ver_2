@@ -1,32 +1,32 @@
 <template>
     <v-popup
-        theme="primary"
-        :confirmOptions="{ type: 'info' }"
-        @close="closeConfirmDraftPopup"
+        theme="danger"
+        :confirmOptions="{ type: 'delete' }"
+        @close="closeConfirmDeletePopup"
     >
         <template #body>
             <p class="knowledge-confirm__text">
-                Среди  выбранных вами вопросов есть <b>черновик.</b> 
+                Вы уверены, что хотите удалить вопрос-ответ?
             </p>
 
             <p class="knowledge-confirm__text">
-                Егоfdfdfdfdстатус будет изменен на «Опубликовано», и вопрос-ответ <b>будет виден вашим пользователям.</b>
+                Это действие нельзя будет отменить.
             </p>
         </template>
 
         <template #footer>
             <button
-                class="button-empty button-empty--primary"
-                @click="closeConfirmDraftPopup"
+                class="button-empty button-empty--danger"
+                @click="closeConfirmDeletePopup"
             >
                 Отмена
             </button>
             
             <button
-                class="button-filled button-filled--primary"
+                class="button-filled button-filled--danger"
                 @click="confirm"
             >
-                Опубликовать
+                Удалить
             </button>
         </template>
     </v-popup>
@@ -43,15 +43,13 @@
         },
 
         methods: {
-            closeConfirmDraftPopup() {
-                this.$emit('closeConfirmDraftPopup');
+            closeConfirmDeletePopup() {
+                this.$emit('closeConfirmDeletePopup');
             },
 
             confirm() {
-                this.$emit('confirm', result);
+                this.$emit('confirm');
             },
-            
-            
         },
     }
 </script>

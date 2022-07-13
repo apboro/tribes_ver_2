@@ -22,8 +22,30 @@
     }
 
     &__table-body {
+        max-height: 125px;
         padding: 10px;
         background-color: $primary-3;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+            width: 3px;
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            background-color: $grey-5 !important;
+        }
+
+        &::-webkit-scrollbar-track {
+            border-radius: 5px;
+            background-color: transparent;
+        }
+
+        & {
+            scrollbar-color: $grey-5 transparent; /*Цвет скролла, цвет ползунка*/
+            scrollbar-width: thin; /*Толщина скролла thin, auto*/
+        }
     }
     
     &__table-item {

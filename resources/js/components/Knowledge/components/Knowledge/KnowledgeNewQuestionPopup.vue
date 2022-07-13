@@ -118,6 +118,8 @@
             }
         },
 
+        
+
         methods: {
             ...mapActions('knowledge', ['ADD_QUESTION']),
 

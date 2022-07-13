@@ -68,7 +68,7 @@
             <template v-if="GET_QUESTIONS && GET_QUESTIONS.length || !IS_LOADING">
                 <v-pagination
                     class="knowledge__pagination"
-                    :paginateData="GET__LINKS"
+                    :paginateData="GET_PAGINATE_DATA"
                     :selectOptions="paginationSelectedOptions"
                     @onPageClick="setPage"
                     @onChangePerPage="setPerPage"
@@ -141,7 +141,7 @@
     import KnowledgeMultipleOperations from './components/Knowledge/KnowledgeMultipleOperations.vue';
     import KnowledgeNewQuestionPopup from './components/Knowledge/KnowledgeNewQuestionPopup.vue';
     import KnowledgeConfirmDraftPopup from './components/Knowledge/KnowledgeConfirmDraftPopup.vue';
-    import KnowledgeConfirmDeletePopup from './components/Knowledge/KnowledgeConfirmDeletePopup'
+    import KnowledgeConfirmDeletePopup from './components/Knowledge/KnowledgeConfirmDeletePopup.vue';
     import KnowledgeAuxiliary from './components/Knowledge/KnowledgeAuxiliary.vue';
     import VSelect from './components/VSelect.vue';
     import { bodyLock, bodyUnLock } from '../../core/functions';
@@ -194,7 +194,7 @@
                 'GET_META_INFO',
                 'IS_LOADING',
                 'GET_IDS_MULTIPLE_OPERATIONS',
-                'GET__LINKS',
+                'GET_PAGINATE_DATA',
             ]),
 
             breadcrumbsLinks() {
@@ -369,6 +369,7 @@
             },
 
             confirmDeleteQuestions() {
+                this.closeConfirmDeletePopup();
                 this.setOperationType('hard_delete');
             },
         },
