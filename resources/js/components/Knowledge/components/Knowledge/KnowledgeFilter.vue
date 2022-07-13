@@ -7,197 +7,77 @@
 
             <div class="knowledge-filter__group knowledge-filter__group--first">
                 <!-- All -->
-                <div class="knowledge-filter__item">
-                    <div class="radio-button knowledge-filter__radio-button">
-                        <input
-                            type="radio"
-                            id="answer_all"
-                            class="radio-button__input"
-                            value="all"
-                            v-model="filters.with_answers"
-                            @change="filter"
-                        >
-                        
-                        <label
-                            for="answer_all"
-                            class="radio-button__label"
-                        ></label>
-                    </div>
-
-                    <label
-                        for="answer_all"
-                        class="knowledge-filter__label"
-                    >
-                        Все
-                    </label>
-                </div>
+                <radio-button
+                    id="answer_all"
+                    class="knowledge-filter__item"
+                    value="all"
+                    :checkedValue="filters.with_answers"
+                    label="Все"
+                    @input="filterWithAnswers"
+                />
 
                 <!-- No answer -->
-                <div class="knowledge-filter__item">
-                    <div class="radio-button knowledge-filter__radio-button">
-                        <input
-                            type="radio"
-                            id="no_answer"
-                            class="radio-button__input"
-                            value="no_answer"
-                            v-model="filters.with_answers"
-                            @change="filter"
-                        >
-                        
-                        <label
-                            for="no_answer"
-                            class="radio-button__label"
-                        ></label>
-                    </div>
-
-                    <label
-                        for="no_answer"
-                        class="knowledge-filter__label"
-                    >
-                        Без ответа
-                    </label>
-                </div>
+                <radio-button
+                    id="answer_no_answer"
+                    class="knowledge-filter__item"
+                    value="no_answer"
+                    :checkedValue="filters.with_answers"
+                    label="Без ответа"
+                    @input="filterWithAnswers"
+                />
 
                 <!-- Width answer -->
-                <div class="knowledge-filter__item">
-                    <div class="radio-button knowledge-filter__radio-button">
-                        <input
-                            type="radio"
-                            id="with_answer"
-                            class="radio-button__input"
-                            value="with_answer"
-                            v-model="filters.with_answers"
-                            @change="filter"
-                        >
-                        
-                        <label
-                            for="with_answer"
-                            class="radio-button__label"
-                        ></label>
-                    </div>
-
-                    <label
-                        for="with_answer"
-                        class="knowledge-filter__label"
-                    >
-                        С ответом
-                    </label>
-                </div>
+                <radio-button
+                    id="answer_with_answer"
+                    class="knowledge-filter__item"
+                    value="with_answer"
+                    :checkedValue="filters.with_answers"
+                    label="С ответом"
+                    @input="filterWithAnswers"
+                />
             </div>
 
             <div class="knowledge-filter__group">
                 <!-- All -->
-                <div class="knowledge-filter__item">
-                    <div class="radio-button knowledge-filter__radio-button">
-                        <input
-                            type="radio"
-                            id="status_all"
-                            class="radio-button__input"
-                            value="all"
-                            v-model="filters.status"
-                            @change="filter"
-                        >
-                        
-                        <label
-                            for="status_all"
-                            class="radio-button__label"
-                        ></label>
-                    </div>
-
-                    <label
-                        for="status_all"
-                        class="knowledge-filter__label"
-                    >
-                        Все
-                    </label>
-                </div>
+                <radio-button
+                    id="status_all"
+                    class="knowledge-filter__item"
+                    value="all"
+                    :checkedValue="filters.status"
+                    label="Все"
+                    @input="setStatus"
+                />
 
                 <!-- Not public -->
-                <div class="knowledge-filter__item">
-                    <div class="radio-button knowledge-filter__radio-button">
-                        <input
-                            type="radio"
-                            id="status_not_public"
-                            class="radio-button__input"
-                            value="not_public"
-                            v-model="filters.status"
-                            @change="filter"
-                        >
-                        
-                        <label
-                            for="status_not_public"
-                            class="radio-button__label"
-                        ></label>
-                    </div>
-
-                    <label
-                        for="status_not_public"
-                        class="knowledge-filter__label"
-                    >
-                        Не опубликовано
-                    </label>
-                </div>
+                <radio-button
+                    id="status_not_public"
+                    class="knowledge-filter__item"
+                    value="not_public"
+                    :checkedValue="filters.status"
+                    label="Не опубликовано"
+                    @input="setStatus"
+                />
 
                 <!-- Public -->
-                <div class="knowledge-filter__item">
-                    <div class="radio-button knowledge-filter__radio-button">
-                        <input
-                            type="radio"
-                            id="status_public"
-                            class="radio-button__input"
-                            value="public"
-                            v-model="filters.status"
-                            @change="filter"
-                        >
-                        
-                        <label
-                            for="status_public"
-                            class="radio-button__label"
-                        ></label>
-                    </div>
-
-                    <label
-                        for="status_public"
-                        class="knowledge-filter__label"
-                    >
-                        Опубликовано
-                    </label>
-                </div>
+                <radio-button
+                    id="status_public"
+                    class="knowledge-filter__item"
+                    value="public"
+                    :checkedValue="filters.status"
+                    label="Опубликовано"
+                    @input="setStatus"
+                />
             
                 <!-- Draft -->
-                <div class="knowledge-filter__item">
-                    <div class="radio-button knowledge-filter__radio-button">
-                        <input
-                            type="radio"
-                            id="status_draft"
-                            class="radio-button__input"
-                            value="draft"
-                            v-model="filters.status"
-                            @change="filter"
-                        >
-                        
-                        <label
-                            for="status_draft"
-                            class="radio-button__label"
-                        ></label>
-                    </div>
-
-                    <label
-                        for="status_draft"
-                        class="knowledge-filter__label"
-                    >
-                        Черновик
-                    </label>
-                </div>
+                <radio-button
+                    id="status_draft"
+                    class="knowledge-filter__item"
+                    value="draft"
+                    :checkedValue="filters.status"
+                    label="Черновик"
+                    @input="setStatus"
+                />
             </div>
-
-            <!-- <radio-button
-                id="a"
-                value="1"
-                :name="filters.status"
-                
-                @input="a"
-            /> -->
         </div>
 
         <button
@@ -231,8 +111,15 @@
 
         methods: {
             ...mapActions('knowledge', ['FILTER_QUESTIONS']),
-            a(event) {
-                this.filters.status = event.target.value
+            
+            setStatus(value) {
+                this.filters.status = value;
+                this.FILTER_QUESTIONS(this.filters);
+            },
+
+            filterWithAnswers(value) {
+                this.filters.with_answers = value;
+                this.FILTER_QUESTIONS(this.filters);
             },
             
             resetFilters() {

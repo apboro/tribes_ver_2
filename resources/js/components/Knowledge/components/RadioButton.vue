@@ -1,21 +1,29 @@
 <template>
     <div class="radio-button">
-        <input
-            type="radio"
-            :id="id"
-            class="radio-button__input"
-            :value="value"
-            :name="name"
-            :checked="checked"
-            @change="check"
-        >
-        
-        <label
-            :for="id"
-            class="radio-button__label"
-        >
-            1
-        </label>
+        <div class="radio-button__wrapper">
+            <input
+                type="radio"
+                :id="id"
+                class="radio-button__input"
+                :value="value"
+                :checked="value == checkedValue"
+                @input="check"
+            >
+            
+            <label
+                :for="id"
+                class="radio-button__decor"
+            ></label>
+        </div>
+
+        <template v-if="label">
+            <label
+                :for="id"
+                class="radio-button__label"
+            >
+                {{ label }}
+            </label>
+        </template>
     </div>
 </template>
 
@@ -30,24 +38,24 @@
             },
 
             value: {
-                type: String,
-                default: 'value'
+                type: [String, Number, Boolean],
+                default: ''
             },
 
-            checked: {
-                type: Boolean,
-                required: false,
-                default: false
+            checkedValue: {
+                type: [String, Number, Boolean],
+                default: ''
             },
 
-            name: {
-                type: String,
+            label: {
+                type: [String, null],
+                default: null
             }
         },
 
         methods: {
             check(event) {
-                this.$emit('input', event.target.value);
+                this.$emit('input', this.value);
             }
         }
     }

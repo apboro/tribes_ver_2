@@ -7,9 +7,8 @@ $icon-color-3: $primary-1;
 $icon-bg-1: $white;
 
 .radio-button {
-    position: relative;
-    width: $icon-width;
-    height: $icon-height;
+    display: flex;
+    align-items: center;
 
     &:hover,
     &:focus {
@@ -22,15 +21,21 @@ $icon-bg-1: $white;
         }
     }
 
+    &__wrapper {
+        position: relative;
+        width: $icon-width;
+        height: $icon-height;
+    }
+
     &__input {
         display: none;
 
-        &:checked + .radio-button__label:before {
+        &:checked + .radio-button__decor:before {
             border: 5px solid $icon-color-3;
         }
     }
 
-    &__label {
+    &__decor {
         cursor: pointer;
 
         &:before {
@@ -47,6 +52,12 @@ $icon-bg-1: $white;
             border-radius: 50%;
             transition: .2s linear;
         }   
+    }
+
+    &__label {
+        margin-left: 8px;
+        @include font($text-color-1, 14px, 20px, 400);
+        cursor: pointer;
     }
 
     &--disabled {
