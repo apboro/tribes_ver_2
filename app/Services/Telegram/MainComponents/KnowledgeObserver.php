@@ -7,6 +7,7 @@ use App\Helper\ArrayHelper;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Services\Knowledge\ManageQuestionService;
 use Illuminate\Log\Logger;
+use Illuminate\Support\Str;
 use Throwable;
 
 class KnowledgeObserver
@@ -17,8 +18,8 @@ class KnowledgeObserver
 
     public function __construct(
         CommunityRepositoryContract $communityRepository,
-        ManageQuestionService $manageQuestionService,
-        Logger $logger
+        ManageQuestionService       $manageQuestionService,
+        Logger                      $logger
     )
     {
         $this->communityRepository = $communityRepository;
@@ -26,13 +27,20 @@ class KnowledgeObserver
         $this->logger = $logger;
     }
 
+    /**
+     * ответ автора на сообщение другого пользователя в чате инициируети создание пары вопрос ответ
+     * ограничивается командой /qas
+     * @param $data
+     * @return bool
+     * @throws \Exception
+     */
     public function handleAuthorReply($data): bool
     {
-        $this->logger->debug('author replay',$data);
-        $replyTeleUserId = ArrayHelper::getValue($data, 'message.from.id',0);
-        $chatId = ArrayHelper::getValue($data, 'message.chat.id',0);
+        $this->logger->debug('author replay', $data);
+        $replyTeleUserId = ArrayHelper::getValue($data, 'message.from.id', 0);
+        $chatId = ArrayHelper::getValue($data, 'message.chat.id', 0);
         if (!$this->communityRepository->isChatBelongsToTeleUserId($chatId, $replyTeleUserId)) {
-            $this->logger->debug('чат не принадлежит этому пользователю',[
+            $this->logger->debug('чат не принадлежит этому пользователю', [
                 'chat' => $chatId,
                 'replyTeleUserId' => $replyTeleUserId
             ]);
@@ -41,22 +49,28 @@ class KnowledgeObserver
         $community = $this->communityRepository->getCommunityByChatId($chatId);
         $question = ArrayHelper::getValue($data, 'message.reply_to_message.text');
         $answer = ArrayHelper::getValue($data, 'message.text');
-        $this->manageQuestionService->setUserId($community->owner);
-        try{
-            $this->manageQuestionService->createFromArray([
-                'community_id' => $community->id,
-                'question' => [
-                    'context' => $question,
-                    'is_public' => false,
-                    'is_draft' => false,
-                    'answer' => [
-                        'context' => $answer,
+
+        try {
+            if (Str::startsWith($answer, '/qas')) {
+                $answer = trim(str_replace('/qas', '', $answer));
+                $this->logger->debug('create qa pair on reply', compact('question','answer'));
+                $this->manageQuestionService->setUserId($community->owner);
+                $this->manageQuestionService->createFromArray([
+                    'community_id' => $community->id,
+                    'question' => [
+                        'context' => $question,
+                        'is_public' => false,
                         'is_draft' => false,
+                        'answer' => [
+                            'context' => $answer,
+                            'is_draft' => false,
+                        ],
                     ],
-                ],
-            ]);
-        }catch(Throwable $e){
-            $telegramException = new TelegramException($e->getMessage(),$data);
+                ]);
+            }
+
+        } catch (Throwable $e) {
+            $telegramException = new TelegramException($e->getMessage(), $data);
             $telegramException->report();
             return false;
         }
