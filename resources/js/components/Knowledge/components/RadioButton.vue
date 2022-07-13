@@ -6,8 +6,8 @@
                 :id="id"
                 class="radio-button__input"
                 :value="value"
-                :checked="value == checkedValue"
-                @input="check"
+                :checked="isChecked"
+                @change="updateInput"
             >
             
             <label
@@ -31,36 +31,42 @@
     export default {
         name: 'RadioButton',
 
+        model: {
+            prop: 'modelValue',
+            event: 'change'
+        },
+
         props: {
             id: {
                 type: String,
-                default: 'id'
+                default: 'id',
             },
 
             value: {
                 type: [String, Number, Boolean],
-                default: ''
+                default: '',
             },
 
-            checkedValue: {
-                type: [String, Number, Boolean],
-                default: ''
+            modelValue: {
+                default: '',
             },
 
             label: {
                 type: [String, null],
-                default: null
+                default: null,
+            }
+        },
+
+        computed: {
+            isChecked() {
+                return this.modelValue == this.value;
             }
         },
 
         methods: {
-            check(event) {
-                this.$emit('input', this.value);
+            updateInput() {
+                this.$emit('change', this.value);
             }
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

@@ -7,19 +7,10 @@
         <div class="knowledge-table__row" :class="{ 'active': isAddedQuestion }">
             <!-- Выделить -->
             <div class="knowledge-table__item">
-                <div class="checkbox">
-                    <input
-                        type="checkbox"
-                        :id="`field_${ question.id }`"
-                        class="checkbox__input"
-                        v-model="isAddedQuestion"
-                    >
-
-                    <label
-                        :for="`field_${ question.id }`"
-                        class="checkbox__label"
-                    ></label>
-                </div>
+                <v-checkbox
+                    :id="`field_${ question.id }`"
+                    v-model="isAddedQuestion"
+                />
             </div>
 
             <!-- Вопрос -->
@@ -255,28 +246,11 @@
                     </div>
 
                     <div class="knowledge-modal__controls">
-                        <div class="checkbox-group">
-                            <div class="checkbox">
-                                <input
-                                    type="checkbox"
-                                    id="question_draft"
-                                    class="checkbox__input"
-                                    v-model="draft"
-                                >
-
-                                <label
-                                    for="question_draft"
-                                    class="checkbox__label"
-                                ></label>
-                            </div>
-
-                            <label
-                                for="question_draft"
-                                class="checkbox-group__label"
-                            >
-                                Черновик
-                            </label>
-                        </div>
+                        <v-checkbox
+                            id="question_draft"
+                            label="Черновик"
+                            v-model="draft"
+                        />
 
                         <div class="toggle-switch">
                             <label class="toggle-switch__switcher">
@@ -323,6 +297,7 @@
     import VOverlay from '../VOverlay.vue';
     import VDropdown from '../VDropdown.vue';
     import VIcon from '../VIcon.vue';
+    import VCheckbox from '../VCheckbox.vue';
     import { mapActions, mapGetters, mapMutations } from 'vuex';
     import {bodyLock, bodyUnLock, timeFormatting} from '../../../../core/functions';
     
@@ -335,6 +310,7 @@
             TextEditor,
             VOverlay,
             VDropdown,
+            VCheckbox,
          },
 
         props: {
@@ -373,6 +349,7 @@
                 },
 
                 set(isAdded) {
+                    console.log(132);
                     // при изменении добавляем или удалеяем элемент из массива
                     if (isAdded) {
                         this.ADD_ID_FOR_OPERATIONS(this.question.id);
@@ -387,7 +364,7 @@
         methods: {
             ...mapActions('knowledge', ['EDIT_QUESTION', 'REMOVE_QUESTION']),
             ...mapMutations('knowledge', ['ADD_ID_FOR_OPERATIONS', 'REMOVE_ID_FOR_OPERATIONS']),
-
+            
             toggleQuestion() {
                 this.isVisibleFullQuestion = !this.isVisibleFullQuestion;
                 
@@ -460,20 +437,6 @@
                 });
             },
 
-            /* getStatus() {
-                const statuses = [];
-                if (!this.question.is_public) {
-                    statuses.push('Непублик');
-                } else if (this.question.is_public) {
-                    statuses.push('Публик');
-                }
-                if (this.question.is_draft) {
-                    statuses.push('Черн');
-                }
-                
-                return statuses;
-            }, */
-
             toggleFullAnswerVisibility() {
                 this.isLongAnswer = !this.isLongAnswer;
             },
@@ -482,14 +445,5 @@
                 copyText(this.question.public_link);
             }
         },
-
-        mounted() {
-            if (this.question.answer) {
-                
-              
-                //console.log(htmlDoc.body.children);
-                
-            }
-        }
     }
 </script>

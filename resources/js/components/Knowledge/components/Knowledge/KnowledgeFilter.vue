@@ -11,9 +11,9 @@
                     id="answer_all"
                     class="knowledge-filter__item"
                     value="all"
-                    :checkedValue="filters.with_answers"
                     label="Все"
-                    @input="filterWithAnswers"
+                    v-model="filters.with_answers"
+                    @change="filter"
                 />
 
                 <!-- No answer -->
@@ -21,9 +21,9 @@
                     id="answer_no_answer"
                     class="knowledge-filter__item"
                     value="no_answer"
-                    :checkedValue="filters.with_answers"
                     label="Без ответа"
-                    @input="filterWithAnswers"
+                    v-model="filters.with_answers"
+                    @change="filter"
                 />
 
                 <!-- Width answer -->
@@ -31,9 +31,9 @@
                     id="answer_with_answer"
                     class="knowledge-filter__item"
                     value="with_answer"
-                    :checkedValue="filters.with_answers"
                     label="С ответом"
-                    @input="filterWithAnswers"
+                    v-model="filters.with_answers"
+                    @change="filter"
                 />
             </div>
 
@@ -43,9 +43,9 @@
                     id="status_all"
                     class="knowledge-filter__item"
                     value="all"
-                    :checkedValue="filters.status"
                     label="Все"
-                    @input="setStatus"
+                    v-model="filters.status"
+                    @change="filter"
                 />
 
                 <!-- Not public -->
@@ -53,9 +53,9 @@
                     id="status_not_public"
                     class="knowledge-filter__item"
                     value="not_public"
-                    :checkedValue="filters.status"
                     label="Не опубликовано"
-                    @input="setStatus"
+                    v-model="filters.status"
+                    @change="filter"
                 />
 
                 <!-- Public -->
@@ -63,9 +63,9 @@
                     id="status_public"
                     class="knowledge-filter__item"
                     value="public"
-                    :checkedValue="filters.status"
                     label="Опубликовано"
-                    @input="setStatus"
+                    v-model="filters.status"
+                    @change="filter"
                 />
             
                 <!-- Draft -->
@@ -73,9 +73,9 @@
                     id="status_draft"
                     class="knowledge-filter__item"
                     value="draft"
-                    :checkedValue="filters.status"
                     label="Черновик"
-                    @input="setStatus"
+                    v-model="filters.status"
+                    @change="filter"
                 />
             </div>
         </div>
@@ -112,7 +112,7 @@
         methods: {
             ...mapActions('knowledge', ['FILTER_QUESTIONS']),
             
-            setStatus(value) {
+            filterStatus(value) {
                 this.filters.status = value;
                 this.FILTER_QUESTIONS(this.filters);
             },
@@ -126,13 +126,11 @@
                 this.filters = {
                     with_answers: 'all',
                     status: 'all',
-                    /* published: 'all',
-                    draft: 'all', */
                 };
                 
                 this.$emit('resetFilters', this.filters);
             },
-            
+
             filter() {
                 this.FILTER_QUESTIONS(this.filters);
             }

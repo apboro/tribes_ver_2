@@ -13,16 +13,3 @@
         margin-top: 3px;
     }
 }
-
-.checkbox-group {
-    display: flex;
-    align-items: center;
-
-    &__label {
-        display: inline-block;
-        margin-left: $indent-2;
-        @include font($text-color-1, 14px, 20px, 400);
-    }
-}
-
-

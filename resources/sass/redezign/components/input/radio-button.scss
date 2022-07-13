@@ -1,10 +1,10 @@
-$icon-width: 16px;
-$icon-height: $icon-width;
+$radio-width: 16px;
+$radio-height: $radio-width;
 
-$icon-color-1: $grey-5;
-$icon-color-2: $grey-7;
-$icon-color-3: $primary-1;
-$icon-bg-1: $white;
+$radio-color-1: $grey-5;
+$radio-color-2: $grey-7;
+$radio-color-3: $primary-1;
+$radio-bg-1: $white;
 
 .radio-button {
     display: flex;
@@ -13,25 +13,25 @@ $icon-bg-1: $white;
     &:hover,
     &:focus {
         .radio-button__label:before {
-            border-color: $icon-color-2;
+            border-color: $radio-color-2;
         }
 
         .radio-button__input:checked + .radio-button__label:before {
-            border-color: $icon-color-3;
+            border-color: $radio-color-3;
         }
     }
 
     &__wrapper {
         position: relative;
-        width: $icon-width;
-        height: $icon-height;
+        width: $radio-width;
+        height: $radio-height;
     }
 
     &__input {
         display: none;
 
         &:checked + .radio-button__decor:before {
-            border: 5px solid $icon-color-3;
+            border: 5px solid $radio-color-3;
         }
     }
 
@@ -45,10 +45,10 @@ $icon-bg-1: $white;
             left: 0;
             z-index: 1;
             display: block;
-            width: $icon-width;
-            height: $icon-height;
-            border: 1px solid $icon-color-1;
-            background-color: $icon-bg-1;
+            width: $radio-width;
+            height: $radio-height;
+            border: 1px solid $radio-color-1;
+            background-color: $radio-bg-1;
             border-radius: 50%;
             transition: .2s linear;
         }   

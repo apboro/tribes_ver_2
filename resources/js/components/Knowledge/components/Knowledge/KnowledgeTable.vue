@@ -4,21 +4,12 @@
         <div class="knowledge-table__header">
             <!-- Multiple operations -->
             <div class="knowledge-table__header-item">
-                <div class="checkbox">
-                    <input
-                        type="checkbox"
-                        id="all_fields"
-                        class="checkbox__input"
-                        :checked="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
-                        :value="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
-                        @input="toggleStateQuestions"
-                    >
-
-                    <label
-                        for="all_fields"
-                        class="checkbox__label"
-                    ></label>
-                </div>
+                <v-checkbox
+                    id="new_question_draft"
+                    :value="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
+                    :modelValue="GET_ALL_STATUS_MULTIPLE_OPERATIONS"    
+                    @change="toggleStateQuestions"
+                />
             </div>
 
             <!-- Вопрос -->
@@ -168,12 +159,13 @@
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import VIcon from '../VIcon.vue';
+    import VCheckbox from '../VCheckbox.vue';
     import KnowledgeTableItem from './KnowledgeTableItem.vue';
 
     export default {
         name: 'KnowledgeTable',
 
-        components: { KnowledgeTableItem, VIcon },
+        components: { KnowledgeTableItem, VIcon, VCheckbox },
 
         props: {
             questions: {
@@ -194,7 +186,6 @@
         computed: {
             ...mapGetters('knowledge', [
                 'IS_LOADING',
-                'IS_ADDED_QUESTIONS',
                 'GET_ALL_STATUS_MULTIPLE_OPERATIONS'
             ]),
 

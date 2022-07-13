@@ -38,7 +38,7 @@ export default ({
     },
 
     IS_ADDED_QUESTIONS: (state) => (findingId) => {
-        return state._idsMultipleOperations.find((id) => id == findingId);
+        return state._idsMultipleOperations.find((id) => id == findingId) ? true : false;
     },
 
     HAS_QUESTION_FOR_OPERATIONS(state) {

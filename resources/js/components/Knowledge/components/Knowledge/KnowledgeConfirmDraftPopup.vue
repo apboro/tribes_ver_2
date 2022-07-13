@@ -34,20 +34,11 @@
                         </label>
 
                         <div class="knowledge-confirm__action">
-                            <div class="checkbox">
-                                <input
-                                    type="checkbox"
-                                    :id="`draft_${ question.id }`"
-                                    class="checkbox__input"
-                                    :value="question.id"
-                                    v-model="ids"
-                                >
-
-                                <label
-                                    :for="`draft_${ question.id }`"
-                                    class="checkbox__label"
-                                ></label>
-                            </div>
+                            <v-checkbox
+                                :id="`draft_${ question.id }`"
+                                :value="question.id"
+                                v-model="ids"
+                            />
                         </div>
                     </div>
                 </div>
@@ -74,12 +65,13 @@
 
 <script>
     import VPopup from '../VPopup.vue';
+    import VCheckbox from '../VCheckbox.vue';
     
     export default {
         name: 'KnowledgeConfirmDraftPopup',
 
         components: {
-            VPopup
+            VPopup, VCheckbox
         },
 
         props: {

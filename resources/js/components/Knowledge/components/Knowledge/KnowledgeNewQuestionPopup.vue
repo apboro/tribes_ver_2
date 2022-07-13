@@ -39,28 +39,11 @@
             </div>
 
             <div class="knowledge-modal__controls">
-                <div class="checkbox-group">
-                    <div class="checkbox">
-                        <input
-                            type="checkbox"
-                            id="new_question_draft"
-                            class="checkbox__input"
-                            v-model="draft"
-                        >
-
-                        <label
-                            for="new_question_draft"
-                            class="checkbox__label"
-                        ></label>
-                    </div>
-
-                    <label
-                        for="new_question_draft"
-                        class="checkbox-group__label"
-                    >
-                        Черновик
-                    </label>
-                </div>
+                <v-checkbox
+                    id="new_question_draft"
+                    label="Черновик"
+                    v-model="draft"
+                />
 
                 <div class="toggle-switch">
                     <label class="toggle-switch__switcher">
@@ -103,11 +86,12 @@
     import { mapActions } from 'vuex';
     import VPopup from '../VPopup.vue';
     import TextEditor from '../TextEditor.vue';
+    import VCheckbox from '../VCheckbox.vue';
 
     export default {
         name: 'KnowledgeNewQuestionPopup',
 
-        components: { VPopup, TextEditor },
+        components: { VPopup, TextEditor, VCheckbox },
 
         data() {
             return {
