@@ -44,24 +44,27 @@ class ImageHandler implements HandlerContract
 //        $model->file;
 
 
+//dd($this->path);
 
 
-        $this->repository->storeFileTest($file,  $this->path);
-//dd($file);
+//dd($name);
 //dd($file->getClientOriginalName());
 //        $new_file = $file->storeAs($this->path, $file->getClientOriginalName());
 //        dd($file);
-        $url = ;
-        $hash = ;
-        $filename = ;
 
+        $hash = $this->repository->setHash($file);
+        $filename = $hash . '.' . $file->guessClientExtension();
+//        dd($filename);
+//        $url = $this->repository;
+
+        $url = $this->repository->storeFileTest($file, $this->path, $filename);
 
         $model['mime'] = $file->getMimeType();
         $model['size'] = $file->getSize();
         $model['isImage'] = 1;
-        $model['filename'] = 1;
-        $model['url'] = 1;
-        $model['hash'] = 1;
+        $model['filename'] = $filename;
+        $model['url'] = $url;
+        $model['hash'] = $hash;
 
         $model->save();
 //        dd($file);

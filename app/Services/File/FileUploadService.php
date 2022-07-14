@@ -38,7 +38,8 @@ class FileUploadService
         Logger $logger
     )
     {
-        $this->modelsFile = new FileCollection();
+        $this->modelsFile = new \Illuminate\Database\Eloquent\Collection();
+//        $this->modelsFile = new FileCollection();
         $this->config = $config;
         $this->logger = $logger;
     }
@@ -72,19 +73,22 @@ class FileUploadService
 //        dd($procedure);
         //todo из $request перебрать все файлы
         //  и обработать их по ихнему mimeType
-        $files = $request->file()['file'];
-//        dd($files);
+
+
         $collect = new FileCollection;
-        if($files instanceof UploadedFile) {
-//            dd(1111);
-            $collect->add($files);
-        } elseif (is_array($files)){
-            foreach ($files as $eachFile) {
-                $collect->add($eachFile);
-            }
-        }
+
         if($request->has('base_64_file')) {
             $collect->add($this->getFileFromBase64($request));
+        } else {
+            $files = $request->file()['file'];
+            if($files instanceof UploadedFile) {
+//            dd(1111);
+                $collect->add($files);
+            } elseif (is_array($files)){
+                foreach ($files as $eachFile) {
+                    $collect->add($eachFile);
+                }
+            }
         }
 
         if($collect->isEmpty()) {
@@ -107,7 +111,7 @@ class FileUploadService
         foreach ($collect as $file) {
 //            dd($file);
             $type = $file->getMimeType();
-//dd($type);//"image/png"
+
             if($this->checkImage($type)) {
                 $file_type = 'image';
                 $config = $handlers[$file_type . '_handler'];
@@ -127,23 +131,6 @@ class FileUploadService
         unset($config['handler']);
 //        dd($config);
         $handler = app()->make($class,$config);
-//        dd($handler);
-
-
-//        mime
-//        size
-//        filename
-//        rank
-//        isImage
-//        url
-//        hash
-//        uploader_id
-//        isVideo
-//        isAudio
-//        remoteFrame
-//        webcaster_event_id
-//        description
-//        iframe
 
         $model = new File([
             'mime' => null,
@@ -162,7 +149,7 @@ class FileUploadService
             'iframe' => null
         ]);
         $model = $handler->startService($file, $model);
-
+//dd($model);
         return $model;
     }
 

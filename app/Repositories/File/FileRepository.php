@@ -79,22 +79,40 @@ class FileRepository implements FileRepositoryContract
             "details" => "Файл успешно удален"
         ]);
     }
-
-    public function storeFileTest($file, $file_name, $path)
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+    /*private function setUrl($path)
     {
-dd($this->setFilename($file));
-        $absolutPath = 'public/' . $path . '/' . Carbon::now()->format('d_m_y');
+        return $this->url = '/storage/' . $path . $this->filename;
+    }
+    private function setFilename($file)
+    {
+        return $this->filename = $this->setHash($file) . '.' . $file->guessClientExtension();
+    }
+    private function prepareDirectory($type, $local = false)
+    {
+        $absolutPath = $type . '/' . Carbon::now()->format('d_m_y') . '/';
+        $this->setUrl($absolutPath);
+        $path = $local ? 'public/' . $absolutPath : storage_path('app/public/') . $absolutPath;
 
-        if (!file_exists(storage_path('app/') . $absolutPath)) {
-            mkdir(storage_path('app/') . $absolutPath, 0755, true);
+        if (!file_exists(storage_path('app/public/') . $absolutPath)) {
+            mkdir(storage_path('app/public/') . $absolutPath, 0755, true);
         }
-//dd($this->setFilename($file));
-        //    /storage/audio/07_07_22/61012b44d33d3c518b72fbd827b6c08a.mp3
-//        dd($absolutPath); //   public/image/13_07_22
-        $url = $file->storeAs($absolutPath, $this->setFilename($file));
-//dd($url);
-        return $url;
-//        dd(1);
+        return $path;
+    }*/
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+    public function storeFileTest($file, $path, $filename)
+    {
+        $absolutPath = $path . '/' . Carbon::now()->format('d_m_y');
+
+        if (!file_exists(storage_path('app/public/') . $absolutPath)) {
+            mkdir(storage_path('app/public/') . $absolutPath, 0755, true);
+        }
+
+        $file->storeAs('public/' . $absolutPath, $filename);
+
+        return '/storage/' . $absolutPath . '/' . $filename;
     }
 
     public function storeFile($data)
@@ -200,9 +218,9 @@ dd($this->setFilename($file));
         return $this->url = '/storage/' . $path . $this->filename;
     }
 
-    private function setHash($file)
+    public function setHash($file)
     {
-        return $this->hash = md5($file . Carbon::now()) ;
+        return md5($file . Carbon::now()) ;
     }
 
     private function setFilename($file)
