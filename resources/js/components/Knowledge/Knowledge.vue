@@ -47,18 +47,20 @@
             </div>
 
             <keep-alive>
-                <template v-if="HAS_QUESTION_FOR_OPERATIONS">
-                    <!-- Multiple operations -->
-                    <knowledge-multiple-operations @setOperationType="setOperationType" />
-                </template>
+                <transition name="a-knowledge-panel" mode="out-in">
+                    <template v-if="HAS_QUESTION_FOR_OPERATIONS">
+                        <!-- Multiple operations -->
+                        <knowledge-multiple-operations @setOperationType="setOperationType" />
+                    </template>
 
-                <template v-else>
-                    <!-- Filter -->
-                    <knowledge-filter
-                        class="knowledge__filter"
-                        @resetFilters="resetFilters"
-                    />
-                </template>
+                    <template v-else>
+                        <!-- Filter -->
+                        <knowledge-filter
+                            class="knowledge__filter"
+                            @resetFilters="resetFilters"
+                        />
+                    </template>
+                </transition>
             </keep-alive>
 
             <!-- Table -->

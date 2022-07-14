@@ -101,7 +101,7 @@
             selectOption(option) {
                 this.selectedValue = option;
                 this.toggleOptionsVisibility();
-                this.$emit('getSelectedValue', this.selectedValue)
+                this.$emit('getSelectedValue', this.selectedValue);
             },
 
             /* setDirection: 

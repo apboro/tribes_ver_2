@@ -10,6 +10,6 @@
             onClick() {
                 this.$emit('onClick');
             }
-        }
+        },
     }
 </script>

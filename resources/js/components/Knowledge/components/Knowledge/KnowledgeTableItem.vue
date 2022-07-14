@@ -20,7 +20,7 @@
             >
                 <p class="knowledge-table__item-question">{{ question.context }}</p>
                 
-                <!-- <transition name="a-arrow"> -->
+                <transition name="a-question-arrow" mode="out-in">
                     <template v-if="isVisibleFullQuestion">
                         <v-icon
                             key="0"
@@ -38,7 +38,7 @@
                             class="knowledge-table__item-icon"
                         />
                     </template>
-                <!-- </transition> -->
+                </transition>
             </div>
 
             <!-- Дата -->
@@ -86,13 +86,13 @@
                     @removeFromPublication="removeFromPublication"
                     @publish="publish"
                     @openQuestionPopup="openQuestionPopup"
-                    @removeQuestion="removeQuestion"
+                    @removeQuestion="openConfirmDeleteKnowledgeQuestionPopup"
                 />
             </div>
         </div>
         
         <!-- Скрытая строка с вопросом/ответом -->
-        <transition name="a-cell">
+        <transition name="a-table-row">
             <div
                 class="knowledge-table__row"
                 v-if="isVisibleFullQuestion"
@@ -220,7 +220,7 @@
         </transition>
 
         <!-- Модальное окно подтверждения удаления -->
-        <!-- <transition name="a-overlay">
+        <transition name="a-overlay">
             <v-overlay
                 v-if="isVisibleConfirmDeleteKnowledgeQuestionPopup"
                 @onClick="closeConfirmDeleteKnowledgeQuestionPopup"
@@ -233,7 +233,7 @@
                 @closeConfirmDeletePopup="closeConfirmDeleteKnowledgeQuestionPopup"
                 @confirm="confirmDeleteKnowledgeQuestion"
             />
-        </transition> -->
+        </transition>
     </div>
 </template>
 
@@ -247,6 +247,7 @@
     import VCheckbox from '../VCheckbox.vue';
     import ToggleSwitch from '../ToggleSwitch.vue';
     import KnowledgeActionsDropdown from './KnowledgeActionsDropdown.vue';
+    import KnowledgeConfirmDeletePopup from './KnowledgeConfirmDeletePopup.vue';
     
     export default {
         name: 'KnowledgeTableItem',
@@ -259,6 +260,7 @@
             ToggleSwitch,
             VCheckbox,
             KnowledgeActionsDropdown,
+            KnowledgeConfirmDeletePopup,
          },
 
         props: {
@@ -272,6 +274,7 @@
             return {
                 isVisibleFullQuestion: false,
                 isVisibleQuestionPopup: false,
+                isVisibleConfirmDeleteKnowledgeQuestionPopup: false,
                 
                 oldQuestionText: this.question.context,
                 oldAnswerText: this.question.answer ? this.question.answer.context : '',
@@ -358,6 +361,16 @@
                 bodyUnLock();
             },
 
+            openConfirmDeleteKnowledgeQuestionPopup() {
+                this.isVisibleConfirmDeleteKnowledgeQuestionPopup = true;
+                bodyLock();
+            },
+
+            closeConfirmDeleteKnowledgeQuestionPopup() {
+                this.isVisibleConfirmDeleteKnowledgeQuestionPopup = false;
+                bodyUnLock();
+            },
+
             setAnswer(answer) {
                 this.answerText = answer;
             },
@@ -366,6 +379,10 @@
                 this.questionText = this.oldQuestionText;
                 this.answerText = this.oldAnswerText;
                 this.closeQuestionPopup();
+            },
+
+            confirmDeleteKnowledgeQuestion() {
+                this.REMOVE_QUESTION({ id: this.question.id });
             },
 
             editQuestion() {
@@ -391,10 +408,6 @@
             publish() {
                 this.isPublic = true;
                 this.editQuestion();
-            },
-
-            removeQuestion() {
-                this.REMOVE_QUESTION({ id: this.question.id });
             },
 
             formatDate(date) {

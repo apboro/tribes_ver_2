@@ -6,6 +6,7 @@
             'popup--danger': theme == 'danger',
             'popup--confirm': confirmOptions
         }"
+        ref="popup"
     >
         <div class="popup__header">
             <h2 class="popup__title">
@@ -93,6 +94,5 @@
                 this.$emit('close');
             },
         },
-
     }
 </script>

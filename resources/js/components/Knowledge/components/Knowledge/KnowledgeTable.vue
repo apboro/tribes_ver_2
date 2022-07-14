@@ -23,88 +23,98 @@
             >
                 <span>Дата</span>
                 
-                <template v-if="sort.update_at === 'off'">
-                    <button
-                        class="button-text button-text--primary button-text--only-icon"
-                        @click="toSort('update_at', 'asc')"
-                    >
-                        <v-icon
-                            name="sort-asc"
-                            size="1"
-                            class="button-text__icon"
-                        />
-                    </button>
-                </template>
+                <transition name="a-sort-icon" mode="out-in">
+                    <template v-if="sort.update_at === 'off'">
+                        <button
+                            key="date_sort_asc"
+                            class="button-text button-text--primary button-text--only-icon"
+                            @click="toSort('update_at', 'asc')"
+                        >
+                            <v-icon
+                                name="sort-asc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
 
-                <template v-if="sort.update_at === 'asc'">
-                    <button
-                        class="button-text button-text--primary button-text--only-icon active"
-                        @click="toSort('update_at', 'desc')"
-                    >
-                        <v-icon
-                            name="sort-asc"
-                            size="1"
-                            class="button-text__icon"
-                        />
-                    </button>
-                </template>
+                    <template v-else-if="sort.update_at === 'asc'">
+                        <button
+                            key="date_sort_asc_active"
+                            class="button-text button-text--primary button-text--only-icon active"
+                            @click="toSort('update_at', 'desc')"
+                        >
+                            <v-icon
+                                name="sort-asc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
 
-                <template v-if="sort.update_at === 'desc'">
-                    <button
-                        class="button-text button-text--primary button-text--only-icon active"
-                        @click="toSort('update_at', 'off')"
-                    >
-                        <v-icon
-                            name="sort-desc"
-                            size="1"
-                            class="button-text__icon"
-                        />
-                    </button>
-                </template>
+                    <template v-else-if="sort.update_at === 'desc'">
+                        <button
+                            key="date_sort_desc"
+                            class="button-text button-text--primary button-text--only-icon active"
+                            @click="toSort('update_at', 'off')"
+                        >
+                            <v-icon
+                                name="sort-desc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
+                </transition>
             </div>
 
             <!-- Обращений -->
             <div class="knowledge-table__header-item knowledge-table__header-item--sortable">
                 <span>Обращений</span>
 
-                <template v-if="sort.c_enquiry === 'off'">
-                    <button
-                        class="button-text button-text--primary button-text--only-icon"
-                        @click="toSort('c_enquiry', 'asc')"
-                    >
-                        <v-icon
-                            name="sort-asc"
-                            size="1"
-                            class="button-text__icon"
-                        />
-                    </button>
-                </template>
+                <transition name="a-sort-icon" mode="out-in">
+                    <template v-if="sort.c_enquiry === 'off'">
+                        <button
+                            key="enquiry_sort_asc"
+                            class="button-text button-text--primary button-text--only-icon"
+                            @click="toSort('c_enquiry', 'asc')"
+                        >
+                            <v-icon
+                                name="sort-asc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
 
-                <template v-if="sort.c_enquiry === 'asc'">
-                    <button
-                        class="button-text button-text--primary button-text--only-icon active"
-                        @click="toSort('c_enquiry', 'desc')"
-                    >
-                        <v-icon
-                            name="sort-asc"
-                            size="1"
-                            class="button-text__icon"
-                        />
-                    </button>
-                </template>
+                    <template v-else-if="sort.c_enquiry === 'asc'">
+                        <button
+                            key="enquiry_sort_asc_active"
+                            class="button-text button-text--primary button-text--only-icon active"
+                            @click="toSort('c_enquiry', 'desc')"
+                        >
+                            <v-icon
+                                name="sort-asc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
 
-                <template v-if="sort.c_enquiry === 'desc'">
-                    <button
-                        class="button-text button-text--primary button-text--only-icon active"
-                        @click="toSort('c_enquiry', 'off')"
-                    >
-                        <v-icon
-                            name="sort-desc"
-                            size="1"
-                            class="button-text__icon"
-                        />
-                    </button>
-                </template>
+                    <template v-else-if="sort.c_enquiry === 'desc'">
+                        <button
+                            key="enquiry_sort_desc"
+                            class="button-text button-text--primary button-text--only-icon active"
+                            @click="toSort('c_enquiry', 'off')"
+                        >
+                            <v-icon
+                                name="sort-desc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
+                </transition>
             </div>
 
             <!-- Статус -->

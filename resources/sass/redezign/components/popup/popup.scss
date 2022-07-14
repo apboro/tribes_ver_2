@@ -105,3 +105,23 @@
         z-index: -1;
     }
 }
+
+.a-popup {
+    &-enter-active {
+        animation: popup .3s;
+    }
+    &-leave-active {
+        animation: popup .1s reverse;
+    }
+}
+
+@keyframes popup {
+    0% {
+        transform: translate(-50%, -48%);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}

@@ -7,7 +7,7 @@
             </svg>
         </template>
 
-        <template v-else-if="name == 'sort-asc'">
+        <template v-else-if="name == 'sort-desc'">
             <svg :width="width" :height="height" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <line class="icon__stroke" x1="1" y1="-1" x2="3" y2="-1" transform="matrix(1 8.74228e-08 8.74228e-08 -1 2 12)" stroke="#4C4957" stroke-width="2" stroke-linecap="round"/>
                 <line class="icon__stroke" x1="1" y1="-1" x2="7" y2="-1" transform="matrix(1 8.74228e-08 8.74228e-08 -1 2 8)" stroke="#4C4957" stroke-width="2" stroke-linecap="round"/>
@@ -15,7 +15,7 @@
             </svg>
         </template>
 
-        <template v-else-if="name == 'sort-desc'">
+        <template v-else-if="name == 'sort-asc'">
             <svg :width="width" :height="height" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <line class="icon__stroke" x1="3" y1="4" x2="5" y2="4" stroke="#4C4957" stroke-width="2" stroke-linecap="round"/>
                 <line class="icon__stroke" x1="3" y1="8" x2="9" y2="8" stroke="#4C4957" stroke-width="2" stroke-linecap="round"/>

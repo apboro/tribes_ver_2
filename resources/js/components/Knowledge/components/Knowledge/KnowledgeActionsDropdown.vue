@@ -2,7 +2,7 @@
     <v-dropdown>
         <template #tooglePanel="{ toggleDropdownVisibility }">
             <button
-                class="button-text button-text--primary button-text--only-icon"
+                class="dropdown button-text knowledge-table__dropdown button-text--primary button-text--only-icon"
                 @click="toggleDropdownVisibility"
             >
                 <v-icon
@@ -16,7 +16,7 @@
         <!-- Меню действий -->
         <template #body="{ toggleDropdownVisibility }">
             <div
-                class="knowledge-table__action-menu"
+                class="dropdown__body knowledge-table__action-menu"
                 @click="toggleDropdownVisibility"
             >
                 <template v-if="isPublic">
