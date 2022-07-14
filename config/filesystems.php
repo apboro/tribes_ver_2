@@ -38,20 +38,24 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
         'views' => [
             'driver' => 'local',
             'root' => base_path('resources/views'),
         ],
-        'test_data'=> [
+        'test_data' => [
             'driver' => 'local',
             'root' => base_path('tests/data'),
         ],
-        'telegram_data'=> [
+        'telegram_data' => [
             'driver' => 'local',
             'root' => storage_path('app/telegram'),
+        ],
+        'tinkoff_data' => [
+            'driver' => 'local',
+            'root' => storage_path('app/tinkoff'),
         ],
         's3' => [
             'driver' => 's3',

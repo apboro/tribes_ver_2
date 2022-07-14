@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\PaymentException;
 use App\Filters\PaymentFilter;
 use App\Helper\PseudoCrypt;
 use App\Mail\ExceptionMail;
@@ -83,19 +84,20 @@ class PaymentController extends Controller
 
     public function notify(Request $request)
     {
-        if($request->all() == []){
+        $data = $request->all();
+        if($data == []){
             return response('OK', 200);
         }
-        Storage::prepend('Tinkoff_notify.log', json_encode('Tinkoff noty ' . Carbon::now()->format('H:i:s')));
-        Storage::prepend('Tinkoff_notify.log', json_encode($request->all()));
+        if (env('GRAB_TEST_DATA') === true) {
+            Storage::disk('tinkoff_data')->put("notify_payment_{$data['OrderId']}_{$data['Status']}.json", json_encode($data, JSON_PRETTY_PRINT));
+        }
 
         if($this->accessor($request)){
             $payment = Payment::where('OrderId', $request['OrderId'])->where('paymentId', $request['PaymentId'])->first();
 
             if(!$payment){
-                $this->telegramLogService->sendLogMessage(
-                    "NOTY: Платёж с OrderId " . $request['OrderId'] . " и PaymentId " .
-                    $request['PaymentId'] . " не найден");
+                (new PaymentException("NOTY: Платёж с OrderId " . $request['OrderId'] . " и PaymentId " .
+                    $request['PaymentId'] . " не найден"))->report();
                 return response('OK', 200);
             }
 
@@ -109,6 +111,7 @@ class PaymentController extends Controller
             TinkoffService::checkStatus($request, $payment, $previous_status);
 
         } else {
+            //todo сделать через Исключение
             $this->botService->sendMessageFromBot(config('telegram_bot.bot.botName'),
                 env('TELEGRAM_LOG_CHAT'), "Банк обратился c уведомлением, но не прошел проверку " . json_encode($request->all()), false, []);
         }
