@@ -75,10 +75,6 @@ class PaymentController extends Controller
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
         
-//        $payment = $this->paymentRepo->freshStatus($payment, $telegramId); //DEPRECATED
-        
-        //if($payment && $payment->)
-
         return view('common.donate.success')->withPayment($payment);
     }
 
@@ -112,11 +108,12 @@ class PaymentController extends Controller
 
         } else {
             //todo сделать через Исключение
-            $this->botService->sendMessageFromBot(config('telegram_bot.bot.botName'),
-                env('TELEGRAM_LOG_CHAT'), "Банк обратился c уведомлением, но не прошел проверку " . json_encode($request->all()), false, []);
+            (new PaymentException("Банк обратился c уведомлением, но не прошел проверку " . json_encode($data)))->report();
+
         }
         return response('OK', 200);
     }
+
     private function accessor($request)
     {
         if(
