@@ -4,6 +4,21 @@ $icon-primary-color: $grey-6;
     display: flex;
     align-items: center;
 
+    &--size-1 {
+        width: 16px;
+        height: 16px;
+    }
+
+    &--size-2 {
+        width: 24px;
+        height: 24px;
+    }
+
+    &--size-3 {
+        width: 76px;
+        height: 76px;
+    }
+
     &--spinner {
         animation: .75s linear infinite spinner;
     }

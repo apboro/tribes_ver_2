@@ -11,8 +11,6 @@ export default ({
     _filters: {
         full_text: '',
         with_answers: 'all',
-        /* published: 'all',
-        draft: 'all', */
         status: 'all'
     },
 
@@ -27,6 +25,8 @@ export default ({
     },
 
     _isLoading: false,
+
+    _errors: null,
 
     _isAllFields: false,
 

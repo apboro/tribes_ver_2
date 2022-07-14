@@ -70,7 +70,7 @@
             />
             
             <!-- Pagination -->
-            <template v-if="GET_QUESTIONS && GET_QUESTIONS.length || !IS_LOADING">
+            <template v-if="GET_QUESTIONS && GET_QUESTIONS.length && !IS_LOADING">
                 <v-pagination
                     class="knowledge__pagination"
                     :paginateData="GET_PAGINATE_DATA"

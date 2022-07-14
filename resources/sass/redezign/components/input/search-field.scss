@@ -7,28 +7,6 @@ $search-color-2: $grey-5;
 .search-field {
     position: relative;
 
-    &:hover {
-        .search-field__field {
-            border-color: $search-color-1;
-        }
-    }
-
-    &.active {
-        .search-field__field {
-            border-color: $search-icon-color-2;
-        }
-
-        .search-field__icon {
-            .icon__fill {
-                fill: $search-icon-color-2;
-            }
-    
-            .icon__stroke {
-                stroke: $search-icon-color-2;
-            }
-        }
-    }
-
     &__field {
         width: 100%;
         padding: 10px 50px 10px 20px;
@@ -36,6 +14,24 @@ $search-color-2: $grey-5;
         border: 1px solid $search-color-2;
         border-radius: 100px;
         transition: $transition;
+
+        &:hover {
+            border-color: $search-color-1;
+        }
+
+        &:focus {
+            border-color: $search-icon-color-2;
+    
+            & + .search-field__icon {
+                .icon__fill {
+                    fill: $search-icon-color-2;
+                }
+        
+                .icon__stroke {
+                    stroke: $search-icon-color-2;
+                }
+            }
+        }
     }
 
     &__icon {

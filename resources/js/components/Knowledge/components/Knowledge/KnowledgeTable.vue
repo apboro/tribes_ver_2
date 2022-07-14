@@ -1,7 +1,10 @@
 <template>
     <div class="knowledge-table">
         <!-- Head -->
-        <div class="knowledge-table__header">
+        <div
+            class="knowledge-table__header"
+            :class="{ 'knowledge-table__header--disabled' : !isHasQuestions}"    
+        >
             <!-- Multiple operations -->
             <div class="knowledge-table__header-item">
                 <v-checkbox

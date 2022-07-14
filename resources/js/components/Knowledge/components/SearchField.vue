@@ -1,15 +1,10 @@
 <template>
-    <div
-        class="search-field"
-        :class="{ 'active': isActiveSearch }"
-    >
+    <div class="search-field">
         <input
             type="text"
             class="search-field__field "
             placeholder="Поиск"
             :value="value"
-            @focus="isActiveSearch = true"
-            @blur="isActiveSearch = false"
             @input="searchFilter"
         >
         
@@ -33,12 +28,6 @@
             value: {
                 type: String,
                 default: ''
-            }
-        },
-
-        data() {
-            return {
-                isActiveSearch: false,
             }
         },
 

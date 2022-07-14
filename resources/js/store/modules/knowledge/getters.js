@@ -51,5 +51,9 @@ export default ({
 
     GET_ALL_STATUS_MULTIPLE_OPERATIONS(state) {
         return state._questions.length === state._idsMultipleOperations.length;
+    },
+
+    GET_ERRORS(state) {
+        return state._errors;
     }
 });
