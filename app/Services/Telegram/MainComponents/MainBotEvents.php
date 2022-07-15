@@ -47,7 +47,8 @@ class MainBotEvents
                         if(!is_array($params)){
                             $exception = new KnowledgeException('Колбек для события с параметрами. Параметры должны быть массивом',[
                                 $method,
-                                $callback
+                                $callback,
+                                $params
                             ]);
                             $exception->report();
                             continue;
@@ -348,7 +349,7 @@ class MainBotEvents
             !empty($mForwardFromId) &&
             $mFromId === $mChatId
         ) {
-            call_user_func($callable,$data);
+            call_user_func($callable,$data,$params);
         }
     }
 

@@ -97,7 +97,7 @@ class KnowledgeObserver
      * @param $data
      * @return void
      */
-    public function detectForwardMessageBotQuestion($data)
+    public function detectForwardMessageBotQuestion($data, $params = [])
     {
         $this->logger->debug('detect_forward_message_bot_question', $data);
         //todo первое бот событие пересланного сообщения устанавливает флаг записи
@@ -109,6 +109,11 @@ class KnowledgeObserver
             //пустой не записываем
             return;
         }
+        if (empty($params['botName']) || !$this->mainBotService->hasBotByName($params['botName'])) {
+            $this->logger->error('empty botName param or mainBotService has not instance that bot', $data);
+            return;
+        }
+
         $firstMessageAsQuestion = Cache::get($key, null);
         if ($firstMessageAsQuestion) {
             $this->logger->debug('create qa pair on forward messages');
@@ -131,12 +136,14 @@ class KnowledgeObserver
             } else {
                 //todo придумать реализцию сценария с уточнением к какому сообществу относится пара вопрос ответ
                 // учитывать временной лаг 5 сек для автора что бы успел ввести
-                //Menux::Button();
-                $this->mainBotService->sendMessageFromBot('mainBot',$mChatId,);
+                $menu = Menux::Create('links')->inline();
+                foreach ($communityCollection as $eachCommunity) {
+                    $menu->row()->btn($eachCommunity->title, 'add-aq-community-' . $eachCommunity->id);
+                }
+                $this->mainBotService->sendMessageFromBot($params['botName'], $mChatId, $menu);
                 $this->logger->debug('telegram scene on forward messages for more communities');
             }
             Cache::forget($key);
-
         } else {
             // кеш ставится на 5 сек , как максимальное время ожидания второго бот события
             // для получения ответа на вопрос
