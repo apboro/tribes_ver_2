@@ -113,6 +113,14 @@
             .knowledge-list__item-text {
                 background-color: $primary-3;
             }
+
+            .icon__stroke {
+                stroke: $primary-1;
+            }
+
+            .icon__fill {
+                fill: $primary-1;
+            }
         }
     }
     
@@ -196,7 +204,6 @@
     }
 
     &__list-link {
-        display: inline-block;
-        margin-top: 20px;
+        margin-top: $indent-3;
     }
 }

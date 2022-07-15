@@ -14,7 +14,7 @@ $button-text-color-danger-2: $danger-1;
 $button-background-color-danger: $danger-2;
 
 .button-text {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 5px 20px;
