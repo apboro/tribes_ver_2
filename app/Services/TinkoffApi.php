@@ -63,7 +63,7 @@ class TinkoffApi
 
     public function __construct($terminalKey, $secretKey)
     {
-        throw new \Exception('DEPRECATED CLASS');
+//        throw new \Exception('DEPRECATED CLASS');
         $this->api_url = 'https://securepay.tinkoff.ru/v2/';
         $this->api_e2c_url = 'https://securepay.tinkoff.ru/e2c/v2/';
 //        $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/';

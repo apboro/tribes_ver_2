@@ -4,15 +4,15 @@ namespace App\Repositories\Payment;
 
 use App\Filters\PaymentFilter;
 use App\Helper\PseudoCrypt;
-use App\Http\Controllers\API\TinkoffMerchantAPI;
+//use App\Http\Controllers\API\TinkoffMerchantAPI;
 use App\Models\Community;
 use App\Models\Payment;
 use App\Models\TelegramUser;
 use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
-use App\Services\Tinkoff\TinkoffApi;
-use App\Services\Tinkoff\TinkoffE2C;
+use App\Services\TinkoffApi;
+use App\Services\TinkoffE2C;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
