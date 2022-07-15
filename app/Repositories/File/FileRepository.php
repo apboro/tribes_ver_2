@@ -7,6 +7,7 @@ namespace App\Repositories\File;
 use App\Models\File;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Auth;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -102,7 +103,7 @@ class FileRepository implements FileRepositoryContract
     }*/
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-    public function storeFileTest($file, $path, $filename)
+    public function storeFileNew(UploadedFile $file, $path, $filename)
     {
         $absolutPath = $path . '/' . Carbon::now()->format('d_m_y');
 
@@ -110,7 +111,7 @@ class FileRepository implements FileRepositoryContract
             mkdir(storage_path('app/public/') . $absolutPath, 0755, true);
         }
 
-        $file->storeAs('public/' . $absolutPath, $filename);
+        $file->storeAs('public/' . $absolutPath, $filename, ['disk' => 'local']);
 
         return '/storage/' . $absolutPath . '/' . $filename;
     }

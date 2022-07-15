@@ -31,6 +31,7 @@ class UserFactory extends Factory
             'password' => bcrypt('test123'),
             'phone_confirmed' => true,
             'locale' => 'ru',
+            'api_token' => Str::random(10),
         ];
     }
 

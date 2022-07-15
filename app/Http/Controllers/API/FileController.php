@@ -162,7 +162,9 @@ class FileController extends Controller
 //        dd($request->storedFiles[0]);
 //        $filesId = $request->storedFiles;
 
+//        dd($request);
         $files = $this->fileUploadService->procRequest($request);
+//        dd($files);
 //dd($files);
         /*if($request['course_id']){
             $course = Course::find($request['course_id']);

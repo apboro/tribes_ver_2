@@ -57,7 +57,7 @@ class ImageHandler implements HandlerContract
 //        dd($filename);
 //        $url = $this->repository;
 
-        $url = $this->repository->storeFileTest($file, $this->path, $filename);
+        $url = $this->repository->storeFileNew($file, $this->path, $filename);
 
         $model['mime'] = $file->getMimeType();
         $model['size'] = $file->getSize();

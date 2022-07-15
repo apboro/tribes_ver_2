@@ -6,6 +6,9 @@ use App\Traits\Modulable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ *@property $url
+ */
 class File extends Model
 {
     use HasFactory, Modulable;
@@ -35,5 +38,15 @@ class File extends Model
     function courses()
     {
         return $this->belongsToMany(Course::class, 'course_attachments');
+    }
+
+    function getUrl()
+    {
+        return $this->url;
+    }
+
+    function getPath()
+    {
+        return str_replace('/storage', '', $this->getUrl());
     }
 }
