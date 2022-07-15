@@ -133,14 +133,14 @@ class KnowledgeObserver
                         ],
                     ],
                 ]);
-            } else {
+            } elseif($communityCollection->count() > 1) {
                 //todo придумать реализцию сценария с уточнением к какому сообществу относится пара вопрос ответ
                 // учитывать временной лаг 5 сек для автора что бы успел ввести
-                $menu = Menux::Create('links')->inline();
+                $menu = [];
                 foreach ($communityCollection as $eachCommunity) {
-                    $menu->row()->btn($eachCommunity->title, 'add-aq-community-' . $eachCommunity->id);
+                    $menu[][] = ['text' => $eachCommunity->title, 'callback_data' => 'add-qa-community-' . $eachCommunity->id];
                 }
-                $this->mainBotService->sendMessageFromBot($params['botName'], $mChatId, $menu);
+                $this->mainBotService->sendMessageFromBot($params['botName'], $mChatId, 'Выбирете сообщество',false, $menu);
                 $this->logger->debug('telegram scene on forward messages for more communities');
             }
             Cache::forget($key);

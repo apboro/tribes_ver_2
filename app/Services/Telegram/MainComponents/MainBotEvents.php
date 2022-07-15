@@ -53,9 +53,8 @@ class MainBotEvents
                             $exception->report();
                             continue;
                         }
-                        $this->{$method}($callback,$params);
-                    }
-                    if (method_exists($this, $method)) {
+                        $this->{$method}($callback, $params);
+                    }else if (method_exists($this, $method)) {
                         $this->{$method}($callback);
                     }
                 }
@@ -349,7 +348,7 @@ class MainBotEvents
             !empty($mForwardFromId) &&
             $mFromId === $mChatId
         ) {
-            call_user_func($callable,$data,$params);
+            call_user_func($callable, $data, $params);
         }
     }
 
