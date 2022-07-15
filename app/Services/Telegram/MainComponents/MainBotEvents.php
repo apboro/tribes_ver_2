@@ -2,12 +2,14 @@
 
 namespace App\Services\Telegram\MainComponents;
 
+use App\Exceptions\KnowledgeException;
 use App\Exceptions\TelegramException;
 use App\Helper\ArrayHelper;
 use App\Jobs\SetNewTelegramUsers;
 use App\Models\Community;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
+use Exception;
 
 class MainBotEvents
 {
@@ -39,10 +41,24 @@ class MainBotEvents
                     $this->{$configItem}();
                 }
             }else if(is_array($configItem)) {
-                foreach($configItem as $method => $callback)
-                if (method_exists($this, $method)) {
-                    $this->{$method}($callback);
+                foreach($configItem as $method => $callback){
+                    if(is_array($callback) && count($callback) == 3){
+                        $params = array_pop($callback);
+                        if(!is_array($params)){
+                            $exception = new KnowledgeException('Колбек для события с параметрами. Параметры должны быть массивом',[
+                                $method,
+                                $callback
+                            ]);
+                            $exception->report();
+                            continue;
+                        }
+                        $this->{$method}($callback,$params);
+                    }
+                    if (method_exists($this, $method)) {
+                        $this->{$method}($callback);
+                    }
                 }
+
             }
 
         }
@@ -67,7 +83,7 @@ class MainBotEvents
                     );
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -104,7 +120,7 @@ class MainBotEvents
                     }
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -125,7 +141,7 @@ class MainBotEvents
                     );
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -154,7 +170,7 @@ class MainBotEvents
 
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -180,7 +196,7 @@ class MainBotEvents
                     }
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -209,7 +225,7 @@ class MainBotEvents
                     $uriPhoto
                 );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -226,7 +242,7 @@ class MainBotEvents
                     Telegram::deleteCommunity($this->data->my_chat_member->chat->id);
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -248,7 +264,7 @@ class MainBotEvents
                     $community->new_chat_title
                 );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -272,14 +288,14 @@ class MainBotEvents
                 return '/images/no-image.svg';
 
             return env('TELEGRAM_BASE_URL') . '/file/bot' . $this->bot->getToken() . '/' . $photoPath;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
         return '';
     }
 
     /* Слушатель сообщений, возвращает текст, chatId, userId */
-    protected function hearsAndWriting($callable)
+    protected function hearsAndWriting($callable,$params = [])
     {
         if (isset($this->data->message->text)) {
             $callable([
@@ -293,9 +309,9 @@ class MainBotEvents
     /**
      * @param string|array $callable
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function isNewReplay($callable)
+    protected function isNewReplay($callable,$params = [])
     {
 
         $data  = ArrayHelper::toArray($this->data);
@@ -307,9 +323,9 @@ class MainBotEvents
     /**
      * @param string|array $callable
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function isNewTextMessage($callable)
+    protected function isNewTextMessage($callable,$params = [])
     {
         $data  = ArrayHelper::toArray($this->data);
         if( ArrayHelper::getValue($data,'message.message_id') &&
@@ -320,7 +336,7 @@ class MainBotEvents
         }
     }
 
-    protected function isNewForwardMessageInBotChat($callable)
+    protected function isNewForwardMessageInBotChat($callable,$params = [])
     {
         $data  = ArrayHelper::toArray($this->data);
         $mFromId = ArrayHelper::getValue($data,'message.from.id');
@@ -336,7 +352,7 @@ class MainBotEvents
         }
     }
 
-    protected function isNewMessageInBotChat($callable)
+    protected function isNewMessageInBotChat($callable,$params = [])
     {
         $data  = ArrayHelper::toArray($this->data);
         $mFromId = ArrayHelper::getValue($data,'message.from.id');

@@ -6,6 +6,8 @@ use App\Exceptions\TelegramException;
 use App\Helper\ArrayHelper;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Services\Knowledge\ManageQuestionService;
+use App\Services\TelegramMainBotService;
+use Askoldex\Teletant\Addons\Menux;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -16,16 +18,19 @@ class KnowledgeObserver
     private CommunityRepositoryContract $communityRepository;
     private ManageQuestionService $manageQuestionService;
     private Logger $logger;
+    private TelegramMainBotService $mainBotService;
 
     public function __construct(
         CommunityRepositoryContract $communityRepository,
         ManageQuestionService       $manageQuestionService,
-        Logger                      $logger
+        Logger                      $logger,
+        TelegramMainBotService $mainBotService
     )
     {
         $this->communityRepository = $communityRepository;
         $this->manageQuestionService = $manageQuestionService;
         $this->logger = $logger;
+        $this->mainBotService = $mainBotService;
     }
 
     /**
@@ -126,6 +131,8 @@ class KnowledgeObserver
             } else {
                 //todo придумать реализцию сценария с уточнением к какому сообществу относится пара вопрос ответ
                 // учитывать временной лаг 5 сек для автора что бы успел ввести
+                //Menux::Button();
+                $this->mainBotService->sendMessageFromBot('mainBot',$mChatId,);
                 $this->logger->debug('telegram scene on forward messages for more communities');
             }
             Cache::forget($key);
