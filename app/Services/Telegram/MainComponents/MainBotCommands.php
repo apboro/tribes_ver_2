@@ -267,7 +267,7 @@ class MainBotCommands
         try {
             $this->bot->onCommand('donate', function (Context $ctx) {
                 if (str_split($ctx->getChatID(), 1)[0] !== '-') {
-                    $communities = $this->communityRepo->getCommunityBelongsUserId($ctx->getChatID());
+                    $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
 
                     if ($communities->first()) {
                         $menu = Menux::Create('links')->inline();
@@ -351,7 +351,7 @@ class MainBotCommands
         try {
             $this->bot->onHears('❗Оказать материальную помощь', function (Context $ctx) {
 
-                $communities = $this->communityRepo->getCommunityBelongsUserId($ctx->getChatID());
+                $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
 
                 if ($communities->first()) {
                     $menu = Menux::Create('links')->inline();
@@ -402,7 +402,7 @@ class MainBotCommands
         try {
             $this->bot->onHears('📂Мои подписки', function (Context $ctx) {
                 $menu = Menux::Create('links')->inline();
-                $communities = $this->communityRepo->getCommunityBelongsUserId($ctx->getChatID());
+                $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
                 if ($communities->first()) {
                     foreach ($communities as $community) {
                         $menu->row()->btn($community->title, 'subscription-' . $community->connection_id);

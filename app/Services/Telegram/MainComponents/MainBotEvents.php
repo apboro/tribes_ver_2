@@ -319,4 +319,36 @@ class MainBotEvents
             call_user_func($callable,$data);
         }
     }
+
+    protected function isNewForwardMessageInBotChat($callable)
+    {
+        $data  = ArrayHelper::toArray($this->data);
+        $mFromId = ArrayHelper::getValue($data,'message.from.id');
+        $mChatId = ArrayHelper::getValue($data,'message.chat.id');
+        $mForwardFromId = ArrayHelper::getValue($data,'message.forward_from.id');
+        if(
+            !empty($mFromId) &&
+            !empty($mChatId) &&
+            !empty($mForwardFromId) &&
+            $mFromId === $mChatId
+        ) {
+            call_user_func($callable,$data);
+        }
+    }
+
+    protected function isNewMessageInBotChat($callable)
+    {
+        $data  = ArrayHelper::toArray($this->data);
+        $mFromId = ArrayHelper::getValue($data,'message.from.id');
+        $mChatId = ArrayHelper::getValue($data,'message.chat.id');
+        $mForwardFromId = ArrayHelper::getValue($data,'message.forward_from.id');
+        if(
+            !empty($mFromId) &&
+            !empty($mChatId) &&
+            empty($mForwardFromId) &&
+            $mFromId === $mChatId
+        ) {
+            call_user_func($callable,$data);
+        }
+    }
 }
