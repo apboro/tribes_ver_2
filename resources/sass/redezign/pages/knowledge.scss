@@ -1,70 +1,50 @@
+$title-color: $text-color-2;
+
 .knowledge {
     padding-top: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 60px;
 
     .container {
-        display: flex;
+       /*  display: flex;
         flex-direction: column;
-        min-height: 86vh;
+        min-height: 86vh; */
     }
 
-    &__breadcrumbs {
-        margin-bottom: 30px;
-    }
+    &__breadcrumbs {}
 
     &__title {
         display: flex;
         flex-wrap: wrap;
-        @include font(black, 21px, 25px, 600);
+        margin-top: $indent-4;
+        @include font($title-color, 24px, 32px, 700);
         text-transform: uppercase;
     }
 
     &__name {
-        @include truncate(500px);  
+        @include truncate(550px);  
     }
 
     &__auxiliary {
-        margin-top: 10px;
-
-        a,
-        button {
-            @include font(#7B7B7B, 12px, 14px, 500);
-        }
+        margin-top: $indent-1;
     }
 
     &__control {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        display: grid;
+        grid-template: 1fr / minmax(250px, 70%) auto;
+        column-gap: $indent-4;
         margin-top: 40px;
     }
 
-    &__search {
-        max-width: 70%;
-    }
-
     &__add-btn {
-        /* padding: 8px 30px;
-        @include font(#fff, 14px, 22px, 600);
-        background-color: #000;
-        border-radius: 5px; */
+        justify-self: end;
     }
 
     &__multiple-operations {
-        display: grid;
-        grid-template: auto / repeat(auto-fill, 100px);
-        column-gap: 30px;
-        height: 38px;
-        margin-top: 20px;
-    }
-
-    &__multiple-btn {
-        @include font(#7B7B7B, 14px, 17px, 500);
-        cursor: pointer;
+        margin-top: $indent-4;
     }
 
     &__filter {
-        margin-top: 20px;
+        margin-top: $indent-4;
     }
 
     &__table-wrapper {
@@ -72,11 +52,32 @@
     }
 
     &__table {
-        margin-top: 20px;
+        margin-top: $indent-2;
     }
 
     &__pagination {
         flex: 0 0 auto;
         margin-top: 30px;
+    }
+}
+
+.a-knowledge-panel {
+    &-enter-active {
+        animation: knowledge-panel .2s;
+    }
+    &-leave-active {
+        animation: knowledge-panel .2s reverse;
+    }
+}
+
+@keyframes knowledge-panel {
+    0% {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
     }
 }

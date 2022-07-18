@@ -1,15 +1,18 @@
 <template>
     <div class="knowledge-table">
         <!-- Head -->
-        <div class="knowledge-table__header">
+        <div
+            class="knowledge-table__header"
+            :class="{ 'knowledge-table__header--disabled' : !isHasQuestions}"    
+        >
             <!-- Multiple operations -->
             <div class="knowledge-table__header-item">
-                <input
-                    type="checkbox"
-                    :checked="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
+                <v-checkbox
+                    id="all_question"
                     :value="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
-                    @input="toggleStateQuestions"
-                >
+                    :modelValue="GET_ALL_STATUS_MULTIPLE_OPERATIONS"    
+                    @change="toggleStateQuestions"
+                />
             </div>
 
             <!-- Вопрос -->
@@ -23,28 +26,98 @@
             >
                 <span>Дата</span>
                 
-                <select
-                    v-model="sort.update_at"
-                    @change="selectSort('update_at', $event)"
-                >
-                    <option value="off">off</option>
-                    <option value="asc">возр</option>
-                    <option value="desc">убыв</option>
-                </select>
+                <transition name="a-sort-icon" mode="out-in">
+                    <template v-if="sort.update_at === 'off'">
+                        <button
+                            key="date_sort_asc"
+                            class="button-text button-text--primary button-text--only-icon"
+                            @click="toSort('update_at', 'asc')"
+                        >
+                            <v-icon
+                                name="sort-asc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
+
+                    <template v-else-if="sort.update_at === 'asc'">
+                        <button
+                            key="date_sort_asc_active"
+                            class="button-text button-text--primary button-text--only-icon active"
+                            @click="toSort('update_at', 'desc')"
+                        >
+                            <v-icon
+                                name="sort-asc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
+
+                    <template v-else-if="sort.update_at === 'desc'">
+                        <button
+                            key="date_sort_desc"
+                            class="button-text button-text--primary button-text--only-icon active"
+                            @click="toSort('update_at', 'off')"
+                        >
+                            <v-icon
+                                name="sort-desc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
+                </transition>
             </div>
 
             <!-- Обращений -->
             <div class="knowledge-table__header-item knowledge-table__header-item--sortable">
                 <span>Обращений</span>
 
-                <select
-                    v-model="sort.c_enquiry"
-                    @change="selectSort('c_enquiry', $event)"
-                >
-                    <option value="off">off</option>
-                    <option value="asc">возр</option>
-                    <option value="desc">убыв</option>
-                </select>
+                <transition name="a-sort-icon" mode="out-in">
+                    <template v-if="sort.c_enquiry === 'off'">
+                        <button
+                            key="enquiry_sort_asc"
+                            class="button-text button-text--primary button-text--only-icon"
+                            @click="toSort('c_enquiry', 'asc')"
+                        >
+                            <v-icon
+                                name="sort-asc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
+
+                    <template v-else-if="sort.c_enquiry === 'asc'">
+                        <button
+                            key="enquiry_sort_asc_active"
+                            class="button-text button-text--primary button-text--only-icon active"
+                            @click="toSort('c_enquiry', 'desc')"
+                        >
+                            <v-icon
+                                name="sort-asc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
+
+                    <template v-else-if="sort.c_enquiry === 'desc'">
+                        <button
+                            key="enquiry_sort_desc"
+                            class="button-text button-text--primary button-text--only-icon active"
+                            @click="toSort('c_enquiry', 'off')"
+                        >
+                            <v-icon
+                                name="sort-desc"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
+                </transition>
             </div>
 
             <!-- Статус -->
@@ -53,7 +126,7 @@
             </div>
 
             <!-- Действия -->
-            <div class="knowledge-table__header-item">
+            <div class="knowledge-table__header-item knowledge-table__header-item--center">
                 Действия
             </div>            
         </div>
@@ -63,7 +136,14 @@
             <!-- Loading -->
             <template v-if="IS_LOADING">
                 <div class="knowledge-table__row knowledge-table__row--special">
-                    loading...
+                    <v-icon
+                        name="spinner-primary"
+                        :sizeParams="{
+                            width: 36,
+                            height: 36
+                        }"
+                        class="icon--spinner"
+                    />
                 </div>
             </template>
 
@@ -80,7 +160,8 @@
                 <!-- Empty -->
                 <template v-else>
                     <div class="knowledge-table__row knowledge-table__row--special">
-                        Empty
+                        <p>Таблица пуста</p>
+                        <p>Добавьте вопрос-ответ</p>
                     </div>
                 </template>
             </template>
@@ -90,12 +171,18 @@
 
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
+    import VIcon from '../VIcon.vue';
+    import VCheckbox from '../VCheckbox.vue';
     import KnowledgeTableItem from './KnowledgeTableItem.vue';
 
     export default {
         name: 'KnowledgeTable',
 
-        components: { KnowledgeTableItem },
+        components: {
+            KnowledgeTableItem,
+            VIcon,
+            VCheckbox
+        },
 
         props: {
             questions: {
@@ -106,8 +193,6 @@
 
         data() {
             return {
-                sortName: '',
-
                 sort: {
                     update_at: 'off',
                     c_enquiry: 'off',
@@ -118,7 +203,6 @@
         computed: {
             ...mapGetters('knowledge', [
                 'IS_LOADING',
-                'IS_ADDED_QUESTIONS',
                 'GET_ALL_STATUS_MULTIPLE_OPERATIONS'
             ]),
 
@@ -132,23 +216,27 @@
                 'SET_SORT',
                 'CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS'
             ]),
+
             ...mapActions('knowledge', ['LOAD_QUESTIONS']),
 
-            selectSort(sortName, event) {
+            toSort(sortName, sortRule) {
                 // выключаем все фильтры кроме того который включаем
                 Object.keys(this.sort).forEach((name) => {
                     if (sortName != name) {
                         this.sort[name] = 'off';
                     }
                 });
-                // если значение "не выключен" передаем данные сортировки в состояние
-                // иначе задаем дефолтное
-                if (event.target.value != 'off') {
-                    this.SET_SORT({ name: sortName, rule: event.target.value });
-                } else {
-                    this.SET_SORT({ name: 'id', rule: 'asc' });
-                }
+                // записываем текущее значение фильтра
+                this.sort[sortName] = sortRule;
 
+                // если значение не "выключен" передаем данные сортировки в состояние
+                // иначе задаем дефолтное
+                if (sortRule != 'off') {
+                    this.SET_SORT({ name: sortName, rule: sortRule });
+                } else {
+                    this.SET_SORT({ name: '', rule: '' });
+                }
+                
                 this.LOAD_QUESTIONS();
             },
 

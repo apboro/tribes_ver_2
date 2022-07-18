@@ -1,79 +1,67 @@
 <template>
     <div class="knowledge">
-        <portal-target name="destination"></portal-target>
+        <!-- <portal-target name="destination"></portal-target> -->
         
         <div class="container">
-            <!-- Breadcrumbs -->
-            <v-breadcrumbs
-                class="knowledge__breadcrumbs"
-                :links="breadcrumbsLinks"
-            />
+            <!-- <template v-if="COMMUNITY_TITLE"> -->
+                <!-- Breadcrumbs -->
+                <v-breadcrumbs
+                    class="knowledge__breadcrumbs"
+                    :links="breadcrumbsLinks"
+                />
+            <!-- </template> -->
 
             <!-- Title -->
-            <h1 class="knowledge__title">
-                База знаний сообщества «
-                <span class="knowledge__name">
-                    {{ COMMUNITY_TITLE }}
-                </span>»
-            </h1>
+            <!-- <template v-if="COMMUNITY_TITLE"> -->
+                <h1 class="knowledge__title">
+                    База знаний сообщества «
+                    <span
+                        class="knowledge__name"
+                        :title="COMMUNITY_TITLE"
+                    >
+                        {{ COMMUNITY_TITLE }}
+                    </span>»
+                </h1>
+            <!-- </template> -->
             
             <!-- Auxiliary -->
-            <div class="knowledge__auxiliary">
-                <a
-                    :href="GET_META_INFO.how_it_works_link"
-                    target="_blank"
-                >
-                    Как это работает?
-                </a>
-
-                <a
-                    :href="GET_META_INFO.public_list_link"
-                    target="_blank"
-                >
-                    Посмотреть как пользователь
-                </a>
-
-                <button @click="copyLink">
-                    Копировать ссылку
-                </button>
-            </div>
+            <knowledge-auxiliary
+                class="knowledge__auxiliary"
+                :metaData="GET_META_INFO"
+            />
 
             <div class="knowledge__control">
                 <!-- Search -->
-                <input
-                    type="text"
-                    class="form-item knowledge__search"
-                    placeholder="Поиск"
-                    @input="searchFilter"
+                <search-field
                     v-model="searchText"
-                >
+                    @input="searchFilter"
+                />
                 
                 <!-- Add question -->
                 <button
-                    class="knowledge__add-btn button-text button-text--only-icon button-text--primary"
+                    class="button-filled knowledge__add-btn button-filled--primary"
                     @click="openNewQuestionPopup"
                 >
-                    
-                    <v-icon
-                        name="right-arrow"
-                        size="1"
-                        class="icon button-text__icon "
-                    />
+                    Добавить новый вопрос-ответ
                 </button>
             </div>
 
-            <template v-if="HAS_QUESTION_FOR_OPERATIONS">
-                <!-- Multiple operations -->
-                <knowledge-multiple-operations @setOperationType="setOperationType" />
-            </template>
+            <keep-alive>
+                <transition name="a-knowledge-panel" mode="out-in">
+                    <template v-if="HAS_QUESTION_FOR_OPERATIONS">
+                        <!-- Multiple operations -->
+                        <knowledge-multiple-operations @setOperationType="setOperationType" />
+                    </template>
 
-            <template v-else>
-                <!-- Filter -->
-                <knowledge-filter
-                    class="knowledge__filter"
-                    @resetFilters="resetFilters"
-                />
-            </template>
+                    <template v-else>
+                        <!-- Filter -->
+                        <knowledge-filter
+                            class="knowledge__filter"
+                            @resetFilters="resetFilters"
+                        />
+                    </template>
+                </transition>
+            </keep-alive>
 
             <!-- Table -->
             <knowledge-table
@@ -82,12 +70,15 @@
             />
             
             <!-- Pagination -->
-            <v-pagination
-                class="knowledge__pagination"
-                :data="GET_META"
-                @onPageClick="setPage"
-                @onChangePerPage="setPerPage"
-            />
+            <template v-if="GET_QUESTIONS && GET_QUESTIONS.length && !IS_LOADING">
+                <v-pagination
+                    class="knowledge__pagination"
+                    :paginateData="GET_PAGINATE_DATA"
+                    :selectOptions="paginationSelectedOptions"
+                    @onPageClick="setPage"
+                    @onChangePerPage="setPerPage"
+                />
+            </template>
 
             <!-- Модальное окно нового вопроса --> 
             <transition name="a-overlay">
@@ -104,42 +95,58 @@
                 />
             </transition>
 
-            <!-- Модальное окно подтверждения -->
-            
-                <transition name="a-overlay">
-                    <v-overlay
-                        v-if="isVisibleConfirmPopup"
-                        @onClick="closeConfirmPopup"
-                    />
-                </transition>
+            <!-- Модальное окно подтверждения удаления -->
+            <transition name="a-overlay">
+                <v-overlay
+                    v-if="isVisibleConfirmDeletePopup"
+                    @onClick="closeConfirmDeletePopup"
+                />
+            </transition>
 
-                <transition name="a-popup">
-                    <knowledge-confirm-popup
-                        v-if="isVisibleConfirmPopup"
-                        :questions="needConfirmationQuestions"
-                        @closeConfirmPopup="closeConfirmPopup"
-                        @confirm="confirmDraftQuestions"
-                    />
-                </transition>
-            
+            <transition name="a-popup">
+                <knowledge-confirm-delete-popup
+                    v-if="isVisibleConfirmDeletePopup"
+                    @closeConfirmDeletePopup="closeConfirmDeletePopup"
+                    @confirm="confirmDeleteQuestions"
+                />
+            </transition>
+
+            <!-- Модальное окно подтверждения черновиков -->
+            <transition name="a-overlay">
+                <v-overlay
+                    v-if="isVisibleConfirmDraftPopup"
+                    @onClick="closeConfirmDraftPopup"
+                />
+            </transition>
+
+            <transition name="a-popup">
+                <knowledge-confirm-draft-popup
+                    v-if="isVisibleConfirmDraftPopup"
+                    :questions="needConfirmationQuestions"
+                    @closeConfirmDraftPopup="closeConfirmDraftPopup"
+                    @confirm="confirmDraftQuestions"
+                />
+            </transition>
         </div>
     </div>
 </template>
 
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
-    import { copyText } from '../../core/functions';
     import VBreadcrumbs from './components/VBreadcrumbs.vue';
-    import VPagination from './components/Knowledge/VPagination.vue';
+    import VPagination from './components/VPagination.vue';
     import VPopup from './components/VPopup.vue';
     import VOverlay from './components/VOverlay.vue';
     import VIcon from './components/VIcon.vue';
-    import TextEditor from './components/TextEditor.vue';
+    import SearchField from './components/SearchField.vue';
     import KnowledgeFilter from './components/Knowledge/KnowledgeFilter.vue';
     import KnowledgeTable from './components/Knowledge/KnowledgeTable.vue';
     import KnowledgeMultipleOperations from './components/Knowledge/KnowledgeMultipleOperations.vue';
     import KnowledgeNewQuestionPopup from './components/Knowledge/KnowledgeNewQuestionPopup.vue';
-    import KnowledgeConfirmPopup from './components/Knowledge/KnowledgeConfirmPopup.vue';
+    import KnowledgeConfirmDraftPopup from './components/Knowledge/KnowledgeConfirmDraftPopup.vue';
+    import KnowledgeConfirmDeletePopup from './components/Knowledge/KnowledgeConfirmDeletePopup.vue';
+    import KnowledgeAuxiliary from './components/Knowledge/KnowledgeAuxiliary.vue';
+    import { bodyLock, bodyUnLock } from '../../core/functions';
 
     export default {
         name: 'Knowledge',
@@ -150,31 +157,30 @@
             VPopup,
             VOverlay,
             VIcon,
-            TextEditor,
+            SearchField,
             KnowledgeFilter,
             KnowledgeTable,
             KnowledgeMultipleOperations,
             KnowledgeNewQuestionPopup,
-            KnowledgeConfirmPopup
+            KnowledgeConfirmDraftPopup,
+            KnowledgeConfirmDeletePopup,
+            KnowledgeAuxiliary,
         },
 
         data() {
             return {
-                breadcrumbsLinks: [
-                    {
-                        text: 'Главная',
-                        href: 'href-1'
-                    },
-                    {
-                        text: 'База знаний сообщества "Мудрость стоиков на каждый день"',
-                        href: 'href-2'
-                    },
-                ],
                 isVisibleNewQuestionPopup: false,
                 searchText: '',
 
                 needConfirmationQuestions: [],
-                isVisibleConfirmPopup: false,
+                isVisibleConfirmDraftPopup: false,
+                isVisibleConfirmDeletePopup: false,
+
+                paginationSelectedOptions: [
+                    { label: 15, value: 15 },
+                    { label: 30, value: 30 },
+                    { label: 45, value: 45 }
+                ],
             }
         },
 
@@ -185,8 +191,23 @@
                 'GET_META',
                 'HAS_QUESTION_FOR_OPERATIONS',
                 'GET_META_INFO',
+                'IS_LOADING',
                 'GET_IDS_MULTIPLE_OPERATIONS',
+                'GET_PAGINATE_DATA',
             ]),
+
+            breadcrumbsLinks() {
+                return [
+                    {
+                        text: 'Главная',
+                        href: 'href-1'
+                    },
+                    {
+                        text: `База знаний сообщества "${ this.COMMUNITY_TITLE }"`,
+                        href: 'href-2'
+                    },
+                ]
+            }
         },
 
         methods: {
@@ -203,20 +224,34 @@
 
             openNewQuestionPopup() {
                 this.isVisibleNewQuestionPopup = true;
+                bodyLock();
             },
 
             closeNewQuestionPopup() {
                 this.isVisibleNewQuestionPopup = false;
+                bodyUnLock();
             },
 
-            openConfirmPopup() {
-                this.isVisibleConfirmPopup = true;
+            openConfirmDraftPopup() {
+                this.isVisibleConfirmDraftPopup = true;
+                bodyLock();
             },
 
-            closeConfirmPopup() {
-                this.isVisibleConfirmPopup = false;
+            closeConfirmDraftPopup() {
+                this.isVisibleConfirmDraftPopup = false;
+                bodyUnLock();
             },
 
+            openConfirmDeletePopup() {
+                this.isVisibleConfirmDeletePopup = true;
+                bodyLock();
+            },
+
+            closeConfirmDeletePopup() {
+                this.isVisibleConfirmDeletePopup = false;
+                bodyUnLock();
+            },
+            
             // переключение страницы пагинации
             setPage(value) {
                 this.SET_PAGINATION({ page: value });
@@ -255,6 +290,10 @@
                 // по типу операции вызываем экшн и получаем ответ
                 switch (type) {
                     case 'delete': 
+                        this.openConfirmDeletePopup();
+                        break;
+
+                    case 'hard_delete':
                         message = await this.TO_MULTIPLE_OPERATIONS({
                             command: 'delete',
                             params: { mark: 0 }
@@ -268,12 +307,11 @@
                             .map((id) => this.GET_QUESTIONS.find((question) => question.id == id))
                             .filter((question) => question.is_draft == true);
                         
-                        
                         // если есть черновики
                         if (draftItems.length) {
                             // отображаем их для подтверждения в окне
                             this.needConfirmationQuestions = draftItems;
-                            this.openConfirmPopup();
+                            this.openConfirmDraftPopup();
                             return false;
                         }
 
@@ -314,7 +352,7 @@
 
                 /* if (message.type === 'error') {
                     this.needConfirmationQuestions = message.items;
-                    this.openConfirmPopup();
+                    this.openConfirmDraftPopup();
                 } */
             },
 
@@ -323,14 +361,14 @@
                     const idsToSend = this.GET_IDS_MULTIPLE_OPERATIONS.filter(el => !notChangeableQuestions.includes(el));
                     this.SET_IDS_MULTIPLE_OPERATIONS(idsToSend);
                 }
-                this.closeConfirmPopup();
+                this.closeConfirmDraftPopup();
                 this.setOperationType('hard_public');
             },
 
-            copyLink() {
-                copyText(this.GET_META_INFO.public_list_link);
+            confirmDeleteQuestions() {
+                this.closeConfirmDeletePopup();
+                this.setOperationType('hard_delete');
             },
-
         },
 
         mounted() {

@@ -1,57 +1,87 @@
 <template>
     <div class="knowledge-filter">
         <div class="knowledge-filter__wrapper">
-            <div class="knowledge-filter__group">
-                <label class="knowledge-filter__title">
-                    Ответ
-                </label>
-                
-                <select
-                    class="form-item"
-                    @change="filter"
+            <h3 class="knowledge-filter__title">
+                Фильтры:
+            </h3>
+
+            <div class="knowledge-filter__group knowledge-filter__group--first">
+                <!-- All -->
+                <radio-button
+                    id="answer_all"
+                    class="knowledge-filter__item"
+                    value="all"
+                    label="Все"
                     v-model="filters.with_answers"
-                >
-                    <option value="all">Все</option>
-                    <option value="with_answer">С ответом</option>
-                    <option value="no_answer">Без ответа</option>
-                </select>
+                    @change="filter"
+                />
+
+                <!-- No answer -->
+                <radio-button
+                    id="answer_no_answer"
+                    class="knowledge-filter__item"
+                    value="no_answer"
+                    label="Без ответа"
+                    v-model="filters.with_answers"
+                    @change="filter"
+                />
+
+                <!-- Width answer -->
+                <radio-button
+                    id="answer_with_answer"
+                    class="knowledge-filter__item"
+                    value="with_answer"
+                    label="С ответом"
+                    v-model="filters.with_answers"
+                    @change="filter"
+                />
             </div>
 
             <div class="knowledge-filter__group">
-                <label class="knowledge-filter__title">
-                    Статус
-                </label>
-                
-                <select
-                    class="form-item"
+                <!-- All -->
+                <radio-button
+                    id="status_all"
+                    class="knowledge-filter__item"
+                    value="all"
+                    label="Все"
+                    v-model="filters.status"
                     @change="filter"
-                    v-model="filters.published"
-                >
-                    <option value="all">Все</option>
-                    <option value="public">Опубликовано</option>
-                    <option value="not_public">Не опубликовано</option>
-                </select>
-            </div>
+                />
 
-            <div class="knowledge-filter__group">
-                <label class="knowledge-filter__title">
-                    Черновик
-                </label>
-                
-                <select
-                    class="form-item"
+                <!-- Not public -->
+                <radio-button
+                    id="status_not_public"
+                    class="knowledge-filter__item"
+                    value="not_public"
+                    label="Не опубликовано"
+                    v-model="filters.status"
                     @change="filter"
-                    v-model="filters.draft"
-                >
-                    <option value="all">Все</option>
-                    <option value="draft">Черновик</option>
-                    <option value="not_draft">Не черновик</option>
-                </select>
+                />
+
+                <!-- Public -->
+                <radio-button
+                    id="status_public"
+                    class="knowledge-filter__item"
+                    value="public"
+                    label="Опубликовано"
+                    v-model="filters.status"
+                    @change="filter"
+                />
+            
+                <!-- Draft -->
+                <radio-button
+                    id="status_draft"
+                    class="knowledge-filter__item"
+                    value="draft"
+                    label="Черновик"
+                    v-model="filters.status"
+                    @change="filter"
+                />
             </div>
         </div>
 
         <button
-            class="knowledge-filter__btn"
+            class="button-text button-text--primary"
             @click="resetFilters"
         >
             Сбросить фильтры
@@ -61,16 +91,18 @@
 
 <script>
     import { mapActions } from 'vuex';
+    import RadioButton from '../RadioButton.vue';
 
     export default {
         name: 'KnowledgeFilter',
+        
+        components: { RadioButton },
 
         data() {
             return {
                 filters: {
                     with_answers: 'all',
-                    published: 'all',
-                    draft: 'all',
+                    status: 'all',
                 },
             }
         },
@@ -78,23 +110,28 @@
         methods: {
             ...mapActions('knowledge', ['FILTER_QUESTIONS']),
             
+            filterStatus(value) {
+                this.filters.status = value;
+                this.FILTER_QUESTIONS(this.filters);
+            },
+
+            filterWithAnswers(value) {
+                this.filters.with_answers = value;
+                this.FILTER_QUESTIONS(this.filters);
+            },
+            
             resetFilters() {
                 this.filters = {
                     with_answers: 'all',
-                    published: 'all',
-                    draft: 'all',
+                    status: 'all',
                 };
                 
                 this.$emit('resetFilters', this.filters);
             },
-            
+
             filter() {
                 this.FILTER_QUESTIONS(this.filters);
             }
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

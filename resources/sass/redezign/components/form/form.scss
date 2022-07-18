@@ -1,0 +1,15 @@
+@import "./form-message";
+
+.form-item {
+    & + & {
+        margin-top: $indent-3;
+    }
+
+    &__label {
+        margin-bottom: 3px;
+    }
+
+    &__message {
+        margin-top: 3px;
+    }
+}

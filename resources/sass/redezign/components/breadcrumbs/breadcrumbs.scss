@@ -1,3 +1,5 @@
+$link-last-color: $grey-10;
+
 .breadcrumbs {
 
     &__list {
@@ -23,16 +25,10 @@
         }
     }
 
-    &__divider {
-        margin-right: 10px;
-        margin-left: 10px;
-    }
-
     &__link {
-        @include font(grey, 14px, 18px, 400);
-
+        
         &--last {
-            color:black;
+            @include font($link-last-color, 14px, 20px, 400);
         }
     }
 }
