@@ -87,7 +87,8 @@ class MainBotCommands
         'mySubscriptions',
         'subscriptionSearch',
         'setTariffForUserByPayId',
-        'knowledgeSearch'
+        'knowledgeSearch',
+        'saveForwardMessageInBotChatAsQA',
     ])
     {
         foreach ($methods as $method) {
@@ -532,6 +533,24 @@ class MainBotCommands
             $this->access();
             $this->extend();
             $this->unsubscribe();
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    private function saveForwardMessageInBotChatAsQA()
+    {
+        try {
+            $this->bot->onAction('add-qa-community-{id:string}', function (Context $ctx) {
+
+                $communityId = $ctx->var('id');
+                $community = $this->communityRepo->getCommunityById($communityId);
+
+                //todo реализовать сохранение пары вопрос ответ из кеша qa_hash_...['q','a'], кеш очистить
+                $ctx->reply("Вопрос ответ сохранен в сообщество: {$community->title}");
+
+
+            });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }

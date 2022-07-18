@@ -138,7 +138,7 @@ class KnowledgeObserver
                 // учитывать временной лаг 5 сек для автора что бы успел ввести
                 $menu = [];
                 foreach ($communityCollection as $eachCommunity) {
-                    $menu[][] = ['text' => $eachCommunity->title, 'callback_data' => 'add-qa-community-' . $eachCommunity->id];
+                    $menu[][] = ['text' => $eachCommunity->title, 'callback_data' => '/add-qa-community-' . $eachCommunity->id];
                 }
                 $this->mainBotService->sendMessageFromBot($params['botName'], $mChatId, 'Выбирете сообщество',false, $menu);
                 $this->logger->debug('telegram scene on forward messages for more communities');
