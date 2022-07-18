@@ -1,5 +1,5 @@
 <template>
-    <div class="v-overlay" @click="onClick"></div>
+    <div class="overlay" @click="onClick"></div>
 </template>
 
 <script>
@@ -10,6 +10,6 @@
             onClick() {
                 this.$emit('onClick');
             }
-        }
+        },
     }
 </script>

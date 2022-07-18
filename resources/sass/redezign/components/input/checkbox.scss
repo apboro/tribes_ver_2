@@ -1,0 +1,87 @@
+$checkbox-width: 18px;
+$checkbox-height: $checkbox-width;
+
+$checkbox-color-1: $grey-5;
+$checkbox-color-2: $grey-7;
+$checkbox-color-3: $primary-1;
+$checkbox-bg-1: $white;
+
+.checkbox {
+    display: flex;
+    align-items: center;
+
+    &:hover,
+    &:focus {
+        .checkbox__decor:before {
+            border-color: $checkbox-color-2;
+        }
+
+        &:checked + .checkbox__decor:before {
+            border-color: $checkbox-color-3;
+        }
+    }
+
+    &__wrapper {
+        position: relative;
+        width: $checkbox-width;
+        height: $checkbox-height;
+    }
+
+
+    &__input {
+        display: none;
+
+        &:checked + .checkbox__decor:before {
+            background-color: $checkbox-color-3;
+            border-color: $checkbox-color-3;
+        }
+
+        &:checked + .checkbox__decor:after {
+            top: 50%;
+            left: 50%;
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+
+    &__decor {
+        cursor: pointer;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            display: block;
+            width: $checkbox-width;
+            height: $checkbox-height;
+            border: 1px solid $checkbox-color-1;
+            background-color: $checkbox-bg-1;
+            border-radius: 2px;
+            transition: .2s linear;
+        }
+
+        &:after {
+            content: "";
+            position: absolute;
+            top: 30%;
+            left: 79%;
+            z-index: 1;
+            width: 15px;
+            height: 15px;
+            background-image: url("/ico/check.svg");
+            background-size: cover;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            visibility: hidden;
+            transition: .2s linear;
+        }
+    }
+
+    &__label {
+        margin-left: $indent-2;
+        @include font($text-color-1, 14px, 20px, 400);
+        cursor: pointer;
+    }
+}

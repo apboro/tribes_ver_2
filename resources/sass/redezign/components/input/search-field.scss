@@ -1,0 +1,55 @@
+$search-icon-color-1: $grey-6;
+$search-icon-color-2: $primary-1;
+$search-color-1: $grey-7;
+$search-color-2: $grey-5;
+
+
+.search-field {
+    position: relative;
+
+    &__field {
+        width: 100%;
+        padding: 10px 50px 10px 20px;
+        @include font($search-color-1, 14px, 20px, 400);
+        border: 1px solid $search-color-2;
+        border-radius: 100px;
+        transition: $transition;
+
+        &:hover {
+            border-color: $search-color-1;
+        }
+
+        &:focus {
+            border-color: $search-icon-color-2;
+    
+            & + .search-field__icon {
+                .icon__fill {
+                    fill: $search-icon-color-2;
+                }
+        
+                .icon__stroke {
+                    stroke: $search-icon-color-2;
+                }
+            }
+        }
+    }
+
+    &__icon {
+        position: absolute;
+        top: calc(50% - 12px);
+        right: 20px;
+
+        .icon__fill {
+            fill: $search-icon-color-1;
+        }
+
+        .icon__stroke {
+            stroke: $search-icon-color-1;
+        }
+    }
+
+    &--disabled {
+        pointer-events: none;
+        opacity: .4;
+    }
+}

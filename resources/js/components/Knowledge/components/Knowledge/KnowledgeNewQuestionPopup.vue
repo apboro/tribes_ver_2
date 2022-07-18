@@ -1,58 +1,71 @@
 <template>
     <v-popup
+        theme="primary"
+        title="Новый вопрос-ответ"
         @close="closeNewQuestionPopup"
     >
-        <template #title>
-            <h2 class="v-popup__title">Новый вопрос-ответ</h2>
-        </template>
-
         <template #body>
-            <label for="new_question">Вопрос</label>
-            <input
-                type="text"
-                id="new_question"
-                class="form-item"
-                v-model="newQuestionText"
-            >
+            <div class="form-item">
+                <label
+                    class="form-label form-item__label"
+                    for="new_question"
+                >
+                    Вопрос
+                </label>
 
-            <label for="">Ответ</label>
-            <text-editor
-                :text="newAnswerText"
-                @edit="setAnswer"
-            />
+                <input
+                    type="text"
+                    id="new_question"
+                    class="form-control"
+                    placeholder="Что такое Tribes?"
+                    v-model="newQuestionText"
+                >
+                
+                <span
+                    class="form-message form-message--danger form-item__message"
+                    v-if="false"
+                ></span>
+            </div>
+
+            <div class="form-item">
+                <label class="form-label form-item__label">
+                    Ответ
+                </label>
+
+                <text-editor
+                    :text="newAnswerText"
+                    @edit="setAnswer"
+                />
+            </div>
 
             <div class="knowledge-modal__controls">
-                <div class="knowledge-filter__item">
-                    <input type="checkbox" id="question_draft" v-model="draft">
-                    <label for="question_draft">Черновик</label>
-                </div>
+                <v-checkbox
+                    id="new_question_draft"
+                    label="Черновик"
+                    v-model="changeDraft"
+                />
 
-                <div class="toggle-switch">
-                    <label class="toggle-switch__switcher">
-                        <input type="checkbox" id="is_published_question" v-model="isPublic">
-                        <span class="toggle-switch__slider"></span>
-                    </label>
-
-                    <label for="is_published_question" class="toggle-switch__label">
-                        Опубликовано
-                    </label>
-                </div>
+                <toggle-switch
+                    id="is_published_new_question"
+                    :label="isPublic ? 'Опубликовано' : 'Не опубликовано'"
+                    v-model="changePublic"
+                />
             </div>
         </template>
 
         <template #footer>
             <button
-                class="v-popup__footer-btn"
+                class="button-empty button-empty--primary"
                 @click="cancelNewQuestion"
             >
-                Cancel
+                Отмена
             </button>
             
             <button
-                class="v-popup__footer-btn"
+                class="button-filled button-filled--primary"
                 @click="sendNewQuestion"
             >
-                Submit
+                Создать
             </button>
         </template>
     </v-popup>
@@ -62,19 +75,52 @@
     import { mapActions } from 'vuex';
     import VPopup from '../VPopup.vue';
     import TextEditor from '../TextEditor.vue';
+    import VCheckbox from '../VCheckbox.vue';
+    import ToggleSwitch from '../ToggleSwitch.vue';
 
     export default {
         name: 'KnowledgeNewQuestionPopup',
 
-        components: { VPopup, TextEditor },
+        components: {
+            VPopup,
+            TextEditor,
+            VCheckbox,
+            ToggleSwitch,
+        },
 
         data() {
             return {
                 newQuestionText: '',
                 newAnswerText: '',
                 draft: false,
-                isPublic: true
+                isPublic: true,
             }
+        },
+
+        computed: {
+            changeDraft: {
+                get() {
+                    return this.draft;
+                },
+                set(bool) {
+                    if (bool) {
+                        this.isPublic = false;
+                    }
+                    this.draft = bool;
+                }
+            },
+
+            changePublic: {
+                get() {
+                    return this.isPublic;
+                },
+                set(bool) {
+                    if (bool) {
+                        this.draft = false;
+                    }
+                    this.isPublic = bool;
+                }
+            },
         },
 
         methods: {

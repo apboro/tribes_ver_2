@@ -14,6 +14,7 @@ use App\Models\TelegramUser;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Payment\PaymentRepositoryContract;
 use App\Repositories\TelegramConnection\TelegramConnectionRepositoryContract;
+use App\Services\Knowledge\ManageQuestionService;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
 use App\Traits\Declination;
@@ -27,6 +28,7 @@ use Askoldex\Teletant\Exception\TeletantException;
 use App\Repositories\Knowledge\KnowledgeRepositoryContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -50,19 +52,22 @@ class MainBotCommands
         'qa' => 'Найти ответ в Базе Знаний сообщества',
 
     ];
+    private ManageQuestionService $manageQuestionService;
 
 
     public function __construct(
         TelegramConnectionRepositoryContract $connectionRepo,
         CommunityRepositoryContract          $communityRepo,
         PaymentRepositoryContract            $paymentRepo,
-        KnowledgeRepositoryContract          $knowledgeRepository
+        KnowledgeRepositoryContract          $knowledgeRepository,
+        ManageQuestionService                $manageQuestionService
     )
     {
         $this->paymentRepo = $paymentRepo;
         $this->connectionRepo = $connectionRepo;
         $this->communityRepo = $communityRepo;
         $this->knowledgeRepository = $knowledgeRepository;
+        $this->manageQuestionService = $manageQuestionService;
     }
 
     public function initBot(MainBot $bot)
@@ -87,7 +92,8 @@ class MainBotCommands
         'mySubscriptions',
         'subscriptionSearch',
         'setTariffForUserByPayId',
-        'knowledgeSearch'
+        'knowledgeSearch',
+        'saveForwardMessageInBotChatAsQA',
     ])
     {
         foreach ($methods as $method) {
@@ -267,7 +273,7 @@ class MainBotCommands
         try {
             $this->bot->onCommand('donate', function (Context $ctx) {
                 if (str_split($ctx->getChatID(), 1)[0] !== '-') {
-                    $communities = $this->communityRepo->getCommunityBelongsUserId($ctx->getChatID());
+                    $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
 
                     if ($communities->first()) {
                         $menu = Menux::Create('links')->inline();
@@ -351,7 +357,7 @@ class MainBotCommands
         try {
             $this->bot->onHears('❗Оказать материальную помощь', function (Context $ctx) {
 
-                $communities = $this->communityRepo->getCommunityBelongsUserId($ctx->getChatID());
+                $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
 
                 if ($communities->first()) {
                     $menu = Menux::Create('links')->inline();
@@ -402,7 +408,7 @@ class MainBotCommands
         try {
             $this->bot->onHears('📂Мои подписки', function (Context $ctx) {
                 $menu = Menux::Create('links')->inline();
-                $communities = $this->communityRepo->getCommunityBelongsUserId($ctx->getChatID());
+                $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
                 if ($communities->first()) {
                     foreach ($communities as $community) {
                         $menu->row()->btn($community->title, 'subscription-' . $community->connection_id);
@@ -426,14 +432,14 @@ class MainBotCommands
                 $message = $ctx->update()->message();
                 $this->bot->logger()->debug('Поиск по БЗ');
                 $searchText = $ctx->var('search');
-                $replyToUser = $message->from()->username()??$message->from()->firstName();
+                $replyToUser = $message->from()->username() ?? $message->from()->firstName();
 
                 if (!$message->replyToMessage()->isEmpty()) {
                     $reply = $message->replyToMessage();
                     if (empty($searchText)) {
                         $searchText = $reply->text();
                     }
-                    $replyToUser = $reply->from()->username()??$reply->from()->firstName();
+                    $replyToUser = $reply->from()->username() ?? $reply->from()->firstName();
                     //$reply->messageId()
                 }
                 $searchText = trim($searchText);
@@ -532,6 +538,71 @@ class MainBotCommands
             $this->access();
             $this->extend();
             $this->unsubscribe();
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    /**
+     * сохранение пары вопрос ответ из кеша "author_chat_bot_111_forward_message-multi"['q','a']
+     * @return void
+     */
+    private function saveForwardMessageInBotChatAsQA()
+    {
+        try {
+            $this->bot->onAction('add-qa-community-{id:string}', function (Context $ctx) {
+
+                $communityId = $ctx->var('id');
+                $mChatId = $ctx->callbackQuery()->from()->id() ?? null;
+                if (empty($mChatId)) {
+                    $this->bot->logger()
+                        ->debug(
+                            'saveForwardMessageInBotChatAsQA: Не определился личный чат автора',
+                            $ctx->callbackQuery()->export()
+                        );
+                    return;
+                }
+                $communities = $this->communityRepo->getCommunitiesForOwnerByTeleUserId($mChatId)->keyBy('id');
+
+                if (!$communities->has($communityId)) {
+                    $this->bot->logger()
+                        ->debug(
+                            'saveForwardMessageInBotChatAsQA: Не найдено сообщество или оно не принадлежит автору',
+                            $ctx->callbackQuery()->export()
+                        );
+                    return;
+                }
+                $community = $communities->get($communityId);
+
+                $key = "author_chat_bot_{$mChatId}_forward_message-multi";
+                $data = Cache::get($key, null);
+                if (empty($data)) {
+                    $this->bot->logger()->debug('saveForwardMessageInBotChatAsQA: Нет данных в кеше', [
+                        'key' => $key
+                    ]);
+                    return;
+                }
+                $this->bot->logger()
+                    ->debug('saveForwardMessageInBotChatAsQA: запись вопрос ответ для сообщества',
+                        array_merge([ 'community_id' => $community->id],$data)
+                    );
+
+                $this->manageQuestionService->setUserId($community->owner);
+                $this->manageQuestionService->createFromArray([
+                    'community_id' => $community->id,
+                    'question' => [
+                        'context' => ArrayHelper::getValue($data, 'q'),
+                        'is_public' => false,
+                        'is_draft' => false,
+                        'answer' => [
+                            'context' => ArrayHelper::getValue($data, 'a'),
+                            'is_draft' => false,
+                        ],
+                    ],
+                ]);
+                $ctx->reply("Вопрос ответ сохранен в сообщество: {$community->title}");
+                Cache::forget($key);
+            });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }

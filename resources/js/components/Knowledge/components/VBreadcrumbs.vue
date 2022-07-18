@@ -1,34 +1,40 @@
 <template>
-    <div class="breadcrumbs">
+    <nav class="breadcrumbs">
         <ul class="breadcrumbs__list">
             <li
                 class="breadcrumbs__item"
                 v-for="(link, index) in links"
                 :key="index"
-            >
-                <a
-                    class="breadcrumbs__link"
-                    :class="{ 'breadcrumbs__link--last': isLastLink(index) }"
-                    :href="link.href"
-                >
-                    {{ link.text }}
-                </a>
+            >   
+                <template v-if="isLastLink(index)">
+                    <span
+                        class="breadcrumbs__link--last"
+                    >
+                        {{ link.text }}
+                    </span>
+                </template>
+
+                <template v-else>
+                    <a
+                        class="link breadcrumbs__link"
+                        :href="link.href"
+                    >
+                        {{ link.text }}
+                    </a>
+                </template>
             </li>
         </ul>
-    </div>
+    </nav>
 </template>
 
 <script>
-    import VIcon from './VIcon.vue';
-
     export default {
         name: 'VBreadcrumbs',
-
-        components: { VIcon },
         
         props: {
             links: {
                 type: Array,
+                default: [],
             }
         },
 

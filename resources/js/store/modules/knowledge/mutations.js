@@ -59,5 +59,9 @@ export default ({
             })
         }
         state._idsMultipleOperations = arr;
+    },
+
+    SET_ERRORS(state, errors) {
+        state._errors = errors;
     }
 });

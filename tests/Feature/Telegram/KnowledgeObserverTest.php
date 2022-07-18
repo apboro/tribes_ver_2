@@ -6,6 +6,9 @@ use App\Models\Community;
 use App\Models\Knowledge\Question;
 use App\Models\TelegramConnection;
 use App\Models\User;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class KnowledgeObserverTest extends TestCase
@@ -123,10 +126,6 @@ class KnowledgeObserverTest extends TestCase
         ]);
     }
 
-    /**
-     * @return array|mixed|string
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
     protected function prepareDBCommunity(?array $data = [])
     {
         $data = $data ?: $this->getDataFromFile('telegram/reply_text_message.json');
