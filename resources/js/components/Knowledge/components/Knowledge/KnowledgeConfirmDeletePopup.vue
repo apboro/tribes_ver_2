@@ -2,6 +2,7 @@
     <v-popup
         theme="danger"
         :confirmOptions="{ type: 'delete' }"
+        :isVisiblePopup="isVisibleConfirmDeletePopup"
         @close="closeConfirmDeletePopup"
     >
         <template #body>
@@ -40,6 +41,13 @@
 
         components: {
             VPopup
+        },
+
+        props: {
+            isVisibleConfirmDeletePopup: {
+                type: Boolean,
+                default: false,
+            }
         },
 
         methods: {

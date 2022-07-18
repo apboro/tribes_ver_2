@@ -81,52 +81,26 @@
             </template>
 
             <!-- Модальное окно нового вопроса --> 
-            <transition name="a-overlay">
-                <v-overlay
-                    v-if="isVisibleNewQuestionPopup"
-                    @onClick="closeNewQuestionPopup"
-                />
-            </transition>
-
-            <transition name="a-popup">
-                <knowledge-new-question-popup
-                    v-if="isVisibleNewQuestionPopup"
-                    @closeNewQuestionPopup="closeNewQuestionPopup"
-                />
-            </transition>
+            <knowledge-new-question-popup
+                :isVisibleNewQuestionPopup="isVisibleNewQuestionPopup"
+                @closeNewQuestionPopup="closeNewQuestionPopup"
+            />
 
             <!-- Модальное окно подтверждения удаления -->
-            <transition name="a-overlay">
-                <v-overlay
-                    v-if="isVisibleConfirmDeletePopup"
-                    @onClick="closeConfirmDeletePopup"
-                />
-            </transition>
-
-            <transition name="a-popup">
-                <knowledge-confirm-delete-popup
-                    v-if="isVisibleConfirmDeletePopup"
-                    @closeConfirmDeletePopup="closeConfirmDeletePopup"
-                    @confirm="confirmDeleteQuestions"
-                />
-            </transition>
+            <knowledge-confirm-delete-popup
+                :isVisibleConfirmDeletePopup="isVisibleConfirmDeletePopup"
+                @closeConfirmDeletePopup="closeConfirmDeletePopup"
+                @confirm="confirmDeleteQuestions"
+            />
+            
 
             <!-- Модальное окно подтверждения черновиков -->
-            <transition name="a-overlay">
-                <v-overlay
-                    v-if="isVisibleConfirmDraftPopup"
-                    @onClick="closeConfirmDraftPopup"
-                />
-            </transition>
-
-            <transition name="a-popup">
-                <knowledge-confirm-draft-popup
-                    v-if="isVisibleConfirmDraftPopup"
-                    :questions="needConfirmationQuestions"
-                    @closeConfirmDraftPopup="closeConfirmDraftPopup"
-                    @confirm="confirmDraftQuestions"
-                />
-            </transition>
+            <knowledge-confirm-draft-popup
+                :isVisibleConfirmDraftPopup="isVisibleConfirmDraftPopup"
+                :questions="needConfirmationQuestions"
+                @closeConfirmDraftPopup="closeConfirmDraftPopup"
+                @confirm="confirmDraftQuestions"
+            />
         </div>
     </div>
 </template>
@@ -136,7 +110,6 @@
     import VBreadcrumbs from './components/VBreadcrumbs.vue';
     import VPagination from './components/VPagination.vue';
     import VPopup from './components/VPopup.vue';
-    import VOverlay from './components/VOverlay.vue';
     import VIcon from './components/VIcon.vue';
     import SearchField from './components/SearchField.vue';
     import KnowledgeFilter from './components/Knowledge/KnowledgeFilter.vue';
@@ -155,7 +128,6 @@
             VBreadcrumbs,
             VPagination,
             VPopup,
-            VOverlay,
             VIcon,
             SearchField,
             KnowledgeFilter,
