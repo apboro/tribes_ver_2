@@ -1,35 +1,44 @@
 <template>
     <v-popup
-        @close="closeConfirmPopup"
+        theme="primary"
+        :confirmOptions="{ type: 'info' }"
+        @close="closeConfirmDraftPopup"
     >
-        <template #title>
-            <h2 class="v-popup__title">Требуется подтверждение</h2>
-        </template>
-
         <template #body>
-            <div class="knowledge-confirm-table">
-                <div class="knowledge-confirm-table__header">
-                    <h3 class="knowledge-confirm-table__title">
+            <p class="knowledge-confirm__text">
+                Среди  выбранных вами вопросов есть <b>черновик.</b> 
+            </p>
+
+            <p class="knowledge-confirm__text">
+                Его статус будет изменен на «Опубликовано», и вопрос-ответ <b>будет виден вашим пользователям.</b>
+            </p>
+
+            <div class="knowledge-confirm__table">
+                <div class="knowledge-confirm__table-header">
+                    <h3 class="knowledge-confirm__table-header-title">
                         Выбранные черновики
                     </h3>
                 </div>
 
-                <div class="knowledge-confirm-table__body">
+                <div class="knowledge-confirm__table-body">
                     <div
-                        class="knowledge-confirm-table__item"
+                        class="knowledge-confirm__table-item"
                         v-for="question in questions"
                         :key="question.id"    
                     >
-                        <div class="knowledge-confirm-table__question">
+                        <label
+                            :for="`draft_${ question.id }`"
+                            class="knowledge-confirm__question"
+                        >
                             {{ question.context }}
-                        </div>
+                        </label>
 
-                        <div class="knowledge-confirm-table__action">
-                            <input
-                                type="checkbox"
+                        <div class="knowledge-confirm__action">
+                            <v-checkbox
+                                :id="`draft_${ question.id }`"
                                 :value="question.id"
                                 v-model="ids"
-                            >
+                            />
                         </div>
                     </div>
                 </div>
@@ -38,17 +47,17 @@
 
         <template #footer>
             <button
-                class="v-popup__footer-btn"
-                @click="closeConfirmPopup"
+                class="button-empty button-empty--primary"
+                @click="closeConfirmDraftPopup"
             >
-                Cancel
+                Отмена
             </button>
             
             <button
-                class="v-popup__footer-btn"
+                class="button-filled button-filled--primary"
                 @click="confirm"
             >
-                Submit
+                Опубликовать
             </button>
         </template>
     </v-popup>
@@ -56,12 +65,13 @@
 
 <script>
     import VPopup from '../VPopup.vue';
+    import VCheckbox from '../VCheckbox.vue';
     
     export default {
-        name: 'KnowledgeConfirmPopup',
+        name: 'KnowledgeConfirmDraftPopup',
 
         components: {
-            VPopup
+            VPopup, VCheckbox
         },
 
         props: {
@@ -78,8 +88,8 @@
         },
 
         methods: {
-            closeConfirmPopup() {
-                this.$emit('closeConfirmPopup');
+            closeConfirmDraftPopup() {
+                this.$emit('closeConfirmDraftPopup');
             },
 
             confirm() {

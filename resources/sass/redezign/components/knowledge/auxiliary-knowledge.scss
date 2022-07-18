@@ -1,0 +1,7 @@
+.auxiliary-knowledge {
+    &__link {
+        & + & {
+            margin-left: $indent-2;
+        }
+    }
+}
