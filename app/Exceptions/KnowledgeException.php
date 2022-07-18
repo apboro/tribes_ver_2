@@ -21,7 +21,7 @@ class KnowledgeException extends Exception
 
     public function report()
     {
-        Log::channel('stack')->debug($this->message,$this->context);
+        Log::channel('stack')->error($this->message,$this->context);
     }
 
     public function getContext()

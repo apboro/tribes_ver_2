@@ -22,10 +22,12 @@ class MainBotCollection extends \Illuminate\Support\Collection implements BotCol
         ]);
     }
 
-    public function getBotByName(string $nameBot): MainBot 
+    public function getBotByName(string $botName): MainBot
     {
-        return $this->items[$nameBot];
+        return $this->items[$botName];
     }
+
+
 
     protected function settings($token)
     {
@@ -33,5 +35,10 @@ class MainBotCollection extends \Illuminate\Support\Collection implements BotCol
         $settings->setHookOnFirstRequest(false);
         $settings->setLogger(app(LogManager::class));
         return $settings;
+    }
+
+    public function hasBotByName(string $botName): bool
+    {
+        return isset( $this->items[$botName]);
     }
 }
