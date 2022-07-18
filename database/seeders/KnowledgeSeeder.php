@@ -21,7 +21,7 @@ class KnowledgeSeeder extends Seeder
     public function run()
     {
         /* @var User $userTest */
-        $userTest = $userTest ?? User::where('email' , 'adolgopolov0@gmail.com')->first()
+        $userTest = $userTest ?? User::where('email' , 'test-dev@webstyle.top')->first()
             ?? User::factory()->has(TelegramUser::factory(),'telegramMeta')->create([
                 'name' => 'Test Testov',
                 'email' => 'test-dev@webstyle.top',
