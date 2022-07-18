@@ -557,7 +557,7 @@ class MainBotCommands
                 if (empty($mChatId)) {
                     $this->bot->logger()
                         ->debug(
-                            'saveForwardMessageInBotChatAsQA: Не определилися личный чат автора',
+                            'saveForwardMessageInBotChatAsQA: Не определился личный чат автора',
                             $ctx->callbackQuery()->export()
                         );
                     return;

@@ -10,6 +10,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Http\Client\Request;
 use Monolog\Logger;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -30,10 +31,15 @@ abstract class TestCase extends BaseTestCase
 
     protected function setUp(): void
     {
-        Http::shouldReceive('post')
-            ->times()
-            ->andReturn(null);
         parent::setUp();
+        Http::fake(function ($request, $options) {
+            /** @var Request $request */
+            Log::debug('post http request', [
+                'url' => $request->url(),
+                'data' => $request->data(),
+            ]);
+            return Http::response();
+        });
         $this->app = app();
         $channel = Log::channel('testing');
         $this->logger = $channel->getLogger();
