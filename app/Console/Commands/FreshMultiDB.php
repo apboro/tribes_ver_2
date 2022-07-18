@@ -40,11 +40,16 @@ class FreshMultiDB extends Command
      */
     public function handle()
     {
+        $outputStyle = new OutputFormatterStyle('white', '#ff0000', ['bold', 'blink']);
+        $this->output->getFormatter()->setStyle('fire', $outputStyle);
+
         //todo  добавить обновление app()->environmentFile('.env.testing');
         // \NunoMaduro\Collision\Adapters\Laravel\Commands\TestCommand::handle
 
-        $outputStyle = new OutputFormatterStyle('white', '#ff0000', ['bold', 'blink']);
-        $this->output->getFormatter()->setStyle('fire', $outputStyle);
+        if(env('APP_ENV') == 'production'){
+            $this->output->writeln('<fire>ОШИБКА</fire> Выполнять сброс базы на проде запрещено');
+            return 0;
+        }
 
         Artisan::call('db:wipe --database=main');
         Artisan::call('db:wipe --database=knowledge');
