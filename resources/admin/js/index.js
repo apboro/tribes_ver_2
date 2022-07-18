@@ -5,10 +5,11 @@ window.axios.defaults.headers.common['Accept'] = 'application/json';
 window.axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 let api_token = document.querySelector('[name="api-token"]');
+let token = document.head.querySelector('meta[name="csrf-token"]');
 
 if(api_token){
     localStorage.setItem('token', api_token.content)
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = api_token.content;
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
     window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + api_token.content;
 } else {
     localStorage.removeItem('token')
