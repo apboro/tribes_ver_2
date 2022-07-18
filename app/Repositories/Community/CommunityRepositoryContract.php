@@ -25,7 +25,7 @@ interface CommunityRepositoryContract
 
     public function getAllCommunity();
 
-    public function getCommunityById($id);
+    public function getCommunityById($id): ?Community;
 
     public function isChatBelongsToTeleUserId(int $chatId, int $teleUserId): bool;
 

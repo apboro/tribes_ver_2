@@ -136,9 +136,13 @@ class KnowledgeObserver
             } elseif($communityCollection->count() > 1) {
                 //todo придумать реализцию сценария с уточнением к какому сообществу относится пара вопрос ответ
                 // учитывать временной лаг 5 сек для автора что бы успел ввести
+                Cache::add($key.'-multi', [
+                    'q' => $firstMessageAsQuestion,
+                    'a' => $text,
+                ], \DateInterval::createFromDateString('10 minutes'));
                 $menu = [];
                 foreach ($communityCollection as $eachCommunity) {
-                    $menu[][] = ['text' => $eachCommunity->title, 'callback_data' => '/add-qa-community-' . $eachCommunity->id];
+                    $menu[][] = ['text' => $eachCommunity->title, 'callback_data' => 'add-qa-community-' . $eachCommunity->id];
                 }
                 $this->mainBotService->sendMessageFromBot($params['botName'], $mChatId, 'Выбирете сообщество',false, $menu);
                 $this->logger->debug('telegram scene on forward messages for more communities');
