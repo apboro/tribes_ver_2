@@ -1,5 +1,11 @@
 <template>
-    <div class="text-editor" ref="editor" @drop.prevent></div>
+    <div
+        class="text-editor"
+        :class="{ 'text-editor--snow': theme == 'snow', 'text-editor--bubble': theme == 'bubble' }"
+    >
+
+        <div class="text-editor__editor" ref="editor" @drop.prevent></div>
+    </div>
 </template>
 
 <script>
@@ -13,6 +19,7 @@
                 type: String,
                 default: 'snow'
             },
+
             text: {
                 type: String,
                 default: ''
@@ -38,8 +45,8 @@
                                 ['bold', 'italic', 'underline', 'strike'], // жирный, курсив, подчеркнутый, зачеркнутый
                                 ['link'], // ссылка
                                 [{ 'list': 'ordered'}, { 'list': 'bullet' }], // списки нумерованный, точечный
-                                [{ 'align': [] }], // положение текста                    
-                                [{ 'script': 'sub'}, { 'script': 'super' }],      // выше/ниже строки
+                                /* [{ 'align': [] }], */ // положение текста                    
+                                /* [{ 'script': 'sub'}, { 'script': 'super' }], */      // выше/ниже строки
                                 ['clean'], // очистить форматирование
                             ],
                         }

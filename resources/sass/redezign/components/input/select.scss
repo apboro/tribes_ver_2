@@ -1,0 +1,121 @@
+$select-color-1: $primary-1;
+
+.select {
+    position: relative;
+    display: inline-block;
+    @include font($text-color-1, 12px, 16px, 400);
+    cursor: pointer;
+
+    &.open {
+        .select__head {
+            border-color: $select-color-1;
+
+            .select__arrow {
+                .icon__fill {
+                    fill: $select-color-1;
+                }
+        
+                .icon__stroke {
+                    stroke: $select-color-1;
+                }
+            }
+        }
+
+        .select__body {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+
+    &--top {
+        .select__body {
+            bottom: 20px;
+            flex-direction: column-reverse;
+        }
+
+        &.open {
+            .select__body {
+                bottom: 30px;
+            }
+        }
+    }
+
+    &--bottom {
+        .select__body {
+            top: 20px;
+            flex-direction: column;
+        }
+
+        &.open {
+            .select__body {
+                top: 30px;
+            }
+        }
+    }
+
+    &__head {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 45px;
+        padding: 4px 6px 4px 10px;
+        background-color: $white;
+        border: 1px solid $grey-5;
+        border-radius: 2px;
+        transition: $transition;
+
+        &:hover {
+            border-color: $grey-7;
+        }
+    }
+
+    &__value {
+        white-space: nowrap;
+    }
+
+    &__arrow {
+        margin-left: 6px;
+
+        .icon__fill {
+            fill: $grey-8;
+        }
+
+        .icon__stroke {
+            stroke: $grey-8;
+        }
+    }
+
+    &__body {
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        display: flex;
+        min-width: 100%;
+        background-color: $white;
+        border-radius: 2px;
+        overflow: hidden;
+        box-shadow: 0px 4px 5px 0px #0000001a;
+        visibility: hidden;
+        opacity: 0;
+        transition: $transition;
+    }
+
+    &__option {
+        padding: 4px 6px 4px 10px;
+        white-space: nowrap;
+        background-color: $white;
+        transition: $transition;
+
+        &:hover {
+            color: $select-color-1;
+            background-color: $primary-2;
+        }
+
+        &.selected {
+            color: $white;
+            background-color: $select-color-1;
+        }
+    }
+}

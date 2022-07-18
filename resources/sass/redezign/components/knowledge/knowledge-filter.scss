@@ -6,28 +6,30 @@
     &__wrapper {
         display: flex;
         flex-wrap: wrap;
-        column-gap: 30px;
-        row-gap: 10px;
+        padding-left: $indent-3;
     }
 
     &__group {
         display: flex;
         align-items: center;
+        padding-right: 20px;
+        padding-left: 20px;
+
+        &--first {
+            border-right: 1px solid $grey-5;
+        }
     }
 
     &__title {
-        margin-right: 20px;
+        @include font($grey-6, 14px, 20px, 600);
     }
 
     &__item {
+        display: flex;
+        align-items: center;
 
         & + & {
             margin-left: 20px;
         }
-    }
-
-    &__btn {
-        @include font(#7B7B7B, 14px, 17px, 500);
-        cursor: pointer;
     }
 }

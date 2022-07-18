@@ -1,0 +1,50 @@
+{
+  "update_id": 944984875,
+  "callback_query": {
+    "id": "1787876363620106792",
+    "from": {
+      "id": 416272404,
+      "is_bot": false,
+      "first_name": "\u0410\u043d\u0434\u0440\u0435\u0439",
+      "last_name": "\u0414\u043e\u043b\u0433\u043e\u043f\u043e\u043b\u043e\u0432",
+      "username": "a_dolgopolov",
+      "language_code": "ru"
+    },
+    "message": {
+      "message_id": 2296,
+      "from": {
+        "id": 5352050869,
+        "is_bot": true,
+        "first_name": "local_test_ad_bot",
+        "username": "dolgopolov_andrey1_bot"
+      },
+      "chat": {
+        "id": 416272404,
+        "first_name": "\u0410\u043d\u0434\u0440\u0435\u0439",
+        "last_name": "\u0414\u043e\u043b\u0433\u043e\u043f\u043e\u043b\u043e\u0432",
+        "username": "a_dolgopolov",
+        "type": "private"
+      },
+      "date": 1658125244,
+      "text": "\u0412\u044b\u0431\u0438\u0440\u0435\u0442\u0435 \u0441\u043e\u043e\u0431\u0449\u0435\u0441\u0442\u0432\u043e",
+      "reply_markup": {
+        "inline_keyboard": [
+          [
+            {
+              "text": "@test1.spodial.com",
+              "callback_data": "add-qa-community-4"
+            }
+          ],
+          [
+            {
+              "text": "TEST07",
+              "callback_data": "add-qa-community-5"
+            }
+          ]
+        ]
+      }
+    },
+    "chat_instance": "-4205218901595572347",
+    "data": "add-qa-community-4"
+  }
+}

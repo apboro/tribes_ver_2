@@ -98,11 +98,6 @@ class TinkoffApi
         }
     }
 
-    /**
-     * @param $args mixed You could use associative array or url params string
-     * @return bool
-     * @throws HttpException
-     */
     public function init($args)
     {
         return $this->buildQuery('Init', $args);
@@ -178,16 +173,6 @@ class TinkoffApi
         return $this->buildQuery('Payment', $args, true);
     }
 
-    /**
-     * Builds a query string and call sendRequest method.
-     * Could be used to custom API call method.
-     *
-     * @param string $path API method name
-     * @param mixed $args query params
-     *
-     * @return mixed
-     * @throws HttpException
-     */
     public function buildQuery($path, $args, $a2c = false)
     {
         $url = $a2c ? $this->api_e2c_url : $this->api_url;
@@ -251,12 +236,6 @@ class TinkoffApi
         return $args;
     }
 
-    /**
-     * Generates Token
-     *
-     * @param $args
-     * @return string
-     */
     private function _genToken($args)
     {
         $token = '';
@@ -273,11 +252,6 @@ class TinkoffApi
         return $token;
     }
 
-    /**
-     * Combines parts of URL. Simply gets all parameters and puts '/' between
-     *
-     * @return string
-     */
     private function _combineUrl()
     {
         $args = func_get_args();
@@ -294,14 +268,6 @@ class TinkoffApi
         return $url;
     }
 
-    /**
-     * Main method. Call API with params
-     *
-     * @param $api_url
-     * @param $args
-     * @return bool|string
-     * @throws HttpException
-     */
     private function _sendRequest($api_url, $args)
     {
         $this->error = '';

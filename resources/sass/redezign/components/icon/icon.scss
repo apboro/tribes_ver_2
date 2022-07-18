@@ -1,0 +1,72 @@
+$icon-primary-color: $grey-6;
+
+.icon {
+    display: flex;
+    align-items: center;
+
+    &--size-1 {
+        width: 16px;
+        height: 16px;
+    }
+
+    &--size-2 {
+        width: 24px;
+        height: 24px;
+    }
+
+    &--size-3 {
+        width: 76px;
+        height: 76px;
+    }
+
+    &--spinner {
+        animation: .75s linear infinite spinner;
+    }
+
+    &--primary {
+        .icon__fill {
+            fill: $icon-primary-color;
+        }
+
+        .icon__stroke {
+            stroke: $icon-primary-color;
+        }
+    }
+
+    &--success {
+        .fill-el {
+            fill: green;
+            transition: $transition;
+        }
+
+        .stroke-el {
+            stroke: #7B7B7B;
+            transition: $transition;
+        }
+
+        &:hover {
+            .fill-el {
+                fill: red;
+            }
+
+            .stroke-el {
+                stroke: red;
+            }
+        }
+    }
+
+    .icon__fill,
+    .icon__stroke {
+        transition: $transition;
+    }
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

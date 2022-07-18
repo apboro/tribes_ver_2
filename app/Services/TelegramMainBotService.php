@@ -58,6 +58,11 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             $events->initEventsMainBot([[
                 'isNewReplay'=>[app('knowledgeObserver'), 'handleAuthorReply'],
                 'isNewTextMessage' => [app('knowledgeObserver'),'detectUserQuestion'],
+                'isNewForwardMessageInBotChat' => [
+                    app('knowledgeObserver'),
+                    'detectForwardMessageBotQuestion',
+                    ['botName' => $nameBot]
+                ],
             ]]);
             $this->getCommandsForBot($nameBot)->initCommand();
             $this->botCollect->getBotByName($nameBot)->listen($data);
@@ -77,7 +82,9 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
 
     public function sendMessageFromBot(string $botName, int $chatId, string $textMessage, bool $preview = false, array $keyboard = [])
     {
-        $this->getApiCommandsForBot($botName)->sendMess($chatId, $textMessage, $preview, $keyboard);
+        if($this->botCollect->hasBotByName($botName)) {
+            $this->getApiCommandsForBot($botName)->sendMess($chatId, $textMessage, $preview, $keyboard);
+        }
     }
 
     public function sendDonateMessage(string $botName, int $chatId, int $donateId)
@@ -103,6 +110,11 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     public function getChatMemberCount(string $botName, int $chatId)
     {
         return $this->getApiCommandsForBot($botName)->getChatCount($chatId);
+    }
+
+    public function hasBotByName($botName): bool
+    {
+        return $this->botCollect->hasBotByName($botName);
     }
 
     public static function staticGetChatMemberCount(string $botName, int $chatId)

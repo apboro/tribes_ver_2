@@ -7,7 +7,9 @@ use App\Models\Course;
 use App\Models\User;
 use App\Services\SMTP\Mailer;
 use App\Services\TelegramLogService;
-use App\Services\TinkoffApi;
+use App\Services\TelegramMainBotService;
+use App\Services\Tinkoff\Payment as Pay;
+use App\Services\Tinkoff\TinkoffApi;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -18,6 +20,7 @@ class TinkoffService
 
     public function __construct()
     {
+        // todo в контейнер
         $this->payTerminal = new TinkoffApi(env('TINKOFF_TERMINAL_KEY'), env('TINKOFF_SECRET_KEY'));
         $this->e2cTerminal = new TinkoffApi(env('TINKOFF_TERMINAL_KEY_E2C'), env('TINKOFF_SECRET_KEY_E2C'));
     }

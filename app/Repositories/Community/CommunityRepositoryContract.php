@@ -21,13 +21,15 @@ interface CommunityRepositoryContract
 
     public function getOwnerIdByChatId(int $chatId): ?int;
 
-    public function getCommunityBelongsUserId($userTelegramId);
+    public function getCommunitiesForMemberByTeleUserId($userTelegramId): Collection;
 
     public function getAllCommunity();
 
-    public function getCommunityById($id);
+    public function getCommunityById($id): ?Community;
 
     public function isChatBelongsToTeleUserId(int $chatId, int $teleUserId): bool;
 
     public function getCommunitiesForOwner(int $ownerId, ?CommunitiesFilter $filters = null): Collection;
+
+    public function getCommunitiesForOwnerByTeleUserId(int $userTelegramId): Collection;
 }

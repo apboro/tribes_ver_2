@@ -1,6 +1,8 @@
 .dropdown {
     height: 100%;
     
+    &--top {}
+
     @media (min-width: $md) {
         position: relative;
     }

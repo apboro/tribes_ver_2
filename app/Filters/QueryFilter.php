@@ -19,9 +19,15 @@ abstract class QueryFilter
         $this->request = $request;
     }
 
-    public function filters()
+    public function filters() : array
     {
-        return $this->request->wantsJson() ? $this->request->json()->all() : $this->request->query();
+        $filters = $this->request->wantsJson() ? $this->request->json()->all() : $this->request->query();
+
+        if(!is_array($filters)){
+            throw new \Exception('Request должен быть array');
+        }
+
+        return count($filters) ? $filters : $this->request->all();
     }
 
     public function apply(Builder $builder)
