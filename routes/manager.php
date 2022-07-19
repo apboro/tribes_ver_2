@@ -15,4 +15,7 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\Manager')->gr
 
     //Payment
     Route::post('/payments', 'PaymentController@list')->name('payments.list');
+
+    //Community
+    Route::post('/community', 'CommunityController@get')->name('community.get');
 });
