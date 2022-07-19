@@ -1,20 +1,24 @@
 <template>
     <div class="card">
         <div class="card-body border-bottom py-3">
-            <div class="d-flex">
+            <div class="d-flex justify-content-between align-items-center">
                 <div class="text-muted">
                     показать
                     <div class="mx-2 d-inline-block">
                         <input type="text" class="form-control form-control-sm" v-model="filter_data.entries" size="3">
-                        
                     </div>
                     на странице
                 </div>
-                <div class="ms-auto text-muted">
+                
+                <div class="d-flex">
+                    <input type="date" class="form-control form-control-sm" id="datepicker-default"  v-model="value"/>
+                    <span style="width: 200px">{{value}}</span>
+                </div>
+
+                <div class="text-muted">
                     Поиск:
                     <div class="ms-2 d-inline-block">
-                        <input type="text" class="form-control form-control-sm" aria-label="поиск">
-                        
+                        <input type="text" class="form-control form-control-sm" v-model="filter_data.search" aria-label="поиск">
                     </div>
                 </div>
             </div>
@@ -62,48 +66,48 @@
 
 <script>
 
+import FilterDataPayments from '../../mixins/filterData'
 export default {
     name: "Payments",
-
+    mixins: [FilterDataPayments],
     data() {
         return {
-            filter_data:{
-                search : null,
-                entries : 5,
-                page : 1,
-            }
+            value: new Date().toDateString()
         }
+    },
+    // data() {
+    //     return {
+    //         filter_data:{
+    //             search : null,
+    //             entries : 10,
+    //             page : 1,
+    //         }
+    //     }
         
-    },
+    // },
 
-    watch: {
-        filter_data: {
-            deep: true,
-            handler: _.debounce(function(v) {
-                this.$store.dispatch('LOAD_PAYMENTS', v);
-            },400)
-        }
-    },
+    // watch: {
+    //     filter_data: {
+    //         deep: true,
+    //         handler: _.debounce(function(v) {
+    //             this.$store.dispatch('LOAD_PAYMENTS', v);
+    //         },400)
+    //     }
+    // },
     mounted(){
         this.$store.dispatch('LOAD_PAYMENTS', this.filter_data).then(() => {
         });
     },
     computed: {
         payments() {
-            console.log(this.$store.getters.getPayments)
-            return this.$store.getters.getPayments;
+            return this.$store.getters.GET_PAYMENTS;
         }
     },
     methods:{
-        setPageByUrl(url){
-            if(url){
-                this.filter_data.page = getParameterByName('page', url);
-            }
-        },
         formatDateTime(str){
             let date = new Date(str);
             return `${date.toLocaleDateString('ru')} ${date.toLocaleTimeString('ru')}`;
-        }
+        },
     }
 }
 </script>

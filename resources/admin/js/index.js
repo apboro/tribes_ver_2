@@ -30,6 +30,9 @@ import store from './store';
 import App from './components/App';
 import router from './router';
 import axios from 'axios';
+import dateFilter from './components/datefilter'
+
+Vue.filter('date', dateFilter)
 
 let app = new Vue({
     router,

@@ -1,19 +1,28 @@
 import axios from 'axios';
 
 let state = {
-    _payment: {},
+    _payment: [],
+    payment_date: [],
 }
 
 let getters = {
-    getPayments (state) {
+    GET_PAYMENTS (state) {
         return state._payment;
+    },
+
+    GET_PAYMENT_DATE (state) {
+        return state.payment_date;
     }
 }
 
 let mutations = {
-    SET_PAYMENT (state, paymentData) {
+    SET_PAYMENTS (state, paymentData) {
         state._payment = paymentData;
     },
+
+    PUSH_PAYMENT_DATE (state, dateData) {
+        state.payment_date = dateData;
+    }
 }
 
 let actions = {
@@ -31,19 +40,36 @@ let actions = {
     //     })
     // },
     async LOAD_PAYMENTS ({commit}, filter_data) {
-        console.log(commit);
-        console.log(filter_data);
         try {
             const resp = await axios({
                 method: "post",
                 url: "http://tribes/api/v2/payments",
                 data: filter_data
             })
-            commit("SET_PAYMENT", resp.data);
+            commit("SET_PAYMENTS", resp.data);
         } catch (error) {
             console.log(error);
         }
     },
+    // async GET_DATE ({commit}, date) {
+    //     try {
+    //         const resp = await axios({
+    //             method: "post",
+    //             url: "http://tribes/api/v2/payments",
+    //             data: date
+    //         })
+    //         console.log(resp.data.data.forEach( function (arrayItem){
+    //             let arr = [];
+    //             arra
+    //             console.log(arrayItem.created_at);
+    //         }));
+    //         commit("PUSH_PAYMENT_DATE", resp.data.data.forEach( function (arrayItem){
+    //             console.log(arrayItem.created_at);
+    //         }));
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // },
 }
 
 export default {
