@@ -11,8 +11,6 @@ class PaymentController extends Controller
 {
     public function list(Request $request, PaymentsFilter $filter)
     {
-//        dd($request);
-
         $payments = Payment::filter($filter)->paginate($request->get('entries'));
 
         return $payments;
