@@ -46,8 +46,8 @@
                 </button>
             </div>
 
-            <keep-alive>
-                <transition name="a-knowledge-panel" mode="out-in">
+            <transition name="a-knowledge-panel" mode="out-in">
+                <keep-alive>
                     <template v-if="HAS_QUESTION_FOR_OPERATIONS">
                         <!-- Multiple operations -->
                         <knowledge-multiple-operations @setOperationType="setOperationType" />
@@ -60,8 +60,8 @@
                             @resetFilters="resetFilters"
                         />
                     </template>
-                </transition>
-            </keep-alive>
+                </keep-alive>
+            </transition>
 
             <!-- Table -->
             <knowledge-table
@@ -70,15 +70,17 @@
             />
             
             <!-- Pagination -->
-            <template v-if="GET_QUESTIONS && GET_QUESTIONS.length && !IS_LOADING">
-                <v-pagination
-                    class="knowledge__pagination"
-                    :paginateData="GET_PAGINATE_DATA"
-                    :selectOptions="paginationSelectedOptions"
-                    @onPageClick="setPage"
-                    @onChangePerPage="setPerPage"
-                />
-            </template>
+            <keep-alive>
+                <template v-if="GET_QUESTIONS && GET_QUESTIONS.length && !IS_LOADING">
+                    <v-pagination
+                        class="knowledge__pagination"
+                        :paginateData="GET_PAGINATE_DATA"
+                        :selectOptions="paginationSelectedOptions"
+                        @onPageClick="setPage"
+                        @onChangePerPage="setPerPage"
+                    />
+                </template>
+            </keep-alive>
 
             <!-- Модальное окно нового вопроса --> 
             <knowledge-new-question-popup
