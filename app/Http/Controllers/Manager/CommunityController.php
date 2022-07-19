@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\CommunityRequest;
 use App\Http\Resources\Manager\CommunityResource;
 use App\Repositories\Community\CommunityRepository;
+use Illuminate\Http\Request;
 
 class CommunityController extends Controller
 {
@@ -15,6 +16,14 @@ class CommunityController extends Controller
     {
         $this->communityRepository = $communityRepository;
     }
+
+    public function list(Request $request)
+    {
+        $communities = $this->communityRepository->getAllCommunity();
+
+        return CommunityResource::collection($communities);
+    }
+
 
     public function get(CommunityRequest $request)
     {
