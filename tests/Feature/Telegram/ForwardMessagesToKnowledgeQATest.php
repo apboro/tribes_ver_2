@@ -32,6 +32,7 @@ class ForwardMessagesToKnowledgeQATest extends TestCase
                 'telegram_user_id' => $data1['message']["from"]['id'],
             ]);
         $community1 = Community::factory()->for($connection1, 'connection')->create([
+            'id' => 1,
             'owner' => $user->id,
             'title' => 'Group 1',
         ]);
@@ -84,6 +85,7 @@ class ForwardMessagesToKnowledgeQATest extends TestCase
                 'telegram_user_id' => $data1['message']["from"]['id'],
             ]);
         $community1 = Community::factory()->for($connection1, 'connection')->create([
+            'id' => 1,
             'owner' => $user->id,
             'title' => 'Group 1',
         ]);
@@ -96,6 +98,7 @@ class ForwardMessagesToKnowledgeQATest extends TestCase
                 'telegram_user_id' => $data1['message']["from"]['id'],
             ]);
         $community2 = Community::factory()->for($connection1, 'connection')->create([
+            'id' => 2,
             'owner' => $user->id,
             'title' => 'Group 2',
         ]);
@@ -123,45 +126,48 @@ class ForwardMessagesToKnowledgeQATest extends TestCase
             $this->getTestHandler()->hasRecord('create qa pair on forward messages', 'debug'),
             'Запись в БД вопрос ответ для одного сообщества'
         );
-        $this->getTestHandler()->hasDebug([
-            'message' => 'post http request',
-            'context' => [
-                'url' => "bot5352050869:AAEIYvbTquj8mGEjZrsuonLfhR0uZzAaKxk/sendMessage",
-                'data' => [
-                    "chat_id" => 416272404,
-                    "text" => "Выбирете сообщество",
-                    "parse_mode" => "HTML",
-                    "disable_web_page_preview" => false,
-                    "reply_markup" => [
-                        "inline_keyboard" => [
-                            [
+        //$this->assertTrue(
+            $this->getTestHandler()->hasDebug([
+                'message' => 'post http request',
+                'context' => [
+                    'url' => "bot5352050869:AAEIYvbTquj8mGEjZrsuonLfhR0uZzAaKxk/sendMessage",
+                    'data' => [
+                        "chat_id" => 416272404,
+                        "text" => "Выберите сообщество",
+                        "parse_mode" => "HTML",
+                        "disable_web_page_preview" => false,
+                        "reply_markup" => [
+                            "inline_keyboard" => [
                                 [
-                                    "text" => "Group 1",
-                                    "callback_data" => "add-qa-community-1",
-                                ]
-                            ],
-                            [
+                                    [
+                                        "text" => "Group 1",
+                                        "callback_data" => "add-qa-community-1",
+                                    ]
+                                ],
                                 [
-                                    "text" => "Group 2",
-                                    "callback_data" => "add-qa-community-2",
+                                    [
+                                        "text" => "Group 2",
+                                        "callback_data" => "add-qa-community-2",
+                                    ]
                                 ]
                             ]
                         ]
-                    ]
+                    ],
                 ],
-            ],
-        ]);
-
-        /*$this->assertDatabaseHas(new Question, [
-            'context' => 'Како бресно jармилевка развjалки чмошка?'
-        ]);*/
-        //-----------------------------------
-
+            ]);
+        //);
     }
 
     public function testSaveQAForTwoCommunity()
     {
-
+        Http::fake(function ($request, $options) {
+            /** @var Request $request */
+            Log::debug('post http request', [
+                'url' => $request->url(),
+                'data' => $request->data(),
+            ]);
+            return Http::response();
+        });
         $user = User::factory()->createItem([
             'name' => 'Test Testov',
             'email' => 'test-dev@webstyle.top',
@@ -175,7 +181,7 @@ class ForwardMessagesToKnowledgeQATest extends TestCase
                 'telegram_user_id' => $data1['callback_query']["from"]['id'],
             ]);
         $community1 = Community::factory()->for($connection1, 'connection')->create([
-            'id' => Str::after($data1['callback_query']["data"],'add-qa-community-'),
+            'id' => 4,
             'owner' => $user->id,
             'title' => 'Group 1',
         ]);
@@ -188,18 +194,21 @@ class ForwardMessagesToKnowledgeQATest extends TestCase
                 'telegram_user_id' => $data1['callback_query']["from"]['id'],
             ]);
         $community2 = Community::factory()->for($connection1, 'connection')->create([
+            'id' => 5,
             'owner' => $user->id,
             'title' => 'Group 2',
         ]);
         Cache::shouldReceive("get")
-                ->once()
-                //->with("author_chat_bot_{416272404}_forward_message-multi",null)
-                ->andReturns([
-                    'q' => 'Test question for forward message',
-                    'a' => 'Test answer for forward message',
-                ]);
+            ->once()
+            //->with("author_chat_bot_{416272404}_forward_message-multi",null)
+            ->andReturns([
+                'q' => 'Test question for forward message',
+                'a' => 'Test answer for forward message',
+            ]);
         Cache::shouldReceive("forget")
             ->once();
+
+        //-----request--------
         $response = $this->post(
             '/bot/webhook',
             $data1
