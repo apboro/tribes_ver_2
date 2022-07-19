@@ -37,32 +37,14 @@ class FileController extends Controller
        $this->fileUploadService = $fileUploadService;
     }
 
-    public function delete(Request $request){
-        $file = File::find($request['id']);
-        if(!$file->isVideo){
-            unlink(storage_path('app/public/' . str_replace('/storage/', '', $file->url)));
-        }
-
-        $file->delete();
-    }
-
     public function get(Request $request)
     {
-        $file = File::find($request['id']);
+        return $this->fileRepo->get($request['id']);
+    }
 
-        if(!$file) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Не найдено',
-                'details' => 'Файл не найден или у вас нет прав для редактирования',
-            ]);
-        } else {
-            return response()->json([
-                "status" => "ok",
-                "details" => "",
-                'file' => $file
-            ]);
-        }
+    public function delete(Request $request)
+    {
+        return $this->fileRepo->delete($request['id']);
     }
 
     public function upload(Request $request)
@@ -166,12 +148,17 @@ class FileController extends Controller
         $files = $this->fileUploadService->procRequest($request);
 //        dd($files);
 //dd($files);
-        /*if($request['course_id']){
+        if($request['course_id']){
             $course = Course::find($request['course_id']);
         }
         if($course){
-            $course->attachments()->sync($request->storedFilesId);
-        }*/
+            $storedFilesId = [];
+            foreach ($files as $file){
+                array_push($storedFilesId, $file['id']);
+            }
+//            dd($storedFilesId);
+            $course->attachments()->syncWithoutDetaching($storedFilesId);
+        }
 
         return response()->json([
             "status" => "ок",

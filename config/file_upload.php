@@ -6,16 +6,12 @@ return [
             'path' => 'image',
         ],
         'video_handler' => [
-            'default' => [
-                'handler' => \App\Services\File\Handlers\VideoHandler::class,
-                'path' => null,
-            ],
+            'handler' => \App\Services\File\Handlers\VideoHandler::class,
+            'path' => null,
         ],
         'audio_handler' => [
-            'default' => [
-                'handler' => \App\Services\File\Handlers\AudioHandler::class,
-                'path' => 'audio',
-            ],
+            'handler' => \App\Services\File\Handlers\AudioHandler::class,
+            'path' => 'audio',
         ],
     ],
 

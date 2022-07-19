@@ -226,7 +226,7 @@ class FileRepository implements FileRepositoryContract
 
     private function setFilename($file)
     {
-        return $this->filename = $this->setHash($file) . '.' . $file->guessClientExtension();
+        return $this->filename = $this->setHash($file) . '.' . $file->guessExtension();
     }
 
     private function collectFileData()

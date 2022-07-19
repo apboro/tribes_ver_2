@@ -28,6 +28,16 @@ class FileUploadService
         'image/gif',
         'application/x-empty'
     ];
+    public $videoTypes = [
+        'video/mp4',
+        'video/x-m4v'
+    ];
+
+    public $audioTypes = [
+        'audio/mp4',
+        'audio/aac',
+        'audio/mpeg',
+    ];
 
 //    private $config;
     private $logger;
@@ -115,9 +125,18 @@ class FileUploadService
             if($this->checkImage($type)) {
                 $file_type = 'image';
                 $config = $handlers[$file_type . '_handler'];
-
-                $this->modelsFile->add($this->procFile($file, $config));
             }
+            elseif($this->checkAudio($type)){
+                $file_type = 'audio';
+                $config = $handlers[$file_type . '_handler'];
+            }
+            elseif($this->checkVideo($type)){
+                $file_type = 'video';
+                $config = $handlers[$file_type . '_handler'];
+            } else {
+                throw new Exception('Неизвестный тип файла');
+            }
+            $this->modelsFile->add($this->procFile($file, $config));
         }
     }
 
@@ -129,7 +148,7 @@ class FileUploadService
         /** @var HandlerContract $handler */
         $class = $config['handler'];
         unset($config['handler']);
-//        dd($config);
+
         $handler = app()->make($class,$config);
 
         $model = new File([
@@ -181,7 +200,15 @@ class FileUploadService
 
     protected function checkImage(string $mimeType): bool
     {
-        return in_array($mimeType,$this->imageTypes);
+        return in_array($mimeType, $this->imageTypes);
+    }
+    protected function checkAudio(string $mimeType): bool
+    {
+        return in_array($mimeType, $this->audioTypes);
+    }
+    protected function checkVideo(string $mimeType): bool
+    {
+        return in_array($mimeType, $this->videoTypes);
     }
 
     private function setUploader()

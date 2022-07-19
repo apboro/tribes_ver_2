@@ -20,37 +20,17 @@ use Illuminate\Support\Str;
 
 class FileUploadTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
-    {
-        Storage::fake('avatars');
-
-        $file = UploadedFile::fake()->image('avatar.jpg');
-
-//        dd($file);
-        $response = $this->post(route('fileUpload'), [
-            'avatar' => $file,
-        ]);
-
-        Storage::disk('avatars')->assertExists($file->hashName());
-    }
 
     /**
      * A basic feature test example.
      *
      * @return void
      */
-    public function test_uploadFiles()
+    public function test_uploadFilesImages()
     {
         $data = $this->prepareDBCommunity();
 
-//        Storage::fake('local');
-
-        $file1 =  UploadedFile::fake()->image('avatar.jpg');
+        $file1 =  UploadedFile::fake()->image('avatar.jpg')->size(1000);
         $file2 =  UploadedFile::fake()->image('avatar1.jpg');
         $response = $this->post('/api/file/upload', [
             'course_id' => $data['course_id'],
@@ -63,28 +43,33 @@ class FileUploadTest extends TestCase
         );
 
         $content = json_decode($response->getContent(), true);
+
         $response->assertStatus(200);
+
         foreach ($content['file'] as $file) {
+            //Проверяем наличие записи в базе
             $this->assertDatabaseHas(File::class, [
                 'id' => $file['id']
             ]);
-//            dd(Storage::disk('local'));
-//            'storage\app\public\image\15_07_22\4c20dcb2ecfa83d3eb5d87f8c4a71c19.jpg'
-//            Storage::disk('local')->assertExists( storage_path('app/public/image/15_07_22/' . $file['filename']) );
+            //Проверяем наличие файла в папке
+            Storage::disk('public')->assertExists(Str::replace('/storage', '', $file['url']));
+
+            $response_delete = $this->post('/api/file/delete', [
+                'id' => $file['id'],
+            ],
+                ['Authorization' => "Bearer {$data['api_token']}"],
+            );
+            $response_delete->assertStatus(200);
+
+            //Проверяем отсутствие записи в базе
+            $this->assertDatabaseMissing(File::class, [
+                'id' => $file['id']
+            ]);
+            //Проверяем отсутствие файла в папке
+            Storage::disk('public')->assertMissing(Str::replace('/storage', '', $file['url']));
         }
 
-
-//        dd($response->assertStatus(500));
-
-//        $response->assertStatus(401);
-
-
-//        Storage::disk('public')->assertExists('file/' . $file->hashName());
-
-
     }
-
-
 
     /**
      * @return array|mixed|string
@@ -92,7 +77,6 @@ class FileUploadTest extends TestCase
      */
     protected function prepareDBCommunity(?array $data = [])
     {
-//        $data = $this->getDataFromFile('reply_text_message.json');
         $user = Sanctum::actingAs(
         User::factory()->createItem([
             'name' => 'Test Testov',
@@ -104,31 +88,11 @@ class FileUploadTest extends TestCase
                 'owner' => $user->id,
             ]);
 
-        $uploadFiles = [
-            new UploadedFile( Storage::disk('test_data')->path('files/Screenshot_1.png'), 'Screenshot_1.png', null, true ),
-            new UploadedFile( Storage::disk('test_data')->path('files/Screenshot_4.png'), 'Screenshot_4.png', null, true  )
-        ];
-
-        /*$stub1 = Storage::disk('test_data')->path('files/Screenshot_1.png');
-        $name1 = Str::random(8).'.png';
-        $path1 = sys_get_temp_dir().'/'.$name1;
-        copy($stub1, $path1);
-        //////
-        $stub2 = Storage::disk('test_data')->path('files/Screenshot_4.png');
-        $name2 = Str::random(8).'.png';
-        $path2 = sys_get_temp_dir().'/'.$name2;
-        copy($stub2, $path2);*/
-
-        /*$uploadFiles = [
-            new UploadedFile($path1, $name1,'image/png', null, true),
-            new UploadedFile($path2, $name2,'image/png', null, true)
-        ];*/
-
         $data = [
             'api_token' => $user->api_token,
             'course_id' => $course->id,
         ];
-//dd($data);
+
         return $data;
     }
 }

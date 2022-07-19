@@ -17,11 +17,11 @@ class ImageHandler implements HandlerContract
     private $path;
     private FileRepository $repository;
 
-    private $fields = [
+    /*private $fields = [
         'url',
         'hash',
         'filename'
-    ];
+    ];*/
 
     public function __construct(string $path, FileRepository $repository)
     {
@@ -35,22 +35,10 @@ class ImageHandler implements HandlerContract
     public function startService(UploadedFile $file, File $model): File
     {
 
-//dd($this->path);
-//        dd($model, $file);
         //как-то обрабатываем картинку (crop, resize и т.д.)
         //todo
         //репозиторий делает сохранение файла в нужную папку и возвращает полное имя файла $file->storeAs($this->path.$file->getClientOriginalName());
 
-//        $model->file;
-
-
-//dd($this->path);
-
-
-//dd($name);
-//dd($file->getClientOriginalName());
-//        $new_file = $file->storeAs($this->path, $file->getClientOriginalName());
-//        dd($file);
 
         $hash = $this->repository->setHash($file);
         $filename = $hash . '.' . $file->guessClientExtension();
@@ -91,7 +79,6 @@ class ImageHandler implements HandlerContract
 //        dd($this->request['file']);
         $validated = $this->request->validate([
             'file' => 'required|mimes:jpg,png,gif|max:2048'
-        
 //            'file' => 'image'
         ]);
 
