@@ -2,6 +2,7 @@
     <v-popup
         theme="primary"
         :confirmOptions="{ type: 'info' }"
+        :isVisiblePopup="isVisibleConfirmDraftPopup"
         @close="closeConfirmDraftPopup"
     >
         <template #body>
@@ -78,6 +79,11 @@
             questions: {
                 type: Array,
                 default: []
+            },
+
+            isVisibleConfirmDraftPopup: {
+                type: Boolean,
+                default: false,
             }
         },
 

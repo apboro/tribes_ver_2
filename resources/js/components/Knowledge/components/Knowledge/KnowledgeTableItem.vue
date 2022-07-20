@@ -135,105 +135,88 @@
             </div>
         </transition>
 
-        <!-- Модальное окно редактирования -->
-        <transition name="a-overlay">
-            <v-overlay
-                v-if="isVisibleQuestionPopup"
-                @onClick="closeQuestionPopup"
-            />
-        </transition>
-
-        <transition name="a-popup">
-            <v-popup
-                theme="primary"
-                title="Редактировать вопрос-ответ"
-                @close="closeQuestionPopup"
-                v-if="isVisibleQuestionPopup"
-            >
-                <template #body>
-                    <div class="form-item">
-                        <label
-                            class="form-label form-item__label"
-                            for="question"
-                        >
-                            Вопрос
-                        </label>
-
-                        <input
-                            type="text"
-                            id="question"
-                            class="form-control"
-                            placeholder="Что такое Tribes?"
-                            v-model="questionText"
-                        >
-
-                        <span
-                            class="form-message form-message--danger form-item__message"
-                            v-if="false"
-                        ></span>
-                    </div>
-
-                    <div class="form-item">
-                        <label
-                            class="form-label form-item__label"
-                        >
-                            Ответ
-                        </label>
-
-                        <text-editor
-                            :text="answerText"
-                            @edit="setAnswer"
-                        />
-                    </div>
-
-                    <div class="knowledge-modal__controls">
-                        <v-checkbox
-                            id="question_draft"
-                            label="Черновик"
-                            v-model="changeDraft"
-                        />
-
-                        <toggle-switch
-                            id="is_published_question"
-                            :label="isPublic ? 'Опубликовано' : 'Не опубликовано'"
-                            v-model="changePublic"
-                        />
-                    </div>
-                </template>
-
-                <template #footer>
-                    <button
-                        class="button-empty button-empty--primary"
-                        @click="cancelQuestion"
+        <!-- Модальное окно редактирования -->        
+        <v-popup
+            theme="primary"
+            title="Редактировать вопрос-ответ"
+            :isVisiblePopup="isVisibleQuestionPopup"
+            @close="closeQuestionPopup"
+            
+        >
+            <template #body>
+                <div class="form-item">
+                    <label
+                        class="form-label form-item__label"
+                        for="question"
                     >
-                        Отмена
-                    </button>
-                    
-                    <button
-                        class="button-filled button-filled--primary"
-                        @click="editQuestion"
+                        Вопрос
+                    </label>
+
+                    <input
+                        type="text"
+                        id="question"
+                        class="form-control"
+                        placeholder="Что такое Tribes?"
+                        v-model="questionText"
                     >
-                        Сохранить
-                    </button>
-                </template>
-            </v-popup>
-        </transition>
+
+                    <span
+                        class="form-message form-message--danger form-item__message"
+                        v-if="false"
+                    ></span>
+                </div>
+
+                <div class="form-item">
+                    <label
+                        class="form-label form-item__label"
+                    >
+                        Ответ
+                    </label>
+
+                    <text-editor
+                        :text="answerText"
+                        @edit="setAnswer"
+                    />
+                </div>
+
+                <div class="knowledge-modal__controls">
+                    <v-checkbox
+                        id="question_draft"
+                        label="Черновик"
+                        v-model="changeDraft"
+                    />
+
+                    <toggle-switch
+                        id="is_published_question"
+                        :label="isPublic ? 'Опубликовано' : 'Не опубликовано'"
+                        v-model="changePublic"
+                    />
+                </div>
+            </template>
+
+            <template #footer>
+                <button
+                    class="button-empty button-empty--primary"
+                    @click="cancelQuestion"
+                >
+                    Отмена
+                </button>
+                
+                <button
+                    class="button-filled button-filled--primary"
+                    @click="editQuestion"
+                >
+                    Сохранить
+                </button>
+            </template>
+        </v-popup>
 
         <!-- Модальное окно подтверждения удаления -->
-        <transition name="a-overlay">
-            <v-overlay
-                v-if="isVisibleConfirmDeleteKnowledgeQuestionPopup"
-                @onClick="closeConfirmDeleteKnowledgeQuestionPopup"
-            />
-        </transition>
-
-        <transition name="a-popup">
-            <knowledge-confirm-delete-popup
-                v-if="isVisibleConfirmDeleteKnowledgeQuestionPopup"
-                @closeConfirmDeletePopup="closeConfirmDeleteKnowledgeQuestionPopup"
-                @confirm="confirmDeleteKnowledgeQuestion"
-            />
-        </transition>
+        <knowledge-confirm-delete-popup
+            :isVisibleConfirmDeletePopup="isVisibleConfirmDeleteKnowledgeQuestionPopup"
+            @closeConfirmDeletePopup="closeConfirmDeleteKnowledgeQuestionPopup"
+            @confirm="confirmDeleteKnowledgeQuestion"
+        />
     </div>
 </template>
 

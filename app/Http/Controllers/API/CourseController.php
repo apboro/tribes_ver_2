@@ -23,7 +23,7 @@ class CourseController extends Controller
         $this->courseRepo = $courseRepo;
     }
 
-    public function store(CourseStoreRequest $request, FileService $fileService)
+    public function store(CourseStoreRequest $request)
     {
         $course = $this->courseRepo->store($request);
 

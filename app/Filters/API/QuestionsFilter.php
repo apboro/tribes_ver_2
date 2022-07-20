@@ -51,13 +51,14 @@ class QuestionsFilter extends QueryFilter
         parent::__construct($request);
     }
 
-    public function filters()
+    public function filters() : array
     {
         //todo сделать валидацию входящих данных, enum
         //     фильтры проверять на правильность значений и выбрасывать Exception
         //      null значения считается что такой фильтр не запрашивался \App\Filters\QueryFilter::apply()
         $filters = $this->request->get('filter', []);
         $filters['sort'] = $filters['sort']??['name'=>'id'];
+
         return $filters;
     }
 
