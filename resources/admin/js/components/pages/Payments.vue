@@ -49,10 +49,12 @@
                         <td><span class="text-muted">{{ payment.OrderId }}</span></td>
                         <td>{{formatDateTime(payment.created_at)}}</td>
                         <td>{{payment.from}}</td>
-                        <td>{{payment.type}}</td>
+                        <td>{{translatePaymentType(payment.type)}}</td>
                         <td>{{payment.community}}</td>
-                        <td>{{payment.status}}</td>
-                        <td>{{payment.add_balance}}</td>
+                        <td>{{translateStatus(payment.status)}}</td>
+                        <!-- <span>{{(payment.status)}}</span> -->
+                        <!-- </td> -->
+                        <td>{{formatCash(payment.add_balance)}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -76,9 +78,11 @@
 <script>
 
 import FilterDataPayments from '../../mixins/filterData'
+import Translations from '../../mixins/translations'
+
 export default {
     name: "Payments",
-    mixins: [FilterDataPayments],
+    mixins: [FilterDataPayments, Translations],
 
     watch: {
         filter_data: {
@@ -104,6 +108,9 @@ export default {
         formatDateTime(str){
             let date = new Date(str);
             return `${date.toLocaleDateString('ru')} ${date.toLocaleTimeString('ru')}`;
+        },
+        formatCash(num){
+            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(num)
         },
     }
 }

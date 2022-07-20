@@ -1,5 +1,8 @@
 <template>
     <div class="sticky-top">
+            <!-- <div class="progress">
+                <div class="progress-bar progress-bar-indeterminate bg-blue"></div>
+            </div> -->
             <header class="navbar navbar-expand-md navbar-light d-print-none">
                 <div class="container-xl">
                     <button class="navbar-toggler" type="button" >
