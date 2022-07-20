@@ -77,16 +77,6 @@ class Question extends Model
         return route('public.knowledge.view', compact('hash', 'question'));
     }
 
-    public function getHashById()
-    {
-        return PseudoCrypt::hash($this->id);
-    }
-
-    public function getPublicQuestionsLink()
-    {
-        return route('public.knowledge.list', [ 'hash' => $this->getHashById() ]);
-    }
-
     public function isUnpublishable(): bool
     {
         return empty($this->context) || $this->is_draft;

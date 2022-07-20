@@ -19,7 +19,7 @@ class KnowledgeController extends Controller
 
     public function list(Request $request, QuestionFilter $filter, $hash)
     {
-        $community = Community::find((int)PseudoCrypt::unhash($hash));
+        $community = Community::findOrFail((int)PseudoCrypt::unhash($hash));
         $this->community_id = $community->id;
 
         if ($request->has('search') && $request['search'] !== null) {
