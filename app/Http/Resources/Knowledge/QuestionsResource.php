@@ -30,9 +30,10 @@ class QuestionsResource extends ResourceCollection
         return parent::toArray($request);
     }
 
-    public function with($request)
+    public function with($request): array
     {
         $additional = [];
+        /** @var Community $community */
         $community = Community::find($request->community_id ?? null);
         if($community){
             $additional['meta_info'] = [

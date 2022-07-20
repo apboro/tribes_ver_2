@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\Manager')->group(function() {
-    Route::post('/users', 'UserController@list')->name('users.list');
-    Route::post('/auth', 'UserController@auth')->name('users.self');
+    Route::post('/users', 'UserController@list')->name('manager.users.list');
+    Route::post('/auth', 'UserController@auth')->name('manager.users.self');
 
     //Payment
-    Route::post('/payments', 'PaymentController@list')->name('payments.list');
+    Route::post('/payments', 'PaymentController@list')->name('manager.payments.list');
 
     //Community
-    Route::post('/communities', 'CommunityController@list')->name('community.list');
-    Route::post('/community', 'CommunityController@get')->name('community.get');
+    Route::post('/communities', 'CommunityController@list')->name('manager.community.list');
+    Route::post('/community', 'CommunityController@get')->name('manager.community.get');
 });
