@@ -1,6 +1,9 @@
 <template>
     <div class="card">
         <div class="card-body border-bottom py-3">
+            <div class="d-flex justify-content-end mb-3">
+                <button class="btn" @click="reset">Сбросить фильтр</button>
+            </div>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="text-muted">
                     показать
@@ -11,8 +14,7 @@
                 </div>
                 
                 <div class="d-flex">
-                    <input type="date" class="form-control form-control-sm" id="datepicker-default"  v-model="value"/>
-                    <span style="width: 200px">{{value}}</span>
+                    <input type="date" class="form-control form-control-sm" id="datepicker-default"  v-model="filter_data.date"/>
                 </div>
 
                 <div class="text-muted">
@@ -42,23 +44,30 @@
                 </thead>
                 <tbody>
 
-                    <tr v-for="payment in payments.data">
+                    <tr v-for="payment in payments.data" :key="payment.OrderId">
                         <td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
                         <td><span class="text-muted">{{ payment.OrderId }}</span></td>
                         <td>{{formatDateTime(payment.created_at)}}</td>
                         <td>{{payment.from}}</td>
                         <td>{{payment.type}}</td>
-                        <td>БУДЕТ community_title!!!</td>
+                        <td>{{payment.community}}</td>
                         <td>{{payment.status}}</td>
                         <td>{{payment.add_balance}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div v-if="payments.per_page < payments.total" class="card-footer d-flex align-items-center">
-            <p class="m-0 text-muted">Показано <span>{{ payments.per_page }}</span> из <span>{{ payments.total }}</span> записей</p>
+        <div v-if="payments.meta && payments.meta.per_page < payments.meta.total" class="card-footer d-flex align-items-center">
+            <p class="m-0 text-muted">Показано <span>{{ payments.meta.per_page }}</span> из <span>{{ payments.meta.total }}</span> записей</p>
             <ul class="pagination m-0 ms-auto">
-                <li v-for="link in payments.links" class="page-item" :class="{'active' : link.active}"><a class="page-link" @click="setPageByUrl(link.url)" href="#">{{ link.label }}</a></li>
+                <li 
+                    v-for="(link, idx) in payments.meta.links"
+                    class="page-item" 
+                    :class="{'active' : link.active}" 
+                    :key="idx"
+                >
+                    <a class="page-link" @click="setPageByUrl(link.url)" href="#">{{ link.label }}</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -70,39 +79,27 @@ import FilterDataPayments from '../../mixins/filterData'
 export default {
     name: "Payments",
     mixins: [FilterDataPayments],
-    data() {
-        return {
-            value: new Date().toDateString()
+
+    watch: {
+        filter_data: {
+            deep: true,
+            handler: _.debounce(function(v) {
+                this.$store.dispatch('LOAD_PAYMENTS', v);
+            },400)
         }
     },
-    // data() {
-    //     return {
-    //         filter_data:{
-    //             search : null,
-    //             entries : 10,
-    //             page : 1,
-    //         }
-    //     }
-        
-    // },
 
-    // watch: {
-    //     filter_data: {
-    //         deep: true,
-    //         handler: _.debounce(function(v) {
-    //             this.$store.dispatch('LOAD_PAYMENTS', v);
-    //         },400)
-    //     }
-    // },
     mounted(){
         this.$store.dispatch('LOAD_PAYMENTS', this.filter_data).then(() => {
         });
     },
+
     computed: {
         payments() {
             return this.$store.getters.GET_PAYMENTS;
         }
     },
+
     methods:{
         formatDateTime(str){
             let date = new Date(str);
