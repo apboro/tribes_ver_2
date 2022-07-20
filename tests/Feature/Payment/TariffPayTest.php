@@ -3,6 +3,7 @@
 namespace Tests\Feature\Payment;
 
 use App\Helper\ArrayHelper;
+use App\Models\Payment;
 use App\Models\Tariff;
 use App\Models\TariffVariant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,9 +27,18 @@ class TariffPayTest extends TestCase
                 'communityTariffID' => $data['tariffVariant']['id'],
             ]
         );
-        dd($response->getContent());
-        $response->assertStatus(200);
-        $response->assertRedirect();
+
+        $response->assertStatus(302);
+        $response->assertRedirect('//ya.ru');
+
+        $this->assertDatabaseHas(Payment::class, [
+            "type" => "tariff",
+            "amount" => 10000,
+            "from" => "new-user",
+            "community_id" => 1,
+            "author" => 1,
+            "add_balance" => 100,
+        ]);
     }
 
     protected function prepareDB()

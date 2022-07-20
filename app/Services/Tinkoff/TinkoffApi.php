@@ -280,7 +280,12 @@ class TinkoffApi
                 'api_url' => $api_url,
                 'args' => $args
             ]);
-            return Storage::disk('test_data')->get("payment/$api_url.json");//->get("payment/file.json");
+            $file_name = md5($args);
+            $storage = Storage::disk('test_data');
+            return $storage->exists("payment/$file_name.json")?
+                $storage->get("payment/$file_name.json"):
+                $storage->get("payment/file.json");
+
         }else if ($curl = curl_init()) {
             curl_setopt($curl, CURLOPT_URL, $api_url);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
