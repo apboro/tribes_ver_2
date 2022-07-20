@@ -100,6 +100,7 @@
             
             selectOption(option) {
                 this.selectedValue = option;
+                console.log(this.selectedValue);
                 this.toggleOptionsVisibility();
                 this.$emit('getSelectedValue', this.selectedValue);
             },

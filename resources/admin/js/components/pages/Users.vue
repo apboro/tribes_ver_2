@@ -81,25 +81,27 @@
 </template>
 
 <script>
+import FilterDataUsers from '../../mixins/filterData';
 export default {
     name: "Users",
-    data() {
-        return {
-            filter_data:{
-                search : null,
-                entries : 10,
-                page : 1,
-            }
-        }
-    },
-    watch: {
-        filter_data: {
-            deep: true,
-            handler: _.debounce(function(v) {
-                this.$store.dispatch('get_users', v);
-            },400)
-        }
-    },
+    mixins: [FilterDataUsers],
+    // data() {
+    //     return {
+    //         filter_data:{
+    //             search : null,
+    //             entries : 10,
+    //             page : 1,
+    //         }
+    //     }
+    // },
+    // watch: {
+    //     filter_data: {
+    //         deep: true,
+    //         handler: _.debounce(function(v) {
+    //             this.$store.dispatch('get_users', v);
+    //         },400)
+    //     }
+    // },
     mounted(){
         this.$store.dispatch('get_users', this.filter_data).then(() => {
         });
@@ -109,13 +111,13 @@ export default {
             return this.$store.getters.users;
         }
     },
-    methods:{
-        setPageByUrl(url){
-            if(url){
-                this.filter_data.page = getParameterByName('page', url);
-            }
-        }
-    }
+    // methods:{
+    //     setPageByUrl(url){
+    //         if(url){
+    //             this.filter_data.page = getParameterByName('page', url);
+    //         }
+    //     }
+    // }
 }
 </script>
 

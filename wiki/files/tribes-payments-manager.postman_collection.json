@@ -36,25 +36,24 @@
 						{
 							"key": "search",
 							"value": "лЕвШа",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "date",
-							"value": "7.7.2022",
+							"value": "15.7.2022",
 							"type": "text",
 							"disabled": true
 						},
 						{
-							"key": "sorting_user",
-							"value": "desc",
-							"type": "text",
-							"disabled": true
+							"key": "sort[name]",
+							"value": "date",
+							"type": "text"
 						},
 						{
-							"key": "sorting_date",
+							"key": "sort[rule]",
 							"value": "asc",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						},
 						{
 							"key": "entries",
