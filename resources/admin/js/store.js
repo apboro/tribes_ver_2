@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import user from './modules/users';
 import auth from './modules/auth';
+import payment from './modules/payments';
 
 Vue.use(Vuex);
 
@@ -23,7 +24,8 @@ export default new Vuex.Store({
     },
     modules: {
         user,
-        auth
+        auth,
+        payment
     },
     mixins: {}
 })
