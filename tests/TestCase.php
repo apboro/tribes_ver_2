@@ -32,6 +32,7 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        //todo  работает только для Ларавел классов, сторонние компоненты установленные через контейнер не работают
         Http::fake(function ($request, $options) {
             /** @var Request $request */
             Log::debug('post http request', [
@@ -109,6 +110,7 @@ abstract class TestCase extends BaseTestCase
         return array_merge($data,[
             'user' => [
                 'id' => $user->id,
+                'email' => $user->email,
             ],
             'telegram_connection' => [
                 'id' => $connection->id,

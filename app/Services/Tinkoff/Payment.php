@@ -17,6 +17,9 @@ use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffApi;
 use phpDocumentor\Reflection\Types\False_;
 
+/**
+ * todo переименовать в более уникальное название путается с eloquent моделью
+ */
 class Payment
 {
     private TinkoffService $tinkoff;

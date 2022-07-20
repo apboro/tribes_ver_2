@@ -32,9 +32,9 @@ class PaymentController extends Controller
     private TelegramLogService $telegramLogService;
 
     public function __construct(
-        PaymentRepository $paymentRepo,
+        PaymentRepository      $paymentRepo,
         TelegramMainBotService $botService,
-        TelegramLogService $telegramLogService
+        TelegramLogService     $telegramLogService
     )
     {
         $this->botService = $botService;
@@ -46,7 +46,7 @@ class PaymentController extends Controller
     {
         return redirect()->route('payment.card.list');
     }
-    
+
     public function cardList()
     {
         return view('common.cash.card.list');
@@ -74,24 +74,24 @@ class PaymentController extends Controller
     public function successPage(Request $request, $hash, $telegramId = NULL)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
-        
+
         return view('common.donate.success')->withPayment($payment);
     }
 
     public function notify(Request $request)
     {
         $data = $request->all();
-        if($data == []){
+        if (empty($data)) {
             return response('OK', 200);
         }
         if (env('GRAB_TEST_DATA') === true) {
             Storage::disk('tinkoff_data')->put("notify_payment_{$data['OrderId']}_{$data['Status']}.json", json_encode($data, JSON_PRETTY_PRINT));
         }
 
-        if($this->accessor($request)){
+        if ($this->accessor($request)) {
             $payment = Payment::where('OrderId', $request['OrderId'])->where('paymentId', $request['PaymentId'])->first();
 
-            if(!$payment){
+            if (!$payment) {
                 (new PaymentException("NOTY: Платёж с OrderId " . $request['OrderId'] . " и PaymentId " .
                     $request['PaymentId'] . " не найден"))->report();
                 return response('OK', 200);
@@ -116,9 +116,9 @@ class PaymentController extends Controller
 
     private function accessor($request)
     {
-        if(
+        if (
             $request->TerminalKey == null
-        ){
+        ) {
             $this->telegramLogService->sendLogMessage(json_encode($request->all()));
             return false;
         } else {

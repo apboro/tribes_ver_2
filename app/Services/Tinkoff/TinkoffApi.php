@@ -4,6 +4,7 @@ namespace App\Services\Tinkoff;
 
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class TinkoffApi
@@ -274,8 +275,13 @@ class TinkoffApi
         if (is_array($args)) {
             $args = json_encode($args);
         }
-
-        if ($curl = curl_init()) {
+        if(env('APP_ENV') === 'testing') {
+            Log::debug('tinkoff api send request',[
+                'api_url' => $api_url,
+                'args' => $args
+            ]);
+            return Storage::disk('test_data')->get("payment/$api_url.json");//->get("payment/file.json");
+        }else if ($curl = curl_init()) {
             curl_setopt($curl, CURLOPT_URL, $api_url);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

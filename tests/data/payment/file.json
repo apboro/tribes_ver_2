@@ -1,0 +1,14 @@
+{
+  "TerminalKey": "1642765329798",
+  "OrderId": "71_0421_30",
+  "Success": true,
+  "Status": "REFUNDED",
+  "PaymentId": 1249670254,
+  "ErrorCode": "0",
+  "Amount": 1000,
+  "CardId": 174677748,
+  "Pan": "220220******4191",
+  "ExpDate": "0323",
+  "Token": "a32b30e3da66ebcf9fdadfd14f8a81987eff9d4f69fb3c2a44c99375d184f0b0",
+  "SpAccumulationId": "1385147"
+}
