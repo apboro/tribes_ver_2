@@ -118,7 +118,7 @@ class DonateController extends Controller
         $community = $this->communityRepo->findCommunityByHash($hash);
 
         foreach ($donate->variants ?? [] as $variant) {
-            if ($variant->isActive) {
+            if (!$variant->isActive) {
                 continue;
             }
 

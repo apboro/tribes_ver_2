@@ -38,7 +38,7 @@ class Community extends Model
 
         static::creating(function ($m) {
             //todo перенести логики привязки создаваемого сообщества в сервис контроллера
-            if( $au = Auth::user()){
+            if(($au = Auth::user()) ==! null){
                 $m->owner = $au->id;
             }
         });
@@ -77,11 +77,6 @@ class Community extends Model
     public function statistic()
     {
         return $this->hasOne(Statistic::class, 'community_id', 'id');
-    }
-
-    public function payment() // Это как?!
-    {
-        return $this->hasOne(Payment::class, 'community_id', 'id');
     }
 
     public function payments()

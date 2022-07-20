@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Payment;
 
+use App\Models\Community;
 use App\Models\Donate;
 use App\Models\DonateVariant;
+use App\Models\Payment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -17,18 +19,38 @@ class DonatePayTest extends TestCase
      */
     public function testRangePay()
     {
-        $response = $this->get('/payment/donate/range');
-
+        $data = $this->prepareDB();
+        $response = $this->get(route('payment.donate.range'),[
+            'amount' => '',
+            'currency' => '',
+            'donateId' => '',
+        ]);
         $response->assertStatus(200);
     }
 
     public function testStaticPay()
     {
-        $this->prepareDB();
-        $hash = '';
-        $response = $this->get("/payment/donate/$hash");
+        $data = $this->prepareDB();
+        $hash = $data['community']['hash'];
+        /** @var Community $community */
+        $community = $data['community_object'];
+        $link = $community->getDonatePaymentLink([
+            'amount' => '10',
+            'currency' => '0',
+            'donateId' => $data['donate']['id'],
+        ]);
+        $response = $this->get($link);
+        $response->assertStatus(302);
+        $response->assertRedirect('//ya.ru');
 
-        $response->assertStatus(200);
+        $this->assertDatabaseHas(Payment::class, [
+            "type" => "donate",
+            "amount" => 1000,
+            "from" => 'Анонимный пользователь',
+            "community_id" => $data['community']['id'],
+            "author" => $data['community']['owner'],
+            "add_balance" => 10,
+        ]);
     }
 
     protected function prepareDB()
@@ -44,6 +66,7 @@ class DonatePayTest extends TestCase
             'title'	 => 'test donate',
             'index' => 1,
         ]);
+        //todo пока не получается подменить ответ тинькоффа, потому все платежи должны быть размером в 1000
         $donateVariant = DonateVariant::factory()
             ->create([
                 'donate_id' => $donate->id,
@@ -51,7 +74,7 @@ class DonatePayTest extends TestCase
                 'isActive' => 1,
                 'description' => 'test donate variant',
                 'index' => 0,
-                'price' => 1000,
+                'price' => 10,
                 'min_price' => null,
                 'max_price' => null,
                 'currency' => 0

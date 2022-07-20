@@ -35,8 +35,8 @@ class TariffPayTest extends TestCase
             "type" => "tariff",
             "amount" => 10000,
             "from" => "new-user",
-            "community_id" => 1,
-            "author" => 1,
+            "community_id" => $data['community']['id'],
+            "author" => $data['community']['owner'],
             "add_balance" => 100,
         ]);
     }
