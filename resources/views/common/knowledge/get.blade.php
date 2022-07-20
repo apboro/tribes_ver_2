@@ -11,7 +11,7 @@
                     </li>
 
                     <li class="breadcrumbs__item">
-                        <a href="{{ $question->getPublicQuestionsLink() }}" class="link breadcrumbs__link">
+                        <a href="{{ $community->getPublicKnowledgeLink() }}" class="link breadcrumbs__link">
                             {{ $community -> title }}
                         </a>
                     </li>
