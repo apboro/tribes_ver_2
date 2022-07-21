@@ -1,6 +1,7 @@
 <template>
     <div class="card">
         <div class="card-body border-bottom py-3">
+
             <div class="d-flex justify-content-end mb-3">
                 <button class="btn" @click="reset">Сбросить фильтр</button>
             </div>
@@ -77,12 +78,14 @@
 
 <script>
 
+import Preloader from '../common/Preloader.vue';
 import FilterDataPayments from '../../mixins/filterData'
 import Translations from '../../mixins/translations'
 
 export default {
     name: "Payments",
     mixins: [FilterDataPayments, Translations],
+    components: {Preloader},
 
     watch: {
         filter_data: {
@@ -94,14 +97,13 @@ export default {
     },
 
     mounted(){
-        this.$store.dispatch('LOAD_PAYMENTS', this.filter_data).then(() => {
-        });
+        this.$store.dispatch('LOAD_PAYMENTS', this.filter_data).then(() => {});
     },
 
     computed: {
         payments() {
             return this.$store.getters.GET_PAYMENTS;
-        }
+        },
     },
 
     methods:{
