@@ -9,6 +9,12 @@ use Tests\BaseUnitTest;
 
 class BotHandlingKnSearchTest extends BaseUnitTest
 {
+    /**
+     * TODO тест не мокает отправки сообщений в телеграм, разобраться почему
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
     public function testHandleQaCommand()
     {
         $this->mock(Context::class)
@@ -23,6 +29,12 @@ class BotHandlingKnSearchTest extends BaseUnitTest
         $this->assertTrue($result, "Не находит в логах search.maxime");
     }
 
+    /**
+     * TODO тест не мокает отправки сообщений в телеграм, разобраться почему
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
     public function testHandleQaCommandWrong()
     {
          $this->mock(Context::class)

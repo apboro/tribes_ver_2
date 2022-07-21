@@ -2,8 +2,9 @@
 
 namespace Tests\Feature\Payment;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Course;
+use App\Models\Payment;
+use App\Services\SMTP\Mailer;
 use Tests\TestCase;
 
 class CoursePayTest extends TestCase
@@ -15,43 +16,53 @@ class CoursePayTest extends TestCase
      */
     public function testPay()
     {
+        $this->mock(Mailer::class)->shouldReceive();
         $data = $this->prepareDB();
-        $hash = $data;
-        $response = $this->get(route('course.pay',compact($hash)),[
-
+        $course = $data['course'];
+        $response = $this->post($course->payLink(), [
+            'email' => 'adolgopolov@google.com',
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
+        $response->assertRedirect('//ya.ru');
+
+        $this->assertDatabaseHas(Payment::class, [
+            "type" => "course",
+            "amount" => 500000,
+            "status" => "COMPLETE",
+            "from" => "adolgopolov",
+            "community_id" => $data['community']['id'],
+            "author" => $data['community']['owner'],
+            "add_balance" => 5000,
+        ]);
     }
 
     protected function prepareDB()
     {
         $data = $this->prepareDBCommunity();
-        $donate = Donate::factory()->create([
+        $course = Course::factory()->create([
             'community_id' => $data['community']['id'],
-            'description'	 => "a",
-            'isSendToCommunity'	 => 1,
-            //'inline_link'	 => Str::random(8),
-            'prompt_image_id'	 => "0",
-            'isAutoPrompt'	 => false,
-            'title'	 => 'test donate',
-            'index' => 1,
+            'title' => 'Test course ',
+            'owner' => $data['community']['owner'],
+            'description' => 'a',
+            'isActive' => 1,
+            'cost' => 5000,
+            'access_days' => 30,
+            'isPublished' => 1,
+            'payment_title' => 'Опалата тестового курса',
+            'payment_description' => 'фи',
+            'isEthernal' => 0,
+            'thanks_text' => 'Спасибо за покупку!',
+            'shipping_noty' => 0,
+            'shipping_views' => 10,
+            'shipping_clicks' => 10,
+            'views' => 300,
+            'clicks' => 300,
+            'shipped_count' => 300
         ]);
-        $donateVariant = DonateVariant::factory()
-            ->create([
-                'donate_id' => $donate->id,
-                'isStatic' => 1,
-                'isActive' => 1,
-                'description' => 'test donate variant',
-                'index' => 0,
-                'price' => 1000,
-                'min_price' => null,
-                'max_price' => null,
-                'currency' => 0
-            ]);
+
         return array_merge($data, [
-            'donate' => $donate->getAttributes(),
-            'donateVariant' => $donateVariant->getAttributes()
+            'course' => $course,
         ]);
     }
 }

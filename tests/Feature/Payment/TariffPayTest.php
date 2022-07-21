@@ -33,11 +33,11 @@ class TariffPayTest extends TestCase
 
         $this->assertDatabaseHas(Payment::class, [
             "type" => "tariff",
-            "amount" => 10000,
+            "amount" => 9900,
             "from" => "new-user",
             "community_id" => $data['community']['id'],
             "author" => $data['community']['owner'],
-            "add_balance" => 100,
+            "add_balance" => 99,
         ]);
     }
 
@@ -49,7 +49,7 @@ class TariffPayTest extends TestCase
         ]);
         $tariffVariant = TariffVariant::factory()->active()
             ->create([
-                'price' => 100,
+                'price' => 99,
                 'title' => 'Вариант для тарифа №1',
                 'tariff_id' => $tariff->id,
             ]);
