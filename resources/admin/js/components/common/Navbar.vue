@@ -16,7 +16,7 @@
                                 <path d="M76.0392 23C73.312 23 71.1237 22.3826 69.4742 21.1478C67.8247 19.8927 67 18.0101 67 15.5C67 13.2126 67.6818 11.3907 69.0454 10.0344C70.4089 8.67814 72.4543 8 75.1814 8C77.6666 8 79.5911 8.58704 80.9546 9.76114C82.3182 10.9352 83 12.5142 83 14.498V17.0789H71.9155C72.1574 18.0304 72.7182 18.6984 73.5979 19.083C74.4996 19.4474 75.7202 19.6295 77.2598 19.6295C78.1175 19.6295 78.9862 19.5587 79.866 19.417C80.7677 19.2753 81.5155 19.0932 82.1093 18.8704V22.0587C81.3615 22.3826 80.4708 22.6154 79.4371 22.7571C78.4035 22.9191 77.2708 23 76.0392 23ZM71.9155 14.255H78.3814V13.6174C78.3814 12.9089 78.1505 12.3523 77.6887 11.9473C77.2268 11.5222 76.446 11.3097 75.3464 11.3097C74.0708 11.3097 73.18 11.5526 72.6742 12.0384C72.1684 12.5041 71.9155 13.2429 71.9155 14.255Z" fill="#333333"></path>
                                 <path d="M92.1104 23C90.9258 23 89.8035 22.9191 88.7436 22.7571C87.6837 22.5952 86.8417 22.3927 86.2182 22.1498V18.415C86.9456 18.7186 87.7873 18.9514 88.7436 19.1134C89.6991 19.2753 90.5517 19.3563 91.2999 19.3563C92.193 19.3563 92.8376 19.3158 93.2327 19.2348C93.6481 19.1539 93.8562 18.9312 93.8562 18.5668C93.8562 18.162 93.5234 17.8583 92.8586 17.6559C92.193 17.4535 91.2789 17.1599 90.1153 16.7753C88.7639 16.3097 87.7351 15.7733 87.0288 15.166C86.3429 14.5385 86 13.6174 86 12.4028C86 10.9859 86.5403 9.90283 87.6213 9.15385C88.7225 8.38462 90.4683 8 92.8586 8C93.7939 8 94.7182 8.07085 95.6332 8.21255C96.5473 8.35425 97.2955 8.5162 97.8777 8.69838V12.3724C97.2955 12.1093 96.6307 11.917 95.8826 11.7955C95.1344 11.6741 94.4587 11.6133 93.8562 11.6133C93.087 11.6133 92.4323 11.664 91.8922 11.7652C91.3724 11.8462 91.1129 12.0587 91.1129 12.4028C91.1129 12.7875 91.4036 13.0607 91.9857 13.2227C92.5671 13.3644 93.4089 13.6073 94.5109 13.9514C95.6745 14.2956 96.5785 14.67 97.223 15.0749C97.8668 15.4595 98.3243 15.9251 98.5947 16.4716C98.8644 17.0182 99 17.7065 99 18.5364C99 19.9737 98.4178 21.0769 97.2542 21.8462C96.0899 22.6154 94.3753 23 92.1104 23Z" fill="#333333"></path>
                             </svg> | Администратор
-                            <preloader v-if="$store.getters.getLoadingStatus"/>
+                            <preloader v-if="$store.getters.getPreloaderStatus"/>
                         </h1>
                     </a>
                     <NavbarSide/>
@@ -29,7 +29,7 @@
                             <div class="navbar-nav">
                                 <ul class="navbar-nav">
 
-                                    <router-link :to="{name:'dashboard'}" v-slot="{ href, route, navigate, isActive, isExactActive }" custom exact>
+                                    <router-link :to="{name:'dashboard'}" v-slot="{ href, navigate, isActive }" custom exact>
                                         <li class="nav-item" :class="[isActive && 'active']" >
                                             <a class="nav-link" :href="href" @click="navigate">
                                                 <span class="nav-link-title">
@@ -38,7 +38,7 @@
                                             </a>
                                         </li>
                                     </router-link>
-                                    <router-link :to="{name:'users'}" v-slot="{ href, route, navigate, isActive, isExactActive }" custom>
+                                    <router-link :to="{name:'users'}" v-slot="{ href, navigate, isActive }" custom>
                                         <li class="nav-item" :class="[isActive && 'active']" >
                                             <a class="nav-link" :href="href" @click="navigate">
                                                 <span class="nav-link-title">
@@ -48,7 +48,7 @@
                                         </li>
                                     </router-link>
 
-                                    <router-link :to="{name:'courses'}" v-slot="{ href, route, navigate, isActive, isExactActive }" custom>
+                                    <router-link :to="{name:'courses'}" v-slot="{ href, navigate, isActive }" custom>
                                         <li class="nav-item" :class="[isActive && 'active']" >
                                             <a class="nav-link" :href="href" @click="navigate">
                                                 <span class="nav-link-title">
@@ -58,7 +58,7 @@
                                         </li>
                                     </router-link>
 
-                                    <router-link :to="{name:'payments'}" v-slot="{ href, route, navigate, isActive, isExactActive }" custom>
+                                    <router-link :to="{name:'payments'}" v-slot="{ href, navigate, isActive }" custom>
                                         <li class="nav-item" :class="[isActive && 'active']" >
                                             <a class="nav-link" :href="href" @click="navigate">
                                                 <span class="nav-link-title">
@@ -67,7 +67,6 @@
                                             </a>
                                         </li>
                                     </router-link>
-
                                 </ul>
                             </div>
                         </div>
@@ -80,6 +79,7 @@
 <script>
 import NavbarSide from "./../layout/NavbarSide";
 import Preloader from "../common/Preloader"
+import { mapGetters  } from 'vuex';
 export default {
     name: "Navbar",
     components:{
@@ -92,6 +92,9 @@ export default {
                 transparent : false,
             }
         }
+    },
+    computed: {
+        ...mapGetters(['getPreloaderStatus'])
     },
 }
 </script>

@@ -75,7 +75,7 @@
             <p class="m-0 text-muted">Показано <span>{{ users.per_page }}</span> из <span>{{ users.total }}</span> записей</p>
             <ul class="pagination m-0 ms-auto">
                 <li 
-                    v-for="(link, idx) in users.links" 
+                    v-for="(link, idx) in users.links"
                     class="page-item" 
                     :class="{'active' : link.active}"
                     :key="idx"
