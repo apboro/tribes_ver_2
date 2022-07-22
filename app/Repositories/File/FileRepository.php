@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Auth;
+use Illuminate\Support\Facades\File as FileFacade;
 use Intervention\Image\ImageManagerStatic as Image;
+use function PHPUnit\Framework\isInstanceOf;
 
 class FileRepository implements FileRepositoryContract
 {
@@ -116,6 +118,51 @@ class FileRepository implements FileRepositoryContract
         return '/storage/' . $absolutPath . '/' . $filename;
     }
 
+    public function saveImageForSeeder($path)
+    {
+        $file = $this->pathToUploadedFile($path);
+
+        $model = new File([
+            'mime' => $file->getMimeType(),
+            'size' => $file->getSize(),
+            'filename' => $this->setHash($file) . '.' . $file->guessClientExtension(),
+            'rank' => 0,
+            'isImage' => 1,
+            'url' => $this->storeFileNew($file, 'image', $this->setHash($file) . '.' . $file->guessClientExtension()),
+            'hash' => $this->setHash($file),
+            'uploader_id' => $this->setUploader(),
+            'isVideo' => 0,
+            'isAudio' => 0,
+            'remoteFrame' => null,
+            'webcaster_event_id' => null,
+            'description' => null,
+            'iframe' => null
+        ]);
+        $model->save();
+
+        return $model;
+    }
+
+    public static function pathToUploadedFile( $path, $public = false )
+    {
+        $name = FileFacade::name( $path );
+
+        $extension = FileFacade::extension( $path );
+
+        $originalName = $name . '.' . $extension;
+
+        $mimeType = FileFacade::mimeType( $path );
+
+        $size = FileFacade::size( $path );
+
+        $error = null;
+
+        $test = $public;
+
+        $object = new UploadedFile($path, $originalName, $mimeType, $error, false);
+
+        return $object;
+    }
     public function storeFile($data)
     {
 
@@ -136,23 +183,23 @@ class FileRepository implements FileRepositoryContract
 
         if($isImage){
             //$this->validateImage($file);
-            $image = Image::make($file)->encode('jpg', 75);
+
+//            $image = Image::make($file)->encode('jpg', 75);
 
             $this->extension = 'jpg';
             $this->mime = 'image/jpg';
-            $this->setFilename($image);
-
+            $this->setFilename($file);
             if($data['crop']){
-                $this->crop($data['cropData'], $image);
-                $image = $this->formatImage($image);
+                $this->crop($data['cropData'], $file);
+                $file = $this->formatImage($file);
                 $this->setUrl($file);
                 $path = $this->prepareDirectory('image') . $this->filename;
-                $image->save($path);
+                $file->save($path);
             } else {
-                $image = $this->formatImage($image);
+                $file = $this->formatImage($file);
                 $this->setUrl($file);
                 $path = $this->prepareDirectory('image') . $this->filename;
-                $image->save($path);
+                $file->save($path);
             }
         } elseif($isVideo){
             $this->validateVideo($data);
@@ -224,7 +271,7 @@ class FileRepository implements FileRepositoryContract
         return md5($file . Carbon::now()) ;
     }
 
-    private function setFilename($file)
+    private function setFilename(UploadedFile $file)
     {
         return $this->filename = $this->setHash($file) . '.' . $file->guessExtension();
     }

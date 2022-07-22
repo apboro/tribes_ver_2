@@ -14,6 +14,13 @@ return [
             'path' => 'audio',
         ],
     ],
+    'tariff' => [
+        'image_handler' => [
+            'handler' => \App\Services\File\Handlers\ImageHandler::class,
+            'path' => 'image',
+
+        ],
+    ],
 
     'donate' => [
         'image_handler' => [

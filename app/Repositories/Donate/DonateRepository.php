@@ -57,7 +57,7 @@ class DonateRepository implements DonateRepositoryContract
         $this->updateVariants($data);
 
         $this->autoPrompt($data);
-
+//        dd($data->files);
         $this->storeImages($data);
 
         $this->donateModel->save();
@@ -104,8 +104,12 @@ class DonateRepository implements DonateRepositoryContract
                     $fileData['file'] = $file['image'];
                     $fileData['crop'] = $decoded->isCrop;
                     $fileData['cropData'] = $decoded->cropData;
+//                    dd($fileData);
+                    dd($file);
+                    dd($data);
+//                    $f = $this->fileRepo->storeFile($fileData);
                     $f = $this->fileRepo->storeFile($fileData);
-
+dd($f);
                     switch ($key) {
                         case 'main':
                             $this->donateModel->main_image_id = $f->id;

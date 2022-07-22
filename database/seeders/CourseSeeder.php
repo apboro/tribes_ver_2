@@ -40,16 +40,10 @@ class CourseSeeder extends Seeder
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
         $imgs = glob('public/testData/files/testImages/*');
-        $img =  $imgs[array_rand($imgs)];
-//        dd($img);
-        $file = FileController::pathToUploadedFile($img, false);
+        $path =  $imgs[array_rand($imgs)];
 
-        $fileData['file'] = $file;
-        $fileData['crop'] = false;
-        $fileData['cropData'] = null;
-        $preview = $this->fileRepo->storeFile($fileData);
+        $preview = $this->fileRepo->saveImageForSeeder($path);
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
         Course::factory()
             ->count(5)
             ->loadImage($preview)

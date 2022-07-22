@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\Input;
 use Illuminate\Support\Facades\File as FileFacade;
 use Symfony\Component\HttpFoundation\File\File as F;
 use App\Repositories\File\FileRepositoryContract;
+use App\Services\File\common\FileEntity;
 use App\Repositories\Video\VideoRepository;
 use App\Repositories\Video\VideoRepositoryContract;
 use App\Services\File\FileUploadService;
@@ -29,12 +30,14 @@ class FileController extends Controller
     public function __construct(
         FileRepositoryContract $fileRepo,
         VideoRepositoryContract $videoRepo,
-        FileUploadService $fileUploadService
+        FileUploadService $fileUploadService,
+        FileEntity $fileEntity
     )
     {
        $this->fileRepo = $fileRepo;
        $this->videoRepo = $videoRepo;
        $this->fileUploadService = $fileUploadService;
+       $this->fileEntity = $fileEntity;
     }
 
     public function get(Request $request)
@@ -144,26 +147,27 @@ class FileController extends Controller
 //        dd($request->storedFiles[0]);
 //        $filesId = $request->storedFiles;
 
-//        dd($request);
+
+        $this->fileEntity->getEntity($request);
+
         $files = $this->fileUploadService->procRequest($request);
-//        dd($files);
-//dd($files);
-        if($request['course_id']){
+
+        /*if($request['course_id']){
             $course = Course::find($request['course_id']);
-        }
-        if($course){
+        }*/
+
+        if($request['entityModel']){
             $storedFilesId = [];
             foreach ($files as $file){
                 array_push($storedFilesId, $file['id']);
             }
-//            dd($storedFilesId);
-            $course->attachments()->syncWithoutDetaching($storedFilesId);
+            $request['entityModel']->attachments()->syncWithoutDetaching($storedFilesId);
         }
 
         return response()->json([
             "status" => "ок",
             "message" => "Загрузка удалась",
-            "file" => $files,
+            "file" => $files[0],
         ]);
     }
 

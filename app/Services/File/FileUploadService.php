@@ -52,6 +52,7 @@ class FileUploadService
 //        $this->modelsFile = new FileCollection();
         $this->config = $config;
         $this->logger = $logger;
+
     }
 
 
@@ -60,19 +61,13 @@ class FileUploadService
 
         $entity = $request->get('entity',null);
         $entityId = $request->get('entityId',null);
-//        $procedure = $request->get('procedure');
-//        dd($procedure);
-        if($request['course_id']){
-            $entity = 'course';
-            $entityId = $request['course_id'];
-//            $course = Course::find($request['course_id']);
-        }
 
         if(!$entity) {
             throw new Exception('Укажите entity в запросе');
         }
 
         $handlers = $this->config->getConfig()[$entity];
+
         if(!$handlers) {
             throw new Exception('Данный entity не сконфигурирован');
         }
@@ -80,31 +75,27 @@ class FileUploadService
         /*if(!in_array([$entity][$procedure], $this->config->getConfig())) {
             $procedure = 'default';
         }*/
-//        dd($procedure);
         //todo из $request перебрать все файлы
         //  и обработать их по ихнему mimeType
-
 
         $collect = new FileCollection;
 
         if($request->has('base_64_file')) {
             $collect->add($this->getFileFromBase64($request));
         } else {
-            $files = $request->file()['file'];
-            if($files instanceof UploadedFile) {
-//            dd(1111);
-                $collect->add($files);
-            } elseif (is_array($files)){
-                foreach ($files as $eachFile) {
-                    $collect->add($eachFile);
-                }
+            if ($request->file()['file']) {
+                $files = $request->file()['file']; // TODO ПРОВЕРИТЬ НА СУЩЕСТВОВАНИЕ
+                $collect->addFiles($files);
+            } else {
+                throw new Exception('Файл не найден');
             }
+
         }
 
         if($collect->isEmpty()) {
             throw new Exception('Пустой набор файлов');
         }
-//dd($collect);
+
 //        $this->processFileCollection($collect, $this->config->get("$entity.$procedure"));
         $this->processFileCollection($collect, $handlers);
 
