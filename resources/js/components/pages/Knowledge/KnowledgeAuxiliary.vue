@@ -26,7 +26,7 @@
 </template>
 
 <script>
-    import { copyText } from '../../../../core/functions';
+    import { copyText } from '../../../core/functions';
     
     export default {
         name: 'KnowledgeAuxiliary',

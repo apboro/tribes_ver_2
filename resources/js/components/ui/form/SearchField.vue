@@ -17,7 +17,7 @@
 </template>
 
 <script>
-    import VIcon from "./VIcon.vue";
+    import VIcon from "../icon/VIcon.vue";
 
     export default {
         name: 'SearchField',

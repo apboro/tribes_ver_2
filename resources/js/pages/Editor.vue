@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
-import Course from "./components/Course";
-import Uploader from "./components/Uploader";
-import CourseSettings from "./components/CourseSettings";
+import Sidebar from "../components/pages/Course/Sidebar";
+import Header from "../components/pages/Course/Header";
+import Course from "../components/pages/Course/Course";
+import Uploader from "../components/pages/Course/Uploader";
+import CourseSettings from "../components/pages/Course/CourseSettings";
 
 export default {
     name: "Editor.vue",

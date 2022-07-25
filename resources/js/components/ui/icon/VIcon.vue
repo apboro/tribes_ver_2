@@ -117,9 +117,7 @@
 </template>
 
 <script>
-import Template from '../../Course/components/templates/Template.vue';
     export default {
-  components: { Template },
         name: 'VIcon',
 
         props: {

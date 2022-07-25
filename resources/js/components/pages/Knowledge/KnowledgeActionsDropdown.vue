@@ -72,9 +72,9 @@
 
 <script>
     import { mapActions } from 'vuex';
-    import VIcon from '../VIcon.vue';
-    import VDropdown from '../VDropdown.vue';
-    import { copyText } from '../../../../core/functions';
+    import VIcon from '../../ui/icon/VIcon.vue';
+    import VDropdown from '../../ui/dropdown/VDropdown.vue';
+    import { copyText } from '../../../core/functions';
 
     export default {
         name: 'KnowledgActionsDropdown',
@@ -118,7 +118,3 @@
         },
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

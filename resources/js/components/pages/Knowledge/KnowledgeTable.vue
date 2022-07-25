@@ -171,8 +171,8 @@
 
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
-    import VIcon from '../VIcon.vue';
-    import VCheckbox from '../VCheckbox.vue';
+    import VIcon from '../../ui/icon/VIcon.vue';
+    import VCheckbox from '../../ui/form/VCheckbox.vue';
     import KnowledgeTableItem from './KnowledgeTableItem.vue';
 
     export default {

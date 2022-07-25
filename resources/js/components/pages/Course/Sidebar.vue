@@ -16,8 +16,8 @@
 
 <script>
 
-import Tab from '../components/tabs/Tab';
-import Tabs from '../components/tabs/Tabs';
+import Tab from './tabs/Tab';
+import Tabs from './tabs/Tabs';
 
 import Templates from "./templates/Templates";
 import Uploads from "./Uploads";

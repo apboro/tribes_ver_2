@@ -74,10 +74,10 @@
 
 <script>
     import { mapActions } from 'vuex';
-    import VPopup from '../VPopup.vue';
-    import TextEditor from '../TextEditor.vue';
-    import VCheckbox from '../VCheckbox.vue';
-    import ToggleSwitch from '../ToggleSwitch.vue';
+    import VPopup from '../../ui/popup/VPopup.vue';
+    import TextEditor from '../../ui/editor/TextEditor.vue';
+    import VCheckbox from '../../ui/form/VCheckbox.vue';
+    import ToggleSwitch from '../../ui/form/ToggleSwitch.vue';
 
     export default {
         name: 'KnowledgeNewQuestionPopup',

@@ -222,13 +222,13 @@
 
 <script>
     import { mapActions, mapGetters, mapMutations } from 'vuex';
-    import { bodyLock, bodyUnLock, timeFormatting } from '../../../../core/functions';
-    import VPopup from '../VPopup.vue';
-    import TextEditor from '../TextEditor.vue';
-    import VOverlay from '../VOverlay.vue';
-    import VIcon from '../VIcon.vue';
-    import VCheckbox from '../VCheckbox.vue';
-    import ToggleSwitch from '../ToggleSwitch.vue';
+    import { bodyLock, bodyUnLock, timeFormatting } from '../../../core/functions';
+    import VPopup from '../../ui/popup/VPopup.vue';
+    import TextEditor from '../../ui/editor/TextEditor.vue';
+    import VOverlay from '../../ui/overlay/VOverlay.vue';
+    import VIcon from '../../ui/icon/VIcon.vue';
+    import VCheckbox from '../../ui/form/VCheckbox.vue';
+    import ToggleSwitch from '../../ui/form/ToggleSwitch.vue';
     import KnowledgeActionsDropdown from './KnowledgeActionsDropdown.vue';
     import KnowledgeConfirmDeletePopup from './KnowledgeConfirmDeletePopup.vue';
     

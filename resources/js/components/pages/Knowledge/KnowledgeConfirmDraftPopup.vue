@@ -65,8 +65,8 @@
 </template>
 
 <script>
-    import VPopup from '../VPopup.vue';
-    import VCheckbox from '../VCheckbox.vue';
+    import VPopup from '../../ui/popup/VPopup.vue';
+    import VCheckbox from '../../ui/form/VCheckbox.vue';
     
     export default {
         name: 'KnowledgeConfirmDraftPopup',

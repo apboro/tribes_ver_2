@@ -109,19 +109,19 @@
 
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
-    import VBreadcrumbs from './components/VBreadcrumbs.vue';
-    import VPagination from './components/VPagination.vue';
-    import VPopup from './components/VPopup.vue';
-    import VIcon from './components/VIcon.vue';
-    import SearchField from './components/SearchField.vue';
-    import KnowledgeFilter from './components/Knowledge/KnowledgeFilter.vue';
-    import KnowledgeTable from './components/Knowledge/KnowledgeTable.vue';
-    import KnowledgeMultipleOperations from './components/Knowledge/KnowledgeMultipleOperations.vue';
-    import KnowledgeNewQuestionPopup from './components/Knowledge/KnowledgeNewQuestionPopup.vue';
-    import KnowledgeConfirmDraftPopup from './components/Knowledge/KnowledgeConfirmDraftPopup.vue';
-    import KnowledgeConfirmDeletePopup from './components/Knowledge/KnowledgeConfirmDeletePopup.vue';
-    import KnowledgeAuxiliary from './components/Knowledge/KnowledgeAuxiliary.vue';
-    import { bodyLock, bodyUnLock } from '../../core/functions';
+    import VBreadcrumbs from '../components/ui/breadcrumbs/VBreadcrumbs.vue';
+    import VPagination from '../components/ui/pagination/VPagination.vue';
+    import VPopup from '../components/ui/popup/VPopup.vue';
+    import VIcon from '../components/ui/icon/VIcon.vue';
+    import SearchField from '../components/ui/form/SearchField.vue';
+    import KnowledgeFilter from '../components/pages/Knowledge/KnowledgeFilter.vue';
+    import KnowledgeTable from '../components/pages/Knowledge/KnowledgeTable.vue';
+    import KnowledgeMultipleOperations from '../components/pages/Knowledge/KnowledgeMultipleOperations.vue';
+    import KnowledgeNewQuestionPopup from '../components/pages/Knowledge/KnowledgeNewQuestionPopup.vue';
+    import KnowledgeConfirmDraftPopup from '../components/pages/Knowledge/KnowledgeConfirmDraftPopup.vue';
+    import KnowledgeConfirmDeletePopup from '../components/pages/Knowledge/KnowledgeConfirmDeletePopup.vue';
+    import KnowledgeAuxiliary from '../components//pages/Knowledge/KnowledgeAuxiliary.vue';
+    import { bodyLock, bodyUnLock } from '../core/functions';
 
     export default {
         name: 'Knowledge',

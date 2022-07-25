@@ -12,14 +12,6 @@
                 @getSelectedValue="onChangePerPage"
             />
 
-            <!-- <select
-                class="select pagination__select"
-                @change="onChangePerPage($event.target.value)"
-            >
-                <option value="15" selected>15</option>
-                <option value="30">30</option>
-                <option value="45">45</option>
-            </select> -->
             <span> из {{ paginateData.total }}</span>
             <!-- <span>Показано записей с {{ data.from }} по {{ data.to }} из {{ data.total }}</span> -->
         </div>
@@ -73,8 +65,8 @@
 </template>
 
 <script>
-    import VSelect from "./VSelect";
-    import VIcon from "./VIcon";
+    import VSelect from "../form/VSelect";
+    import VIcon from "../icon/VIcon";
 
     export default {
         name: 'KnowledgePagination',

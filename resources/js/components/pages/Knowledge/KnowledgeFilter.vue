@@ -91,7 +91,7 @@
 
 <script>
     import { mapActions } from 'vuex';
-    import RadioButton from '../RadioButton.vue';
+    import RadioButton from '../../ui/form/RadioButton.vue';
 
     export default {
         name: 'KnowledgeFilter',

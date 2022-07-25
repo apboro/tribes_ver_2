@@ -75,8 +75,8 @@
 </template>
 
 <script>
-    import VIcon from "./VIcon.vue";
-    import VOverlay from "./VOverlay.vue";
+    import VIcon from "../icon/VIcon.vue";
+    import VOverlay from "../overlay/VOverlay.vue";
 
     export default {
         name: 'VPopup',

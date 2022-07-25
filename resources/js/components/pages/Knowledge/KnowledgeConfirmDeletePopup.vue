@@ -34,7 +34,7 @@
 </template>
 
 <script>
-    import VPopup from '../VPopup.vue';
+    import VPopup from '../../ui/popup/VPopup.vue';
     
     export default {
         name: 'KnowledgeConfirmDeletePopup',
