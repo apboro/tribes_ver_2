@@ -1,15 +1,11 @@
 <?php
 namespace App\Services\Tinkoff;
 
-use App\Http\Controllers\PaymentController;
+
 use App\Models\Accumulation;
 use App\Models\Course;
-use App\Models\Payment;
-use App\Models\TariffVariant;
 use App\Models\User;
-use App\Repositories\Payment\PaymentRepository;
 use App\Services\SMTP\Mailer;
-use App\Services\TelegramBotService;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\Payment as Pay;
@@ -39,7 +35,7 @@ class TinkoffService
     {
         DB::beginTransaction();
         try {
-//            $author = $payment->owner()->first();
+
             if(isset($data->SpAccumulationId)){
                 $accumulation = Accumulation::where('SpAccumulationId', $data->SpAccumulationId)->where('status', 'active')->first();
                 if(!$accumulation){
@@ -50,6 +46,7 @@ class TinkoffService
                         'ended_at' => Carbon::now()->endOfDay()->modify('last day of this month'),
                         'status' => 'active',
                     ]);
+                    // todo выбрасывать Ексепшн, если не удалось создать $accumulation увеличить информативность исключений
                 }
             }
             $new_status = $data->Status;
@@ -144,7 +141,7 @@ class TinkoffService
             return response('OK', 200);
         } catch (\Exception $e) {
             DB::rollback();
-//            -612889716
+            //переделать на репор от
             TelegramLogService::staticSendLogMessage(
                 "Платёж " . $payment->id . " завершился неуспешно, Администрация в курсе" .
                 json_encode($e->getMessage())

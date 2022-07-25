@@ -1,0 +1,14 @@
+{
+  "TerminalKey": "1642765329798",
+  "OrderId": "154_0608_50",
+  "Success": true,
+  "Status": "CONFIRMED",
+  "PaymentId": 1398083450,
+  "ErrorCode": "0",
+  "Amount": 1000,
+  "CardId": 174732986,
+  "Pan": "553691******8095",
+  "ExpDate": "0325",
+  "Token": "6bd4be2267dcc848f13d3c835c689596f3293122685aad20a3a075e2d835291f",
+  "SpAccumulationId": "1595642"
+}

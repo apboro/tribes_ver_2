@@ -5,11 +5,13 @@ namespace App\Models;
 use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
 use App\Traits\Authorable;
+use Database\Factories\CourseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
+/** @method CourseFactory factory() */
 class Course extends Model
 {
     use HasFactory, Authorable;
