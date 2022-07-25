@@ -317,3 +317,8 @@ Route::any('/manager{any}', function () {
 
 Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name('telegram.interface');
 
+// Footer Routes
+Route::get('/statistics', function () {
+    return view('common.community.statistics');
+})->name('st');
+
