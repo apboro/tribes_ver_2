@@ -5,6 +5,8 @@ namespace Tests;
 use App\Models\Community;
 use App\Models\TelegramConnection;
 use App\Models\User;
+use Askoldex\Teletant\Context;
+use Askoldex\Teletant\Entities\Message;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,15 +34,17 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        //todo  работает только для Ларавел классов, сторонние компоненты установленные через контейнер не работают
-        Http::fake(function ($request, $options) {
+        $this->mock(Context::class)
+            ->shouldReceive('reply')
+            ->andReturn( new Message($this->getDataFromFile('telegram/text_message.json')) );
+        Http::fake([ '*' => function ($request, $options) {
             /** @var Request $request */
             Log::debug('post http request', [
                 'url' => $request->url(),
                 'data' => $request->data(),
             ]);
             return Http::response();
-        });
+        }]);
         $this->app = app();
         $channel = Log::channel('testing');
         $this->logger = $channel->getLogger();

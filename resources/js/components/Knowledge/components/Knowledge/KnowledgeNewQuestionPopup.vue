@@ -2,6 +2,7 @@
     <v-popup
         theme="primary"
         title="Новый вопрос-ответ"
+        :isVisiblePopup="isVisibleNewQuestionPopup"
         @close="closeNewQuestionPopup"
     >
         <template #body>
@@ -86,6 +87,13 @@
             TextEditor,
             VCheckbox,
             ToggleSwitch,
+        },
+
+        props: {
+            isVisibleNewQuestionPopup: {
+                type: Boolean,
+                default: false,
+            }
         },
 
         data() {

@@ -22,6 +22,8 @@
 
 ## Сборка проекта
 Для сборки проекта в режиме разработки (development)
-    npm run watch
+    `npm run watch`
 Для сборки готового проекта (production)
-    npm run production
+```bash
+npm run production
+```

@@ -21,16 +21,11 @@ class PaymentsFilter extends QueryFilter
         });
     }
 
-    public function sortingUser($sort)
+    public function sort(array $data)
     {
-        return $this->builder
-            ->orderBy('user_id',$sort);
-    }
-
-    public function sortingDate($sort)
-    {
-        return $this->builder
-            ->orderBy('created_at',$sort);
+        $name = $this->sortingColumn($data['name']);
+        $rule = $this->sortingRule($data['rule']);
+        $this->builder->orderBy($name, $rule);
     }
 
     public function date($date)
@@ -39,5 +34,27 @@ class PaymentsFilter extends QueryFilter
 
         return $this->builder
             ->whereDate('created_at', $date);
+    }
+
+    private function sortingColumn($column)
+    {
+        $list = [
+            'user' => 'user_id',
+            'date' => 'created_at',
+            'default' => 'id'
+        ];
+
+        return $list[$column] ?? $list['default'];
+    }
+
+    private function sortingRule($rule)
+    {
+        $list = [
+            'asc' => 'asc',
+            'desc' => 'desc',
+            'default' => 'desc'
+        ];
+
+        return $list[$rule] ?? $list['default'];
     }
 }
