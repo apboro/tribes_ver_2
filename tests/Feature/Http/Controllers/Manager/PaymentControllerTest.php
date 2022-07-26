@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Manager;
 
+use App\Models\Community;
 use App\Models\Payment;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
@@ -9,40 +10,6 @@ use Tests\TestCase;
 
 class PaymentControllerTest extends TestCase
 {
-    private function AuthSanctum()
-    {
-        Sanctum::actingAs(
-            User::factory()->create()
-        );
-    }
-
-    private function CreatePayments()
-    {
-       for ($i = 0; $i < 5; $i++) {
-            Payment::factory()->create([
-                'id' => $i + 1,
-                'OrderId' => 'q6CibHWjsf15Ti' . $i,
-                'add_balance' => $i,
-                'from' => 'Buyer ' . $i,
-                'comment' => 'Nulla',
-                "isNotify" => true,
-                'paymentId' => $i,
-                'amount' => 100 + $i,
-                'response' => 'Natus',
-                'status' => 'NEW',
-                'token' => 'Voluptatum',
-                'error' => 'Rerum',
-                'created_at' => '2022-07-1' . $i . 'T07:34:16.000000Z',
-                'updated_at' => '2022-07-1' . $i . 'T07:34:16.000000Z',
-                'type' => 'tariff',
-                'activated' => true,
-                'SpAccumulationId' => 'Necessitatibus',
-                'RebillId' => 'Est',
-                'user_id' => $i,
-            ]);
-        }
-    }
-
     public function testGetListPayments()
     {
         $this->AuthSanctum();
@@ -52,31 +19,11 @@ class PaymentControllerTest extends TestCase
             ->assertJsonStructure([
                 'data' => [
                     '*' => [
-                        'id',
                         'OrderId',
-                        'community_id',
+                        'community',
                         'add_balance',
-                        'from',
-                        'comment',
-                        'isNotify',
-                        'telegram_user_id',
-                        'paymentId',
-                        'amount',
-                        'paymentUrl',
-                        'response',
-                        'status',
-                        'token',
-                        'error',
                         'created_at',
-                        'updated_at',
                         'type',
-                        'activated',
-                        'SpAccumulationId',
-                        'RebillId',
-                        'user_id',
-                        'payable_id',
-                        'payable_type',
-                        'author'
                     ]
                 ]
             ]);
@@ -93,6 +40,7 @@ class PaymentControllerTest extends TestCase
             ->assertJsonFragment([
                 'from' => 'Buyer 0'
             ])
+            ->assertValid()
             ->assertJsonCount('1', 'data');
     }
 
@@ -129,6 +77,7 @@ class PaymentControllerTest extends TestCase
 
         $response = $this->postJson('api/v2/payments', ['sort' => ['name' => 'user', 'rule' => 'asc']])
             ->assertOk()
+            ->assertValid()
             ->assertJsonCount(5, 'data');
 
         $content = json_encode(json_decode($response->getContent()), JSON_PRETTY_PRINT);
@@ -212,5 +161,42 @@ class PaymentControllerTest extends TestCase
             ->assertUnauthorized();
     }
 
+    private function AuthSanctum()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+    }
 
+    private function CreatePayments()
+    {
+        $community = Community::factory()->create(
+            ['title' => 'Test']
+        );
+
+        for ($i = 0; $i < 5; $i++) {
+            Payment::factory()->create([
+                'id' => $i + 1,
+                'OrderId' => 'q6CibHWjsf15Ti' . $i,
+                'community_id' => $community->id,
+                'add_balance' => $i,
+                'from' => 'Buyer ' . $i,
+                'comment' => 'Nulla',
+                "isNotify" => true,
+                'paymentId' => $i,
+                'amount' => 100 + $i,
+                'response' => 'Natus',
+                'status' => 'NEW',
+                'token' => 'Voluptatum',
+                'error' => 'Rerum',
+                'created_at' => '2022-07-1' . $i . 'T07:34:16.000000Z',
+                'updated_at' => '2022-07-1' . $i . 'T07:34:16.000000Z',
+                'type' => 'tariff',
+                'activated' => true,
+                'SpAccumulationId' => 'Necessitatibus',
+                'RebillId' => 'Est',
+                'user_id' => $i,
+            ]);
+        }
+    }
 }
