@@ -38,12 +38,12 @@
                 />
                 
                 <!-- Add question -->
-                <button
-                    class="button-filled knowledge__add-btn button-filled--primary"
+
+                <v-button
+                    class="knowledge__add-btn"
+                    text="Добавить новый вопрос-ответ"
                     @click="openNewQuestionPopup"
-                >
-                    Добавить новый вопрос-ответ
-                </button>
+                />
             </div>
 
             <transition name="a-knowledge-panel" mode="out-in">
@@ -109,6 +109,7 @@
 
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
+    import VButton from './components/VButton.vue';
     import VBreadcrumbs from './components/VBreadcrumbs.vue';
     import VPagination from './components/VPagination.vue';
     import VPopup from './components/VPopup.vue';
@@ -127,6 +128,7 @@
         name: 'Knowledge',
 
         components: {
+            VButton,
             VBreadcrumbs,
             VPagination,
             VPopup,
@@ -185,6 +187,12 @@
         },
 
         methods: {
+            clickedBTN() {
+                console.log('123')
+            },
+            clicked() {
+                console.log('clicekd')
+            },
             ...mapMutations('knowledge', [
                 'SET_PAGINATION',
                 'SET_IDS_MULTIPLE_OPERATIONS',
