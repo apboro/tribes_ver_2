@@ -1,45 +1,10 @@
 $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(140px, 12%) minmax(135px, 10%) minmax(90px, 10%);
 
 .knowledge-table {
-    display: grid;
-    grid-template: 50px 1fr / 1fr;
-    border: 1px solid $grey-3;
-    border-radius: 5px;
-
-    &__header {
-        position: sticky;
-        top: $header-height;
-        z-index: 10;
-        display: grid;
+    .table__header {
         grid-template: $table-grid-template;
-        align-items: center;
-        padding: 10px 20px;
-        @include font($grey-8, 14px, 20px, 600);
-        text-transform: uppercase;
-        background-color: $grey-2;
-
-        &--disabled {
-            pointer-events: none;
-        }
     }
-
-    &__header-item {
-        &--sortable {
-            display: flex;
-            align-items: center;
-        }
-
-        &--center {
-            text-align: center;
-        }
-    }
-
-    &__icon-sort {
-        margin-left: $indent-1;
-    }
-
-    &__body {}
-
+    
     &__item-wrapper {
         &.open {
             .knowledge-table__row {

@@ -1,12 +1,12 @@
 <template>
-    <div class="knowledge-table">
+    <div class="table knowledge-table">
         <!-- Head -->
         <div
-            class="knowledge-table__header"
-            :class="{ 'knowledge-table__header--disabled' : !isHasQuestions}"    
+            class="table__header"
+            :class="{ 'table__header--disabled' : !isHasQuestions}"    
         >
             <!-- Multiple operations -->
-            <div class="knowledge-table__header-item">
+            <div class="table__header-item">
                 <v-checkbox
                     id="all_question"
                     :value="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
@@ -16,13 +16,13 @@
             </div>
 
             <!-- Вопрос -->
-            <div class="knowledge-table__header-item">
+            <div class="table__header-item">
                 Вопрос
             </div>
 
             <!-- Дата -->
             <div
-                class="knowledge-table__header-item knowledge-table__header-item--sortable"
+                class="table__header-item table__header-item--sortable"
             >
                 <span>Дата</span>
                 
@@ -72,7 +72,7 @@
             </div>
 
             <!-- Обращений -->
-            <div class="knowledge-table__header-item knowledge-table__header-item--sortable">
+            <div class="table__header-item table__header-item--sortable">
                 <span>Обращений</span>
 
                 <transition name="a-sort-icon" mode="out-in">
@@ -121,18 +121,18 @@
             </div>
 
             <!-- Статус -->
-            <div class="knowledge-table__header-item">
+            <div class="table__header-item">
                 Статус
             </div>
 
             <!-- Действия -->
-            <div class="knowledge-table__header-item knowledge-table__header-item--center">
+            <div class="table__header-item table__header-item--center">
                 Действия
             </div>            
         </div>
 
         <!-- Body -->
-        <div class="knowledge-table__body">
+        <div class="table__body">
             <!-- Loading -->
             <template v-if="IS_LOADING">
                 <div class="knowledge-table__row knowledge-table__row--special">

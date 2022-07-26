@@ -69,6 +69,11 @@
                 :questions="GET_QUESTIONS"
             />
             
+            <questions-table
+                class="knowledge__table"
+                :questions="GET_QUESTIONS"
+            />
+            
             <!-- Pagination -->
             <keep-alive>
                 <template v-if="GET_QUESTIONS && GET_QUESTIONS.length && !IS_LOADING">
@@ -114,6 +119,7 @@
     import VPopup from '../components/ui/popup/VPopup.vue';
     import VIcon from '../components/ui/icon/VIcon.vue';
     import SearchField from '../components/ui/form/SearchField.vue';
+    import QuestionsTable from '../components/pages/Knowledge/Table/QuestionsTable.vue';
     import KnowledgeFilter from '../components/pages/Knowledge/KnowledgeFilter.vue';
     import KnowledgeTable from '../components/pages/Knowledge/KnowledgeTable.vue';
     import KnowledgeMultipleOperations from '../components/pages/Knowledge/KnowledgeMultipleOperations.vue';
@@ -132,6 +138,7 @@
             VPopup,
             VIcon,
             SearchField,
+            QuestionsTable,
             KnowledgeFilter,
             KnowledgeTable,
             KnowledgeMultipleOperations,
