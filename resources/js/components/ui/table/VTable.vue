@@ -1,25 +1,32 @@
 <template>
     <div class="table knowledge-table">
-        <!-- Head -->
-        <div
-            class="table__header"
-            :class="{ 'table__header--disabled' : !isHasQuestions }"    
-        >
-            <slot name="header"></slot>
+        <table-header
+            :class="{ 'table__header--disabled' : !hasQuestions }"
+            :data="data"
+            :table="table"
+            :sortAttrs="sortAttrs"
+            @changeMultipleState="changeMultipleState"
+            @sort="toSort"
+        />
 
-            <div
-                v-for="(headerItem, index) in headerItems"
-                :key="index"
-            >
-                
-            </div>     
-        </div>
+        <table-body
+            :isLoading="isLoading"
+            :hasQuestions="hasQuestions"
+        />
     </div>
 </template>
 
 <script>
+    import TableHeader from './TableHeader.vue';
+    import TableBody from './TableBody.vue';
+
     export default {
         name: 'VTable',
+
+        components: {
+            TableHeader,
+            TableBody,
+        },
 
         props: {
             data: {
@@ -27,26 +34,36 @@
                 default: []
             },
 
-            headerItems: {
+            table: {
                 type: Array,
-                default: []
+                default: [],
+            },
+
+            sortAttrs: {
+                type: Object,
+                default: {},
+            },
+
+            isLoading: {
+                type: Boolean,
+                default: false,
             }
         },
 
-        data() {
-            return {
-
-            }
-        },
-
-        methods: {
-            isHasQuestions() {
+        computed: {
+            hasQuestions() {
                 return this.data && this.data.length ? true : false;
             },
+        },
+
+        methods: {            
+            changeMultipleState() {
+                this.$emit('changeMultipleState');
+            },
+
+            toSort(sortName, sortRule) {
+                this.$emit('sort', sortName, sortRule);
+            }
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

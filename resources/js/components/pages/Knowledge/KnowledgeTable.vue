@@ -8,7 +8,7 @@
             <!-- Multiple operations -->
             <div class="table__header-item">
                 <v-checkbox
-                    id="all_question"
+                    id="all_question1"
                     :value="GET_ALL_STATUS_MULTIPLE_OPERATIONS"
                     :modelValue="GET_ALL_STATUS_MULTIPLE_OPERATIONS"    
                     @change="toggleStateQuestions"
@@ -76,11 +76,11 @@
                 <span>Обращений</span>
 
                 <transition name="a-sort-icon" mode="out-in">
-                    <template v-if="sort.c_enquiry === 'off'">
+                    <template v-if="sort.enquiry === 'off'">
                         <button
                             key="enquiry_sort_asc"
                             class="button-text button-text--primary button-text--only-icon"
-                            @click="toSort('c_enquiry', 'asc')"
+                            @click="toSort('enquiry', 'asc')"
                         >
                             <v-icon
                                 name="sort-asc"
@@ -90,11 +90,11 @@
                         </button>
                     </template>
 
-                    <template v-else-if="sort.c_enquiry === 'asc'">
+                    <template v-else-if="sort.enquiry === 'asc'">
                         <button
                             key="enquiry_sort_asc_active"
                             class="button-text button-text--primary button-text--only-icon active"
-                            @click="toSort('c_enquiry', 'desc')"
+                            @click="toSort('enquiry', 'desc')"
                         >
                             <v-icon
                                 name="sort-asc"
@@ -104,11 +104,11 @@
                         </button>
                     </template>
 
-                    <template v-else-if="sort.c_enquiry === 'desc'">
+                    <template v-else-if="sort.enquiry === 'desc'">
                         <button
                             key="enquiry_sort_desc"
                             class="button-text button-text--primary button-text--only-icon active"
-                            @click="toSort('c_enquiry', 'off')"
+                            @click="toSort('enquiry', 'off')"
                         >
                             <v-icon
                                 name="sort-desc"
@@ -195,7 +195,7 @@
             return {
                 sort: {
                     update_at: 'off',
-                    c_enquiry: 'off',
+                    enquiry: 'off',
                 },
             }
         },
