@@ -135,7 +135,7 @@
         <div class="table__body">
             <!-- Loading -->
             <template v-if="IS_LOADING">
-                <div class="knowledge-table__row knowledge-table__row--special">
+                <div class="table__row table__row--special">
                     <v-icon
                         name="spinner-primary"
                         :sizeParams="{
@@ -159,7 +159,7 @@
                 
                 <!-- Empty -->
                 <template v-else>
-                    <div class="knowledge-table__row knowledge-table__row--special">
+                    <div class="table__row table__row--special">
                         <p>Таблица пуста</p>
                         <p>Добавьте вопрос-ответ</p>
                     </div>

@@ -33,5 +33,288 @@
 
     &__body {}
 
+    &__row-wrapper {
+        &.open {
+            .table__row {
+                background-color: $blue-3;
+                border-color: transparent;
+            }
+        }
+    }
+
+    &__row {
+        display: grid;
+        align-items: center;
+        padding: 15px 20px;
+        background-color: $white;
+        border-bottom: 1px solid $white;
+        transition: $transition;
+
+        &:hover {
+            background-color: $primary-3;
+
+            .table__item {
+                &--changable {
+                    color: $primary-1;
+                }
+
+                &-arrow-icon {
+                    .icon__fill {
+                        fill: $primary-1;
+                    }
+        
+                    .icon__stroke {
+                        stroke: $primary-1;
+                    }
+                }
+            }
+        }
+
+        &.active {
+            .table__item {
+                &--changable {
+                    color: $primary-1;
+                }
+
+                &-arrow-icon {
+                    .icon__fill {
+                        fill: $primary-1;
+                    }
+        
+                    .icon__stroke {
+                        stroke: $primary-1;
+                    }
+                }
+            }
+        }
+
+        &--special {
+            grid-template: auto / auto !important;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            @include font($grey-5, 18px, 24px, 500);
+        }
+    }
+
+    &__item {
+        @include font($grey-9, 14px, 20px, 400);
+        transition: $transition;
+
+        &--center {
+            display: flex;
+            justify-content: center;
+        }
+
+        &--openable {
+            position: relative;
+            display: grid;
+            grid-template: 1fr / auto 31px;
+            cursor: pointer;
+        }
+
+        &--changable {}
+
+        &-arrow-icon {
+            padding-right: $indent-2;
+
+            .icon__fill {
+                fill: $grey-8;
+            }
+
+            .icon__stroke {
+                stroke: $grey-8;
+            }
+        }
+    }
+
+    &__item-truncate-text {
+        @include truncate(100%);
+    }
+
+    &__status {
+        padding: 4px 10px;
+        white-space: nowrap;
+        @include font(#fff, 12px, 16px, 600);
+        border-radius: 17px;
+
+        &--green {
+            color: $green-1;
+            background-color: $green-2;
+        }
+
+        &--red {
+            color: $red-1;
+            background-color: $red-2;
+        }
+
+        &--orange {
+            color: $orange-1;
+            background-color: $orange-2;
+        }
+    }
+
+    &__full {
+        grid-column: 2 / 3;
+        @include font($text-color-2, 14px, 20px, 400);
+
+        & + & {
+            margin-top: $indent-3;
+        }
+    }
+
+    &__full--openable {
+        
+        &.hide {
+            .table__openable-block {
+                max-height: 100px;
+                overflow: hidden;
     
+                &:before {
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+        }
+    }
+
+    &__openable-block {
+        position: relative;
+        
+        &:before {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 20px;
+            background:  linear-gradient(180deg, rgba(244, 251, 255, 0) 0%, #F4FBFF 100%);;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        ol, ul {
+            padding-left: 20px;
+        }
+    }
+
+    &__open-openable-btn {
+        margin-top: $indent-3;
+        margin-left: auto;
+    }
+
+    &__full-title {
+        margin-bottom: $indent-1;
+    }
+
+    &__row-wrapper {
+        &:last-child {
+            .v-table__row {
+                &:last-child {
+                    border-bottom: none;
+                }    
+            }
+        }
+    }
+
+    &__dropdown {
+        & + .dropdown__body--top {
+            .table__action-menu {
+                bottom: 100%;
+                flex-direction: column-reverse;
+            }
+        }
+
+        & + .dropdown__body--bottom {
+            .table__action-menu {
+                top: 100%;
+                flex-direction: column;
+            }
+        }
+    }
+
+    &__action-menu {
+        position: absolute;
+        right: 100%;
+        z-index: 5;
+        display: flex;
+        min-width: 185px;
+        background-color: $white;
+        border: 1px solid $grey-3;
+    }
+
+    &__action-item {
+        display: inline-block;
+        padding: 10px 15px;
+        text-align: center;
+        @include font($text-color-1, 14px, 20px, 400);
+        cursor: pointer;
+        transition: $transition;
+
+        & + & {
+            border-top: 1px solid $grey-3;
+        }
+
+        &:hover {
+            color: $primary-1;
+        }
+    }
+}
+
+.a-table-row {
+    &-enter-active {
+        animation: table-row .3s;
+    }
+    &-leave-active {
+        animation: table-row .3s reverse;
+    }
+}
+
+@keyframes table-row {
+    0% {
+        opacity: 0;
+        transform: translateY(-3px) scaleY(-100%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px) scaleY(0px);
+    }
+}
+
+.a-question-arrow {
+    &-enter-active {
+        animation: question-arrow .2s;
+    }
+
+    &-leave-active {
+        animation: question-arrow .2s reverse;
+    }
+}
+
+@keyframes question-arrow {
+    0% {
+        transform: translateY(-3px) scaleY(-50%);
+    }
+
+    100% {
+        transform: translateY(0px) scaleY(0px); 
+    }
+}
+
+.a-sort-icon {
+    &-enter-active {
+        animation: sort-icon .2s;
+    }
+}
+
+@keyframes sort-icon {
+    0% {
+        transform: rotateY(90deg);
+    }
+
+    100% {
+        transform: rotateY(0deg); 
+    }
 }

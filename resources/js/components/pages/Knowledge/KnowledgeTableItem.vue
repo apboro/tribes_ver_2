@@ -1,85 +1,79 @@
 <template>
     <div
-        class="knowledge-table__item-wrapper"
-        :class="{ 'open': isVisibleFullQuestion }"
+        class="table__row-wrapper"
+        :class="{ 'open': isVisibleHideSection }"
     >
         <!-- Строка -->
-        <div class="knowledge-table__row" :class="{ 'active': isAddedQuestion }">
+        <div class="table__row" :class="{ 'active': isAddedField }">
             <!-- Выделить -->
-            <div class="knowledge-table__item">
+            <div class="table__item">
                 <v-checkbox
                     :id="`field_${ question.id }`"
-                    v-model="isAddedQuestion"
+                    v-model="isAddedField"
                 />
             </div>
 
             <!-- Вопрос -->
             <div
-                class="knowledge-table__item knowledge-table__item--question"
+                class="table__item table__item--openable table__item--changable"
                 @click="toggleQuestion"
             >
-                <p class="knowledge-table__item-question">{{ question.context }}</p>
+                <p class="table__item-truncate-text">{{ question.context }}</p>
                 
                 <transition name="a-question-arrow" mode="out-in">
-                    <template v-if="isVisibleFullQuestion">
+                    <template v-if="isVisibleHideSection">
                         <v-icon
+                            class="table__item-arrow-icon"
                             key="0"
                             name="arrow-up"
                             size="1"
-                            class="knowledge-table__item-icon"
                         />
                     </template>
 
                     <template v-else>
                         <v-icon
+                            class="table__item-arrow-icon"
                             key="1"
                             name="arrow-down"
                             size="1"
-                            class="knowledge-table__item-icon"
                         />
                     </template>
                 </transition>
             </div>
 
             <!-- Дата -->
-            <div class="knowledge-table__item knowledge-table__item--date">
+            <div class="table__item table__item--changable">
                 {{ formatDate(question.created_at) }}
             </div>
 
             <!-- Обращений -->
-            <div class="knowledge-table__item knowledge-table__item--enquery">
+            <div class="table__item table__item--changable">
                 {{ question.c_enquiry }}
             </div>
 
             <!-- Статус -->
-            <div class="knowledge-table__item">
+            <div class="table__item">
                 <template v-if="question.is_public">
-                    <span
-                        class="knowledge-table__status knowledge-table__status--public"
-                    >
+                    <span class="table__status table__status--green">
                         Опубликовано
                     </span>
                 </template>
 
                 <template v-if="!question.is_public && !question.is_draft">
-                    <span
-                        class="knowledge-table__status knowledge-table__status--not-public"
-                    >
+                    <span class="table__status table__status--red">
                         Не опубликовано
                     </span>
                 </template>
 
                 <template v-if="question.is_draft">
-                    <span
-                        class="knowledge-table__status knowledge-table__status--draft"
-                    >
+                    <span class="table__status table__status--orange">
                         Черновик
                     </span>
                 </template>
             </div>
 
             <!-- Действия -->
-            <div class="knowledge-table__item knowledge-table__item--center">
+            <div class="table__item table__item--center">
                 <knowledge-actions-dropdown
                     :question="question"
                     :isPublic="isPublic"
@@ -94,32 +88,32 @@
         <!-- Скрытая строка с вопросом/ответом -->
         <transition name="a-table-row">
             <div
-                class="knowledge-table__row"
-                v-if="isVisibleFullQuestion"
+                class="table__row"
+                v-if="isVisibleHideSection"
             >
-                <div class="knowledge-table__item knowledge-table__full">
-                    <div class="knowledge-table__full-question">
-                        <p class="knowledge-table__full-title">
+                <div class="table__item table__full">
+                    <div class="table__full">
+                        <p class="table__full-title">
                             Вопрос:
                         </p>
                         <p>{{ question.context }}</p>
                     </div>
 
                     <div
-                        class="knowledge-table__full-answer"
+                        class="table__full table__full--openable"
                         :class="{ 'hide': isLongAnswer }"
                         ref="answer"
                     >
-                        <p class="knowledge-table__full-title">
+                        <p class="table__full-title">
                             Ответ:
                         </p>
                         
                         <template v-if="question.answer">
-                            <div class="knowledge-table__answer-block" v-html="question.answer.context"></div>
+                            <div class="table__openable-block" v-html="question.answer.context"></div>
                             
                             <template v-if="isVisibleFullAnswerBtn">
                                 <button
-                                    class="button-text knowledge-table__open-answer-btn button-text--primary"
+                                    class="button-text table__open-openable-btn button-text--primary"
                                     @click="toggleFullAnswerVisibility"
                                 >
                                     {{ isLongAnswer ? 'Читать полностью' : 'Скрыть ответ' }}
@@ -255,7 +249,7 @@
 
         data() {
             return {
-                isVisibleFullQuestion: false,
+                isVisibleHideSection: false,
                 isVisibleQuestionPopup: false,
                 isVisibleConfirmDeleteKnowledgeQuestionPopup: false,
                 
@@ -276,7 +270,7 @@
         computed: {
             ...mapGetters('knowledge', ['IS_ADDED_QUESTIONS']),
 
-            isAddedQuestion: {
+            isAddedField: {
                 // проверяем есть ли такая запись в массиве, и ставим чек в зависимости от ответа
                 get() {
                     return this.IS_ADDED_QUESTIONS(this.question.id);
@@ -322,7 +316,7 @@
             ...mapMutations('knowledge', ['ADD_ID_FOR_OPERATIONS', 'REMOVE_ID_FOR_OPERATIONS']),
             
             toggleQuestion() {
-                this.isVisibleFullQuestion = !this.isVisibleFullQuestion;
+                this.isVisibleHideSection = !this.isVisibleHideSection;
                 
                 this.$nextTick(() => {
                     if (this.$refs.answer) {
