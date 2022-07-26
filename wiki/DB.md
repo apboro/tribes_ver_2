@@ -18,3 +18,13 @@ CREATE DATABASE "test_community" WITH TEMPLATE "community" OWNER andrey;
 CREATE SCHEMA knowledge AUTHORIZATION usernamedb;
 ```
 
+## Установить расширение для UUID 
+
+```psql
+## в каждой БД под правами супер пользователя 
+\с community;
+CREATE EXTENSION "uuid-ossp";
+## убедится что функция uuid_generate_v4 установлена
+\df;
+```
+
