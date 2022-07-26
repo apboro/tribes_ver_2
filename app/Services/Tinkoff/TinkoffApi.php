@@ -4,7 +4,9 @@ namespace App\Services\Tinkoff;
 
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class TinkoffApi
 {
@@ -275,7 +277,23 @@ class TinkoffApi
             $args = json_encode($args);
         }
 
-        if ($curl = curl_init()) {
+        if(env('APP_ENV') === 'testing') {
+            $testArgs = json_decode($args,true);
+            Log::debug('tinkoff api send request',[
+                'api_url' => $api_url,
+                'args' => $testArgs
+            ]);
+            $path = Str::afterLast(rtrim($api_url,'/'),'/');
+            // создание хеша для тестового файла данных по платежу можно опираться только на путь и сумму платежа
+            // потому что все остальные параметры в $args являются динамическими,
+            // потому автотесты платежей разделять по Amount, каждый тест должен иметь свою сумму
+            $file_name = md5($path.$testArgs['Amount']);
+            $storage = Storage::disk('test_data');
+            return $storage->exists("payment/$file_name.json")?
+                $storage->get("payment/$file_name.json"):
+                $storage->get("payment/file.json");
+
+        }else if ($curl = curl_init()) {
             curl_setopt($curl, CURLOPT_URL, $api_url);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

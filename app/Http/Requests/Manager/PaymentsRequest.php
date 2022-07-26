@@ -25,9 +25,11 @@ class PaymentsRequest extends FormRequest
     {
         return [
             'search' => 'string|nullable',
-            'date' => 'date',
-            'sort.name' => 'string',
-            'sort.rule' => 'string|nullable',
+            'date' => 'string|nullable',
+            'sort' => [
+                'name' => 'string',
+                'rule' => 'string|nullable',
+            ],
             'entries' => 'integer',
 
         ];

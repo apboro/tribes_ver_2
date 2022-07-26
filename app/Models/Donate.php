@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-/** @method DonateFactory factory() */
+/**
+ * @method DonateFactory factory()
+ * @property int $id
+ *
+ */
 class Donate extends Model
 {
     use HasFactory;

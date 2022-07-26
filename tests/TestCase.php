@@ -106,22 +106,24 @@ abstract class TestCase extends BaseTestCase
                 'user_id' => $user->id,
                 'telegram_user_id' => 333,
             ]);
+
         /** @var Community $community */
         $community = Community::factory()->for($connection, 'connection')->create([
             'owner' => $user->id,
             'title' => 'Group for Test Testov',
         ]);
+        $community->generateHash();
+        $community->updateQuietly(['hash' => $community->hash]);
         return array_merge($data,[
             'user' => [
                 'id' => $user->id,
+                'email' => $user->email,
             ],
             'telegram_connection' => [
                 'id' => $connection->id,
             ],
-            'community' => [
-                'id' => $community->id,
-                'owner' => $community->owner,
-            ],
+            'community' => $community->getAttributes(),
+            'community_object' => $community,
         ]);
     }
 }
