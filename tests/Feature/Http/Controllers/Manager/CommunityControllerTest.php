@@ -7,7 +7,7 @@ use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class CommunityController extends TestCase
+class CommunityControllerTest extends TestCase
 {
     /**
      * A basic feature test example.
