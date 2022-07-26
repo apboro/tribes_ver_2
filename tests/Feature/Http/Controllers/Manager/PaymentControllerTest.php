@@ -212,5 +212,46 @@ class PaymentControllerTest extends TestCase
             ->assertUnauthorized();
     }
 
+    public function testGetListUniqueUsers()
+    {
+        $this->AuthSanctum();
 
+        $this->CreatePayments();
+
+        $this->postJson('api/v2/customers')
+            ->assertOk()
+            ->assertJsonStructure([
+                'customers' => [
+                    '*' => [
+                        'id',
+                        'name',
+                    ]
+                ]
+            ])
+            ->assertJsonCount(2, 'customers');
+    }
+
+    public function testGetListPaymentsWithFilterByFrom()
+    {
+        $this->AuthSanctum();
+
+        $this->CreatePayments();
+
+        $this->postJson('api/v2/payments', ['from' => 1])
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    '*' =>[
+                        'OrderId',
+                        'community',
+                        'add_balance',
+                        'from',
+                        'status',
+                        'created_at',
+                        'type',
+                    ]
+                ]
+            ])
+            ->assertJsonCount(2, 'data');
+    }
 }
