@@ -36,6 +36,11 @@ class PaymentsFilter extends QueryFilter
             ->whereDate('created_at', $date);
     }
 
+    public function from($id)
+    {
+        return $this->builder->where('user_id', $id)    ;
+    }
+
     private function sortingColumn($column)
     {
         $list = [
