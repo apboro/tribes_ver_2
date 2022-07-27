@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Repositories\File\FileRepositoryContract;
+use App\Repositories\Statistic\MediaProductStatisticRepository;
+use App\Repositories\Statistic\MediaProductStatisticRepositoryContract;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 //use Elasticsearch\ClientBuilder;
@@ -82,6 +84,12 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Follower\FollowerRepositoryContract::class,
             \App\Repositories\Follower\FollowerRepository::class
         );
+
+        $this->app->bind(
+            MediaProductStatisticRepositoryContract::class,
+            MediaProductStatisticRepository::class
+        );
+
         $this->bindSearchClient();
 
     }

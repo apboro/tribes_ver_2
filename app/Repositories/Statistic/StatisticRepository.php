@@ -81,7 +81,7 @@ class StatisticRepository implements StatisticRepositoryContract
     }
 
     /** Получение всех подписчиков */
-    public function getAllSubcribers()
+    public function getAllSubscribers()
     {
 //        dd();
         if (isset($this->statistic->first()->community->connection->chat_id)) {
@@ -120,13 +120,13 @@ class StatisticRepository implements StatisticRepositoryContract
     }
 
     /** Получение суммы донатов за определенный период времени. Время в формате Y-m-d*/
-    public function getDonateSumPeriiod($fromTime, $beforeTime)
+    public function getDonateSumPeriod($fromTime, $beforeTime)
     {
         return $this->getSumType($this->statistic->community()->first(), 'donate', $fromTime, $beforeTime);
     }
 
     /** Получение суммы тарифов за определенный период времени. Время в формате Y-m-d*/
-    public function getTariffSumPeriiod($fromTime, $beforeTime)
+    public function getTariffSumPeriod($fromTime, $beforeTime)
     {
         return $this->getSumType($this->statistic->community()->first(), 'tariff', $fromTime, $beforeTime);
     }

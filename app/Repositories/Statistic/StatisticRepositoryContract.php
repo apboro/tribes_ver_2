@@ -11,7 +11,7 @@ interface StatisticRepositoryContract
     public function getPaidSubscribers();
 
     /** Получение всех подписчиков */
-    public function getAllSubcribers();
+    public function getAllSubscribers();
 
     /** Получение уникальных посетителей платёжной страницы за период времени в формате Y-m-d*/
     public function getHostsPeriod($fromTime, $beforeTime);
@@ -29,10 +29,10 @@ interface StatisticRepositoryContract
     public function getTariffSum();
     
     /** Получение суммы донатов за определенный период времени. Время в формате Y-m-d H:i:s */
-    public function getDonateSumPeriiod($fromTime, $beforeTime);
+    public function getDonateSumPeriod($fromTime, $beforeTime);
     
     /** Получение суммы тарифов за определенный период времени. Время в формате Y-m-d H:i:s */
-    public function getTariffSumPeriiod($fromTime, $beforeTime);
+    public function getTariffSumPeriod($fromTime, $beforeTime);
     
      /** Получение количества донатов за весь период */
      public function getTotalDonate();
