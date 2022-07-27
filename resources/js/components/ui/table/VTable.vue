@@ -2,16 +2,18 @@
     <div class="table knowledge-table">
         <table-header
             :class="{ 'table__header--disabled' : !hasQuestions }"
-            :data="data"
-            :table="table"
+            :tableHeader="tableHeader"
             :sortAttrs="sortAttrs"
             @changeMultipleState="changeMultipleState"
             @sort="toSort"
         />
 
         <table-body
+            :data="data"
+            :tableRow="tableRow"
             :isLoading="isLoading"
             :hasQuestions="hasQuestions"
+            
         />
     </div>
 </template>
@@ -34,9 +36,14 @@
                 default: []
             },
 
-            table: {
+            tableHeader: {
                 type: Array,
                 default: [],
+            },
+
+            tableRow: {
+                type: Array,
+                default: () => [],
             },
 
             sortAttrs: {
@@ -47,7 +54,12 @@
             isLoading: {
                 type: Boolean,
                 default: false,
-            }
+            },
+
+            /* isAddedField: {
+                type: Boolean,
+                default: false,
+            }, */
         },
 
         computed: {
@@ -56,7 +68,8 @@
             },
         },
 
-        methods: {            
+        methods: {
+                    
             changeMultipleState() {
                 this.$emit('changeMultipleState');
             },

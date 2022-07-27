@@ -2,7 +2,8 @@
     <div>
         <v-table
             :data="questions"
-            :table="table"
+            :tableHeader="tableHeader"
+            :tableRow="tableRow"
             :sortAttrs="sort"
             :isLoading="IS_LOADING"
             @changeMultipleState="toggleStateQuestions"
@@ -43,24 +44,50 @@
                     enquiry: 'off',
                 },
 
-                table: [],
+                tableHeader: [],
+
+                tableRow: [],
             }
         },
 
         computed: {
             ...mapGetters('knowledge', [
                 'IS_LOADING',
-                'GET_ALL_STATUS_MULTIPLE_OPERATIONS'
+                'GET_ALL_STATUS_MULTIPLE_OPERATIONS',
+                'IS_ADDED_QUESTIONS',
             ]),
+
+            isAddedField: {
+                // проверяем есть ли такая запись в массиве, и ставим чек в зависимости от ответа
+                get() {
+                    return this.IS_ADDED_QUESTIONS(this.question.id);
+                },
+
+                set(isAdded) {
+                    // при изменении добавляем или удалеяем элемент из массива
+                    if (isAdded) {
+                        this.ADD_ID_FOR_OPERATIONS(this.question.id);
+                    } else {
+                        this.REMOVE_ID_FOR_OPERATIONS(this.question.id);
+                    }
+                },
+            },
         },
 
         methods: {
             ...mapMutations('knowledge', [
                 'SET_SORT',
-                'CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS'
+                'CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS',
+                'IS_ADDED_QUESTIONS',
+                'ADD_ID_FOR_OPERATIONS',
+                'REMOVE_ID_FOR_OPERATIONS',
             ]),
 
-            ...mapActions('knowledge', ['LOAD_QUESTIONS']),
+            ...mapActions('knowledge', [
+                'LOAD_QUESTIONS',
+                'EDIT_QUESTION',
+                'REMOVE_QUESTION',
+            ]),
 
             toSort(sortName, sortRule) {
                 console.log(sortName, sortRule);
@@ -88,68 +115,68 @@
 
             toggleStateQuestions() {
                 this.CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS(!this.GET_ALL_STATUS_MULTIPLE_OPERATIONS);
-            }
+            },
+
+
+
+           
         },
 
         mounted() {
-            this.table = [
+            this.tableHeader = [
                 {
-                    header: {
-                        type: 'multiple',
-                        id: 'all_questions',
-                        value: () => this.GET_ALL_STATUS_MULTIPLE_OPERATIONS,
-                        modelValue: () => this.GET_ALL_STATUS_MULTIPLE_OPERATIONS,
-                    },
-
-                    body: {}
+                    type: 'multiple',
+                    id: 'all_questions',
+                    value: () => this.GET_ALL_STATUS_MULTIPLE_OPERATIONS,
+                    modelValue: () => this.GET_ALL_STATUS_MULTIPLE_OPERATIONS,
                 },
 
                 {
-                    header: {
-                        type: 'text',
-                        text: 'Вопрос',
-                    },
-
-                    body: {}
+                    type: 'text',
+                    text: 'Вопрос',
                 },
 
                 {
-                    header: {
-                        type: 'sorting',
-                        text: 'Дата',
-                        sortName: 'update_at',
-                    },
-
-                    body: {}
+                    type: 'sorting',
+                    text: 'Дата',
+                    sortName: 'update_at',
                 },
 
                 {
-                    header: {
-                        type: 'sorting',
-                        text: 'Обращений',
-                        sortName: 'enquiry',
-                    },
-
-                    body: {}
+                    type: 'sorting',
+                    text: 'Обращений',
+                    sortName: 'enquiry',
                 },
 
                 {
-                    header: {
-                        type: 'text',
-                        text: 'Статус',
-                    },
-
-                    body: {}
+                    type: 'text',
+                    text: 'Статус',
                 },
 
                 {
-                    header: {
-                        type: 'text',
-                        text: 'Действия',
-                    },
-
-                    body: {}
+                    type: 'text',
+                    text: 'Действия',
                 },
+            ];
+
+            this.tableRow = [
+                {
+                    type: 'multiple',
+                    value: (id) => this.IS_ADDED_QUESTIONS(id),
+                    modelValue: (id) => this.IS_ADDED_QUESTIONS(id),
+                    add: (id) => this.ADD_ID_FOR_OPERATIONS(id),
+                    remove: (id) => this.REMOVE_ID_FOR_OPERATIONS(id),
+                },
+
+                {},
+
+                {},
+
+                {},
+
+                {},
+
+                {},
             ];
         }
     }

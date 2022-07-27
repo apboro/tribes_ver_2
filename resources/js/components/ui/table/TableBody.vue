@@ -18,7 +18,13 @@
         <template v-else>
             <!-- Data -->
             <template v-if="hasQuestions">
-                1
+                <table-row
+                    v-for="(item, index) in data"
+                    :key="index"
+                    :data="item"
+                    :row="tableRow"
+                    
+                ></table-row>
             </template>
             
             <!-- Empty -->
@@ -34,13 +40,27 @@
 
 <script>
     import VIcon from "../icon/VIcon.vue";
+    import TableRow from "./TableRow.vue";
 
     export default {
         name: 'TableBody',
 
-        components: { VIcon },
+        components: {
+            VIcon,
+            TableRow,
+        },
 
         props: {
+            data: {
+                type: Array,
+                default: [],
+            },
+
+            tableRow: {
+                type: Array,
+                default: () => [],
+            },
+
             isLoading: {
                 type: Boolean,
                 default: false,
@@ -49,7 +69,12 @@
             hasQuestions: {
                 type: Boolean,
                 default: false,
-            }
+            },
+
+           /*  isAddedField: {
+                type: Boolean,
+                default: false,
+            } */
         }
     }
 </script>

@@ -5,44 +5,37 @@
     >
         <!-- Header Items -->
         <div
-            v-for="(item, index) in table"
+            v-for="(item, index) in tableHeader"
             :key="index"
+            class="table__header-item"
+            :class="{ 'table__header-item--sortable': item.type == 'sorting' }"
         >
             <!-- Multiple -->
-            <div
-                v-if="item.header.type == 'multiple'"
-                class="table__header-item"
-            >
+            <template v-if="item.type == 'multiple'">
                 <v-checkbox
-                    :id="item.header.id"
-                    :value="item.header.value()"
-                    :modelValue="item.header.modelValue()"    
+                    :id="item.id"
+                    :value="item.value()"
+                    :modelValue="item.modelValue()"    
                     @change="changeMultipleState"
                 />
-            </div>
+            </template>
 
             <!-- Текстовый -->
-            <div
-                v-if="item.header.type == 'text'"
-                class="table__header-item"
-            >
-                {{ item.header.text }}
-            </div>
+            <template v-if="item.type == 'text'">
+                {{ item.text }}
+            </template>
 
             <!-- Sort -->
-            <div
-                v-if="item.header.type == 'sorting'"
-                class="table__header-item table__header-item--sortable"
-            >
-                <span>{{ item.header.text }}</span>
-                
+            <template v-if="item.type == 'sorting'">
+                <span>{{ item.text }}</span>
+            
                 <sort-button
-                    :sortProps="item.header"
-                    :value="sortAttrs[item.header.sortName]"
+                    :sortProps="item"
+                    :value="sortAttrs[item.sortName]"
                     @sort="toSort"
                 />
-            </div>
-        </div>     
+            </template>
+        </div>
     </div>
 </template>
 
@@ -61,12 +54,7 @@
         },
 
         props: {
-            data: {
-                type: Array,
-                default: []
-            },
-
-            table: {
+            tableHeader: {
                 type: Array,
                 default: [],
             },
