@@ -251,9 +251,7 @@ class TariffRepository implements TariffRepositoryContract
             $this->tariffModel->reminder_description = $data['reminder_description'];
         }
 
-        if ($data['success_description']) {
-            $this->tariffModel->thanks_description = $data['success_description'];
-        }
+        $this->tariffModel->thanks_description = $data['success_description'] ?? null;
 
         if ($data['main_description']) {
             $this->tariffModel->prompt_description = $data['main_description'];
