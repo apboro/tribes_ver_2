@@ -1,33 +1,34 @@
 import axios from 'axios';
 
 let state = {
-    _payment: [],
+    _cutomers: [],
 }
 
 let mutations = {
-    SET_PAYMENTS (state, paymentData) {
-        state._payment = paymentData;
+    SET_CUSTOMERS (state, customersData) {
+        state._cutomers = customersData;
     },
 }
 
 let getters = {
-    getPayments (state) {
-        return state._payment;
+    getCustomers (state) {
+        return state._cutomers;
     },
 }
 
 let actions = {
-    async loadPayments ({commit}, filter_data) {
+
+    async loadUniqUsersPayments({commit}, customer_data) {
 
         try {
             commit("SET_PRELOADER_STATUS", true);
             const resp = await axios({
                 method: "post",
-                url: "http://tribes/api/v2/payments",
-                data: filter_data
+                url: "http://tribes/api/v2/customers",
+                data: customer_data
             })
-            console.log('PAYMENTS: ', resp.data);
-            commit("SET_PAYMENTS", resp.data);
+            console.log('CUSTOMERS: ', resp.data);
+            commit("SET_CUSTOMERS", resp.data);
             commit("SET_PRELOADER_STATUS", false);
         } catch (error) {
             console.log(error);
