@@ -13,7 +13,7 @@
                     name="publication_description"
                     rows="5"
                     placeholder="{{ __('form.message_text') }}"
-                >@if($community->tariff && $community->tariff->publication_description){{$community->tariff->publication_description}}@else{{ __('tariff.available_rates') }} @endif</textarea>
+                >@if($community->tariff && $community->tariff->publication_description){{$community->tariff->publication_description}}@endif</textarea>
                 
                 <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">
                     <i data-feather='save' class="font-medium-1" ></i>
