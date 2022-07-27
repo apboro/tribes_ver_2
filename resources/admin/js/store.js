@@ -18,7 +18,7 @@ export default new Vuex.Store({
             return state.loading
         },
 
-        isLogged: state => !!state.userU,
+        isLogged: state => !!state._user,
 
         getPreloaderStatus (state) {
             return state.isPreloader
