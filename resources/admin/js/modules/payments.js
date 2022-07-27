@@ -26,7 +26,6 @@ let actions = {
                 url: "http://tribes/api/v2/payments",
                 data: filter_data
             })
-            console.log('PAYMENTS: ', resp.data);
             commit("SET_PAYMENTS", resp.data);
             commit("SET_PRELOADER_STATUS", false);
         } catch (error) {

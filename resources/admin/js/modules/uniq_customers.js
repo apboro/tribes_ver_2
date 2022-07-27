@@ -27,7 +27,6 @@ let actions = {
                 url: "http://tribes/api/v2/customers",
                 data: customer_data
             })
-            console.log('CUSTOMERS: ', resp.data);
             commit("SET_CUSTOMERS", resp.data);
             commit("SET_PRELOADER_STATUS", false);
         } catch (error) {
