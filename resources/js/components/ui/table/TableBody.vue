@@ -23,7 +23,8 @@
                     :key="index"
                     :data="item"
                     :row="tableRow"
-                    
+                    @getMultipleValue="getMultipleValue"
+                    @setMultipleValue="setMultipleValue"
                 ></table-row>
             </template>
             
@@ -75,6 +76,16 @@
                 type: Boolean,
                 default: false,
             } */
+        },
+
+        methods: {
+            getMultipleValue(id) {
+                this.$emit('getMultipleValue', id);
+            },
+
+            setMultipleValue(id, bool) {
+                this.$emit('setMultipleValue', id, bool)
+            }
         }
     }
 </script>

@@ -13,7 +13,8 @@
             :tableRow="tableRow"
             :isLoading="isLoading"
             :hasQuestions="hasQuestions"
-            
+            @getMultipleValue="getMultipleValue"
+            @setMultipleValue="setMultipleValue"
         />
     </div>
 </template>
@@ -76,6 +77,14 @@
 
             toSort(sortName, sortRule) {
                 this.$emit('sort', sortName, sortRule);
+            },
+
+            getMultipleValue(id) {
+                this.$emit('getMultipleValue', id);
+            },
+
+            setMultipleValue(id, bool) {
+                this.$emit('setMultipleValue', id, bool);
             }
         }
     }

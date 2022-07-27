@@ -8,17 +8,18 @@
             <!-- Выделить -->
             <div class="table__item" v-for="(col, index) in row" :key="index">
                 <template v-if="col.type == 'multiple'">
-                    <!-- <v-checkbox
-                        :id="`field_${ data.id }`"
-                        v-model="col.isAddedField"
-                    /> -->
-
                     <v-checkbox
-                        :id="`field_${ data.id }`"
-                        :value="item.value()"
-                        :modelValue="item.modelValue()"    
-                        @change="item.change"
+                        :id="`field_${ data.id }z`"
+                        :value="col.show(data.id)"
+                        :modelValue="col.show(data.id)"
                     />
+
+                    <!-- <v-checkbox
+                        :id="`field_${ data.id }x`"
+                        :value="col.value(data.id)"
+                        :modelValue="col.modelValue(data.id)"    
+                        @change="change1($event, col.add, col.remove)"
+                    /> -->
                 </template>
             </div>
 
@@ -57,10 +58,23 @@
         data() {
             return {
                 isVisibleHideSection: false,
+
+                
             }
         },
 
         computed: {
+            a: {
+                get() {
+                    return this.$emit('getMultipleValue', this.data.id)
+                    console.log(1);
+                },
+
+                set(bool) {
+                    this.$emit('setMultipleValue', this.data.id, bool);
+                }
+            },
+
             isAddedField: {
                 // проверяем есть ли такая запись в массиве, и ставим чек в зависимости от ответа
                 get() {
@@ -91,6 +105,15 @@
                     }
                 }) */
             },
+
+            change1(event, add, remove) {
+                
+                if (event.target.value) {
+                    add(this.data.id);
+                } else {
+                    remove(this.data.id);
+                }
+            }
         }
     }
 </script>

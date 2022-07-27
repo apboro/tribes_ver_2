@@ -8,6 +8,8 @@
             :isLoading="IS_LOADING"
             @changeMultipleState="toggleStateQuestions"
             @sort="toSort"
+            @getMultipleValue="ch"
+            @setMultipleValue="sch"
         >   
            
         </v-table>
@@ -64,6 +66,7 @@
                 },
 
                 set(isAdded) {
+                    console.log(1);
                     // при изменении добавляем или удалеяем элемент из массива
                     if (isAdded) {
                         this.ADD_ID_FOR_OPERATIONS(this.question.id);
@@ -78,7 +81,6 @@
             ...mapMutations('knowledge', [
                 'SET_SORT',
                 'CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS',
-                'IS_ADDED_QUESTIONS',
                 'ADD_ID_FOR_OPERATIONS',
                 'REMOVE_ID_FOR_OPERATIONS',
             ]),
@@ -117,7 +119,21 @@
                 this.CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS(!this.GET_ALL_STATUS_MULTIPLE_OPERATIONS);
             },
 
+            ch(id) {
+                return this.IS_ADDED_QUESTIONS(id);
+            },
 
+            sch(id, bool) {
+                if (bool) {
+                    this.ADD_ID_FOR_OPERATIONS(id);
+                } else {
+                    this.REMOVE_ID_FOR_OPERATIONS(id);
+                }
+            },
+
+            showId(id) {
+                return this.IS_ADDED_QUESTIONS(id);
+            }
 
            
         },
@@ -162,10 +178,14 @@
             this.tableRow = [
                 {
                     type: 'multiple',
-                    value: (id) => this.IS_ADDED_QUESTIONS(id),
+                    show: (id) => this.showId(id)
+                    /* value: (id) => this.IS_ADDED_QUESTIONS(id), */
+                    /* value: false,
                     modelValue: (id) => this.IS_ADDED_QUESTIONS(id),
+                    isAdd: (id) => this.IS_ADDED_QUESTIONS(id),
                     add: (id) => this.ADD_ID_FOR_OPERATIONS(id),
                     remove: (id) => this.REMOVE_ID_FOR_OPERATIONS(id),
+                    isAddedField: () => this.isAddedField */
                 },
 
                 {},
