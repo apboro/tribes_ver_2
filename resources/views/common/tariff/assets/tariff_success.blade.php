@@ -14,7 +14,7 @@
                     rows="5"
                     placeholder="{{ __('form.message_text') }}"
                 >@if($community->tariff && $community->tariff->thanks_description){{$community->tariff->thanks_description}}@endif</textarea>
-{{--                @else{{ __('tariff.success_default_description') }}--}}
+
                 <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">
                     <i data-feather='save' class="font-medium-1" ></i>
                 </span>

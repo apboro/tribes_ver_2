@@ -250,7 +250,7 @@ class TariffRepository implements TariffRepositoryContract
         $this->tariffModel->thanks_description = $data['success_description'] ?? null;
 
         $this->tariffModel->main_description = $data['main_description'] ?? null;
-
+ 
         $this->tariffModel->publication_description = $data['publication_description'] ?? null;
     }
 

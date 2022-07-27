@@ -15,8 +15,6 @@
                     placeholder="{{ __('form.message_text') }}"
                 >@if($community->tariff && $community->tariff->reminder_description){{$community->tariff->reminder_description}}@endif</textarea>
 
-{{--                {{ __('tariff.reminder_default_description') }}--}}
-
                 <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">
                     <i data-feather='save' class="font-medium-1" ></i>
                 </span>
