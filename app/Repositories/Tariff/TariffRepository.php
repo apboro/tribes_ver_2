@@ -150,7 +150,7 @@ class TariffRepository implements TariffRepositoryContract
             $this->tariffModel->title = $data['title'];
         }
 
-        if ($data['trial_period']) {
+        if (isset($data['trial_period'])) {
             $this->tariffModel->test_period = $data['trial_period'];
         }
 
