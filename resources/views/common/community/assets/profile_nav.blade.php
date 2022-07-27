@@ -49,7 +49,7 @@
         >
             <i data-feather="book" class="font-medium-3 me-50"></i>
             <span class="fw-bold">
-                {{ __('base.subscriptions') }}
+                {{ __('base.subscribers') }}
             </span>
         </a>
     </li>

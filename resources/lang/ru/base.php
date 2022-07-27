@@ -111,7 +111,7 @@ return [
     'standart' => 'Стандартный',
     'statistics' => 'Статистика',
     'status' => 'Статус',
-    'subscriptions' => 'Подписки',
+    'subscribers' => 'Подписчики',
 
     'audience' => 'Аудитория',
     'product' => 'Медиапродукты',
