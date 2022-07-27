@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\Donate;
 use App\Models\Payment;
 use App\Models\Payment as P;
+use App\Repositories\Community\CommunityRepositoryContract;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use Illuminate\Http\Request;
@@ -44,19 +45,22 @@ class TestBotController extends Controller
 {
     protected TelegramMainBotService $telegramService;
     private TelegramLogService $telegramLogService;
+    private CommunityRepositoryContract $communityRepo;
 
     public function __construct(
+        CommunityRepositoryContract $communityRepo,
         TelegramMainBotService $telegramService,
         TelegramLogService $telegramLogService
     )
     {
         $this->telegramService = $telegramService;
         $this->telegramLogService = $telegramLogService;
+        $this->communityRepo = $communityRepo;
     }
 
     public function index(Request $request)
     {
-
+        dd($this->communityRepo->getCommunitiesForMemberByTeleUserId(1234567));
 //        try {
 //            $telegramUsers = TelegramUser::with('tariffVariant')->get();
 //            foreach ($telegramUsers as $user) {
