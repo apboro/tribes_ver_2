@@ -28,7 +28,7 @@
                         {{ $payment->payable()->first()->donate()->first()->success_description ? $payment->payable()->first()->donate()->first()->success_description : __('donate.thanks_for_donation') }}
                     @endif
                     @if ($payment->type == 'tariff')
-                        {{ $payment->payable()->first()->tariff()->first()->thanks_description ? $payment->payable()->first()->tariff()->first()->thanks_description : 'Для подтверждения оплаты тарифа, пожалуйста перейдите в телеграм и запустите бота.'}}
+                        {{ $payment->payable()->first()->tariff()->first()->thanks_description ? $payment->payable()->first()->tariff()->first()->thanks_description : 'Спасибо за оплату, тариф успешно активирован! Для подключения к сообществу нажмите кнопку "в телеграм", запустите диалог с Tribesbot и перейдите по пригласительной ссылке "подписаться".'}}
                     @endif
                 </h2>
 
