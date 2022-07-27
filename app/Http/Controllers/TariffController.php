@@ -72,9 +72,9 @@ class TariffController extends Controller
 
         $email = $request['email'];
 
-        $user = User::where('email', 'like', '%' . $email . '%')->first();
+        $user = User::where('email',  strtolower($email))->first();
 
-        if($email != null && $user == null){
+        if(isset($email) && $user == null){
             $user = User::create([
                 'email' => strtolower($email),
                 'name' => explode('@', $email)[0],
