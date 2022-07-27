@@ -34,7 +34,7 @@
                                     communityName: '{{ $community->title }}',
                                     communityTariff: '{{ $tariff->title }}',
                                     communityTariffID: '{{ $tariff->id }}',
-                                    communityAmount: {{ $tariff->price }},
+                                    communityAmount: '{{ $tariff->price }}',
                                     url: `{{ $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
                                 })"
                             >
