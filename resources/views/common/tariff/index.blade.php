@@ -18,7 +18,7 @@
                     {!! $community->tariff->main_description !!}
                 </div>
 
-                <div class="col-12 row">
+                <div class="col-12 mt-1 row">
                     @if ($community->tariff->test_period !== 0)
                         <a
                             href="https://t.me/{{ env('TELEGRAM_BOT_NAME') }}?start={{ $community->id }}trial"
@@ -53,6 +53,10 @@
                         <a href="{{ route('privacy.index') }}" target="_blank" class="btn-link">политикой конфиденциальности.</a>
                     </span>
                 </div>
+
+                <p class="col-12 mt-1">
+                    Платежи за продление доступа списываются автоматически. Вы можете отказаться от продления доступа в любой момент просто покинув сообщество.
+                </p>
             </div>
         </div>
     </div>
