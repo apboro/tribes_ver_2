@@ -15,8 +15,11 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\Manager')->gr
 
     //Payment
     Route::post('/payments', 'PaymentController@list')->name('manager.payments.list');
-
+    Route::post('/customers', 'PaymentController@customers')->name('manager.customers.list');
     //Community
     Route::post('/communities', 'CommunityController@list')->name('manager.community.list');
     Route::post('/community', 'CommunityController@get')->name('manager.community.get');
+
+    Route::post('/loginAs', 'LoginController@loginAs')->name('manager.login.as');
+    Route::post('/loginBack', 'LoginController@loginBack')->name('manager.login.back');
 });
