@@ -49,24 +49,30 @@
                 <div class="d-flex flex-column align-items-center w-100 text-center @if($community->tariff && $community->tariff->getThanksImage()) hide @else  @endif" data-crop-image-load-container>
                     <div class="position-relative mx-auto w-100">
                         <!-- Описание загрузки -->
-                        <div data-crop-image-instructions>
-                            <p class="mb-1">
-                                {{ __('form.drag_image_instruction') }}
-                            </p>
-
-                            <small>
-                                {{ __('form.support_format') }}
-                            </small>
-
-                            <strong class="d-block">
-                                {{ __('form.max_image_size') }}
-                            </strong>
+                        <div style="padding: 0; border:none;" data-crop-image-instructions>
+                            <img
+                                src="/images/chuck.jpg"
+                                alt=""
+                                class="active-image__img rounded w-100"
+                            >
                             
                             <label
                                 for="success_image_upload"
                                 class="position-absolute top-0 end-0 bottom-0 start-0 pointer"
                             ></label>
+
+                            <label
+                                class="col-7 col-lg-8 btn btn-info px-1 mt-1"
+                                for="success_image_upload"                                
+                            >
+                                <i data-feather='download' class="font-medium-1"></i>
+                                <span class="d-none d-xl-inline-block">
+                                    {{ __('base.select_image') }}
+                                </span>
+                            </label>
                         </div>
+
+                        
 
                         <!-- Данные -->
                         <div class="hide" data-crop-image-data-container>
@@ -103,6 +109,22 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- <div class="@if($community->tariff && $community->tariff->getThanksImage()) hide  @else col-12 d-flex mt-1  @endif" data-crop-image-buttons-container>
+                    <div class="input-group">                
+                        <label
+                            class="col-7 col-lg-8 btn btn-info px-1"
+                            for="success_image_upload"                                
+                        >
+                            <i data-feather='download' class="font-medium-1"></i>
+                            <span class="d-none d-xl-inline-block">
+                                {{ __('base.select_image') }}
+                            </span>
+                        </label>
+                    
+                        
+                    </div>
+                </div> -->
 
                 <!-- Кнопки -->
                 <div class="col-12 d-flex mt-1 @if($community->tariff && $community->tariff->getThanksImage())  @else hide @endif" data-crop-image-buttons-container>

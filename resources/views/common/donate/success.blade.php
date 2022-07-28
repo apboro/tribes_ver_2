@@ -9,7 +9,8 @@
                         <img src="{{ $payment->payable()->first()->donate()->first()->getSuccessImage()->url }}" alt=""
                             class="active-image__img w-100">
                     @else
-                        <video src="/videos/donate-success.mp4" muted="muted" autoplay loop class="w-100"></video>
+                        <img src="/images/chuck.jpg" alt=""
+                            class="active-image__img w-100">
                     @endif
                 @endif
                 @if ($payment->type == 'tariff')
@@ -17,7 +18,8 @@
                         <img src="{{ $payment->payable()->first()->tariff()->first()->getThanksImage()->url }}" alt=""
                             class="active-image__img w-100">
                     @else
-                        <video src="/videos/donate-success.mp4" muted="muted" autoplay loop class="w-100"></video>
+                        <img src="/images/chuck.jpg" alt=""
+                            class="active-image__img w-100">
                     @endif
                 @endif
             </div>
