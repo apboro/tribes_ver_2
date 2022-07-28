@@ -16,7 +16,7 @@
                     />
                 </template>
 
-                <template v-if="col.type == 'openable'">
+                <template v-else-if="col.type == 'openable'">
                     <div
                         class="table__item table__item--openable table__item--changable"
                         @click="toggleQuestion"
@@ -44,6 +44,13 @@
                         </transition>
                     </div>
                 </template>
+
+                <template v-else-if="col.type == 'time'">
+                    <time-format
+                        :value="data.created_at"
+                        typeValue="date"
+                    />
+                </template>
             </div>
 
 
@@ -62,6 +69,7 @@
 
 <script>
     import VCheckbox from"../form/VCheckbox.vue";
+    import TimeFormat from '../format/TimeFormat.vue';
     import VIcon from "../icon/VIcon.vue";
     import HiddenRow from "./HiddenRow.vue";
 
@@ -72,6 +80,7 @@
             VCheckbox,
             VIcon,
             HiddenRow,
+            TimeFormat,
         },
 
         props: {

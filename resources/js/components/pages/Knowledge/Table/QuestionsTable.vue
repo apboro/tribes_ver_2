@@ -187,10 +187,12 @@
 
                 {
                     type: 'openable',
-
                 },
 
-                {},
+                {
+                    type: 'time',
+                    typeValue: 'date',
+                },
 
                 {},
 
