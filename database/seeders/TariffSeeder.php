@@ -28,9 +28,8 @@ class TariffSeeder extends Seeder
 
 
         foreach (Community::all() as $community) {
-            $tariff = Tariff::factory()->tariffNotification()->testPeriod(20)->create([
-                'community_id' => $community->id,
-            ]);
+            $tariff = env('USE_TRIAL_PERIOD') ?  $this->tariffCreate(20, $community)
+                : $this->tariffCreate(0, $community);
 
             TariffVariant::factory()->active()->count(3)
                 ->sequence(fn ($sequence) => [
@@ -42,6 +41,12 @@ class TariffSeeder extends Seeder
                 ]);
         }
 
+    }
 
+    private function tariffCreate($days, $community)
+    {
+        return Tariff::factory()->tariffNotification()->TestPeriod($days)->create([
+            'community_id' => $community->id,
+        ]);
     }
 }

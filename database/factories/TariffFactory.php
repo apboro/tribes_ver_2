@@ -15,7 +15,7 @@ class TariffFactory extends Factory
         return [
             //'id' => null,
             'community_id' => null,
-            'test_period' => rand(1,31),
+            'test_period' => 0,
             'title' => $this->faker->text(255),
             'main_description' => $this->faker->text(600),
             'main_image_id' => rand(125,5000),

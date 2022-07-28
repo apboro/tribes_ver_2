@@ -150,7 +150,7 @@ class TariffRepository implements TariffRepositoryContract
             $this->tariffModel->title = $data['title'];
         }
 
-        if ($data['trial_period']) {
+        if ($data['trial_period']  && env('USE_TRIAL_PERIOD')) {
             $this->tariffModel->test_period = $data['trial_period'];
         }
 
@@ -167,7 +167,7 @@ class TariffRepository implements TariffRepositoryContract
         // dd($data['send_to_community']);
         $this->sendToCommunityAction($data, $community);
 
-        if ($data['trial_period']) {
+        if ($data['trial_period'] && env('USE_TRIAL_PERIOD')) {
             $trialData = [
                 'tariff_name' => 'Пробный период',
                 'tariff_cost' => 0,
