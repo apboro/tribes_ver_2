@@ -150,11 +150,11 @@
             <template v-else>
                 <!-- Data -->
                 <template v-if="isHasQuestions">
-                    <!-- <knowledge-table-item
+                    <knowledge-table-item
                         v-for="question in questions"
                         :key="question.id"
                         :question="question"
-                    /> -->
+                    />
                 </template>
                 
                 <!-- Empty -->

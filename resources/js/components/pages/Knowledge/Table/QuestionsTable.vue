@@ -6,11 +6,14 @@
             :tableRow="tableRow"
             :sortAttrs="sort"
             :isLoading="IS_LOADING"
+            @onAction="onAction"
         >   
            <!-- <template #openableCol="{ openableData }">
                             {{openableData}}
                         </template> -->
         </v-table>
+
+        
     </div>
 </template>
 
@@ -46,6 +49,9 @@
                 tableHeader: [],
 
                 tableRow: [],
+
+                isVisible: false,
+                dropData: {}
             }
         },
 
@@ -119,6 +125,7 @@
                 Object.values(questions).forEach((question, index) => {
                     const item = {};
                     item.id = question.id;
+
                     item.openable = {
                         mainText: question.context,
                         hiddenContent: true,
@@ -127,18 +134,36 @@
                         titleMain: 'Вопрос:',
                         titleContent: 'Ответ:',
                     };
+
                     item.created_at = question.created_at;
+                    item.c_enquiry = question.c_enquiry;
+
+                    if (question.is_public) {
+                        item.status = 'Опубликовано';
+                        item.statusTheme = 'green';
+                    } else if (!question.is_public && !question.is_draft) {
+                        item.status = 'Не опубликовано';
+                        item.statusTheme = 'red';
+                    } else if (question.is_draft) {
+                        item.status = 'Черновик';
+                        item.statusTheme = 'orange';
+                    }
+
                     data.push(item);
                 });
 
                 return data;
             },
+
+            onAction(data) {
+                this.isVisible = true;
+                this.dropData = data;
+                console.log(data);
+            }
         },
 
         mounted() {
-            /* if (this.questions) {
-                console.log(this.questions);
-            } */
+           
             this.tableHeader = [
                 {
                     type: 'multiple',
@@ -198,9 +223,13 @@
                     type: 'text',
                 },
 
-                {},
+                {
+                    type: 'status'
+                },
 
-                {},
+                {
+                    type: 'action',
+                },
             ];
 
             this.tableRowHidden = [

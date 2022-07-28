@@ -11,7 +11,7 @@
             :tableRow="tableRow"
             :isLoading="isLoading"
             :hasQuestions="hasQuestions"
-            
+            @onAction="onAction"
         />
     </div>
 </template>
@@ -64,7 +64,9 @@
         },
 
         methods: {
-            
+            onAction(data) {
+                this.$emit('onAction', data);
+            }
         }
     }
 </script>

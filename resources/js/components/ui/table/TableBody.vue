@@ -23,7 +23,7 @@
                     :key="index"
                     :data="item"
                     :row="tableRow"
-                    
+                    @onAction="onAction"
                 >
 
                 </table-row>
@@ -77,7 +77,9 @@
         },
 
         methods: {
-           
+            onAction(data) {
+                this.$emit('onAction', data);
+            },
         },
 
         mounted() {
