@@ -16,7 +16,7 @@
                     :id="item.id"
                     :value="item.value()"
                     :modelValue="item.modelValue()"    
-                    @change="changeMultipleState"
+                    @change="item.change"
                 />
             </template>
 
@@ -32,7 +32,7 @@
                 <sort-button
                     :sortProps="item"
                     :value="sortAttrs[item.sortName]"
-                    @sort="toSort"
+                    @sort="item.sort"
                 />
             </template>
         </div>
@@ -66,13 +66,8 @@
         },
 
         methods: {
-            changeMultipleState() {
-                this.$emit('changeMultipleState');
-            },
+            
 
-            toSort(sortName, sortRule) {
-                this.$emit('sort', sortName, sortRule);
-            }
         }
     }
 </script>

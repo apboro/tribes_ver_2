@@ -4,8 +4,6 @@
             :class="{ 'table__header--disabled' : !hasQuestions }"
             :tableHeader="tableHeader"
             :sortAttrs="sortAttrs"
-            @changeMultipleState="changeMultipleState"
-            @sort="toSort"
         />
 
         <table-body
@@ -13,8 +11,7 @@
             :tableRow="tableRow"
             :isLoading="isLoading"
             :hasQuestions="hasQuestions"
-            @getMultipleValue="getMultipleValue"
-            @setMultipleValue="setMultipleValue"
+            
         />
     </div>
 </template>
@@ -70,22 +67,7 @@
         },
 
         methods: {
-                    
-            changeMultipleState() {
-                this.$emit('changeMultipleState');
-            },
-
-            toSort(sortName, sortRule) {
-                this.$emit('sort', sortName, sortRule);
-            },
-
-            getMultipleValue(id) {
-                this.$emit('getMultipleValue', id);
-            },
-
-            setMultipleValue(id, bool) {
-                this.$emit('setMultipleValue', id, bool);
-            }
+            
         }
     }
 </script>

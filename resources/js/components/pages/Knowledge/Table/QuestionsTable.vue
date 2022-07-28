@@ -6,10 +6,6 @@
             :tableRow="tableRow"
             :sortAttrs="sort"
             :isLoading="IS_LOADING"
-            @changeMultipleState="toggleStateQuestions"
-            @sort="toSort"
-            @getMultipleValue="ch"
-            @setMultipleValue="sch"
         >   
            
         </v-table>
@@ -58,23 +54,6 @@
                 'GET_ALL_STATUS_MULTIPLE_OPERATIONS',
                 'IS_ADDED_QUESTIONS',
             ]),
-
-            isAddedField: {
-                // проверяем есть ли такая запись в массиве, и ставим чек в зависимости от ответа
-                get() {
-                    return this.IS_ADDED_QUESTIONS(this.question.id);
-                },
-
-                set(isAdded) {
-                    console.log(1);
-                    // при изменении добавляем или удалеяем элемент из массива
-                    if (isAdded) {
-                        this.ADD_ID_FOR_OPERATIONS(this.question.id);
-                    } else {
-                        this.REMOVE_ID_FOR_OPERATIONS(this.question.id);
-                    }
-                },
-            },
         },
 
         methods: {
@@ -112,6 +91,7 @@
                 
                 this.LOAD_QUESTIONS();
 
+                // снять выделение
                 this.CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS(false);
             },
 
@@ -119,20 +99,16 @@
                 this.CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS(!this.GET_ALL_STATUS_MULTIPLE_OPERATIONS);
             },
 
-            ch(id) {
+            getMultipleItemValue(id) {
                 return this.IS_ADDED_QUESTIONS(id);
             },
 
-            sch(id, bool) {
+            setMultipleItemValue(bool, id) {
                 if (bool) {
                     this.ADD_ID_FOR_OPERATIONS(id);
                 } else {
                     this.REMOVE_ID_FOR_OPERATIONS(id);
                 }
-            },
-
-            showId(id) {
-                return this.IS_ADDED_QUESTIONS(id);
             }
 
            
@@ -145,6 +121,7 @@
                     id: 'all_questions',
                     value: () => this.GET_ALL_STATUS_MULTIPLE_OPERATIONS,
                     modelValue: () => this.GET_ALL_STATUS_MULTIPLE_OPERATIONS,
+                    change: () => this.toggleStateQuestions(),
                 },
 
                 {
@@ -156,12 +133,14 @@
                     type: 'sorting',
                     text: 'Дата',
                     sortName: 'update_at',
+                    sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
                 },
 
                 {
                     type: 'sorting',
                     text: 'Обращений',
                     sortName: 'enquiry',
+                    sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
                 },
 
                 {
@@ -178,14 +157,8 @@
             this.tableRow = [
                 {
                     type: 'multiple',
-                    show: (id) => this.showId(id)
-                    /* value: (id) => this.IS_ADDED_QUESTIONS(id), */
-                    /* value: false,
-                    modelValue: (id) => this.IS_ADDED_QUESTIONS(id),
-                    isAdd: (id) => this.IS_ADDED_QUESTIONS(id),
-                    add: (id) => this.ADD_ID_FOR_OPERATIONS(id),
-                    remove: (id) => this.REMOVE_ID_FOR_OPERATIONS(id),
-                    isAddedField: () => this.isAddedField */
+                    getValue: (id) => this.getMultipleItemValue(id),
+                    setValue: (event, id) => this.setMultipleItemValue(event, id),
                 },
 
                 {},
