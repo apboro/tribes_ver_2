@@ -156,7 +156,6 @@
     }
 
     &__full {
-        grid-column: 2 / 3;
         @include font($text-color-2, 14px, 20px, 400);
 
         & + & {

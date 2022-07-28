@@ -24,7 +24,16 @@
                     :data="item"
                     :row="tableRow"
                     
-                ></table-row>
+                >
+                    <!-- <slot
+                        name="openableCol"
+                        :data="data"
+                    > -->
+                        <!-- <template #openableCol="{ openableData }">
+                            {{openableData}}
+                        </template> -->
+                    <!-- </slot> -->
+                </table-row>
             </template>
             
             <!-- Empty -->
@@ -71,14 +80,15 @@
                 default: false,
             },
 
-           /*  isAddedField: {
-                type: Boolean,
-                default: false,
-            } */
+           
         },
 
         methods: {
            
+        },
+
+        mounted() {
+            // console.log(this.openableData);
         }
     }
 </script>

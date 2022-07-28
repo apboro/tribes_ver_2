@@ -54,10 +54,7 @@
                 default: false,
             },
 
-            /* isAddedField: {
-                type: Boolean,
-                default: false,
-            }, */
+            
         },
 
         computed: {

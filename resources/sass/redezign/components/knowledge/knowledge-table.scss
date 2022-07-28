@@ -8,4 +8,8 @@ $table-grid-template: auto / minmax(18px, 31px) auto minmax(100px, 10%) minmax(1
     .table__row {
         grid-template: $table-grid-template;
     }
+
+    .table__full {
+        grid-column: 2 / 3;
+    }
 }

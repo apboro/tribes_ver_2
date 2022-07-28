@@ -1,13 +1,15 @@
 <template>
     <div>
         <v-table
-            :data="questions"
+            :data="convert(questions)"
             :tableHeader="tableHeader"
             :tableRow="tableRow"
             :sortAttrs="sort"
             :isLoading="IS_LOADING"
         >   
-           
+           <!-- <template #openableCol="{ openableData }">
+                            {{openableData}}
+                        </template> -->
         </v-table>
     </div>
 </template>
@@ -17,7 +19,6 @@
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import VIcon from '../../../ui/icon/VIcon.vue';
     import VCheckbox from '../../../ui/form/VCheckbox.vue';
-    import KnowledgeTableItem from '../KnowledgeTableItem.vue';
     
     export default {
         name: 'QuestionsTable',
@@ -109,12 +110,35 @@
                 } else {
                     this.REMOVE_ID_FOR_OPERATIONS(id);
                 }
-            }
+            },
 
-           
+            
+
+            convert(questions) {
+                const data = [];    
+                Object.values(questions).forEach((question, index) => {
+                    const item = {};
+                    item.id = question.id;
+                    item.openable = {
+                        mainText: question.context,
+                        hiddenContent: true,
+                        hiddenContentType: 'editor',
+                        hiddenContent: question.answer.context,
+                        titleMain: 'Вопрос:',
+                        titleContent: 'Ответ:',
+                    };
+                    item.created_at = question.created_at;
+                    data.push(item);
+                });
+
+                return data;
+            },
         },
 
         mounted() {
+            /* if (this.questions) {
+                console.log(this.questions);
+            } */
             this.tableHeader = [
                 {
                     type: 'multiple',
@@ -161,7 +185,10 @@
                     setValue: (event, id) => this.setMultipleItemValue(event, id),
                 },
 
-                {},
+                {
+                    type: 'openable',
+
+                },
 
                 {},
 
@@ -170,6 +197,10 @@
                 {},
 
                 {},
+            ];
+
+            this.tableRowHidden = [
+                {}
             ];
         }
     }
