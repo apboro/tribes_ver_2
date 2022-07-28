@@ -32,16 +32,16 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a class="nav-link {{ request()->is('*community/*/knowledge*') ? 'active' : '' }}"
-            href="{{ route('knowledge.index', $community) }}"
-        >
-            <i data-feather="database" class="font-medium-3 me-50"></i>
-            <span class="fw-bold">
-                {{ __('base.knowledge_base') }}
-            </span>
-        </a>
-    </li>
+{{--    <li class="nav-item">--}}
+{{--        <a class="nav-link {{ request()->is('*community/*/knowledge*') ? 'active' : '' }}"--}}
+{{--            href="{{ route('knowledge.index', $community) }}"--}}
+{{--        >--}}
+{{--            <i data-feather="database" class="font-medium-3 me-50"></i>--}}
+{{--            <span class="fw-bold">--}}
+{{--                {{ __('base.knowledge_base') }}--}}
+{{--            </span>--}}
+{{--        </a>--}}
+{{--    </li>--}}
 
     <li class="nav-item">
         <a class="nav-link {{ request()->is('*community/*/subscriptions') ? 'active' : '' }}"
