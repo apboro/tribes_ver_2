@@ -25,11 +25,14 @@
                         placeholder="Выбрать пользователя" 
                         id="select-users" 
                         value=""
+                        v-model="customer_data.select"
                     >
-                        <option value="1">Список пользователей</option>
-                        <option value="2">Список пользователей</option>
-                        <option value="3">Список пользователей</option>
-                        <option value="4">Список пользователей</option>
+                        <option 
+                            v-for="customer in customers.customers" 
+                            :key="customer.id"
+                        >
+                            {{customer.name}}
+                        </option>
                     </select>
                 </div>
 
@@ -103,17 +106,29 @@ export default {
             handler: _.debounce(function(v) {
                 this.$store.dispatch('loadPayments', v);
             },400)
+        },
+
+        customer_data: {
+            deep: true,
+            handler: _.debounce(function(v) {
+                this.$store.dispatch('loadUniqUsersPayments', v);
+            },400)
         }
     },
 
     mounted(){
         this.$store.dispatch('loadPayments', this.filter_data).then(() => {});
+        this.$store.dispatch('loadUniqUsersPayments', this.customer_data).then(() => {});
     },
 
     computed: {
         payments() {
             return this.$store.getters.getPayments;
         },
+
+        customers() {
+            return this.$store.getters.getCustomers;
+        }
     },
 
     methods:{
@@ -121,6 +136,7 @@ export default {
             let date = new Date(str);
             return `${date.toLocaleDateString('ru')} ${date.toLocaleTimeString('ru')}`;
         },
+
         formatCash(num){
             return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(num)
         },
