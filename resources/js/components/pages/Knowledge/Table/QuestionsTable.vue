@@ -194,7 +194,9 @@
                     typeValue: 'date',
                 },
 
-                {},
+                {
+                    type: 'text',
+                },
 
                 {},
 

@@ -75,15 +75,25 @@
                 type: Boolean,
                 default: false,
             },
+        },
 
-            isVisibleFullAnswerBtn: {
-                type: Boolean,
-                default: false,
-            },
+        data() {
+            return {
+                isLongAnswer: false,
+                isVisibleFullAnswerBtn: false,
+            }
+        },
 
-            isLongAnswer: {
-                type: Boolean,
-                default: false,
+        watch: {
+            isVisibleHideSection() {
+                this.$nextTick(() => {
+                    if (this.$refs.hiddenRow) {
+                        if (this.$refs.hiddenRow.getBoundingClientRect().height > 100) {
+                            this.isLongAnswer = true;
+                            this.isVisibleFullAnswerBtn = true;
+                        }
+                    }
+                })
             }
         },
 
@@ -91,6 +101,6 @@
             toggleFullAnswerVisibility() {
                 this.isLongAnswer = !this.isLongAnswer;
             },
-        }
+        },
     }
 </script>

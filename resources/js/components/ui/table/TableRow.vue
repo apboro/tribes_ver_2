@@ -6,7 +6,20 @@
         <!-- Строка -->
         <div class="table__row" :class="{ 'active': isAddedField }">
             <!-- Выделить -->
-            <div class="table__item" v-for="(col, index) in row" :key="index">
+            <div
+                class="table__item"
+                :class="{
+                    'table__item--openable': col.type == 'openable',
+                    'table__item--changable':
+                        col.type == 'openable' ||
+                        col.type == 'time' ||
+                        col.type == 'text'
+                }"
+                v-for="(col, index) in row"
+                :key="index"
+                @click="onItemClick(col.type)"
+            >
+
                 <template v-if="col.type == 'multiple'">
                     <v-checkbox
                         :id="`field_${ data.id }`"
@@ -17,10 +30,10 @@
                 </template>
 
                 <template v-else-if="col.type == 'openable'">
-                    <div
+                    <!-- <div
                         class="table__item table__item--openable table__item--changable"
                         @click="toggleQuestion"
-                    >
+                    > -->
                         <p class="table__item-truncate-text">{{ data.openable.mainText }}</p>
                         
                         <transition name="a-question-arrow" mode="out-in">
@@ -42,7 +55,7 @@
                                 />
                             </template>
                         </transition>
-                    </div>
+                    <!-- </div> -->
                 </template>
 
                 <template v-else-if="col.type == 'time'">
@@ -50,6 +63,10 @@
                         :value="data.created_at"
                         typeValue="date"
                     />
+                </template>
+
+                <template v-else-if="col.type == 'text'">
+                    
                 </template>
             </div>
 
@@ -60,8 +77,6 @@
             <hidden-row
                 :data="data"
                 :isVisibleHideSection="isVisibleHideSection"
-                :isVisibleFullAnswerBtn="isVisibleFullAnswerBtn"
-                :isLongAnswer="isLongAnswer"
             />
         </template>
     </div>
@@ -99,23 +114,18 @@
             return {
                 isVisibleHideSection: false,
                 isAddedField: false,
-                isLongAnswer: false,
-                isVisibleFullAnswerBtn: false,
             }
         },
 
         methods: {
+            onItemClick(type) {
+                if (type == 'openable') {
+                    this.toggleQuestion();
+                }
+            },
+
             toggleQuestion() {
                 this.isVisibleHideSection = !this.isVisibleHideSection;
-                
-                this.$nextTick(() => {
-                    if (this.$refs.hiddenRow) {
-                        if (this.$refs.answer.getBoundingClientRect().height > 100) {
-                            this.isLongAnswer = true;
-                            this.isVisibleFullAnswerBtn = true;
-                        }
-                    }
-                })
             },
 
             changeMultiple(change, value, id) {

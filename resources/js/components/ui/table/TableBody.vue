@@ -25,14 +25,7 @@
                     :row="tableRow"
                     
                 >
-                    <!-- <slot
-                        name="openableCol"
-                        :data="data"
-                    > -->
-                        <!-- <template #openableCol="{ openableData }">
-                            {{openableData}}
-                        </template> -->
-                    <!-- </slot> -->
+
                 </table-row>
             </template>
             
