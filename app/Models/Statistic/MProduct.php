@@ -2,10 +2,12 @@
 
 namespace App\Models\Statistic;
 
+use App\Models\Course;
 use Database\Factories\Statistic\MProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property $uuid Уникальный номер медиатовара
@@ -24,12 +26,21 @@ class MProduct extends Model
 
     public function mProductSales(): HasMany
     {
-        return $this->hasMany(MProductSale::class,'uuid','uuid');
+        return $this->hasMany(MProductSale::class, 'uuid', 'uuid');
     }
 
     public function MProductUserViews(): HasMany
     {
-        return $this->hasMany(MProductUserView::class,'uuid','uuid');
+        return $this->hasMany(MProductUserView::class, 'uuid', 'uuid');
+    }
+
+    public function entityObj(): ?HasOne
+    {
+        if ($this->type === 'course') {
+            return $this->hasOne(Course::class, 'uuid', 'uuid');
+        } else {
+            return null;
+        }
     }
 
 }

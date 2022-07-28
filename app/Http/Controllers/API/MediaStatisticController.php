@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Filters\API\MediaSalesFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\MediaSalesStatRequest;
+use App\Http\Resources\Statistic\MediaSalesResource;
 use App\Repositories\Statistic\MediaProductStatisticRepositoryContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MediaStatisticController extends Controller
 {
@@ -15,9 +19,10 @@ class MediaStatisticController extends Controller
         $this->statisticRepository = $statisticRepository;
     }
 
-    public function salesList(Request $request)
+    public function salesList(MediaSalesFilter $filter)
     {
-
+        $filter->replace(['user' => Auth::user()->id]);
+        return new MediaSalesResource($this->statisticRepository->getSales($filter));
     }
 
     public function productsList(Request $request)

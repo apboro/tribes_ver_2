@@ -75,8 +75,9 @@ class PaymentControllerTest extends TestCase
 
         $this->CreatePayments();
 
-        $response = $this->postJson('api/v2/payments', ['sort' => ['name' => 'user', 'rule' => 'asc']])
-            ->assertOk()
+        $response = $this->postJson('api/v2/payments', ['sort' => ['name' => 'user', 'rule' => 'asc']]);
+
+        $response->assertOk()
             ->assertValid()
             ->assertJsonCount(5, 'data');
 

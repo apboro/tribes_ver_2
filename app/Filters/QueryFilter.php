@@ -4,7 +4,7 @@ namespace App\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Str;
+use Illuminate\Support\Str;
 
 abstract class QueryFilter
 {

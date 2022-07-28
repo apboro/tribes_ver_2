@@ -454,13 +454,15 @@ class MainBotCommands
                     return;
                 }
 
-                $filters = new QuestionsFilter(new Request(['filter' => [
+                $filters = new QuestionsFilter(new Request());
+                $filters->replace([
                     'published' => 'public',
                     'draft' => 'not_draft',
                     'per_page' => 3,
                     'page' => 1,
                     'full_text' => $searchText,
-                ]]));
+                ]);
+
                 $paginateQuestionsCollection = $this->knowledgeRepository->getQuestionsByCommunityId($community->id, $filters);
                 if ($paginateQuestionsCollection->isEmpty()) {
                     $ctx->replyHTML("@$replyToUser Ответов не найдено.");
