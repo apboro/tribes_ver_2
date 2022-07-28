@@ -42,6 +42,7 @@ class FileUploadService
 //    private $config;
     private $logger;
     private $modelsFile;
+    private $request;
 
     public function __construct(
         FileConfig $config,
@@ -56,15 +57,27 @@ class FileUploadService
     }
 
 
-    public function procRequest(Request $request): EloquentCollection
+    public function procRequest($request): EloquentCollection
     {
+        $this->request = $request;
+//        dd($request);
 
-        $entity = $request->get('entity',null);
-        $entityId = $request->get('entityId',null);
+//        dd($request instanceof Request);
+//        $entity = $request->get('entity',null);
+//        dd($request['entity']);
+//        $entity = $request['entity'];
+//        dd($entity);
 
-        if(!$entity) {
+        if (isset($request['entity'])){
+            $entity = $request['entity'];
+        } else {
             throw new Exception('Укажите entity в запросе');
         }
+
+//        dd($request);
+        /*if(!$entity) {
+            throw new Exception('Укажите entity в запросе');
+        }*/
 
         $handlers = $this->config->getConfig()[$entity];
 
@@ -80,11 +93,22 @@ class FileUploadService
 
         $collect = new FileCollection;
 
-        if($request->has('base_64_file')) {
+        /*if($request->has('base_64_file')) {
             $collect->add($this->getFileFromBase64($request));
         } else {
             if ($request->file()['file']) {
                 $files = $request->file()['file']; // TODO ПРОВЕРИТЬ НА СУЩЕСТВОВАНИЕ
+                $collect->addFiles($files);
+            } else {
+                throw new Exception('Файл не найден');
+            }
+
+        }*/
+        if(isset($request['base_64_file'])) {
+            $collect->add($this->getFileFromBase64($request));
+        } else {
+            if (isset( $request['file'] )) {
+                $files = $request['file']; // TODO ПРОВЕРИТЬ НА СУЩЕСТВОВАНИЕ
                 $collect->addFiles($files);
             } else {
                 throw new Exception('Файл не найден');
@@ -95,6 +119,7 @@ class FileUploadService
         if($collect->isEmpty()) {
             throw new Exception('Пустой набор файлов');
         }
+
 
 //        $this->processFileCollection($collect, $this->config->get("$entity.$procedure"));
         $this->processFileCollection($collect, $handlers);
@@ -110,7 +135,7 @@ class FileUploadService
     {
         /** @var UploadedFile $file */
         foreach ($collect as $file) {
-//            dd($file);
+//            dd($handlers);
             $type = $file->getMimeType();
 
             if($this->checkImage($type)) {
@@ -127,6 +152,7 @@ class FileUploadService
             } else {
                 throw new Exception('Неизвестный тип файла');
             }
+//            dd($handlers);
             $this->modelsFile->add($this->procFile($file, $config));
         }
     }
@@ -139,6 +165,24 @@ class FileUploadService
         /** @var HandlerContract $handler */
         $class = $config['handler'];
         unset($config['handler']);
+//        dd($config);
+//        $procedure = isset($config['procedure']) ? $config['procedure'] : null;
+
+
+        $procedure =[];
+        if (isset($config['procedure'])) {
+            foreach ($config['procedure'] as $proc) {
+//                dd($proc);
+                if ($proc == 'crop'){
+                    $procedure['crop'] = $this->request['cropData'];
+                }
+            }
+        }
+
+
+
+//        dd($procedure);
+
 
         $handler = app()->make($class,$config);
 
@@ -158,7 +202,7 @@ class FileUploadService
             'description' => null,
             'iframe' => null
         ]);
-        $model = $handler->startService($file, $model);
+        $model = $handler->startService($file, $model, $procedure);
 //dd($model);
         return $model;
     }
@@ -172,9 +216,9 @@ class FileUploadService
      * @param Request $request
      * @return void
      */
-    protected function getFileFromBase64(Request $request): UploadedFile
+    protected function getFileFromBase64($request): UploadedFile
     {
-        $image = $request->get('base_64_file');
+        $image = $request['base_64_file'];
         //todo выбрать из строки mimeType
         $image = str_replace('data:image/png;base64,', '', $image);
         $mimeType = 'image/png';

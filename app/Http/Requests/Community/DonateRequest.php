@@ -20,9 +20,13 @@ class DonateRequest extends FormRequest
             'donate.3.min_price' => 'exclude_without:donate.3.status|required',
             'donate.3.max_price' => 'exclude_without:donate.3.status|required',
 
-            'title' => ['required', 'max:255'],
+            'title' => ['sometimes ', 'required', 'max:255'],
             'description' => ['sometimes', 'required', 'max:600'],
             'success_description' => ['sometimes', 'max:600'],
+
+            'entity' => 'nullable',
+            'entityId' => 'nullable',
+            'entityModel' => 'nullable',
         ];
     }
 

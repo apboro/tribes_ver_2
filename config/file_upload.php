@@ -24,18 +24,9 @@ return [
 
     'donate' => [
         'image_handler' => [
-            'crop' => [
-                'handler' => \App\Services\File\Handlers\ImageHandler::class,
-                'path' => 'image',
-            ],
-            'resize' => [
-                'handler' => \App\Services\File\Handlers\ImageHandler::class,
-                'path' => 'image',
-            ],
-            'default' => [
-                'handler' => \App\Services\File\Handlers\ImageHandler::class,
-                'path' => 'image',
-            ],
+            'handler' => \App\Services\File\Handlers\ImageHandler::class,
+            'path' => 'image',
+            'procedure' => ['crop'],
         ],
     ],
 

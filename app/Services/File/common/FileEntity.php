@@ -7,37 +7,45 @@ use Illuminate\Http\Request;
 
 class FileEntity {
 
-    public function __construct(Request $request)
+    /*public function __construct(Request $request)
     {
         $this->request = $request;
-    }
+    }*/
 
     public function getEntity($request)
     {
 
 //dd($request->file());
+//        dd($request->all());
         if($request['course_id']){
-            $this->setEntity('course');
-            $this->setEntityId($request['course_id']);
-            $this->setEntityModel(Course::find($request['course_id']));
-        } else {
-            $this->setEntity(null);
-            $this->setEntityId(null);
-            $this->setEntityModel(null);
+            $this->setEntity($request,'course');
+            $this->setEntityId($request, $request['course_id']);
+            $this->setEntityModel($request,Course::find($request['course_id']));
+        } elseif ($request['donate']){
+            $this->setEntity($request,'donate');
+            $this->setEntityId($request,null);
+            $this->setEntityModel($request,null);
+//            dd($request);
+        }
+        else {
+            $this->setEntity($request,null);
+            $this->setEntityId($request,null);
+            $this->setEntityModel($request,null);
         }
 
     }
 
-    private function setEntity($entity){
-        $this->request->request->set('entity', $entity);
+    private function setEntity($request, $entity){
+//        $this->request->request->set('entity', $entity);
+        $request->request->add(['entity' => $entity]);
     }
 
-    private function setEntityId($entityId){
-        $this->request->request->set('entityId', $entityId);
+    private function setEntityId($request, $entityId){
+        $request->request->set('entityId', $entityId);
     }
 
-    private function setEntityModel($entityModel){
-        $this->request->request->set('entityModel', $entityModel);
+    private function setEntityModel($request, $entityModel){
+        $request->request->set('entityModel', $entityModel);
     }
 
 }

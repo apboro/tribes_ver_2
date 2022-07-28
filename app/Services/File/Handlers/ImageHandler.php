@@ -32,9 +32,19 @@ class ImageHandler implements HandlerContract
     }
 
 
-    public function startService(UploadedFile $file, File $model): File
+    public function startService(UploadedFile $file, File $model, array $procedure): File
     {
+        dd($file);
+        foreach ($procedure as $key => $proc) {
+//            dd($key);
+            switch ($key) {
+                case 'crop':
+                    $this->crop($proc, $file);
+                    break;
+            }
 
+//            $this->proc . 'Function' . ();
+        }
         //как-то обрабатываем картинку (crop, resize и т.д.)
         //todo
         //репозиторий делает сохранение файла в нужную папку и возвращает полное имя файла $file->storeAs($this->path.$file->getClientOriginalName());
@@ -59,20 +69,18 @@ class ImageHandler implements HandlerContract
         return $model;
     }
 
-    private function setUrl($path)
+
+    ////////////////////////////////////////////////////////
+
+    public function crop($crop, $image)
     {
-        return $this->url = '/storage/' . $path . $this->filename;
+        $dimensions = explode('|', $crop);
+        $image->crop((int)$dimensions[2], (int)$dimensions[3], (int)$dimensions[0], (int)$dimensions[1]);
     }
 
-    private function setHash($file)
-    {
-        return $this->hash = md5($file . Carbon::now()) ;
-    }
 
-    private function setFilename($file)
-    {
-        return $this->filename = $this->setHash($file) . '.' . $file->guessClientExtension();
-    }
+
+
 
     private function validateImage()
     {

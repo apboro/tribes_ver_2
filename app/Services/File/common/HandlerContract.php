@@ -7,5 +7,5 @@ use Illuminate\Http\UploadedFile;
 
 interface HandlerContract
 {
-    public function startService(UploadedFile $file, File $model): File;
+    public function startService(UploadedFile $file, File $model, array $procedure): File;
 }

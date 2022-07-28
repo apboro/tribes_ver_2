@@ -26,6 +26,7 @@ class FileController extends Controller
     private $fileRepo;
     private $videoRepo;
     private $fileUploadService;
+    private $fileEntity;
 
     public function __construct(
         FileRepositoryContract $fileRepo,
@@ -147,9 +148,9 @@ class FileController extends Controller
 //        dd($request->storedFiles[0]);
 //        $filesId = $request->storedFiles;
 
-
+//        dd($request);
         $this->fileEntity->getEntity($request);
-
+//        dd($request);
         $files = $this->fileUploadService->procRequest($request);
 
         /*if($request['course_id']){
