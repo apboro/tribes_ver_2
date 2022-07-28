@@ -8,6 +8,7 @@ use App\Repositories\File\FileRepository;
 use App\Services\File\common\HandlerContract;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
@@ -34,7 +35,7 @@ class ImageHandler implements HandlerContract
 
     public function startService(UploadedFile $file, File $model, array $procedure): File
     {
-        dd($file);
+//        dd($file);
         foreach ($procedure as $key => $proc) {
 //            dd($key);
             switch ($key) {
@@ -72,10 +73,17 @@ class ImageHandler implements HandlerContract
 
     ////////////////////////////////////////////////////////
 
-    public function crop($crop, $image)
+    public function crop($crop, $file)
     {
+        $hash = $this->repository->setHash($file);
+        $filename = $hash . '.' . $file->guessClientExtension();
+
+        $url = $this->repository->storeFileNew($file, $this->path, $filename);
+
+        $image = Image::make($file)->encode('jpg', 75);
         $dimensions = explode('|', $crop);
         $image->crop((int)$dimensions[2], (int)$dimensions[3], (int)$dimensions[0], (int)$dimensions[1]);
+        $image->save($url);
     }
 
 
