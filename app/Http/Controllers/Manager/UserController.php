@@ -20,6 +20,13 @@ class UserController extends Controller
         return response($users);
     }
 
+    public function get(Request $request)
+    {
+        $user = User::findOrFail($request['id']);
+
+        return response($user);
+    }
+
     public function auth(Request $request)
     {
         return Auth::user();

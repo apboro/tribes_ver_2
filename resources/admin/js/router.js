@@ -19,19 +19,19 @@ let router =  new Router({
             path: '/',
             name: 'dashboard',
             meta: {layout: 'main', requiresAuth: true},
-            component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Dashboard.vue')
+            component: () => import(/* webpackChunkName: "Dashboard" */ './components/pages/Dashboard.vue')
         },
         {
             path: '/users',
             name: 'users',
             meta: {layout: 'main', tabName: 'Пользователи'},
-            component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Users.vue')
+            component: () => import(/* webpackChunkName: "Users" */ './components/pages/Users.vue')
         },
         {
             path: '/courses',
             name: 'courses',
             meta: {layout: 'main'},
-            component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Courses.vue')
+            component: () => import(/* webpackChunkName: "Courses" */ './components/pages/Courses.vue')
         },
 
         {
@@ -39,7 +39,14 @@ let router =  new Router({
             name: 'payments',
             meta: {layout: 'main'},
             // meta: {layout: 'main', requiresAuth: true},
-            component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Payments.vue')
+            component: () => import(/* webpackChunkName: "Payments" */ './components/pages/Payments.vue')
+        },
+
+        {
+            path: '/user/:id',
+            name: 'Profile',
+            // meta: {layout: 'main'},
+            component: () => import(/* webpackChunkName: "Profile" */ './components/pages/Profile.vue'),
         },
 
 

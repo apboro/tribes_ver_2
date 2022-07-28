@@ -50,12 +50,12 @@
       display: flex;
         .circle {
             height: .3rem;
-			margin: .15rem;
-			background-color: #206bc4;
-			border-radius: 50%;
-			animation-name: scaleIn;
-			animation-duration: .7s;
-			transform: scale(0);
+            margin: .15rem;
+            background-color: #206bc4;
+            border-radius: 50%;
+            animation-name: scaleIn;
+            animation-duration: .7s;
+            transform: scale(0);
             width: .3rem;
 
             &:nth-child(1) {
