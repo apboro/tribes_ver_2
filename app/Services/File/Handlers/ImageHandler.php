@@ -40,7 +40,7 @@ class ImageHandler implements HandlerContract
 //            dd($key);
             switch ($key) {
                 case 'crop':
-                    $this->crop($proc, $file);
+                    $fileNew = $this->crop($proc, $file);
                     break;
             }
 
@@ -49,17 +49,17 @@ class ImageHandler implements HandlerContract
         //как-то обрабатываем картинку (crop, resize и т.д.)
         //todo
         //репозиторий делает сохранение файла в нужную папку и возвращает полное имя файла $file->storeAs($this->path.$file->getClientOriginalName());
+dd($fileNew);
 
-
-        $hash = $this->repository->setHash($file);
-        $filename = $hash . '.' . $file->guessClientExtension();
+        $hash = $this->repository->setHash($fileNew);
+        $filename = $hash . '.' . $fileNew->guessClientExtension();
 //        dd($filename);
 //        $url = $this->repository;
 
-        $url = $this->repository->storeFileNew($file, $this->path, $filename);
-
-        $model['mime'] = $file->getMimeType();
-        $model['size'] = $file->getSize();
+        $url = $this->repository->storeFileNew($fileNew, $this->path, $filename);
+//dd($url);
+        $model['mime'] = $fileNew->getMimeType();
+        $model['size'] = $fileNew->getSize();
         $model['isImage'] = 1;
         $model['filename'] = $filename;
         $model['url'] = $url;
@@ -75,15 +75,13 @@ class ImageHandler implements HandlerContract
 
     public function crop($crop, $file)
     {
-        $hash = $this->repository->setHash($file);
-        $filename = $hash . '.' . $file->guessClientExtension();
-
-        $url = $this->repository->storeFileNew($file, $this->path, $filename);
-
         $image = Image::make($file)->encode('jpg', 75);
         $dimensions = explode('|', $crop);
         $image->crop((int)$dimensions[2], (int)$dimensions[3], (int)$dimensions[0], (int)$dimensions[1]);
-        $image->save($url);
+
+//dd($image);
+        return new UploadedFile($image->dirname . '/' . $image->basename, $image->basename, $image->mime);
+//        dd($zz);
     }
 
 
