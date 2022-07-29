@@ -19,7 +19,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('send:donate')->everyMinute()->timezone('Europe/Moscow');
         $schedule->command('check:tariff')->everyMinute()->timezone('Europe/Moscow');
-        $schedule->command('check:trial')->everyMinute()->timezone('Europe/Moscow');
+        env('USE_TRIAL_PERIOD', true) ?
+            $schedule->command('check:trial')->everyMinute()->timezone('Europe/Moscow')
+            : null;
         $schedule->command('tariff:decrement')->dailyAt('23:59')->timezone('Europe/Moscow');
     }
 
