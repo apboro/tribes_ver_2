@@ -9,8 +9,7 @@
             <div class="col-12">
                 <!-- Form -->
                 <form
-                    {{--action="{{ route('community.donate.settings.update', $community) }}"--}}
-                    action="{{ route('community.donate.update', ['community' => $community->id, 'id' => $donate ? $donate->id : NULL]) }}"
+                    action="{{ route('community.donate.settings.update', ['community' => $community->id, 'id' => $donate ? $donate->id : null]) }}"
                     method="post"
                     class=""
                     id="donate_settings_form_{{ $community->id }}"
