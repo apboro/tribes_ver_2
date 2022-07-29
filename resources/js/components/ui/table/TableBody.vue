@@ -23,8 +23,32 @@
                     :key="index"
                     :data="item"
                     :row="tableRow"
-                    @onAction="onAction"
+                    :isOpenable="isOpenable()"
+                    
                 >
+                    <template #openableBlock="{ data, isVisibleHiddenRow, toggleHiddenRowVisibility }">
+                        <slot
+                            name="openableBlock"
+                            :data="data"
+                            :isVisibleHiddenRow="isVisibleHiddenRow"
+                            :toggleHiddenRowVisibility="toggleHiddenRowVisibility"
+                        ></slot>    
+                    </template>
+
+                    <template #hiddenRow="{ data, isVisibleHiddenRow }">
+                        <slot
+                            name="hiddenRow"
+                            :data="data"
+                            :isVisibleHiddenRow="isVisibleHiddenRow"
+                        ></slot>
+                    </template>
+
+                    <template #tableAction="{ data }">
+                        <slot
+                            name="tableAction"
+                            :data="data"
+                        ></slot>
+                    </template>
 
                 </table-row>
             </template>
@@ -77,13 +101,14 @@
         },
 
         methods: {
-            onAction(data) {
-                this.$emit('onAction', data);
-            },
+
+            isOpenable() {
+                return this.tableRow.find((item) => item.type == 'openable') ? true : false;
+            }
         },
 
         mounted() {
-            // console.log(this.openableData);
+           
         }
     }
 </script>

@@ -2,45 +2,31 @@
     <transition name="a-table-row">
         <div
             class="table__row"
-            v-if="isVisibleHideSection"
+            v-if="isVisibleHiddenRow"
         >
             <div class="table__item table__full">
                 <div class="table__full">
-                    <p
-                        v-if="data.openable.titleMain"
-                        class="table__full-title"
-                    >
-                        {{ data.openable.titleMain }}
+                    <p class="table__full-title">
+                        Вопрос
                     </p>
-                    <p>{{ data.openable.mainText }}</p>
+                    <p>{{ data.context }}</p>
                 </div>
 
                 <div
-                    v-if="data.openable.hiddenContent"
+                    v-if="data.answer.context"
                     class="table__full table__full--openable"
                     :class="{ 'hide': isLongAnswer }"
                     ref="hiddenRow"
                 >
-                    <p
-                        v-if="data.openable.titleContent"
-                        class="table__full-title"
-                    >
-                        {{ data.openable.titleContent }}
+                    <p class="table__full-title">
+                        Ответ
                     </p>
                     
-                    <template v-if="data.openable.hiddenContent">
+                    <template v-if="data.answer.context">
                         <div
-                            v-if="data.openable.hiddenContentType == 'editor'"
                             class="table__openable-block"
-                            v-html="data.openable.hiddenContent"
+                            v-html="data.answer.context"
                         ></div>
-                        
-                        <div
-                            v-else-if="data.openable.hiddenContentType == 'text'"
-                            class="table__openable-block"
-                        >
-                            {{ data.openable.hiddenContent }}
-                        </div>
                         
                         <template v-if="isVisibleFullAnswerBtn">
                             <button
@@ -71,7 +57,7 @@
                 default: () => {},
             },
 
-            isVisibleHideSection: {
+            isVisibleHiddenRow: {
                 type: Boolean,
                 default: false,
             },
@@ -85,7 +71,7 @@
         },
 
         watch: {
-            isVisibleHideSection() {
+            isVisibleHiddenRow() {
                 this.$nextTick(() => {
                     if (this.$refs.hiddenRow) {
                         if (this.$refs.hiddenRow.getBoundingClientRect().height > 100) {

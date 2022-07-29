@@ -19,7 +19,30 @@
                 class="dropdown__body table__action-menu"
                 @click="toggleDropdownVisibility"
             >
-                <template v-if="isPublic">
+                <div
+                    v-for="(action, index) in actions"
+                    :key="index"
+                >
+                    <template v-if="action.type == 'button'">
+                        <button
+                            class="table__action-item"
+                            @click="action.onClick(data, action)"
+                        >
+                            {{ action.text }}
+                        </button>
+                    </template>
+
+                    <template v-if="action.type == 'link'">
+                        <a
+                            :href="data[action.key]"
+                            target="_blank"
+                            class="table__action-item"
+                        >
+                            {{ action.text }}
+                        </a>
+                    </template>
+                </div>
+                <!-- <template v-if="isPublic">
                     <button
                         class="table__action-item"
                         @click="removeFromPublication"
@@ -64,57 +87,34 @@
                     @click="removeQuestion"
                 >
                     Удалить
-                </button>
+                </button> -->
             </div>
         </template>
     </v-dropdown>
 </template>
 
 <script>
-    import { mapActions } from 'vuex';
-    import VIcon from '../../ui/icon/VIcon.vue';
-    import VDropdown from '../../ui/dropdown/VDropdown.vue';
-    import { copyText } from '../../../core/functions';
+    import VDropdown from "../dropdown/VDropdown.vue";
+    import VIcon from "../icon/VIcon.vue";
 
     export default {
-        name: 'KnowledgActionsDropdown',
-
-        components: { VIcon, VDropdown },
+        name: 'ActionsDropdown',
+        
+        components: {
+            VDropdown,
+            VIcon,
+        },
 
         props: {
-            question: {
+            data: {
                 type: Object,
-                default: {},
+                default: () => {},
             },
 
-            isPublic: {
-                type: Boolean,
-                default: false,
+            actions: {
+                type: Array,
+                default: () => [],
             }
-        },
-
-        methods: {
-            ...mapActions('knowledge', ['REMOVE_QUESTION']),
-
-            removeFromPublication() {
-                this.$emit('removeFromPublication');
-            },
-
-            publish() {
-                this.$emit('publish');
-            },
-
-            openQuestionPopup() {
-                this.$emit('openQuestionPopup');
-            },
-
-            copyLink() {
-                copyText(this.question.public_link);
-            },
-
-            removeQuestion() {
-                this.$emit('removeQuestion');
-            },
-        },
+        }
     }
 </script>

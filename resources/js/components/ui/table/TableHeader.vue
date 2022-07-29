@@ -8,7 +8,10 @@
             v-for="(item, index) in tableHeader"
             :key="index"
             class="table__header-item"
-            :class="{ 'table__header-item--sortable': item.type == 'sorting' }"
+            :class="{
+                'table__header-item--sortable': item.type == 'sorting',
+                'table__header-item--center': item.type == 'text-center',    
+            }"
         >
             <!-- Multiple -->
             <template v-if="item.type == 'multiple'">
@@ -21,7 +24,7 @@
             </template>
 
             <!-- Текстовый -->
-            <template v-if="item.type == 'text'">
+            <template v-if="item.type == 'text' || item.type == 'text-center'">
                 {{ item.text }}
             </template>
 
@@ -64,10 +67,5 @@
                 default: {},
             }
         },
-
-        methods: {
-            
-
-        }
     }
 </script>

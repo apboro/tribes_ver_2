@@ -236,7 +236,7 @@
     &__action-menu {
         position: absolute;
         right: 100%;
-        z-index: 5;
+        z-index: 15;
         display: flex;
         min-width: 185px;
         background-color: $white;
@@ -245,6 +245,7 @@
 
     &__action-item {
         display: inline-block;
+        width: 100%;
         padding: 10px 15px;
         text-align: center;
         @include font($text-color-1, 14px, 20px, 400);

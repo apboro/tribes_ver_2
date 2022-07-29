@@ -11,8 +11,32 @@
             :tableRow="tableRow"
             :isLoading="isLoading"
             :hasQuestions="hasQuestions"
-            @onAction="onAction"
-        />
+        >
+            <template #openableBlock="{ data, isVisibleHiddenRow, toggleHiddenRowVisibility }">
+                <slot
+                    name="openableBlock"
+                    :data="data"
+                    :isVisibleHiddenRow="isVisibleHiddenRow"
+                    :toggleHiddenRowVisibility="toggleHiddenRowVisibility"
+                ></slot>    
+            </template>
+
+            <template #hiddenRow="{ data, isVisibleHiddenRow }">
+                <slot
+                    name="hiddenRow"
+                    :data="data"
+                    :isVisibleHiddenRow="isVisibleHiddenRow"
+                ></slot>
+            </template>
+
+            <template #tableAction="{ data }">
+                <slot
+                    name="tableAction"
+                    :data="data"
+                ></slot>
+            </template>
+
+        </table-body>
     </div>
 </template>
 
@@ -64,9 +88,7 @@
         },
 
         methods: {
-            onAction(data) {
-                this.$emit('onAction', data);
-            }
+           
         }
     }
 </script>

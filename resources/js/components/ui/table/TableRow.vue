@@ -1,12 +1,18 @@
 <template>
     <div
         class="table__row-wrapper"
-        :class="{ 'open': isVisibleHideSection }"
+        :class="{ 'open': isVisibleHiddenRow }"
     >
         <!-- Строка -->
-        <div class="table__row" :class="{ 'active': isAddedField }">
-            <!-- Выделить -->
+        <div
+            class="table__row"
+            :class="{ 'active': isAddedField }"
+        >
             <div
+                v-for="(col, index) in row"
+                :key="index"
+            >
+            <!-- <div
                 class="table__item"
                 :class="{
                     'table__item--openable': col.type == 'openable',
@@ -14,49 +20,34 @@
                         col.type == 'openable' ||
                         col.type == 'time' ||
                         col.type == 'text',
-                    'table__item--center': col.type == 'action'
+                    'table__item--center': col.type == 'actions'
                 }"
-                v-for="(col, index) in row"
-                :key="index"
                 @click="onItemClick(col.type)"
-            >
-
+            > -->
+                <!-- Выделить -->
                 <template v-if="col.type == 'multiple'">
-                    <v-checkbox
-                        :id="`field_${ data.id }`"
-                        :value="col.getValue(data.id)"
-                        :modelValue="col.getValue(data.id)"
-                        @change="changeMultiple(col.setValue, $event, data.id)"
-                    />
+                    <div class="table__item">
+                        <v-checkbox
+                            :id="`field_${ data.id }`"
+                            :value="col.getValue(data.id)"
+                            :modelValue="col.getValue(data.id)"
+                            @change="changeMultiple(col.setValue, $event, data.id)"
+                        />
+                    </div>
                 </template>
 
                 <template v-else-if="col.type == 'openable'">
-                    <p class="table__item-truncate-text">{{ data.openable.mainText }}</p>
-                        
-                    <transition name="a-question-arrow" mode="out-in">
-                        <template v-if="isVisibleHideSection">
-                            <v-icon
-                                class="table__item-arrow-icon"
-                                key="0"
-                                name="arrow-up"
-                                size="1"
-                            />
-                        </template>
-
-                        <template v-else>
-                            <v-icon
-                                class="table__item-arrow-icon"
-                                key="1"
-                                name="arrow-down"
-                                size="1"
-                            />
-                        </template>
-                    </transition>
+                    <slot
+                        name="openableBlock"
+                        :data="data"
+                        :isVisibleHiddenRow="isVisibleHiddenRow"
+                        :toggleHiddenRowVisibility="toggleHiddenRowVisibility"
+                    ></slot>    
                 </template>
 
-                <template v-else-if="col.type == 'time'">
+                <!-- <template v-else-if="col.type == 'time'">
                     <time-format
-                        :value="data.created_at"
+                        :value="data[col.key]"
                         typeValue="date"
                     />
                 </template>
@@ -78,20 +69,27 @@
                     </span>
                 </template>
 
-                <template v-else-if="col.type == 'action'">
-                    <button @click="onAction">send</button>
-                    
-                </template>
+                <template v-else-if="col.type == 'actions'"> -->
+                    <!-- <actions-dropdown
+                        :data="data"
+                        :actions="col.actions"
+                    ></actions-dropdown> -->
+                    <!-- <slot
+                        name="tableAction"
+                        :data="data"
+                    ></slot>              
+                </template> -->
             </div>
 
 
         </div>
 
-        <template v-if="data.openable">
-            <hidden-row
+        <template v-if="isOpenable">
+            <slot
+                name="hiddenRow"
                 :data="data"
-                :isVisibleHideSection="isVisibleHideSection"
-            />
+                :isVisibleHiddenRow="isVisibleHiddenRow"
+            ></slot>
         </template>
     </div>
 </template>
@@ -100,7 +98,8 @@
     import VCheckbox from"../form/VCheckbox.vue";
     import TimeFormat from '../format/TimeFormat.vue';
     import VIcon from "../icon/VIcon.vue";
-    import HiddenRow from "./HiddenRow.vue";
+    import HiddenRow from "../../pages/Knowledge/Table/HiddenRow.vue";
+    import ActionsDropdown from './ActionsDropdown.vue';
 
     export default {
         name: 'TableRow',
@@ -110,6 +109,7 @@
             VIcon,
             HiddenRow,
             TimeFormat,
+            ActionsDropdown,
         },
 
         props: {
@@ -122,11 +122,16 @@
                 type: Array,
                 default: () => [],
             },
+
+            isOpenable: {
+                type: Boolean,
+                default: false,
+            }
         },
 
         data() {
             return {
-                isVisibleHideSection: false,
+                isVisibleHiddenRow: false,
                 isAddedField: false,
             }
         },
@@ -138,18 +143,14 @@
                 }
             },
 
-            toggleQuestion() {
-                this.isVisibleHideSection = !this.isVisibleHideSection;
-            },
-
             changeMultiple(change, value, id) {
                 this.isAddedField = value;
                 change(value, id);
             },
 
-            onAction() {
-                this.$emit('onAction', this.data);
-            }
+            toggleHiddenRowVisibility() {
+                this.isVisibleHiddenRow = !this.isVisibleHiddenRow;
+            },
         },
     }
 </script>

@@ -1,16 +1,70 @@
 <template>
     <div>
         <v-table
-            :data="convert(questions)"
+            :data="questions"
             :tableHeader="tableHeader"
             :tableRow="tableRow"
             :sortAttrs="sort"
             :isLoading="IS_LOADING"
-            @onAction="onAction"
         >   
-           <!-- <template #openableCol="{ openableData }">
-                            {{openableData}}
-                        </template> -->
+            <template #openableBlock="{ data, isVisibleHiddenRow, toggleHiddenRowVisibility }">
+                <col-openable
+                    :data="data"
+                    :isVisibleHiddenRowParent="isVisibleHiddenRow"
+                    @toggleHiddenRowVisibility="toggleHiddenRowVisibility"
+                />    
+            </template>
+
+            <template #hiddenRow="{ data, isVisibleHiddenRow }">
+                <hidden-row
+                    :data="data"
+                    :isVisibleHiddenRow="isVisibleHiddenRow"
+                />
+            </template>
+
+            <template #tableAction="{ data }">
+                <v-dropdown>
+                    <template #tooglePanel="{ toggleDropdownVisibility }">
+                        <button
+                            class="dropdown button-text table__dropdown button-text--primary button-text--only-icon"
+                            @click="toggleDropdownVisibility"
+                        >
+                            <v-icon
+                                name="vertical-dots"
+                                size="1"
+                                class="button-text__icon"
+                            />
+                        </button>
+                    </template>
+
+                    <!-- Меню действий -->
+                    <template #body="{ toggleDropdownVisibility }">
+                        <div
+                            class="dropdown__body table__action-menu"
+                            @click="toggleDropdownVisibility"
+                        >
+                            
+                                    <button
+                                        class="table__action-item"
+                                        @click="a(data)"
+                                    >
+                                        see
+                                    </button>
+                                
+                                    <!-- <a
+                                        :href="data[action.key]"
+                                        target="_blank"
+                                        class="table__action-item"
+                                    >
+                                        {{ action.text }}
+                                    </a> -->
+                                
+                            
+                            
+                        </div>
+                    </template>
+                </v-dropdown>
+            </template>
         </v-table>
 
         
@@ -22,6 +76,9 @@
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import VIcon from '../../../ui/icon/VIcon.vue';
     import VCheckbox from '../../../ui/form/VCheckbox.vue';
+    import VDropdown from '../../../ui/dropdown/VDropdown.vue';
+    import ColOpenable from './ColOpenable.vue';
+    import HiddenRow from './HiddenRow.vue';
     
     export default {
         name: 'QuestionsTable',
@@ -30,6 +87,9 @@
             VTable,
             VIcon,
             VCheckbox,
+            VDropdown,
+            ColOpenable,
+            HiddenRow,
         },
                        
         props: {
@@ -135,7 +195,7 @@
                         titleContent: 'Ответ:',
                     };
 
-                    item.created_at = question.created_at;
+                    item.createdAt = question.created_at;
                     item.c_enquiry = question.c_enquiry;
 
                     if (question.is_public) {
@@ -149,17 +209,66 @@
                         item.statusTheme = 'orange';
                     }
 
+                    item.isPublic = question.is_public;
+                    item.isDraft = question.is_draft;
+
+                    item.publicLink = question.public_link;
+                    item.link = question.link;
+
                     data.push(item);
                 });
 
                 return data;
             },
 
-            onAction(data) {
-                this.isVisible = true;
-                this.dropData = data;
-                console.log(data);
-            }
+            // editQuestion() {
+            //     this.EDIT_QUESTION({
+            //         question: {
+            //             id: this.question.id,
+            //             context: this.questionText,
+            //             is_draft: this.draft,
+            //             is_public: this.isPublic,
+            //             answer: {
+            //                 context: this.answerText,
+            //                 is_draft: false
+            //             }
+            //         },
+            //     });
+            // },
+
+            editQuestion(question) {
+                this.EDIT_QUESTION({
+                    question: {
+                        id: question.id,
+                        context: question.openable.mainText,
+                        is_draft: question.isDraft,
+                        is_public: question.isPublic,
+                        answer: {
+                            context: question.openable.hiddenContent,
+                            is_draft: false
+                        }
+                    },
+                });
+            },
+
+            getPublicStatus() {
+                // ne public ili public
+            },
+
+            togglePublicStatus(question, action) {
+                console.log(question);
+                if (question.isPublic) {
+                    action.text = 'Опубликовать';
+                } else {
+                    action.text = 'Снять с публикации';
+                }
+                question.isPublic = !question.isPublic;
+                    
+                    
+                //this.isPublic = false;
+                this.editQuestion(question);
+            },
+
         },
 
         mounted() {
@@ -198,7 +307,7 @@
                 },
 
                 {
-                    type: 'text',
+                    type: 'text-center',
                     text: 'Действия',
                 },
             ];
@@ -212,11 +321,13 @@
 
                 {
                     type: 'openable',
+                    mainTextKey: 'context',
                 },
 
                 {
                     type: 'time',
                     typeValue: 'date',
+                    key: 'createdAt'
                 },
 
                 {
@@ -228,12 +339,22 @@
                 },
 
                 {
-                    type: 'action',
-                },
-            ];
+                    type: 'actions',
+                    actions: [
+                        {
+                            type: 'button',
+                            text: 'Снять с публикации',
+                            onClick: (data, action) => this.togglePublicStatus(data, action),
 
-            this.tableRowHidden = [
-                {}
+                        },
+
+                        {
+                            type: 'link',
+                            text: 'Предпросмотр',
+                            key: 'publicLink'
+                        },
+                    ]
+                },
             ];
         }
     }
