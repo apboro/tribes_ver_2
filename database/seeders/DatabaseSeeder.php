@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Administrator;
 use App\Models\Knowledge\Question;
 use App\Models\TelegramUser;
 use App\Models\User;
@@ -38,7 +39,9 @@ class DatabaseSeeder extends Seeder
         ]);
         $userTest->createTempToken();
 
-
+        Administrator::factory()->create([
+            'user_id' => $userTest->id
+        ]);
         //Auth::login($user);
 
 

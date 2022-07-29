@@ -229,6 +229,11 @@ class User extends Authenticatable
         return $phone ? '+7 ' . $this->phoneNumber($phone) : '-';
     }
 
+    public function administrator()
+    {
+        return $this->hasOne(Administrator::class, 'user_id','id');
+    }
+
     public function createTempToken()
     {
         if ($this->tokens()->count() !== 0) {
