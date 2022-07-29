@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Http\Controllers\API\FileController;
 use App\Repositories\File\FileRepositoryContract;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class CourseFactory extends Factory
 {
@@ -18,6 +19,7 @@ class CourseFactory extends Factory
         return [
             //'id' => '',
             'title' => 'Курс ' . $this->faker->text(8),
+            'uuid' => Str::uuid(),
             'owner' => null,
             'preview' => null,//Не готово
             'description' => null,
