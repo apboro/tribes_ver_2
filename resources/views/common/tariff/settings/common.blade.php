@@ -11,6 +11,7 @@
         <div class="card">
             <div class="card-body">
                 @csrf
+                @if (env('USE_TRIAL_PERIOD'))
                 <!-- Пробный период -->
                 <div>
                     <div class="row align-items-center">
@@ -38,8 +39,8 @@
                                             <option value="180" @if ($community->tariff->test_period == 180) selected @endif>180 {{ __('base.days_low') }}</option>
                                             <option value="365" @if ($community->tariff->test_period == 365) selected @endif>365 {{ __('base.days_low') }}</option>
                                         @endif
-                                    </select>                 
-                                
+                                    </select>
+
                                     <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">
                                         <i data-feather='save' class="font-medium-1" ></i>
                                     </span>
@@ -49,17 +50,17 @@
                     </div>
                     <hr />
                 </div>
-
-                <div class="inactive-form-items">
+                    @endif
+                    <div class="inactive-form-items">
                     <div class="row align-items-center">
                         <div class="col-md-12 col-12">
                             <div class="d-flex align-items-center">
                                 <div class="form-check form-check-primary form-switch">
-                                    <input type="checkbox" 
-                                        class="form-check-input pointer" 
+                                    <input type="checkbox"
+                                        class="form-check-input pointer"
                                         id="tariff_notification"
-                                        value="true" 
-                                        name="tariff_notification" 
+                                        value="true"
+                                        name="tariff_notification"
                                         {{ ($community->tariff->tariff_notification == true) ? 'checked' : null }}
                                     />
                                 </div>
@@ -86,7 +87,7 @@
                 @include('common.tariff.assets.tariff_publication')
 
                 <!-- Отправить в сообщество -->
-                <div class="mt-2">                                   
+                <div class="mt-2">
                     <div class="row d-flex align-items-center">
                         <div class="col-12">
                             <div class="d-flex align-items-center">
@@ -104,11 +105,11 @@
                                     {{ __('form.send_to_community') }}
                                 </label>
                             </div>
-                        </div>      
+                        </div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="card-footer">
                 <!-- Submit -->
                 <div class="col-sm-5 col-lg-4 col-xl-3">

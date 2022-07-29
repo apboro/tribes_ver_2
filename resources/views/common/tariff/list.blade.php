@@ -75,9 +75,11 @@
                                     <p class="card-text">
                                         {{ $tariff->price }}₽ — {{ $tariff->period }} ({{ __('base.days_low') }})
                                     </p>
+                                    @if(env('USE_TRIAL_PERIOD'))
                                     <p class="card-text">
                                         {{ __('base.trial_period') }} — {{ $community->tariff->test_period }} ({{ __('base.days_low') }})
                                     </p>
+                                    @endif
                                 </div>
 
                                 <div class="card-footer">

@@ -156,7 +156,7 @@ class TariffRepository implements TariffRepositoryContract
 
         $this->tariffModel->test_period = $data['trial_period']  && env('USE_TRIAL_PERIOD')
             ? $data['trial_period']
-            : 0;
+            : $this->tariffModel->test_period;
 
         $this->tariffModel->tariff_notification = $data['tariff_notification'];
 
@@ -253,7 +253,7 @@ class TariffRepository implements TariffRepositoryContract
 
         $this->tariffModel->thanks_description = $data['success_description'] ?? null;
 
-//        $this->tariffModel->prompt_description = $data['main_description'] ?? null;
+        $this->tariffModel->main_description = $data['main_description'] ?? null;
 
         $this->tariffModel->publication_description = $data['publication_description'] ?? null;
     }
