@@ -28,7 +28,7 @@ class TariffSeeder extends Seeder
 
 
         foreach (Community::all() as $community) {
-            $tariff = env('USE_TRIAL_PERIOD') ?  $this->tariffCreate(20, $community)
+            $tariff = env('USE_TRIAL_PERIOD', true) ?  $this->tariffCreate(20, $community)
                 : $this->tariffCreate(0, $community);
 
             TariffVariant::factory()->active()->count(3)

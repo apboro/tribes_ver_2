@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-body">
                 @csrf
-                @if (env('USE_TRIAL_PERIOD'))
+                @if (env('USE_TRIAL_PERIOD', true))
                 <!-- Пробный период -->
                 <div>
                     <div class="row align-items-center">

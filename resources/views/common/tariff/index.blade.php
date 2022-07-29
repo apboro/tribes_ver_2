@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="col-12 row">
-                    @if ($community->tariff->test_period !== 0 && env('USE_TRIAL_PERIOD'))
+                    @if ($community->tariff->test_period !== 0 && env('USE_TRIAL_PERIOD', true))
                         <a
                             href="https://t.me/{{ env('TELEGRAM_BOT_NAME') }}?start={{ $community->id }}trial"
                             class="btn btn-outline-success waves-effect mb-1"
