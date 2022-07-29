@@ -26,7 +26,7 @@ return [
         'image_handler' => [
             'handler' => \App\Services\File\Handlers\ImageHandler::class,
             'path' => 'image',
-            'procedure' => ['crop'],
+            'procedure' => ['crop', 'watermark'],
         ],
     ],
 

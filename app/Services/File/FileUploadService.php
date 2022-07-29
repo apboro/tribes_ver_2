@@ -173,9 +173,15 @@ class FileUploadService
         if (isset($config['procedure'])) {
             foreach ($config['procedure'] as $proc) {
 //                dd($proc);
-                if ($proc == 'crop'){
-                    $procedure['crop'] = $this->request['cropData'];
+                switch ($proc) {
+                    case 'crop':
+                        $procedure['crop'] = $this->request['cropData'];
+                        break;
+                    case 'watermark':
+                        $procedure['watermark'] = asset('images/watermarks/test-watermark.png');
+                        break;
                 }
+
             }
         }
 

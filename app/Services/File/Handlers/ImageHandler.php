@@ -37,19 +37,21 @@ class ImageHandler implements HandlerContract
     {
 //        dd($file);
         foreach ($procedure as $key => $proc) {
-//            dd($key);
+//            dd($procedure);
             switch ($key) {
                 case 'crop':
                     $fileNew = $this->crop($proc, $file);
                     break;
+                case 'watermark':
+                    $fileNew = $this->watermark($proc, $file);
+                    break;
             }
 
-//            $this->proc . 'Function' . ();
         }
         //как-то обрабатываем картинку (crop, resize и т.д.)
         //todo
         //репозиторий делает сохранение файла в нужную папку и возвращает полное имя файла $file->storeAs($this->path.$file->getClientOriginalName());
-dd($fileNew);
+
 
         $hash = $this->repository->setHash($fileNew);
         $filename = $hash . '.' . $fileNew->guessClientExtension();
@@ -75,13 +77,29 @@ dd($fileNew);
 
     public function crop($crop, $file)
     {
-        $image = Image::make($file)->encode('jpg', 75);
-        $dimensions = explode('|', $crop);
-        $image->crop((int)$dimensions[2], (int)$dimensions[3], (int)$dimensions[0], (int)$dimensions[1]);
+        $image = Image::make($file)->encode('jpg', 100);
 
-//dd($image);
-        return new UploadedFile($image->dirname . '/' . $image->basename, $image->basename, $image->mime);
-//        dd($zz);
+        $dimensions = explode('|', $crop);
+        $image->crop((int)$dimensions[2], (int)$dimensions[3], $x = (int)$dimensions[0], $y = (int)$dimensions[1]);
+
+        $image->save(storage_path('app/public/temp/') . 'temp.png', 100, 'png');
+
+        $f = new UploadedFile($image->dirname . '/' . $image->basename, $image->basename, $image->mime);
+
+        return $f;
+    }
+
+    public function watermark($crop, $file)
+    {
+        $image = Image::make($file)->encode('jpg', 100);
+
+        $image->insert($crop, 'center');
+
+        $image->save(storage_path('app/public/temp/') . 'temp.png', 100, 'png');
+
+        $f = new UploadedFile($image->dirname . '/' . $image->basename, $image->basename, $image->mime);
+
+        return $f;
     }
 
 
