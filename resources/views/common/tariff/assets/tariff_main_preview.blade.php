@@ -21,7 +21,7 @@
         </div>
         @if($community->tariff)
         <div class="col-12 row">
-            @if ($community->tariff->test_period !== 0)
+            @if ($community->tariff->test_period !== 0 && env('USE_TRIAL_PERIOD', true))
             <button class="btn btn-outline-success waves-effect mb-1">
                 Пробный период — {{$community->tariff->test_period}} {{App\Traits\Declination::defineDeclination($community->tariff->test_period)}}
             </button>

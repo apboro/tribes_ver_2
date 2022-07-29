@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Manager;
 
+use App\Models\Administrator;
 use App\Models\Community;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
@@ -16,19 +17,23 @@ class CommunityControllerTest extends TestCase
      */
     public function testGetCommunity()
     {
+        $user = User::factory()->create();
         Sanctum::actingAs(
-            User::factory()->create()
+            $user
         );
+        Administrator::factory()->create([
+            'user_id' => $user->id
+        ]);
 
         $community = Community::factory()->create()->only('id', 'title');
 
-        $this->postJson('api/v2/community', ['id' => $community['id']])
-            ->assertOk()
+        $response = $this->postJson('api/v2/community', ['id' => $community['id']]);
+
+        $response->assertOk()
             ->assertJsonStructure([
                 'id',
                 'title'
             ])
             ->assertExactJson($community);
-
     }
 }
