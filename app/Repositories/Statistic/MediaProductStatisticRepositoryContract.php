@@ -3,10 +3,11 @@
 namespace App\Repositories\Statistic;
 
 use App\Filters\API\MediaSalesFilter;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface MediaProductStatisticRepositoryContract
 {
-    public function getSales(MediaSalesFilter $filters): Collection;
+    public function getSales(MediaSalesFilter $filters): LengthAwarePaginator;
 
 }

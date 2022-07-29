@@ -18,11 +18,11 @@ class MediaSaleResource extends JsonResource
     {
         return [
             "uuid" => $this->resource->uuid,
-            "title" => $this->resource->mProduct->entityObj->title??'Не определилось',
-            "tele_login" => $this->resource->teleUser->user_name??'',
-            "buy_date" => $this->resource->created_at,
+            "title" => $this->resource->title,
+            "tele_login" => $this->resource->tele_login,
+            "buy_date" => $this->resource->buy_date,
             "price" => $this->resource->price,
-            "status" => $this->resource->payment->status??'Не определилось',
+            "status" => $this->resource->status,
         ];
     }
 }

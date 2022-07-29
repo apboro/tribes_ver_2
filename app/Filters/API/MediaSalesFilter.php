@@ -10,12 +10,12 @@ class MediaSalesFilter extends QueryAPIFilter
     protected function _sortingName($name): string
     {
         $list = [
-            'create_date' => 'created_at',
-            'update_date' => 'updated_at',
-            'price' => 'price',
-
+            'create_date' => 'm_product_sales.created_at',
+            'update_date' => 'm_product_sales.updated_at',
+            'price' => 'm_product_sales.price',
+            'status' => 'payments.status',
         ];
-        return $list[$name] ?? $list['created_at'];
+        return $list[$name] ?? $list['create_date'];
     }
 
     public function page()
@@ -38,10 +38,18 @@ class MediaSalesFilter extends QueryAPIFilter
         $this->builder->orderBy($name,$rule);
     }
 
-    public function user($value)
+    public function buyer($value)
     {
-        return $this->builder->where(['user_id' => $value]);
+        return $this->builder->where(['m_product_sales.user_id' => $value]);
     }
 
+    public function owner($value)
+    {
+        return $this->builder->where(['courses.owner' => $value]);
+    }
 
+    public function status($value)
+    {
+        return $this->builder->where(['payments.status' => $value]);
+    }
 }

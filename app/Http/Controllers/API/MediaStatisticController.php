@@ -21,8 +21,9 @@ class MediaStatisticController extends Controller
 
     public function salesList(MediaSalesFilter $filter)
     {
-        $filter->replace(['user' => Auth::user()->id]);
-        return new MediaSalesResource($this->statisticRepository->getSales($filter));
+        $filter->replace(['owner' => Auth::user()->id]);
+
+        return (new MediaSalesResource($this->statisticRepository->getSales($filter)))->forApi();
     }
 
     public function productsList(Request $request)

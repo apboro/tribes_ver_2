@@ -8,7 +8,6 @@ use App\Http\Requests\API\CommunitiesRequest;
 use App\Http\Requests\API\CommunityRequest;
 use App\Http\Resources\CommunitiesResource;
 use App\Http\Resources\CommunityResource;
-use App\Http\Resources\Knowledge\QuestionsResource;
 use App\Repositories\Community\CommunityRepository;
 use Illuminate\Http\Request;
 

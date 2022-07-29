@@ -34,13 +34,15 @@ class MProduct extends Model
         return $this->hasMany(MProductUserView::class, 'uuid', 'uuid');
     }
 
-    public function entityObj(): ?HasOne
+    public function course(): ?HasOne
     {
-        if ($this->type === 'course') {
+        //todo в дальнейшем переделать на полиморфное отношение
+        return $this->hasOne(Course::class, 'uuid', 'uuid');
+        /*if ($this->type === 'course') {
             return $this->hasOne(Course::class, 'uuid', 'uuid');
         } else {
             return null;
-        }
+        }*/
     }
 
 }

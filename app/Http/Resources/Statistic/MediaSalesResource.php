@@ -2,27 +2,23 @@
 
 namespace App\Http\Resources\Statistic;
 
+use App\Http\Resources\ApiResourceCollection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 
-class MediaSalesResource extends ResourceCollection
+/** @property LengthAwarePaginator $resource */
+class MediaSalesResource extends ApiResourceCollection
 {
 
     public function __construct($resource)
     {
         parent::__construct($resource);
 
-        $this->collection = $this->collection->map(function ($item){
+        $this->collection = $this->collection->map(function ($item) {
             return new MediaSaleResource($item);
         });
     }
 
-    public function toArray($request)
-    {
-        return parent::toArray($request);
-    }
-
-    public function with($request): array
-    {
-        return parent::toArray($request);
-    }
 }
