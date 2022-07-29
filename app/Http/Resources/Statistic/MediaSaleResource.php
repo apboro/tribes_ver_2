@@ -5,7 +5,7 @@ namespace App\Http\Resources\Statistic;
 use App\Models\Statistic\MProductSale;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @property MProductSale $resource */
+/** @property object $resource */
 class MediaSaleResource extends JsonResource
 {
     /**
