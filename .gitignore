@@ -24,7 +24,6 @@
 .env
 /*.testing
 .env.backup
-composer.lock
 .idea
 .phpunit.result.cache
 Homestead.json
