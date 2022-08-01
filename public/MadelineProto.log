@@ -1,3 +1,225 @@
+<<<<<<< HEAD
+Logger:         	Automatically truncated logfile to 1048576
+Session:        	Can't garbage collect updates.getChannelDifference with message ID 7124683649743585280 in DC 2 sent 7 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Can't garbage collect updates.getChannelDifference with message ID 7124683649743585292 in DC 2 sent 7 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Can't garbage collect updates.getChannelDifference with message ID 7124683649743585296 in DC 2 sent 7 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Can't garbage collect updates.getChannelDifference with message ID 7124683649743585300 in DC 2 sent 7 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Can't garbage collect msgs_state_req with message ID 7124683666923454464 in DC 2 sent 3 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Garbage collected 1 outgoing messages in DC 2, 6 left
+CheckLoop:      	We did not receive a response for 2 seconds: reconnecting and exiting check loop on DC 2.0
+Connection:     	Reconnecting DC 2.0
+Connection:     	Disconnecting from DC 2.0
+Connection:     	Disconnected from DC 2.0
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.167.50:443 main DC 2, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+SessionPaths:   	Waiting for exclusive lock of C:\OpenServer\domains\tribes/tdlib/Session/user_2.madeline.safe.php.lock...
+SessionPaths:   	Got exclusive lock of C:\OpenServer\domains\tribes/tdlib/Session/user_2.madeline.safe.php.lock...
+SessionPaths:   	Waiting for exclusive lock of C:\OpenServer\domains\tribes/tdlib/Session/user_2.madeline.lightState.php.lock...
+SessionPaths:   	Got exclusive lock of C:\OpenServer\domains\tribes/tdlib/Session/user_2.madeline.lightState.php.lock...
+APIWrapper:     	Saved session!
+PingLoop:       	Ping DC 1.0
+DataCenter:     	Connection failed (2): Operation timed out
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.167.50:80 main DC 2, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+Session:        	Garbage collected 0 outgoing messages in DC 1, 1 left
+Session:        	Garbage collected 0 outgoing messages in DC 1, 1 left
+DataCenter:     	Connection failed (2): Operation timed out
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.167.50:88 main DC 2, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+Session:        	Can't garbage collect ping_delay_disconnect with message ID 7124683692693258240 in DC 1 sent 3 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Garbage collected 0 outgoing messages in DC 1, 1 left
+CheckLoop:      	Still missing ping_delay_disconnect,  on DC 1.0, sending state request
+Session:        	Can't garbage collect ping_delay_disconnect with message ID 7124683692693258240 in DC 1 sent 4 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Garbage collected 0 outgoing messages in DC 1, 2 left
+DataCenter:     	Connection failed (2): Operation timed out
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.167.50:5222 main DC 2, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+Session:        	Can't garbage collect ping_delay_disconnect with message ID 7124683692693258240 in DC 1 sent 5 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Garbage collected 0 outgoing messages in DC 1, 2 left
+CheckLoop:      	We did not receive a response for 2 seconds: reconnecting and exiting check loop on DC 1.0
+Connection:     	Reconnecting DC 1.0
+Connection:     	Disconnecting from DC 1.0
+Connection:     	Disconnected from DC 1.0
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.52:443 main DC 1, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (2): Operation timed out
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:443 main DC 2, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+DataCenter:     	Connection failed (2): Connection to tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:443 refused
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:80 main DC 2, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+DataCenter:     	Connection failed (1): Operation timed out
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.52:80 main DC 1, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (2): Connection to tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:80 refused
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:88 main DC 2, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+DataCenter:     	Connection failed (2): Connection to tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:88 refused
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:5222 main DC 2, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+DataCenter:     	Connection failed (2): Connection to tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:5222 refused
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.167.50:443 main DC 2, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+DataCenter:     	Connection failed (1): Operation timed out
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.52:88 main DC 1, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (2): Connecting to tcp://149.154.167.50:443 failed: timeout exceeded (2000 ms)
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.167.50:80 main DC 2, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+DataCenter:     	Connection failed (1): Operation timed out
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.52:5222 main DC 1, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (2): Connecting to tcp://149.154.167.50:80 failed: timeout exceeded (2000 ms)
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.167.50:88 main DC 2, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+PingLoop:       	Ping DC 3.0
+DataCenter:     	Connection failed (1): Operation timed out
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:443 main DC 1, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (1): Connection to tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:443 refused
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:80 main DC 1, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+Session:        	Garbage collected 0 outgoing messages in DC 3, 1 left
+DataCenter:     	Connection failed (1): Connection to tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:80 refused
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:88 main DC 1, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (1): Connection to tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:88 refused
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:5222 main DC 1, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (2): Connecting to tcp://149.154.167.50:88 failed: timeout exceeded (2000 ms)
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.167.50:5222 main DC 2, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+CheckLoop:      	Still missing ping_delay_disconnect,  on DC 3.0, sending state request
+Session:        	Can't garbage collect ping_delay_disconnect with message ID 7124683757117767680 in DC 3 sent 3 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Garbage collected 0 outgoing messages in DC 3, 1 left
+DataCenter:     	Connection failed (1): Connection to tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:5222 refused
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.52:443 main DC 1, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+PingLoop:       	Ping DC 5.0
+Session:        	Garbage collected 0 outgoing messages in DC 5, 1 left
+Session:        	Can't garbage collect ping_delay_disconnect with message ID 7124683757117767680 in DC 3 sent 4 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Garbage collected 0 outgoing messages in DC 3, 2 left
+DataCenter:     	Connection failed (2): Connecting to tcp://149.154.167.50:5222 failed: timeout exceeded (2000 ms)
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:443 main DC 2, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+Session:        	Garbage collected 0 outgoing messages in DC 5, 1 left
+DataCenter:     	Connection failed (2): Connection to tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:443 refused
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:80 main DC 2, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+CheckLoop:      	We did not receive a response for 2 seconds: reconnecting and exiting check loop on DC 3.0
+Session:        	Can't garbage collect ping_delay_disconnect with message ID 7124683757117767680 in DC 3 sent 6 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Can't garbage collect msgs_state_req with message ID 7124683770002669568 in DC 3 sent 3 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Garbage collected 0 outgoing messages in DC 3, 2 left
+DataCenter:     	Connection failed (1): Connecting to tcp://149.154.175.52:443 failed: timeout exceeded (2000 ms)
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.52:80 main DC 1, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+CheckLoop:      	Still missing ping_delay_disconnect,  on DC 5.0, sending state request
+Connection:     	Reconnecting DC 3.0
+Connection:     	Disconnecting from DC 3.0
+Connection:     	Disconnected from DC 3.0
+DataCenter:     	Reconnecting to DC 3 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.100:443 main DC 3, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 3.0
+DataCenter:     	Connection failed (2): Connection to tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:80 refused
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:88 main DC 2, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+Session:        	Can't garbage collect ping_delay_disconnect with message ID 7124683774297636864 in DC 5 sent 3 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Garbage collected 0 outgoing messages in DC 5, 2 left
+DataCenter:     	Connection failed (2): Connection to tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:88 refused
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:5222 main DC 2, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+DataCenter:     	Connection failed (2): Connection to tcp://[2001:067c:04e8:f002:0000:0000:0000:000a]:5222 refused
+DataCenter:     	Reconnecting to DC 2 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://venus.web.telegram.org:443/apiw1 main DC 2, via ipv4 using HttpsStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 2.0
+Session:        	Can't garbage collect ping_delay_disconnect with message ID 7124683774297636864 in DC 5 sent 4 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Garbage collected 0 outgoing messages in DC 5, 2 left
+DataCenter:     	Connection failed (1): Connecting to tcp://149.154.175.52:80 failed: timeout exceeded (2000 ms)
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.52:88 main DC 1, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+CheckLoop:      	We did not receive a response for 2 seconds: reconnecting and exiting check loop on DC 5.0
+DataCenter:     	Connection failed (3): Operation timed out
+DataCenter:     	Reconnecting to DC 3 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.100:80 main DC 3, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 3.0
+Session:        	Can't garbage collect ping_delay_disconnect with message ID 7124683774297636864 in DC 5 sent 6 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Can't garbage collect msgs_state_req with message ID 7124683787182538752 in DC 5 sent 3 seconds ago, no response has been received or it wasn't yet handled!
+Session:        	Garbage collected 0 outgoing messages in DC 5, 2 left
+Connection:     	Reconnecting DC 5.0
+Connection:     	Disconnecting from DC 5.0
+Connection:     	Disconnected from DC 5.0
+DataCenter:     	Reconnecting to DC 5 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://91.108.56.172:443 main DC 5, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 5.0
+DataCenter:     	Connection failed (1): Connecting to tcp://149.154.175.52:88 failed: timeout exceeded (2000 ms)
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.52:5222 main DC 1, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (3): Operation timed out
+DataCenter:     	Reconnecting to DC 3 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.100:88 main DC 3, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 3.0
+DataCenter:     	Connection failed (5): Operation timed out
+DataCenter:     	Reconnecting to DC 5 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://91.108.56.172:80 main DC 5, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 5.0
+SessionPaths:   	Waiting for exclusive lock of C:\OpenServer\domains\tribes/tdlib/Session/user_2.madeline.safe.php.lock...
+SessionPaths:   	Got exclusive lock of C:\OpenServer\domains\tribes/tdlib/Session/user_2.madeline.safe.php.lock...
+SessionPaths:   	Waiting for exclusive lock of C:\OpenServer\domains\tribes/tdlib/Session/user_2.madeline.lightState.php.lock...
+SessionPaths:   	Got exclusive lock of C:\OpenServer\domains\tribes/tdlib/Session/user_2.madeline.lightState.php.lock...
+APIWrapper:     	Saved session!
+DataCenter:     	Connection failed (1): Connecting to tcp://149.154.175.52:5222 failed: timeout exceeded (2000 ms)
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:443 main DC 1, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (1): Connection to tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:443 refused
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:80 main DC 1, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (3): Operation timed out
+DataCenter:     	Reconnecting to DC 3 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://149.154.175.100:5222 main DC 3, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 3.0
+DataCenter:     	Connection failed (1): Connection to tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:80 refused
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:88 main DC 1, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+DataCenter:     	Connection failed (5): Operation timed out
+DataCenter:     	Reconnecting to DC 5 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://91.108.56.172:88 main DC 5, via ipv4 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 5.0
+DataCenter:     	Connection failed (1): Connection to tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:88 refused
+DataCenter:     	Reconnecting to DC 1 (0) from existing
+DataCenterConnection: 	Trying shared connection via tcp://[2001:0b28:f23d:f001:0000:0000:0000:000a]:5222 main DC 1, via ipv6 using AbridgedStream => BufferedRawStream => DefaultStream (0)
+Connection:     	Connecting to DC 1.0
+=======
 Logger:         	Automatically truncated logfile to 1048576
 UpdateHandler, Strojevgen:  	Parsing updates (updateShort) received via the socket...
 Session, Strojevgen:        	Garbage collected 1 incoming messages in DC 2, 0 left
@@ -7423,3 +7645,4 @@ Session, Strojevgen:        	Can't garbage collect updates.getChannelDifference 
 Session, Strojevgen:        	Garbage collected 0 outgoing messages in DC 2, 10 left
 Session, Strojevgen:        	Garbage collected 12 incoming messages in DC 2, 0 left
 Session, Strojevgen:        	Garbage collected 10 outgoing messages in DC 2, 0 left
+>>>>>>> 0d5ceed228b32f79fde4baa8b047b4ea96af95b8

@@ -2,7 +2,7 @@
     <div id="pay_block_preview_container" class="d-flex flex-column align-items-center">
         <div id="preview_img" class="col-12 mb-2" style="margin-top:10px; height: 260px; background-color: #ebe9f1;">
             <img
-                src="@if($community->tariff && $community->tariff->getMainImage()){{ $community->tariff->getMainImage()->url }}@else/images/no-image.svg @endif"
+                src="@if($community->tariff && $community->tariff->getMainImage()){{$community->tariff->getMainImage()->url }}@else/images/no-image.svg @endif"
                 alt=""  
                 class="active-image__img rounded w-100 h-100"
                 style="object-fit: contain;"

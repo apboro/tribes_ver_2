@@ -114,17 +114,12 @@ class MainBotCommands
                     if (str_split($ctx->getChatID(), 1)[0] !== '-') {
                         $ctx->replyHTML('Добро пожаловать в главное меню, ' . $ctx->getUsername() . '! Я бот сервиса по монетизации Telegram-каналов и чатов.' . "\n\n"
                             . 'Ссылка на сайт ' . route('main') . "\n"
-                            . 'Создание и настройка проектов происходит в веб кабинете.' . "\n\n"
-                            . 'Вот список доступных для вас команд:' . "\n"
-                            . $this->getCommandsListAsString(), Menux::Get('main'));
+                            . 'Создание и настройка проектов происходит в веб кабинете.', Menux::Get('main'));
                     } else $ctx->reply('Здравствуйте, вас приветствует TestBot');
                 } else {
                     if (str_split($ctx->getChatID(), 1)[0] !== '-') {
-                        $ctx->replyHTML('Здравствуйте, ' . $ctx->getUsername()
-                            . '! Добро пожаловать в сообщество.' . "\n\n"
-                            . 'Вот список доступных для вас команд:' . "\n"
-                            . '/start - Начало работы с ботом' . "\n"
-                            . '/donate - если желаете оказать помощь сообществу в котором состоите', Menux::Get('custom'));
+                        $userName = ', ' . $ctx->getUsername() . '!' ?? '';
+                        $ctx->replyHTML('Здравствуйте' . $userName, Menux::Get('custom'));
                     }
                 }
                 if (!empty($ctx->var('paymentId'))) {
@@ -273,6 +268,7 @@ class MainBotCommands
         try {
             $this->bot->onCommand('donate', function (Context $ctx) {
                 if (str_split($ctx->getChatID(), 1)[0] !== '-') {
+
                     $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
 
                     if ($communities->first()) {
@@ -282,7 +278,8 @@ class MainBotCommands
                         }
                         $ctx->reply('Выберите сообщество, которому желаете оказать материальную помощ.', $menu);
                         $ctx->enter('donate');
-                    }
+                    } else
+                        $ctx->reply('Вы не состоите в сообществе.');
                 }
             });
         } catch (\Exception $e) {
@@ -705,7 +702,7 @@ class MainBotCommands
                 if ($payment && $payment->type == 'tariff') {
                     $link = $this->createAndSaveInviteLink($payment->community->connection);
                     $invite = ($link)
-                        ? "\n" . 'Пригласительная ссылка на ресурс: <a href="' . $link . '">Подписаться</a>' : '';
+                        ? "\n" . 'Чтобы вступить в сообщество, нажмите сюда: <a href="' . $link . '">Подписаться</a>' : '';
 
                     $message = $payment->community->tariff->thanks_description ?? '';
 
@@ -724,7 +721,7 @@ class MainBotCommands
                 $community = $this->communityRepo->getCommunityById($communityId);
                 if ($community) {
                     $link = $this->createAndSaveInviteLink($community->connection);
-                    $invite = ($link) ? "\n" . 'Пригласительная ссылка на ресурс: <a href="' . $link . '">Подписаться</a>' : '';
+                    $invite = ($link) ? "\n" . 'чтобы вступить в сообщество, нажмите сюда: <a href="' . $link . '">Подписаться</a>' : '';
 
                     $message = $community->tariff->thanks_description ?? '';
 
@@ -759,13 +756,14 @@ class MainBotCommands
     {
         try {
             Menux::Create('menu', 'main')
-                ->row()->btn('🚀Личный кабинет')->btn('🔧Помощь')
-                ->row()->btn('❗Оказать материальную помощь')->btn('📂Мои подписки')
+                ->row()->btn('🚀Личный кабинет')
+                ->row()->btn('📂Мои подписки')
                 ->row()->btn('🔍Найти подписку');
 
             Menux::Create('menuCustom', 'custom')
-                ->row()->btn('🚀Личный кабинет')->btn('🔧Помощь')
-                ->row()->btn('❗Оказать материальную помощь')->btn('📂Мои подписки');
+                ->row()->btn('🚀Личный кабинет')
+                ->row()->btn('📂Мои подписки')
+                ->row()->btn('🔍Найти подписку');
         } catch (MenuxException $e) {
         }
     }

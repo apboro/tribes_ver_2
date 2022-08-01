@@ -59,7 +59,9 @@ class SetNewTelegramUsers implements ShouldQueue
             $ty->last_name   = isset($user['user']['last_name']) ? $user['user']['last_name'] : NULL;
             $ty->save();
 
-            $ty->communities()->attach($community);
+            if (!$ty->communities()->find($community->id))
+                $ty->communities()->attach($community);
+
         }
     }
 }
