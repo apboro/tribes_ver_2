@@ -12,18 +12,6 @@
                 v-for="(col, index) in row"
                 :key="index"
             >
-            <!-- <div
-                class="table__item"
-                :class="{
-                    'table__item--openable': col.type == 'openable',
-                    'table__item--changable':
-                        col.type == 'openable' ||
-                        col.type == 'time' ||
-                        col.type == 'text',
-                    'table__item--center': col.type == 'actions'
-                }"
-                @click="onItemClick(col.type)"
-            > -->
                 <!-- Выделить -->
                 <template v-if="col.type == 'multiple'">
                     <div class="table__item">
@@ -36,6 +24,7 @@
                     </div>
                 </template>
 
+                <!-- Раскрывающийся элемент -->
                 <template v-else-if="col.type == 'openable'">
                     <slot
                         name="openableBlock"
@@ -45,40 +34,48 @@
                     ></slot>    
                 </template>
 
-                <!-- <template v-else-if="col.type == 'time'">
-                    <time-format
-                        :value="data[col.key]"
-                        typeValue="date"
-                    />
+                <template v-else-if="col.type == 'time'">
+                    <div class="table__item table__item--changable">
+                        <time-format
+                            :value="data[col.key]"
+                            :typeValue="col.typeValue"
+                        />
+                    </div>
                 </template>
 
                 <template v-else-if="col.type == 'text'">
-                    {{ data.c_enquiry }}
+                    <div class="table__item table__item--changable">
+                        {{ data.c_enquiry }}
+                    </div>
                 </template>
 
                 <template v-else-if="col.type == 'status'">
-                    <span
-                        class="table__status"
-                        :class="{
-                            'table__status--green': data.statusTheme == 'green',
-                            'table__status--red': data.statusTheme == 'red',
-                            'table__status--orange': data.statusTheme == 'orange',
-                        }"
-                    >
-                        {{ data.status }}
-                    </span>
+                    <div class="table__item">
+                        <span
+                            class="table__status"
+                            :class="{
+                                'table__status--green': col.getStatus(data).class == 'green',
+                                'table__status--red': col.getStatus(data).class == 'red',
+                                'table__status--orange': col.getStatus(data).class == 'orange',
+                            }"
+                        >
+                            {{ col.getStatus(data).text }}
+                        </span>
+                    </div>
                 </template>
 
-                <template v-else-if="col.type == 'actions'"> -->
-                    <!-- <actions-dropdown
-                        :data="data"
-                        :actions="col.actions"
-                    ></actions-dropdown> -->
-                    <!-- <slot
-                        name="tableAction"
-                        :data="data"
-                    ></slot>              
-                </template> -->
+                <template v-else-if="col.type == 'actions'">
+                    <div class="table__item table__item--center">
+                        <col-actions :colData="data">
+                            <template #tableAction="{ data }">
+                                <slot
+                                    name="tableAction"
+                                    :data="data"
+                                ></slot>
+                            </template>
+                        </col-actions>
+                    </div>
+                </template>
             </div>
 
 
@@ -98,8 +95,9 @@
     import VCheckbox from"../form/VCheckbox.vue";
     import TimeFormat from '../format/TimeFormat.vue';
     import VIcon from "../icon/VIcon.vue";
+    import VDropdown from '../dropdown/VDropdown.vue';
     import HiddenRow from "../../pages/Knowledge/Table/HiddenRow.vue";
-    import ActionsDropdown from './ActionsDropdown.vue';
+    import ColActions from './ColActions.vue';
 
     export default {
         name: 'TableRow',
@@ -107,9 +105,10 @@
         components: {
             VCheckbox,
             VIcon,
+            VDropdown,
             HiddenRow,
             TimeFormat,
-            ActionsDropdown,
+            ColActions,
         },
 
         props: {

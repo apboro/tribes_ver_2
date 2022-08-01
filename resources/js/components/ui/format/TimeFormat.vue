@@ -18,7 +18,7 @@
 
             typeValue: {
                 type: String,
-                default: 'date, time'
+                default: 'date&time'
             },
 
             format: {
