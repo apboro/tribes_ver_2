@@ -12,7 +12,7 @@ return [
     'settings_title' => 'Tariff settings in the community',
     'payment_page' => 'Landing page',
     'welcome_description_title' => 'Welcome message for new member',
-    'welcome_default_description' => '@link_to_member_profile, welcome to our community!',
+    'welcome_default_description' => 'Welcome to our community!',
     'reminder_description_title' => 'Payment reminder message',
     'reminder_default_description' => 'Thank you for being part of our community! In order for me to continue to please you with the novelties of my community, I ask you to support me by extending your tariff',
     'success_description_title' => 'Thank you message for payment',

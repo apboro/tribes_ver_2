@@ -90,7 +90,7 @@
                         </span>
 
                         <span class="badge bg-light-info">
-                            {{ $community->statistic->repository()->getPaidSubscribers() }} / {{ $community->statistic->repository()->getAllSubcribers() }}
+                            {{ $community->statistic->repository()->getPaidSubscribers() }} / {{ $community->statistic->repository()->getAllSubscribers() }}
                         </span>
                     </li>
 

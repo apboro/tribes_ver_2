@@ -38,7 +38,7 @@ class StatisticRepository implements StatisticRepositoryContract
         foreach ($payment as $pay) {
             $balance[] = $pay->add_balance;
         }
-        
+
         return array_sum($balance);
     }
 
@@ -77,22 +77,40 @@ class StatisticRepository implements StatisticRepositoryContract
     /** Получение количества оплативших подписчиков */
     public function getPaidSubscribers()
     {
-        return $this->statistic->community()->with('followers')->first()->followers()->count();
+        $community = $this->statistic->getCommunity();
+        if ($community) :
+            $tariffVariants = $community->tariff->variants()->select('id')->with('payFollowers')->get();
+            $allPayFollowers = [];
+            foreach ($tariffVariants as $variant) :
+                foreach ($variant->payFollowers as $payFollower) :
+                    $allPayFollowers[] = $payFollower;
+                endforeach;
+            endforeach;
+
+            return count($allPayFollowers);
+        endif;
+
+        return false;
     }
 
     /** Получение всех подписчиков */
-    public function getAllSubcribers()
+    public function getAllSubscribers()
     {
-//        dd();
-        if (isset($this->statistic->first()->community->connection->chat_id)) {
-            return $this->getSubscribers($this->statistic->first()->community->connection->chat_id);
-        }
+        $community = $this->statistic->getCommunity();
+        if ($community) :
+            if (isset($community->connection->chat_id))
+                return $this->getSubscribers($community->connection->chat_id);
+        endif;
     }
 
     /** Получение уникальных посетителей платёжной страницы за период времени в формате Y-m-d*/
     public function getHostsPeriod($fromTime, $beforeTime)
     {
-        return $this->statistic->userIp()->whereDate('created_at', '>=', $fromTime)->whereDate('created_at', '<=', $beforeTime)->distinct('ip')->count();
+        return $this->statistic->userIp()
+            ->whereDate('created_at', '>=', $fromTime)
+            ->whereDate('created_at', '<=', $beforeTime)
+            ->distinct('ip')
+            ->count();
     }
 
     /** Получение просмотров платёжной страницы */
@@ -110,49 +128,81 @@ class StatisticRepository implements StatisticRepositoryContract
     /** Получение суммы донатов за весь период */
     public function getDonateSum()
     {
-        return $this->getSumTypeAll($this->statistic->community()->first(), 'donate');
+        $community = $this->statistic->getCommunity();
+        if ($community)
+            return $this->getSumTypeAll($community, 'donate');
+
+        return false;
     }
 
     /** Получение суммы тарифов за весь период */
     public function getTariffSum()
     {
-        return $this->getSumTypeAll($this->statistic->community()->first(), 'tariff');
+        $community = $this->statistic->getCommunity();
+        if ($community)
+            return $this->getSumTypeAll($community, 'tariff');
+
+        return false;
     }
 
     /** Получение суммы донатов за определенный период времени. Время в формате Y-m-d*/
-    public function getDonateSumPeriiod($fromTime, $beforeTime)
+    public function getDonateSumPeriod($fromTime, $beforeTime)
     {
-        return $this->getSumType($this->statistic->community()->first(), 'donate', $fromTime, $beforeTime);
+        $community = $this->statistic->getCommunity();
+        if ($community)
+            return $this->getSumType($community, 'donate', $fromTime, $beforeTime);
+
+        return false;
     }
 
     /** Получение суммы тарифов за определенный период времени. Время в формате Y-m-d*/
-    public function getTariffSumPeriiod($fromTime, $beforeTime)
+    public function getTariffSumPeriod($fromTime, $beforeTime)
     {
-        return $this->getSumType($this->statistic->community()->first(), 'tariff', $fromTime, $beforeTime);
+        $community = $this->statistic->getCommunity();
+        if ($community)
+            return $this->getSumType($community, 'tariff', $fromTime, $beforeTime);
+
+        return false;
     }
 
     /** Получение количества донатов за весь период */
     public function getTotalDonate()
     {
-        return $this->totalType($this->statistic->community()->first(), 'donate');
+        $community = $this->statistic->getCommunity();
+        if ($community)
+            return $this->totalType($community, 'donate');
+
+        return false;
     }
 
     /** Получение количества оплаченных тарифов за весь период */
     public function getTotalTariff()
     {
-        return $this->totalType($this->statistic->community()->first(), 'tariff');
+        $community = $this->statistic->getCommunity();
+        if ($community)
+            return $this->totalType($community, 'tariff');
+
+        return false;
     }
 
     /** Получение количества донатов за определенный период времени. Время в формате Y-m-d  */
     public function getTotalDonatePeriod($fromTime, $beforeTime)
     {
-        return $this->totalTypePeriod($this->statistic->community()->first(), 'donate', $fromTime, $beforeTime);
+        $community = $this->statistic->getCommunity();
+        if ($community)
+            return $this->totalTypePeriod($community, 'donate', $fromTime, $beforeTime);
+
+        return false;
     }
 
     /** Получение количества оплаченных тарифов за определенный период времени. Время в формате Y-m-d  */
     public function getTotalTariffPeriod($fromTime, $beforeTime)
     {
-        return $this->totalTypePeriod($this->statistic->community()->first(), 'tariff', $fromTime, $beforeTime);
+        $community = $this->statistic->getCommunity();
+        if ($community)
+            return $this->totalTypePeriod($community, 'tariff', $fromTime, $beforeTime);
+
+        return false;
     }
 
     protected function getSumTypeAll($community, $type)
@@ -191,8 +241,6 @@ class StatisticRepository implements StatisticRepositoryContract
     protected function getSubscribers($chatId)
     {
         try {
-//            dd($chatId);
-
             $count = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $chatId);
             if (isset($count) && $count !== NULL) {
                 return $count;

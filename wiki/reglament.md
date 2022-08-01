@@ -1,4 +1,4 @@
-## Задачи в гитхаб
+## Задачи в GitHub / GitLab
 
 1. На каждую отданную в работу программисту задачу заводим ветку
 2. ветка наследуется от родительской `dev` перед созданием нового `branch` обновиться до актуальной версии `git pull dev`
@@ -10,7 +10,7 @@
 только для бесплатных аккаунтов github organization не нашел в документации 
 ```
 
-## Наименование веток в github 
+## Наименование веток в github / gitlab
 
     `2022_05_26_andrey_tele_bots`
 
@@ -21,6 +21,12 @@
 
    ```angular2html
        https://github.com/CoderYooda/Community/pull/new/'branch-name'
-```
+   ```
+
+## Наименование комитов в github / gitlab
+
+    `TBS-999 add some changes`
+Где TBS-999 - id задачи в jira и краткое описание изменений
+
 
 ![Image](images/trello_gitbranch_add.png)

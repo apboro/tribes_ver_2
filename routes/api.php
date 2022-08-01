@@ -87,4 +87,10 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
         Route::post('store', 'CommunityController@store')->name('api.community.store');
         Route::post('delete', 'CommunityController@delete')->name('api.community.delete');*/
     });
+
+    Route::group(['prefix' => 'media-statistic'], function () {
+        Route::post('sales-list', 'MediaStatisticController@salesList')->name('api.media-statistic.sales-list');
+        Route::post('products-list', 'MediaStatisticController@productsList')->name('api.media-statistic.products-list');
+        Route::post('views-list', 'MediaStatisticController@viewsList')->name('api.media-statistic.views-list');
+    });
 });

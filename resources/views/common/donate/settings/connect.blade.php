@@ -41,7 +41,7 @@
                                 <div class="col-md-10 col-xl-5 col-10">
                                     <div class="mb-1 mb-xl-1">
                                         <label class="form-label">
-                                            Наименование доната
+                                            Наименование доната *
                                         </label>
                                         <input
                                             type="text"
@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
 
                         <div class="card-footer">
                             <div class="row align-items-center">
@@ -132,6 +132,7 @@
                                     </div>
                                 </span> 
                             </div>
+                        </div>
                         </form>
                     </div>
                 </div>
