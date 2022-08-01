@@ -34,10 +34,9 @@ class QuestionController extends Controller
 
     public function list(QuestionsRequest $questionRequest, QuestionsFilter $filters): QuestionsResource
     {
-        //$arrayParams = $filters->getParams();
         $models = $this->knowledgeRepository->getQuestionsByCommunityId($questionRequest->community_id, $filters);
 
-        return new QuestionsResource($models);
+        return (new QuestionsResource($models))->forApi();
     }
 
     public function get(QuestionRequest $questionRequest): QuestionResource

@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "b2686980-1248-4b78-8dd4-c291e6530150",
+		"_postman_id": "03d13310-152b-42bc-a6f1-6a935d8c4cc1",
 		"name": "spodial-kw-api",
 		"description": "запросы для обращения к АПИ базы знаний",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "21036434"
+		"_exporter_id": "6194295"
 	},
 	"item": [
 		{
@@ -32,18 +32,17 @@
 						{
 							"key": "filter[with_answers]",
 							"value": "1",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						},
 						{
 							"key": "filter[draft]",
-							"value": "0",
+							"value": "draft",
 							"type": "text",
 							"disabled": true
 						},
 						{
 							"key": "filter[published]",
-							"value": "0",
+							"value": "public",
 							"type": "text",
 							"disabled": true
 						},
@@ -67,12 +66,26 @@
 						{
 							"key": "filter[sort][name]",
 							"value": "id",
-							"type": "text"
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "update_date",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "enquiry",
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "filter[sort][rule]",
 							"value": "DESC",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "filter[page]",
@@ -83,12 +96,6 @@
 						{
 							"key": "filter[per_page]",
 							"value": "3",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "filter[status]",
-							"value": "draft",
 							"type": "text"
 						}
 					]
@@ -552,7 +559,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"update_id\": 944984566,\n  \"message\": {\n    \"message_id\": 1840,\n    \"from\": {\n      \"id\": 416272404,\n      \"is_bot\": false,\n      \"first_name\": \"\\u0410\\u043d\\u0434\\u0440\\u0435\\u0439\",\n      \"last_name\": \"\\u0414\\u043e\\u043b\\u0433\\u043e\\u043f\\u043e\\u043b\\u043e\\u0432\",\n      \"username\": \"a_dolgopolov\",\n      \"language_code\": \"ru\"\n    },\n    \"chat\": {\n      \"id\": -608142614,\n      \"title\": \"@test1_group_for_main_bot\",\n      \"type\": \"group\",\n      \"all_members_are_administrators\": true\n    },\n    \"date\": 1654781088,\n    \"text\": \"\\u0442\\u0435\\u043a\\u0441\\u0442 \\u0434\\u043b\\u044f \\u0442\\u0435\\u0441\\u0442\\u0430\"\n  }\n}",
+					"raw": "{\n  \"update_id\": 944984736,\n  \"message\": {\n    \"message_id\": 2123,\n    \"from\": {\n      \"id\": 416272404,\n      \"is_bot\": false,\n      \"first_name\": \"\\u0410\\u043d\\u0434\\u0440\\u0435\\u0439\",\n      \"last_name\": \"\\u0414\\u043e\\u043b\\u0433\\u043e\\u043f\\u043e\\u043b\\u043e\\u0432\",\n      \"username\": \"a_dolgopolov\",\n      \"language_code\": \"ru\"\n    },\n    \"chat\": {\n      \"id\": -608142614,\n      \"title\": \"@test1.spodial.com\",\n      \"type\": \"group\",\n      \"all_members_are_administrators\": true\n    },\n    \"date\": 1657275058,\n    \"new_chat_participant\": {\n      \"id\": 1036021042,\n      \"is_bot\": false,\n      \"first_name\": \"\\u041e\\u043b\\u0435\\u0433\",\n      \"last_name\": \"\\u041f\\u044f\\u0442\\u0430\\u043a\\u043e\\u0432\",\n      \"username\": \"pyatakov31\"\n    },\n    \"new_chat_member\": {\n      \"id\": 1036021042,\n      \"is_bot\": false,\n      \"first_name\": \"\\u041e\\u043b\\u0435\\u0433\",\n      \"last_name\": \"\\u041f\\u044f\\u0442\\u0430\\u043a\\u043e\\u0432\",\n      \"username\": \"pyatakov31\"\n    },\n    \"new_chat_members\": [\n      {\n        \"id\": 1036021042,\n        \"is_bot\": false,\n        \"first_name\": \"\\u041e\\u043b\\u0435\\u0433\",\n        \"last_name\": \"\\u041f\\u044f\\u0442\\u0430\\u043a\\u043e\\u0432\",\n        \"username\": \"pyatakov31\"\n      }\n    ]\n  }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -560,7 +567,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{host}}/bot/webhook",
+					"raw": "{{host}}/bot/webhook?XDEBUG_SESSION_START=PHPSTORM",
 					"host": [
 						"{{host}}"
 					],
@@ -571,8 +578,7 @@
 					"query": [
 						{
 							"key": "XDEBUG_SESSION_START",
-							"value": "PHPSTORM",
-							"disabled": true
+							"value": "PHPSTORM"
 						}
 					]
 				},
@@ -621,6 +627,158 @@
 					]
 				},
 				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "статистика products-list",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "create_date",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/media-statistic/products-list"
+			},
+			"response": []
+		},
+		{
+			"name": "статистика sales-list",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "update_date",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "create_date",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "price",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "status",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[buyer]",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[status]",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[create_date]",
+							"value": "2022-07-28 2022-07-29",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/media-statistic/sales-list",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"media-statistic",
+						"sales-list"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "id",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "статистика views-list",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "{{host}}/api/media-statistic/views-list"
 			},
 			"response": []
 		}
