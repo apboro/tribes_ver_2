@@ -4,16 +4,10 @@ namespace App\Repositories\Statistic;
 
 use App\Filters\API\MediaProductsFilter;
 use App\Filters\API\MediaSalesFilter;
-use App\Helper\ArrayHelper;
-use App\Models\Course;
-use App\Models\Payment;
-use App\Models\Statistic\MProduct;
-use App\Models\Statistic\MProductSale;
-use App\Models\TelegramUser;
+use App\Filters\API\MediaViewsFilter;
 use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -31,6 +25,60 @@ class MediaProductStatisticRepository implements MediaProductStatisticRepository
         ]);
         $builder = $this->getBuilderForSales();
         $builder = $filters->apply($builder);
+        $perPage = $filterData['per-page'] ?? 15;
+
+        return new LengthAwarePaginator(
+            $builder->limit($perPage)->get(),
+            $builder->count(),
+            $perPage,
+            $filterData['page'] ?? null
+        );
+    }
+
+    public function getProducts(MediaProductsFilter $filters): LengthAwarePaginator
+    {
+        $filterData = $filters->filters();
+        Log::debug("MediaProductStatisticRepository::getProducts", [
+            'filter' => $filterData,
+        ]);
+        $builder = $this->getBuilderForProducts();
+
+        $builder = $filters->apply($builder);
+        //dd($builder->toSql());
+        $perPage = $filterData['per-page'] ?? 15;
+
+        return new LengthAwarePaginator(
+            $builder->limit($perPage)->get(),
+            $builder->count(),
+            $perPage,
+            $filterData['page'] ?? null
+        );
+    }
+
+    public function getViews(MediaViewsFilter $filters): LengthAwarePaginator
+    {
+        $ct = 'courses';
+        $u = 'users';
+        $mpv = 'm_product_user_views';
+
+        $builder = DB::table($u)
+            ->join($mpv, "$mpv.user_id", "=", "$u.id")
+            ->join($ct, "$mpv.uuid", "=", "$ct.uuid")
+            ->select([
+                "$ct.uuid",
+                "$mpv.user_id",
+                "$ct.title as title",
+                "$u.name as user_name",
+                "$mpv.c_time_view as time_view",
+            ]);
+
+        $filterData = $filters->filters();
+        Log::debug("MediaProductStatisticRepository::getViews", [
+            'filter' => $filterData,
+        ]);
+
+        $builder = $filters->apply($builder);
+        //dd($builder->toSql());
         $perPage = $filterData['per-page'] ?? 15;
 
         return new LengthAwarePaginator(
@@ -61,26 +109,6 @@ class MediaProductStatisticRepository implements MediaProductStatisticRepository
                 "$p.status as status"
             ]);
         return $builder;
-    }
-
-    public function getProducts(MediaProductsFilter $filters): LengthAwarePaginator
-    {
-        $filterData = $filters->filters();
-        Log::debug("MediaProductStatisticRepository::getProducts", [
-            'filter' => $filterData,
-        ]);
-        $builder = $this->getBuilderForProducts();
-
-        $builder = $filters->apply($builder);
-        //dd($builder->toSql());
-        $perPage = $filterData['per-page'] ?? 15;
-
-        return new LengthAwarePaginator(
-            $builder->limit($perPage)->get(),
-            $builder->count(),
-            $perPage,
-            $filterData['page'] ?? null
-        );
     }
 
     protected function getBuilderForProducts(): Builder

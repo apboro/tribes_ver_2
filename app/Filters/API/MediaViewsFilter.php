@@ -4,15 +4,14 @@ namespace App\Filters\API;
 
 use App\Helper\ArrayHelper;
 
-class MediaProductsFilter extends QueryAPIFilter
+class MediaViewsFilter extends QueryAPIFilter
 {
     protected function _sortingName($name): string
     {
         $list = [
             'create_date' => 'courses.created_at',
             'update_date' => 'courses.updated_at',
-            'actual_price' => 'courses.price',
-            //'status' => 'm_product.c_time_view',
+
         ];
         return $list[$name] ?? $list['create_date'];
     }
