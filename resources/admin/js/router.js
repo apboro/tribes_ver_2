@@ -12,7 +12,7 @@ let router =  new Router({
         {
             path: '/login',
             name: 'login',
-            meta: {layout: 'auth', requiresAuth: false},
+            meta: {layout: 'auth'},
             component: () => import(/* webpackChunkName: "Login" */ './components/auth/Login')
         },
         {
@@ -24,20 +24,20 @@ let router =  new Router({
         {
             path: '/users',
             name: 'users',
-            meta: {layout: 'main', tabName: 'Пользователи'},
+            meta: {layout: 'main', tabName: 'Пользователи', requiresAuth: true},
             component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Users.vue')
         },
         {
             path: '/courses',
             name: 'courses',
-            meta: {layout: 'main'},
+            meta: {layout: 'main', requiresAuth: true},
             component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Courses.vue')
         },
 
         {
             path: '/payments',
             name: 'payments',
-            meta: {layout: 'main'},
+            meta: {layout: 'main', requiresAuth: true},
             // meta: {layout: 'main', requiresAuth: true},
             component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Payments.vue')
         },
@@ -61,6 +61,13 @@ let router =  new Router({
         // },
         // { path: '*', redirect: '/' },
     ]
+});
+
+router.beforeEach((to, from, next) => {
+    const authRequired = !['/login'].includes(to.path);
+    const loggedIn = localStorage.getItem('token');
+    if (authRequired && !loggedIn) next({ name: 'login' })
+    else next();
 });
 
 // router.beforeEach((to, from, next) => {
