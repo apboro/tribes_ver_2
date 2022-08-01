@@ -17,21 +17,19 @@
                 {{ selectedValue }}
             </span>
 
-            <template v-if="isOpen">
-                <v-icon
-                    name="arrow-up"
-                    size="1"
-                    class="select__arrow"
-                />
-            </template>
+            <v-icon
+                v-if="isOpen"
+                name="arrow-up"
+                size="1"
+                class="select__arrow"
+            />
 
-            <template v-else>
-                <v-icon
-                    name="arrow-down"
-                    size="1"
-                    class="select__arrow"
-                />
-            </template>
+            <v-icon
+                v-else
+                name="arrow-down"
+                size="1"
+                class="select__arrow"
+            />
         </div>
 
         <div

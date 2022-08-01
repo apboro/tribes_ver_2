@@ -37,7 +37,7 @@
     import VPopup from '../../ui/popup/VPopup.vue';
     
     export default {
-        name: 'KnowledgeConfirmDeletePopup',
+        name: 'ConfirmDeletePopup',
 
         components: {
             VPopup

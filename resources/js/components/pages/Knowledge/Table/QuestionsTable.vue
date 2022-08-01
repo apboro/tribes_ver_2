@@ -1,14 +1,18 @@
 <template>
     <div>
         <!-- Таблица -->
+        <!-- В data передаем данные для отображения в строках таблицы -->
+        <!-- В tableOptions описание для шапки и строк таблицы, содержащее текст, функции, названия полей данных по котрым будет обращаться и пр. -->
+        <!-- sortAttrs объект содержащий актуальную сортировку -->
+        <!-- Статус находится ли в состоянии загрузки данных - для отображения прелоадера -->
         <v-table
             :data="questions"
-            :tableHeader="tableHeader"
-            :tableRow="tableRow"
+            :tableOptions="tableOptions"
             :sortAttrs="sort"
             :isLoading="IS_LOADING"
         >   
-            <template #openableBlock="{ data, isVisibleHiddenRow, toggleHiddenRowVisibility }">
+            <!-- Слот для вставки элемента по которому можно будет открыть невидимую строку -->
+            <template #openableCol="{ data, isVisibleHiddenRow, toggleHiddenRowVisibility }">
                 <col-openable
                     :data="data"
                     :isVisibleHiddenRowParent="isVisibleHiddenRow"
@@ -16,6 +20,7 @@
                 />    
             </template>
 
+            <!-- Слот для вставки контента, содержащегося в невидимой строке -->
             <template #hiddenRow="{ data, isVisibleHiddenRow }">
                 <hidden-row
                     :data="data"
@@ -23,7 +28,8 @@
                 />
             </template>
 
-            <template #tableAction="{ data }">
+            <!-- Слот для вставки меню действий, которое может быть добавлено как колонка в строку таблицы -->
+            <template #actionCol="{ data }">
                 <col-actions
                     :question="data"
                     @openEditQuestionPopup="openEditQuestionPopup"
@@ -34,18 +40,16 @@
 
         <!-- Окно редактирования вопроса -->
         <edit-question-popup
-            v-if="isVisibleQuestionPopup"
             :question="question"
             :isVisibleQuestionPopup="isVisibleQuestionPopup"
             @closeEditQuestionPopup="closeEditQuestionPopup"
         />
 
-        <!-- Окно подтверждения удаления -->
         <!-- Модальное окно подтверждения удаления -->
-        <knowledge-confirm-delete-popup
-            :isVisibleConfirmDeletePopup="isVisibleConfirmDeleteKnowledgeQuestionPopup"
-            @closeConfirmDeletePopup="closeConfirmDeleteKnowledgeQuestionPopup"
-            @confirm="confirmDeleteKnowledgeQuestion"
+        <confirm-delete-popup
+            :isVisibleConfirmDeletePopup="isVisibleConfirmDeleteQuestionPopup"
+            @closeConfirmDeletePopup="closeConfirmDeleteQuestionPopup"
+            @confirm="confirmDeleteQuestion"
         />
     </div>
 </template>
@@ -54,34 +58,30 @@
     import { bodyLock, bodyUnLock } from '../../../../core/functions';
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import VTable from '../../../ui/table/VTable.vue';
-    import VIcon from '../../../ui/icon/VIcon.vue';
     import VCheckbox from '../../../ui/form/VCheckbox.vue';
-    import VDropdown from '../../../ui/dropdown/VDropdown.vue';
     import ColOpenable from './ColOpenable.vue';
     import HiddenRow from './HiddenRow.vue';
     import ColActions from './ColActions.vue';
     import EditQuestionPopup from './EditQuestionPopup.vue';
-    import KnowledgeConfirmDeletePopup from '../KnowledgeConfirmDeletePopup.vue';
+    import ConfirmDeletePopup from '../ConfirmDeletePopup.vue';
     
     export default {
         name: 'QuestionsTable',
  
         components: {
             VTable,
-            VIcon,
             VCheckbox,
-            VDropdown,
             ColOpenable,
             HiddenRow,
             ColActions,
             EditQuestionPopup,
-            KnowledgeConfirmDeletePopup           
+            ConfirmDeletePopup,           
         },
 
         props: {
             questions: {
                 type: Array,
-                default: [],
+                default: () => [],
             }
         },
 
@@ -92,95 +92,83 @@
                     enquiry: 'off',
                 },
 
-                tableHeader: [
-                    {
-                        type: 'multiple',
-                        id: 'all_questions',
-                        value: () => this.GET_ALL_STATUS_MULTIPLE_OPERATIONS,
-                        modelValue: () => this.GET_ALL_STATUS_MULTIPLE_OPERATIONS,
-                        change: () => this.toggleStateQuestions(),
-                    },
+                tableOptions: {
+                    header: [
+                        {
+                            type: 'multiple',
+                            id: 'all_questions',
+                            value: () => this.GET_ALL_STATUS_MULTIPLE_OPERATIONS,
+                            modelValue: () => this.GET_ALL_STATUS_MULTIPLE_OPERATIONS,
+                            change: () => this.toggleStateQuestions(),
+                        },
 
-                    {
-                        type: 'text',
-                        text: 'Вопрос',
-                    },
+                        {
+                            type: 'text',
+                            text: 'Вопрос',
+                        },
 
-                    {
-                        type: 'sorting',
-                        text: 'Дата',
-                        sortName: 'update_at',
-                        sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
-                    },
+                        {
+                            type: 'sorting',
+                            text: 'Дата',
+                            sortName: 'update_at',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
 
-                    {
-                        type: 'sorting',
-                        text: 'Обращений',
-                        sortName: 'enquiry',
-                        sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
-                    },
+                        {
+                            type: 'sorting',
+                            text: 'Обращений',
+                            sortName: 'enquiry',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
 
-                    {
-                        type: 'text',
-                        text: 'Статус',
-                    },
+                        {
+                            type: 'text',
+                            text: 'Статус',
+                        },
 
-                    {
-                        type: 'text-center',
-                        text: 'Действия',
-                    },
-                ],
+                        {
+                            type: 'text-center',
+                            text: 'Действия',
+                        },
+                    ],
 
-                tableRow: [
-                    {
-                        type: 'multiple',
-                        getValue: (id) => this.getMultipleItemValue(id),
-                        setValue: (event, id) => this.setMultipleItemValue(event, id),
-                    },
+                    row: [
+                        {
+                            type: 'multiple',
+                            getValue: (id) => this.getMultipleItemValue(id),
+                            setValue: (event, id) => this.setMultipleItemValue(event, id),
+                        },
 
-                    {
-                        type: 'openable',
-                    },
+                        {
+                            type: 'openable',
+                        },
 
-                    {
-                        type: 'time',
-                        typeValue: 'date',
-                        key: 'created_at'
-                    },
+                        {
+                            type: 'time',
+                            typeValue: 'date',
+                            key: 'created_at'
+                        },
 
-                    {
-                        type: 'text',
-                    },
+                        {
+                            type: 'text',
+                        },
 
-                    {
-                        type: 'status',
-                        getStatus: (data) => this.getStatus(data),
-                    },
+                        {
+                            type: 'status',
+                            getStatus: (data) => this.getStatus(data),
+                        },
 
-                    {
-                        type: 'actions',
-                        actions: [
-                            {
-                                type: 'button',
-                                text: 'Снять с публикации',
-                                onClick: (data, action) => this.togglePublicStatus(data, action),
+                        {
+                            type: 'actions',
+                        },
+                    ],
+                },
 
-                            },
+                isVisibleQuestionPopup: false, // окно редактирования вопроса
+                isVisibleConfirmDeleteQuestionPopup: false, // окно подтверждения удаления
 
-                            {
-                                type: 'link',
-                                text: 'Предпросмотр',
-                                key: 'publicLink'
-                            },
-                        ]
-                    },
-                ],
-
-                isVisibleQuestionPopup: false,
-                isVisibleConfirmDeleteKnowledgeQuestionPopup: false,
-
-                question: {},
-                removedItemId: null,
+                question: {}, // редактируемый вопрос
+                removedItemId: null, // ид удаляемого вопроса
             }
         },
 
@@ -206,7 +194,6 @@
             ]),
 
             toSort(sortName, sortRule) {
-                console.log(sortName, sortRule);
                 // выключаем все фильтры кроме того который включаем
                 Object.keys(this.sort).forEach((name) => {
                     if (sortName != name) {
@@ -276,29 +263,24 @@
 
             confirmRemoved(id) {
                 this.removedItemId = id;
-                this.openConfirmDeleteKnowledgeQuestionPopup();
+                this.openconfirmDeleteQuestionPopup();
             },
 
-            openConfirmDeleteKnowledgeQuestionPopup() {
-                this.isVisibleConfirmDeleteKnowledgeQuestionPopup = true;
+            openconfirmDeleteQuestionPopup() {
+                this.isVisibleConfirmDeleteQuestionPopup = true;
                 bodyLock();
             },
 
-            closeConfirmDeleteKnowledgeQuestionPopup() {
+            closeConfirmDeleteQuestionPopup() {
                 this.removedItemId = null;
-                this.isVisibleConfirmDeleteKnowledgeQuestionPopup = false;
+                this.isVisibleConfirmDeleteQuestionPopup = false;
                 bodyUnLock();
             },
 
-            confirmDeleteKnowledgeQuestion() {
+            confirmDeleteQuestion() {
                 this.REMOVE_QUESTION({ id: this.removedItemId });
-                this.closeConfirmDeleteKnowledgeQuestionPopup();
+                this.closeConfirmDeleteQuestionPopup();
             },
         },
-
-        mounted() {
-           
-            
-        }
     }
 </script>

@@ -28,14 +28,13 @@
                             v-html="data.answer.context"
                         ></div>
                         
-                        <template v-if="isVisibleFullAnswerBtn">
-                            <button
-                                class="button-text table__open-openable-btn button-text--primary"
-                                @click="toggleFullAnswerVisibility"
-                            >
-                                {{ isLongAnswer ? 'Читать полностью' : 'Скрыть ответ' }}
-                            </button>
-                        </template>
+                        <button
+                            v-if="isVisibleFullAnswerBtn"
+                            class="button-text table__open-openable-btn button-text--primary"
+                            @click="toggleFullAnswerVisibility"
+                        >
+                            {{ isLongAnswer ? 'Читать полностью' : 'Скрыть ответ' }}
+                        </button>
                     </template>
                     
                     <template v-else>

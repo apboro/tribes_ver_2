@@ -39,7 +39,7 @@
 
 <script>
     export default {
-        name: "KnowledgeMultipleOperations",
+        name: "MultipleOperations",
 
         methods: {
             setOperationType(type) {

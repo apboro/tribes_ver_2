@@ -1,22 +1,20 @@
 <template>
     <div>
-        <template v-if="isPublic">
-            <button
-                class="table__action-item"
-                @click="removeFromPublication"
-            >
-                Снять с публикации
-            </button>
-        </template>
+        <button
+            v-if="isPublic"
+            class="table__action-item"
+            @click="removeFromPublication"
+        >
+            Снять с публикации
+        </button>
 
-        <template v-else>
-            <button
-                class="table__action-item"
-                @click="publish"
-            >
-                Опубликовать
-            </button>
-        </template>
+        <button
+            v-else
+            class="table__action-item"
+            @click="publish"
+        >
+            Опубликовать
+        </button>
 
         <a
             :href="question.public_link"

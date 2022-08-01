@@ -69,10 +69,11 @@
     import VCheckbox from '../../ui/form/VCheckbox.vue';
     
     export default {
-        name: 'KnowledgeConfirmDraftPopup',
+        name: 'ConfirmDraftPopup',
 
         components: {
-            VPopup, VCheckbox
+            VPopup,
+            VCheckbox
         },
 
         props: {

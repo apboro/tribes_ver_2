@@ -1,7 +1,5 @@
 <template>
-    <div class="knowledge">
-        <!-- <portal-target name="destination"></portal-target> -->
-        
+    <div class="knowledge">        
         <div class="container">
             <!-- <template v-if="COMMUNITY_TITLE"> -->
                 <!-- Breadcrumbs -->
@@ -25,7 +23,7 @@
             <!-- </template> -->
             
             <!-- Auxiliary -->
-            <knowledge-auxiliary
+            <auxiliary-panel
                 class="knowledge__auxiliary"
                 :metaData="GET_META_INFO"
             />
@@ -48,27 +46,22 @@
 
             <transition name="a-knowledge-panel" mode="out-in">
                 <keep-alive>
-                    <template v-if="HAS_QUESTION_FOR_OPERATIONS">
-                        <!-- Multiple operations -->
-                        <knowledge-multiple-operations @setOperationType="setOperationType" />
-                    </template>
-
-                    <template v-else>
-                        <!-- Filter -->
-                        <knowledge-filter
-                            class="knowledge__filter"
-                            @resetFilters="resetFilters"
-                        />
-                    </template>
+                    <!-- Multiple operations -->
+                    <multiple-operations
+                        v-if="HAS_QUESTION_FOR_OPERATIONS"
+                        @setOperationType="setOperationType"
+                    />
+                    
+                    <!-- Filter -->
+                    <questions-filter
+                        v-else
+                        class="knowledge__filter"
+                        @resetFilters="resetFilters"
+                    />
                 </keep-alive>
             </transition>
 
             <!-- Table -->
-            <knowledge-table
-                class="knowledge__table"
-                :questions="GET_QUESTIONS"
-            />
-            
             <questions-table
                 class="knowledge__table"
                 :questions="GET_QUESTIONS"
@@ -76,33 +69,31 @@
             
             <!-- Pagination -->
             <keep-alive>
-                <template v-if="GET_QUESTIONS && GET_QUESTIONS.length && !IS_LOADING">
-                    <v-pagination
-                        class="knowledge__pagination"
-                        :paginateData="GET_PAGINATE_DATA"
-                        :selectOptions="paginationSelectedOptions"
-                        @onPageClick="setPage"
-                        @onChangePerPage="setPerPage"
-                    />
-                </template>
+                <v-pagination
+                    v-if="GET_QUESTIONS && GET_QUESTIONS.length && !IS_LOADING"
+                    class="knowledge__pagination"
+                    :paginateData="GET_PAGINATE_DATA"
+                    :selectOptions="paginationSelectedOptions"
+                    @onPageClick="setPage"
+                    @onChangePerPage="setPerPage"
+                />
             </keep-alive>
 
             <!-- Модальное окно нового вопроса --> 
-            <knowledge-new-question-popup
+            <new-question-popup
                 :isVisibleNewQuestionPopup="isVisibleNewQuestionPopup"
                 @closeNewQuestionPopup="closeNewQuestionPopup"
             />
 
             <!-- Модальное окно подтверждения удаления -->
-            <knowledge-confirm-delete-popup
+            <confirm-delete-popup
                 :isVisibleConfirmDeletePopup="isVisibleConfirmDeletePopup"
                 @closeConfirmDeletePopup="closeConfirmDeletePopup"
                 @confirm="confirmDeleteQuestions"
             />
             
-
             <!-- Модальное окно подтверждения черновиков -->
-            <knowledge-confirm-draft-popup
+            <confirm-draft-popup
                 :isVisibleConfirmDraftPopup="isVisibleConfirmDraftPopup"
                 :questions="needConfirmationQuestions"
                 @closeConfirmDraftPopup="closeConfirmDraftPopup"
@@ -114,20 +105,19 @@
 
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
+    import { bodyLock, bodyUnLock } from '../core/functions';
     import VBreadcrumbs from '../components/ui/breadcrumbs/VBreadcrumbs.vue';
     import VPagination from '../components/ui/pagination/VPagination.vue';
     import VPopup from '../components/ui/popup/VPopup.vue';
     import VIcon from '../components/ui/icon/VIcon.vue';
     import SearchField from '../components/ui/form/SearchField.vue';
     import QuestionsTable from '../components/pages/Knowledge/Table/QuestionsTable.vue';
-    import KnowledgeFilter from '../components/pages/Knowledge/KnowledgeFilter.vue';
-    import KnowledgeTable from '../components/pages/Knowledge/KnowledgeTable.vue';
-    import KnowledgeMultipleOperations from '../components/pages/Knowledge/KnowledgeMultipleOperations.vue';
-    import KnowledgeNewQuestionPopup from '../components/pages/Knowledge/KnowledgeNewQuestionPopup.vue';
-    import KnowledgeConfirmDraftPopup from '../components/pages/Knowledge/KnowledgeConfirmDraftPopup.vue';
-    import KnowledgeConfirmDeletePopup from '../components/pages/Knowledge/KnowledgeConfirmDeletePopup.vue';
-    import KnowledgeAuxiliary from '../components//pages/Knowledge/KnowledgeAuxiliary.vue';
-    import { bodyLock, bodyUnLock } from '../core/functions';
+    import QuestionsFilter from '../components/pages/Knowledge/QuestionsFilter.vue';
+    import MultipleOperations from '../components/pages/Knowledge/MultipleOperations.vue';
+    import NewQuestionPopup from '../components/pages/Knowledge/NewQuestionPopup.vue';
+    import ConfirmDraftPopup from '../components/pages/Knowledge/ConfirmDraftPopup.vue';
+    import ConfirmDeletePopup from '../components/pages/Knowledge/ConfirmDeletePopup.vue';
+    import AuxiliaryPanel from '../components/pages/Knowledge/AuxiliaryPanel.vue';
 
     export default {
         name: 'Knowledge',
@@ -139,13 +129,12 @@
             VIcon,
             SearchField,
             QuestionsTable,
-            KnowledgeFilter,
-            KnowledgeTable,
-            KnowledgeMultipleOperations,
-            KnowledgeNewQuestionPopup,
-            KnowledgeConfirmDraftPopup,
-            KnowledgeConfirmDeletePopup,
-            KnowledgeAuxiliary,
+            QuestionsFilter,
+            MultipleOperations,
+            NewQuestionPopup,
+            ConfirmDraftPopup,
+            ConfirmDeletePopup,
+            AuxiliaryPanel,
         },
 
         data() {

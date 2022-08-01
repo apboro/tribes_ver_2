@@ -20,7 +20,7 @@
                 @click="toggleDropdownVisibility"
             >
                 <slot
-                    name="tableAction"
+                    name="actionCol"
                     :data="colData"
                 ></slot>    
             </div>

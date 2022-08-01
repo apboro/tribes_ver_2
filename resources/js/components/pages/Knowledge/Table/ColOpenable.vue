@@ -11,23 +11,21 @@
             name="a-question-arrow"
             mode="out-in"
         >
-            <template v-if="isVisibleHiddenRow">
-                <v-icon
-                    class="table__item-arrow-icon"
-                    key="0"
-                    name="arrow-up"
-                    size="1"
-                />
-            </template>
+            <v-icon
+                v-if="isVisibleHiddenRow"
+                class="table__item-arrow-icon"
+                key="0"
+                name="arrow-up"
+                size="1"
+            />
 
-            <template v-else>
-                <v-icon
-                    class="table__item-arrow-icon"
-                    key="1"
-                    name="arrow-down"
-                    size="1"
-                />
-            </template> 
+            <v-icon
+                v-else
+                class="table__item-arrow-icon"
+                key="1"
+                name="arrow-down"
+                size="1"
+            /> 
         </transition>
     </div>
 </template>

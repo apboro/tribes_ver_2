@@ -1,26 +1,28 @@
 <template>
     <div class="table knowledge-table">
         <table-header
-            :class="{ 'table__header--disabled' : !hasQuestions }"
-            :tableHeader="tableHeader"
+            :class="{ 'table__header--disabled' : !hasData }"
+            :headerSettings="tableOptions.header"
             :sortAttrs="sortAttrs"
         />
 
         <table-body
             :data="data"
-            :tableRow="tableRow"
+            :rowSettings="tableOptions.row"
             :isLoading="isLoading"
-            :hasQuestions="hasQuestions"
+            :hasData="hasData"
         >
-            <template #openableBlock="{ data, isVisibleHiddenRow, toggleHiddenRowVisibility }">
+            <!-- Слот для вставки элемента по которому можно будет открыть невидимую строку -->
+            <template #openableCol="{ data, isVisibleHiddenRow, toggleHiddenRowVisibility }">
                 <slot
-                    name="openableBlock"
+                    name="openableCol"
                     :data="data"
                     :isVisibleHiddenRow="isVisibleHiddenRow"
                     :toggleHiddenRowVisibility="toggleHiddenRowVisibility"
                 ></slot>    
             </template>
 
+            <!-- Слот для вставки контента, содержащегося в невидимой строке -->
             <template #hiddenRow="{ data, isVisibleHiddenRow }">
                 <slot
                     name="hiddenRow"
@@ -29,13 +31,13 @@
                 ></slot>
             </template>
 
-            <template #tableAction="{ data }">
+            <!-- Слот для вставки меню действий, которое может быть добавлено как колонка в строку таблицы -->
+            <template #actionCol="{ data }">
                 <slot
-                    name="tableAction"
+                    name="actionCol"
                     :data="data"
                 ></slot>
             </template>
-
         </table-body>
     </div>
 </template>
@@ -58,14 +60,9 @@
                 default: []
             },
 
-            tableHeader: {
-                type: Array,
-                default: [],
-            },
-
-            tableRow: {
-                type: Array,
-                default: () => [],
+            tableOptions: {
+                type: Object,
+                default: () => {},
             },
 
             sortAttrs: {
@@ -77,18 +74,12 @@
                 type: Boolean,
                 default: false,
             },
-
-            
         },
 
         computed: {
-            hasQuestions() {
+            hasData() {
                 return this.data && this.data.length ? true : false;
             },
         },
-
-        methods: {
-           
-        }
     }
 </script>

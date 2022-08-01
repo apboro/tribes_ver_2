@@ -2,39 +2,42 @@
     <!-- Body -->
     <div class="table__body">
         <!-- Loading -->
-        <template v-if="isLoading">
-            <div class="table__row table__row--special">
-                <v-icon
-                    name="spinner-primary"
-                    :sizeParams="{
-                        width: 36,
-                        height: 36
-                    }"
-                    class="icon--spinner"
-                />
-            </div>
-        </template>
+        <div
+            v-if="isLoading"
+            class="table__row table__row--special"
+        >
+            <v-icon
+                name="spinner-primary"
+                :sizeParams="{
+                    width: 36,
+                    height: 36
+                }"
+                class="icon--spinner"
+            />
+        </div>
 
         <template v-else>
             <!-- Data -->
-            <template v-if="hasQuestions">
+            <template v-if="hasData">
                 <table-row
                     v-for="(item, index) in data"
                     :key="index"
                     :data="item"
-                    :row="tableRow"
-                    :isOpenable="isOpenable()"
+                    :row="rowSettings"
+                    :isOpenable="isOpenable"
                     
                 >
-                    <template #openableBlock="{ data, isVisibleHiddenRow, toggleHiddenRowVisibility }">
+                    <!-- Слот для вставки элемента по которому можно будет открыть невидимую строку -->
+                    <template #openableCol="{ data, isVisibleHiddenRow, toggleHiddenRowVisibility }">
                         <slot
-                            name="openableBlock"
+                            name="openableCol"
                             :data="data"
                             :isVisibleHiddenRow="isVisibleHiddenRow"
                             :toggleHiddenRowVisibility="toggleHiddenRowVisibility"
                         ></slot>    
                     </template>
 
+                    <!-- Слот для вставки контента, содержащегося в невидимой строке -->
                     <template #hiddenRow="{ data, isVisibleHiddenRow }">
                         <slot
                             name="hiddenRow"
@@ -43,9 +46,10 @@
                         ></slot>
                     </template>
 
-                    <template #tableAction="{ data }">
+                    <!-- Слот для вставки меню действий, которое может быть добавлено как колонка в строку таблицы -->
+                    <template #actionCol="{ data }">
                         <slot
-                            name="tableAction"
+                            name="actionCol"
                             :data="data"
                         ></slot>
                     </template>
@@ -54,12 +58,13 @@
             </template>
             
             <!-- Empty -->
-            <template v-else>
-                <div class="table__row table__row--special">
-                    <p>Таблица пуста</p>
-                    <p>Добавьте вопрос-ответ</p>
-                </div>
-            </template>
+            <div
+                v-else
+                class="table__row table__row--special"
+            >
+                <p>Таблица пуста</p>
+                <p>Добавьте вопрос-ответ</p>
+            </div>
         </template>
     </div>
 </template>
@@ -82,7 +87,7 @@
                 default: [],
             },
 
-            tableRow: {
+            rowSettings: {
                 type: Array,
                 default: () => [],
             },
@@ -92,23 +97,16 @@
                 default: false,
             },
 
-            hasQuestions: {
+            hasData: {
                 type: Boolean,
                 default: false,
-            },
-
-           
+            }, 
         },
 
-        methods: {
-
+        computed: {
             isOpenable() {
-                return this.tableRow.find((item) => item.type == 'openable') ? true : false;
-            }
+                return this.rowSettings.find((item) => item.type == 'openable') ? true : false;
+            },
         },
-
-        mounted() {
-           
-        }
     }
 </script>

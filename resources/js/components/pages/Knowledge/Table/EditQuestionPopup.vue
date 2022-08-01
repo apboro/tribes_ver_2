@@ -106,10 +106,10 @@
 
         data() {
             return {
-                questionText: this.question.context,
-                answerText: this.question.answer ? this.question.answer.context : '',
-                draft: this.question.is_draft,
-                isPublic: this.question.is_public,
+                questionText: '',
+                answerText: '',
+                draft: null,
+                isPublic: null,
             }
         },
 
@@ -137,6 +137,15 @@
                     this.isPublic = bool;
                 }
             },
+        },
+
+        watch: {
+            question() {
+                this.questionText = this.question.context;
+                this.answerText = this.question.answer ? this.question.answer.context : '';
+                this.draft = this.question.is_draft;
+                this.isPublic = this.question.is_public;
+            }
         },
 
         methods: {

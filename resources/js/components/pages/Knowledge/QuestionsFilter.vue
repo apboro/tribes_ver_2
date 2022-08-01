@@ -94,7 +94,7 @@
     import RadioButton from '../../ui/form/RadioButton.vue';
 
     export default {
-        name: 'KnowledgeFilter',
+        name: 'QuestionsFilter',
         
         components: { RadioButton },
 

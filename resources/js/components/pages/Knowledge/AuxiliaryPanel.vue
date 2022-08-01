@@ -29,7 +29,7 @@
     import { copyText } from '../../../core/functions';
     
     export default {
-        name: 'KnowledgeAuxiliary',
+        name: 'AuxiliaryPanel',
         
         props: {
             metaData: {

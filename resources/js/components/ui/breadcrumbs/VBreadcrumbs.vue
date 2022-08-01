@@ -6,22 +6,20 @@
                 v-for="(link, index) in links"
                 :key="index"
             >   
-                <template v-if="isLastLink(index)">
-                    <span
-                        class="breadcrumbs__link--last"
-                    >
-                        {{ link.text }}
-                    </span>
-                </template>
+                <span
+                    v-if="isLastLink(index)"
+                    class="breadcrumbs__link--last"
+                >
+                    {{ link.text }}
+                </span>
 
-                <template v-else>
-                    <a
-                        class="link breadcrumbs__link"
-                        :href="link.href"
-                    >
-                        {{ link.text }}
-                    </a>
-                </template>
+                <a
+                    v-else
+                    class="link breadcrumbs__link"
+                    :href="link.href"
+                >
+                    {{ link.text }}
+                </a>
             </li>
         </ul>
     </nav>

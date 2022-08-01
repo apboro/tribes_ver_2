@@ -5,7 +5,7 @@
     >
         <!-- Header Items -->
         <div
-            v-for="(item, index) in tableHeader"
+            v-for="(item, index) in headerSettings"
             :key="index"
             class="table__header-item"
             :class="{
@@ -14,14 +14,13 @@
             }"
         >
             <!-- Multiple -->
-            <template v-if="item.type == 'multiple'">
-                <v-checkbox
-                    :id="item.id"
-                    :value="item.value()"
-                    :modelValue="item.modelValue()"    
-                    @change="item.change"
-                />
-            </template>
+            <v-checkbox
+                v-if="item.type == 'multiple'"
+                :id="item.id"
+                :value="item.value()"
+                :modelValue="item.modelValue()"    
+                @change="item.change"
+            />
 
             <!-- Текстовый -->
             <template v-if="item.type == 'text' || item.type == 'text-center'">
@@ -30,7 +29,9 @@
 
             <!-- Sort -->
             <template v-if="item.type == 'sorting'">
-                <span>{{ item.text }}</span>
+                <span>
+                    {{ item.text }}
+                </span>
             
                 <sort-button
                     :sortProps="item"
@@ -57,7 +58,7 @@
         },
 
         props: {
-            tableHeader: {
+            headerSettings: {
                 type: Array,
                 default: [],
             },

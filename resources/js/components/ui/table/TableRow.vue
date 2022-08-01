@@ -13,89 +13,93 @@
                 :key="index"
             >
                 <!-- Выделить -->
-                <template v-if="col.type == 'multiple'">
-                    <div class="table__item">
-                        <v-checkbox
-                            :id="`field_${ data.id }`"
-                            :value="col.getValue(data.id)"
-                            :modelValue="col.getValue(data.id)"
-                            @change="changeMultiple(col.setValue, $event, data.id)"
-                        />
-                    </div>
-                </template>
+                <div
+                    v-if="col.type == 'multiple'"
+                    class="table__item"
+                >
+                    <v-checkbox
+                        :id="`field_${ data.id }`"
+                        :value="col.getValue(data.id)"
+                        :modelValue="col.getValue(data.id)"
+                        @change="changeMultiple(col.setValue, $event, data.id)"
+                    />
+                </div>
 
                 <!-- Раскрывающийся элемент -->
-                <template v-else-if="col.type == 'openable'">
-                    <slot
-                        name="openableBlock"
-                        :data="data"
-                        :isVisibleHiddenRow="isVisibleHiddenRow"
-                        :toggleHiddenRowVisibility="toggleHiddenRowVisibility"
-                    ></slot>    
-                </template>
+                <slot
+                    v-else-if="col.type == 'openable'"
+                    name="openableCol"
+                    :data="data"
+                    :isVisibleHiddenRow="isVisibleHiddenRow"
+                    :toggleHiddenRowVisibility="toggleHiddenRowVisibility"
+                ></slot>    
 
-                <template v-else-if="col.type == 'time'">
-                    <div class="table__item table__item--changable">
-                        <time-format
-                            :value="data[col.key]"
-                            :typeValue="col.typeValue"
-                        />
-                    </div>
-                </template>
+                <!-- Дата, время -->
+                <div
+                    v-else-if="col.type == 'time'"
+                    class="table__item table__item--changable"
+                >
+                    <time-format
+                        :value="data[col.key]"
+                        :typeValue="col.typeValue"
+                    />
+                </div>
+                
+                <!-- Текст -->
+                <div
+                    v-else-if="col.type == 'text'"
+                    class="table__item table__item--changable"
+                >
+                    {{ data.c_enquiry }}
+                </div>
+                
+                <!-- Статус -->
+                <div
+                    v-else-if="col.type == 'status'"
+                    class="table__item"
+                >
+                    <span
+                        class="table__status"
+                        :class="{
+                            'table__status--green': col.getStatus(data).class == 'green',
+                            'table__status--red': col.getStatus(data).class == 'red',
+                            'table__status--orange': col.getStatus(data).class == 'orange',
+                        }"
+                    >
+                        {{ col.getStatus(data).text }}
+                    </span>
+                </div>
 
-                <template v-else-if="col.type == 'text'">
-                    <div class="table__item table__item--changable">
-                        {{ data.c_enquiry }}
-                    </div>
-                </template>
-
-                <template v-else-if="col.type == 'status'">
-                    <div class="table__item">
-                        <span
-                            class="table__status"
-                            :class="{
-                                'table__status--green': col.getStatus(data).class == 'green',
-                                'table__status--red': col.getStatus(data).class == 'red',
-                                'table__status--orange': col.getStatus(data).class == 'orange',
-                            }"
-                        >
-                            {{ col.getStatus(data).text }}
-                        </span>
-                    </div>
-                </template>
-
-                <template v-else-if="col.type == 'actions'">
-                    <div class="table__item table__item--center">
-                        <col-actions :colData="data">
-                            <template #tableAction="{ data }">
-                                <slot
-                                    name="tableAction"
-                                    :data="data"
-                                ></slot>
-                            </template>
-                        </col-actions>
-                    </div>
-                </template>
+                <!-- Меню действий -->
+                <div
+                    v-else-if="col.type == 'actions'"
+                    class="table__item table__item--center"
+                >
+                    <col-actions :colData="data">
+                        <template #actionCol="{ data }">
+                            <slot
+                                name="actionCol"
+                                :data="data"
+                            ></slot>
+                        </template>
+                    </col-actions>
+                </div>
             </div>
-
-
         </div>
 
-        <template v-if="isOpenable">
-            <slot
-                name="hiddenRow"
-                :data="data"
-                :isVisibleHiddenRow="isVisibleHiddenRow"
-            ></slot>
-        </template>
+        <!-- Невидимая строка -->
+        <slot
+            v-if="isOpenable"
+            name="hiddenRow"
+            :data="data"
+            :isVisibleHiddenRow="isVisibleHiddenRow"
+        ></slot>
     </div>
 </template>
 
 <script>
     import VCheckbox from"../form/VCheckbox.vue";
     import TimeFormat from '../format/TimeFormat.vue';
-    import VIcon from "../icon/VIcon.vue";
-    import VDropdown from '../dropdown/VDropdown.vue';
     import HiddenRow from "../../pages/Knowledge/Table/HiddenRow.vue";
     import ColActions from './ColActions.vue';
 
@@ -104,8 +108,6 @@
         
         components: {
             VCheckbox,
-            VIcon,
-            VDropdown,
             HiddenRow,
             TimeFormat,
             ColActions,
@@ -136,12 +138,6 @@
         },
 
         methods: {
-            onItemClick(type) {
-                if (type == 'openable') {
-                    this.toggleQuestion();
-                }
-            },
-
             changeMultiple(change, value, id) {
                 this.isAddedField = value;
                 change(value, id);

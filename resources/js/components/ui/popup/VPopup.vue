@@ -47,27 +47,25 @@
                 </div>
 
                 <template v-if="confirmOptions">
-                    <template v-if="confirmOptions.type == 'info'">
-                        <v-icon
-                            name="info"
-                            :sizeParams="{
-                                width: 231,
-                                height: 231
-                            }"
-                            class="popup__decor"
-                        />
-                    </template>
+                    <v-icon
+                        v-if="confirmOptions.type == 'info'"
+                        name="info"
+                        :sizeParams="{
+                            width: 231,
+                            height: 231
+                        }"
+                        class="popup__decor"
+                    />
 
-                    <template v-else-if="confirmOptions.type == 'delete'">
-                        <v-icon
-                            name="delete"
-                            :sizeParams="{
-                                width: 231,
-                                height: 231
-                            }"
-                            class="popup__decor"
-                        />
-                    </template>
+                    <v-icon
+                        v-else-if="confirmOptions.type == 'delete'"
+                        name="delete"
+                        :sizeParams="{
+                            width: 231,
+                            height: 231
+                        }"
+                        class="popup__decor"
+                    />
                 </template>
             </div>
         </transition>

@@ -16,14 +16,13 @@
             ></label>
         </div>
 
-        <template v-if="label">
-            <label
-                :for="id"
-                class="radio-button__label"
-            >
-                {{ label }}
-            </label>
-        </template>
+        <label
+            v-if="label"
+            :for="id"
+            class="radio-button__label"
+        >
+            {{ label }}
+        </label>
     </div>
 </template>
 

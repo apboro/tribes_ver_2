@@ -80,7 +80,7 @@
     import ToggleSwitch from '../../ui/form/ToggleSwitch.vue';
 
     export default {
-        name: 'KnowledgeNewQuestionPopup',
+        name: 'NewQuestionPopup',
 
         components: {
             VPopup,

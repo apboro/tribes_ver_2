@@ -23,42 +23,40 @@
                 v-for="(item, i) in paginateData.links"
                 :key="i"
             >
-                <template v-if="item.label == 'Назад'">
-                    <button
-                        class="button-text button-text--primary button-text--only-icon"
-                        :class="{ 'button-text--disabled': item.disabled }"
-                        @click="onPageClick(item.page)"
-                    >
-                        <v-icon
-                            name="arrow-left"
-                            size="1"
-                            class=""
-                        />
-                    </button>
-                </template>
+                <button
+                    v-if="item.label == 'Назад'"       
+                    class="button-text button-text--primary button-text--only-icon"
+                    :class="{ 'button-text--disabled': item.disabled }"
+                    @click="onPageClick(item.page)"
+                >
+                    <v-icon
+                        name="arrow-left"
+                        size="1"
+                        class=""
+                    />
+                </button>
 
-                <template v-else-if="item.label == 'Далее'">
-                    <button
-                        class="button-text button-text--primary button-text--only-icon"
-                        :class="{ 'button-text--disabled': item.disabled }"
-                        @click="onPageClick(item.page)"
-                    >
-                        <v-icon
-                            name="arrow-right"
-                            size="1"
-                            class="pagination__btn"
-                        />
-                    </button>
-                </template>
+                
+                <button
+                    v-else-if="item.label == 'Далее'"
+                    class="button-text button-text--primary button-text--only-icon"
+                    :class="{ 'button-text--disabled': item.disabled }"
+                    @click="onPageClick(item.page)"
+                >
+                    <v-icon
+                        name="arrow-right"
+                        size="1"
+                        class="pagination__btn"
+                    />
+                </button>
 
-                <template v-else>
-                    <button
-                        class="pagination__page"
-                        @click="onPageClick(item.page)"
-                    >
-                        {{ item.label }}
-                    </button>
-                </template>
+                <button
+                    v-else
+                    class="pagination__page"
+                    @click="onPageClick(item.page)"
+                >
+                    {{ item.label }}
+                </button>
             </div>
         </div>
     </div>
