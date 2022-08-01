@@ -76,7 +76,7 @@
                 <ul class="list-unstyled mb-0">
                     <li class="mb-75">
                         <span class="fw-bolder me-25">
-                            {{ __('community.date_of_creation') }}:
+                            {{ __('community.date_of_connection') }}:
                         </span>
 
                         <span class="badge bg-light-info" id="create_date_title">

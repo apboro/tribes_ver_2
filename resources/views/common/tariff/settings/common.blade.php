@@ -26,7 +26,6 @@
                                         class="form-select pointer "
                                         id="trial_period"
                                         name="trial_period"
-                                        onchange="CommunityPage.tariffPageSettings.commonBlock.checkTrialPeriodStatus()"
                                     >
                                         @if ($community->tariff !== null)
                                             <option value="0" @if ($community->tariff->test_period == 0) selected @endif>{{ __('base.none') }}</option>
@@ -116,7 +115,7 @@
                     <button
                         class="btn w-100 btn-icon btn-success d-flex align-items-center justify-content-center"
                         type="submit"
-                        onclick="CommunityPage.tariffPageSettings.commonBlock.trialPeriodAttention(event)"
+                        onclick="CommunityPage.tariffPageSettings.commonBlock.trialPeriodAttention(event, '{{$community->tariff->test_period}}')"
                         data-repeater-create
                     >
                         <i data-feather="save" class="font-medium-1"></i>

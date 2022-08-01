@@ -4,7 +4,7 @@ return [
     'add_tariff' => 'Add tariff',
     'create_tariff_instruction' => 'No rates have been added. To add a tariff, click on the "Add tariff" button',
     'create_tariff_instruction_active' => 'There are no active rates. Add an active rate or change the status of an inactive rate',
-    'create_tariff_instruction_inactive' => 'There are no inactive rates. Add an inactive rate or change the status of an active rate',
+    'create_tariff_instruction_inactive' => 'There are no inactive tariffs',
     'tariff_name' => 'Tariff name',
     'trial_period' => 'Trial period',
     'change_tariff' => 'Change tariff',

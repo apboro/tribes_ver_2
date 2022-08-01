@@ -3,7 +3,7 @@
 @section('content')
     <div class="content-wrapper container-xxl p-0" data-plugin="CommunityPage">
         <!-- Breadcrumbs block -->
-        @include('common.community.assets.profile_breadcrumbs')
+        {{--@include('common.community.assets.profile_breadcrumbs')--}}
         
         <div class="content-wrapper container-xxl p-0">
             <div class="content-body">

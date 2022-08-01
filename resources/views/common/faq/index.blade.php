@@ -54,7 +54,7 @@
                     <div>
                         <p><b>Как начать пользоваться?</b></p>
                         <p>
-                            Зарегистриуйтесь по адресу <a target="_blank" href="https://spodial.com/register" class="btn-link">{{ env('APP_NAME') }}.com/register</a> и создайте свой первый проект.
+                            Зарегистриуйтесь по адресу <a target="_blank" href="https://spodial.com/register" class="btn-link">{{ env('APP_URL') }}.com/register</a> и создайте свой первый проект.
                         </p>
                     </div>
                     <div>

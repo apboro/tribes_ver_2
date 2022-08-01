@@ -9,7 +9,8 @@
                         <img src="{{ $payment->payable()->first()->donate()->first()->getSuccessImage()->url }}" alt=""
                             class="active-image__img w-100">
                     @else
-                        <video src="/videos/donate-success.mp4" muted="muted" autoplay loop class="w-100"></video>
+                        <img src="/images/chuck.jpg" alt=""
+                            class="active-image__img w-100">
                     @endif
                 @endif
                 @if ($payment->type == 'tariff')
@@ -17,7 +18,8 @@
                         <img src="{{ $payment->payable()->first()->tariff()->first()->getThanksImage()->url }}" alt=""
                             class="active-image__img w-100">
                     @else
-                        <video src="/videos/donate-success.mp4" muted="muted" autoplay loop class="w-100"></video>
+                        <img src="/images/chuck.jpg" alt=""
+                            class="active-image__img w-100">
                     @endif
                 @endif
             </div>
@@ -28,7 +30,7 @@
                         {{ $payment->payable()->first()->donate()->first()->success_description ? $payment->payable()->first()->donate()->first()->success_description : __('donate.thanks_for_donation') }}
                     @endif
                     @if ($payment->type == 'tariff')
-                        {{ $payment->payable()->first()->tariff()->first()->thanks_description ? $payment->payable()->first()->tariff()->first()->thanks_description : 'Для подтверждения оплаты тарифа, пожалуйста перейдите в телеграм и запустите бота.'}}
+                        {{ $payment->payable()->first()->tariff()->first()->thanks_description ? $payment->payable()->first()->tariff()->first()->thanks_description : 'Спасибо за оплату, тариф успешно активирован! Для подключения к сообществу нажмите кнопку "в телеграм", запустите диалог с Tribesbot и перейдите по пригласительной ссылке "подписаться".'}}
                     @endif
                 </h2>
 
