@@ -39,41 +39,59 @@ let getters = {
 };
 
 let mutations = {
-    users(state, users){
+    USERS(state, users){
         state.users = users;
     },
-    push_user(state, user){
+    PUSH_USER(state, user){
         // state.users.pushIfNotExist(user, function(e) {
         //     return e.id === user.id;
         // });
     },
-    push_user_errors(state, errors){
+    PUSH_USER_ERRORS(state, errors){
         state.user_errors = errors;
     }
 };
 
 let actions = {
+    async get_users ({commit}, filter_data) {
 
-    get_users({commit}, filter_data){
-        return new Promise((resolve, reject) => {
-            //commit('auth_request');
-            axios({url: '/api/v2/users', data: filter_data, method: 'POST' })
-                .then(resp => {
-                    commit('users', resp.data);
-                    resolve(resp);
-                })
-                .catch(err => {
-                    reject(err);
-                })
-        })
+        try {
+            commit("SET_PRELOADER_STATUS", true);
+            const resp = await axios({
+                method: "post",
+                url: '/api/v2/users',
+                data: filter_data
+            })
+            commit("USERS", resp.data);
+            commit("SET_PRELOADER_STATUS", false);
+        } catch (error) {
+            console.log(error);
+            commit("SET_PRELOADER_STATUS", false);
+        }
     },
+
+    // get_users({commit}, filter_data){
+    //     return new Promise((resolve, reject) => {
+    //         //commit('auth_request');
+    //         commit("loading", true);
+    //         axios({url: '/api/v2/users', data: filter_data, method: 'POST' })
+    //             .then(resp => {
+    //                 commit('users', resp.data);
+    //                 resolve(resp);
+    //             })
+    //             .catch(err => {
+    //                 reject(err);
+    //             })
+    //             commit("loading", false);
+    //     })
+    // },
     get_user({commit}, id){
         return new Promise((resolve, reject) => {
             //commit('auth_request');
             axios({url: '/api/common/users/' + id + '/get', method: 'GET' })
                 .then(resp => {
                     console.log('success');
-                    commit('push_user', resp.data.user);
+                    commit('PUSH_USER', resp.data.user);
                     resolve(resp);
                 })
                 .catch(err => {
@@ -87,12 +105,12 @@ let actions = {
             //commit('auth_request');
             axios({url: '/api/common/users/store', data: data, method: 'POST' })
                 .then(resp => {
-                    commit('push_user', resp.data.user);
-                    commit('push_user_errors', null);
+                    commit('PUSH_USER', resp.data.user);
+                    commit('PUSH_USER_ERRORS', null);
                     resolve(resp);
                 })
                 .catch(err => {
-                    commit('push_user_errors', !!err.response.data.errors ? err.response.data.errors : null);
+                    commit('PUSH_USER_ERRORS', !!err.response.data.errors ? err.response.data.errors : null);
                     reject(err);
                 })
         })
@@ -102,11 +120,11 @@ let actions = {
             //commit('auth_request');
             axios({url: '/api/common/users/' + user.id + '/update', data: user, method: 'POST' })
                 .then(resp => {
-                    commit('push_user_errors', null);
+                    commit('PUSH_USER_ERRORS', null);
                     resolve(resp);
                 })
                 .catch(err => {
-                    commit('push_user_errors', !!err.response.data.errors ? err.response.data.errors : null);
+                    commit('PUSH_USER_ERRORS', !!err.response.data.errors ? err.response.data.errors : null);
                     reject(err);
                 })
         })

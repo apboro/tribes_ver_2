@@ -29,4 +29,11 @@ class Statistic extends Model
         return new StatisticRepository($this);
     }
 
+    public function getCommunity()
+    {
+        if ($this->community()->first())
+            return $this->community()->first();
+
+        return false;
+    }
 }

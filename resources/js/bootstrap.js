@@ -81,8 +81,8 @@ window.axios.interceptors.response.use(function (response) {
         }
     } */
     if (error.response.status === 401 || error.response.status === 419) {
-        console.log(1);
-        window.location.href = "/login";
+        /* console.log(1);
+        window.location.href = "/login"; */
     }
    /*  if (error.response.status === 403) {
         if(error.response.data.type == "gateClosed"){

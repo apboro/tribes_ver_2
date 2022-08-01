@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources\Knowledge;
 
-use App\Http\Resources\CommunityResource;
+use App\Http\Resources\ApiResourceCollection;
 use App\Models\Community;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class QuestionsResource extends ResourceCollection
+class QuestionsResource extends ApiResourceCollection
 {
     public static $wrap = 'items';
 

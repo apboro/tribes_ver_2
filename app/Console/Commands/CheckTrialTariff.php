@@ -43,19 +43,25 @@ class CheckTrialTariff extends Command
         try {
             $telegramUsers = TelegramUser::with('tariffVariant')->get();
             foreach ($telegramUsers as $user) {
-                if ($user->tariffVariant->first() !== NULL) {
+                if ($user->tariffVariant->first()) {
                     foreach ($user->tariffVariant as $variant) {
+
+                        if ($variant->price !== 0 && $variant->period !== $variant->tariff->test_period)
+                            continue;
 
                         if (date('H:i') == $variant->pivot->prompt_time) {
 
                             $userName = ($user->user_name) ? '<a href="t.me/' . $user->user_name . '">' . $user->user_name . '</a>' : $user->telegram_id;
 
                             if ($variant->pivot->days = 1) {
+                                $communityTitle = $variant->tariff->community->title ?? '';
                                 $this->telegramService->sendMessageFromBot(config('telegram_bot.bot.botName'), $user->telegram_id,
-                                 'Пробный период подходит к концу. Продлите подписку: <a href="' . 
-                                  route('community.tariff.payment', ['hash' => PseudoCrypt::hash($variant->tariff->community->id, 8)])  . '">Сылка</a>', true, []);
+                                 'Пробный период в сообществе' . $communityTitle . ' подходит к концу. Оплатите подписку: <a href="' .
+                                  route('community.tariff.payment', ['hash' => PseudoCrypt::hash($variant->tariff->community->id, 8)])  . '">Ссылка</a>', true, []);
                             }
+
                             $follower = User::find($user->user_id);
+
                             $tariffVariant = TariffVariant::where('tariff_id', $variant->tariff->id)->whereHas('payUsers', function ($q) use($follower) {
                                 $q->where('id', $follower->id);
                             })->first();

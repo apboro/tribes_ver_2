@@ -5,6 +5,7 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TinkoffApi
 {
@@ -287,12 +288,6 @@ class TinkoffApi
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
             ));
-
-//            TelegramBotService::sendMessage(-612889716, $api_url );
-//            TelegramBotService::sendMessage(-612889716, $args );
-//
-//            Storage::prepend('Tinkoff_notify.log', 'req');
-//            Storage::prepend('Tinkoff_notify.log', json_encode($curl));
 
             $out = curl_exec($curl);
 
