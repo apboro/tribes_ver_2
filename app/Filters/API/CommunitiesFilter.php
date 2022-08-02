@@ -22,11 +22,11 @@ class CommunitiesFilter extends QueryFilter
         ];
     }
 
-    public function filters()
+    public function filters(): array
     {
         return $this->request->get('filter', []);
     }
-
+//
     /**
      * filter[type]
      * @param int $value enumerate 0,1

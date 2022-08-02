@@ -1,6 +1,7 @@
 /node_modules
 /storage/*.key
 /storage/temp.png
+/storage/api-docs
 /public/modules
 /public/temp.png
 /public/css
@@ -24,7 +25,6 @@
 .env
 /*.testing
 .env.backup
-composer.lock
 .idea
 .phpunit.result.cache
 Homestead.json
@@ -50,6 +50,6 @@ _ide_helper.php
 
 test.json
 /videos/donate-success.mp4
-package-lock.json
 public/mix-manifest.json
 public/temp.png
+/resources/views/vendor/l5-swagger

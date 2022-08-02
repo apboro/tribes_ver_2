@@ -18,7 +18,7 @@ class Administrator
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()->administrator) {
+        if (Auth::user()->administrator || session()->has('sudo')) {
             return  $next($request);
         }
 
