@@ -8,6 +8,7 @@ use App\Services\Telegram\BotInterface\TelegramMainBotServiceContract;
 use App\Services\Telegram\MainBotCollection;
 use App\Services\Telegram\MainComponents\MainBotCommands;
 use App\Services\Telegram\MainComponents\MainBotEvents;
+use App\Services\Telegram\MainComponents\MessageObserver;
 use App\Services\Telegram\MainComponents\TelegramMidlwares;
 use Askoldex\Teletant\Exception\TeletantException;
 
@@ -63,6 +64,9 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
                     'detectForwardMessageBotQuestion',
                     ['botName' => $nameBot]
                 ],
+            ]]);
+            $events->initEventsMainBot([[
+                'isNewTextMessage' => [app('messageObserver'),'handleUserMessage'],
             ]]);
             $this->getCommandsForBot($nameBot)->initCommand();
             $this->botCollect->getBotByName($nameBot)->listen($data);

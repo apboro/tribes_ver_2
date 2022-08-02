@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Repositories\TelegramConnection;
+namespace App\Repositories\Telegram;
 
 
 use App\Models\TelegramConnection;

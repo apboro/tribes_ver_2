@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\Telegram\TeleMessageRepository;
+use App\Repositories\Telegram\TeleMessageRepositoryContract;
 use Illuminate\Log\Logger;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Log;
@@ -21,8 +23,12 @@ class TelegramBotServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            \App\Repositories\TelegramConnection\TelegramConnectionRepositoryContract::class,
-            \App\Repositories\TelegramConnection\TelegramConnectionRepository::class
+            \App\Repositories\Telegram\TelegramConnectionRepositoryContract::class,
+            \App\Repositories\Telegram\TelegramConnectionRepository::class
+        );
+        $this->app->bind(
+            TeleMessageRepositoryContract::class,
+            TeleMessageRepository::class
         );
 
         $this->app->bind(
