@@ -26,7 +26,7 @@ window['Burger'] = new BurgerMenu();
 
 import Vue from 'vue';
 import store from './store/store';
-import Knowledge from './pages/Knowledge';
+import Statistics from './pages/Statistics';
 import PortalVue from 'portal-vue';
 
 Vue.use(PortalVue)
@@ -34,7 +34,7 @@ Vue.use(PortalVue)
 let app = new Vue({
     // router,
     store,
-    render: h => h(Knowledge)
+    render: h => h(Statistics)
 }).$mount('#app');
 
 
