@@ -13,7 +13,7 @@ use App\Models\Payment;
 use App\Models\TelegramUser;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Payment\PaymentRepositoryContract;
-use App\Repositories\TelegramConnection\TelegramConnectionRepositoryContract;
+use App\Repositories\Telegram\TelegramConnectionRepositoryContract;
 use App\Services\Knowledge\ManageQuestionService;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;

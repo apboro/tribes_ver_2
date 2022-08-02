@@ -1,0 +1,32 @@
+{
+  "update_id": 944984874,
+  "message": {
+    "message_id": 2295,
+    "from": {
+      "id": 416272404,
+      "is_bot": false,
+      "first_name": "\u0410\u043d\u0434\u0440\u0435\u0439",
+      "last_name": "\u0414\u043e\u043b\u0433\u043e\u043f\u043e\u043b\u043e\u0432",
+      "username": "a_dolgopolov",
+      "language_code": "ru"
+    },
+    "chat": {
+      "id": 416272404,
+      "first_name": "\u0410\u043d\u0434\u0440\u0435\u0439",
+      "last_name": "\u0414\u043e\u043b\u0433\u043e\u043f\u043e\u043b\u043e\u0432",
+      "username": "a_dolgopolov",
+      "type": "private"
+    },
+    "date": 1658125243,
+    "forward_from": {
+      "id": 416272404,
+      "is_bot": false,
+      "first_name": "\u0410\u043d\u0434\u0440\u0435\u0439",
+      "last_name": "\u0414\u043e\u043b\u0433\u043e\u043f\u043e\u043b\u043e\u0432",
+      "username": "a_dolgopolov",
+      "language_code": "ru"
+    },
+    "forward_date": 1657868458,
+    "text": "\u0410 \u0421\u0435\u0440\u0433\u0435\u0439 \u043e\u0442\u0432\u0435\u0442"
+  }
+}
