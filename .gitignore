@@ -24,7 +24,6 @@
 .env
 /*.testing
 .env.backup
-composer.lock
 .idea
 .phpunit.result.cache
 Homestead.json
@@ -46,7 +45,6 @@ _ide_helper.php
 /lib/tdLib
 /tdLib
 /tests/Browser
-/tdLib
 
 test.json
 /videos/donate-success.mp4
