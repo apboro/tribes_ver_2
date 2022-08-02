@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Community\DonateRequest;
 use App\Http\Requests\Donate\DonatePageRequest;
+use App\Http\Requests\Donate\DonateSettingsRequest;
 use App\Http\Requests\Donate\TakeDonatePageRequest;
 use App\Models\Community;
 use App\Models\Donate;
@@ -19,7 +20,7 @@ class DonateController extends Controller
 {
     private $donateRepo;
     private $communityRepo;
-    private $paymentRepo;
+    private PaymentRepository $paymentRepo;
 
     public function __construct(
         DonateRepositoryContract $donateRepo,
@@ -75,7 +76,6 @@ class DonateController extends Controller
         $p = new Pay();
         $p->amount($amount * 100)
             ->payFor($rangeDonate)
-            ->recurrent(false)
             ->payer($user ?? null);
 
         $payment = $p->pay();
@@ -104,9 +104,19 @@ class DonateController extends Controller
         
         $messages = [];
 
-        $messages[] = $request->get('settingsUpdate') ? __('donate.settings_success_message') : __('donate.success_message');
         $messages[] = $request->get('send_to_community') ? __('donate.send_to_community') : null;
+        $messages[] = $request->get('settingsUpdate') ? __('donate.success_message') : __('donate.success_settings_message');
 
+        return redirect()->route('community.donate.list', $community)
+            ->withMessage($messages);
+    }
+
+    public function donateSettingsUpdate(Community $community, DonateSettingsRequest $request, $id = null)
+    {
+        $this->donateRepo->update($community, $request, $id);
+        $messages = [];
+
+        $messages[] = $request->get('settingsUpdate') ? __('donate.success_settings_message') : null;
         return redirect()->route('community.donate.list', $community)
             ->withMessage($messages);
     }
@@ -119,47 +129,48 @@ class DonateController extends Controller
         $community = $this->communityRepo->findCommunityByHash($hash);
 
         foreach ($donate->variants ?? [] as $variant) {
-            if ($variant->isActive) {
-                if ($variant->isStatic) {
-                    if ($variant->price === $amount && $variant->currency === $currency) {
+            if (!$variant->isActive) {
+                continue;
+            }
 
-                        $p = new Pay();
-                        $p->amount($amount * 100)
-                            ->payFor($variant)
-                            ->recurrent(false)
-                            ->payer(null);
+            if ($variant->isStatic) {
+                if ($variant->price === $amount && $variant->currency === $currency) {
 
-                        $payment = $p->pay();
+                    $p = new Pay();
+                    $p->amount($amount * 100)
+                        ->payFor($variant)
+                        ->payer(null);
 
-                        if (!$payment) {
-                            abort(404);
-                        }
-                        return redirect()->to($payment->paymentUrl);
+                    $payment = $p->pay();
+
+                    if (!$payment) {
+                        abort(404);
                     }
-                } else {
-                    if ($amount === 0 && $variant->currency === $currency) {
-                        return $community ? view('common.donate.form')
-                            ->withMin($variant->min_price)
-                            ->withMax($variant->max_price)
-                            ->withCommunity($community)
-                            ->withDonate($donate)
-                            : abort(404);
-                    } elseif ($amount !== 0) {
-                        $p = new Pay();
-                        $p->amount($amount * 100)
-                            ->payFor($variant)
-                            ->recurrent(false)
-                            ->payer(null);
+                    return redirect()->to($payment->paymentUrl);
+                }
+            } else {
+                if ($amount === 0 && $variant->currency === $currency) {
+                    return $community ? view('common.donate.form')
+                        ->withMin($variant->min_price)
+                        ->withMax($variant->max_price)
+                        ->withCommunity($community)
+                        ->withDonate($donate)
+                        : abort(404);
+                } elseif ($amount !== 0) {
+                    $p = new Pay();
+                    $p->amount($amount * 100)
+                        ->payFor($variant)
+                        ->payer(null);
 
-                        $payment = $p->pay();
+                    $payment = $p->pay();
 
-                        if (!$payment) {
-                            abort(404);
-                        }
-                        return redirect()->to($payment->paymentUrl);
+                    if (!$payment) {
+                        abort(404);
                     }
+                    return redirect()->to($payment->paymentUrl);
                 }
             }
+
         }
         abort(404);
         return null;

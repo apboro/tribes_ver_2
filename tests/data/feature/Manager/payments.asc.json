@@ -1,167 +1,81 @@
 {
-    "current_page": 1,
     "data": [
         {
-            "id": 1,
             "OrderId": "q6CibHWjsf15Ti0                                                                                                                                                                                                                                                ",
-            "community_id": null,
+            "community": "Test",
             "add_balance": 0,
             "from": "Buyer 0",
-            "comment": "Nulla",
-            "isNotify": true,
-            "telegram_user_id": null,
-            "paymentId": 0,
-            "amount": 100,
-            "paymentUrl": null,
-            "response": "Natus",
             "status": "NEW",
-            "token": "Voluptatum",
-            "error": "Rerum                                                                                                                                                                                                                                                          ",
             "created_at": "2022-07-10T04:34:16.000000Z",
-            "updated_at": "2022-07-10T04:34:16.000000Z",
-            "type": "tariff",
-            "activated": true,
-            "SpAccumulationId": "Necessitatibus",
-            "RebillId": "Est",
-            "user_id": 0,
-            "payable_id": null,
-            "payable_type": null,
-            "author": null
+            "type": "tariff"
         },
         {
-            "id": 2,
             "OrderId": "q6CibHWjsf15Ti1                                                                                                                                                                                                                                                ",
-            "community_id": null,
+            "community": "Test",
             "add_balance": 1,
             "from": "Buyer 1",
-            "comment": "Nulla",
-            "isNotify": true,
-            "telegram_user_id": null,
-            "paymentId": 1,
-            "amount": 101,
-            "paymentUrl": null,
-            "response": "Natus",
             "status": "NEW",
-            "token": "Voluptatum",
-            "error": "Rerum                                                                                                                                                                                                                                                          ",
             "created_at": "2022-07-11T04:34:16.000000Z",
-            "updated_at": "2022-07-11T04:34:16.000000Z",
-            "type": "tariff",
-            "activated": true,
-            "SpAccumulationId": "Necessitatibus",
-            "RebillId": "Est",
-            "user_id": 1,
-            "payable_id": null,
-            "payable_type": null,
-            "author": null
+            "type": "tariff"
         },
         {
-            "id": 3,
             "OrderId": "q6CibHWjsf15Ti2                                                                                                                                                                                                                                                ",
-            "community_id": null,
+            "community": "Test",
             "add_balance": 2,
             "from": "Buyer 2",
-            "comment": "Nulla",
-            "isNotify": true,
-            "telegram_user_id": null,
-            "paymentId": 2,
-            "amount": 102,
-            "paymentUrl": null,
-            "response": "Natus",
             "status": "NEW",
-            "token": "Voluptatum",
-            "error": "Rerum                                                                                                                                                                                                                                                          ",
             "created_at": "2022-07-12T04:34:16.000000Z",
-            "updated_at": "2022-07-12T04:34:16.000000Z",
-            "type": "tariff",
-            "activated": true,
-            "SpAccumulationId": "Necessitatibus",
-            "RebillId": "Est",
-            "user_id": 2,
-            "payable_id": null,
-            "payable_type": null,
-            "author": null
+            "type": "tariff"
         },
         {
-            "id": 4,
             "OrderId": "q6CibHWjsf15Ti3                                                                                                                                                                                                                                                ",
-            "community_id": null,
+            "community": "Test",
             "add_balance": 3,
             "from": "Buyer 3",
-            "comment": "Nulla",
-            "isNotify": true,
-            "telegram_user_id": null,
-            "paymentId": 3,
-            "amount": 103,
-            "paymentUrl": null,
-            "response": "Natus",
             "status": "NEW",
-            "token": "Voluptatum",
-            "error": "Rerum                                                                                                                                                                                                                                                          ",
             "created_at": "2022-07-13T04:34:16.000000Z",
-            "updated_at": "2022-07-13T04:34:16.000000Z",
-            "type": "tariff",
-            "activated": true,
-            "SpAccumulationId": "Necessitatibus",
-            "RebillId": "Est",
-            "user_id": 3,
-            "payable_id": null,
-            "payable_type": null,
-            "author": null
+            "type": "tariff"
         },
         {
-            "id": 5,
             "OrderId": "q6CibHWjsf15Ti4                                                                                                                                                                                                                                                ",
-            "community_id": null,
+            "community": "Test",
             "add_balance": 4,
             "from": "Buyer 4",
-            "comment": "Nulla",
-            "isNotify": true,
-            "telegram_user_id": null,
-            "paymentId": 4,
-            "amount": 104,
-            "paymentUrl": null,
-            "response": "Natus",
             "status": "NEW",
-            "token": "Voluptatum",
-            "error": "Rerum                                                                                                                                                                                                                                                          ",
             "created_at": "2022-07-14T04:34:16.000000Z",
-            "updated_at": "2022-07-14T04:34:16.000000Z",
-            "type": "tariff",
-            "activated": true,
-            "SpAccumulationId": "Necessitatibus",
-            "RebillId": "Est",
-            "user_id": 4,
-            "payable_id": null,
-            "payable_type": null,
-            "author": null
+            "type": "tariff"
         }
     ],
-    "first_page_url": "http:\/\/localhost\/api\/v2\/payments?page=1",
-    "from": 1,
-    "last_page": 1,
-    "last_page_url": "http:\/\/localhost\/api\/v2\/payments?page=1",
-    "links": [
-        {
-            "url": null,
-            "label": "\u041d\u0430\u0437\u0430\u0434",
-            "active": false
-        },
-        {
-            "url": "http:\/\/localhost\/api\/v2\/payments?page=1",
-            "label": "1",
-            "active": true
-        },
-        {
-            "url": null,
-            "label": "\u0414\u0430\u043b\u0435\u0435",
-            "active": false
-        }
-    ],
-    "next_page_url": null,
-    "path": "http:\/\/localhost\/api\/v2\/payments",
-    "per_page": 15,
-    "prev_page_url": null,
-    "to": 5,
-    "total": 5
+    "links": {
+        "first": "http:\/\/localhost\/api\/v2\/payments?page=1",
+        "last": "http:\/\/localhost\/api\/v2\/payments?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "links": [
+            {
+                "url": null,
+                "label": "\u041d\u0430\u0437\u0430\u0434",
+                "active": false
+            },
+            {
+                "url": "http:\/\/localhost\/api\/v2\/payments?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": null,
+                "label": "\u0414\u0430\u043b\u0435\u0435",
+                "active": false
+            }
+        ],
+        "path": "http:\/\/localhost\/api\/v2\/payments",
+        "per_page": 15,
+        "to": 5,
+        "total": 5
+    }
 }

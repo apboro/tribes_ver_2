@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-/** @method DonateFactory factory() */
+/**
+ * @method DonateFactory factory()
+ * @property int $id
+ *
+ */
 class Donate extends Model
 {
     use HasFactory;
@@ -51,16 +55,11 @@ class Donate extends Model
 
     function getSumDonateByIndex()
     {
-        $payments = Payment::select('type', 'add_balance')->where('community_id', $this->community->id)->where('type', '!=', 'tariff')->get();
+        $payments = Payment::select('add_balance')->where('payable_id', $this->id)->where('type', 'donate')->get();
         $sum = [];
         foreach ($payments as $payment) {
-            $index = $payment->type;
-            $new_index = preg_replace("/[a-zA-Zа-яА-Я-]/", "", $index);
-            if ($new_index == $this->index) {
-                $sum[] = $payment->add_balance;
-            }
+            $sum[] = $payment->add_balance;
         }
-        
         return $sum;
     }
 
@@ -98,10 +97,12 @@ class Donate extends Model
     {
         return $this->belongsTo(File::class,'main_image_id')->first();
     }
+
     public function getPromptImage()
     {
         return $this->belongsTo(File::class,'prompt_image_id')->first();
     }
+
     public function getSuccessImage()
     {
         return $this->belongsTo(File::class,'success_image_id')->first();

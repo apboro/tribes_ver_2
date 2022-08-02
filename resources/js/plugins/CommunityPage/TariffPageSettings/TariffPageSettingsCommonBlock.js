@@ -4,20 +4,17 @@ export class TariffPageSettingsCommonBlock {
     constructor(options) {
         this.container = options.parent.querySelector('[data-tab="tariffPageSettingsCommon"]');
         this.trialPeriodSelect = this.container.querySelector('#trial_period');
-        this.trialPeriodStatus = null;
+        
 
         this.init();
     }
 
     init() {
-        this.checkTrialPeriodStatus();
+        
         this.initCroppImageController();
     }
 
-    checkTrialPeriodStatus() {
-        this.trialPeriodStatus = this.trialPeriodSelect.value == 0 ? false : true;
-    }
-
+    
     initCroppImageController() {
         this.croppImageControllerWelcome = new CropImageController({
             container: this.container,
@@ -40,14 +37,14 @@ export class TariffPageSettingsCommonBlock {
         });
     }
 
-    trialPeriodAttention(event) {
+    trialPeriodAttention(event, savedPeriod) {
         event.preventDefault();
-        if (this.trialPeriodStatus) {
-            this.container.submit();
-        } else {
+        if (savedPeriod != '0' && this.trialPeriodSelect.value == '0') {
             new ModalWindow({
                 modalEl: this.createModal(),
             });
+        } else {
+            this.container.submit();
         }
     }
 

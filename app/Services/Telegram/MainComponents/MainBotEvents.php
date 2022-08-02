@@ -112,7 +112,10 @@ class MainBotEvents
                             $lastName = !empty($member->last_name) ? $member->last_name : '';
 
                             $ty = Telegram::registerTelegramUser($member->id, NULL, $userName, $firstName, $lastName);
-                            $ty->communities()->attach($community);
+
+                            if (!$ty->communities()->find($community->id))
+                                $ty->communities()->attach($community);
+
                             $text = ($userName ?: $firstName)
                                 . ', ' . $description . $image;
                             $this->bot->getExtentionApi()->sendMess($chatId, $text);

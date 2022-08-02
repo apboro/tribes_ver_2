@@ -40,24 +40,24 @@ class StatisticController extends Controller
         $count = $request['count'];
         $rank = $request['rank'];
         $beforeTime = $request['beforeTime'];
-        $method = 'getTariffSumPeriiod';
+        $method = 'getTariffSumPeriod';
         return response()->json($this->getData($method, $community, $count, $rank, $beforeTime));
     }
 
     public function getSumDonate(Community $community, $count, $rank, $beforeTime = NULL)
     {   
-        $method = 'getDonateSumPeriiod';
+        $method = 'getDonateSumPeriod';
         return json_encode($this->getData($method, $community, $count, $rank, $beforeTime));
     }
 
     protected function getData($method, $community, $count, $rank, $beforeTime = NULL)
     {
         switch ($rank) {
-            case 'd': 
+            case 'd':
                 $format = 'Y-m-d';
                 $formatEnd = 'Y-m-d';
                 break;
-            case 'm': 
+            case 'm':
                 $format = 'Y-m-1';
                 $formatEnd = 'Y-m-t';
                 break;
