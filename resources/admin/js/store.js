@@ -4,28 +4,44 @@ import Vuex from 'vuex'
 import user from './modules/users';
 import auth from './modules/auth';
 import payment from './modules/payments';
+import uniq_customers from './modules/uniq_customers';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
         loading : false,
+        isPreloader: false
     },
+
     getters : {
         loading : state => {
             return state.loading
         },
-        isLogged: state => !!state.userU
+
+        isLogged: state => !!state._user,
+
+        getPreloaderStatus (state) {
+            return state.isPreloader
+        }
     },
+
     mutations: {
         loading(state, val){
             state.loading = val;
         },
+
+        SET_PRELOADER_STATUS (state, preloaderStatus) {
+            state.isPreloader = preloaderStatus;
+        }
     },
+
     modules: {
         user,
         auth,
-        payment
+        payment,
+        uniq_customers,
     },
+
     mixins: {}
 })

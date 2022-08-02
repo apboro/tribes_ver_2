@@ -36,12 +36,12 @@
                 />
                 
                 <!-- Add question -->
-                <button
-                    class="button-filled knowledge__add-btn button-filled--primary"
+
+                <v-button
+                    class="knowledge__add-btn"
+                    text="Добавить новый вопрос-ответ"
                     @click="openNewQuestionPopup"
-                >
-                    Добавить новый вопрос-ответ
-                </button>
+                />
             </div>
 
             <transition name="a-knowledge-panel" mode="out-in">
@@ -105,24 +105,26 @@
 
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
-    import { bodyLock, bodyUnLock } from '../core/functions';
-    import VBreadcrumbs from '../components/ui/breadcrumbs/VBreadcrumbs.vue';
-    import VPagination from '../components/ui/pagination/VPagination.vue';
-    import VPopup from '../components/ui/popup/VPopup.vue';
-    import VIcon from '../components/ui/icon/VIcon.vue';
-    import SearchField from '../components/ui/form/SearchField.vue';
-    import QuestionsTable from '../components/pages/Knowledge/Table/QuestionsTable.vue';
-    import QuestionsFilter from '../components/pages/Knowledge/QuestionsFilter.vue';
-    import MultipleOperations from '../components/pages/Knowledge/MultipleOperations.vue';
-    import NewQuestionPopup from '../components/pages/Knowledge/NewQuestionPopup.vue';
-    import ConfirmDraftPopup from '../components/pages/Knowledge/ConfirmDraftPopup.vue';
-    import ConfirmDeletePopup from '../components/pages/Knowledge/ConfirmDeletePopup.vue';
-    import AuxiliaryPanel from '../components/pages/Knowledge/AuxiliaryPanel.vue';
+    import VButton from './components/VButton.vue';
+    import VBreadcrumbs from './components/VBreadcrumbs.vue';
+    import VPagination from './components/VPagination.vue';
+    import VPopup from './components/VPopup.vue';
+    import VIcon from './components/VIcon.vue';
+    import SearchField from './components/SearchField.vue';
+    import KnowledgeFilter from './components/Knowledge/KnowledgeFilter.vue';
+    import KnowledgeTable from './components/Knowledge/KnowledgeTable.vue';
+    import KnowledgeMultipleOperations from './components/Knowledge/KnowledgeMultipleOperations.vue';
+    import KnowledgeNewQuestionPopup from './components/Knowledge/KnowledgeNewQuestionPopup.vue';
+    import KnowledgeConfirmDraftPopup from './components/Knowledge/KnowledgeConfirmDraftPopup.vue';
+    import KnowledgeConfirmDeletePopup from './components/Knowledge/KnowledgeConfirmDeletePopup.vue';
+    import KnowledgeAuxiliary from './components/Knowledge/KnowledgeAuxiliary.vue';
+    import { bodyLock, bodyUnLock } from '../../core/functions';
 
     export default {
         name: 'Knowledge',
 
         components: {
+            VButton,
             VBreadcrumbs,
             VPagination,
             VPopup,
@@ -181,6 +183,12 @@
         },
 
         methods: {
+            clickedBTN() {
+                console.log('123')
+            },
+            clicked() {
+                console.log('clicekd')
+            },
             ...mapMutations('knowledge', [
                 'SET_PAGINATION',
                 'SET_IDS_MULTIPLE_OPERATIONS',

@@ -150,9 +150,13 @@ class TariffRepository implements TariffRepositoryContract
             $this->tariffModel->title = $data['title'];
         }
 
-        if ($data['trial_period']) {
-            $this->tariffModel->test_period = $data['trial_period'];
-        }
+//        if ($data['trial_period']  && env('USE_TRIAL_PERIOD')) {
+//            $this->tariffModel->test_period = $data['trial_period'];
+//        }
+
+        $this->tariffModel->test_period = $data['trial_period']  && env('USE_TRIAL_PERIOD', true)
+            ? $data['trial_period']
+            : $this->tariffModel->test_period;
 
         $this->tariffModel->tariff_notification = $data['tariff_notification'];
 
@@ -167,7 +171,7 @@ class TariffRepository implements TariffRepositoryContract
         // dd($data['send_to_community']);
         $this->sendToCommunityAction($data, $community);
 
-        if ($data['trial_period']) {
+        if ($data['trial_period'] && env('USE_TRIAL_PERIOD', true)) {
             $trialData = [
                 'tariff_name' => 'Пробный период',
                 'tariff_cost' => 0,
@@ -243,25 +247,15 @@ class TariffRepository implements TariffRepositoryContract
 
     private function updateDescriptions($data)
     {
-        if ($data['welcome_description']) {
-            $this->tariffModel->welcome_description = $data['welcome_description'];
-        }
+        $this->tariffModel->welcome_description = $data['welcome_description'] ?? null;
 
-        if ($data['reminder_description']) {
-            $this->tariffModel->reminder_description = $data['reminder_description'];
-        }
+        $this->tariffModel->reminder_description = $data['reminder_description'] ?? null;
 
-        if ($data['success_description']) {
-            $this->tariffModel->thanks_description = $data['success_description'];
-        }
+        $this->tariffModel->thanks_description = $data['success_description'] ?? null;
 
-        if ($data['main_description']) {
-            $this->tariffModel->prompt_description = $data['main_description'];
-        }
+        $this->tariffModel->main_description = $data['main_description'] ?? null;
 
-        if ($data['publication_description']) {
-            $this->tariffModel->publication_description = $data['publication_description'];
-        }
+        $this->tariffModel->publication_description = $data['publication_description'] ?? null;
     }
 
     private function clearImages()

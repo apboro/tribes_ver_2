@@ -47,8 +47,16 @@ class Tariff extends Model
         return $this->belongsTo(File::class,'publication_image_id')->first();
     }
 
-    public static $baseData = [
-        'test_period' => 0,
-    ];
+    public static function baseData()
+    {
+        return [
+            'test_period' => 0,
+            'welcome_description' => __('tariff.welcome_default_description'),
+            'reminder_description' =>  __('tariff.reminder_default_description'),
+            'thanks_description' =>  __('tariff.success_default_description'),
+            'publication_description' => __('tariff.available_rates')
+        ];
+    }
+
 
 }
