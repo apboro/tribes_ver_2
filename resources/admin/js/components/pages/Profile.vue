@@ -1,16 +1,25 @@
 <template>
 <div>
-    <div style="display: flex; justify-content: center;">
-        <div class="col-md-12">
-            <div class="user_info">
+    <div>
+        <div class="col-md-12 d-flex justify-content-between pb-5">
+            <div class="d-flex align-items-center col-md-3">
                 <span class="avatar avatar-xl avatar-rounded">JL</span>
-                <div class="user_info__data">
+                <div class="d-inline-block m-3">
                     <h3 class="m-0 mb-1"><a href="#">{{ user.name ?? 'Без имени' }}</a></h3>
                     <div class="text-muted">{{ user.created_at ?? 'Дата создания'}}</div>
                     <div>{{ user.email ?? 'email' }}</div>
                     <div>{{ user.phone ?? 'phone' }}</div>
                 </div>
             </div>
+            <div class="col-md-3 text-center">
+                <h1>ПЛАТЕЖИ</h1>
+            </div>
+            <div class="col-md-3 text-center">
+                <h1>МЕДИАТОВАРЫ</h1>
+            </div>
+        </div>
+        <div class="text-center">
+            <h1>СООБЩЕСТВА</h1>
         </div>
     </div>
 </div>
@@ -39,13 +48,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .user_info {
-        display: flex;
-        align-items: center;
 
-        &__data {
-            margin: 0 0 0 20px;
-            display: inline-block;
-        }
-    }
 </style>

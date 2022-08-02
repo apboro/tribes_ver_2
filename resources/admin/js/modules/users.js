@@ -63,6 +63,7 @@ let actions = {
                 url: '/api/v2/users',
                 data: filter_data
             })
+            sessionStorage.setItem('Users', JSON.stringify(resp.data))
             commit("USERS", resp.data);
             commit("SET_PRELOADER_STATUS", false);
         } catch (error) {
