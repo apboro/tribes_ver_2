@@ -1,7 +1,7 @@
 .profile-community {
     display: grid;
     grid-template-rows: min-content min-content min-content;
-    grid-template-columns: minmax(300px, 440px) min-content;
+    grid-template-columns: minmax(375px, 455px) min-content;
     justify-content: space-between;
     column-gap: 20px;
     row-gap: 35px;
@@ -49,20 +49,76 @@
         border-radius: 2px;
     }
 
-    &__connect {
-        padding: 20px;
-        background-color: rgb(188, 218, 163);
+    &__connect {}
+
+    &__connect-label {
+        @include font($text-color-1, 16px, 19px, 600);
+    }
+    
+    &__connect-date {
+        margin-top: 6px;
+        @include font($grey-5, 16px, 19px, 400);
     }
 
-    &__link {
-        padding: 20px;
-        background-color: rgb(165, 190, 212);
+    &__pay-link-block {}
+
+    &__pay-link-label {
+        @include font($text-color-1, 16px, 19px, 400);
+    }
+
+    &__pay-link-wrapper {
+        margin-top: 6px;
+    }
+
+    &__pay-link {
+
+
+        &:not(:first-child):before {
+            content: "|";
+        }
     }
 
     &__money {
         grid-row: 1 / 4;
         grid-column: 2 / 3;
-        padding: 20px;
-        background-color: rgb(218, 127, 195);
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        justify-content: center;
+        column-gap: 30px;
+        row-gap: 40px;
+        padding: 40px;
+        background-color: $primary-1;
+        border-radius: 2px;
+        box-shadow: $shadow-1;
+    }
+
+    &__money-label {
+        @include font($white, 16px, 19px, 700);
+        white-space: nowrap;
+    }
+
+    &__money-value {
+        margin-top: 6px;
+        @include font($white, 18px, 21px, 400);
+        white-space: nowrap;
+    }
+
+    &__money-difference {
+        display: inline-block;
+        @include font($white, 18px, 21px, 400);
+
+        &--plus {
+            color: $green-1;
+        }
+    }
+
+    &__money-btn {
+        @include font($primary-1, 16px, 21px, 700);
+        text-transform: uppercase;
+        white-space: nowrap;
+        background-color: #fff;
+        
     }
 }
