@@ -123,13 +123,6 @@
     }
 }
 
-.smooth-enter-active, .smooth-leave-active {
-    transition: opacity .5s;
-  }
-.smooth-enter, .smooth-leave-to {
-opacity: 0
-}
-
 .a-community-profile {
     &-enter-active {
         animation: community-profile .2s;

@@ -319,6 +319,6 @@ Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name(
 
 
 // X
-Route::get('/{community}/statistic', function () {
-    return view('common.community.statistics');
-})->name('statistic.index');
+Route::get('/{community}/analytics', function () {
+    return view('common.community.analytics');
+})->name('analytics.index');
