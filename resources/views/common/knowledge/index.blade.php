@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="{{ asset('css/knowledgeStyles.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/redesignStyles.css') }}" rel="stylesheet">
     <script src="{{ mix('js/knowledge.js') }}" defer></script>
     @auth
         <meta name="api-token" content="{{ Auth::user()->api_token }}">

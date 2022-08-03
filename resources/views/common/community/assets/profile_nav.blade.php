@@ -44,12 +44,12 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link {{ request()->is('*community/*/subscriptions') ? 'active' : '' }}"
+        <a class="nav-link {{ request()->is('*community/*/subscribers') ? 'active' : '' }}"
             href="{{ route('community.tariff.subscriptions', $community) }}"
         >
             <i data-feather="book" class="font-medium-3 me-50"></i>
             <span class="fw-bold">
-                {{ __('base.subscriptions') }}
+                {{ __('base.subscribers') }}
             </span>
         </a>
     </li>

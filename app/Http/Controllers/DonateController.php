@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Community\DonateRequest;
 use App\Http\Requests\Donate\DonatePageRequest;
+use App\Http\Requests\Donate\DonateSettingsRequest;
 use App\Http\Requests\Donate\TakeDonatePageRequest;
 use App\Models\Community;
 use App\Models\Donate;
@@ -103,9 +104,19 @@ class DonateController extends Controller
         
         $messages = [];
 
-        $messages[] = $request->get('settingsUpdate') ? __('donate.settings_success_message') : __('donate.success_message');
         $messages[] = $request->get('send_to_community') ? __('donate.send_to_community') : null;
+        $messages[] = $request->get('settingsUpdate') ? __('donate.success_message') : __('donate.success_settings_message');
 
+        return redirect()->route('community.donate.list', $community)
+            ->withMessage($messages);
+    }
+
+    public function donateSettingsUpdate(Community $community, DonateSettingsRequest $request, $id = null)
+    {
+        $this->donateRepo->update($community, $request, $id);
+        $messages = [];
+
+        $messages[] = $request->get('settingsUpdate') ? __('donate.success_settings_message') : null;
         return redirect()->route('community.donate.list', $community)
             ->withMessage($messages);
     }

@@ -5,6 +5,10 @@ let initialState = () =>  {
             entries : 5,
             page : 1,
             date: null,
+        },
+        
+        customer_data: {
+            select: null,
         }
     }
 };

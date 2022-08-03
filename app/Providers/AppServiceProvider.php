@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Helper\Data;
 use App\Services\Telegram\MainComponents\KnowledgeObserver;
+use App\Services\Telegram\MainComponents\MessageObserver;
 use App\Services\Tinkoff\TinkoffApi;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->bind('knowledgeObserver',function(){
             return app()->make(KnowledgeObserver::class);
+        });
+
+        $this->app->bind('messageObserver',function(){
+            return app()->make(MessageObserver::class);
         });
 
         $this->app->bind('payTerminal',function(){

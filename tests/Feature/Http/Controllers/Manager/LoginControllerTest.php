@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Manager;
 
 use App\Helper\PseudoCrypt;
+use App\Models\Administrator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\Sanctum;
@@ -46,11 +47,17 @@ class LoginControllerTest extends TestCase
 
     private function AuthSanctum()
     {
+        $user = User::factory()->create([
+            'id' => 1
+        ]);
+
         Sanctum::actingAs(
-            User::factory()->create([
-                'id' => 1
-            ])
+            $user
         );
+
+        Administrator::factory()->create([
+            'user_id' => $user->id,
+        ]);
     }
 
 

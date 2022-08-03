@@ -77,6 +77,7 @@ class Telegram extends Messenger
                         $ty->communities()->attach($community);
 //                        $botService->unKickUser($telegram_id, $community->connection->chat_id);
                     }
+
                     $variant = $community->tariff->variants()->find($payment->payable_id);
                     if ($ty->tariffVariant->find($variant->id) == NULL) {
                         foreach ($ty->tariffVariant->where('tariff_id', $community->tariff->id) as $userTariff) {
@@ -187,7 +188,7 @@ class Telegram extends Messenger
                 'image' => self::saveCommunityPhoto($tc->photo_url, $tc->chat_id)
             ]);
 
-            $community->tariff()->create(Tariff::$baseData);
+            $community->tariff()->create(Tariff::baseData());
             $community->statistic()->create([
                 'community_id' => $community->id
             ]);

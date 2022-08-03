@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\Manager')->group(function() {
+Route::middleware(['auth:sanctum', 'admin'])->namespace('App\Http\Controllers\Manager')->group(function() {
     Route::post('/users', 'UserController@list')->name('manager.users.list');
     Route::post('/user', 'UserController@get')->name('manager.user.get');
     Route::post('/auth', 'UserController@auth')->name('manager.users.self');

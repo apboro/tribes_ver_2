@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="col-12 row">
-                    @if ($community->tariff->test_period !== 0)
+                    @if ($community->tariff->test_period !== 0 && env('USE_TRIAL_PERIOD', true))
                         <a
                             href="https://t.me/{{ env('TELEGRAM_BOT_NAME') }}?start={{ $community->id }}trial"
                             class="btn btn-outline-success waves-effect mb-1"
@@ -34,7 +34,7 @@
                                     communityName: '{{ $community->title }}',
                                     communityTariff: '{{ $tariff->title }}',
                                     communityTariffID: '{{ $tariff->id }}',
-                                    communityAmount: {{ $tariff->price }},
+                                    communityAmount: '{{ $tariff->price }}',
                                     url: `{{ $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
                                 })"
                             >
@@ -53,6 +53,10 @@
                         <a href="{{ route('privacy.index') }}" target="_blank" class="btn-link">политикой конфиденциальности.</a>
                     </span>
                 </div>
+
+                <p class="col-12 mt-1">
+                    Платежи за продление доступа списываются автоматически. Вы можете отказаться от продления доступа в любой момент просто покинув сообщество.
+                </p>
             </div>
         </div>
     </div>

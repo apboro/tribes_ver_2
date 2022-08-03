@@ -4,7 +4,7 @@ namespace Tests\Unit\telegram;
 
 use App\Providers\TelegramBotServiceProvider;
 
-use App\Repositories\TelegramConnection\TelegramConnectionRepositoryContract;
+use App\Repositories\Telegram\TelegramConnectionRepositoryContract;
 use App\Services\Telegram\BotInterface\BotContract;
 use App\Services\Telegram\MainBot;
 use App\Services\Telegram\MainBotCollection;

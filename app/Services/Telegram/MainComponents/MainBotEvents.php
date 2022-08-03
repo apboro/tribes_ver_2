@@ -112,7 +112,10 @@ class MainBotEvents
                             $lastName = !empty($member->last_name) ? $member->last_name : '';
 
                             $ty = Telegram::registerTelegramUser($member->id, NULL, $userName, $firstName, $lastName);
-                            $ty->communities()->attach($community);
+
+                            if (!$ty->communities()->find($community->id))
+                                $ty->communities()->attach($community);
+
                             $text = ($userName ?: $firstName)
                                 . ', ' . $description . $image;
                             $this->bot->getExtentionApi()->sendMess($chatId, $text);
@@ -329,6 +332,7 @@ class MainBotEvents
     {
         $data  = ArrayHelper::toArray($this->data);
         if( ArrayHelper::getValue($data,'message.message_id') &&
+            ArrayHelper::getValue($data,'message.from.is_bot') !== true &&
             ArrayHelper::getValue($data,'message.text') &&
             empty(ArrayHelper::getValue($data,'message.reply_to_message'))
         ) {

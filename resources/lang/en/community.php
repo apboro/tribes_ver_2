@@ -10,7 +10,7 @@ return [
     'waiting' => 'First add a bot...',
     'account_owner' => 'Account owner',
     'about_community' => 'About the community',
-    'date_of_creation' => 'Date of creation',
+    'date_of_connection' => 'Connection date',
     'paid_subscribers_label' => 'Paid subscribers / total',
     'unique_visitors' => 'Unique visitors',
     'subscription_renewers' => 'Subscription renewers',

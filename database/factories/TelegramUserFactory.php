@@ -5,9 +5,7 @@ namespace Database\Factories;
 use App\Models\TelegramUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-/**
- * @method ?TelegramUser getItemByAttrs()
- */
+
 class TelegramUserFactory extends Factory
 {
     use instanceTrait;

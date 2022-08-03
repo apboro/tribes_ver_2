@@ -107,7 +107,7 @@ return [
     'statistics' => 'Statistics',
     'standart' => 'Standart',
     'status' => 'Status',
-    'subscriptions' => 'Subscriptions',
+    'subscribers' => 'Subscribers',
 
     'audience' => 'Audience',
     'product' => 'Media products',

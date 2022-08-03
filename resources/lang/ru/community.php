@@ -10,7 +10,7 @@ return [
     'waiting' => 'Сначала добавьте бота...',
     'account_owner' => 'Владелец аккаунта',
     'about_community' => 'О сообществе',
-    'date_of_creation' => 'Дата создания',
+    'date_of_connection' => 'Дата подключения',
     'paid_subscribers_label' => 'Оплативишие подписчики / всего',
     'unique_visitors' => 'Уникальные посетители',
     'subscription_renewers' => 'Продлившие подписку',
