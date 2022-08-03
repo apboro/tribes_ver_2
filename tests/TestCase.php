@@ -5,11 +5,14 @@ namespace Tests;
 use App\Models\Community;
 use App\Models\TelegramConnection;
 use App\Models\User;
+use Askoldex\Teletant\Context;
+use Askoldex\Teletant\Entities\Message;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Http\Client\Request;
 use Monolog\Logger;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -30,10 +33,18 @@ abstract class TestCase extends BaseTestCase
 
     protected function setUp(): void
     {
-        Http::shouldReceive('post')
-            ->times()
-            ->andReturn(null);
         parent::setUp();
+        $this->mock(Context::class)
+            ->shouldReceive('reply')
+            ->andReturn( new Message($this->getDataFromFile('telegram/text_message.json')) );
+        Http::fake([ '*' => function ($request, $options) {
+            /** @var Request $request */
+            Log::debug('post http request', [
+                'url' => $request->url(),
+                'data' => $request->data(),
+            ]);
+            return Http::response();
+        }]);
         $this->app = app();
         $channel = Log::channel('testing');
         $this->logger = $channel->getLogger();
@@ -63,7 +74,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getDataFromFile($name = '', $asJson = false)
     {
-        $jsonData = Storage::disk('test_data')->get("feature/telegram/$name");
+        $jsonData = Storage::disk('test_data')->get("feature/$name");
         if ($asJson) {
             return $jsonData;
         }
@@ -95,22 +106,24 @@ abstract class TestCase extends BaseTestCase
                 'user_id' => $user->id,
                 'telegram_user_id' => 333,
             ]);
+
         /** @var Community $community */
         $community = Community::factory()->for($connection, 'connection')->create([
             'owner' => $user->id,
             'title' => 'Group for Test Testov',
         ]);
+        $community->generateHash();
+        $community->updateQuietly(['hash' => $community->hash]);
         return array_merge($data,[
             'user' => [
                 'id' => $user->id,
+                'email' => $user->email,
             ],
             'telegram_connection' => [
                 'id' => $connection->id,
             ],
-            'community' => [
-                'id' => $community->id,
-                'owner' => $community->owner,
-            ],
+            'community' => $community->getAttributes(),
+            'community_object' => $community,
         ]);
     }
 }

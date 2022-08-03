@@ -14,14 +14,6 @@ return [
             'path' => 'audio',
         ],
     ],
-    'tariff' => [
-        'image_handler' => [
-            'handler' => \App\Services\File\Handlers\ImageHandler::class,
-            'path' => 'image',
-
-        ],
-    ],
-
     'donate' => [
         'image_handler' => [
             'handler' => \App\Services\File\Handlers\ImageHandler::class,
@@ -29,13 +21,10 @@ return [
             'procedure' => ['crop', 'watermark'],
         ],
     ],
-
-    'user' => [
+    'tariff' => [
         'image_handler' => [
-
+            'handler' => \App\Services\File\Handlers\ImageHandler::class,
+            'path' => 'image',
         ],
-        'avatar_handler' => [
-
-        ],
-    ]
+    ],
 ];

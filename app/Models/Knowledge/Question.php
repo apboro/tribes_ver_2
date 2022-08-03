@@ -27,7 +27,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Question extends Model
 {
-
     use HasFactory, Searchable;
 
     public $useSearchType = 'Question';
@@ -49,6 +48,17 @@ class Question extends Model
         return $this->hasOne(Answer::class, 'question_id', 'id');
     }
 
+    public function getShortAnswerAttribute()
+    {
+        $answer = $this->answer()->first();
+
+        if (strlen($answer->context) > 200) {
+            $answer->context = mb_substr($answer->context, 0, 199) . '...';
+        }
+        return $answer;
+    }
+
+
     public function community()
     {
         return $this->belongsTo(Community::class, 'community_id');
@@ -65,15 +75,6 @@ class Question extends Model
         $question = $this->id;
 
         return route('public.knowledge.view', compact('hash', 'question'));
-    }
-    public function getHashById()
-    {
-        return PseudoCrypt::hash($this->id);
-    }
-
-    public function getPublicQuestionsLink()
-    {
-        return route('public.knowledge.list', [ 'hash' => $this->getHashById() ]);
     }
 
     public function isUnpublishable(): bool

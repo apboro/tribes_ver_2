@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use App\Helper\PseudoCrypt;
 use App\Models\Statistic;
@@ -76,6 +77,7 @@ class Telegram extends Messenger
                         $ty->communities()->attach($community);
 //                        $botService->unKickUser($telegram_id, $community->connection->chat_id);
                     }
+
                     $variant = $community->tariff->variants()->find($payment->payable_id);
                     if ($ty->tariffVariant->find($variant->id) == NULL) {
                         foreach ($ty->tariffVariant->where('tariff_id', $community->tariff->id) as $userTariff) {
@@ -186,7 +188,7 @@ class Telegram extends Messenger
                 'image' => self::saveCommunityPhoto($tc->photo_url, $tc->chat_id)
             ]);
 
-            $community->tariff()->create(Tariff::$baseData);
+            $community->tariff()->create(Tariff::baseData());
             $community->statistic()->create([
                 'community_id' => $community->id
             ]);
@@ -242,6 +244,7 @@ class Telegram extends Messenger
 
     public static function botEnterGroupEvent($userId, $chatId, $chatType, $chatTitle, $photo_url = null)
     {
+
         try {
             $isChannel = strpos($chatType, 'channel') !== false;
 
@@ -250,7 +253,7 @@ class Telegram extends Messenger
             $hash = self::hash($userId, $chatType);
 
             $tc = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
-
+            Log::debug('поиск группы $hash init',compact('chatId','hash'));
             if ($tc) {
                 $tc->chat_id = $chatId;
                 $tc->chat_title = $chatTitle;
@@ -262,6 +265,7 @@ class Telegram extends Messenger
 
                 $tc->photo_url = $photo_url ?? null;
                 $tc->save();
+                Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType',compact('chatId','chatTitle','chatType'));
             }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -270,7 +274,6 @@ class Telegram extends Messenger
 
     public static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id)
     {
-        /* @var $commRepo CommunityRepositoryContract */
 
         $tc = TelegramConnection::where('telegram_user_id', $telegram_user_id)
             ->where('chat_id', $chat_id)

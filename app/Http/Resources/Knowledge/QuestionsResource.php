@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources\Knowledge;
 
-use App\Http\Resources\CommunityResource;
+use App\Http\Resources\ApiResourceCollection;
 use App\Models\Community;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class QuestionsResource extends ResourceCollection
+class QuestionsResource extends ApiResourceCollection
 {
     public static $wrap = 'items';
 
@@ -30,9 +29,10 @@ class QuestionsResource extends ResourceCollection
         return parent::toArray($request);
     }
 
-    public function with($request)
+    public function with($request): array
     {
         $additional = [];
+        /** @var Community $community */
         $community = Community::find($request->community_id ?? null);
         if($community){
             $additional['meta_info'] = [

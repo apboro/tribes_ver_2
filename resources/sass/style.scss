@@ -209,3 +209,10 @@ $icon-height: $icon-width;
         }
     }
 } */
+
+.loginError {
+
+    &__error {
+        color: red;
+    }
+}

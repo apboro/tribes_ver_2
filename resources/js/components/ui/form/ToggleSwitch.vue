@@ -1,0 +1,87 @@
+<template>
+    <div class="toggle-switch">
+        <label class="toggle-switch__switcher">
+            <input
+                type="checkbox"
+                :id="id"
+                class="toggle-switch__input"
+                :checked="isChecked"
+                :value="value"
+                @change="updateInput"
+            >
+
+            <span class="toggle-switch__slider"></span>
+        </label>
+
+        <label :for="id" class="toggle-switch__label">
+            {{ label }}
+        </label>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: 'ToggleSwitch',
+
+        model: {
+            prop: 'modelValue',
+            event: 'change'
+        },
+
+        props: {
+            id: {
+                type: String,
+                default: ''
+            },
+
+            value: {
+                type: [String, Number, Boolean],
+                default: ''
+            },
+            
+            modelValue: {
+                default: ""
+            },
+
+            label: {
+                type: [String, null],
+                default: null
+            },
+
+            trueValue: {
+                default: true
+            },
+
+            falseValue: {
+                default: false
+            }
+        },
+
+        computed: {
+            isChecked() {
+                if (this.modelValue instanceof Array) {
+                    return this.modelValue.includes(this.value)
+                }
+                // Note that `true-value` and `false-value` are camelCase in the JS
+                return this.modelValue === this.trueValue;
+            }
+        },
+
+        methods: {
+            updateInput(event) {
+                let isChecked = event.target.checked
+                if (this.modelValue instanceof Array) {
+                    let newValue = [...this.modelValue];
+                    if (isChecked) {
+                        newValue.push(this.value);
+                    } else {
+                        newValue.splice(newValue.indexOf(this.value), 1)
+                    }
+                    this.$emit('change', newValue);
+                } else {
+                    this.$emit('change', isChecked ? this.trueValue : this.falseValue);
+                }
+            }
+        }
+    }
+</script>

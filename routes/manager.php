@@ -9,7 +9,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->namespace('App\Http\Controllers\Manager')->group(function() {
-    Route::post('/users', 'UserController@list')->name('users.list');
-    Route::post('/auth', 'UserController@auth')->name('users.self');
+Route::middleware(['auth:sanctum', 'admin'])->namespace('App\Http\Controllers\Manager')->group(function() {
+    Route::post('/users', 'UserController@list')->name('manager.users.list');
+    Route::post('/user', 'UserController@get')->name('manager.user.get');
+    Route::post('/auth', 'UserController@auth')->name('manager.users.self');
+
+    //Payment
+    Route::post('/payments', 'PaymentController@list')->name('manager.payments.list');
+    Route::post('/customers', 'PaymentController@customers')->name('manager.customers.list');
+    //Community
+    Route::post('/communities', 'CommunityController@list')->name('manager.community.list');
+    Route::post('/community', 'CommunityController@get')->name('manager.community.get');
+
+    Route::post('/loginAs', 'LoginController@loginAs')->name('manager.login.as');
+    Route::post('/loginBack', 'LoginController@loginBack')->name('manager.login.back');
 });

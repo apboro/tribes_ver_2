@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Administrator;
 use App\Models\Knowledge\Question;
 use App\Models\TelegramUser;
 use App\Models\User;
@@ -28,12 +29,17 @@ class DatabaseSeeder extends Seeder
                 'email' => 'pyatak@gmail.com',
                 'phone' => 9155707971,
             ]);
-
+        $user->createTempToken();
+/** @var User $userTest */
         $userTest = User::factory()->createItem([
             'name' => 'Test Testov',
             'email' => 'test-dev@webstyle.top',
         ]);
+        $userTest->createTempToken();
 
+        Administrator::factory()->create([
+            'user_id' => $userTest->id
+        ]);
         //Auth::login($user);
 
 

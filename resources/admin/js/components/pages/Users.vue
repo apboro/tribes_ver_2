@@ -35,13 +35,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="user in users.data">
+                <tr v-for="user in users.data" :key="user.id">
                     <td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
                     <td><span class="text-muted">{{ user.id }}</span></td>
                     <td><a href="invoice.html" class="text-reset" tabindex="-1">Icons</a></td>
                     <td>
-                        <span class="flag flag-country-pl"></span>
-                        {{ user.name }}
+                        <transition>
+                            <!-- @click="getUser(user)" -->
+                            <!-- :to="'/user/' + user.id" -->
+                            <router-link 
+                                :to="{name:'Profile', params: {id: user.id}}"
+                            >
+                                {{ user.name }}
+                            </router-link>
+                        </transition>
                     </td>
                     <td :title="user.phone_confirmed ? 'Подтвержден' : 'Не подтвержден'">
                         {{ user.phone }}
@@ -55,43 +62,46 @@
                     </td>
                     <td>$940</td>
                     <td class="text-end">
-                            <span class="dropdown">
-                              <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-                              <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="#">
-                                  Action
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                  Another action
-                                </a>
-                              </div>
-                            </span>
+                        <span class="dropdown">
+                            <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="#">
+                                Action
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                Another action
+                            </a>
+                            </div>
+                        </span>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
+
         <div v-if="users.per_page < users.total" class="card-footer d-flex align-items-center">
             <p class="m-0 text-muted">Показано <span>{{ users.per_page }}</span> из <span>{{ users.total }}</span> записей</p>
             <ul class="pagination m-0 ms-auto">
-                <li v-for="link in users.links" class="page-item" :class="{'active' : link.active}"><a class="page-link" @click="setPageByUrl(link.url)" href="#">{{ link.label }}</a></li>
+                <li 
+                    v-for="(link, idx) in users.links"
+                    class="page-item" 
+                    :class="{'active' : link.active}"
+                    :key="idx"
+                >
+                    <a class="page-link" @click="setPageByUrl(link.url)" href="#">{{ link.label }}</a>
+                </li>
             </ul>
         </div>
     </div>
 </template>
 
 <script>
+import FilterDataUsers from '../../mixins/filterData';
 export default {
     name: "Users",
-    data() {
-        return {
-            filter_data:{
-                search : null,
-                entries : 10,
-                page : 1,
-            }
-        }
-    },
+    mixins: [FilterDataUsers],
+
+
     watch: {
         filter_data: {
             deep: true,
@@ -100,21 +110,23 @@ export default {
             },400)
         }
     },
+    
     mounted(){
         this.$store.dispatch('get_users', this.filter_data).then(() => {
         });
     },
+
     computed: {
         users() {
+            // console.log(this.$store.getters.users);
             return this.$store.getters.users;
         }
     },
-    methods:{
-        setPageByUrl(url){
-            if(url){
-                this.filter_data.page = getParameterByName('page', url);
-            }
-        }
+    methods: {
+        // getUser(obj){
+        //     console.log(this.$route.params)
+        //     // this.$router.push({ name: 'Profile' })
+        // }
     }
 }
 </script>

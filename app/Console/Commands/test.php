@@ -20,8 +20,8 @@ use App\Repositories\Payment\PaymentRepository;
 use App\Services\TelegramMainBotService;
 use App\Services\TelegramComponents\Storage;
 use App\Services\Tinkoff\Payment as Pay;
-use App\Services\TinkoffApi;
-use App\Services\TinkoffE2C;
+use App\Services\Tinkoff\TinkoffApi;
+use App\Services\Tinkoff\TinkoffE2C;
 use Carbon\Carbon;
 use App\Services\SMTP\Mailer;
 

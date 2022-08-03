@@ -2,7 +2,7 @@
 
 Из консоли в корне выполнить команду
 
-```
+```bash
 php artisan base:fresh
 ```
 
@@ -16,3 +16,7 @@ php artisan base:fresh
 **Покупатель**
 `Логин: pyatak@gmail.com`
 `Пароль: test123`
+
+```bash 
+php artisan db:seed --class=KnowledgeSeeder
+```

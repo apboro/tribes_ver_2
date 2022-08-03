@@ -53,109 +53,9 @@ class FileController extends Controller
 
     public function upload(Request $request)
     {
-
-//        dd($request['course_id']);
-//        $f = $this->fileUploadService->prepareStoreFile();
-
-//        return 'audio loaded';
-
-//        $this->fileRepo->storeFile(
-//            $this->FileUploadService->storeFiles() // [1, 2, 44]
-//        );
-//
-//        $this->fileRepo->storeFile(
-//            $this->FileUploadService->storeFiles() // [1, 2, 44]
-//        );
-//        $FileUploadService = new FileUploadService($request);
-//        $FileUploadService->init();
-
-
-
-
-//        dd(mime_content_type($request['file']));
-//dd($request->all());
-
-
-/*
-        if($request['base_64_file']){
-            $image = $request['base_64_file'];  // your base64 encoded
-            $image = str_replace('data:image/png;base64,', '', $image);
-            $image = str_replace(' ', '+', $image);
-            $imageName = 'temp.png';
-
-            FileFacade::put($imageName, base64_decode($image));
-
-            $file = $this->pathToUploadedFile($imageName, false);
-
-        } else {
-            $file = $request['file'];
-        }
-
-        if(!$file){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Нет прикрепленного файла'
-            ]);
-        }
-
-        $mime = $file->getMimeType();
-
-        $title = $request['title'] ?? explode('.', $file->getClientOriginalName() ?? 'Без названия.jpg')[0] ;
-
-        if(in_array($mime, $this->fileRepo->imageTypes)){
-            $decoded = json_decode($request['crop']) ?? new \stdClass();
-            $fileData['file'] = $file;
-            $fileData['crop'] = $decoded->isCrop ?? false;
-            $fileData['cropData'] = $decoded->cropData ?? null;
-            $f = $this->fileRepo->storeFile($fileData);
-        } elseif (in_array($mime, $this->fileRepo->videoTypes)){
-//            $path = $this->videoRepo->storeTempVideo($file);
-//            $resp = $this->videoRepo->uploadToWebcaster($path, $title);
-
-            $webcaster = new WebcasterPro();
-            $resp = $webcaster->uploads($file);
-
-            $ifarme = $this->videoRepo->getVideo($resp->event_id);
-
-            $f = File::create([
-                'isVideo' => true,
-                'filename' => $resp->file_name,
-                'size' => 0,
-                'mime' => $mime,
-                'description' => json_encode($resp->previews),
-                'uploader_id' => Auth::user()->id,
-                'url' => $resp->manifest,
-                'remoteFrame' => $resp->event_id,
-                'iframe' => $ifarme->event->embed
-            ]);
-
-        } elseif (in_array($mime, $this->fileRepo->audioTypes)){
-            $fileData['file'] = $file;
-            $f = $this->fileRepo->storeFile($fileData);
-        } else {
-            return response()->json([
-                "status" => "error",
-                "message" => "Загрузка не удалась",
-                "details" => "Файл не поддерживается для загрузки.",
-            ]);
-        }*/
-//dd($f);
-//        dd($f);
-
-//        dd($request->storedFiles);
-//dd($request['course_id']);
-
-//        dd($request->storedFiles[0]);
-//        $filesId = $request->storedFiles;
-
-//        dd($request);
         $this->fileEntity->getEntity($request);
-//        dd($request);
-        $files = $this->fileUploadService->procRequest($request);
 
-        /*if($request['course_id']){
-            $course = Course::find($request['course_id']);
-        }*/
+        $files = $this->fileUploadService->procRequest($request);
 
         if($request['entityModel']){
             $storedFilesId = [];
@@ -172,7 +72,7 @@ class FileController extends Controller
         ]);
     }
 
-    private function is_base64($s)
+    /*private function is_base64($s)
     {
         return (bool) preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $s);
     }
@@ -196,5 +96,5 @@ class FileController extends Controller
         $object = new UploadedFile($path, $originalName, $mimeType, $error, false);
 
         return $object;
-    }
+    }*/
 }

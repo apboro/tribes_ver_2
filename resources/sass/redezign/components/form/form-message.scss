@@ -1,0 +1,16 @@
+.form-message {
+    display: inline-block;
+    @include font($text-color-1, 12px, 16px, 400);
+
+    &--success {
+        color: $success-1;
+    }
+
+    &--danger {
+        color: $danger-1;
+    }
+
+    &--warning {
+        color: $warning-1;
+    }
+}

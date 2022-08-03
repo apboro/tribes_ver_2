@@ -81,7 +81,7 @@ class CourseController extends Controller
 
     public function pay(CoursePayRequest $request)
     {
-        $course = Course::find((int)PseudoCrypt::unhash($request['hash']));
+        $course = Course::findOrFail((int)PseudoCrypt::unhash($request['hash']));
 
         $course->increment('clicks');
 
@@ -104,7 +104,8 @@ class CourseController extends Controller
 
             $user->tinkoffSync();
             $user->hashMake();
-            Auth::login($user)->createTempToken();
+            $user->createTempToken();
+            //Auth::login($user)->createTempToken();
 
             $v = view('mail.registration')->with(['login' => $email,'password' => $password])->render();
             new Mailer('Сервис '. env('APP_NAME'), $v, 'Регистрация', $email);
@@ -135,10 +136,7 @@ class CourseController extends Controller
             $payment = $p->pay();
         }
 
-//        dd($user);
-
-
-        if(isset($payment) && $payment){
+        if(!empty($payment)){
             return $request->ajax() ? response()->json([
                 'status' => 'ok',
                 'redirect' => $payment->paymentUrl

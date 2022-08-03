@@ -1,6 +1,6 @@
 export default ({
     _communityId: window.location.pathname.split('/')[2],
-    _communityTitle: 'Мудрость стоиков на каждый день',
+    _communityTitle: '',
     
     _questions: [],
     
@@ -11,13 +11,12 @@ export default ({
     _filters: {
         full_text: '',
         with_answers: 'all',
-        published: 'all',
-        draft: 'all',
+        status: 'all'
     },
 
     _sort: {
-        name: 'id',
-        rule: 'asc'
+        name: '',
+        rule: ''
     },
 
     _pagination: {
@@ -26,6 +25,8 @@ export default ({
     },
 
     _isLoading: false,
+
+    _errors: null,
 
     _isAllFields: false,
 

@@ -14,9 +14,12 @@ use App\Models\TariffVariant;
 use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
-use App\Services\TinkoffApi;
+use App\Services\Tinkoff\TinkoffApi;
 use phpDocumentor\Reflection\Types\False_;
 
+/**
+ * todo переименовать в более уникальное название путается с eloquent моделью
+ */
 class Payment
 {
     private TinkoffService $tinkoff;
@@ -196,7 +199,7 @@ class Payment
             if($this->charged){
                 $chargeRes = $this->tinkoff->payTerminal->Charge([
                     'PaymentId' => $this->payment->paymentId,
-                    'RebillId' => $rebildPayment->RebillId,
+                    'RebillId' => !empty($rebildPayment->RebillId) ? $rebildPayment->RebillId : null,
                 ]);
                 $chargeRes = json_decode($chargeRes);
 
@@ -209,6 +212,8 @@ class Payment
                     $this->payment->save();
                     TinkoffService::checkStatus($chargeRes, $this->payment, $previous_status);
                 } else {
+                    //todo сохранять в лог файл TelegramLogService::staticSendLogMessage заменить на
+                    // \App\Exceptions\TelegramException::report() сделать похожий для платежей
                     TelegramLogService::staticSendLogMessage("Charge ответил с ошибкой: " . json_encode($chargeRes));
                     return false;
                 }
@@ -227,8 +232,12 @@ class Payment
     {
         $attaches = [];
 
-        if($this->payment) $attaches['hash'] = PseudoCrypt::hash($this->payment->id);
-        if($this->telegram_id) $attaches['telegram_id'] = $this->telegram_id;
+        if($this->payment) {
+            $attaches['hash'] = PseudoCrypt::hash($this->payment->id);
+        }
+        if($this->telegram_id) {
+            $attaches['telegram_id'] = $this->telegram_id;
+        }
 
         $receiptItem = [[
             'Name'          => 'Оплата доступа к сообществу',

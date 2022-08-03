@@ -58,4 +58,14 @@ class PaymentFactory extends Factory
         });
     }
 
+    public function typeCourse($id): self
+    {
+        return $this->state(function (array $attributes) use ($id) {
+            return [
+                'payable_id' => $id,
+                'payable_type' => 'App\Models\Course',
+            ];
+        });
+    }
+
 }

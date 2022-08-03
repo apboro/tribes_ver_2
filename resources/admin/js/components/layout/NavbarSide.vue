@@ -11,12 +11,8 @@
         </div>
 
         <div class="d-none d-md-flex">
-            <a href="?theme=dark" class="nav-link px-0 hide-theme-dark" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                <Icon icon="moon" />
-            </a>
-
-            <a href="?theme=light" class="nav-link px-0 hide-theme-light" title="Enable light mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                <Icon icon="sun" />
+            <a @click="toggleThemeColor" class="nav-link px-0" href="javascript:void(0)" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
+               <Icon :icon="schema.theme_color === 'theme-light' ? 'moon' : 'sun'" />
             </a>
         </div>
 
@@ -24,41 +20,65 @@
             <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
                 <span class="avatar avatar-sm" ></span>
                 <div class="d-none d-xl-block ps-2">
-                    <div>Paweł Kuna</div>
+                    <div>{{GET_USER.name}}</div>
                     <div class="mt-1 small text-muted">UI Designer</div>
                 </div>
             </a>
             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <a href="#" class="dropdown-item">Set status</a>
+                <a href="#" class="dropdown-item">Profile &amp; account</a>
+                <a href="#" class="dropdown-item">Feedback</a>
                 <div class="dropdown-divider"></div>
-                <h3 class="dropdown-header">фвмфц</h3>
-                <a href="#" class="dropdown-item active">2323</a>
-                <a href="#" class="dropdown-item text-danger">фцввв</a>
-                <a href="#" class="dropdown-item">фцвв</a>
-                <label class="dropdown-item"><input class="form-check-input m-0 me-2" > фцв</label>
-                <a href="#" class="dropdown-item">фцвфцв</a>
-
-                <span class="dropdown-header">Dropdown header</span>
-                <a class="dropdown-item" href="#">
-                    Action
-                    <span class="badge bg-primary ms-auto">12</span>
-                </a>
-                <a class="dropdown-item" href="#">
-                    <span class="badge bg-green ms-auto"></span>
-                </a>
-                <a class="dropdown-item active" href="#">Active action</a>
-                <a class="dropdown-item disabled" href="#">Disabled action</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Separated link</a>
+                <a href="#" class="dropdown-item">Settings</a>
+                <a @click.prevent='logout' href="#" class="dropdown-item">Logout</a>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { Dropdown } from 'bootstrap';
+import { mapActions, mapGetters } from 'vuex';
 import Icon from "../ui/Icon";
 export default {
     name: "NavbarSide",
-    components:{Icon}
+    components:{Icon},
+    data() {
+        return {
+            schema:{
+                theme_color: 'theme-light'
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(["GET_USER"])
+    },
+    methods: {
+        logout(){
+
+            this.$router.push({name: 'login'}).catch(() => {});
+        },
+        ...mapActions(["LOAD_USER"]),
+
+        toggleThemeColor() {
+            let apply_light = 
+                localStorage.getItem('theme-color') === 'theme-dark';    
+            let schema = apply_light ? 'theme-light' : 'theme-dark';
+            this.setThemeColor(schema);
+        },
+
+        setThemeColor(schema){
+            
+            this.schema.theme_color = schema;
+            localStorage.setItem('theme-color', schema);
+            document.body.classList.remove('theme-dark');
+            document.body.classList.remove('theme-light');
+            document.body.classList.add(schema);
+        },
+    },
+    mounted(){
+        this.LOAD_USER();
+    }
 }
 </script>
 

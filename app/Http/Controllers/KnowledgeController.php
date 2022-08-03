@@ -8,32 +8,18 @@ use App\Models\Article;
 use App\Models\Community;
 use App\Models\Knowledge\Answer;
 use App\Models\Knowledge\Question;
-use Elasticsearch\Client;
-use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
-use Elasticsearch\Endpoints\Count;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
-use phpDocumentor\Reflection\Types\Collection;
 
 class KnowledgeController extends Controller
 {
-    public $elasticsearch;
     public $perPage = 15;
     private $community_id;
-    private $follower_map = ['', 'К', 'M', 'B'];
-
-    public function __construct(Client $elasticsearch)
-    {
-        $this->elasticsearch = $elasticsearch;
-    }
 
     public function list(Request $request, QuestionFilter $filter, $hash)
     {
-        $community = Community::find((int)PseudoCrypt::unhash($hash));
-
-        $countFollowers = $this->modifiedCountFollowers($community);
+        $community = Community::findOrFail((int)PseudoCrypt::unhash($hash));
         $this->community_id = $community->id;
 
         if ($request->has('search') && $request['search'] !== null) {
@@ -46,24 +32,23 @@ class KnowledgeController extends Controller
                 ->where('community_id', $community->id)
                 ->paginate($this->perPage);
         }
+
+        $community->load('owner');
+
         return view('common.knowledge.list')
             ->withCommunity($community)
-            ->withCountFollowers($countFollowers)
-            ->withPopularQuestions($this->popularQuestions($community))
             ->withQuestions($questions);
     }
 
     public function get(Request $request, $hash, Question $question)
     {
-//        $community = Community::findOrFail((int)PseudoCrypt::unhash($hash));
-        $community = Community::where('hash', $hash)->firstOrFail();
+        $community = Community::findOrFail((int)PseudoCrypt::unhash($hash));
         Cache::forget($community->hash);
 
         if (!Cache::has('user_ip') || !Cache::has($question->id) || $request->ip() != Cache::get('user_ip')) {
-            $question->c_enquiry += 1;
-            $question->save();
+            $question->increment('c_enquiry');
             Cache::put('user_ip', $request->ip(), 900);
-            Cache::put($question->id, $community->hash, 900);
+            Cache::put($question->id, $question->uri_hash, 900);
         }
 
         $question->load('answer');
@@ -117,47 +102,5 @@ class KnowledgeController extends Controller
 
         return redirect()->route('knowledge.list', $community)
             ->withMessage(__('knowledge.knowledge_form_success'));
-    }
-
-    private function modifiedCountFollowers($community)
-    {
-        $countFollowers = $community->followers()->count();
-        $string = $this->getString($countFollowers);
-
-        for ($rank = 0; $countFollowers > 999; $rank++) {
-            $countFollowers = round($countFollowers / 1000, 1);
-        }
-
-        return $countFollowers . $this->follower_map[$rank] . $string;
-    }
-
-    private function getString($number)
-    {
-        $string = ' подписчиков';
-
-        if ($number === 1) {
-            $string = ' подписчик';
-        } elseif ($number > 1 && $number < 5) {
-            $string = ' подписчика';
-        }
-
-        return $string;
-    }
-
-    private function popularQuestions($community)
-    {
-        if ($community->questions()->count() === 0) {
-            return null;
-        }
-
-        return Question::where([
-            ['community_id', $this->community_id],
-            ['is_public', true],
-            ['is_draft', false]
-        ])->orderBy('c_enquiry', 'DESC')
-            ->limit(20)
-            ->get()
-            ->shuffle()
-            ->slice(0, 5);
     }
 }

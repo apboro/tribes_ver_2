@@ -47,7 +47,7 @@ class TariffVariantFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'isActive' => array_rand([0,1]),
+                'isActive' => true,
             ];
         });
     }

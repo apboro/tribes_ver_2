@@ -51,6 +51,12 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::any('/tinkoff/notify', 'PaymentController@notify')->name('tinkoff.notify');
     });
 
+    // Публичные ссылки на вопросы
+    Route::namespace('App\Http\Controllers')->group(function () {
+        Route::get('/{hash}/questions', 'KnowledgeController@list')->name('public.knowledge.list');
+        Route::get('/{hash}/questions/{question}/view', 'KnowledgeController@get')->name('public.knowledge.view');
+    });
+
 
     // Авторизованные роуты
     Route::middleware('auth')->namespace('App\Http\Controllers')->group(function () {
@@ -124,8 +130,8 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                 Route::any('/{community}/tariff/add', 'TariffController@tariffAdd')->name('community.tariff.add');
                 Route::any('/{community}/tariff/edit/{id}/{activate?}', 'TariffController@tariffEdit')->name('community.tariff.edit');
 
-                Route::get('/{community}/subscriptions', 'TariffController@subscriptions')->name('community.tariff.subscriptions');
-                Route::post('/{community}/subscriptions/change', 'TariffController@subscriptionsChange')->name('community.tariff.subscriptionsChange');
+                Route::get('/{community}/subscribers', 'TariffController@subscriptions')->name('community.tariff.subscriptions');
+                Route::post('/{community}/subscribers/change', 'TariffController@subscriptionsChange')->name('community.tariff.subscriptionsChange');
                 Route::get('/{community}/tariff', 'TariffController@list')->name('community.tariff.list');
                 Route::get('/{community}/tariff/settings/{tab?}', 'TariffController@settings')->name('community.tariff.settings');
                 Route::post('/{community}/tariff/settings/update', 'TariffController@tariffSettings')->name('tariff.settings.update');
@@ -151,8 +157,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
             });
         });
 
-        Route::get('/{hash}/questions', 'KnowledgeController@list')->name('public.knowledge.list');
-        Route::get('/{hash}/questions/{question}/view', 'KnowledgeController@get')->name('public.knowledge.view');
+
         Route::get('/{hash}/knowledge/help', 'KnowledgeController@help')->name('public.knowledge.help');
 
         Route::get('/community/add', function () {
@@ -308,7 +313,12 @@ Route::any('/test', [TestBotController::class, 'index']);
 
 Route::any('/manager{any}', function () {
     return view('admin');
-})->where('any', '.*');
+})->where('any', '.*')->middleware('admin');
 
 Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name('telegram.interface');
+
+// Footer Routes
+Route::get('/statistics', function () {
+    return view('common.community.statistics');
+})->name('st');
 

@@ -9,4 +9,6 @@ Interface BotCollectionContract
     public function add(array $item): void;
 
     public function getBotByName(string $botName): MainBot;
+
+    public function hasBotByName(string $botName): bool;
 }

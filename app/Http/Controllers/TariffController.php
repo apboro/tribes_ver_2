@@ -75,6 +75,7 @@ class TariffController extends Controller
         $user = User::where('email', 'like', '%' . $email . '%')->first();
 
         if($email != null && $user == null){
+            /** @var User $user */
             $user = User::create([
                 'email' => strtolower($email),
                 'name' => explode('@', $email)[0],
@@ -84,10 +85,7 @@ class TariffController extends Controller
                 'phone_confirmed' => false,
             ]);
 
-            $token = $user->createToken('api-token');
-            $user
-                ->withAccessToken($token->plainTextToken)
-                ->setTempToken($token->plainTextToken);
+            $token = $user->createTempToken();
 
             $user->tinkoffSync();
             $user->hashMake();

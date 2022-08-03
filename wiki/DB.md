@@ -1,3 +1,4 @@
+
 ## клонировать БД для тестов
 
 выбрать БД
@@ -16,5 +17,15 @@ CREATE DATABASE "test_community" WITH TEMPLATE "community" OWNER andrey;
 
 ```psql
 CREATE SCHEMA knowledge AUTHORIZATION usernamedb;
+```
+
+## Установить расширение для UUID 
+
+```psql
+## в каждой БД под правами супер пользователя 
+\с community;
+CREATE EXTENSION "uuid-ossp";
+## убедится что функция uuid_generate_v4 установлена
+\df;
 ```
 

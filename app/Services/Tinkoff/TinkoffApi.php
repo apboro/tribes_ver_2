@@ -4,7 +4,9 @@ namespace App\Services\Tinkoff;
 
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class TinkoffApi
 {
@@ -98,11 +100,6 @@ class TinkoffApi
         }
     }
 
-    /**
-     * @param $args mixed You could use associative array or url params string
-     * @return bool
-     * @throws HttpException
-     */
     public function init($args)
     {
         return $this->buildQuery('Init', $args);
@@ -178,16 +175,6 @@ class TinkoffApi
         return $this->buildQuery('Payment', $args, true);
     }
 
-    /**
-     * Builds a query string and call sendRequest method.
-     * Could be used to custom API call method.
-     *
-     * @param string $path API method name
-     * @param mixed $args query params
-     *
-     * @return mixed
-     * @throws HttpException
-     */
     public function buildQuery($path, $args, $a2c = false)
     {
         $url = $a2c ? $this->api_e2c_url : $this->api_url;
@@ -251,12 +238,6 @@ class TinkoffApi
         return $args;
     }
 
-    /**
-     * Generates Token
-     *
-     * @param $args
-     * @return string
-     */
     private function _genToken($args)
     {
         $token = '';
@@ -273,11 +254,6 @@ class TinkoffApi
         return $token;
     }
 
-    /**
-     * Combines parts of URL. Simply gets all parameters and puts '/' between
-     *
-     * @return string
-     */
     private function _combineUrl()
     {
         $args = func_get_args();
@@ -294,14 +270,6 @@ class TinkoffApi
         return $url;
     }
 
-    /**
-     * Main method. Call API with params
-     *
-     * @param $api_url
-     * @param $args
-     * @return bool|string
-     * @throws HttpException
-     */
     private function _sendRequest($api_url, $args)
     {
         $this->error = '';
@@ -309,7 +277,23 @@ class TinkoffApi
             $args = json_encode($args);
         }
 
-        if ($curl = curl_init()) {
+        if(env('APP_ENV') === 'testing') {
+            $testArgs = json_decode($args,true);
+            Log::debug('tinkoff api send request',[
+                'api_url' => $api_url,
+                'args' => $testArgs
+            ]);
+            $path = Str::afterLast(rtrim($api_url,'/'),'/');
+            // создание хеша для тестового файла данных по платежу можно опираться только на путь и сумму платежа
+            // потому что все остальные параметры в $args являются динамическими,
+            // потому автотесты платежей разделять по Amount, каждый тест должен иметь свою сумму
+            $file_name = md5($path.$testArgs['Amount']);
+            $storage = Storage::disk('test_data');
+            return $storage->exists("payment/$file_name.json")?
+                $storage->get("payment/$file_name.json"):
+                $storage->get("payment/file.json");
+
+        }else if ($curl = curl_init()) {
             curl_setopt($curl, CURLOPT_URL, $api_url);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

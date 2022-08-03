@@ -6,6 +6,8 @@ use App\Helper\Data;
 use App\Services\File\common\FileConfig;
 use App\Services\Telegram\MainComponents\KnowledgeObserver;
 use Illuminate\Config\Repository;
+use App\Services\Telegram\MainComponents\MessageObserver;
+use App\Services\Tinkoff\TinkoffApi;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
@@ -49,6 +51,23 @@ class AppServiceProvider extends ServiceProvider
 
             return app()->make(Repository::class, ['items' => 'test']);
         });*/
+        $this->app->bind('messageObserver',function(){
+            return app()->make(MessageObserver::class);
+        });
+
+        $this->app->bind('payTerminal',function(){
+            return app()->make(TinkoffApi::class,[
+                'terminalKey' => env('TINKOFF_TERMINAL_KEY'),
+                'secretKey' => env('TINKOFF_SECRET_KEY'),
+            ]);
+        });
+
+        $this->app->bind('e2cTerminal',function(){
+            return app()->make(TinkoffApi::class,[
+                'terminalKey' => env('TINKOFF_TERMINAL_KEY_E2C'),
+                'secretKey' => env('TINKOFF_SECRET_KEY_E2C'),
+            ]);
+        });
     }
 
     /**

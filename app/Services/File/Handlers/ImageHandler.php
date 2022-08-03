@@ -14,95 +14,109 @@ use Illuminate\Support\Facades\Storage;
 
 class ImageHandler implements HandlerContract
 {
-
     private $path;
     private FileRepository $repository;
 
-    /*private $fields = [
-        'url',
-        'hash',
-        'filename'
-    ];*/
-
     public function __construct(string $path, FileRepository $repository)
     {
-
-//        $this->path = Storage::disk('public')->path($path);
         $this->path = $path;
         $this->repository = $repository;
     }
 
-
     public function startService(UploadedFile $file, File $model, array $procedure): File
     {
-//        dd($file);
-        foreach ($procedure as $key => $proc) {
-//            dd($procedure);
-            switch ($key) {
-                case 'crop':
-                    $fileNew = $this->crop($proc, $file);
-                    break;
-                case 'watermark':
-                    $fileNew = $this->watermark($proc, $file);
-                    break;
+        $fileProcessed = $file;
+        //Обрабатываем картинку (crop, resize и т.д.)
+        if ($procedure) {
+            $fileProcessed = Image::make($file)->encode('jpg', 100);
+            foreach ($procedure as $key => $proc) {
+                switch ($key) {
+                    case 'crop':
+                        $fileProcessed = $this->crop($proc, $fileProcessed);
+                        break;
+                    case 'watermark':
+                        $fileProcessed = $this->watermark($proc, $fileProcessed);
+                        break;
+                }
             }
-
+            $fileProcessed = $this->saveFileProcessed($fileProcessed);
         }
-        //как-то обрабатываем картинку (crop, resize и т.д.)
-        //todo
-        //репозиторий делает сохранение файла в нужную папку и возвращает полное имя файла $file->storeAs($this->path.$file->getClientOriginalName());
 
+        $hash = $this->repository->setHash($fileProcessed);
+        $filename = $hash . '.' . $fileProcessed->guessClientExtension();
 
-        $hash = $this->repository->setHash($fileNew);
-        $filename = $hash . '.' . $fileNew->guessClientExtension();
-//        dd($filename);
-//        $url = $this->repository;
+        $url = $this->repository->storeFileNew($fileProcessed, $this->path, $filename);
 
-        $url = $this->repository->storeFileNew($fileNew, $this->path, $filename);
-//dd($url);
-        $model['mime'] = $fileNew->getMimeType();
-        $model['size'] = $fileNew->getSize();
+        $model['mime'] = $fileProcessed->getMimeType();
+        $model['size'] = $fileProcessed->getSize();
         $model['isImage'] = 1;
         $model['filename'] = $filename;
         $model['url'] = $url;
         $model['hash'] = $hash;
 
         $model->save();
-//        dd($file);
+
         return $model;
     }
 
-
     ////////////////////////////////////////////////////////
 
-    public function crop($crop, $file)
+    /**
+     * @param $crop
+     * @param $fileProcessed
+     * @return mixed
+     */
+    private function crop($crop, $fileProcessed)
     {
-        $image = Image::make($file)->encode('jpg', 100);
-
         $dimensions = explode('|', $crop);
-        $image->crop((int)$dimensions[2], (int)$dimensions[3], $x = (int)$dimensions[0], $y = (int)$dimensions[1]);
 
-        $image->save(storage_path('app/public/temp/') . 'temp.png', 100, 'png');
+        $fileProcessed->crop((int)$dimensions[2], (int)$dimensions[3], $x = (int)$dimensions[0], $y = (int)$dimensions[1]);
 
-        $f = new UploadedFile($image->dirname . '/' . $image->basename, $image->basename, $image->mime);
-
-        return $f;
+        return $fileProcessed;
     }
 
-    public function watermark($crop, $file)
+    /**
+     * @param $crop
+     * @param $fileProcessed
+     * @return mixed
+     */
+    private function watermark($crop, $fileProcessed)
     {
-        $image = Image::make($file)->encode('jpg', 100);
+        $fileProcessedSize = $fileProcessed->getSize();
+        $fileProcessedWidth = $fileProcessedSize->width;
+        $fileProcessedHeight = $fileProcessedSize->height;
 
-        $image->insert($crop, 'center');
+        $watermark = Image::make($crop);
 
-        $image->save(storage_path('app/public/temp/') . 'temp.png', 100, 'png');
+        if($fileProcessedWidth > $fileProcessedHeight) {
+            //делаем высоту вотермарки 40% от высоты картинки
+            $watermark->resize(null, $fileProcessedHeight/100*40, function ($constraint){
+                $constraint->aspectRatio();
+            });
+        } else {
+            //делаем ширину вотермарки 40% от ширины картинки
+            $watermark->resize($fileProcessedWidth/100*40, null, function ($constraint){
+                $constraint->aspectRatio();
+            });
+        }
 
-        $f = new UploadedFile($image->dirname . '/' . $image->basename, $image->basename, $image->mime);
+        $fileProcessed->insert($watermark, 'bottom-right');
 
-        return $f;
+        return $fileProcessed;
     }
 
+    /**
+     * @param $fileProcessed
+     * @return UploadedFile
+     */
+    private function saveFileProcessed($fileProcessed)
+    {
+        $fileProcessed->save(storage_path('app/public/temp/') . 'temp.png', 100, 'png');
 
+        $file = new UploadedFile($fileProcessed->dirname . '/' . $fileProcessed->basename, $fileProcessed->basename, $fileProcessed->mime);
+
+        return $file;
+    }
 
 
 

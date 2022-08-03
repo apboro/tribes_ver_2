@@ -50,14 +50,14 @@ class CommunityRepository implements CommunityRepositoryContract
 //        return $community;
     }
 
-    public function getCommunityByChatId($chatId)
+    public function getCommunityByChatId($chatId): ?Community
     {
         return Community::whereHas('connection', function ($q) use ($chatId) {
             $q->where('chat_id', $chatId);
         })->first();
     }
 
-    public function getCommunityBelongsUserId($userTelegramId)
+    public function getCommunitiesForMemberByTeleUserId($userTelegramId): Collection
     {
         return Community::whereHas('followers', function ($query) use ($userTelegramId) {
             $query->where('telegram_id', $userTelegramId);
@@ -69,7 +69,7 @@ class CommunityRepository implements CommunityRepositoryContract
         return Community::all();
     }
 
-    public function getCommunityById($id)
+    public function getCommunityById($id): ?Community
     {
         return Community::find($id);
     }
@@ -91,5 +91,12 @@ class CommunityRepository implements CommunityRepositoryContract
     {
         $tConnect = TelegramConnection::where('chat_id', $chatId)->with('community')->first();
         return $tConnect->community->id ?? null;
+    }
+
+    public function getCommunitiesForOwnerByTeleUserId(int $userTelegramId): Collection
+    {
+        return Community::whereHas('connection', function ($query) use ($userTelegramId) {
+            $query->where('telegram_user_id', $userTelegramId);
+        })->get();
     }
 }

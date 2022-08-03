@@ -5,6 +5,7 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TinkoffApi
 {
@@ -63,6 +64,7 @@ class TinkoffApi
 
     public function __construct($terminalKey, $secretKey)
     {
+//        throw new \Exception('DEPRECATED CLASS');
         $this->api_url = 'https://securepay.tinkoff.ru/v2/';
         $this->api_e2c_url = 'https://securepay.tinkoff.ru/e2c/v2/';
 //        $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/';
@@ -98,11 +100,7 @@ class TinkoffApi
         }
     }
 
-    /**
-     * @param $args mixed You could use associative array or url params string
-     * @return bool
-     * @throws HttpException
-     */
+
     public function init($args)
     {
         return $this->buildQuery('Init', $args);
@@ -178,16 +176,6 @@ class TinkoffApi
         return $this->buildQuery('Payment', $args, true);
     }
 
-    /**
-     * Builds a query string and call sendRequest method.
-     * Could be used to custom API call method.
-     *
-     * @param string $path API method name
-     * @param mixed $args query params
-     *
-     * @return mixed
-     * @throws HttpException
-     */
     public function buildQuery($path, $args, $a2c = false)
     {
         $url = $a2c ? $this->api_e2c_url : $this->api_url;
@@ -251,12 +239,6 @@ class TinkoffApi
         return $args;
     }
 
-    /**
-     * Generates Token
-     *
-     * @param $args
-     * @return string
-     */
     private function _genToken($args)
     {
         $token = '';
@@ -273,11 +255,6 @@ class TinkoffApi
         return $token;
     }
 
-    /**
-     * Combines parts of URL. Simply gets all parameters and puts '/' between
-     *
-     * @return string
-     */
     private function _combineUrl()
     {
         $args = func_get_args();
@@ -294,14 +271,6 @@ class TinkoffApi
         return $url;
     }
 
-    /**
-     * Main method. Call API with params
-     *
-     * @param $api_url
-     * @param $args
-     * @return bool|string
-     * @throws HttpException
-     */
     private function _sendRequest($api_url, $args)
     {
         $this->error = '';
@@ -319,12 +288,6 @@ class TinkoffApi
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
             ));
-
-//            TelegramBotService::sendMessage(-612889716, $api_url );
-//            TelegramBotService::sendMessage(-612889716, $args );
-//
-//            Storage::prepend('Tinkoff_notify.log', 'req');
-//            Storage::prepend('Tinkoff_notify.log', json_encode($curl));
 
             $out = curl_exec($curl);
 

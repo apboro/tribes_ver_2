@@ -51,11 +51,11 @@ class DonateRepository implements DonateRepositoryContract
         $this->donateModel->community_id = $community->id;
 
         $arrIndex = [0];
-//        dd($community->donate);
+
         foreach ($community->donate as $donate) {
             $arrIndex[] = $donate->index ?? 0;
         }
-//        dd($arrIndex);
+
         $this->donateModel->index = max($arrIndex) + 1;
 
         $this->updateDescriptions($request);
@@ -67,7 +67,7 @@ class DonateRepository implements DonateRepositoryContract
         $this->updateVariants($request);
 
         $this->autoPrompt($request);
-//        dd($data->files);
+
         $this->storeImages($request);
 
         $this->donateModel->save();
@@ -108,9 +108,6 @@ class DonateRepository implements DonateRepositoryContract
     private function storeImages($request)
     {
         $this->fileEntity->getEntity($request);
-//        dd($request->all());
-        
-        /*$files = $this->fileUploadService->procRequest($request);*/
 
         if (isset($request['files'])) {
             foreach ($request['files'] as $key => $file) {
@@ -122,10 +119,6 @@ class DonateRepository implements DonateRepositoryContract
                     $fileData['entity'] = $request['entity'];
 
                     $f = $this->fileUploadService->procRequest($fileData)[0];
-//                    dd($file);
-//                   $f = $this->fileUploadService->procRequest($data);
-
-//                    dd($f->id);
 
                     switch ($key) {
                         case 'main':

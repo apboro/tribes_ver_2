@@ -163,7 +163,7 @@ class FileRepository implements FileRepositoryContract
 
         return $object;
     }
-    public function storeFile($data)
+    /*public function storeFile($data)
     {
 
         $file = $data['file'];
@@ -211,15 +211,15 @@ class FileRepository implements FileRepositoryContract
         $file = File::create($this->collectFileData()->only($this->fields)->toArray());
 
         return $file;
-    }
+    }*/
 
-    public function crop($cropdata, $image)
+    /*public function crop($cropdata, $image)
     {
         $dimensions = explode('|', $cropdata);
         $image->crop((int)$dimensions[2], (int)$dimensions[3], (int)$dimensions[0], (int)$dimensions[1]);
-    }
+    }*/
 
-    private function setDescription($data)
+    /*private function setDescription($data)
     {
         return $this->description = isset($data['description']) ? $data['description'] : 'File';
     }
@@ -242,7 +242,7 @@ class FileRepository implements FileRepositoryContract
     private function setMime($file)
     {
         return $this->mime = $file->getMimeType();
-    }
+    }*/
 
     private function setUploader()
     {
@@ -251,7 +251,7 @@ class FileRepository implements FileRepositoryContract
             $this->uploader_id = Auth::id();
     }
 
-    private function setSize($file)
+    /*private function setSize($file)
     {
         return $this->size = $file->getSize();
     }
@@ -259,19 +259,19 @@ class FileRepository implements FileRepositoryContract
     private function setRank($file)
     {
         return $this->rank = 0;
-    }
+    }*/
 
-    private function setUrl($path)
+    /*private function setUrl($path)
     {
         return $this->url = '/storage/' . $path . $this->filename;
-    }
+    }*/
 
     public function setHash($file)
     {
         return md5($file . Carbon::now()) ;
     }
 
-    private function setFilename(UploadedFile $file)
+    /*private function setFilename(UploadedFile $file)
     {
         return $this->filename = $this->setHash($file) . '.' . $file->guessExtension();
     }
@@ -283,9 +283,9 @@ class FileRepository implements FileRepositoryContract
             $data[$field] = $this->$field;
         }
         return collect($data);
-    }
+    }*/
 
-    private function validateImage($request)
+    /*private function validateImage($request)
     {
         if($request['crop']){
             $validated = $request->validate([
@@ -322,18 +322,18 @@ class FileRepository implements FileRepositoryContract
             'body' => 'required',
         ]);
         return $validated;
-    }
+    }*/
 
-    private function formatImage($image)
+    /*private function formatImage($image)
     {
         $image->resize(1920, null, function ($constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();
         });
         return $image;
-    }
+    }*/
 
-    private function prepareDirectory($type, $local = false)
+    /*private function prepareDirectory($type, $local = false)
     {
         $absolutPath = $type . '/' . Carbon::now()->format('d_m_y') . '/';
         $this->setUrl($absolutPath);
@@ -343,9 +343,9 @@ class FileRepository implements FileRepositoryContract
             mkdir(storage_path('app/public/') . $absolutPath, 0755, true);
         }
         return $path;
-    }
+    }*/
 
-    private function setExtension($file)
+    /*private function setExtension($file)
     {
         return $this->extension = $file->guessClientExtension();
     }
@@ -358,5 +358,5 @@ class FileRepository implements FileRepositoryContract
     private function storeDocument(StoreDocumentRequest $request)
     {
 //        dd(2);
-    }
+    }*/
 }

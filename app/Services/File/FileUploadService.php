@@ -169,7 +169,7 @@ class FileUploadService
 //        $procedure = isset($config['procedure']) ? $config['procedure'] : null;
 
 
-        $procedure =[];
+        $procedure = [];
         if (isset($config['procedure'])) {
             foreach ($config['procedure'] as $proc) {
 //                dd($proc);

@@ -1,0 +1,116 @@
+{
+	"info": {
+		"_postman_id": "e9fedaf9-1a9e-47cb-a9c9-b61b363ee67b",
+		"name": "tribes-payments-manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "21036434"
+	},
+	"item": [
+		{
+			"name": "Список платежей с фильтрами",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true,
+					"connection": true,
+					"user-agent": true,
+					"accept-encoding": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "search",
+							"value": "лЕвШа",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "date",
+							"value": "15.7.2022",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "sort[name]",
+							"value": "date",
+							"type": "text"
+						},
+						{
+							"key": "sort[rule]",
+							"value": "asc",
+							"type": "text"
+						},
+						{
+							"key": "entries",
+							"value": "2",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "4",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/api/v2/payments"
+			},
+			"response": []
+		},
+		{
+			"name": "Список платежей",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true,
+					"connection": true,
+					"user-agent": true,
+					"accept-encoding": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "entries",
+							"value": "2",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/api/v2/payments"
+			},
+			"response": []
+		}
+	]
+}

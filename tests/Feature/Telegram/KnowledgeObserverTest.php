@@ -6,6 +6,9 @@ use App\Models\Community;
 use App\Models\Knowledge\Question;
 use App\Models\TelegramConnection;
 use App\Models\User;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class KnowledgeObserverTest extends TestCase
@@ -20,7 +23,7 @@ class KnowledgeObserverTest extends TestCase
     {
         $response = $this->post(
             '/bot/webhook',
-            $this->getDataFromFile('text_message.json')
+            $this->getDataFromFile('telegram/text_message.json')
         );
         $response->assertStatus(200);
         $this->assertTrue(
@@ -29,7 +32,7 @@ class KnowledgeObserverTest extends TestCase
         );
         //$handler = $this->getTestHandler();
         $this->assertTrue(
-            $this->getTestHandler()->hasRecord('user question handler', 'debug'),
+            $this->getTestHandler()->hasRecord('user custom question handler', 'debug'),
             'Не привязан к событию \App\Services\Telegram\MainComponents\KnowledgeObserver::detectUserQuestion'
         );
         $this->assertFalse(
@@ -43,7 +46,7 @@ class KnowledgeObserverTest extends TestCase
     {
         $response = $this->post(
             '/bot/webhook',
-            $this->getDataFromFile('reply_text_message.json')
+            $this->getDataFromFile('telegram/reply_text_message.json')
         );
         $response->assertStatus(200);
 
@@ -68,7 +71,7 @@ class KnowledgeObserverTest extends TestCase
 
     public function testSaveNewReplyMessage()
     {
-        $data = $this->prepareDBCommunity();
+        $data = $this->prepareDBCommunity($this->getDataFromFile('telegram/reply_text_with_qas_message.json'));
         $response = $this->post(
             '/bot/webhook',
             $data
@@ -123,13 +126,9 @@ class KnowledgeObserverTest extends TestCase
         ]);
     }
 
-    /**
-     * @return array|mixed|string
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
     protected function prepareDBCommunity(?array $data = [])
     {
-        $data = $this->getDataFromFile('reply_text_message.json');
+        $data = $data ?: $this->getDataFromFile('telegram/reply_text_message.json');
         $user = User::factory()->createItem([
             'name' => 'Test Testov',
             'email' => 'test-dev@webstyle.top',

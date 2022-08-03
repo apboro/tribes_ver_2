@@ -24,7 +24,6 @@
 .env
 /*.testing
 .env.backup
-composer.lock
 .idea
 .phpunit.result.cache
 Homestead.json
@@ -44,6 +43,7 @@ _ide_helper.php
 /lib/session.madeline.safe.php
 /lib/session.madeline.safe.php.lock
 /lib/tdLib
+/tdLib
 /tests/Browser
 
 test.json

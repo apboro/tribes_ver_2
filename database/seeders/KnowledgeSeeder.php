@@ -26,13 +26,14 @@ class KnowledgeSeeder extends Seeder
                 'name' => 'Test Testov',
                 'email' => 'test-dev@webstyle.top',
             ]);
+
         /* @var Community $community */
         $community = $community ?? Community::where('owner' , $userTest->id)->first();
         if(empty($community)) {
             throw new Exception('Не создано сообщество для пользователя $userTest');
         }
         $question = Question::factory()
-            ->public()->notDraft()->count(3)
+            ->public()->notDraft()->count(6)
             ->has(Answer::factory()->notDraft()->for($community,'community'),'answer')
             ->create([
             'community_id' => $community->id,

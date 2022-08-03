@@ -26,8 +26,8 @@ window['Burger'] = new BurgerMenu();
 
 import Vue from 'vue';
 import store from './store/store';
-import Knowledge from './components/Knowledge/Knowledge';
-import PortalVue from 'portal-vue'
+import Knowledge from './pages/Knowledge';
+import PortalVue from 'portal-vue';
 
 Vue.use(PortalVue)
 
@@ -36,3 +36,51 @@ let app = new Vue({
     store,
     render: h => h(Knowledge)
 }).$mount('#app');
+
+
+
+
+window.axios.interceptors.response.use(function (response) {
+    /* document.body.classList.remove('loading');
+    window.isXHRloading = false;
+    // window.unsetPreloader();
+    if(response.data.event){
+        let event = new CustomEvent(response.data.event, {
+            'detail' : {
+                data: response.data
+            },
+        });
+
+        let listns = document.getElementsByClassName(response.data.event + 'Listner');
+        [].forEach.call(listns, function(elem){
+            elem.dispatchEvent(event);
+        });
+        document.dispatchEvent(event);
+        console.log("Событие " + response.data.event + " объявлено");
+    } */
+    return response;
+}, function (error) {
+    // window.unsetPreloader();
+   /*  if (error.response.status === 422 || error.response.status === 200) {
+
+        // console.log('123', error.response.data.message, error.response.data.type);
+
+        if(error.response.data.message && error.response.data.type){
+            window.notification.notify( error.response.data.type, error.response.data.message);
+        }
+    } */
+    if (error.response.status === 401 || error.response.status === 419) {
+        console.log(1);
+        window.location.href = "/login";
+    }
+   /*  if (error.response.status === 403) {
+        if(error.response.data.type == "gateClosed"){
+            window.notification.notify( 'error', error.response.data.message);
+        }
+    } */
+    //document.body.classList.remove('loading');
+    //window.isXHRloading = false;
+    return Promise.reject(error);
+}, function(e){
+
+});

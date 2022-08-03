@@ -7,6 +7,7 @@ use App\Models\TestData;
 use App\Services\TelegramMainBotService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -22,13 +23,13 @@ class TelegramBotController extends Controller
     public function index(Request $request)
     {
         $data = $request->collect();
-        TestData::create([
-            'data' => $data
-        ]);
         $botName = config('telegram_bot.bot.botName');
-        if(env('GRAB_TEST_DATA') === true) {
+
+        if (env('GRAB_TEST_DATA') === true) {
             $time = time();
-            Storage::disk('telegram_data')->put("message_{$botName}_{$time}.json",$data);
+            $acosData = json_decode($data, true);
+            $updId = $acosData['update_id'] ?? '';
+            Storage::disk('telegram_data')->put("message_{$botName}_upd{$updId}_{$time}.json", $data);
         }
 
         $this->mainBotService->run($botName, $request->collect());
@@ -38,16 +39,18 @@ class TelegramBotController extends Controller
     public function indexBot2(Request $request)
     {
         $data = $request->collect();
-        TestData::create([
-            'data' => $data
-        ]);
         $botName = config('telegram_bot.bot1.botName');
-         if(env('GRAB_TEST_DATA') === true) {
-             $time = time();
 
-             Storage::disk('telegram_data')->put("message_{$botName}_{$time}.json",$data);
-         }
+        if (env('GRAB_TEST_DATA') === true) {
+            TestData::create([
+                'data' => $data
+            ]);
+            $time = time();
+            $acosData = json_decode($data, true);
+            $updId = $acosData['update_id'] ?? '';
+            Storage::disk('telegram_data')->put("message_{$botName}_upd{$updId}_{$time}.json", $data);
+        }
 
-         $this->mainBotService->run($botName, $request->collect());
+        $this->mainBotService->run($botName, $request->collect());
     }
 }

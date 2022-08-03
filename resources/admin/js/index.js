@@ -4,7 +4,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['Accept'] = 'application/json';
 window.axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-// window.token = document.head.querySelector('meta[name="csrf-token"]');
 let api_token = document.querySelector('[name="api-token"]');
 
 if(api_token){
@@ -30,6 +29,7 @@ import Vue from 'vue';
 import store from './store';
 import App from './components/App';
 import router from './router';
+import axios from 'axios';
 
 let app = new Vue({
     router,

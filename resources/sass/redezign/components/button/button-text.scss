@@ -3,6 +3,7 @@ $button-background-color: $black-hover;
 $button-text-color-primary-1: $text-color-1;
 $button-text-color-primary-2: $primary-1;
 $button-background-color-primary: $primary-2;
+$button-icon-color-primary-1: $grey-8;
 
 $button-text-color-success-1: $success-1;
 $button-text-color-success-2: $success-1;
@@ -13,7 +14,7 @@ $button-text-color-danger-2: $danger-1;
 $button-background-color-danger: $danger-2;
 
 .button-text {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 5px 20px;
@@ -31,28 +32,29 @@ $button-background-color-danger: $danger-2;
     &--primary {
         color: $button-text-color-primary-1;
 
-        &:active {
+        &:active,
+        &.active {
             color: $button-text-color-primary-2;
             background-color: $button-background-color-primary;
 
             .button-text__icon {
-                .fill-el {
+                .icon__fill {
                     fill: $button-text-color-primary-2;
                 }
     
-                .stroke-el {
+                .icon__stroke {
                     stroke: $button-text-color-primary-2;
                 }
             }
         }
 
         .button-text__icon {
-            .fill-el {
-                fill: $button-text-color-primary-1;
+            .icon__fill {
+                fill: $button-icon-color-primary-1;
             }
 
-            .stroke-el {
-                stroke: $button-text-color-primary-1;
+            .icon__stroke {
+                stroke: $button-icon-color-primary-1;
             }
         }
     }
@@ -66,11 +68,11 @@ $button-background-color-danger: $danger-2;
         }
 
         .button-text__icon {
-            .fill-el {
+            .icon__fill {
                 fill: $button-text-color-success-1;
             }
 
-            .stroke-el {
+            .icon__stroke {
                 stroke: $button-text-color-success-1;
             }
         }
@@ -85,11 +87,11 @@ $button-background-color-danger: $danger-2;
         }
 
         .button-text__icon {
-            .fill-el {
+            .icon__fill {
                 fill: $button-text-color-danger-1;
             }
 
-            .stroke-el {
+            .icon__stroke {
                 stroke: $button-text-color-danger-1;
             }
         }
@@ -114,11 +116,11 @@ $button-background-color-danger: $danger-2;
             margin-right: 10px;
         }
 
-        .fill-el {
+        .icon__fill {
             transition: $transition;
         }
 
-        .stroke-el {
+        .icon__stroke {
             transition: $transition;
         }
     }
