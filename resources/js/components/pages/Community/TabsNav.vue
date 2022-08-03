@@ -1,5 +1,5 @@
 <template>
-    <nav class="nav-community community__nav">
+    <nav class="nav-community">
         <ul class="nav-community__list">
             <li
                 class="nav-community__item"
@@ -20,7 +20,7 @@
 
 <script>
     export default {
-        name: 'CommunityNav',
+        name: 'TabsNav',
 
         props: {
             // links: {

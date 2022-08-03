@@ -10,13 +10,11 @@
                     Tech in UK
                 </h2>
 
-                <community-nav />
+                <tabs-nav class="community__nav" />
             </header>
 
             <!-- Profile -->
-            <div class="community__profile">
-                Community profile
-            </div>
+            <community-profile class="community__profile"/>
 
             <!-- Analytics -->
             <div class="analytics">
@@ -73,12 +71,13 @@
 <script>
     import BarChart from '../components/ui/chart/BarChart.vue';
     import LineChart from '../components/ui/chart/LineChart.vue';
-    import CommunityNav from '../components/pages/Community/CommunityNav.vue';
+    import TabsNav from '../components/pages/Community/TabsNav.vue';
+import CommunityProfile from '../components/pages/Community/CommunityProfile.vue';
 
     export default {
         name: 'Statistics',
         
-        components: { CommunityNav, BarChart, LineChart },
+        components: { TabsNav, BarChart, LineChart, CommunityProfile },
 
         data() {
             return {
