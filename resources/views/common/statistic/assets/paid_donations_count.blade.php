@@ -15,7 +15,7 @@
                 {{ __('base.total') }}:
             </p>    
             <h2 class="fw-bolder m-0">
-                {{ $community->statistic->repository()->getTotalDonate() }}
+                {{ $community->statistic ? $community->statistic->repository()->getTotalDonate() : null }}
             </h2>
         </div>
     </div>
