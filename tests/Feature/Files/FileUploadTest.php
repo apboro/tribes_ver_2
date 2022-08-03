@@ -46,28 +46,27 @@ class FileUploadTest extends TestCase
 
         $response->assertStatus(200);
 
-        foreach ($content['file'] as $file) {
-            //Проверяем наличие записи в базе
-            $this->assertDatabaseHas(File::class, [
-                'id' => $file['id']
-            ]);
-            //Проверяем наличие файла в папке
-            Storage::disk('public')->assertExists(Str::replace('/storage', '', $file['url']));
+        //Проверяем наличие записи в базе
+        $file = $content['file'];
+        $this->assertDatabaseHas(File::class, [
+            'id' => $file['id']
+        ]);
+        //Проверяем наличие файла в папке
+        Storage::disk('public')->assertExists(Str::replace('/storage', '', $file['url']));
 
-            $response_delete = $this->post('/api/file/delete', [
-                'id' => $file['id'],
-            ],
-                ['Authorization' => "Bearer {$data['api_token']}"],
-            );
-            $response_delete->assertStatus(200);
+        $response_delete = $this->post('/api/file/delete', [
+            'id' => $file['id'],
+        ],
+            ['Authorization' => "Bearer {$data['api_token']}"],
+        );
+        $response_delete->assertStatus(200);
 
-            //Проверяем отсутствие записи в базе
-            $this->assertDatabaseMissing(File::class, [
-                'id' => $file['id']
-            ]);
-            //Проверяем отсутствие файла в папке
-            Storage::disk('public')->assertMissing(Str::replace('/storage', '', $file['url']));
-        }
+        //Проверяем отсутствие записи в базе
+        $this->assertDatabaseMissing(File::class, [
+            'id' => $file['id']
+        ]);
+        //Проверяем отсутствие файла в папке
+        Storage::disk('public')->assertMissing(Str::replace('/storage', '', $file['url']));
 
     }
 
