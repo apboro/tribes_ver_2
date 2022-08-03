@@ -16,7 +16,7 @@
             </p>
 
             <h2 class="fw-bolder m-0">
-                {{ $community->statistic->repository()->getPaidSubscribers() }}
+                {{ $community->statistic ? $community->statistic->repository()->getPaidSubscribers() : null }}
             </h2>
         </div>
     </div>

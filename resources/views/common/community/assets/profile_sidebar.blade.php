@@ -90,7 +90,7 @@
                         </span>
 
                         <span class="badge bg-light-info">
-                            {{ $community->statistic->repository()->getPaidSubscribers() }} / {{ $community->statistic->repository()->getAllSubscribers() }}
+                            {{ $community->statistic ? $community->statistic->repository()->getPaidSubscribers() : null }} / {{ $community->statistic ? $community->statistic->repository()->getAllSubscribers() : null }}
                         </span>
                     </li>
 
@@ -100,7 +100,7 @@
                         </span>
 
                         <span class="badge bg-light-info" id="unique_visitors_title">
-                            {{ $community->statistic->repository()->getHosts() }}
+                            {{ $community->statistic ? $community->statistic->repository()->getHosts() : null }}
                         </span>
                     </li>
 
@@ -110,7 +110,7 @@
                         </span>
 
                         <span class="badge bg-light-info" id="renewed_subscription_title">
-                            {{ $community->statistic->repository()->getProlongationUser() }}
+                            {{ $community->statistic ? $community->statistic->repository()->getProlongationUser() : null }}
                         </span>
                     </li>
 
@@ -120,7 +120,7 @@
                         </span>
 
                         <span class="badge bg-light-info" id="payment_page_views">
-                            {{ $community->statistic->repository()->getViews() }}
+                            {{ $community->statistic ? $community->statistic->repository()->getViews() :null }}
                         </span>
                     </li>
 
@@ -130,7 +130,7 @@
                         </span>
 
                         <span class="badge bg-light-info" id="donation_amounts_title">
-                            {{ $community->statistic->repository()->getDonateSum() }}
+                            {{ $community->statistic ? $community->statistic->repository()->getDonateSum() :null }}
                         </span>
                     </li>
 
@@ -140,7 +140,7 @@
                         </span>
 
                         <span class="badge bg-light-info" id="donation_count_title">
-                            {{ $community->statistic->repository()->getTotalDonate() }}
+                            {{ $community->statistic ? $community->statistic->repository()->getTotalDonate() :null }}
                         </span>
                     </li>
 
@@ -150,7 +150,7 @@
                         </span>
 
                         <span class="badge bg-light-info" id="tariff_amounts_title">
-                            {{ $community->statistic->repository()->getTariffSum() }}
+                            {{ $community->statistic ? $community->statistic->repository()->getTariffSum() :null }}
                         </span>
                     </li>
 
@@ -160,7 +160,7 @@
                         </span>
 
                         <span class="badge bg-light-info" id="tariff_count_title">
-                            {{ $community->statistic->repository()->getTotalTariff() }}
+                            {{ $community->statistic ? $community->statistic->repository()->getTotalTariff() :null }}
                         </span>
                     </li>
                 </ul>
