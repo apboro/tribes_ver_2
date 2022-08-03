@@ -1,0 +1,14 @@
+.community {
+    padding-top: 20px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__title {
+        @include font($text-color-1, 55px, 74px, 700);
+        @include truncate(550px);
+    }
+}

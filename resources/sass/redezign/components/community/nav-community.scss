@@ -1,0 +1,21 @@
+.nav-community {
+
+
+    &__list {
+        display: flex;
+        column-gap: 15px;
+        list-style: none;
+    }
+
+    &__item {}
+
+    &__link {
+        @include font($text-color-1, 16px, 21px, 700);
+        text-transform: uppercase;
+        transition: $transition;
+
+        &.active {
+            color: $primary-1;
+        }
+    }
+}

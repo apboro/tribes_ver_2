@@ -1,7 +1,7 @@
 <ul class="nav nav-pills mb-1 gap-1">
     <li class="nav-item ">
         <a class="nav-link {{ request()->is('*community/*/statistic*') ? 'active' : '' }}"
-            href="{{ route('community.statistic', $community) }}"
+            href="{{ route('statistic.index', $community) }}"
         >
             <i data-feather="pie-chart" class="font-medium-3 me-50"></i>
             <span class="fw-bold">

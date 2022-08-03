@@ -1,29 +1,16 @@
 <template>
-    <div class="statistics">
+    <div class="community">
         <div class="container">
             <!-- HEAD -->
-            <header class="community__header" style="display: flex; justify-content: space-between;">
-                <h2 class="community__title">Title</h2>
+            <header class="community__header">
+                <h2
+                    class="community__title"
+                    title="Tech in UK"
+                >
+                    Tech in UK
+                </h2>
 
-                <nav class="community__nav">
-                    <ul style="display: flex; column-gap: 20px;">
-                        <li>
-                            <a href="">Аналитика</a>
-                        </li>
-
-                        <li>
-                            <a href="">Донаты</a>
-                        </li>
-
-                        <li>
-                            <a href="">Тарифы</a>
-                        </li>
-
-                        <li>
-                            <a href="">База знаний</a>
-                        </li>
-                    </ul>
-                </nav>
+                <community-nav />
             </header>
 
             <!-- Profile -->
@@ -86,14 +73,16 @@
 <script>
     import BarChart from '../components/ui/chart/BarChart.vue';
     import LineChart from '../components/ui/chart/LineChart.vue';
+    import CommunityNav from '../components/pages/Community/CommunityNav.vue';
 
     export default {
         name: 'Statistics',
         
-        components: { BarChart, LineChart },
+        components: { CommunityNav, BarChart, LineChart },
 
         data() {
             return {
+                
                 chartData: {
                     labels: [ 'January', 'February', 'March', '1', '2', '3' ],
                     datasets: [ { data: [40, 20, 12, 1, 2, 3] } ]
