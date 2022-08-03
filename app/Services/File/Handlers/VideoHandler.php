@@ -18,7 +18,7 @@ class VideoHandler implements HandlerContract
         $this->repository = $repository;
     }
 
-    public function startService(UploadedFile $file, File $model): File
+    public function startService(UploadedFile $file, File $model, array $procedure): File
     {
 
         $webcaster = new WebcasterPro();

@@ -60,13 +60,6 @@ class FileUploadService
     public function procRequest($request): EloquentCollection
     {
         $this->request = $request;
-//        dd($request);
-
-//        dd($request instanceof Request);
-//        $entity = $request->get('entity',null);
-//        dd($request['entity']);
-//        $entity = $request['entity'];
-//        dd($entity);
 
         if (isset($request['entity'])){
             $entity = $request['entity'];
@@ -85,25 +78,10 @@ class FileUploadService
             throw new Exception('Данный entity не сконфигурирован');
         }
 
-        /*if(!in_array([$entity][$procedure], $this->config->getConfig())) {
-            $procedure = 'default';
-        }*/
-        //todo из $request перебрать все файлы
+        //  из $request перебрать все файлы
         //  и обработать их по ихнему mimeType
-
         $collect = new FileCollection;
 
-        /*if($request->has('base_64_file')) {
-            $collect->add($this->getFileFromBase64($request));
-        } else {
-            if ($request->file()['file']) {
-                $files = $request->file()['file']; // TODO ПРОВЕРИТЬ НА СУЩЕСТВОВАНИЕ
-                $collect->addFiles($files);
-            } else {
-                throw new Exception('Файл не найден');
-            }
-
-        }*/
         if(isset($request['base_64_file'])) {
             $collect->add($this->getFileFromBase64($request));
         } else {
@@ -113,15 +91,12 @@ class FileUploadService
             } else {
                 throw new Exception('Файл не найден');
             }
-
         }
 
         if($collect->isEmpty()) {
             throw new Exception('Пустой набор файлов');
         }
 
-
-//        $this->processFileCollection($collect, $this->config->get("$entity.$procedure"));
         $this->processFileCollection($collect, $handlers);
 
         return $this->modelsFile;
@@ -165,14 +140,10 @@ class FileUploadService
         /** @var HandlerContract $handler */
         $class = $config['handler'];
         unset($config['handler']);
-//        dd($config);
-//        $procedure = isset($config['procedure']) ? $config['procedure'] : null;
-
 
         $procedure = [];
         if (isset($config['procedure'])) {
             foreach ($config['procedure'] as $proc) {
-//                dd($proc);
                 switch ($proc) {
                     case 'crop':
                         $procedure['crop'] = $this->request['cropData'];
@@ -184,11 +155,6 @@ class FileUploadService
 
             }
         }
-
-
-
-//        dd($procedure);
-
 
         $handler = app()->make($class,$config);
 

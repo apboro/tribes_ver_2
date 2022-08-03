@@ -6,6 +6,8 @@ use App\Models\TariffVariant;
 use App\Models\Statistic;
 use App\Models\UserIp;
 use App\Repositories\File\FileRepositoryContract;
+use App\Services\File\common\FileEntity;
+use App\Services\File\FileUploadService;
 use App\Filters\TariffFilter;
 use App\Models\TelegramUser;
 use App\Services\TelegramMainBotService;
@@ -17,11 +19,20 @@ class TariffRepository implements TariffRepositoryContract
     private $tariffModel;
     public $perPage = 15;
     protected TelegramMainBotService $mainServiceBot;
+    private $fileUploadService;
+    private $fileEntity;
 
-    public function __construct(FileRepositoryContract $fileRepo, TelegramMainBotService $mainServiceBot)
+    public function __construct(
+        FileRepositoryContract $fileRepo,
+        TelegramMainBotService $mainServiceBot,
+        FileUploadService $fileUploadService,
+        FileEntity $fileEntity
+    )
     {
         $this->fileRepo = $fileRepo;
         $this->mainServiceBot = $mainServiceBot;
+        $this->fileUploadService = $fileUploadService;
+        $this->fileEntity = $fileEntity;
     }
 
     public function statisticView(Request $request, $community)
@@ -190,9 +201,79 @@ class TariffRepository implements TariffRepositoryContract
         }
     }
 
-    private function storeImages($data)
+    private function storeImages($request)
     {
-        if (isset($data['files'])) {
+//        dd($request->all());
+
+        $this->fileEntity->getEntity($request);
+
+//        $testArray = [];
+//        dd($request['files']);
+        if (isset($request['files'])) {
+            foreach ($request['files'] as $key => $file) {
+//                dd($key, $file);
+//                dump($file);
+                $decoded = json_decode($file['crop']);
+//                dd($decoded);
+                if (isset($file['image']) && $decoded->isCrop) {
+                    $fileData['file'] = $file['image'];
+                    $fileData['crop'] = $decoded->isCrop;
+                    $fileData['cropData'] = $decoded->cropData;
+                    $fileData['entity'] = $request['entity'];
+
+//                    dump($key);
+
+                    $f = $this->fileUploadService->procRequest($fileData)[0];
+                    array_push($testArray, $this->fileUploadService->procRequest($fileData)[0]->id);
+//                    dd($f);
+//                    dd(1);
+                    dump($f);
+//                    array_push($testArray, $f);
+//dd($f->id);
+                    /*switch ($key) {
+                        case 'pay':
+                            $this->tariffModel->main_image_id = $f->id;
+                            break;
+                        case 'welcome':
+                            $this->tariffModel->welcome_image_id = $f->id;
+                            break;
+                        case 'reminder':
+                            $this->tariffModel->reminder_image_id  = $f->id;
+                            break;
+                        case 'success':
+                            $this->tariffModel->thanks_image_id  = $f->id;
+                            break;
+                        case 'publication':
+                            $this->tariffModel->publication_image_id  = $f->id;
+                            break;
+                    }*/
+
+//                    dump($this->tariffModel);
+                }
+                if ($file['delete'] == "true") {
+                    switch ($key) {
+                        case 'pay':
+                            $this->tariffModel->main_image_id = 0;
+                            break;
+                        case 'welcome':
+                            $this->tariffModel->welcome_image_id = 0;
+                            break;
+                        case 'success':
+                            $this->tariffModel->thanks_image_id  = 0;
+                            break;
+                        case 'reminder':
+                            $this->tariffModel->reminder_image_id  = 0;
+                            break;
+                        case 'publication':
+                            $this->tariffModel->publication_image_id  = 0;
+                            break;
+                    }
+                }
+            }
+
+//            dd($testArray);
+        }
+        /*if (isset($data['files'])) {
             foreach ($data['files'] as $key => $file) {
                 if (isset($file['crop'])) {
                     $decoded = json_decode($file['crop']);
@@ -242,7 +323,7 @@ class TariffRepository implements TariffRepositoryContract
                     }
                 }
             }
-        }
+        }*/
     }
 
     private function updateDescriptions($data)

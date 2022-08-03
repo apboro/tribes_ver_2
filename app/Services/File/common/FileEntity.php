@@ -25,7 +25,10 @@ class FileEntity {
             $this->setEntity($request,'donate');
             $this->setEntityId($request,null);
             $this->setEntityModel($request,null);
-//            dd($request);
+        } elseif ($request['tariff_notification']) {
+            $this->setEntity($request,'tariff');
+            $this->setEntityId($request,null);
+            $this->setEntityModel($request,null);
         }
         else {
             $this->setEntity($request,null);

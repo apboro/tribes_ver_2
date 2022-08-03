@@ -21,7 +21,7 @@ class AudioHandler implements HandlerContract
         $this->repository = $repository;
     }
 
-    public function startService(UploadedFile $file, File $model): File
+    public function startService(UploadedFile $file, File $model, array $procedure): File
     {
 //        dd($this->path);
         $hash = $this->repository->setHash($file);
