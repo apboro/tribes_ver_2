@@ -43,6 +43,7 @@ let mutations = {
         state.users = users;
     },
     PUSH_USER(state, user){
+        // state.users = user;
         // state.users.pushIfNotExist(user, function(e) {
         //     return e.id === user.id;
         // });
@@ -62,6 +63,7 @@ let actions = {
                 url: '/api/v2/users',
                 data: filter_data
             })
+            sessionStorage.setItem('Users', JSON.stringify(resp.data))
             commit("USERS", resp.data);
             commit("SET_PRELOADER_STATUS", false);
         } catch (error) {
@@ -70,36 +72,24 @@ let actions = {
         }
     },
 
-    // get_users({commit}, filter_data){
-    //     return new Promise((resolve, reject) => {
-    //         //commit('auth_request');
-    //         commit("loading", true);
-    //         axios({url: '/api/v2/users', data: filter_data, method: 'POST' })
-    //             .then(resp => {
-    //                 commit('users', resp.data);
-    //                 resolve(resp);
-    //             })
-    //             .catch(err => {
-    //                 reject(err);
-    //             })
-    //             commit("loading", false);
-    //     })
-    // },
     get_user({commit}, id){
+
         return new Promise((resolve, reject) => {
-            //commit('auth_request');
-            axios({url: '/api/common/users/' + id + '/get', method: 'GET' })
+            commit("SET_PRELOADER_STATUS", true);
+            axios({url: '/api/v2/user', data: {'id' : id}, method: 'POST' })
                 .then(resp => {
-                    console.log('success');
                     commit('PUSH_USER', resp.data.user);
                     resolve(resp);
+                    commit("SET_PRELOADER_STATUS", false);
                 })
                 .catch(err => {
                     console.log('Err');
                     reject(err);
+                    commit("SET_PRELOADER_STATUS", false);
                 })
         })
     },
+
     store_user({commit}, data){
         return new Promise((resolve, reject) => {
             //commit('auth_request');
