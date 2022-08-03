@@ -14,7 +14,17 @@
             </header>
 
             <!-- Profile -->
-            <community-profile class="community__profile"/>
+            <transition name="a-community-profile">
+                <community-profile v-if="isVisibleProfile" class="community__profile"/>
+            </transition>
+            <div class="community__profile-btn-wrapper">
+                <button
+                    class="community__profile-btn"
+                    @click="toggleProfileVisibility"
+                >
+                    {{ isVisibleProfile ? 'Скрыть профиль' : 'Показать профиль' }}
+                </button>
+            </div>
 
             <!-- Analytics -->
             <div class="analytics">
@@ -81,7 +91,8 @@ import CommunityProfile from '../components/pages/Community/CommunityProfile.vue
 
         data() {
             return {
-                
+                isVisibleProfile: true,
+
                 chartData: {
                     labels: [ 'January', 'February', 'March', '1', '2', '3' ],
                     datasets: [ { data: [40, 20, 12, 1, 2, 3] } ]
@@ -117,6 +128,9 @@ import CommunityProfile from '../components/pages/Community/CommunityProfile.vue
         },
 
         methods: {
+            toggleProfileVisibility() {
+                this.isVisibleProfile = !this.isVisibleProfile;
+            },
             toggleData(value) {    
                 const visibilityData = this.chartData2.datasets[value].hidden;
             

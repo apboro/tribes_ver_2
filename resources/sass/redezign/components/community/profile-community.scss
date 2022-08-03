@@ -122,3 +122,31 @@
         
     }
 }
+
+.smooth-enter-active, .smooth-leave-active {
+    transition: opacity .5s;
+  }
+.smooth-enter, .smooth-leave-to {
+opacity: 0
+}
+
+.a-community-profile {
+    &-enter-active {
+        animation: community-profile .2s;
+    }
+    &-leave-active {
+        animation: community-profile .2s reverse;
+    }
+}
+
+@keyframes community-profile {
+    0% {
+        opacity: 0;
+        //transform: translateY(-100%);
+    }
+    
+    100% {
+        opacity: 1;
+        //transform: translateY(0%);
+    }
+}
