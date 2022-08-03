@@ -16,7 +16,7 @@
             </p>    
             
             <h2 class="fw-bolder m-0">
-                {{ $community->statistic->repository()->getHosts() }}
+                {{ $community->statistic ? $community->statistic->repository()->getHosts() : null }}
             </h2>
         </div>
     </div>
