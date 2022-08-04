@@ -28,7 +28,7 @@ class Mailer
      */
     public function send($subject, $from, $html, $to): string
     {
-        if(env('APP_ENV') === 'testing') {
+        if(env('APP_ENV') !== 'testing') {
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
