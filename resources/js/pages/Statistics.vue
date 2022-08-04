@@ -63,12 +63,5 @@
                 localStorage.setItem("is_visible_community_profile", this.isVisibleProfile);
             },
         },
-
-        mounted() {
-        },
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

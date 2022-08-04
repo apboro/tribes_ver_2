@@ -1,5 +1,10 @@
 <template>
-    <div class="analytics">
+    <div class="analytics-community">
+        <analytics-filter
+            class="analytics-community__filter"
+            @getPeriod="filter"
+        />
+
         <div>
             <line-chart
                 :chartData="chartData2"
@@ -8,7 +13,7 @@
             <div class="legend-box" style="display: flex;">
                 <button
                     style="padding: 10px;"
-                    :style="{ backgroundColor: dataset.backgroundColor }"
+                    :style="{ backgroundColor: dataset.borderColor }"
                     v-for="(dataset, index) in chartData2.datasets"
                     :key="index"
                     @click="toggleData(index)"
@@ -34,7 +39,7 @@
                 <div class="legend-box" style="display: flex;">
                     <button
                         style="padding: 10px;"
-                        :style="{ backgroundColor: dataset.backgroundColor }"
+                        :style="{ backgroundColor: dataset.borderColor }"
                         v-for="(dataset, index) in chartData2.datasets"
                         :key="index"
                         @click="toggleData(index)"
@@ -44,10 +49,13 @@
                 </div>
             </li>
         </ul>
+
+        <button @click="change">change</button>
     </div>
 </template>
 
 <script>
+    import AnalyticsFilter from '../components/pages/CommunityAnalytics/AnalyticsFilter.vue';
     import BarChart from '../components/ui/chart/BarChart.vue';
     import LineChart from '../components/ui/chart/LineChart.vue';
 
@@ -57,6 +65,7 @@
         components: {
             BarChart,
             LineChart,
+            AnalyticsFilter,
         },
 
         data() {
@@ -104,6 +113,14 @@
                 } else {
                     this.chartData2.datasets[value].hidden = true;
                 }
+            },
+            
+            change() {
+                this.chartData2.datasets[0].data = [100, 200, 300];
+            },
+            
+            filter(period) {
+                console.log(period);
             }
         }
     }
