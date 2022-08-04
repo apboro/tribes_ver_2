@@ -2,15 +2,12 @@
 
 namespace App\Services\File\Handlers;
 
-
 use App\Models\File;
 use App\Repositories\File\FileRepository;
 use App\Services\File\common\HandlerContract;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
 
 class ImageHandler implements HandlerContract
 {
@@ -44,7 +41,6 @@ class ImageHandler implements HandlerContract
 
         $hash = $this->repository->setHash($fileProcessed);
         $filename = $hash . '.' . $fileProcessed->guessClientExtension();
-
         $url = $this->repository->storeFileNew($fileProcessed, $this->path, $filename);
 
         $model['mime'] = $fileProcessed->getMimeType();
@@ -58,8 +54,6 @@ class ImageHandler implements HandlerContract
 
         return $model;
     }
-
-    ////////////////////////////////////////////////////////
 
     /**
      * @param $crop

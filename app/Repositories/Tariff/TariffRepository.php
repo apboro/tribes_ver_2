@@ -203,34 +203,23 @@ class TariffRepository implements TariffRepositoryContract
 
     private function storeImages($request)
     {
-//        dd($request->all());
-
         $this->fileEntity->getEntity($request);
 
-//        $testArray = [];
-//        dd($request['files']);
         if (isset($request['files'])) {
             foreach ($request['files'] as $key => $file) {
-//                dd($key, $file);
-//                dump($file);
                 $decoded = json_decode($file['crop']);
-//                dd($decoded);
+
                 if (isset($file['image']) && $decoded->isCrop) {
                     $fileData['file'] = $file['image'];
                     $fileData['crop'] = $decoded->isCrop;
                     $fileData['cropData'] = $decoded->cropData;
                     $fileData['entity'] = $request['entity'];
 
-//                    dump($key);
-
                     $f = $this->fileUploadService->procRequest($fileData)[0];
-                    array_push($testArray, $this->fileUploadService->procRequest($fileData)[0]->id);
-//                    dd($f);
-//                    dd(1);
-                    dump($f);
-//                    array_push($testArray, $f);
-//dd($f->id);
-                    /*switch ($key) {
+
+                    $this->fileUploadService->modelsFile = new \Illuminate\Database\Eloquent\Collection();
+
+                    switch ($key) {
                         case 'pay':
                             $this->tariffModel->main_image_id = $f->id;
                             break;
@@ -246,10 +235,9 @@ class TariffRepository implements TariffRepositoryContract
                         case 'publication':
                             $this->tariffModel->publication_image_id  = $f->id;
                             break;
-                    }*/
-
-//                    dump($this->tariffModel);
+                    }
                 }
+
                 if ($file['delete'] == "true") {
                     switch ($key) {
                         case 'pay':
@@ -270,60 +258,7 @@ class TariffRepository implements TariffRepositoryContract
                     }
                 }
             }
-
-//            dd($testArray);
         }
-        /*if (isset($data['files'])) {
-            foreach ($data['files'] as $key => $file) {
-                if (isset($file['crop'])) {
-                    $decoded = json_decode($file['crop']);
-                    if (isset($file['image'])) {
-                        $fileData['file'] = $file['image'];
-                        $fileData['crop'] = $decoded->isCrop;
-                        $fileData['cropData'] = $decoded->cropData;
-                        $f = $this->fileRepo->storeFile($fileData);
-
-                        switch ($key) {
-                            case 'pay':
-                                $this->tariffModel->main_image_id = $f->id;
-                                break;
-                            case 'welcome':
-                                $this->tariffModel->welcome_image_id = $f->id;
-                                break;
-                            case 'success':
-                                $this->tariffModel->thanks_image_id  = $f->id;
-                                break;
-                            case 'reminder':
-                                $this->tariffModel->reminder_image_id  = $f->id;
-                                break;
-                            case 'publication':
-                                $this->tariffModel->publication_image_id  = $f->id;
-                                break;
-                        }
-                    }
-                }
-                if ($file['delete'] == "true") {
-
-                    switch ($key) {
-                        case 'pay':
-                            $this->tariffModel->main_image_id = 0;
-                            break;
-                        case 'welcome':
-                            $this->tariffModel->welcome_image_id = 0;
-                            break;
-                        case 'success':
-                            $this->tariffModel->thanks_image_id  = 0;
-                            break;
-                        case 'reminder':
-                            $this->tariffModel->reminder_image_id  = 0;
-                            break;
-                        case 'publication':
-                            $this->tariffModel->publication_image_id  = 0;
-                            break;
-                    }
-                }
-            }
-        }*/
     }
 
     private function updateDescriptions($data)

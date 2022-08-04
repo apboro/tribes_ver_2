@@ -148,49 +148,6 @@ class DonateRepository implements DonateRepositoryContract
                 }
             }
         }
-
-
-        /*
-        if (isset($data['files'])) {
-            foreach ($data['files'] as $key => $file) {
-                $decoded = json_decode($file['crop']);
-                if (isset($file['image'])) {
-                    $fileData['file'] = $file['image'];
-                    $fileData['crop'] = $decoded->isCrop;
-                    $fileData['cropData'] = $decoded->cropData;
-
-                    $f = $this->fileRepo->storeFile($fileData);
- //                   $f = $this->fileUploadService->procRequest($data);
-
-                    switch ($key) {
-                        case 'main':
-                            $this->donateModel->main_image_id = $f->id;
-                            break;
-                        case 'prompt':
-                            $this->donateModel->prompt_image_id = $f->id;
-                            break;
-                        case 'success':
-                            $this->donateModel->success_image_id  = $f->id;
-                            break;
-                    }
-                }
-                if ($file['delete'] == "true") {
-
-                    switch ($key) {
-                        case 'main':
-                            $this->donateModel->main_image_id = 0;
-                            break;
-                        case 'prompt':
-                            $this->donateModel->prompt_image_id = 0;
-                            break;
-                        case 'success':
-                            $this->donateModel->success_image_id  = 0;
-                            break;
-                    }
-                }
-            }
-        }
-        */
     }
 
     public function generateLink()

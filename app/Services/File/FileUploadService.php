@@ -39,9 +39,8 @@ class FileUploadService
         'audio/mpeg',
     ];
 
-//    private $config;
     private $logger;
-    private $modelsFile;
+    public $modelsFile;
     private $request;
 
     public function __construct(
@@ -57,6 +56,10 @@ class FileUploadService
     }
 
 
+    /**
+     * @param $request
+     * @return EloquentCollection
+     */
     public function procRequest($request): EloquentCollection
     {
         $this->request = $request;
@@ -66,11 +69,6 @@ class FileUploadService
         } else {
             throw new Exception('Укажите entity в запросе');
         }
-
-//        dd($request);
-        /*if(!$entity) {
-            throw new Exception('Укажите entity в запросе');
-        }*/
 
         $handlers = $this->config->getConfig()[$entity];
 
@@ -86,7 +84,7 @@ class FileUploadService
             $collect->add($this->getFileFromBase64($request));
         } else {
             if (isset( $request['file'] )) {
-                $files = $request['file']; // TODO ПРОВЕРИТЬ НА СУЩЕСТВОВАНИЕ
+                $files = $request['file'];
                 $collect->addFiles($files);
             } else {
                 throw new Exception('Файл не найден');
@@ -174,14 +172,10 @@ class FileUploadService
             'description' => null,
             'iframe' => null
         ]);
+
         $model = $handler->startService($file, $model, $procedure);
-//dd($model);
+
         return $model;
-    }
-
-    protected function procCollect(FileCollection $collection, array $entity): EloquentCollection
-    {
-
     }
 
     /**
@@ -204,20 +198,36 @@ class FileUploadService
         return new UploadedFile(Storage::disk('local')->path($imageName),'temporary_file_name',$mimeType);
     }
 
-
+    /**
+     * @param string $mimeType
+     * @return bool
+     */
     protected function checkImage(string $mimeType): bool
     {
         return in_array($mimeType, $this->imageTypes);
     }
+
+    /**
+     * @param string $mimeType
+     * @return bool
+     */
     protected function checkAudio(string $mimeType): bool
     {
         return in_array($mimeType, $this->audioTypes);
     }
+
+    /**
+     * @param string $mimeType
+     * @return bool
+     */
     protected function checkVideo(string $mimeType): bool
     {
         return in_array($mimeType, $this->videoTypes);
     }
 
+    /**
+     * @return int|string|null
+     */
     private function setUploader()
     {
         return env('APP_DEBUG') ?
