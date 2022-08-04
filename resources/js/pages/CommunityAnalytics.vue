@@ -14,7 +14,7 @@
             />
         </ul>
 
-        <div>
+        <!-- <div>
             <line-chart
                 :chartData="chartData2"
             />
@@ -30,36 +30,7 @@
                     {{ dataset.label }}
                 </button>
             </div>
-        </div>
-
-        <ul class="analytics__list" style="display: flex; column-gap: 20px;">
-            <li class="analytics__item" style="width: 500px; ">
-                <bar-chart
-                    :chartData="chartData2"
-                    
-                />
-            </li>
-
-            <li class="analytics__item" style="width: 500px; ">
-                <line-chart
-                    :chartData="chartData2"
-                />
-
-                <div class="legend-box" style="display: flex;">
-                    <button
-                        style="padding: 10px;"
-                        :style="{ backgroundColor: dataset.borderColor }"
-                        v-for="(dataset, index) in chartData2.datasets"
-                        :key="index"
-                        @click="toggleData(index)"
-                    >
-                        {{ dataset.label }}
-                    </button>
-                </div>
-            </li>
-        </ul>
-
-        <button @click="change">change</button>
+        </div> -->
     </div>
 </template>
 
@@ -122,13 +93,6 @@
                     }
                 },
 
-                
-
-                chartData: {
-                    labels: [ 'January', 'February', 'March', '1', '2', '3' ],
-                    datasets: [ { data: [40, 20, 12, 1, 2, 3] } ]
-                },
-
                 chartData2: {
                     labels: [ '1', '2', '3' ],
                     datasets: [
@@ -169,12 +133,20 @@
                 }
             },
             
-            change() {
-                this.chartData2.datasets[0].data = [100, 200, 300];
-            },
-            
             filter(period) {
-                console.log(period);
+                if (period == 'week') {
+                    this.dataList.subscribers.data = [10, 30, 40, 20, 25, 50, 10, 5, 15, 25, 10, 45];
+                    this.dataList.messages.data = [3, 7, 25, 36, 42, 23, 31];
+                    this.dataList.finance.data = [100, 250, 150, 300, 250, 400, 350, 450];
+                } else if (period == 'month') {
+                    this.dataList.subscribers.data = [100, 200, 300, 100, 50, 150, 420, 100, 200, 300, 100, 50, 150, 420, 100, 200, 300, 100, 50, 150, 420, 100, 200, 300, 100, 50, 150, 420];
+                    this.dataList.messages.data = [100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 300, 100, 20, 300];
+                    this.dataList.finance.data = [100, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300];
+                } else if (period == 'year') {
+                    this.dataList.subscribers.data = [200, 100, 300, 420, 50, 100, 150];
+                    this.dataList.messages.data = [10, 200, 30, 50, 20];
+                    this.dataList.finance.data = [150, 20, 300, 200, 100];
+                }
             }
         }
     }

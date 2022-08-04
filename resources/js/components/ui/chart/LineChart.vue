@@ -48,6 +48,17 @@
                     radius: 0,
                     hoverRadius: 0,
                     tension: 0.5, //скругление
+                    // отключение анимации
+                    animation: {
+                        duration: 0 // general animation time
+                    },
+
+                    hover: {
+                        animationDuration: 0 // duration of animations when hovering an item
+                    },
+
+                    responsiveAnimationDuration: 0,
+
                     layout: {
                         padding: 0
                     },

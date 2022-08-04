@@ -60,9 +60,9 @@
             }
         },
 
-        data() {
-            return {
-                chartData: {
+        computed: {
+            chartData() {
+                return {
                     labels: this.data.data,
                     datasets: [
                         {
@@ -71,14 +71,20 @@
                             hidden: false,
                         }
                     ]
-                },
+                }
+            },
 
-                chartOptions: {
+            chartOptions() {
+                return {
                     responsive: true,
                     maintainAspectRatio: false,
                     radius: 0,
                     hoverRadius: 0,
                     borderWidth: 4,
+                    animation:{
+                        duration: 1000,
+                        easing: 'easeInOutCubic'
+                    },
                     
                     scales: {
                         x: { display: false },
@@ -91,7 +97,7 @@
                         tooltip: { enabled: false },
                     }
                     
-                },
+                }
             }
         },
     }

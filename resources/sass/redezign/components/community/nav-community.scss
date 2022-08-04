@@ -3,6 +3,7 @@
 
     &__list {
         display: flex;
+        flex-wrap: wrap;
         column-gap: 15px;
         list-style: none;
     }
