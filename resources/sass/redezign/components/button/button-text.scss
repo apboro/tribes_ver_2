@@ -18,6 +18,7 @@ $button-background-color-danger: $danger-2;
     align-items: center;
     justify-content: center;
     padding: 5px 20px;
+    text-align: center;
     @include font($button-text-color-primary-1, 14px, 20px, 400);
     background-color: transparent;
     border-radius: 100px;

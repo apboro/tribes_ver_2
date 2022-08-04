@@ -1,1 +1,13 @@
-.analytics-community {}
+.analytics-community {
+    &__filter {}
+
+    &__card-list {
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: repeat(3, calc(33% - 13px));
+        column-gap: 25px;
+        margin-top: 30px;
+        list-style: none;
+    }
+
+}

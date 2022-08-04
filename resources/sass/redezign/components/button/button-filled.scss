@@ -13,6 +13,7 @@ $button-background-color-danger-2: $danger-4;
 .button-filled {
     display: inline-block;
     padding: 10px 40px;
+    text-align: center;
     @include font($button-text-color-light, 14px, 20px, 600);
     border-radius: 66px;
     cursor: pointer;

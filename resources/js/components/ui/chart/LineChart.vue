@@ -1,15 +1,10 @@
 <template>
-  <LineChartGenerator
-    :chart-options="chartOptions"
-    :chart-data="chartData"
-    :chart-id="chartId"
-    :dataset-id-key="datasetIdKey"
-    :plugins="plugins"
-    :css-classes="cssClasses"
-    :styles="styles"
-    :width="width"
-    :height="height"
-  />
+    <LineChartGenerator
+        :chart-options="options"
+        :chart-data="chartData"
+        :width="width"
+        :height="height"
+    />
 </template>
 
 <script>
@@ -22,14 +17,14 @@
         name: 'LineChart',
         components: { LineChartGenerator },
         props: {
-            chartId: {
-                type: String,
-                default: 'line-chart'
+            chartOptions: {
+                type: [Object, null],
+                default: null
             },
 
-            datasetIdKey: {
-                type: String,
-                default: 'label'
+            chartData: {
+                type: Object,
+                default: () => [],
             },
 
             width: {
@@ -41,34 +36,18 @@
                 type: Number,
                 default: 400
             },
-
-            cssClasses: {
-                default: '',
-                type: String
-            },
-
-            styles: {
-                type: Object,
-                default: () => {}
-            },
-
-            plugins: {
-                type: Object,
-                default: () => {}
-            },
-
-            chartData: {
-                type: Object,
-                default: () => [],
-            },
         },
 
         data() {
             return {
-                chartOptions: {
+                data: {},
+
+                baseOptions: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    //tension: 0.5, //скругление
+                    radius: 0,
+                    hoverRadius: 0,
+                    tension: 0.5, //скругление
                     layout: {
                         padding: 0
                     },
@@ -79,7 +58,7 @@
                     scales: {
                         x: {
                             display: false,
-                            scaleLabel: {
+                            /* scaleLabel: {
                                 display: true
                             },
                             gridLines: {
@@ -89,12 +68,12 @@
                             },
                             ticks: {
                                 fontColor: 'rgb(0, 0, 100)'
-                            }
+                            } */
                         },
                         y: {
                             display: false,
                             
-                            scaleLabel: {
+                            /* scaleLabel: {
                                 display: true,
                                 
                             },
@@ -115,7 +94,7 @@
                                 display: true,
                                 color: 'rgb(0, 100, 0)',
                                 zeroLineColor: 'rgb(0, 100, 0)'
-                            }
+                            } */
                         }
                     },
 
@@ -141,6 +120,7 @@
                         },
                         
                         tooltip: {
+                            enabled: false,
                             // Updated default tooltip UI
                            /*  shadowOffsetX: 1,
                             shadowOffsetY: 1,
@@ -165,6 +145,12 @@
 
                 
                 
+            }
+        },
+
+        computed: {
+            options() {
+                return this.chartOptions ?? this.baseOptions;
             }
         },
 

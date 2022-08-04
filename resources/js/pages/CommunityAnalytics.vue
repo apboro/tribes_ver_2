@@ -5,6 +5,15 @@
             @getPeriod="filter"
         />
 
+        <ul class="analytics-community__card-list">
+            <chart-card
+                class="analytics-community__card-item"
+                v-for="(data, index) in dataList"
+                :key="index"
+                :data="data"
+            />
+        </ul>
+
         <div>
             <line-chart
                 :chartData="chartData2"
@@ -26,7 +35,7 @@
         <ul class="analytics__list" style="display: flex; column-gap: 20px;">
             <li class="analytics__item" style="width: 500px; ">
                 <bar-chart
-                    :chartData="chartData"
+                    :chartData="chartData2"
                     
                 />
             </li>
@@ -56,6 +65,7 @@
 
 <script>
     import AnalyticsFilter from '../components/pages/CommunityAnalytics/AnalyticsFilter.vue';
+    import ChartCard from '../components/pages/CommunityAnalytics/ChartCard.vue';
     import BarChart from '../components/ui/chart/BarChart.vue';
     import LineChart from '../components/ui/chart/LineChart.vue';
 
@@ -66,10 +76,54 @@
             BarChart,
             LineChart,
             AnalyticsFilter,
+            ChartCard,
         },
 
         data() {
-            return {
+            return {  
+                dataList: {
+                    subscribers: {
+                        title: 'Подписчики',
+                        data: [10, 30, 40, 20, 25, 50, 10, 5, 15, 25, 10, 45],
+                        infoLeft: {
+                            text: 'Прирост',
+                            value: '+96'
+                        },
+                        infoRight: {
+                            text: 'Полезных',
+                            value: '+13'    
+                        }
+                    },
+
+                    messages: {
+                        title: 'Сообщества',
+                        data: [3, 7, 25, 36, 42, 23, 31],
+                        infoLeft: {
+                            text: 'Отправлено',
+                            value: '+563'
+                        },
+                        infoRight: {
+                            text: 'Полезных',
+                            value: '+233'    
+                        }
+                    },
+
+                    finance: {
+                        title: 'Финансы',
+                        data: [100, 250, 150, 300, 250, 400, 350, 450],
+                        infoLeft: {
+                            text: 'Приход',
+                            value: '₽24.3k'
+                        },
+                        infoRight: {
+                            text: 'Можно вывести',
+                            value: '₽20,3k'    
+                        }
+                    }
+                },
+
+                
+
                 chartData: {
                     labels: [ 'January', 'February', 'March', '1', '2', '3' ],
                     datasets: [ { data: [40, 20, 12, 1, 2, 3] } ]
