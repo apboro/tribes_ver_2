@@ -15,8 +15,8 @@
                         дает свое согласие&nbsp;<b>Индивидуальному предпринимателю Бордияну Андрею Сергеевичу</b>(ОГРНИП 313313012600090, ИНН 312181691267) 
                         на получение информационной и (или) рекламной рассылки (далее –&nbsp;<b>«Согласие»</b>).<br>
                         Термины и понятия используются в Согласии в значении, указанном в Пользовательском соглашении (доступном для ознакомления по адресу:&nbsp;
-                        <a href="/terms/" class="btn-link" target="_blank">https://{{ env('APP_URL') }}.pw/terms</a>) и Согласии на Подписку (доступном для ознакомления по адресу:&nbsp;
-                        <a href="/sub_terms/" class="btn-link" target="_blank">https://{{ env('APP_URL') }}.pw/sub_terms</a>).
+                        <a href="/terms/" class="btn-link" target="_blank">{{ env('APP_URL') }}/terms</a>) и Согласии на Подписку (доступном для ознакомления по адресу:&nbsp;
+                        <a href="/sub_terms/" class="btn-link" target="_blank">{{ env('APP_URL') }}/sub_terms</a>).
                     </p>
                     
                     <ol class="list-decimal">
