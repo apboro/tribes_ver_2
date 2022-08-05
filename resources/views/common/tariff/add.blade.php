@@ -87,7 +87,13 @@
                                     id="tariff_pay_period"
                                     name="tariff_pay_period"
                                 >
-                                    <option value="1" checked>1 {{ __('base.day_low') }}</option>
+                                    @if(env('FOR_TESTER'))
+                                        <option value="0" checked>1 {{ __('base.minute_low') }}</option>
+                                        <option value="1" >1 {{ __('base.day_low') }}</option>
+                                    @else
+                                        <option value="1" checked>1 {{ __('base.day_low') }}</option>
+                                    @endif
+
                                     <option value="3">3 {{ __('base.days_rus_low') }}</option>
                                     <option value="7">7 {{ __('base.days_low') }}</option>
                                     <option value="14">14 {{ __('base.days_low') }}</option>
@@ -134,8 +140,8 @@
                             </div>
                         </div>
                     </div>
-                </div> 
-            </form>
+                </form>
+            </div>
         </div>
     </section>
 @endsection
