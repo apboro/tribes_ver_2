@@ -3,6 +3,7 @@
 namespace App\Services\Tinkoff;
 
 
+use App\Services\TelegramLogService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -201,7 +202,9 @@ class TinkoffApi
                 }
             }
         }
-
+        if(env('DEBUG_TINKOFF', false)){
+            TelegramLogService::staticSendLogMessage("url: " . $url . " аргументы:" . json_encode($args));
+        }
         $url = $this->_combineUrl($url, $path);
         return $this->_sendRequest($url, $args);
     }
