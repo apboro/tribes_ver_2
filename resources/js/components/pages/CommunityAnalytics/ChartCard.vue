@@ -68,6 +68,10 @@
                         {
                             data: this.data.data,                           
                             borderColor: "#2AB0EE",
+                            fill: {
+                                target: 'origin',
+                                above: '#2AB0EE10',
+                            },
                             hidden: false,
                         }
                     ]
@@ -80,8 +84,11 @@
                     maintainAspectRatio: false,
                     radius: 0,
                     hoverRadius: 0,
-                    borderWidth: 4,
-                    animation:{
+                    borderWidth: 1,
+                    pointBorderColor: 'transparent',
+                    
+                    //pointStyle: 'cross', // эта странная комбинация не скрывает график в потолке
+                    animation: {
                         duration: 1000,
                         easing: 'easeInOutCubic'
                     },
@@ -92,9 +99,11 @@
                     },
 
                     plugins: {
+                        
                         legend: { display: false },
                         title: { display: false },
                         tooltip: { enabled: false },
+                        
                     }
                     
                 }

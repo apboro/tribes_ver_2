@@ -9,9 +9,9 @@
 
 <script>
     import { Line as LineChartGenerator } from 'vue-chartjs/legacy';
-    import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+    import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement, Filler } from 'chart.js';
 
-    ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement);
+    ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement, Filler);
 
     export default {
         name: 'LineChart',
@@ -84,7 +84,7 @@
                         y: {
                             display: false,
                             
-                            /* scaleLabel: {
+                            scaleLabel: {
                                 display: true,
                                 
                             },
@@ -105,7 +105,7 @@
                                 display: true,
                                 color: 'rgb(0, 100, 0)',
                                 zeroLineColor: 'rgb(0, 100, 0)'
-                            } */
+                            }
                         }
                     },
 

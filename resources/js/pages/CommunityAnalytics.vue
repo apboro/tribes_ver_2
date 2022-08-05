@@ -5,7 +5,30 @@
             @getPeriod="filter"
         />
 
-        <ul class="analytics-community__card-list">
+        <nav class="analytics-community__nav">
+            <ul class="analytics-community__nav-list">
+                <li class="analytics-community__nav-ite">
+                    <button
+                        class="button-empty button-empty--primary"
+                    >
+                        Main
+                    </button>
+                </li>
+
+                <li class="analytics-community__nav-ite">
+                    <button
+                        class="button-empty button-empty--primary"
+                    >
+                        Main
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <ul
+            v-if="visibleTab == 'main'"
+            class="analytics-community__card-list"
+        >
             <chart-card
                 class="analytics-community__card-item"
                 v-for="(data, index) in dataList"
@@ -13,6 +36,8 @@
                 :data="data"
             />
         </ul>
+
+        <div v-else-if="visibleTab == 'subscribers'">1234</div>
 
         <!-- <div>
             <line-chart
@@ -51,7 +76,9 @@
         },
 
         data() {
-            return {  
+            return {
+                visibleTab: 'main',
+
                 dataList: {
                     subscribers: {
                         title: 'Подписчики',
