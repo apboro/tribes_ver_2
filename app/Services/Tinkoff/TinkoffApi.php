@@ -203,6 +203,7 @@ class TinkoffApi
             }
         }
         if(env('DEBUG_TINKOFF', false)){
+            dd("url: " . $url . " аргументы:" . json_encode($args));
             TelegramLogService::staticSendLogMessage("url: " . $url . " аргументы:" . json_encode($args));
         }
         $url = $this->_combineUrl($url, $path);
