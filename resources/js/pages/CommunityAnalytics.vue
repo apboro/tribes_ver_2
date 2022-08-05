@@ -10,6 +10,7 @@
                 <li class="analytics-community__nav-ite">
                     <button
                         class="button-empty button-empty--primary"
+                        @click="visibleTab = 'main'"
                     >
                         Main
                     </button>
@@ -18,8 +19,9 @@
                 <li class="analytics-community__nav-ite">
                     <button
                         class="button-empty button-empty--primary"
+                        @click="visibleTab = 'subscribers'"
                     >
-                        Main
+                        Subscribers
                     </button>
                 </li>
             </ul>
@@ -37,7 +39,10 @@
             />
         </ul>
 
-        <div v-else-if="visibleTab == 'subscribers'">1234</div>
+        <analytics-subscribers
+            v-else-if="visibleTab == 'subscribers'"
+            :data="subscribers"
+        />
 
         <!-- <div>
             <line-chart
@@ -64,6 +69,7 @@
     import ChartCard from '../components/pages/CommunityAnalytics/ChartCard.vue';
     import BarChart from '../components/ui/chart/BarChart.vue';
     import LineChart from '../components/ui/chart/LineChart.vue';
+    import AnalyticsSubscribers from './AnalyticsSubscribers.vue';
 
     export default {
         name: 'CommunityAnalytics',
@@ -73,11 +79,12 @@
             LineChart,
             AnalyticsFilter,
             ChartCard,
+            AnalyticsSubscribers,
         },
 
         data() {
             return {
-                visibleTab: 'main',
+                visibleTab: 'subscribers',
 
                 dataList: {
                     subscribers: {
@@ -116,6 +123,29 @@
                         infoRight: {
                             text: 'Можно вывести',
                             value: '₽20,3k'    
+                        }
+                    }
+                },
+
+                subscribers: {
+                    common: {
+                        text: 'Всего подписчиков в сообществе',
+                        value: '2356'
+                    },
+
+                    joined: {
+                        data: [500, 200, 100, 60, 155, 80, 220, 300, 100, 400],
+                        legend: {
+                            text: 'Вступили в сообщество',
+                            value: '+96',
+                        }
+                    },
+
+                    left: {
+                        data: [100, 50, 220, 180, 70, 160, 90, 130, 400, 300],
+                        legend: {
+                            text: 'Покинули сообщество',
+                            value: '-19',
                         }
                     }
                 },

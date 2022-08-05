@@ -50,7 +50,7 @@
                     v-else-if="col.type == 'text'"
                     class="table__item table__item--changable"
                 >
-                    {{ data.c_enquiry }}
+                    {{ data[col.key] }}
                 </div>
                 
                 <!-- Статус -->

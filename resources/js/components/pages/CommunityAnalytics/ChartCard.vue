@@ -87,7 +87,6 @@
                     borderWidth: 1,
                     pointBorderColor: 'transparent',
                     
-                    //pointStyle: 'cross', // эта странная комбинация не скрывает график в потолке
                     animation: {
                         duration: 1000,
                         easing: 'easeInOutCubic'

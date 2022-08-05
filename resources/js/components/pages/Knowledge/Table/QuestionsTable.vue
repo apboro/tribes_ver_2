@@ -6,6 +6,7 @@
         <!-- sortAttrs объект содержащий актуальную сортировку -->
         <!-- Статус находится ли в состоянии загрузки данных - для отображения прелоадера -->
         <v-table
+            :classTable="classTable"
             :data="questions"
             :tableOptions="tableOptions"
             :sortAttrs="sort"
@@ -82,6 +83,11 @@
             questions: {
                 type: Array,
                 default: () => [],
+            },
+
+            classTable: {
+                type: String,
+                default: ''
             }
         },
 
@@ -151,6 +157,7 @@
 
                         {
                             type: 'text',
+                            key: 'c_enquiry'
                         },
 
                         {

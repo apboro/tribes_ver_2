@@ -1,5 +1,5 @@
 <template>
-    <div class="table knowledge-table">
+    <div class="table" :class="classTable">
         <table-header
             :class="{ 'table__header--disabled' : !hasData }"
             :headerSettings="tableOptions.header"
@@ -66,14 +66,19 @@
             },
 
             sortAttrs: {
-                type: Object,
-                default: {},
+                type: [Object, null],
+                default: null,
             },
 
             isLoading: {
                 type: Boolean,
                 default: false,
             },
+
+            classTable: {
+                type: String,
+                default: ''
+            }
         },
 
         computed: {

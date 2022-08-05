@@ -64,8 +64,8 @@
             },
 
             sortAttrs: {
-                type: Object,
-                default: {},
+                type: [Object, null],
+                default: null,
             }
         },
     }
