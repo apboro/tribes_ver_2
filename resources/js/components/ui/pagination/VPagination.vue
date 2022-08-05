@@ -17,13 +17,34 @@
         </div>
 
         <div class="pagination__item">
+            <div class="pagination__control">
+                <button      
+                    class="button-text button-text--primary button-text--only-icon"
+                    :class="{ 'button-text--disabled': isDisabledBackBtn }"
+                    @click="onPageClick(activePage - 1)"
+                >
+                    <v-icon
+                        name="arrow-left"
+                        size="1"
+                        class=""
+                    />
+                </button>
+            </div>
+
             <div
                 class="pagination__control"
-                :class="{ 'active': item.active }"
-                v-for="(item, i) in paginateData.links"
-                :key="i"
+                :class="{ 'active': isActive(pageNumber) }"
+                v-for="pageNumber in pageCount"
+                :key="pageNumber"
             >
                 <button
+                    class="pagination__page"
+                    @click="onPageClick(pageNumber)"
+                >
+                    {{ pageNumber }}
+                </button>
+
+                <!-- <button
                     v-if="item.label == 'Назад'"       
                     class="button-text button-text--primary button-text--only-icon"
                     :class="{ 'button-text--disabled': item.disabled }"
@@ -56,6 +77,20 @@
                     @click="onPageClick(item.page)"
                 >
                     {{ item.label }}
+                </button> -->
+            </div>
+
+            <div class="pagination__control">
+                <button      
+                    class="button-text button-text--primary button-text--only-icon"
+                    :class="{ 'button-text--disabled': isDisabledNextBtn }"
+                    @click="onPageClick(activePage + 1)"
+                >
+                    <v-icon
+                        name="arrow-right"
+                        size="1"
+                        class=""
+                    />
                 </button>
             </div>
         </div>
@@ -67,7 +102,7 @@
     import VIcon from "../icon/VIcon";
 
     export default {
-        name: 'KnowledgePagination',
+        name: 'VPagination',
 
         components: { VSelect, VIcon },
 
@@ -85,7 +120,21 @@
 
         data() {
             return {
-                data: []
+                activePage: 1,
+            }
+        },
+
+        computed: {
+            pageCount() {
+                return Math.ceil(this.paginateData.total / Number(this.paginateData.per_page));
+            },
+
+            isDisabledBackBtn() {
+                return this.activePage <= 1;
+            },
+
+            isDisabledNextBtn() {
+                return this.paginateData.current_page == this.pageCount;
             }
         },
 
@@ -95,8 +144,15 @@
             },
 
             onPageClick(value) {
+                this.activePage = value;
                 this.$emit('onPageClick', value);
             },
+
+            isActive(pageNumber) {
+                return pageNumber == this.paginateData.current_page;
+            },
+
+            
         },
     }
 </script>
