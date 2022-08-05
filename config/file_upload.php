@@ -18,7 +18,7 @@ return [
         'image_handler' => [
             'handler' => \App\Services\File\Handlers\ImageHandler::class,
             'path' => 'image',
-            'procedure' => ['crop', 'watermark'],
+            'procedure' => ['crop'],
         ],
     ],
     'tariff' => [
@@ -26,6 +26,13 @@ return [
             'handler' => \App\Services\File\Handlers\ImageHandler::class,
             'path' => 'image',
             'procedure' => ['crop'],
+        ],
+    ],
+    'test' => [
+        'image_handler' => [
+            'handler' => \App\Services\File\Handlers\ImageHandler::class,
+            'path' => 'image',
+            'procedure' => ['crop', 'watermark'],
         ],
     ],
 ];

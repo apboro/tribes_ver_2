@@ -8,11 +8,14 @@ use App\Services\File\common\HandlerContract;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Intervention\Image\ImageManagerStatic as Image;
+use Mockery\Exception;
+use function PHPUnit\Framework\isEmpty;
 
 class ImageHandler implements HandlerContract
 {
     private $path;
     private FileRepository $repository;
+    private $errors = [];
 
     public function __construct(string $path, FileRepository $repository)
     {
@@ -22,6 +25,8 @@ class ImageHandler implements HandlerContract
 
     public function startService(UploadedFile $file, File $model, array $procedure): File
     {
+        $this->validateFile($file);
+
         $fileProcessed = $file;
         //Обрабатываем картинку (crop, resize и т.д.)
         if ($procedure) {
@@ -42,7 +47,7 @@ class ImageHandler implements HandlerContract
         $hash = $this->repository->setHash($fileProcessed);
         $filename = $hash . '.' . $fileProcessed->guessClientExtension();
         $url = $this->repository->storeFileNew($fileProcessed, $this->path, $filename);
-
+//dd($fileProcessed->getSize());
         $model['mime'] = $fileProcessed->getMimeType();
         $model['size'] = $fileProcessed->getSize();
         $model['isImage'] = 1;
@@ -113,16 +118,25 @@ class ImageHandler implements HandlerContract
     }
 
 
-
-    private function validateImage()
+    //Валидация файла
+    private function validateFile($file)
     {
-//        dd($this->request['file']);
-        $validated = $this->request->validate([
-            'file' => 'required|mimes:jpg,png,gif|max:2048'
-//            'file' => 'image'
-        ]);
+        $this->sizeValidate($file);
 
-        return $validated;
+//        dd(empty($this->errors));
+        if (!empty($this->errors)) {
+            return 'Максимальный размер файла 2 Mb';
+        }
     }
+
+    private function sizeValidate($file)
+    {
+        $parameter = $file->getSize()/(1024 * 1024);//Размер файла в mb
+
+        if ($parameter > 2) {
+            array_push($this->errors, 'Максимальный размер файла 2 Mb');
+        }
+    }
+
 
 }

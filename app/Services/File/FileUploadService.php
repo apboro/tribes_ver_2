@@ -62,6 +62,7 @@ class FileUploadService
      */
     public function procRequest($request): EloquentCollection
     {
+//dd($request);
         $this->request = $request;
 
         if (isset($request['entity'])){
@@ -110,7 +111,7 @@ class FileUploadService
         foreach ($collect as $file) {
 //            dd($handlers);
             $type = $file->getMimeType();
-
+//dd($type);
             if($this->checkImage($type)) {
                 $file_type = 'image';
                 $config = $handlers[$file_type . '_handler'];
@@ -125,7 +126,7 @@ class FileUploadService
             } else {
                 throw new Exception('Неизвестный тип файла');
             }
-//            dd($handlers);
+
             $this->modelsFile->add($this->procFile($file, $config));
         }
     }

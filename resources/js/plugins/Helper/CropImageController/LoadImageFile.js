@@ -31,9 +31,9 @@ export class LoadImageFile {
         this.file.readAsDataURL(this.files[0]);
         
         // если выбранный файл больше допустимого размера - не загружаем его
-        if (this.isBigFile()) {
+        /*if (this.isBigFile()) {
             return false;
-        }
+        }*/
 
         // когда файл загружен
         this.file.onload = (event) => {
