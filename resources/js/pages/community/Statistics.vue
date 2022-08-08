@@ -34,9 +34,9 @@
 </template>
 
 <script>
-    import TabsNav from '../components/pages/Community/TabsNav.vue';
-    import CommunityProfile from '../components/pages/Community/CommunityProfile.vue';
-    import CommunityAnalytics from './CommunityAnalytics.vue';
+    import TabsNav from '../../components/pages/Community/TabsNav.vue';
+    import CommunityProfile from '../../components/pages/Community/CommunityProfile.vue';
+    import CommunityAnalytics from './analytics/CommunityAnalytics.vue';
 
     export default {
         name: 'Statistics',

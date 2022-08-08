@@ -1,13 +1,8 @@
 <template>
     <div class="analytics-community">
-        <analytics-filter
-            class="analytics-community__filter"
-            @getPeriod="filter"
-        />
-
         <nav class="analytics-community__nav">
             <ul class="analytics-community__nav-list">
-                <li class="analytics-community__nav-ite">
+                <li class="analytics-community__nav-item">
                     <button
                         class="button-empty button-empty--primary"
                         @click="visibleTab = 'main'"
@@ -16,7 +11,7 @@
                     </button>
                 </li>
 
-                <li class="analytics-community__nav-ite">
+                <li class="analytics-community__nav-item">
                     <button
                         class="button-empty button-empty--primary"
                         @click="visibleTab = 'subscribers'"
@@ -27,22 +22,17 @@
             </ul>
         </nav>
 
-        <ul
-            v-if="visibleTab == 'main'"
-            class="analytics-community__card-list"
-        >
-            <chart-card
-                class="analytics-community__card-item"
-                v-for="(data, index) in dataList"
-                :key="index"
-                :data="data"
+        <transition name="a-page-tabs" mode="out-in">
+            <analytics-list
+                v-if="visibleTab == 'main'"
+                :data="dataList"
             />
-        </ul>
-
-        <analytics-subscribers
-            v-else-if="visibleTab == 'subscribers'"
-            :data="subscribers"
-        />
+            
+            <analytics-subscribers
+                v-else-if="visibleTab == 'subscribers'"
+                :data="subscribers"
+            />
+        </transition>
 
         <!-- <div>
             <line-chart
@@ -65,11 +55,11 @@
 </template>
 
 <script>
-    import AnalyticsFilter from '../components/pages/CommunityAnalytics/AnalyticsFilter.vue';
-    import ChartCard from '../components/pages/CommunityAnalytics/ChartCard.vue';
-    import BarChart from '../components/ui/chart/BarChart.vue';
-    import LineChart from '../components/ui/chart/LineChart.vue';
+    
+    import BarChart from '../../../components/ui/chart/BarChart.vue';
+    import LineChart from '../../../components/ui/chart/LineChart.vue';
     import AnalyticsSubscribers from './AnalyticsSubscribers.vue';
+    import AnalyticsList from './AnalyticsList.vue';
 
     export default {
         name: 'CommunityAnalytics',
@@ -77,8 +67,7 @@
         components: {
             BarChart,
             LineChart,
-            AnalyticsFilter,
-            ChartCard,
+            AnalyticsList,
             AnalyticsSubscribers,
         },
 
@@ -190,21 +179,7 @@
                 }
             },
             
-            filter(period) {
-                if (period == 'week') {
-                    this.dataList.subscribers.data = [10, 30, 40, 20, 25, 50, 10, 5, 15, 25, 10, 45];
-                    this.dataList.messages.data = [3, 7, 25, 36, 42, 23, 31];
-                    this.dataList.finance.data = [100, 250, 150, 300, 250, 400, 350, 450];
-                } else if (period == 'month') {
-                    this.dataList.subscribers.data = [100, 200, 300, 100, 50, 150, 420, 100, 200, 300, 100, 50, 150, 420, 100, 200, 300, 100, 50, 150, 420, 100, 200, 300, 100, 50, 150, 420];
-                    this.dataList.messages.data = [100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 300, 100, 20, 300];
-                    this.dataList.finance.data = [100, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300];
-                } else if (period == 'year') {
-                    this.dataList.subscribers.data = [200, 100, 300, 420, 50, 100, 150];
-                    this.dataList.messages.data = [10, 200, 30, 50, 20];
-                    this.dataList.finance.data = [150, 20, 300, 200, 100];
-                }
-            }
+            
         }
     }
 </script>

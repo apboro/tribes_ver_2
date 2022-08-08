@@ -12,4 +12,29 @@
         list-style: none;
     }
 
+    &__nav {}
+
+    &__nav-list {}
+
+}
+
+.a-page-tabs {
+    &-enter-active {
+        animation: page-tabs .2s;
+    }
+    &-leave-active {
+        animation: page-tabs .2s reverse;
+    }
+}
+
+@keyframes page-tabs {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    
+    100% {
+        opacity: 1;
+        transform: translateX(0px);
+    }
 }
