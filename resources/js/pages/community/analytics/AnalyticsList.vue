@@ -14,7 +14,7 @@
 </template>
 
 <script>
-    import ChartCard from '../../../components/pages/CommunityAnalytics/ChartCard.vue';
+    import ChartCard from '../../../components/pages/Community/Analytics/ChartCard.vue';
 
     export default {
         name: 'AnalyticsList',
@@ -48,11 +48,7 @@
         },
 
         mounted() {
-            
+            this.filter();
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

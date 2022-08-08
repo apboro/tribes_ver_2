@@ -1,0 +1,37 @@
+.chart-analytics-community {
+
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__label {
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+        column-gap: 60px;
+
+        &--pointer {
+            cursor: pointer;
+        }
+    }
+
+    &__label-text {
+       @include font($text-color-1, 18px, 24px, 700);
+    }
+
+    &__label-value {
+       @include font($text-color-1, 40px, 32px, 600);
+    }
+
+    &__chart {
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+}

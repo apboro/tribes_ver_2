@@ -1,53 +1,61 @@
 <template>
-    <div>
-        <div>
-            <span>
-                {{ data.common.text }}
-            </span>
+    <div class="chart-analytics-community">
+        <div class="chart-analytics-community__header">
+            <div class="chart-analytics-community__label">
+                <span class="chart-analytics-community__label-text">
+                    {{ data.common.text }}
+                </span>
 
-            <span>
-                {{ data.common.value }}
-            </span>
+                <span class="chart-analytics-community__label-value">
+                    {{ data.common.value }}
+                </span>
+            </div>
+
+            <button
+                class="chart-analytics-community__label chart-analytics-community__label--pointer"
+                @click="toggleData('joined')"
+            >
+                <span class="chart-analytics-community__label-text">
+                    {{ data.joined.legend.text }}
+                </span>
+
+                <span
+                    class="chart-analytics-community__label-value"
+                    :style="{ color: joined.color }"
+                >
+                    {{ data.joined.legend.value }}
+                </span>
+            </button>
         </div>
 
-        <button
-            style="padding: 10px;"
-            :style="{ backgroundColor: joined.color }"
-            @click="toggleData('joined')"
-        >
-            <span>
-                {{ data.joined.legend.text }}
-            </span>
-
-            <span>
-                {{ data.joined.legend.value }}
-            </span>
-        </button>
-
         <line-chart
-            class="card-analytics__chart"
+            class="chart-analytics-community__chart"
             :chartData="chartData"
             :chartOptions="chartOptions"
         />
 
-        <button
-            style="padding: 10px;"
-            :style="{ backgroundColor: left.color }"
-            @click="toggleData('left')"
-        >
-            <span>
-                {{ data.left.legend.text }}
-            </span>
-
-            <span>
-                {{ data.left.legend.value }}
-            </span>
-        </button>
+        <div class="chart-analytics-community__footer">
+            <button
+                class="chart-analytics-community__label chart-analytics-community__label--pointer"
+                @click="toggleData('left')"
+            >
+                <span
+                    class="chart-analytics-community__label-value"
+                    :style="{ color: left.color }"
+                >
+                    {{ data.left.legend.value }}
+                </span>
+             
+                <span class="chart-analytics-community__label-text">
+                    {{ data.left.legend.text }}
+                </span>
+            </button>
+        </div>
     </div>
 </template>
 
 <script>
-    import LineChart from '../../ui/chart/LineChart.vue';
+    import LineChart from '../../../ui/chart/LineChart.vue';
 
     export default {
         name: 'FullChart',
@@ -85,14 +93,12 @@
                         {
                             data: this.data.joined.data,                           
                             borderColor: this.joined.color,
-                            
                             hidden: this.joined.isVisible,
                         },
 
                         {
                             data: this.data.left.data,                           
                             borderColor: this.left.color,
-                            
                             hidden: this.left.isVisible,
                         }
                     ]
@@ -107,7 +113,7 @@
                     hoverRadius: 0,
                     borderWidth: 4,
                     pointBorderColor: 'transparent',
-                    tension: 0.5,
+                    tension: 0.1,
                     
                     animation: {
                         duration: 1000,

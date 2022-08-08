@@ -1,26 +1,26 @@
 <template>
-    <div class="filter-analytics">
-        <span class="filter-analytics__title">
+    <div class="filter-analytics-community">
+        <span class="filter-analytics-community__title">
             Период:
         </span>
 
-        <ul class="filter-analytics__list">
+        <ul class="filter-analytics-community__list">
             <li
-                class="filter-analytics__item"
+                class="filter-analytics-community__item"
                 v-for="filter in filters"
                 :key="filter.value"
             >
                 <input
                     type="radio"
                     :id="filter.value"
-                    class="filter-analytics__radio"
+                    class="filter-analytics-community__radio"
                     :value="filter.value"
                     v-model="periods"
                 >
 
                 <label
                     :for="filter.value"
-                    class="filter-analytics__label"
+                    class="filter-analytics-community__label"
                 >
                     {{ filter.text }}
                 </label>

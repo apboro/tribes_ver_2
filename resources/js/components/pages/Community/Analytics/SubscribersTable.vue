@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import VTable from '../../ui/table/VTable.vue'
+    import VTable from '../../../ui/table/VTable.vue'
     
     export default {
         name: 'SubscribersTable',

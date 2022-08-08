@@ -1,0 +1,23 @@
+.progress-analytics-community {
+    &__list {
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+        list-style: none;
+    }
+
+    &__item {
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: 40% 40px 1fr;
+        align-items: center;
+    }
+
+    &__title {
+        @include font($primary-1, 18px, 24px, 700);
+    }
+
+    &__value {
+        @include font($text-color-1, 14px, 20px, 600);
+    }
+}

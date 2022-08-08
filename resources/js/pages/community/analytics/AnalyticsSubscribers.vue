@@ -1,8 +1,30 @@
 <template>
-    <div>
-        <full-chart
+    <div >
+        <subscribers-chart
+            
             :data="data"
         />
+
+        <div class="progress-analytics-community analytics-community__progress">
+            <ul class="progress-analytics-community__list">
+                <li class="progress-analytics-community__item">
+                    <span class="progress-analytics-community__title">Lorem, ipsum dolor.</span>
+
+                    <span class="progress-analytics-community__value">20%</span>
+
+                    <v-progress value="20" />
+                </li>
+
+                <li class="progress-analytics-community__item">
+                    <span class="progress-analytics-community__title">Lorem, ipsum dolor.</span>
+
+                    <span class="progress-analytics-community__value">40%</span>
+
+                    <v-progress value="40" />
+                </li>
+            </ul>
+        </div>
+
 
         <subscribers-table
             class="subs-table"
@@ -12,15 +34,17 @@
 </template>
 
 <script>
-    import FullChart from '../../../components/pages/CommunityAnalytics/FullChart.vue';
-    import SubscribersTable from '../../../components/pages/CommunityAnalytics/SubscribersTable.vue';
+    import SubscribersChart from '../../../components/pages/Community/Analytics/SubscribersChart.vue';
+    import SubscribersTable from '../../../components/pages/Community/Analytics/SubscribersTable.vue';
+    import VProgress from '../../../components/ui/progress/VProgress.vue';
 
     export default {
         name: 'AnalyticsSubscribers',
 
         components: {
-            FullChart,
+            SubscribersChart,
             SubscribersTable,
+            VProgress,
         },
 
         props: {
@@ -61,6 +85,10 @@
                 this.$emit('filter', { name: 'subscribers', period: this.period });
             }
         },
+
+        mounted() {
+            this.filter();
+        }
     }
 </script>
 

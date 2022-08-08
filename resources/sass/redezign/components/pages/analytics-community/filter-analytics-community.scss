@@ -1,4 +1,4 @@
-.filter-analytics {
+.filter-analytics-community {
     display: flex;
     border-top: 1px solid $primary-1;
 
@@ -14,12 +14,12 @@
         list-style: none;
     }
 
-    &__item {}
+    //&__item {}
 
     &__radio {
         display: none;
 
-        &:checked + .filter-analytics__label {
+        &:checked + .filter-analytics-community__label {
             @include font($primary-1, 16px, 19px, 600);
 
             &:before {

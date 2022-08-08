@@ -1,42 +1,42 @@
 <template>
-    <li class="card-analytics">
-        <div class="card-analytics__header">
-            <h3 class="card-analytics__title">
+    <li class="card-analytics-community">
+        <div class="card-analytics-community__header">
+            <h3 class="card-analytics-community__title">
                 {{ data.title }}
             </h3>
-            <span class="card-analytics__subtitle">за период</span>
+            <span class="card-analytics-community__subtitle">за период</span>
         </div>
 
         <line-chart
-            class="card-analytics__chart"
+            class="card-analytics-community__chart"
             :chartData="chartData"
             :chartOptions="chartOptions"
             :width="350"
             :height="110"
         />
 
-        <div class="card-analytics__footer">
-            <div class="card-analytics__info">
-                <span class="card-analytics__info-label">
+        <div class="card-analytics-community__footer">
+            <div class="card-analytics-community__info">
+                <span class="card-analytics-community__info-label">
                     {{ data.infoLeft.text }}
                 </span>
 
-                <span class="card-analytics__info-value">
+                <span class="card-analytics-community__info-value">
                     {{ data.infoLeft.value }}
                 </span>
             </div>
 
-            <div class="card-analytics__info">
-                <span class="card-analytics__info-label">
+            <div class="card-analytics-community__info">
+                <span class="card-analytics-community__info-label">
                     {{ data.infoRight.text }}
                 </span>
 
-                <span class="card-analytics__info-value card-analytics__info-value--green">
+                <span class="card-analytics-community__info-value card-analytics-community__info-value--green">
                     {{ data.infoRight.value }}
                 </span>
             </div>
 
-            <button class="button-filled button-filled--primary card-analytics__link">
+            <button class="button-filled button-filled--primary card-analytics-community__link">
                 Подробнее
             </button>
         </div>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-    import LineChart from '../../ui/chart/LineChart.vue';
+    import LineChart from '../../../ui/chart/LineChart.vue';
 
     export default {
         name: 'ChartCard',
@@ -86,6 +86,7 @@
                     hoverRadius: 0,
                     borderWidth: 1,
                     pointBorderColor: 'transparent',
+                    tension: 0.1,
                     
                     animation: {
                         duration: 1000,

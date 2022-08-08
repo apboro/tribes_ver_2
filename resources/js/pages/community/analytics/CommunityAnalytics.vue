@@ -1,26 +1,11 @@
 <template>
     <div class="analytics-community">
-        <nav class="analytics-community__nav">
-            <ul class="analytics-community__nav-list">
-                <li class="analytics-community__nav-item">
-                    <button
-                        class="button-empty button-empty--primary"
-                        @click="visibleTab = 'main'"
-                    >
-                        Main
-                    </button>
-                </li>
-
-                <li class="analytics-community__nav-item">
-                    <button
-                        class="button-empty button-empty--primary"
-                        @click="visibleTab = 'subscribers'"
-                    >
-                        Subscribers
-                    </button>
-                </li>
-            </ul>
-        </nav>
+        <analytics-nav
+            class="analytics-community__nav"
+            :links="navigationLinks"
+            :visibleTab="visibleTab"
+            @switchTab="switchTab"    
+        />
 
         <analytics-filter
             class="analytics-community__filter"
@@ -30,7 +15,8 @@
 
         <transition name="a-page-tabs" mode="out-in">
             <analytics-list
-                v-if="visibleTab == 'main'"
+                v-if="visibleTab == 'list'"
+                class="analytics-community__tab"
                 :data="dataList"
                 :period="filterValue"
                 @filter="filter"
@@ -38,6 +24,7 @@
             
             <analytics-subscribers
                 v-else-if="visibleTab == 'subscribers'"
+                class="analytics-community__tab"
                 :data="subscribers"
                 :period="filterValue"
                 @filter="filter"
@@ -67,9 +54,10 @@
 <script>
     /* import BarChart from '../../../components/ui/chart/BarChart.vue';
     import LineChart from '../../../components/ui/chart/LineChart.vue'; */
-    import AnalyticsFilter from '../../../components/pages/CommunityAnalytics/AnalyticsFilter.vue';
+    import AnalyticsFilter from '../../../components/pages/Community/Analytics/AnalyticsFilter.vue';
     import AnalyticsSubscribers from './AnalyticsSubscribers.vue';
     import AnalyticsList from './AnalyticsList.vue';
+    import AnalyticsNav from '../../../components/pages/Community/Analytics/AnalyticsNav.vue';
 
     export default {
         name: 'CommunityAnalytics',
@@ -77,6 +65,7 @@
         components: {
             /* BarChart,
             LineChart, */
+            AnalyticsNav,
             AnalyticsFilter,
             AnalyticsList,
             AnalyticsSubscribers,
@@ -84,6 +73,18 @@
 
         data() {
             return {
+                navigationLinks: [
+                    {
+                        text: 'Все',
+                        tabName: 'list'
+                    },
+
+                    {
+                        text: 'Подписчики',
+                        tabName: 'subscribers'
+                    },
+                ],
+
                 visibleTab: 'subscribers',
                 filterValue: 'week',
 
@@ -181,6 +182,10 @@
         },
 
         methods: {
+            switchTab(tabName) {
+                this.visibleTab = tabName;
+            },
+            
             toggleData(value) {    
                 const visibilityData = this.chartData2.datasets[value].hidden;
             
