@@ -32,6 +32,13 @@
 <script>
     export default {
         name: 'AnalyticsFilter',
+
+        props: {
+            filterValue: {
+                type: String,
+                default: '',
+            }
+        },
         
         data() {
             return {
@@ -62,7 +69,7 @@
                     },
                 ],
 
-                period: 'week',
+                period: this.filterValue,
             }
         },
 
@@ -73,7 +80,7 @@
                 },
                 set(value) {
                     this.period = value;
-                    this.$emit('getPeriod', value);
+                    this.$emit('setPeriod', value);
                 }
             }
         },

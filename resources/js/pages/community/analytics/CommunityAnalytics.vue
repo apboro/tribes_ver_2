@@ -22,15 +22,25 @@
             </ul>
         </nav>
 
+        <analytics-filter
+            class="analytics-community__filter"
+            :filterValue="filterValue"
+            @setPeriod="setPeriod"
+        />
+
         <transition name="a-page-tabs" mode="out-in">
             <analytics-list
                 v-if="visibleTab == 'main'"
                 :data="dataList"
+                :period="filterValue"
+                @filter="filter"
             />
             
             <analytics-subscribers
                 v-else-if="visibleTab == 'subscribers'"
                 :data="subscribers"
+                :period="filterValue"
+                @filter="filter"
             />
         </transition>
 
@@ -55,9 +65,9 @@
 </template>
 
 <script>
-    
-    import BarChart from '../../../components/ui/chart/BarChart.vue';
-    import LineChart from '../../../components/ui/chart/LineChart.vue';
+    /* import BarChart from '../../../components/ui/chart/BarChart.vue';
+    import LineChart from '../../../components/ui/chart/LineChart.vue'; */
+    import AnalyticsFilter from '../../../components/pages/CommunityAnalytics/AnalyticsFilter.vue';
     import AnalyticsSubscribers from './AnalyticsSubscribers.vue';
     import AnalyticsList from './AnalyticsList.vue';
 
@@ -65,8 +75,9 @@
         name: 'CommunityAnalytics',
 
         components: {
-            BarChart,
-            LineChart,
+            /* BarChart,
+            LineChart, */
+            AnalyticsFilter,
             AnalyticsList,
             AnalyticsSubscribers,
         },
@@ -74,6 +85,7 @@
         data() {
             return {
                 visibleTab: 'subscribers',
+                filterValue: 'week',
 
                 dataList: {
                     subscribers: {
@@ -179,7 +191,26 @@
                 }
             },
             
-            
+            setPeriod(period) {
+                this.filterValue = period;
+                /* if (period == 'week') {
+                    this.dataList.subscribers.data = [10, 30, 40, 20, 25, 50, 10, 5, 15, 25, 10, 45];
+                    this.dataList.messages.data = [3, 7, 25, 36, 42, 23, 31];
+                    this.dataList.finance.data = [100, 250, 150, 300, 250, 400, 350, 450];
+                } else if (period == 'month') {
+                    this.dataList.subscribers.data = [100, 200, 300, 100, 50, 150, 420, 100, 200, 300, 100, 50, 150, 420, 100, 200, 300, 100, 50, 150, 420, 100, 200, 300, 100, 50, 150, 420];
+                    this.dataList.messages.data = [100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 100, 20, 300, 300, 100, 20, 300];
+                    this.dataList.finance.data = [100, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300, 100, 200, 300, 200, 300];
+                } else if (period == 'year') {
+                    this.dataList.subscribers.data = [200, 100, 300, 420, 50, 100, 150];
+                    this.dataList.messages.data = [10, 200, 30, 50, 20];
+                    this.dataList.finance.data = [150, 20, 300, 200, 100];
+                } */
+            },
+
+            filter(data) {
+                console.log(data);
+            }
         }
     }
 </script>

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-    import FullChart from '../../../components/pages/CommunityAnalytics/FullChart.vue'
+    import FullChart from '../../../components/pages/CommunityAnalytics/FullChart.vue';
     import SubscribersTable from '../../../components/pages/CommunityAnalytics/SubscribersTable.vue';
 
     export default {
@@ -28,6 +28,11 @@
                 type: Object,
                 default: () => {},
             },
+
+            period: {
+                type: String,
+                default: () => '',
+            }
         },
 
         data() {
@@ -43,7 +48,19 @@
                     }
                 ]
             }
-        }
+        },
+
+        watch: {
+            period() {
+                this.filter();
+            }
+        },
+
+        methods: {
+            filter() {
+                this.$emit('filter', { name: 'subscribers', period: this.period });
+            }
+        },
     }
 </script>
 
