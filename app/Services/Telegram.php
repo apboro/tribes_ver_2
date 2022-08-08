@@ -167,6 +167,9 @@ class Telegram extends Messenger
         return true;
     }
 
+    /**
+     * Проверка подключения сообщества
+     */
     public function checkCommunityConnect($hash)
     {
         $tc = TelegramConnection::whereHash($hash)
@@ -192,6 +195,8 @@ class Telegram extends Messenger
             $community->statistic()->create([
                 'community_id' => $community->id
             ]);
+            $this->addBot($community);
+            $this->addAuthorOnCommunity($community);
 
             $community->generateHash();
             $community->save();
@@ -206,6 +211,38 @@ class Telegram extends Messenger
         } else {
             return false;
         }
+    }
+
+    /**
+     * Добавить бота в таблицу telegram_users и telegram_users_community если его там нет
+     *
+     * @return void
+     */
+    protected function addBot($community)
+    {
+        $ty = TelegramUser::where('telegram_id', config('telegram_bot.bot.botId'))->select('telegram_id')->first();
+        if (!$ty) {
+            $ty = TelegramUser::create([
+                'telegram_id' => config('telegram_bot.bot.botId'),
+                'auth_date' => now(),
+                'first_name' => config('telegram_bot.bot.botName'),
+                'user_name' =>  config('telegram_bot.bot.botFullName'),
+            ]);
+        }
+
+        $ty->communities()->attach($community);
+    }
+
+    /**
+     * Добавить автора в таблицу telegram_users_community
+     *
+     * @return void
+     */
+    protected function addAuthorOnCommunity($community)
+    {
+        $ty = TelegramUser::where('user_id', $community->owner)->first();
+        if ($ty)
+            $ty->communities()->attach($community);
     }
 
     public function invokeCommunityConnect($user, $type)

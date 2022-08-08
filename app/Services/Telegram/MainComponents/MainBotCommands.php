@@ -306,6 +306,8 @@ class MainBotCommands
                 if ($payment) {
                     $payment->telegram_user_id = $ctx->getUserID();
                     $payment->save();
+                } else {
+                    $ctx->reply('Ваша подписка уже актевированна, что-бы получить ссылку на ресурс пройдите в раздел "Мои подписки".');
                 }
 
                 if ($payment && $payment->type == 'tariff' && $payment->status == 'CONFIRMED') {
@@ -322,10 +324,8 @@ class MainBotCommands
                     $variant = $community->tariff->variants()->find($payment->payable_id);
                     if (!$ty->tariffVariant->find($variant->id)) {
                         foreach ($ty->tariffVariant->where('tariff_id', $community->tariff->id) as $userTariff) {
-
-                            if ($userTariff->id !== $variant->id) {
+                            if ($userTariff->id !== $variant->id) 
                                 $ty->tariffVariant()->detach($userTariff->id);
-                            }
                         }
                         $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i')]);
                     } else {
@@ -335,6 +335,7 @@ class MainBotCommands
                             'isAutoPay' => true
                         ]);
                     }
+
                     $payment->activated = true;
                     $payment->save();
 
@@ -759,13 +760,11 @@ class MainBotCommands
         try {
             Menux::Create('menu', 'main')
                 ->row()->btn('🚀Личный кабинет')
-                ->row()->btn('📂Мои подписки')
-                ->row()->btn('🔍Найти подписку');
+                ->row()->btn('📂Мои подписки');
 
             Menux::Create('menuCustom', 'custom')
                 ->row()->btn('🚀Личный кабинет')
-                ->row()->btn('📂Мои подписки')
-                ->row()->btn('🔍Найти подписку');
+                ->row()->btn('📂Мои подписки');
         } catch (MenuxException $e) {
         }
     }
