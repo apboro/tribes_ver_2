@@ -21,4 +21,5 @@ return [
     'settings_success_message' => 'Tariff settings have been successfully updated',
     'description_publication_tariffs' => 'Description for the publication of tariffs',
     'available_rates' => 'Available rates',
+    'number_button' => 'Landing page button number',
 ];

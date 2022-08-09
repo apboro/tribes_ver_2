@@ -21,4 +21,5 @@ return [
     'settings_success_message' => 'Настройки тарифов были успешно обновлены',
     'description_publication_tariffs' => 'Описание к публикации тарифов',
     'available_rates' => 'Доступные тарифы',
+    'number_button' => 'Номер кнопки на посадочной странице',
 ];
