@@ -8,8 +8,7 @@ use App\Services\File\common\HandlerContract;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Intervention\Image\ImageManagerStatic as Image;
-use Mockery\Exception;
-use function PHPUnit\Framework\isEmpty;
+use Illuminate\Support\Facades\Validator;
 
 class ImageHandler implements HandlerContract
 {
@@ -23,6 +22,13 @@ class ImageHandler implements HandlerContract
         $this->repository = $repository;
     }
 
+    /**
+     * @param UploadedFile $file
+     * @param File $model
+     * @param array $procedure
+     * @return File
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function startService(UploadedFile $file, File $model, array $procedure): File
     {
         $this->validateFile($file);
@@ -46,8 +52,9 @@ class ImageHandler implements HandlerContract
 
         $hash = $this->repository->setHash($fileProcessed);
         $filename = $hash . '.' . $fileProcessed->guessClientExtension();
+
         $url = $this->repository->storeFileNew($fileProcessed, $this->path, $filename);
-//dd($fileProcessed->getSize());
+
         $model['mime'] = $fileProcessed->getMimeType();
         $model['size'] = $fileProcessed->getSize();
         $model['isImage'] = 1;
@@ -112,31 +119,26 @@ class ImageHandler implements HandlerContract
     {
         $fileProcessed->save(storage_path('app/public/temp/') . 'temp.png', 100, 'png');
 
-        $file = new UploadedFile($fileProcessed->dirname . '/' . $fileProcessed->basename, $fileProcessed->basename, $fileProcessed->mime);
-
+        $file = new UploadedFile($fileProcessed->dirname . '/' . $fileProcessed->basename, $fileProcessed->basename, $fileProcessed->mime, null, true);
         return $file;
     }
 
-
     //Валидация файла
+
+    /**
+     * @param $file
+     * @throws \Illuminate\Validation\ValidationException
+     */
     private function validateFile($file)
     {
-        $this->sizeValidate($file);
+        $data = ['file' => $file];
 
-//        dd(empty($this->errors));
-        if (!empty($this->errors)) {
-            return 'Максимальный размер файла 2 Mb';
-        }
+        Validator::make($data,[
+            'file' => 'mimes:jpg,jpeg,png,gif|max:2048',
+        ],[
+            'file.max' => 'Размер изображения превышает 2MB',
+            'file.mimes' => 'Поддерживаемые форматы JPG, JPEG, PNG, GIF',
+        ])->validate();
     }
-
-    private function sizeValidate($file)
-    {
-        $parameter = $file->getSize()/(1024 * 1024);//Размер файла в mb
-
-        if ($parameter > 2) {
-            array_push($this->errors, 'Максимальный размер файла 2 Mb');
-        }
-    }
-
 
 }

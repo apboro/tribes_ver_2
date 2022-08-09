@@ -53,7 +53,6 @@ class DonateRequest extends FormRequest
             'description.max' => 'Максимальное количество знаков поля "Общее описание доната" 600',
 
             'success_description.max' => 'Максимальное количество знаков поля "Текст сообщения" 600',
-
         ];
     }
 }

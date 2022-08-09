@@ -2,16 +2,15 @@
 
 namespace App\Services\File\Handlers;
 
-
 use App\Models\File;
 use App\Repositories\File\FileRepository;
 use App\Services\File\common\HandlerContract;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Validator;
 
 class AudioHandler implements HandlerContract
 {
-
     private $path;
     private FileRepository $repository;
 
@@ -21,9 +20,17 @@ class AudioHandler implements HandlerContract
         $this->repository = $repository;
     }
 
+    /**
+     * @param UploadedFile $file
+     * @param File $model
+     * @param array $procedure
+     * @return File
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function startService(UploadedFile $file, File $model, array $procedure): File
     {
-//        dd($this->path);
+        $this->validateFile($file);
+
         $hash = $this->repository->setHash($file);
         $filename = $hash . '.' . $file->guessClientExtension();
 
@@ -37,18 +44,27 @@ class AudioHandler implements HandlerContract
         $model['hash'] = $hash;
 
         $model->save();
-//        dd($file);
+
         return $model;
     }
 
-    private function validateAudio()
-    {
-        $validated = $this->request->validate([
-            'file' => 'required|mimes:mp3,wav,aac|max:100480',
-        ]);
+    //Валидация файла
 
-        return $validated;
+    /**
+     * @param $file
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    private function validateFile($file)
+    {
+        $data = ['file' => $file];
+        Validator::make($data,[
+            'file' => 'mimes:mp3,wav,aac|max:20480',
+        ],[
+            'file.max' => 'Размер аудио превышает 20MB',
+            'file.mimes' => 'Поддерживаемые форматы MP3, WAV, AAC',
+        ])->validate();
     }
+
 
 
 }

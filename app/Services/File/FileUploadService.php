@@ -2,7 +2,6 @@
 
 namespace App\Services\File;
 
-use App\Models\Course;
 use App\Models\File;
 use App\Models\User;
 use App\Services\File\common\FileCollection;
@@ -12,10 +11,7 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Log\Logger;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Storage;
 use Mockery\Exception;
 
@@ -49,12 +45,10 @@ class FileUploadService
     )
     {
         $this->modelsFile = new \Illuminate\Database\Eloquent\Collection();
-//        $this->modelsFile = new FileCollection();
         $this->config = $config;
         $this->logger = $logger;
 
     }
-
 
     /**
      * @param $request
@@ -62,7 +56,6 @@ class FileUploadService
      */
     public function procRequest($request): EloquentCollection
     {
-//dd($request);
         $this->request = $request;
 
         if (isset($request['entity'])){
@@ -109,9 +102,8 @@ class FileUploadService
     {
         /** @var UploadedFile $file */
         foreach ($collect as $file) {
-//            dd($handlers);
             $type = $file->getMimeType();
-//dd($type);
+
             if($this->checkImage($type)) {
                 $file_type = 'image';
                 $config = $handlers[$file_type . '_handler'];
@@ -180,23 +172,22 @@ class FileUploadService
     }
 
     /**
-     * @param Request $request
-     * @return void
+     * @param $request
+     * @return UploadedFile
      */
     protected function getFileFromBase64($request): UploadedFile
     {
         $image = $request['base_64_file'];
-        //todo выбрать из строки mimeType
+
         $image = str_replace('data:image/png;base64,', '', $image);
         $mimeType = 'image/png';
         $image = str_replace(' ', '+', $image);
-//            dd(base64_decode($image));
         $imageName = 'temp.png';
         if(! Storage::disk('local')->put($imageName, base64_decode($image), $lock = true)) {
             throw new Exception('Не удалось сохранить файл');
         }
 
-        return new UploadedFile(Storage::disk('local')->path($imageName),'temporary_file_name',$mimeType);
+        return new UploadedFile(Storage::disk('local')->path($imageName),'temp.png',$mimeType, null, true);
     }
 
     /**

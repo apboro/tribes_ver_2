@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Repositories\File;
-
 
 use App\Models\File;
 use App\Models\User;
@@ -14,38 +12,6 @@ use Illuminate\Support\Facades\File as FileFacade;
 
 class FileRepository implements FileRepositoryContract
 {
-    public $imageTypes = [
-        'image/jpeg',
-        'image/jpg',
-        'image/png',
-        'image/gif',
-        'application/x-empty'
-    ];
-
-    public $videoTypes = [
-        'video/mp4',
-        'video/x-m4v'
-    ];
-
-    public $audioTypes = [
-        'audio/mp4',
-        'audio/aac',
-        'audio/mpeg',
-    ];
-
-    private $fields = [
-        'mime',
-        'size',
-        'filename',
-        'rank',
-        'description',
-        'isImage',
-        'isVideo',
-        'isAudio',
-        'url',
-        'hash',
-        'uploader_id',
-    ];
 
     public function get($id)
     {
@@ -80,8 +46,7 @@ class FileRepository implements FileRepositoryContract
             "details" => "Файл успешно удален"
         ]);
     }
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
+
     public function storeFileNew(UploadedFile $file, $path, $filename)
     {
         $absolutPath = $path . '/' . Carbon::now()->format('d_m_y');

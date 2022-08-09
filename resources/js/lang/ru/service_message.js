@@ -14,7 +14,6 @@ export const service_message = {
 
     // Info
     select_image_area: 'Выберите нужную область изображения',
-    command_copied: 'Команда скопирована',
     redirect_message: 'Вы будете перенаправлены в панель управления сообществом через',
 
     // Warning

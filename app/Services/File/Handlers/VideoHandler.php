@@ -2,12 +2,12 @@
 
 namespace App\Services\File\Handlers;
 
-
 use App\Models\File;
 use App\Repositories\Video\VideoRepository;
 use App\Services\WebcasterPro;
 use App\Services\File\common\HandlerContract;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Validator;
 
 class VideoHandler implements HandlerContract
 {
@@ -18,8 +18,16 @@ class VideoHandler implements HandlerContract
         $this->repository = $repository;
     }
 
+    /**
+     * @param UploadedFile $file
+     * @param File $model
+     * @param array $procedure
+     * @return File
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function startService(UploadedFile $file, File $model, array $procedure): File
     {
+        $this->validateFile($file);
 
         $webcaster = new WebcasterPro();
         $resp = $webcaster->uploads($file);
@@ -40,4 +48,20 @@ class VideoHandler implements HandlerContract
         return $model;
     }
 
+    //Валидация файла
+
+    /**
+     * @param $file
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    private function validateFile($file)
+    {
+        $data = ['file' => $file];
+        Validator::make($data,[
+            'file' => 'mimes:mp4|max:102400',
+        ],[
+            'file.max' => 'Размер видио превышает 100MB',
+            'file.mimes' => 'Поддерживаемые форматы MP4',
+        ])->validate();
+    }
 }

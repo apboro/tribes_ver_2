@@ -111,14 +111,12 @@ class DonateRepository implements DonateRepositoryContract
 
         if (isset($request['files'])) {
             foreach ($request['files'] as $key => $file) {
-//                dd($request['files']);
                 $decoded = json_decode($file['crop']);
                 if (isset($file['image'])) {
                     $fileData['file'] = $file['image'];
                     $fileData['crop'] = $decoded->isCrop;
                     $fileData['cropData'] = $decoded->cropData;
                     $fileData['entity'] = $request['entity'];
-//                    dd($file['image']->getSize());
 
                     $f = $this->fileUploadService->procRequest($fileData)[0];
 
@@ -135,7 +133,6 @@ class DonateRepository implements DonateRepositoryContract
                     }
                 }
                 if ($file['delete'] == "true") {
-
                     switch ($key) {
                         case 'main':
                             $this->donateModel->main_image_id = 0;
