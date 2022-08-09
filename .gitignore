@@ -11,6 +11,8 @@
 /public/ico/*
 /public/admin/js
 /public/admin/js/*
+/public/admin/css
+/public/admin/css/*
 /public/fonts
 /public/images
 /public/images/*
@@ -48,6 +50,5 @@ _ide_helper.php
 
 test.json
 /videos/donate-success.mp4
-package-lock.json
 public/mix-manifest.json
 public/temp.png
