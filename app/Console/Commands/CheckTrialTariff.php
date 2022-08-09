@@ -68,15 +68,15 @@ class CheckTrialTariff extends Command
 
                             if ($variant->pivot->days < 1 and $tariffVariant !== NULL) {
 
-                                $this->telegramService->kickUser(config('telegram_bot.bot.botName'), $user->telegram_id, $variant->tariff->community->connection->chat_id);
-                                $user->communities()->detach($variant->tariff->community->id);
+                                // $this->telegramService->kickUser(config('telegram_bot.bot.botName'), $user->telegram_id, $variant->tariff->community->connection->chat_id);
+                                // $user->communities()->detach($variant->tariff->community->id);
 
-                                if ($variant->tariff->tariff_notification == true) {
-                                    $this->telegramService->sendMessageFromBot(config('telegram_bot.bot.botName'),
-                                        $variant->tariff->community->connection->telegram_user_id,
-                                        'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа', false, []
-                                    );
-                                }
+                                // if ($variant->tariff->tariff_notification == true) {
+                                //     $this->telegramService->sendMessageFromBot(config('telegram_bot.bot.botName'),
+                                //         $variant->tariff->community->connection->telegram_user_id,
+                                //         'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа', false, []
+                                //     );
+                                // }
                             }
                         }
                     }
