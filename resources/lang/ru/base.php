@@ -12,7 +12,7 @@ return [
     'amount_max' => 'Макс. сумма',
     'answer' => 'Ответ',
     'arbitrary_amount' => 'Произвольная сумма',
-    'audience' => 'Аудитория',
+
     'avatar' => 'Аватар',
     // B
     'back' => 'Назад',
@@ -80,6 +80,8 @@ return [
     'months' => 'Месяцы',
     'months_2_low' => 'месяцев',
     'months_3_low' => 'месяца',
+    'minute_low' => 'минута',
+    'minutes_low' => 'минут',
     // N
     'name' => 'Имя',
     'next' => 'Далее',
@@ -111,7 +113,7 @@ return [
     'standart' => 'Стандартный',
     'statistics' => 'Статистика',
     'status' => 'Статус',
-    'subscribers' => 'Подписчики',
+    'subscribers' => 'Участники',
 
     'audience' => 'Аудитория',
     'product' => 'Медиапродукты',

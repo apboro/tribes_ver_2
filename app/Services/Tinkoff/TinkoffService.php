@@ -30,7 +30,6 @@ class TinkoffService
         return $this->payTerminal->init($args);
     }
 
-
     public static function checkStatus($data, $payment, $previous_status)
     {
         DB::beginTransaction();

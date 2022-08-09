@@ -19,10 +19,10 @@ if (window.token) {
 import { Cropper } from 'vue-advanced-cropper';
 import store from './courseStore';
 //import store from './store/store';
-import Text from "./components/Course/components/Media/Text";
-import Video from "./components/Course/components/Media/Video";
-import Audio from "./components/Course/components/Media/Audio";
-import Image from "./components/Course/components/Media/Image";
+import Text from "./components/pages/Course/Media/Text";
+import Video from "./components/pages/Course/Media/Video";
+import Audio from "./components/pages/Course/Media/Audio";
+import Image from "./components/pages/Course/Media/Image";
 
 
 
@@ -40,7 +40,7 @@ Vue.use(VideoPlayer)
 Vue.use(AudioVisual)
 Vue.component('cropper', Cropper);
 
-import Editor from './components/Course/Editor';
+import Editor from './pages/Editor';
 import { Dictionary } from './lang/Dictionary';
 
 import BurgerMenu from './plugins/Helper/BurgerMenu';

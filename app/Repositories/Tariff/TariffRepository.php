@@ -76,14 +76,14 @@ class TariffRepository implements TariffRepositoryContract
                         $ty->communities()->updateExistingPivot($community->id, [
                             'excluded' => $excluded,
                         ]);
-                        $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
+                        // $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
                     }
                     
                     if ($excluded == false) {
                         $ty->communities()->updateExistingPivot($community->id, [
                             'excluded' => $excluded,
                         ]);
-                        $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
+                        // $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
                     }
                 }
                 

@@ -26,7 +26,7 @@ window['Burger'] = new BurgerMenu();
 
 import Vue from 'vue';
 import store from './store/store';
-import Knowledge from './components/Knowledge/Knowledge';
+import Knowledge from './pages/Knowledge';
 import PortalVue from 'portal-vue';
 
 Vue.use(PortalVue)

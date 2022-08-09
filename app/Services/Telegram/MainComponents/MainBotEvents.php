@@ -332,6 +332,7 @@ class MainBotEvents
     {
         $data  = ArrayHelper::toArray($this->data);
         if( ArrayHelper::getValue($data,'message.message_id') &&
+            ArrayHelper::getValue($data,'message.from.is_bot') !== true &&
             ArrayHelper::getValue($data,'message.text') &&
             empty(ArrayHelper::getValue($data,'message.reply_to_message'))
         ) {

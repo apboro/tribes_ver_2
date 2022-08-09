@@ -3,8 +3,8 @@
 return [
     'add_tariff' => 'Добавить тариф',
     'create_tariff_instruction' => 'Не добавлено ни одного тарифа. Для добавления тарифа нажмите на кнопку "Добавить тариф"',
-    'create_tariff_instruction_active' => 'Отсутвствуют активные тарифы. Добавьте активный тариф или измените статус неактивного тарифа',
-    'create_tariff_instruction_inactive' => 'Неактивные тарифы отсутвствуют',
+    'create_tariff_instruction_active' => 'Отсутствуют активные тарифы. Добавьте активный тариф или измените статус неактивного тарифа',
+    'create_tariff_instruction_inactive' => 'Неактивные тарифы отсутствуют',
     'tariff_name' => 'Название тарифа',
     'trial_period' => 'Пробный период',
     'change_tariff' => 'Изменить тариф',

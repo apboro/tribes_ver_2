@@ -40,8 +40,15 @@
                     <td><span class="text-muted">{{ user.id }}</span></td>
                     <td><a href="invoice.html" class="text-reset" tabindex="-1">Icons</a></td>
                     <td>
-                        <span class="flag flag-country-pl"></span>
-                        {{ user.name }}
+                        <transition>
+                            <!-- @click="getUser(user)" -->
+                            <!-- :to="'/user/' + user.id" -->
+                            <router-link 
+                                :to="{name:'Profile', params: {id: user.id}}"
+                            >
+                                {{ user.name }}
+                            </router-link>
+                        </transition>
                     </td>
                     <td :title="user.phone_confirmed ? 'Подтвержден' : 'Не подтвержден'">
                         {{ user.phone }}
@@ -71,6 +78,7 @@
                 </tbody>
             </table>
         </div>
+
         <div v-if="users.per_page < users.total" class="card-footer d-flex align-items-center">
             <p class="m-0 text-muted">Показано <span>{{ users.per_page }}</span> из <span>{{ users.total }}</span> записей</p>
             <ul class="pagination m-0 ms-auto">
@@ -93,6 +101,7 @@ export default {
     name: "Users",
     mixins: [FilterDataUsers],
 
+
     watch: {
         filter_data: {
             deep: true,
@@ -109,9 +118,16 @@ export default {
 
     computed: {
         users() {
+            // console.log(this.$store.getters.users);
             return this.$store.getters.users;
         }
     },
+    methods: {
+        // getUser(obj){
+        //     console.log(this.$route.params)
+        //     // this.$router.push({ name: 'Profile' })
+        // }
+    }
 }
 </script>
 
