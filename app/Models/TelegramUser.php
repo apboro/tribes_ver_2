@@ -56,6 +56,11 @@ class TelegramUser extends Model
         return $this->tariffVariant()->where('tariff_id', $id)->first();
     }
 
+    function getVariantById($id)
+    {
+        return $this->tariffVariant()->find($id);
+    }
+
     function getCommunityById($id)
     {
         return $this->communities()->where('community_id', $id)->first();
