@@ -44,7 +44,7 @@ class Mailer
                     'subject' => $subject, // Обязательно
                     'name' => $from,
                     'html' => $html, // Обязательно
-                    'from' => "no-reply@spodial.com", // Обязательно
+                    'from' => env('MAIL_FROM_ADDRESS', 'no-reply@example.com'), // Обязательно
                     'to' => $to, // Обязательно
                     'headers' => "[{ 'msg-type': 'media' }]",
                     'text' => "ТЕСТ"
@@ -61,7 +61,7 @@ class Mailer
                 'subject' => $subject, // Обязательно
                 'name' => $from,
                 'html' => $html, // Обязательно
-                'from' => "no-reply@spodial.com", // Обязательно
+                'from' => env('MAIL_FROM_ADDRESS', 'no-reply@example.com'), // Обязательно
                 'to' => $to, // Обязательно
                 'headers' => "[{ 'msg-type': 'media' }]",
                 'text' => "ТЕСТ"
