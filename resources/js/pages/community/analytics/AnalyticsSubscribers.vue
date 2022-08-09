@@ -1,25 +1,23 @@
 <template>
     <div >
         <subscribers-chart
-            
-            :data="GET_SUBSCRIBERS_DATA.data"
+            :data="GET_SUBSCRIBERS_CHART_DATA"
         />
-        
         
         <progress-list
             class="analytics-community__progress"
-            :progressItems="GET_SUBSCRIBERS_DATA.progressItems"
+            :progressItems="progressList"
         />
 
         <subscribers-table
             class="analytics-community__table"
-            :subscribers="GET_SUBSCRIBERS_DATA.subscribers"
+            :subscribers="GET_TABLE_DATA"
         />
     </div>
 </template>
 
 <script>
-    import { mapGetters, mapActions } from 'vuex';
+    import { mapGetters, mapActions, mapMutations } from 'vuex';
     import SubscribersChart from '../../../components/pages/Community/Analytics/SubscribersChart.vue';
     import SubscribersTable from '../../../components/pages/Community/Analytics/SubscribersTable.vue';
     import ProgressList from '../../../components/pages/Community/Analytics/ProgressList.vue';
@@ -43,21 +41,44 @@
         data() {
             return {
                 name: 'subscribers',
+                data2: {}
             }
         },
 
         computed: {
-            ...mapGetters('community_analytics', ['GET_DATA_ITEM', 'GET_DATA', 'GET_SUBSCRIBERS_DATA']),
+            ...mapGetters('community_analytics', [
+                'GET_TABLE_DATA',
+                'GET_SUBSCRIBERS_CHART_DATA',
+                'GET_SUBSCRIBERS_PROGRESS_DATA'
+            ]),
+
+            progressList() {
+                return [
+                    {
+                        text: 'Не заходили в чат',
+                        value: Math.floor(this.GET_SUBSCRIBERS_PROGRESS_DATA.no_visit_chat / this.GET_SUBSCRIBERS_PROGRESS_DATA.total * 100),
+                    },
+                    {
+                        text: 'Ни одного сообщения и реакции',
+                        value: Math.floor(this.GET_SUBSCRIBERS_PROGRESS_DATA.no_activity / this.GET_SUBSCRIBERS_PROGRESS_DATA.total * 100),
+                    }
+                ];
+            }
         },
 
         watch: {
             period() {
                 this.filter();
+            },
+
+            GET_SUBSCRIBERS_CHART_DATA() {
+                this.data2 = this.GET_SUBSCRIBERS_CHART_DATA;
             }
         },
 
         methods: {
             ...mapActions('community_analytics', ['LOAD_DATA_ITEM', "LOAD_SUBSCRIBERS_DATA"]),
+            ...mapMutations('community_analytics', ['SET_DATA_ITEM']),
 
             filter() {
                 this.$emit('filter', { name: this.name, period: this.period });
@@ -65,7 +86,10 @@
         },
 
         mounted() {
-            this.LOAD_SUBSCRIBERS_DATA();
+            console.log(this.GET_SUBSCRIBERS_CHART_DATA);
+            this.LOAD_DATA_ITEM(this.name);
+
+           
 
             this.filter();
         }

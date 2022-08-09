@@ -1,12 +1,12 @@
 <template>
     <div >
         <messages-chart
-            :data="GET_MESSAGES_DATA.data"
+            :data="data2.data"
         />
 
         <messages-table
             class="analytics-community__table"
-            :subscribers="GET_MESSAGES_DATA.subscribers"
+            :subscribers="data2.subscribers"
         />
     </div>
 </template>
@@ -34,6 +34,8 @@
         data() {
             return {
                 name: 'messages',
+
+                data2: {}
             }
         },
 
@@ -44,6 +46,10 @@
         watch: {
             period() {
                 this.filter();
+            },
+
+            GET_DATA_ITEM() {
+                this.data2 = this.GET_DATA_ITEM;
             }
         },
 
@@ -56,7 +62,7 @@
         },
 
         async mounted() {
-            await this.LOAD_MESSAGES_DATA();
+            await this.LOAD_DATA_ITEM(this.name);
             console.log();
 
             this.filter();

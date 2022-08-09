@@ -7,11 +7,4 @@ export default ({
         state._dataItem = dataItem;
     },
 
-    SET_SUBSCRIBERS_DATA(state, subscribers) {
-        state._subscribers = subscribers;
-    },
-
-    SET_MESSAGES_DATA(state, messages) {
-        state._messages = messages;
-    }
 });

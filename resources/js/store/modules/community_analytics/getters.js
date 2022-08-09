@@ -7,15 +7,24 @@ export default ({
         return state._dataItem;
     },
 
-    GET_DATA(state) {
-        return state._dataItem.data;
+    GET_TABLE_DATA(state) {
+        return state._dataItem.items;
     },
 
-    GET_SUBSCRIBERS_DATA(state) {
-        return state._subscribers;
+    GET_SUBSCRIBERS_CHART_DATA(state) {
+        return {
+            total: state._dataItem.total,
+            joined: state._dataItem.joined,
+            left: state._dataItem.left,
+        };
     },
 
-    GET_MESSAGES_DATA(state) {
-        return state._messages;
+    GET_SUBSCRIBERS_PROGRESS_DATA(state) {
+        return {
+            total: state._dataItem.total,
+            no_activity: state._dataItem.no_activity,
+            no_visit_chat: state._dataItem.no_visit_chat,
+        };
     },
+
 });

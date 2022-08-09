@@ -44,194 +44,51 @@ export default ({
         commit('SET_DATA_LIST', data)
     },
 
-    LOAD_SUBSCRIBERS_DATA({ commit }) {
-        const data = {
-            data: {
-                common: {
-                    text: 'Всего подписчиков в сообществе',
-                    value: '2356'
-                },
-
-                joined: {
-                    data: [500, 200, 100, 60, 155, 80, 220, 300, 100, 400],
-                    legend: {
-                        text: 'Вступили в сообщество',
-                        value: '+96',
-                    }
-                },
-
-                left: {
-                    data: [100, 50, 220, 180, 70, 160, 90, 130, 400, 300],
-                    legend: {
-                        text: 'Покинули сообщество',
-                        value: '-19',
-                    }
-                }
-            },
-            
-            progressItems: [
-                {
-                    text: 'Не заходили в чат',
-                    value: 23
-                },
-
-                {
-                    text: 'Ни одного сообщения и реакции',
-                    value: 46
-                }
-            ],
-            subscribers: [
-                {
-                    message: 'message text',
-                    username: 'username text',
-                    date: 'date text',
-                    reaction: 'reaction text',
-                    answer: 'answer text',
-                    utility: 'utility text',
-                },
-                {
-                    message: 'message text',
-                    username: 'username text',
-                    date: 'date text',
-                    reaction: 'reaction text',
-                    answer: 'answer text',
-                    utility: 'utility text',
-                },
-                {
-                    message: 'message text',
-                    username: 'username text',
-                    date: 'date text',
-                    reaction: 'reaction text',
-                    answer: 'answer text',
-                    utility: 'utility text',
-                }
-            ]
-        };
-
-        commit('SET_SUBSCRIBERS_DATA', data);
-    },
-
-    LOAD_MESSAGES_DATA({ commit }) {
-        const data = {
-            data: {
-                common: {
-                    text: 'Всего подписчиков в сообществе',
-                    value: '2356'
-                },
-
-                joined: {
-                    data: [500, 200, 100, 60, 155, 80, 220, 300, 100, 400],
-                    legend: {
-                        text: 'Вступили в сообщество',
-                        value: '+96',
-                    }
-                },
-
-                useful: {
-                    data: [100, 50, 220, 180, 70, 160, 90, 130, 400, 300],
-                    legend: {
-                        text: 'Полезных сообщений',
-                        value: '+219',
-                    }
-                }
-            },
-            
-            subscribers: [
-                {
-                    message: 'message text',
-                    username: 'username text',
-                    date: 'date text',
-                    reaction: 'reaction text',
-                    answer: 'answer text',
-                    utility: 'utility text',
-                },
-                {
-                    message: 'message text',
-                    username: 'username text',
-                    date: 'date text',
-                    reaction: 'reaction text',
-                    answer: 'answer text',
-                    utility: 'utility text',
-                },
-                {
-                    message: 'message text',
-                    username: 'username text',
-                    date: 'date text',
-                    reaction: 'reaction text',
-                    answer: 'answer text',
-                    utility: 'utility text',
-                }
-            ]
-        };
-
-        commit('SET_MESSAGES_DATA', data);
-    },
-
     LOAD_DATA_ITEM({ commit }, name) {
         let data = '';
         switch (name) {
             case 'subscribers':
                 data = {
-                    data: {
-                        common: {
-                            text: 'Всего подписчиков в сообществе',
-                            value: '2356'
-                        },
-    
-                        joined: {
-                            data: [500, 200, 100, 60, 155, 80, 220, 300, 100, 400],
-                            legend: {
-                                text: 'Вступили в сообщество',
-                                value: '+96',
-                            }
-                        },
-    
-                        left: {
-                            data: [100, 50, 220, 180, 70, 160, 90, 130, 400, 300],
-                            legend: {
-                                text: 'Покинули сообщество',
-                                value: '-19',
-                            }
-                        }
-                    },
-                    
-                    progressItems: [
+                    items: [
                         {
-                            text: 'Не заходили в чат',
-                            value: 23
+                            message: 'message text',
+                            username: 'username text',
+                            date: 'date text',
+                            reaction: 'reaction text',
+                            answer: 'answer text',
+                            utility: 'utility text',
                         },
-        
                         {
-                            text: 'Ни одного сообщения и реакции',
-                            value: 46
+                            message: 'message text',
+                            username: 'username text',
+                            date: 'date text',
+                            reaction: 'reaction text',
+                            answer: 'answer text',
+                            utility: 'utility text',
+                        },
+                        {
+                            message: 'message text',
+                            username: 'username text',
+                            date: 'date text',
+                            reaction: 'reaction text',
+                            answer: 'answer text',
+                            utility: 'utility text',
                         }
                     ],
-                    subscribers: [
-                        {
-                            message: 'message text',
-                            username: 'username text',
-                            date: 'date text',
-                            reaction: 'reaction text',
-                            answer: 'answer text',
-                            utility: 'utility text',
-                        },
-                        {
-                            message: 'message text',
-                            username: 'username text',
-                            date: 'date text',
-                            reaction: 'reaction text',
-                            answer: 'answer text',
-                            utility: 'utility text',
-                        },
-                        {
-                            message: 'message text',
-                            username: 'username text',
-                            date: 'date text',
-                            reaction: 'reaction text',
-                            answer: 'answer text',
-                            utility: 'utility text',
-                        }
-                    ]
+                    total: 2356,
+                    
+                    joined: {
+                        items: [500, 200, 100, 60, 155, 80, 220, 300, 100, 400],
+                        total: 96,
+                    },
+                    
+                    left: {
+                        items: [100, 50, 220, 180, 70, 160, 90, 130, 400, 300],
+                        total: 19,
+                    },
+
+                    no_visit_chat: 400,
+                    no_activity: 650,
                 };
             break;
 
@@ -289,8 +146,6 @@ export default ({
                 };
             break;
         }
-
-        
 
         commit('SET_DATA_ITEM', data);
     }

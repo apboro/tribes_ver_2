@@ -3,11 +3,11 @@
         <div class="chart-analytics-community__header">
             <div class="chart-analytics-community__label">
                 <span class="chart-analytics-community__label-text">
-                    {{ data.common.text }}
+                    Всего подписчиков в сообществе
                 </span>
 
                 <span class="chart-analytics-community__label-value">
-                    {{ data.common.value }}
+                    {{ data.total }}
                 </span>
             </div>
 
@@ -16,14 +16,14 @@
                 @click="toggleData('joined')"
             >
                 <span class="chart-analytics-community__label-text">
-                    {{ data.joined.legend.text }}
+                    Вступили в сообщество
                 </span>
 
                 <span
                     class="chart-analytics-community__label-value"
                     :style="{ color: joined.color }"
                 >
-                    {{ data.joined.legend.value }}
+                    +{{ data.joined.total }}
                 </span>
             </button>
         </div>
@@ -43,11 +43,11 @@
                     class="chart-analytics-community__label-value"
                     :style="{ color: left.color }"
                 >
-                    {{ data.left.legend.value }}
+                    -{{ data.left.total }}
                 </span>
              
                 <span class="chart-analytics-community__label-text">
-                    {{ data.left.legend.text }}
+                    Покинули сообщество
                 </span>
             </button>
         </div>
@@ -86,29 +86,22 @@
         },
 
         computed: {
-            hasData() {
-                return !!this.data;
-            },
-
             chartData() {
-                if (this.data) {
+                return {
+                    labels: this.data.joined.items,
+                    datasets: [
+                        {
+                            data: this.data.joined.items,                           
+                            borderColor: this.joined.color,
+                            hidden: this.joined.isVisible,
+                        },
 
-                    return {
-                        labels: this.data.joined.data,
-                        datasets: [
-                            {
-                                data: this.data.joined.data,                           
-                                borderColor: this.joined.color,
-                                hidden: this.joined.isVisible,
-                            },
-    
-                            {
-                                data: this.data.left.data,                           
-                                borderColor: this.left.color,
-                                hidden: this.left.isVisible,
-                            }
-                        ]
-                    }
+                        {
+                            data: this.data.left.items,                           
+                            borderColor: this.left.color,
+                            hidden: this.left.isVisible,
+                        }
+                    ]
                 }
             },
 
