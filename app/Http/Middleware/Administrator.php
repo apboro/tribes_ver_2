@@ -18,10 +18,11 @@ class Administrator
      */
     public function handle(Request $request, Closure $next)
     {
+
         if (Auth::user()->administrator) {
             return  $next($request);
         }
 
-        return redirect('/');
+        return response()->json(['message' => 'вы - не администратор'], 401);
     }
 }

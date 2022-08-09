@@ -72,7 +72,7 @@ let router =  new Router({
 
 router.beforeEach((to, from, next) => {
     const authRequired = !['/login'].includes(to.path);
-    const loggedIn = localStorage.getItem('token');
+    const loggedIn = sessionStorage.getItem('token');
     if (authRequired && !loggedIn) next({ name: 'login' })
     else next();
 });

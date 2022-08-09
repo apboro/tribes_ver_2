@@ -313,7 +313,7 @@ Route::any('/test', [TestBotController::class, 'index']);
 
 Route::any('/manager{any}', function () {
     return view('admin');
-})->where('any', '.*')->middleware('admin');
+})->where('any', '.*');
 
 Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name('telegram.interface');
 

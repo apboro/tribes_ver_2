@@ -21,6 +21,7 @@ export default {
     },
     computed: {
         layout() {
+          console.log((this.$route.meta.layout || 'main') + '-layout');
             return (this.$route.meta.layout || 'main') + '-layout'
         },
     },
@@ -36,7 +37,13 @@ export default {
         }
     },
     mounted(){
+        if(sessionStorage.getItem('token').length && sessionStorage.getItem('token').length !== null){
+          this.$router.push({name: 'login'}).catch((err) => {console.warn(err)})
+        }
+
+
         this.addBodyClassForSwitchThemeOnLoad();
+
     }
 }
 </script>

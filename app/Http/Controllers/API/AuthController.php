@@ -20,10 +20,9 @@ class AuthController extends Controller
                 'email' => ['Авторизация не удалась'],
             ]);
         }
-
         return response()->json([
             'status' => 'ok',
             'token' => $user->createToken('api-token')->plainTextToken
-        ]);
+        ], 200);
     }
 }

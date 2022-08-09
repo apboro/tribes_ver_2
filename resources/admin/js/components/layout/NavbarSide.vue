@@ -55,7 +55,8 @@ export default {
     },
     methods: {
         logout(){
-
+            sessionStorage.setItem('token', null);
+            window.axios.defaults.headers.common['Authorization'] = '';
             this.$router.push({name: 'login'}).catch(() => {});
         },
         ...mapActions(["LOAD_USER"]),
@@ -77,7 +78,7 @@ export default {
         },
     },
     mounted(){
-        this.LOAD_USER();
+        // this.LOAD_USER();
     }
 }
 </script>
