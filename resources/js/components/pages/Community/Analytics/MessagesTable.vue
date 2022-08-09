@@ -1,0 +1,54 @@
+<template>
+    <div>
+        <v-table
+            :classTable="'subscribers-table'"
+            :data="subscribers"
+            :tableOptions="tableOptions"
+            :isLoading="false"
+        >   
+        </v-table>
+    </div>
+</template>
+
+<script>
+    import VTable from '../../../ui/table/VTable.vue'
+    
+    export default {
+        name: 'MessagesTable',
+        
+        components: {
+            VTable
+        },
+
+        props: {
+            subscribers: {
+                type: Array,
+                default: () => []
+            }
+        },
+
+        data() {
+            return {
+                tableOptions: {
+                    header: [
+                        { type: 'text', text: 'Сообщение / реакция' },
+                        { type: 'text', text: 'Имя / никнейм автора' },
+                        { type: 'text', text: 'Дата' },
+                        { type: 'text', text: 'Реакции' },
+                        { type: 'text', text: 'Ответы' },
+                        { type: 'text', text: 'Полезность' },
+                    ],
+
+                    row: [
+                        { type: 'text', key: 'message' },
+                        { type: 'text', key: 'username' },
+                        { type: 'text', key: 'date' },
+                        { type: 'text', key: 'reaction' },
+                        { type: 'text', key: 'answer' },
+                        { type: 'text', key: 'utility' },
+                    ],
+                },
+            }
+        }
+    }
+</script>

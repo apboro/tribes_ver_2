@@ -17,7 +17,6 @@
             <analytics-list
                 v-if="visibleTab == 'list'"
                 class="analytics-community__tab"
-                :data="dataList"
                 :period="filterValue"
                 @filter="filter"
             />
@@ -25,7 +24,13 @@
             <analytics-subscribers
                 v-else-if="visibleTab == 'subscribers'"
                 class="analytics-community__tab"
-                :data="subscribers"
+                :period="filterValue"
+                @filter="filter"
+            />
+
+            <analytics-messages
+                v-else-if="visibleTab == 'messages'"
+                class="analytics-community__tab"
                 :period="filterValue"
                 @filter="filter"
             />
@@ -56,6 +61,7 @@
     import LineChart from '../../../components/ui/chart/LineChart.vue'; */
     import AnalyticsFilter from '../../../components/pages/Community/Analytics/AnalyticsFilter.vue';
     import AnalyticsSubscribers from './AnalyticsSubscribers.vue';
+    import AnalyticsMessages from './AnalyticsMessages.vue';
     import AnalyticsList from './AnalyticsList.vue';
     import AnalyticsNav from '../../../components/pages/Community/Analytics/AnalyticsNav.vue';
 
@@ -69,6 +75,7 @@
             AnalyticsFilter,
             AnalyticsList,
             AnalyticsSubscribers,
+            AnalyticsMessages,
         },
 
         data() {
@@ -83,74 +90,15 @@
                         text: 'Подписчики',
                         tabName: 'subscribers'
                     },
+
+                    {
+                        text: 'Сообщения',
+                        tabName: 'messages'
+                    },
                 ],
 
                 visibleTab: 'subscribers',
                 filterValue: 'week',
-
-                dataList: {
-                    subscribers: {
-                        title: 'Подписчики',
-                        data: [10, 30, 40, 20, 25, 50, 10, 5, 15, 25, 10, 45],
-                        infoLeft: {
-                            text: 'Прирост',
-                            value: '+96'
-                        },
-                        infoRight: {
-                            text: 'Полезных',
-                            value: '+13'    
-                        }
-                    },
-
-                    messages: {
-                        title: 'Сообщества',
-                        data: [3, 7, 25, 36, 42, 23, 31],
-                        infoLeft: {
-                            text: 'Отправлено',
-                            value: '+563'
-                        },
-                        infoRight: {
-                            text: 'Полезных',
-                            value: '+233'    
-                        }
-                    },
-
-                    finance: {
-                        title: 'Финансы',
-                        data: [100, 250, 150, 300, 250, 400, 350, 450],
-                        infoLeft: {
-                            text: 'Приход',
-                            value: '₽24.3k'
-                        },
-                        infoRight: {
-                            text: 'Можно вывести',
-                            value: '₽20,3k'    
-                        }
-                    }
-                },
-
-                subscribers: {
-                    common: {
-                        text: 'Всего подписчиков в сообществе',
-                        value: '2356'
-                    },
-
-                    joined: {
-                        data: [500, 200, 100, 60, 155, 80, 220, 300, 100, 400],
-                        legend: {
-                            text: 'Вступили в сообщество',
-                            value: '+96',
-                        }
-                    },
-
-                    left: {
-                        data: [100, 50, 220, 180, 70, 160, 90, 130, 400, 300],
-                        legend: {
-                            text: 'Покинули сообщество',
-                            value: '-19',
-                        }
-                    }
-                },
 
                 chartData2: {
                     labels: [ '1', '2', '3' ],

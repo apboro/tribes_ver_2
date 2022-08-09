@@ -5,7 +5,7 @@
         >
             <chart-card
                 class="analytics-community__card-item"
-                v-for="(data, index) in data"
+                v-for="(data, index) in GET_DATA_LIST"
                 :key="index"
                 :data="data"
             />
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+    import { mapGetters, mapActions } from 'vuex';
     import ChartCard from '../../../components/pages/Community/Analytics/ChartCard.vue';
 
     export default {
@@ -24,15 +25,14 @@
         },
 
         props: {
-            data: {
-                type: Object,
-                default: () => {},
-            },
-
             period: {
                 type: String,
                 default: () => '',
             }
+        },
+
+        computed: {
+            ...mapGetters('community_analytics', ['GET_DATA_LIST']),
         },
 
         watch: {
@@ -42,13 +42,18 @@
         },
 
         methods: {
+            ...mapActions('community_analytics', ['LOAD_DATA_LIST']),
+            
             filter() {
                 this.$emit('filter', { name: 'list', period: this.period });
             }
         },
 
         mounted() {
+            this.LOAD_DATA_LIST();
+
             this.filter();
+
         }
     }
 </script>

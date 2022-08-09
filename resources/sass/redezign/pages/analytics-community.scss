@@ -1,5 +1,5 @@
 .analytics-community {
-    &__filter {}
+    //&__filter {}
 
     &__card-list {
         display: grid;
@@ -12,9 +12,13 @@
         list-style: none;
     }
 
-    &__nav {}
+    //&__nav {}
 
     &__progress {
+        margin-top: 50px;
+    }
+
+    &__table {
         margin-top: 50px;
     }
 }

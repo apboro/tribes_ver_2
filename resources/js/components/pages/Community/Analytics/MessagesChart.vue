@@ -37,17 +37,17 @@
         <div class="chart-analytics-community__footer">
             <button
                 class="chart-analytics-community__label chart-analytics-community__label--pointer"
-                @click="toggleData('left')"
+                @click="toggleData('useful')"
             >
                 <span
                     class="chart-analytics-community__label-value"
-                    :style="{ color: left.color }"
+                    :style="{ color: useful.color }"
                 >
-                    {{ data.left.legend.value }}
+                    {{ data.useful.legend.value }}
                 </span>
              
                 <span class="chart-analytics-community__label-text">
-                    {{ data.left.legend.text }}
+                    {{ data.useful.legend.text }}
                 </span>
             </button>
         </div>
@@ -58,7 +58,7 @@
     import LineChart from '../../../ui/chart/LineChart.vue';
 
     export default {
-        name: 'SubscribersChart',
+        name: 'MessagesChart',
         
         components: {
             LineChart,
@@ -78,37 +78,30 @@
                     color: '#21C169',
                 },
                 
-                left: {
+                useful: {
                     isVisible: false,
-                    color: '#E24041',
+                    color: '#30AAF0',
                 }
             }
         },
 
         computed: {
-            hasData() {
-                return !!this.data;
-            },
-
             chartData() {
-                if (this.data) {
+                return {
+                    labels: this.data.joined.data,
+                    datasets: [
+                        {
+                            data: this.data.joined.data,                           
+                            borderColor: this.joined.color,
+                            hidden: this.joined.isVisible,
+                        },
 
-                    return {
-                        labels: this.data.joined.data,
-                        datasets: [
-                            {
-                                data: this.data.joined.data,                           
-                                borderColor: this.joined.color,
-                                hidden: this.joined.isVisible,
-                            },
-    
-                            {
-                                data: this.data.left.data,                           
-                                borderColor: this.left.color,
-                                hidden: this.left.isVisible,
-                            }
-                        ]
-                    }
+                        {
+                            data: this.data.useful.data,                           
+                            borderColor: this.useful.color,
+                            hidden: this.useful.isVisible,
+                        }
+                    ]
                 }
             },
 
@@ -146,10 +139,6 @@
             toggleData(value) {
                 this[value].isVisible = !this[value].isVisible;
             },
-        },
-
-        mounted() {
-            console.log(this.data);
         }
     }
 </script>
