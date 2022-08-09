@@ -26,7 +26,7 @@
                 Пробный период — {{$community->tariff->test_period}} {{App\Traits\Declination::defineDeclination($community->tariff->test_period)}}
             </button>
             @endif
-{{--            {{dd($community->tariff->getTariffVariants())}}--}}
+            
             @foreach ($community->tariff->getTariffVariants() as $tariff)
                 @if ($tariff->isActive == true && $tariff->price !== 0)
                     <button class="btn btn-outline-success waves-effect mb-1">
