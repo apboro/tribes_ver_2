@@ -13,6 +13,7 @@ Route::middleware(['auth:sanctum', 'admin'])->namespace('App\Http\Controllers\Ma
     Route::post('/users', 'UserController@list')->name('manager.users.list');
     Route::post('/user', 'UserController@get')->name('manager.user.get');
     Route::post('/auth', 'UserController@auth')->name('manager.users.self');
+    Route::post('/user/appoint-admin', 'UserController@appointAdmin')->name('manager.users.appoint-admin');
 
     //Payment
     Route::post('/payments', 'PaymentController@list')->name('manager.payments.list');
