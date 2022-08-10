@@ -117,9 +117,6 @@
                                                             type="btn" class="btn btn-primary mt-1 mb-1">
                                                             Присоедениться к сообществу в телеграм &rarr;
                                                         </a>
-                                                        <a href="{{ route('login', ['email' => $login]) }}" >
-                                                            
-                                                        </a>
                                                     </td>
                                                 </tr>
                                             </table>
