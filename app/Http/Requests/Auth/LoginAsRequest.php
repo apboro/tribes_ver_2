@@ -6,10 +6,10 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class LoginAsRequest extends FormRequest
 {
-    public function authorize()
+    /*public function authorize()
     {
         return true;
-    }
+    }*/
 
     public function rules()
     {

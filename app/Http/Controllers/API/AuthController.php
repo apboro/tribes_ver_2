@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginAsRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -31,13 +32,13 @@ class AuthController extends Controller
     {
         $user = User::where('id', $request->id)->first();
 
-        if (!$user) {
+        if (empty($user)) {
             throw ValidationException::withMessages([
-                'email' => ['Авторизация не удалась'],
+                'email' => ["Авторизация не удалась пользователь №{$request->id} не найден"],
             ]);
         }
         $token = $user->createToken('api-token');
-
+        Auth::guard('web')->setUser($user);
         return response()->json([
             'status' => 'ok',
             'token' => $token->plainTextToken
