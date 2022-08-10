@@ -7,6 +7,7 @@ use App\Models\Statistic;
 use App\Models\UserIp;
 use App\Repositories\File\FileRepositoryContract;
 use App\Filters\TariffFilter;
+use App\Models\Payment;
 use App\Models\TelegramUser;
 use App\Services\TelegramMainBotService;
 use Illuminate\Http\Request;
@@ -57,37 +58,126 @@ class TariffRepository implements TariffRepositoryContract
 
     public function perm($request, $community)
     {
-        if (isset($request->days)) {
-            foreach ($request->days as $userId => $days) {
-                $ty = TelegramUser::find($userId);
-                $variantId = $ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first()->id;
-                $ty->tariffVariant()->updateExistingPivot($variantId, [
-                    'days' => $days,
-                ]);
+        if (isset($request->days)) 
+            $this->updateDaysForUser($request, $community);
+
+        if (isset($request->excluded))
+            $this->excludedUser($request, $community);
+
+        if (isset($request->tariff))
+            $this->updateTariffForUser($request, $community);
+    }
+
+    /**
+     * Обновить или добавить дату оплаты тарифа
+     */
+    private function updatePaymentDate($date, $time, $community, $ty)
+    {
+        $newDate = $date . ' ' . $time;
+        if ($date !== null) {
+             $this->createPayment($community->id, $ty->telegram_id, $newDate);
+        } 
+    }
+
+    private function createPayment($communityId, $tyTelegramId, $date)
+    {
+        Payment::create([
+            'OrderId' => 1,
+            'community_id' => $communityId,
+            'add_balance' => 0,
+            'isNotify' => false,
+            'telegram_user_id' => $tyTelegramId,
+            'paymentUrl' => env('APP_DOMAIN'),
+            'type' => 'tariff',
+            'activated' => false,
+            'created_at' => $date,
+            'updated_at' => $date
+        ]);
+    }
+
+    /**
+     * Обновить тариф пользователю
+     */
+    private function updateTariffForUser($request, $community)
+    {
+        foreach ($request->tariff as $tyId => $variantId) {
+            $ty = TelegramUser::find($tyId);
+           
+            if (isset($request->date_payment[$tyId]) && isset($request->time_payment[$tyId])) {
+                $this->updatePaymentDate($request->date_payment[$tyId], $request->time_payment[$tyId], $community, $ty);
+            } else { 
+                if ($variantId)
+                    $this->createPayment($community->id, $ty->telegram_id, now()->format('Y-m-d G:i:s'));
             }
+            
+            
+            // if ($ty->telegram_id === config('telegram_bot.bot.botId') || $ty->user_id === $community->owner)        //Отключить возможность дать тариф автору и боту
+            //     continue;
+
+            $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
+
+            if ($variantId === null) {
+                if ($variantForThisCommunity) 
+                    $ty->tariffVariant()->detach($variantForThisCommunity->id);
+                    $payments = Payment::where('telegram_user_id', $ty->telegram_id)->where('type', 'tariff')->get();
+                    foreach ($payments as $payment) {
+                        $payment->delete();
+                    }
+                continue;
+            }
+            
+            $variant = TariffVariant::find($variantId);
+    
+            if ($variantForThisCommunity) {
+                $ty->tariffVariant()->detach($variantForThisCommunity->id);
+                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i')]);
+            } else {
+                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i')]);
+            } 
         }
+    }
 
-        if (isset($request->excluded)) {
-            foreach ($request->excluded as $userId => $excluded) {
-                $ty = TelegramUser::find($userId);
-                if ($excluded != $ty->communities()->where('community_id', $community->id)->first()->pivot->excluded) {
+    /**
+     * Обновить количество дней пользователю
+     */
+    private function updateDaysForUser($request, $community)
+    {
+        foreach ($request->days as $userId => $days) {
+            $ty = TelegramUser::find($userId);
+            $variantId = $ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first()->id;
+            $ty->tariffVariant()->updateExistingPivot($variantId, [
+                'days' => $days,
+            ]);
+        }
+    }
 
-                    if ($excluded == true) {
-                        $ty->communities()->updateExistingPivot($community->id, [
-                            'excluded' => $excluded,
-                        ]);
-                        // $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
-                    }
-                    
-                    if ($excluded == false) {
-                        $ty->communities()->updateExistingPivot($community->id, [
-                            'excluded' => $excluded,
-                        ]);
-                        // $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
-                    }
+    /**
+     * Забанить пользователя или отменить бан
+     */
+    private function excludedUser($request, $community)
+    {
+        foreach ($request->excluded as $userId => $excluded) {
+            $ty = TelegramUser::find($userId);
+            if ($ty->telegram_id === config('telegram_bot.bot.botId') || $ty->user_id === $community->owner)
+                continue;
+
+            if ($excluded != $ty->communities()->where('community_id', $community->id)->first()->pivot->excluded) {
+
+                if ($excluded === true) {
+                    $ty->communities()->updateExistingPivot($community->id, [
+                        'excluded' => $excluded,
+                    ]);
+                    $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
                 }
                 
+                if ($excluded === false) {
+                    $ty->communities()->updateExistingPivot($community->id, [
+                        'excluded' => $excluded,
+                    ]);
+                    $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
+                }
             }
+            
         }
     }
 
