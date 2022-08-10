@@ -24,7 +24,7 @@
                             Пароль
                         </label>
                         <div class="form-validation">
-                        <div class="input-group input-group-flat">
+                        <div class="input-group input-group-flat" :class="{invalid: errors.password}">
                             <input
                                 :type="fieldType"
                                 class="form-control"
@@ -109,13 +109,8 @@ export default {
                 }
             } catch (err) {
                 if (err.response && err.response.status === 422){
-
-                    console.log('RESPONSE: ', err.response);
-                    console.log('EMAIL: ',err.response.data.errors.email[0]);
-                    // console.log('PASSWORD: ', typeof err.response.data.errors.password);
-
                     this.errors.email = err.response.data.errors.email[0] ?? null;
-                    this.errors.password = err.response.data.errors.password ?? null;
+                    this.errors.password = err.response.data.errors.password[0] ?? null;
                 }
             }
         },
@@ -129,7 +124,9 @@ export default {
     color: #e53935;
 }
 
-.form-validation > .invalid {
+.form-validation > .invalid,
+.invalid > .input-group-text,
+.invalid > input.form-control {
     border-color: #e53935;
 }
 

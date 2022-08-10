@@ -15,11 +15,9 @@ if(api_token){
 }
 
 window.axios.interceptors.response.use(function (response) {
-    console.log(response)
     return response;
 }, function (error) {
     if (error.response.status === 401 || error.response.status === 419) {
-        console.log(window.location.href);
         window.location.href = '/manager/login';
     }
     return Promise.reject(error);
