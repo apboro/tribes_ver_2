@@ -14,6 +14,7 @@ use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Donate\DonateRepositoryContract;
 
 use App\Repositories\Payment\PaymentRepository;
+use App\Services\SMTP\Mailer;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffService;
@@ -74,6 +75,9 @@ class PaymentController extends Controller
     public function successPage(Request $request, $hash, $telegramId = NULL)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
+
+        $v = view('mail.telegram_invitation')->withPayment($payment)->render();
+        new Mailer('Сервис TRIBES', $v, 'Приглашение', $payment->payer->email);
 
         return view('common.donate.success')->withPayment($payment);
     }
