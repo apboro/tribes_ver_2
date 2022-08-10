@@ -14,21 +14,14 @@ class LoginAsRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email',
-            'password' => 'required|string',
+            'id' => 'required|integer',
         ];
-    }
-
-    public function prepareForValidation()
-    {
-        $this->request->set('email', strtolower($this->request->get('email')));
     }
 
     public function messages()
     {
         return [
-            'email.required' => 'email - обязательное поле',
-            'password.required' => 'Пароль - обязательное поле',
+            'id' => 'user_id - обязательное поле',
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginAsRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,18 +27,20 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function loginAs(LoginRequest $request)
+    public function loginAs(LoginAsRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('id', $request->id)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (!$user) {
             throw ValidationException::withMessages([
                 'email' => ['Авторизация не удалась'],
             ]);
         }
+        $token = $user->createToken('api-token');
+
         return response()->json([
             'status' => 'ok',
-            'token' => $user->createToken('api-token')->plainTextToken
+            'token' => $token->plainTextToken
         ], 200);
     }
 }
