@@ -1,10 +1,7 @@
 <template>
-<!-- <body v-bind:class="currentTheme">
-    {{currentTheme}} -->
     <div class="loading" v-bind:class="{'load' : this.$store.getters.loading}">
         <component :is="layout" />
     </div>
-<!-- </body> -->
 </template>
 
 <script>
@@ -40,9 +37,11 @@ export default {
           this.$router.push({name: 'login'}).catch((err) => {console.warn(err)})
         }
 
-
         this.addBodyClassForSwitchThemeOnLoad();
 
+        if (this.$store.getters.isAuthen) {
+            this.$store.dispatch('LOAD_USER');
+        }
     }
 }
 </script>

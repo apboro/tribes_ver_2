@@ -17,13 +17,6 @@
         </div>
 
         <div class="nav-item dropdown">
-            <!-- <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-                <span class="avatar avatar-sm" ></span>
-                <div class="d-none d-xl-block ps-2">
-                    <div>{{GET_USER.name}}</div>
-                    <div class="mt-1 small text-muted">UI Designer</div>
-                </div>
-            </a> -->
             <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
                 <span class="avatar avatar-sm" >
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="#f9d71c" stroke-linecap="round" stroke-linejoin="round">
@@ -63,7 +56,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["GET_USER"])
+        ...mapGetters(["GET_USER"]),
     },
     methods: {
         ...mapActions(["LOAD_USER"]),
@@ -90,9 +83,6 @@ export default {
             document.body.classList.add(schema);
         },
     },
-    mounted(){
-        // this.LOAD_USER();
-    }
 }
 </script>
 

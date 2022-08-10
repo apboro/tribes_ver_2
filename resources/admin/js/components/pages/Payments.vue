@@ -1,10 +1,6 @@
 <template>
     <div class="card">
         <div class="card-body border-bottom py-3">
-
-            <!-- <div class="d-flex justify-content-end mb-3">
-                <button class="btn" @click="reset">Сбросить фильтр</button>
-            </div> -->
             <div class="d-flex justify-content-between align-items-center">
                 <div class="text-muted">
                     показать
@@ -39,7 +35,6 @@
                 <div class="text-muted">
                     Поиск:
                     <div class="ms-2 d-inline-block">
-                        <!-- <input type="text" class="form-control form-control-sm" v-model="filter_data.search" aria-label="поиск"> -->
                         <input type="text" class="form-control" v-model="filter_data.search" aria-label="поиск"/>
                     </div>
                 </div>
@@ -64,7 +59,7 @@
                     <tr v-for="payment in payments.data" :key="payment.OrderId">
                         <td><span class="text-muted">{{ payment.OrderId }}</span></td>
                         <td>{{formatDateTime(payment.created_at)}}</td>
-                        <td>{{payment.from}}</td>
+                        <td>{{payment.from ?? 'ФИО пользователя'}}</td>
                         <td>{{translatePaymentType(payment.type)}}</td>
                         <td>{{payment.community}}</td>
                         <td>{{translateStatus(payment.status)}}</td>
@@ -94,10 +89,12 @@
 import Preloader from '../common/Preloader.vue';
 import FilterDataPayments from '../../mixins/filterData'
 import Translations from '../../mixins/translations'
+import FormatDateTime from '../../mixins/formatDateTime'
+import FormatCash from '../../mixins/formatCash'
 
 export default {
     name: "Payments",
-    mixins: [FilterDataPayments, Translations],
+    mixins: [FilterDataPayments, Translations, FormatDateTime, FormatCash],
     components: {Preloader},
 
     watch: {
@@ -130,17 +127,6 @@ export default {
             return this.$store.getters.customersHasName;
         }
     },
-
-    methods:{
-        formatDateTime(str){
-            let date = new Date(str);
-            return `${date.toLocaleDateString('ru')} ${date.toLocaleTimeString('ru')}`;
-        },
-
-        formatCash(num){
-            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(num)
-        },
-    }
 }
 </script>
 

@@ -106,6 +106,7 @@ export default {
                     sessionStorage.setItem('token', result.data.token)
                     this.$router.push({name: 'users'}).catch((err) => {console.warn(err)})
                     window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + result.data.token;
+                    this.$store.dispatch('LOAD_USER');                    
                 }
             } catch (err) {
                 if (err.response && err.response.status === 422){
