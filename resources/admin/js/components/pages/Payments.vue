@@ -28,7 +28,7 @@
                         v-model="customer_data.select"
                     >
                         <option 
-                            v-for="customer in customers.customers" 
+                            v-for="customer in customers" 
                             :key="customer.id"
                         >
                             {{customer.name}}
@@ -117,8 +117,8 @@ export default {
     },
 
     mounted(){
-        this.$store.dispatch('loadPayments', this.filter_data).then(() => {});
-        this.$store.dispatch('loadUniqUsersPayments', this.customer_data).then(() => {});
+        this.$store.dispatch('loadPayments', this.filter_data);
+        this.$store.dispatch('loadUniqUsersPayments', this.customer_data);
     },
 
     computed: {
@@ -127,7 +127,7 @@ export default {
         },
 
         customers() {
-            return this.$store.getters.getCustomers;
+            return this.$store.getters.customersHasName;
         }
     },
 
