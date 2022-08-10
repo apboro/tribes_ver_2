@@ -24,10 +24,6 @@ window.axios.interceptors.response.use(function (response) {
 });
 
 
-
-
-
-
 window.getParameterByName = function(name, url = window.location.href) {
     name = name.replace(/[\[\]]/g, '\\$&');
     let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),

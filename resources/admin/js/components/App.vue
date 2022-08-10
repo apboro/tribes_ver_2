@@ -21,7 +21,6 @@ export default {
     },
     computed: {
         layout() {
-          console.log((this.$route.meta.layout || 'main') + '-layout');
             return (this.$route.meta.layout || 'main') + '-layout'
         },
     },
