@@ -1,46 +1,24 @@
 export default ({
     _dataList: {},
 
-    _dataItem: {
-        items: [],
-        total: null,
-        
-        joined: {
-            items: [],
-            total: null,
-        },
-        
-        left: {
-            items: [],
-            total: null,
-        },
-
-        useful: {
-            items: [],
-            total: null,
-        },
-
-        no_visit_chat: null,
-        no_activity: null,
-    },
-
     _items: [],
 
     _total: null,
 
-    joined: {},
+    _period_total: null,
 
-    left: {},
+    _joined: {},
 
-    useful: {},
+    _left: {},
+
+    _useful: {},
     
-    no_visit_chat: null,
-    no_activity: null,
-    
+    _subscriptions: {},
 
-    /* _subscribers: {},
+    _donations: {},
 
-    _messages: {},
+    _media: {},
 
-    _payments: {}, */
+    _no_visit_chat: null,
+    _no_activity: null,
 });

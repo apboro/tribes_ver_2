@@ -1,27 +1,27 @@
 <template>
     <div >
-        <messages-chart
-            :data="GET_MESSAGES_CHART_DATA"
+        <payments-chart
+            :data="GET_PAYMENTS_CHART_DATA"
         />
 
-        <messages-table
+        <payments-table
             class="analytics-community__table"
-            :messages="GET_TABLE_DATA"
+            :payments="GET_TABLE_DATA"
         />
     </div>
 </template>
 
 <script>
     import { mapGetters, mapActions } from 'vuex';
-    import MessagesChart from '../../../components/pages/Community/Analytics/messages/MessagesChart.vue';
-    import MessagesTable from '../../../components/pages/Community/Analytics/messages/MessagesTable.vue';
+    import PaymentsChart from '../../../components/pages/Community/Analytics/payments/PaymentsChart.vue';
+    import PaymentsTable from '../../../components/pages/Community/Analytics/payments/PaymentsTable.vue';
 
     export default {
-        name: 'AnalyticsMessages',
+        name: 'AnalyticsPayments',
 
         components: {
-            MessagesChart,
-            MessagesTable,
+            PaymentsChart,
+            PaymentsTable,
         },
 
         props: {
@@ -33,14 +33,14 @@
 
         data() {
             return {
-                name: 'messages',
+                name: 'payments',
             }
         },
 
         computed: {
             ...mapGetters('community_analytics', [
                 'GET_TABLE_DATA',
-                'GET_MESSAGES_CHART_DATA',
+                'GET_PAYMENTS_CHART_DATA',
             ]),
         },
 

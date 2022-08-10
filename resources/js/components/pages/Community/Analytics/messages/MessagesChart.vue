@@ -2,25 +2,25 @@
     <div v-if="data" class="chart-analytics-community">
         <div class="chart-analytics-community__header">
             <div class="chart-analytics-community__label">
-                <span class="chart-analytics-community__label-text">
+                <span class="chart-analytics-community__text">
                     Всего подписчиков в сообществе
                 </span>
 
-                <span class="chart-analytics-community__label-value">
+                <span class="chart-analytics-community__value">
                     {{ data.total }}
                 </span>
             </div>
 
             <button
-                class="chart-analytics-community__label chart-analytics-community__label--pointer"
+                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
                 @click="toggleData('joined')"
             >
-                <span class="chart-analytics-community__label-text">
+                <span class="chart-analytics-community__text">
                     Вступили в сообщество
                 </span>
 
                 <span
-                    class="chart-analytics-community__label-value"
+                    class="chart-analytics-community__value"
                     :style="{ color: joined.color }"
                 >
                     {{ data.joined.total }}
@@ -36,17 +36,17 @@
 
         <div class="chart-analytics-community__footer">
             <button
-                class="chart-analytics-community__label chart-analytics-community__label--pointer"
+                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
                 @click="toggleData('useful')"
             >
                 <span
-                    class="chart-analytics-community__label-value"
+                    class="chart-analytics-community__value"
                     :style="{ color: useful.color }"
                 >
                     {{ data.useful.total }}
                 </span>
              
-                <span class="chart-analytics-community__label-text">
+                <span class="chart-analytics-community__text">
                     Полезных сообщений
                 </span>
             </button>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-    import LineChart from '../../../ui/chart/LineChart.vue';
+    import LineChart from '../../../../ui/chart/LineChart.vue';
 
     export default {
         name: 'MessagesChart',
@@ -87,6 +87,7 @@
 
         computed: {
             chartData() {
+                console.log(this.data);
                 return {
                     labels: this.data.joined.items,
                     datasets: [

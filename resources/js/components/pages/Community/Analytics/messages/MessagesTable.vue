@@ -1,8 +1,8 @@
 <template>
     <div>
         <v-table
-            :classTable="'subscribers-table'"
-            :data="subscribers"
+            :classTable="'messages-table'"
+            :data="messages"
             :tableOptions="tableOptions"
             :isLoading="false"
         >   
@@ -11,17 +11,17 @@
 </template>
 
 <script>
-    import VTable from '../../../ui/table/VTable.vue'
+    import VTable from '../../../../ui/table/VTable.vue'
     
     export default {
-        name: 'SubscribersTable',
+        name: 'MessagesTable',
         
         components: {
             VTable
         },
 
         props: {
-            subscribers: {
+            messages: {
                 type: Array,
                 default: () => []
             }

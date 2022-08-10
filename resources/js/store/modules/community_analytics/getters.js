@@ -3,36 +3,41 @@ export default ({
         return state._dataList;
     },
 
-    GET_DATA_ITEM(state) {
-        return state._dataItem;
-    },
-
     GET_TABLE_DATA(state) {
-        return state._dataItem.items;
+        return state._items;
     },
 
     GET_SUBSCRIBERS_CHART_DATA(state) {
         return {
-            total: state._dataItem.total,
-            joined: state._dataItem.joined,
-            left: state._dataItem.left,
+            total: state._total,
+            joined: state._joined,
+            left: state._left,
         };
     },
 
     GET_SUBSCRIBERS_PROGRESS_DATA(state) {
         return {
-            total: state._dataItem.total,
-            no_activity: state._dataItem.no_activity,
-            no_visit_chat: state._dataItem.no_visit_chat,
+            total: state._total,
+            no_activity: state._no_activity,
+            no_visit_chat: state._no_visit_chat,
         };
     },
 
     GET_MESSAGES_CHART_DATA(state) {
         return {
-            total: state._dataItem.total,
-            joined: state._dataItem.joined,
-            useful: state._dataItem.useful,
+            total: state._total,
+            joined: state._joined,
+            useful: state._useful,
         };
     },
 
+    GET_PAYMENTS_CHART_DATA(state) {
+        return {
+            total: state._total,
+            period_total: state._period_total,
+            subscriptions: state._subscriptions,
+            donations: state._donations,
+            media: state._media,
+        };
+    },
 });

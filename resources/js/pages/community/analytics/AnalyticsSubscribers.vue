@@ -18,8 +18,8 @@
 
 <script>
     import { mapGetters, mapActions, mapMutations } from 'vuex';
-    import SubscribersChart from '../../../components/pages/Community/Analytics/SubscribersChart.vue';
-    import SubscribersTable from '../../../components/pages/Community/Analytics/SubscribersTable.vue';
+    import SubscribersChart from '../../../components/pages/Community/Analytics/subscribers/SubscribersChart.vue';
+    import SubscribersTable from '../../../components/pages/Community/Analytics/subscribers/SubscribersTable.vue';
     import ProgressList from '../../../components/pages/Community/Analytics/ProgressList.vue';
 
     export default {
@@ -41,7 +41,6 @@
         data() {
             return {
                 name: 'subscribers',
-                data2: {}
             }
         },
 
@@ -70,10 +69,6 @@
             period() {
                 this.filter();
             },
-
-            GET_SUBSCRIBERS_CHART_DATA() {
-                this.data2 = this.GET_SUBSCRIBERS_CHART_DATA;
-            }
         },
 
         methods: {
@@ -85,10 +80,7 @@
         },
 
         mounted() {
-            console.log(this.GET_SUBSCRIBERS_CHART_DATA);
             this.LOAD_DATA_ITEM(this.name);
-
-           
 
             this.filter();
         }

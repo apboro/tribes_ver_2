@@ -1,11 +1,9 @@
 .subscribers-table {
     .table__header {
-        grid-template: auto/20% 20% 15% 15% 15% 15%;
+        grid-template: auto/20% 20% 15% 15% 10% 10% 10%;
     }
 
     .table__row {
-        grid-template: auto/20% 20% 15% 15% 15% 15%;
+        grid-template: auto/20% 20% 15% 15% 10% 10% 10%;
     }
-
-    
 }

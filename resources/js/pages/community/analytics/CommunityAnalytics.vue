@@ -34,6 +34,13 @@
                 :period="filterValue"
                 @filter="filter"
             />
+
+            <analytics-payments
+                v-else-if="visibleTab == 'payments'"
+                class="analytics-community__tab"
+                :period="filterValue"
+                @filter="filter"
+            />
         </transition>
 
         <!-- <div>
@@ -62,6 +69,7 @@
     import AnalyticsFilter from '../../../components/pages/Community/Analytics/AnalyticsFilter.vue';
     import AnalyticsSubscribers from './AnalyticsSubscribers.vue';
     import AnalyticsMessages from './AnalyticsMessages.vue';
+    import AnalyticsPayments from './AnalyticsPayments.vue';
     import AnalyticsList from './AnalyticsList.vue';
     import AnalyticsNav from '../../../components/pages/Community/Analytics/AnalyticsNav.vue';
 
@@ -76,6 +84,7 @@
             AnalyticsList,
             AnalyticsSubscribers,
             AnalyticsMessages,
+            AnalyticsPayments,
         },
 
         data() {
@@ -95,9 +104,14 @@
                         text: 'Сообщения',
                         tabName: 'messages'
                     },
+
+                    {
+                        text: 'Финансы',
+                        tabName: 'payments'
+                    },
                 ],
 
-                visibleTab: 'messages',
+                visibleTab: 'payments',
                 filterValue: 'week',
 
                 chartData2: {

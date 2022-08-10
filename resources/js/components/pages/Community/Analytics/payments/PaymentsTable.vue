@@ -1,8 +1,8 @@
 <template>
     <div>
         <v-table
-            :classTable="'subscribers-table'"
-            :data="subscribers"
+            :classTable="'payments-table'"
+            :data="payments"
             :tableOptions="tableOptions"
             :isLoading="false"
         >   
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import VTable from '../../../ui/table/VTable.vue'
+    import VTable from '../../../../ui/table/VTable.vue'
     
     export default {
         name: 'MessagesTable',
@@ -21,7 +21,7 @@
         },
 
         props: {
-            subscribers: {
+            payments: {
                 type: Array,
                 default: () => []
             }
@@ -31,21 +31,21 @@
             return {
                 tableOptions: {
                     header: [
-                        { type: 'text', text: 'Сообщение / реакция' },
-                        { type: 'text', text: 'Имя / никнейм автора' },
+                        { type: 'text', text: 'Имя подписчика' },
+                        { type: 'text', text: 'Никнейм' },
+                        { type: 'text', text: 'Название транзакции' },
+                        { type: 'text', text: 'Тип транзакции' },
                         { type: 'text', text: 'Дата' },
-                        { type: 'text', text: 'Реакции' },
-                        { type: 'text', text: 'Ответы' },
-                        { type: 'text', text: 'Полезность' },
+                        { type: 'text', text: 'Сумма' },
                     ],
 
                     row: [
-                        { type: 'text', key: 'message' },
+                        { type: 'text', key: 'name' },
                         { type: 'text', key: 'username' },
+                        { type: 'text', key: 'transaction_name' },
+                        { type: 'text', key: 'transaction_type' },
                         { type: 'text', key: 'date' },
-                        { type: 'text', key: 'reaction' },
-                        { type: 'text', key: 'answer' },
-                        { type: 'text', key: 'utility' },
+                        { type: 'text', key: 'amount' },
                     ],
                 },
             }
