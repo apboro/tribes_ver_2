@@ -60,7 +60,7 @@
                     </td>
                     <td>$940</td>
                     <td class="text-end">
-                        <span class="dropdown">
+                        <!-- <span class="dropdown">
                             <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                             <div class="dropdown-menu dropdown-menu-end">
                             <a class="dropdown-item" href="#">
@@ -70,7 +70,18 @@
                                 Another action
                             </a>
                             </div>
-                        </span>
+                        </span> -->
+                        <div class="btn-group">
+                            <button type="button" class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <button @click.prevent="loginAs(user.id)" class="dropdown-item" type="button">Войти от этого пользователя</button>
+                                </li>
+                                <li><button class="dropdown-item" type="button">Another action</button></li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -119,6 +130,15 @@ export default {
             return this.$store.getters.users;
         }
     },
+    methods: {
+        async loginAs(userId) {
+            const res = await axios({
+                method: "post",
+                url: "/api/login-as",
+                data: {id: userId}
+            })
+        }
+    }
 }
 </script>
 
