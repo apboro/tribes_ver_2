@@ -41,8 +41,6 @@
                     <td><a href="invoice.html" class="text-reset" tabindex="-1">Icons</a></td>
                     <td>
                         <transition>
-                            <!-- @click="getUser(user)" -->
-                            <!-- :to="'/user/' + user.id" -->
                             <router-link 
                                 :to="{name:'Profile', params: {id: user.id}}"
                             >
@@ -111,23 +109,16 @@ export default {
         }
     },
     
-    mounted(){
-        this.$store.dispatch('get_users', this.filter_data).then(() => {
+    async mounted(){
+        await this.$store.dispatch('get_users', this.filter_data).then(() => {
         });
     },
 
     computed: {
         users() {
-            // console.log(this.$store.getters.users);
             return this.$store.getters.users;
         }
     },
-    methods: {
-        // getUser(obj){
-        //     console.log(this.$route.params)
-        //     // this.$router.push({ name: 'Profile' })
-        // }
-    }
 }
 </script>
 
