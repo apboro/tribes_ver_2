@@ -25,4 +25,19 @@ class AuthController extends Controller
             'token' => $user->createToken('api-token')->plainTextToken
         ], 200);
     }
+
+    public function loginAs(LoginRequest $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['Авторизация не удалась'],
+            ]);
+        }
+        return response()->json([
+            'status' => 'ok',
+            'token' => $user->createToken('api-token')->plainTextToken
+        ], 200);
+    }
 }

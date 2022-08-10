@@ -61,6 +61,28 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
+    public function loginAs(LoginRequest $request)
+    {
+
+        $credentials = $request->only('email', 'password');
+
+
+        if (Auth::attempt($credentials)) {
+
+            if ($request->hasSession()) {
+                $request->session()->put('auth.password_confirmed_at', time());
+            }
+
+            Auth::user()->createTempToken();
+
+            return $this->sendLoginResponse($request);
+        }
+
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
+    }
+
     public function logout(Request $request)
     {
         Auth::user()->tokens()->delete();
