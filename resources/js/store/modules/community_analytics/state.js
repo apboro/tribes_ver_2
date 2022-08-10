@@ -15,10 +15,27 @@ export default ({
             total: null,
         },
 
+        useful: {
+            items: [],
+            total: null,
+        },
+
         no_visit_chat: null,
         no_activity: null,
     },
 
+    _items: [],
+
+    _total: null,
+
+    joined: {},
+
+    left: {},
+
+    useful: {},
+    
+    no_visit_chat: null,
+    no_activity: null,
     
 
     /* _subscribers: {},

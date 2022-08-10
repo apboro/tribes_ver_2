@@ -77,8 +77,7 @@
         },
 
         methods: {
-            ...mapActions('community_analytics', ['LOAD_DATA_ITEM', "LOAD_SUBSCRIBERS_DATA"]),
-            ...mapMutations('community_analytics', ['SET_DATA_ITEM']),
+            ...mapActions('community_analytics', ['LOAD_DATA_ITEM']),
 
             filter() {
                 this.$emit('filter', { name: this.name, period: this.period });

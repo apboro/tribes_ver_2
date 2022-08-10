@@ -66,8 +66,8 @@
 
         props: {
             data: {
-                type: Object,
-                default: () => {}
+                type: [Object, null],
+                default: null
             }
         },
 
@@ -87,21 +87,25 @@
 
         computed: {
             chartData() {
-                return {
-                    labels: this.data.joined.items,
-                    datasets: [
-                        {
-                            data: this.data.joined.items,                           
-                            borderColor: this.joined.color,
-                            hidden: this.joined.isVisible,
-                        },
+                console.log(this.data);
+                if (this.data) {
+                    return {
 
-                        {
-                            data: this.data.left.items,                           
-                            borderColor: this.left.color,
-                            hidden: this.left.isVisible,
-                        }
-                    ]
+                        labels: this.data.joined.items,
+                        datasets: [
+                            {
+                                data: this.data.joined.items,                           
+                                borderColor: this.joined.color,
+                                hidden: this.joined.isVisible,
+                            },
+    
+                            {
+                                data: this.data.left.items,                           
+                                borderColor: this.left.color,
+                                hidden: this.left.isVisible,
+                            }
+                        ]
+                    }
                 }
             },
 

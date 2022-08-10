@@ -97,7 +97,7 @@
                     },
                 ],
 
-                visibleTab: 'subscribers',
+                visibleTab: 'messages',
                 filterValue: 'week',
 
                 chartData2: {

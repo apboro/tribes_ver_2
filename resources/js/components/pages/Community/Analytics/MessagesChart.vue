@@ -3,11 +3,11 @@
         <div class="chart-analytics-community__header">
             <div class="chart-analytics-community__label">
                 <span class="chart-analytics-community__label-text">
-                    {{ data.common.text }}
+                    Всего подписчиков в сообществе
                 </span>
 
                 <span class="chart-analytics-community__label-value">
-                    {{ data.common.value }}
+                    {{ data.total }}
                 </span>
             </div>
 
@@ -16,14 +16,14 @@
                 @click="toggleData('joined')"
             >
                 <span class="chart-analytics-community__label-text">
-                    {{ data.joined.legend.text }}
+                    Вступили в сообщество
                 </span>
 
                 <span
                     class="chart-analytics-community__label-value"
                     :style="{ color: joined.color }"
                 >
-                    {{ data.joined.legend.value }}
+                    {{ data.joined.total }}
                 </span>
             </button>
         </div>
@@ -43,11 +43,11 @@
                     class="chart-analytics-community__label-value"
                     :style="{ color: useful.color }"
                 >
-                    {{ data.useful.legend.value }}
+                    {{ data.useful.total }}
                 </span>
              
                 <span class="chart-analytics-community__label-text">
-                    {{ data.useful.legend.text }}
+                    Полезных сообщений
                 </span>
             </button>
         </div>
@@ -88,16 +88,16 @@
         computed: {
             chartData() {
                 return {
-                    labels: this.data.joined.data,
+                    labels: this.data.joined.items,
                     datasets: [
                         {
-                            data: this.data.joined.data,                           
+                            data: this.data.joined.items,                           
                             borderColor: this.joined.color,
                             hidden: this.joined.isVisible,
                         },
 
                         {
-                            data: this.data.useful.data,                           
+                            data: this.data.useful.items,                           
                             borderColor: this.useful.color,
                             hidden: this.useful.isVisible,
                         }

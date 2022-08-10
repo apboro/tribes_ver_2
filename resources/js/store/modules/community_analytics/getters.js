@@ -27,4 +27,12 @@ export default ({
         };
     },
 
+    GET_MESSAGES_CHART_DATA(state) {
+        return {
+            total: state._dataItem.total,
+            joined: state._dataItem.joined,
+            useful: state._dataItem.useful,
+        };
+    },
+
 });

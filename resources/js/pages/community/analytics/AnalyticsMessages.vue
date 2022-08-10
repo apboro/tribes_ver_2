@@ -1,12 +1,12 @@
 <template>
     <div >
         <messages-chart
-            :data="data2.data"
+            :data="GET_MESSAGES_CHART_DATA"
         />
 
         <messages-table
             class="analytics-community__table"
-            :subscribers="data2.subscribers"
+            :subscribers="GET_TABLE_DATA"
         />
     </div>
 </template>
@@ -40,7 +40,10 @@
         },
 
         computed: {
-            ...mapGetters('community_analytics', ['GET_DATA_ITEM', 'GET_MESSAGES_DATA']),
+            ...mapGetters('community_analytics', [
+                'GET_TABLE_DATA',
+                'GET_MESSAGES_CHART_DATA',
+            ]),
         },
 
         watch: {
@@ -61,15 +64,11 @@
             }
         },
 
-        async mounted() {
-            await this.LOAD_DATA_ITEM(this.name);
+        mounted() {
+            this.LOAD_DATA_ITEM(this.name);
             console.log();
 
             this.filter();
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
