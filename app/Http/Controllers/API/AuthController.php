@@ -41,7 +41,7 @@ class AuthController extends Controller
             ]);
         }
         $token = $user->createToken('api-token');
-        Auth::loginUsingId($user->id, TRUE);
+        Auth::guard('web')->loginUsingId($user->id, TRUE);
         Session::flush();
         session()->regenerateToken();
         Session::put('admin_id',$admin->id);
