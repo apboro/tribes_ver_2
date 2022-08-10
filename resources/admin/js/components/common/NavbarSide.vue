@@ -17,11 +17,23 @@
         </div>
 
         <div class="nav-item dropdown">
-            <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+            <!-- <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
                 <span class="avatar avatar-sm" ></span>
                 <div class="d-none d-xl-block ps-2">
                     <div>{{GET_USER.name}}</div>
                     <div class="mt-1 small text-muted">UI Designer</div>
+                </div>
+            </a> -->
+            <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+                <span class="avatar avatar-sm" >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="#f9d71c" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"></path>
+                    </svg>
+                </span>
+                <div class="d-none d-xl-block ps-2">
+                    <div>{{GET_USER.name}}</div>
+                    <div class="mt-1 small text-muted">{{GET_USER.job ?? 'Администратор'}}</div>
                 </div>
             </a>
             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -54,12 +66,13 @@ export default {
         ...mapGetters(["GET_USER"])
     },
     methods: {
+        ...mapActions(["LOAD_USER"]),
+        
         logout(){
             sessionStorage.setItem('token', null);
             window.axios.defaults.headers.common['Authorization'] = '';
             this.$router.push({name: 'login'}).catch(() => {});
         },
-        ...mapActions(["LOAD_USER"]),
 
         toggleThemeColor() {
             let apply_light = 
