@@ -106,6 +106,40 @@
 			"response": []
 		},
 		{
+			"name": "login_as",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/login-as",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
 			"name": "вопросы список",
 			"request": {
 				"method": "POST",

@@ -229,6 +229,11 @@ class User extends Authenticatable
         return $phone ? '+7 ' . $this->phoneNumber($phone) : '-';
     }
 
+    public function isAdmin()
+    {
+        return Administrator::where('user_id',$this->id)->exists();
+    }
+
     public function administrator()
     {
         return $this->hasOne(Administrator::class, 'user_id','id');
