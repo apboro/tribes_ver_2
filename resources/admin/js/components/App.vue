@@ -37,7 +37,7 @@ export default {
         }
     },
     mounted(){
-        if(sessionStorage.getItem('token').length && sessionStorage.getItem('token').length !== null){
+        if(!sessionStorage.getItem('token') || sessionStorage.getItem('token') === null){
           this.$router.push({name: 'login'}).catch((err) => {console.warn(err)})
         }
 
