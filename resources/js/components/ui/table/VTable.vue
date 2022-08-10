@@ -1,5 +1,5 @@
 <template>
-    <div class="table" :class="classTable">
+    <div class="table">
         <table-header
             :class="{ 'table__header--disabled' : !hasData }"
             :headerSettings="tableOptions.header"
@@ -74,11 +74,6 @@
                 type: Boolean,
                 default: false,
             },
-
-            classTable: {
-                type: String,
-                default: ''
-            }
         },
 
         computed: {

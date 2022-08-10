@@ -6,7 +6,7 @@
         <!-- sortAttrs объект содержащий актуальную сортировку -->
         <!-- Статус находится ли в состоянии загрузки данных - для отображения прелоадера -->
         <v-table
-            :classTable="classTable"
+            class="knowledge-table"
             :data="questions"
             :tableOptions="tableOptions"
             :sortAttrs="sort"

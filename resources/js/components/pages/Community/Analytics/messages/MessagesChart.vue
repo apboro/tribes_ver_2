@@ -23,7 +23,7 @@
                     class="chart-analytics-community__value"
                     :style="{ color: joined.color }"
                 >
-                    {{ data.joined.total }}
+                    +{{ data.joined.total }}
                 </span>
             </button>
         </div>
@@ -43,7 +43,7 @@
                     class="chart-analytics-community__value"
                     :style="{ color: useful.color }"
                 >
-                    {{ data.useful.total }}
+                    +{{ data.useful.total }}
                 </span>
              
                 <span class="chart-analytics-community__text">

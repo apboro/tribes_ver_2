@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-table
-            :classTable="'payments-table'"
+            class="analytics-community-payments-table"
             :data="payments"
             :tableOptions="tableOptions"
             :isLoading="false"

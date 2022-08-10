@@ -13,8 +13,8 @@
 
 <script>
     import { mapGetters, mapActions } from 'vuex';
-    import MessagesChart from '../../../components/pages/Community/Analytics/messages/MessagesChart.vue';
-    import MessagesTable from '../../../components/pages/Community/Analytics/messages/MessagesTable.vue';
+    import MessagesChart from '../../../../components/pages/Community/Analytics/messages/MessagesChart.vue';
+    import MessagesTable from '../../../../components/pages/Community/Analytics/messages/MessagesTable.vue';
 
     export default {
         name: 'AnalyticsMessages',

@@ -13,8 +13,8 @@
 
 <script>
     import { mapGetters, mapActions } from 'vuex';
-    import PaymentsChart from '../../../components/pages/Community/Analytics/payments/PaymentsChart.vue';
-    import PaymentsTable from '../../../components/pages/Community/Analytics/payments/PaymentsTable.vue';
+    import PaymentsChart from '../../../../components/pages/Community/Analytics/payments/PaymentsChart.vue';
+    import PaymentsTable from '../../../../components/pages/Community/Analytics/payments/PaymentsTable.vue';
 
     export default {
         name: 'AnalyticsPayments',

@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-table
-            :classTable="'subscribers-table'"
+            class="analytics-community-subscribers-table"
             :data="subscribers"
             :tableOptions="tableOptions"
             :isLoading="false"

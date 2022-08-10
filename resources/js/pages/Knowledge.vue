@@ -62,7 +62,6 @@
 
             <!-- Table -->
             <questions-table
-                :classTable="'knowledge-table'"
                 :questions="GET_QUESTIONS"
             />
             

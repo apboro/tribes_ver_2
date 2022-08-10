@@ -18,9 +18,9 @@
 
 <script>
     import { mapGetters, mapActions, mapMutations } from 'vuex';
-    import SubscribersChart from '../../../components/pages/Community/Analytics/subscribers/SubscribersChart.vue';
-    import SubscribersTable from '../../../components/pages/Community/Analytics/subscribers/SubscribersTable.vue';
-    import ProgressList from '../../../components/pages/Community/Analytics/ProgressList.vue';
+    import SubscribersChart from '../../../../components/pages/Community/Analytics/subscribers/SubscribersChart.vue';
+    import SubscribersTable from '../../../../components/pages/Community/Analytics/subscribers/SubscribersTable.vue';
+    import ProgressList from '../../../../components/pages/Community/Analytics/ProgressList.vue';
 
     export default {
         name: 'AnalyticsSubscribers',

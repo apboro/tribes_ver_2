@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-table
-            :classTable="'messages-table'"
+            class="analytics-community-messages-table"
             :data="messages"
             :tableOptions="tableOptions"
             :isLoading="false"

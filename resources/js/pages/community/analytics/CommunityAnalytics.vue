@@ -67,10 +67,10 @@
     /* import BarChart from '../../../components/ui/chart/BarChart.vue';
     import LineChart from '../../../components/ui/chart/LineChart.vue'; */
     import AnalyticsFilter from '../../../components/pages/Community/Analytics/AnalyticsFilter.vue';
-    import AnalyticsSubscribers from './AnalyticsSubscribers.vue';
-    import AnalyticsMessages from './AnalyticsMessages.vue';
-    import AnalyticsPayments from './AnalyticsPayments.vue';
-    import AnalyticsList from './AnalyticsList.vue';
+    import AnalyticsSubscribers from './tabs/AnalyticsSubscribers.vue';
+    import AnalyticsMessages from './tabs/AnalyticsMessages.vue';
+    import AnalyticsPayments from './tabs/AnalyticsPayments.vue';
+    import AnalyticsList from './tabs/AnalyticsList.vue';
     import AnalyticsNav from '../../../components/pages/Community/Analytics/AnalyticsNav.vue';
 
     export default {
