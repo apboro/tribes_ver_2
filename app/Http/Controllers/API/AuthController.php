@@ -13,6 +13,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+
     public function login(LoginRequest $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -30,6 +31,7 @@ class AuthController extends Controller
 
     public function loginAs(LoginAsRequest $request)
     {
+        //dd(123);
         $user = User::where('id', $request->id)->first();
 
         if (empty($user)) {
@@ -38,10 +40,14 @@ class AuthController extends Controller
             ]);
         }
         $token = $user->createToken('api-token');
-        Auth::guard('web')->setUser($user);
+        Auth::guard('web')->login($user);
+        session()->regenerateToken();
+        $csrf = session()->token();
+
         return response()->json([
             'status' => 'ok',
-            'token' => $token->plainTextToken
+            'token' => $token->plainTextToken,
+            'csrf' => $csrf,
         ], 200);
     }
 }
