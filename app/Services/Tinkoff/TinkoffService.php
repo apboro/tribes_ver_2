@@ -83,6 +83,19 @@ class TinkoffService
                     TelegramLogService::staticSendLogMessage("В копилку с ID  " . $accumulation->id . " зачислено" . $payment->amount / 100 . " Рублей");
 
                     if($community){
+                        if($payment->type === 'tariff') {
+                            $payerName = $payment->telegramUser->publicName();
+                            $tariffName = $payment->payable()->first()->title;
+                            $tariffCost = $payment->add_balance;
+                            $tariffEndDate  = Carbon::now()->addDays($payment->tariffs()->first()->days)->format('dd.mm.Y');
+                            /** @var TelegramMainBotService $botService */
+                            $botService = app(TelegramMainBotService::class);
+                                $botService->sendMessageFromBot(
+                                    config('telegram_bot.bot.botName'),
+                                    $payment->telegram_user_id,
+                                    "Участник $payerName оплатил $tariffName , $tariffCost и $tariffEndDate"
+                                );
+                        }
                         TelegramLogService::staticSendLogMessage(
                             "Tinkoff: совершен платёж за " .
                             ($community ? $decoder[$payment->type] : 'за что то') .
