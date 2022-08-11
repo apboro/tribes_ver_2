@@ -81,7 +81,7 @@ class CheckTariff extends Command
                                         $this->telegramService->sendMessageFromBot(
                                             config('telegram_bot.bot.botName'),
                                             env('TELEGRAM_LOG_CHAT'),
-                                            "Рекуррентное списание от " . $firstName . $lastName . " в сообщетво "
+                                            "Рекуррентное списание от " . $firstName . $lastName . " в сообщество "
                                         );
                                         $user->tariffVariant()->updateExistingPivot($variant->id, [
                                             'days' => $variant->period,
