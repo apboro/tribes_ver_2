@@ -60,7 +60,7 @@
                     class="dropdown-item d-flex align-items-center"
                     href="{{ route('auth.login_as') }}"
                     onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();"
+                        document.getElementById('login-as-form').submit();"
                 >
                     <i data-feather="power" class="font-medium-2 me-50"></i>
                     {{ __('base.login_as_admin') }}
