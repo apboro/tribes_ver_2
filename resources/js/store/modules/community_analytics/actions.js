@@ -112,6 +112,16 @@ export default ({
                             reaction: 'reaction text',
                             answer: 'answer text',
                             utility: 'utility text',
+                            reactions: [
+                                { value: 10, icon: '👍' },
+                                { value: 4, icon: '🎉' },
+                                { value: 232, icon: '😁' },
+                                { value: 3476, icon: '👏' },
+                                { value: 4, icon: '🔥' },
+                                { value: 3476, icon: '👏' },
+                                { value: 4, icon: '🎉' },
+                                { value: 232, icon: '😁' },
+                            ],
                         },
                         {
                             message: 'message text',
@@ -120,6 +130,16 @@ export default ({
                             reaction: 'reaction text',
                             answer: 'answer text',
                             utility: 'utility text',
+                            reactions: [
+                                { value: 10, icon: '👍' },
+                                { value: 4, icon: '🎉' },
+                                { value: 232, icon: '😁' },
+                                { value: 3476, icon: '👏' },
+                                { value: 4, icon: '🔥' },
+                                { value: 3476, icon: '👏' },
+                                { value: 4, icon: '🎉' },
+                                { value: 232, icon: '😁' },
+                            ],
                         },
                         {
                             message: 'message text',
@@ -128,6 +148,16 @@ export default ({
                             reaction: 'reaction text',
                             answer: 'answer text',
                             utility: 'utility text',
+                            reactions: [
+                                { value: 10, icon: '👍' },
+                                { value: 4, icon: '🎉' },
+                                { value: 232, icon: '😁' },
+                                { value: 3476, icon: '👏' },
+                                { value: 4, icon: '🔥' },
+                                { value: 3476, icon: '👏' },
+                                { value: 4, icon: '🎉' },
+                                { value: 232, icon: '😁' },
+                            ],
                         }
                     ],
                     total: 2356,
@@ -140,7 +170,7 @@ export default ({
                     useful: {
                         items: [100, 50, 220, 180, 70, 160, 90, 130, 400, 300],
                         total: 219,
-                    }
+                    },
                 };
 
                 commit('SET_DATA_ITEMS', data.items);

@@ -84,6 +84,26 @@
                         </template>
                     </col-actions>
                 </div>
+
+                <!-- Меню действий -->
+                <div
+                    v-else-if="col.type == 'custom'"
+                    class="table__item"
+                >   
+                    <slot
+                        name="customCol"
+                        :data="data"
+                    ></slot> 
+                    
+                    <!-- <col-actions :colData="data">
+                        <template #actionCol="{ data }">
+                            <slot
+                                name="actionCol"
+                                :data="data"
+                            ></slot>
+                        </template>
+                    </col-actions> -->
+                </div>
             </div>
         </div>
 

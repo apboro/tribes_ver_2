@@ -66,12 +66,12 @@
 <script>
     /* import BarChart from '../../../components/ui/chart/BarChart.vue';
     import LineChart from '../../../components/ui/chart/LineChart.vue'; */
-    import AnalyticsFilter from '../../../components/pages/Community/Analytics/AnalyticsFilter.vue';
+    import AnalyticsFilter from '../../../components/pages/community/analytics/AnalyticsFilter.vue';
     import AnalyticsSubscribers from './tabs/AnalyticsSubscribers.vue';
     import AnalyticsMessages from './tabs/AnalyticsMessages.vue';
     import AnalyticsPayments from './tabs/AnalyticsPayments.vue';
     import AnalyticsList from './tabs/AnalyticsList.vue';
-    import AnalyticsNav from '../../../components/pages/Community/Analytics/AnalyticsNav.vue';
+    import AnalyticsNav from '../../../components/pages/community/analytics/AnalyticsNav.vue';
 
     export default {
         name: 'CommunityAnalytics',
@@ -111,7 +111,7 @@
                     },
                 ],
 
-                visibleTab: 'payments',
+                visibleTab: 'messages',
                 filterValue: 'week',
 
                 chartData2: {

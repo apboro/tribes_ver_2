@@ -5,7 +5,23 @@
             :data="messages"
             :tableOptions="tableOptions"
             :isLoading="false"
-        >   
+        >
+            <!-- Слот для вставки не обычно оформленной ячейки, которое может быть добавлено как колонка в строку таблицы -->
+            <template #customCol="{ data }">
+                {{ data.message }}
+                <ul class="analytics-community-messages-table__reaction-list">
+                    <li
+                        class="analytics-community-messages-table__reaction-item"
+                        v-for="(reaction, index) in data.reactions"
+                        :key="index"
+                    >
+                        {{ reaction.icon }}
+                        <span class="analytics-community-messages-table__reaction-value">
+                            {{ reaction.value }}
+                        </span>
+                    </li>
+                </ul>
+            </template>
         </v-table>
     </div>
 </template>
@@ -40,7 +56,7 @@
                     ],
 
                     row: [
-                        { type: 'text', key: 'message' },
+                        { type: 'custom', data: 'message' },
                         { type: 'text', key: 'username' },
                         { type: 'text', key: 'date' },
                         { type: 'text', key: 'reaction' },

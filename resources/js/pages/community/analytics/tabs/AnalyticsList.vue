@@ -15,7 +15,7 @@
 
 <script>
     import { mapGetters, mapActions } from 'vuex';
-    import ChartCard from '../../../../components/pages/Community/Analytics/ChartCard.vue';
+    import ChartCard from '../../../../components/pages/community/analytics/ChartCard.vue';
 
     export default {
         name: 'AnalyticsList',
