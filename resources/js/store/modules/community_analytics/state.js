@@ -22,4 +22,20 @@ export default ({
     _no_visit_chat: null,
     _no_activity: null,
 
+    _filters: {
+        period: '',
+    },
+
+    _sort: {
+        name: '',
+        rule: ''
+    },
+
+    _pagination: {
+        page: '1',
+        per_page: '15'
+    },
+
+    _isLoading: false,
+
 });

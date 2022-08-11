@@ -46,4 +46,12 @@ export default ({
     SET_NO_ACTIVITY_VALUE(state, noActivityValue) {
         state._no_activity = noActivityValue;
     },
+
+    SET_FILTERS(state, filters) {
+        Object.keys(state._filters).forEach((key) => {
+            if (filters.hasOwnProperty(key)) {
+                state._filters[key] = filters[key];
+            }
+        });
+    },
 });

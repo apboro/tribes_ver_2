@@ -64,6 +64,7 @@
 </template>
 
 <script>
+    import { mapActions } from 'vuex';
     /* import BarChart from '../../../components/ui/chart/BarChart.vue';
     import LineChart from '../../../components/ui/chart/LineChart.vue'; */
     import AnalyticsFilter from '../../../components/pages/community/analytics/AnalyticsFilter.vue';
@@ -144,6 +145,8 @@
         },
 
         methods: {
+            ...mapActions('community_analytics', ['FILTER']),
+
             switchTab(tabName) {
                 this.visibleTab = tabName;
             },
@@ -177,7 +180,8 @@
 
             filter(data) {
                 // slot for vuex action
-                console.log(data);
+                
+                this.FILTER(data)
 
                 if (data.name == 'list') {
 

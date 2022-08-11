@@ -52,6 +52,19 @@
                 >
                     {{ data[col.key] }}
                 </div>
+
+                <!-- Ссылка -->
+                <div
+                    v-else-if="col.type == 'link'"
+                    class="table__item table__item--changable"
+                >
+                    <a
+                        :href="data[col.key].link"
+                        class="link"
+                    >
+                        {{ data[col.key].text }}
+                    </a>
+                </div>
                 
                 <!-- Статус -->
                 <div
@@ -85,7 +98,7 @@
                     </col-actions>
                 </div>
 
-                <!-- Меню действий -->
+                <!-- Ячейка индивидуального оформления -->
                 <div
                     v-else-if="col.type == 'custom'"
                     class="table__item"
@@ -94,15 +107,6 @@
                         name="customCol"
                         :data="data"
                     ></slot> 
-                    
-                    <!-- <col-actions :colData="data">
-                        <template #actionCol="{ data }">
-                            <slot
-                                name="actionCol"
-                                :data="data"
-                            ></slot>
-                        </template>
-                    </col-actions> -->
                 </div>
             </div>
         </div>

@@ -107,8 +107,15 @@ export default ({
                     items: [
                         {
                             message: 'message text',
-                            username: 'username text',
-                            date: 'date text',
+                            name: {
+                                text: 'name text',
+                                link: '#'
+                            },
+                            username: {
+                                text: 'username text',
+                                link: '#'
+                            },
+                            date: new Date(),
                             reaction: 'reaction text',
                             answer: 'answer text',
                             utility: 'utility text',
@@ -125,8 +132,15 @@ export default ({
                         },
                         {
                             message: 'message text',
-                            username: 'username text',
-                            date: 'date text',
+                            name: {
+                                text: 'name text',
+                                link: '#'
+                            },
+                            username: {
+                                text: 'username text',
+                                link: '#1'
+                            },
+                            date: new Date(),
                             reaction: 'reaction text',
                             answer: 'answer text',
                             utility: 'utility text',
@@ -143,8 +157,15 @@ export default ({
                         },
                         {
                             message: 'message text',
-                            username: 'username text',
-                            date: 'date text',
+                            name: {
+                                text: 'name text',
+                                link: '#'
+                            },
+                            username: {
+                                text: 'username text',
+                                link: '#'
+                            },
+                            date: new Date(),
                             reaction: 'reaction text',
                             answer: 'answer text',
                             utility: 'utility text',
@@ -236,7 +257,9 @@ export default ({
             break;
         }
 
+    },
 
-        
+    FILTER({ commit }, filterAttrs) {
+        console.log(filterAttrs);
     }
 });

@@ -4,6 +4,7 @@
             class="analytics-community-messages-table"
             :data="messages"
             :tableOptions="tableOptions"
+            :sortAttrs="sort"
             :isLoading="false"
         >
             <!-- Слот для вставки не обычно оформленной ячейки, которое может быть добавлено как колонка в строку таблицы -->
@@ -47,24 +48,109 @@
             return {
                 tableOptions: {
                     header: [
-                        { type: 'text', text: 'Сообщение / реакция' },
-                        { type: 'text', text: 'Имя / никнейм автора' },
-                        { type: 'text', text: 'Дата' },
-                        { type: 'text', text: 'Реакции' },
-                        { type: 'text', text: 'Ответы' },
-                        { type: 'text', text: 'Полезность' },
+                        {
+                            type: 'sorting',
+                            text: 'Сообщение / реакция',
+                            sortName: 'message',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Имя автора',
+                            sortName: 'name',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Никнейм',
+                            sortName: 'username',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Дата',
+                            sortName: 'date',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Реакции',
+                            sortName: 'reaction',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Ответы',
+                            sortName: 'answer',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Полезность',
+                            sortName: 'utility',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
                     ],
 
                     row: [
-                        { type: 'custom', data: 'message' },
-                        { type: 'text', key: 'username' },
-                        { type: 'text', key: 'date' },
+                        { type: 'custom' },
+                        { type: 'link', key: 'name' },
+                        { type: 'link', key: 'username' },
+                        { type: 'time', typeValue: 'date', key: 'date' },
                         { type: 'text', key: 'reaction' },
                         { type: 'text', key: 'answer' },
                         { type: 'text', key: 'utility' },
                     ],
                 },
+
+                sort: {
+                    message: 'off',
+                    name: 'off',
+                    username: 'off',
+                    date: 'off',
+                    reaction: 'off',
+                    answer: 'off',
+                    utility: 'off',
+                },
             }
-        }
+        },
+
+        methods: {
+            toSort(sortName, sortRule) {
+                // выключаем все фильтры кроме того который включаем
+                Object.keys(this.sort).forEach((name) => {
+                    if (sortName != name) {
+                        this.sort[name] = 'off';
+                    }
+                });
+                // записываем текущее значение фильтра
+                this.sort[sortName] = sortRule;
+                console.log(sortName, sortRule);
+            },
+            
+            toSort2(sortName, sortRule) {
+                // выключаем все фильтры кроме того который включаем
+                Object.keys(this.sort).forEach((name) => {
+                    if (sortName != name) {
+                        this.sort[name] = 'off';
+                    }
+                });
+                // записываем текущее значение фильтра
+                this.sort[sortName] = sortRule;
+
+                // если значение не "выключен" передаем данные сортировки в состояние
+                // иначе задаем дефолтное
+                if (sortRule != 'off') {
+                    this.SET_SORT({ name: sortName, rule: sortRule });
+                } else {
+                    this.SET_SORT({ name: '', rule: '' });
+                }
+                
+                this.LOAD_QUESTIONS();
+
+                // снять выделение
+                this.CHANGE_ALL_QUESTIONS_ON_MULTIPLE_OPERATIONS(false);
+            },
+        },
     }
 </script>
