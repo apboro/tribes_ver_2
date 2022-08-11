@@ -1,5 +1,5 @@
 @auth
-    <ul class="nav navbar-nav align-items-center ms-auto">
+    <ul class="nav navbar-nav align-items-center ms-auto" data-plugin="Headuser">
         <li class="nav-item dropdown dropdown-user">
             <a
                 class="nav-link dropdown-toggle dropdown-user-link"
@@ -69,9 +69,7 @@
 
                 <a
                     class="dropdown-item d-flex align-items-center"
-                    href="{{ route('auth.login_as') }}"
-                    onclick="event.preventDefault();
-                        document.getElementById('login-as-form').submit();"
+                    onclick="Headuser.loginAsAdmin()"
                 >
                     <i data-feather="power" class="font-medium-2 me-50"></i>
                     {{ __('auth.login_as_admin') }}
