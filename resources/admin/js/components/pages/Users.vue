@@ -131,14 +131,19 @@ export default {
         }
     },
     methods: {
-        async loginAs(userId) {
-            const res = await axios({
-                method: "post",
-                url: "/api/login-as",
-                data: {id: userId}
-            })
-            window.location.href = '/';
-        }
+      loginAs(userId){
+        return new Promise((resolve, reject) => {
+          axios({url: '/api/login-as', data: {'id' : userId}, method: 'POST' })
+              .then(resp => {
+                window.location.href = '/';
+                resolve(resp);
+              })
+              .catch(err => {
+                console.log('Err');
+                reject(err);
+              })
+        })
+      }
     }
 }
 </script>
