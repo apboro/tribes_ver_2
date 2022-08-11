@@ -176,7 +176,18 @@
             },
 
             filter(data) {
+                // slot for vuex action
                 console.log(data);
+
+                if (data.name == 'list') {
+
+                } else if (data.name == 'subscribers') {
+                    
+                } else if (data.name == 'messages') {
+                    
+                } else if (data.name == 'payments') {
+                    
+                } 
             }
         }
     }

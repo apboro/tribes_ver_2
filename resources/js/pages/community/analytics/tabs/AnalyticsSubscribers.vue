@@ -17,7 +17,7 @@
 </template>
 
 <script>
-    import { mapGetters, mapActions, mapMutations } from 'vuex';
+    import { mapGetters, mapActions } from 'vuex';
     import SubscribersChart from '../../../../components/pages/Community/Analytics/subscribers/SubscribersChart.vue';
     import SubscribersTable from '../../../../components/pages/Community/Analytics/subscribers/SubscribersTable.vue';
     import ProgressList from '../../../../components/pages/Community/Analytics/ProgressList.vue';
@@ -62,7 +62,7 @@
                         value: Math.floor(this.GET_SUBSCRIBERS_PROGRESS_DATA.no_activity / this.GET_SUBSCRIBERS_PROGRESS_DATA.total * 100),
                     }
                 ];
-            }
+            },
         },
 
         watch: {

@@ -21,4 +21,5 @@ export default ({
 
     _no_visit_chat: null,
     _no_activity: null,
+
 });

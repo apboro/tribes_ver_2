@@ -87,26 +87,25 @@
 
         computed: {
             chartData() {
-                console.log(this.data);
-                if (this.data) {
-                    return {
+                
+                return {
 
-                        labels: this.data.joined.items,
-                        datasets: [
-                            {
-                                data: this.data.joined.items,                           
-                                borderColor: this.joined.color,
-                                hidden: this.joined.isVisible,
-                            },
-    
-                            {
-                                data: this.data.left.items,                           
-                                borderColor: this.left.color,
-                                hidden: this.left.isVisible,
-                            }
-                        ]
-                    }
+                    labels: this.data.joined.items,
+                    datasets: [
+                        {
+                            data: this.data.joined.items,                           
+                            borderColor: this.joined.color,
+                            hidden: this.joined.isVisible,
+                        },
+
+                        {
+                            data: this.data.left.items,                           
+                            borderColor: this.left.color,
+                            hidden: this.left.isVisible,
+                        }
+                    ]
                 }
+                
             },
 
             chartOptions() {
