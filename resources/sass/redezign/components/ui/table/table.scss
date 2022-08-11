@@ -32,7 +32,7 @@
         }
     }
 
-    &__body {}
+    //&__body {}
 
     &__row-wrapper {
         &.open {
@@ -116,7 +116,7 @@
             cursor: pointer;
         }
 
-        &--changable {}
+        //&--changable {}
 
         &-arrow-icon {
             padding-right: $indent-2;

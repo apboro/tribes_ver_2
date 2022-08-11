@@ -8,6 +8,17 @@
             class="analytics-community__table"
             :messages="GET_TABLE_DATA"
         />
+
+        <!-- Pagination -->
+        <v-pagination
+            v-if="GET_TABLE_DATA && GET_TABLE_DATA.length && !IS_LOADING"
+            class="analytics-community__pagination"
+            :paginateData="GET_PAGINATE_DATA"
+            :selectOptions="paginationSelectedOptions"
+            @onPageClick="setPage"
+            @onChangePerPage="setPerPage"
+        />
+        
     </div>
 </template>
 
@@ -15,6 +26,7 @@
     import { mapGetters, mapActions } from 'vuex';
     import MessagesChart from '../../../../components/pages/community/analytics/messages/MessagesChart.vue';
     import MessagesTable from '../../../../components/pages/community/analytics/messages/MessagesTable.vue';
+    import VPagination from '../../../../components/ui/pagination/VPagination.vue';
 
     export default {
         name: 'AnalyticsMessages',
@@ -22,6 +34,7 @@
         components: {
             MessagesChart,
             MessagesTable,
+            VPagination,
         },
 
         props: {
@@ -34,6 +47,12 @@
         data() {
             return {
                 name: 'messages',
+
+                paginationSelectedOptions: [
+                    { label: 15, value: 15 },
+                    { label: 30, value: 30 },
+                    { label: 45, value: 45 }
+                ],
             }
         },
 
@@ -41,6 +60,8 @@
             ...mapGetters('community_analytics', [
                 'GET_TABLE_DATA',
                 'GET_MESSAGES_CHART_DATA',
+                'IS_LOADING',
+                'GET_PAGINATE_DATA'
             ]),
         },
 
@@ -55,7 +76,22 @@
 
             filter() {
                 this.$emit('filter', { name: this.name, period: this.period });
-            }
+            },
+
+            // переключение страницы пагинации
+            setPage(value) {
+                this.SET_PAGINATION({ page: value });
+                //this.LOAD_QUESTIONS();
+            },
+
+            // изменение количества просматриваемых страниц
+            setPerPage(value) {
+                this.SET_PAGINATION({
+                    per_page: value,
+                    page: 1 
+                });
+                //this.LOAD_DATA_ITEM(this.name);
+            },
         },
 
         mounted() {

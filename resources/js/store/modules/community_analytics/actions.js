@@ -192,13 +192,22 @@ export default ({
                         items: [100, 50, 220, 180, 70, 160, 90, 130, 400, 300],
                         total: 219,
                     },
+
+                    meta: {
+                        current_page: 1,
+                        from: 1,
+                        last_page: 2,
+                        per_page: "15",
+                        to: 15,
+                        total: 16,
+                    },
                 };
 
                 commit('SET_DATA_ITEMS', data.items);
                 commit('SET_JOINED_DATA', data.joined);
                 commit('SET_TOTAL_VALUE', data.total);
                 commit('SET_USEFUL_DATA', data.useful);
-             
+                commit('SET_META', data.meta);
             break;
 
             case 'payments':

@@ -31,10 +31,7 @@ export default ({
         rule: ''
     },
 
-    _pagination: {
-        page: '1',
-        per_page: '15'
-    },
+    _meta: {},
 
     _isLoading: false,
 

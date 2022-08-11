@@ -54,4 +54,8 @@ export default ({
             }
         });
     },
+
+    SET_META(state, meta) {
+        state._meta = meta;
+    },
 });

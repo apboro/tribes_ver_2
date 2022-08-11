@@ -40,4 +40,12 @@ export default ({
             media: state._media,
         };
     },
+
+    GET_PAGINATE_DATA(state) {
+        return state._meta;
+    },
+
+    IS_LOADING(state) {
+        return state._isLoading;
+    }
 });
