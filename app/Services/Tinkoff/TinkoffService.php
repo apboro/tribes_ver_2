@@ -93,7 +93,8 @@ class TinkoffService
                                 $botService->sendMessageFromBot(
                                     config('telegram_bot.bot.botName'),
                                     $payment->telegram_user_id,
-                                    "Участник $payerName оплатил $tariffName , $tariffCost и $tariffEndDate"
+                                    "Участник $payerName оплатил $tariffName в сообществе {$community->title}, 
+                                    стоимость $tariffCost рублей действует до $tariffEndDate г."
                                 );
                         }
                         TelegramLogService::staticSendLogMessage(
