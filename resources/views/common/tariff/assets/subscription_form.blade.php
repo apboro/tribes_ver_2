@@ -140,24 +140,65 @@
                                                     </td>
 
                                                     <td valign="top" colspan="1" class="dataTables_empty">
-
-                                                        @if ($follower->getTariffById($community->tariff->id))
-                                                            {{ $follower->getTariffById($community->tariff->id)->title }}
-                                                        @endif
+                                                        
+                                                        <select
+                                                        class="form-select pointer "
+                                                        id="tariff"
+                                                        name="tariff[{{ $follower->id }}]"
+                                                        >
+                                                            @if ($community->tariff !== null)
+                                                                <option value="{{ false }}"
+                                                                @if (!$follower->getVariantById($variant->id))
+                                                                selected
+                                                                @endif
+                                                                >{{ __('base.none') }}</option>
+                                                                
+                                                                @foreach ($community->tariffvariants as $variant)
+                                                                    <option 
+                                                                    value="{{ $variant->id }}"
+                                                                    @if ($follower->getVariantById($variant->id)) 
+                                                                    selected 
+                                                                    @endif
+                                                                    >
+                                                                        {{ $variant->title }}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                        
 
                                                     </td>
 
                                                     <td valign="top" colspan="1" class="dataTables_empty">
-                                                        {{ $follower->payment->last() ? $follower->payment->last()->created_at->format('d.m.Y') : '-' }}
+                                                        @if ($follower->payment->last())
+                                                            {{$follower->payment->last()->created_at->format('d.m.Y G:i:s')}}
+                                                        @else
+                                                            <input 
+                                                                type="date" 
+                                                                id="date_payment" 
+                                                                class="form-control pointer" 
+                                                                name="date_payment[{{ $follower->id }}]" 
+                                                                value="{{false}}"
+                                                            />
+                                                            <input 
+                                                                type="time" 
+                                                                id="time_payment" 
+                                                                class="form-control pointer" 
+                                                                name="time_payment[{{ $follower->id }}]" 
+                                                                value="{{false}}"
+                                                            />
+                                                        @endif
+                                                        
+                                                        {{-- {{ $follower->payment->last() ? $follower->payment->last()->created_at->format('d.m.Y G:i:s') : '—' }} --}}
                                                     </td>
 
                                                     <td valign="top" colspan="1" class="dataTables_empty">
                                                         <div class="col-sm-12 col-lg-12">
-                                                            <input type="text" class="form-control dt-input"
+                                                            {{ $follower->getTariffById($community->tariff->id) ? $follower->getTariffById($community->tariff->id)->pivot->days : '—' }} 
+                                                            {{-- <input type="text" class="form-control dt-input"
                                                                 data-column="3"
-                                                                @if ($follower->getTariffById($community->tariff->id)) value= "{{ $follower->getTariffById($community->tariff->id)->pivot->days }}" @endif
+                                                                value=""
                                                                 data-column-index="2"
-                                                                name="days[{{ $follower->id }}]" />
+                                                                name="days[{{ $follower->id }}]" /> --}}
                                                         </div>
                                                     </td>
 
