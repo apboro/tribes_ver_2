@@ -25,6 +25,17 @@ class Tariff extends Model
         return $this->hasMany(TariffVariant::class, 'tariff_id', 'id');
     }
 
+    public function getTariffVariants()
+    {
+        $tariffVariants = TariffVariant::where('tariff_id', $this->id)
+            ->where('isActive', true,)
+            ->where('price', '>', 0)
+            ->orderBy('number_button', 'ASC')
+            ->get();
+
+        return $tariffVariants;
+    }
+
     public function getMainImage()
     {
         return $this->belongsTo(File::class,'main_image_id')->first();
