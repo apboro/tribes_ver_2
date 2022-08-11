@@ -27,12 +27,12 @@ class TariffRepository implements TariffRepositoryContract
     public function statisticView(Request $request, $community)
     {
         $ips = UserIp::where('ip', $request->getClientIp())
-            ->where('statistic_id', $community->statistic->id)
+            ->where('statistic_id', $community->statistic->id ?? null)
             ->whereDate('created_at', date('Y-m-d'))
             ->get();
 
         $ipsAll = UserIp::where('ip', $request->getClientIp())
-            ->where('statistic_id', $community->statistic->id)
+            ->where('statistic_id', $community->statistic->id ?? null)
             ->get();
 
         $statistic = Statistic::firstOrCreate([
@@ -42,7 +42,7 @@ class TariffRepository implements TariffRepositoryContract
         if ($ips->first() == NULL) {
             UserIp::create([
                 'ip' => $request->getClientIp(),
-                'statistic_id' => $community->statistic->id,
+                'statistic_id' => $community->statistic->id ?? null,
             ]);
             if ($ipsAll->first() == NULL) {
                 $statistic->hosts++;

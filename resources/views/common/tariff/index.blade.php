@@ -1,5 +1,13 @@
 @extends('layouts.auth')
 
+@section('og')
+    <meta property="og:title" content="{{$community->tariff->title}}"/>
+    <meta property="og:description" content="{{$community->tariff->main_description}}"/>
+    <meta property="og:image" content="@if ($community->tariff->getMainImage()){{ asset($community->tariff->getMainImage()->url) }}@endif"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:url" content= "{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}" />
+@endsection
+
 @section('content')
     <div class="auth-inner my-2" data-plugin="TariffSelectionPage">
         <div class="card mb-0">
