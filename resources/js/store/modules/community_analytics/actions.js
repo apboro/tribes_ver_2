@@ -100,6 +100,7 @@ export default ({
                 commit('SET_TOTAL_VALUE', data.total);
                 commit('SET_NO_VISIT_VALUE', data.no_visit_chat);
                 commit('SET_NO_ACTIVITY_VALUE', data.no_activity);
+
             break;
 
             case 'messages':
@@ -214,32 +215,49 @@ export default ({
                 data = { 
                     items: [
                         {
-                            name: 'name text',
-                            username: 'username text',
+                            name: {
+                                text: 'name text',
+                                link: '#'
+                            },
+                            username: {
+                                text: 'username text',
+                                link: '#'
+                            },
                             transaction_name: 'transaction name text',
                             transaction_type: 'transaction type text',
-                            date: 'date text',
+                            date: new Date(),
                             amount: 'amount text',
                         },
                         {
-                            name: 'name text',
-                            username: 'username text',
+                            name: {
+                                text: 'name text',
+                                link: '#'
+                            },
+                            username: {
+                                text: 'username text',
+                                link: '#'
+                            },
                             transaction_name: 'transaction name text',
                             transaction_type: 'transaction type text',
-                            date: 'date text',
+                            date: new Date(),
                             amount: 'amount text',
                         },
                         {
-                            name: 'name text',
-                            username: 'username text',
+                            name: {
+                                text: 'name text',
+                                link: '#'
+                            },
+                            username: {
+                                text: 'username text',
+                                link: '#'
+                            },
                             transaction_name: 'transaction name text',
                             transaction_type: 'transaction type text',
-                            date: 'date text',
+                            date: new Date(),
                             amount: 'amount text',
                         },
                     ],
                     total: 150330,
-                    period_total: 1150330, 
 
                     subscriptions: {
                         items: [10, 20, 25, 15, 18, 12, 32, 22, 19, 8],
@@ -254,15 +272,30 @@ export default ({
                     media: {
                         items: [130, 220, 120, 176, 72, 121, 68, 142, 26, 230],
                         total: 2319,
-                    }
+                    },
+
+                    all_payments: {
+                        items: [240, 290, 365, 271, 160, 293, 180, 294, 111, 262],
+                        total: 1150330
+                    },
+
+                    meta: {
+                        current_page: 1,
+                        from: 1,
+                        last_page: 2,
+                        per_page: "15",
+                        to: 15,
+                        total: 16,
+                    },
                 };
 
                 commit('SET_DATA_ITEMS', data.items);
                 commit('SET_TOTAL_VALUE', data.total);
-                commit('SET_PERIOD_TOTAL_VALUE', data.period_total);
+                commit('SET_ALL_PAYMENTS', data.all_payments);
                 commit('SET_SUBSCRIPTIONS_DATA', data.subscriptions);
                 commit('SET_DONATIONS_DATA', data.donations);
                 commit('SET_MEDIA_DATA', data.media);
+                commit('SET_META', data.meta);
             break;
         }
 

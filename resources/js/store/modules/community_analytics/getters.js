@@ -34,10 +34,10 @@ export default ({
     GET_PAYMENTS_CHART_DATA(state) {
         return {
             total: state._total,
-            period_total: state._period_total,
             subscriptions: state._subscriptions,
             donations: state._donations,
             media: state._media,
+            all_payments: state._all_payments,
         };
     },
 

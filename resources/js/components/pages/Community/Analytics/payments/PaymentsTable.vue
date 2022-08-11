@@ -4,6 +4,7 @@
             class="analytics-community-payments-table"
             :data="payments"
             :tableOptions="tableOptions"
+            :sortAttrs="sort"
             :isLoading="false"
         >   
         </v-table>
@@ -31,24 +32,77 @@
             return {
                 tableOptions: {
                     header: [
-                        { type: 'text', text: 'Имя подписчика' },
-                        { type: 'text', text: 'Никнейм' },
-                        { type: 'text', text: 'Название транзакции' },
-                        { type: 'text', text: 'Тип транзакции' },
-                        { type: 'text', text: 'Дата' },
-                        { type: 'text', text: 'Сумма' },
+                        {
+                            type: 'sorting',
+                            text: 'Имя автора',
+                            sortName: 'name',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Никнейм',
+                            sortName: 'username',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Название транзакции',
+                            sortName: 'transaction_name',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Тип транзакции',
+                            sortName: 'transaction_type',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Дата',
+                            sortName: 'date',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Сумма',
+                            sortName: 'amount',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
                     ],
 
                     row: [
-                        { type: 'text', key: 'name' },
-                        { type: 'text', key: 'username' },
+                        { type: 'link', key: 'name' },
+                        { type: 'link', key: 'username' },
                         { type: 'text', key: 'transaction_name' },
                         { type: 'text', key: 'transaction_type' },
-                        { type: 'text', key: 'date' },
+                        { type: 'time', typeValue: 'date', key: 'date' },
                         { type: 'text', key: 'amount' },
                     ],
                 },
+
+                sort: {
+                    name: 'off',
+                    username: 'off',
+                    transaction_name: 'off',
+                    transaction_type: 'off',
+                    date: 'off',
+                    amount: 'off',
+                },
             }
+        },
+
+        methods: {
+            toSort(sortName, sortRule) {
+                // выключаем все фильтры кроме того который включаем
+                Object.keys(this.sort).forEach((name) => {
+                    if (sortName != name) {
+                        this.sort[name] = 'off';
+                    }
+                });
+                // записываем текущее значение фильтра
+                this.sort[sortName] = sortRule;
+                console.log(sortName, sortRule);
+            },
         }
     }
 </script>

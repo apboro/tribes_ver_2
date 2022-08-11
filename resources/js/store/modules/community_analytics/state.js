@@ -5,8 +5,6 @@ export default ({
 
     _total: null,
 
-    _period_total: null,
-
     _joined: {},
 
     _left: {},
@@ -18,6 +16,8 @@ export default ({
     _donations: {},
 
     _media: {},
+
+    _all_payments: {},
 
     _no_visit_chat: null,
     _no_activity: null,

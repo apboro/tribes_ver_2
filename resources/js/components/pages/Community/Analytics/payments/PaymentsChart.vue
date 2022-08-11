@@ -11,15 +11,22 @@
                 </span>
             </div>
 
-            <div class="chart-analytics-community__label chart-analytics-community__label--right">
+            <button
+                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                @click="toggleData('all_payments')"
+            >
                 <span class="chart-analytics-community__text">
                     Поступления  за период
                 </span>
 
-                <span class="chart-analytics-community__value">
-                    <span class="chart-analytics-community__currency">₽</span>{{ data.period_total }}
+                <span
+                    class="chart-analytics-community__value"
+                    :style="{ color: all_payments.color }"
+                >
+                    <span class="chart-analytics-community__currency">₽</span>{{ data.all_payments.total }}
                 </span>
-            </div>
+             
+            </button>
         </div>
 
         <line-chart
@@ -108,9 +115,14 @@
 
         data() {
             return {
-                subscriptions: {
+                all_payments: {
                     isVisible: false,
                     color: '#21C169',
+                },
+                
+                subscriptions: {
+                    isVisible: false,
+                    color: '#E24041',
                 },
                 
                 donations: {
@@ -132,6 +144,12 @@
                 return {
                     labels: this.data.subscriptions.items,
                     datasets: [
+                        {
+                            data: this.data.all_payments.items,                           
+                            borderColor: this.all_payments.color,
+                            hidden: this.all_payments.isVisible,
+                        },
+
                         {
                             data: this.data.subscriptions.items,                           
                             borderColor: this.subscriptions.color,

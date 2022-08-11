@@ -11,8 +11,8 @@ export default ({
         state._total = totalValue;
     },
 
-    SET_PERIOD_TOTAL_VALUE(state, periodTotalValue) {
-        state._period_total = periodTotalValue;
+    SET_ALL_PAYMENTS(state, allPayments) {
+        state._all_payments = allPayments;
     },
 
     SET_JOINED_DATA(state, joined) {
