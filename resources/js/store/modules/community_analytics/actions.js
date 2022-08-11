@@ -51,27 +51,45 @@ export default ({
                 data = {
                     items: [
                         {
-                            name: 'name text',
-                            username: 'username text',
-                            date: 'date text',
+                            name: {
+                                text: 'name text',
+                                link: '#'
+                            },
+                            username: {
+                                text: 'username text',
+                                link: '#'
+                            },
+                            date: new Date(),
                             messages: 'messages text',
                             reaction_out: 'reaction out text',
                             reaction_in: 'reaction in text',
                             utility: 'utility text',
                         },
                         {
-                            name: 'name text',
-                            username: 'username text',
-                            date: 'date text',
+                            name: {
+                                text: 'name text',
+                                link: '#'
+                            },
+                            username: {
+                                text: 'username text',
+                                link: '#'
+                            },
+                            date: new Date(),
                             messages: 'messages text',
                             reaction_out: 'reaction out text',
                             reaction_in: 'reaction in text',
                             utility: 'utility text',
                         },
                         {
-                            name: 'name text',
-                            username: 'username text',
-                            date: 'date text',
+                            name: {
+                                text: 'name text',
+                                link: '#'
+                            },
+                            username: {
+                                text: 'username text',
+                                link: '#'
+                            },
+                            date: new Date(),
                             messages: 'messages text',
                             reaction_out: 'reaction out text',
                             reaction_in: 'reaction in text',
@@ -90,6 +108,15 @@ export default ({
                         total: 19,
                     },
 
+                    meta: {
+                        current_page: 1,
+                        from: 1,
+                        last_page: 2,
+                        per_page: "15",
+                        to: 15,
+                        total: 16,
+                    },
+
                     no_visit_chat: 400,
                     no_activity: 650,
                 };
@@ -100,7 +127,7 @@ export default ({
                 commit('SET_TOTAL_VALUE', data.total);
                 commit('SET_NO_VISIT_VALUE', data.no_visit_chat);
                 commit('SET_NO_ACTIVITY_VALUE', data.no_activity);
-
+                commit('SET_META', data.meta);
             break;
 
             case 'messages':

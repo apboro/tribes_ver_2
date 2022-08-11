@@ -112,7 +112,7 @@
                     },
                 ],
 
-                visibleTab: 'payments',
+                visibleTab: 'subscribers',
                 filterValue: 'week',
 
                 chartData2: {

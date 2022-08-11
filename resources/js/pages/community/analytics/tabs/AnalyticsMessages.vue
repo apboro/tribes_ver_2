@@ -18,7 +18,6 @@
             @onPageClick="setPage"
             @onChangePerPage="setPerPage"
         />
-        
     </div>
 </template>
 

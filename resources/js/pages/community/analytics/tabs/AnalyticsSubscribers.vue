@@ -13,6 +13,16 @@
             class="analytics-community__table"
             :subscribers="GET_TABLE_DATA"
         />
+
+        <!-- Pagination -->
+        <v-pagination
+            v-if="GET_TABLE_DATA && GET_TABLE_DATA.length && !IS_LOADING"
+            class="analytics-community__pagination"
+            :paginateData="GET_PAGINATE_DATA"
+            :selectOptions="paginationSelectedOptions"
+            @onPageClick="setPage"
+            @onChangePerPage="setPerPage"
+        />
     </div>
 </template>
 
@@ -21,6 +31,7 @@
     import SubscribersChart from '../../../../components/pages/community/analytics/subscribers/SubscribersChart.vue';
     import SubscribersTable from '../../../../components/pages/community/analytics/subscribers/SubscribersTable.vue';
     import ProgressList from '../../../../components/pages/community/analytics/ProgressList.vue';
+    import VPagination from '../../../../components/ui/pagination/VPagination.vue';
 
     export default {
         name: 'AnalyticsSubscribers',
@@ -29,6 +40,7 @@
             SubscribersChart,
             SubscribersTable,
             ProgressList,
+            VPagination,
         },
 
         props: {
@@ -41,6 +53,12 @@
         data() {
             return {
                 name: 'subscribers',
+
+                paginationSelectedOptions: [
+                    { label: 15, value: 15 },
+                    { label: 30, value: 30 },
+                    { label: 45, value: 45 }
+                ],
             }
         },
 
@@ -48,7 +66,9 @@
             ...mapGetters('community_analytics', [
                 'GET_TABLE_DATA',
                 'GET_SUBSCRIBERS_CHART_DATA',
-                'GET_SUBSCRIBERS_PROGRESS_DATA'
+                'GET_SUBSCRIBERS_PROGRESS_DATA',
+                'IS_LOADING',
+                'GET_PAGINATE_DATA',
             ]),
 
             progressList() {
@@ -76,7 +96,22 @@
 
             filter() {
                 this.$emit('filter', { name: this.name, period: this.period });
-            }
+            },
+
+            // переключение страницы пагинации
+            setPage(value) {
+                this.SET_PAGINATION({ page: value });
+                //this.LOAD_QUESTIONS();
+            },
+
+            // изменение количества просматриваемых страниц
+            setPerPage(value) {
+                this.SET_PAGINATION({
+                    per_page: value,
+                    page: 1 
+                });
+                //this.LOAD_DATA_ITEM(this.name);
+            },
         },
 
         mounted() {

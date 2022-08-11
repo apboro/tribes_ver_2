@@ -4,6 +4,7 @@
             class="analytics-community-subscribers-table"
             :data="subscribers"
             :tableOptions="tableOptions"
+            :sortAttrs="sort"
             :isLoading="false"
         >   
         </v-table>
@@ -31,34 +32,85 @@
             return {
                 tableOptions: {
                     header: [
-                        { type: 'text', text: 'Имя подписчика' },
-                        { type: 'text', text: 'Никнейм' },
-                        { type: 'text', text: 'Дата' },
-                        { type: 'text', text: 'Сообщения' },
-                        { type: 'text', text: 'Реакции (оставил)' },
-                        { type: 'text', text: 'Реакции (получил)' },
-                        { type: 'text', text: 'Полезность' },
+                        {
+                            type: 'sorting',
+                            text: 'Имя подписчика',
+                            sortName: 'name',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Никнейм',
+                            sortName: 'username',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Дата',
+                            sortName: 'date',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Сообщения',
+                            sortName: 'messages',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Реакции (оставил)',
+                            sortName: 'reaction_out',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Реакции (получил)',
+                            sortName: 'reaction_in',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
+                        {
+                            type: 'sorting',
+                            text: 'Полезность',
+                            sortName: 'utility',
+                            sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
+                        },
                     ],
 
                     row: [
-                        { type: 'text', key: 'name' },
-                        { type: 'text', key: 'username' },
-                        { type: 'text', key: 'date' },
+                        { type: 'link', key: 'name' },
+                        { type: 'link', key: 'username' },
+                        { type: 'time', typeValue: 'date', key: 'date' },
                         { type: 'text', key: 'messages' },
                         { type: 'text', key: 'reaction_out' },
                         { type: 'text', key: 'reaction_in' },
                         { type: 'text', key: 'utility' },
                     ],
+                },
 
-                    /* name: 'name text',
-                            username: 'username text',
-                            date: 'date text',
-                            messages: 'messages text',
-                            reaction_out: 'reaction out text',
-                            reaction_in: 'reaction in text',
-                            utility: 'utility text', */
+                sort: {
+                    name: 'off',
+                    username: 'off',
+                    date: 'off',
+                    messages: 'off',
+                    reaction_out: 'off',
+                    reaction_in: 'off',
+                    utility: 'off',
                 },
             }
+        },
+
+        methods: {
+            toSort(sortName, sortRule) {
+                // выключаем все фильтры кроме того который включаем
+                Object.keys(this.sort).forEach((name) => {
+                    if (sortName != name) {
+                        this.sort[name] = 'off';
+                    }
+                });
+                // записываем текущее значение фильтра
+                this.sort[sortName] = sortRule;
+                console.log(sortName, sortRule);
+            },
         }
     }
 </script>
