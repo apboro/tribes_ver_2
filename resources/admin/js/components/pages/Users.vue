@@ -137,6 +137,7 @@ export default {
                 url: "/api/login-as",
                 data: {id: userId}
             })
+            window.location.href = '/';
         }
     }
 }
