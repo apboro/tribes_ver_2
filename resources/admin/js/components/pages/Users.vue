@@ -60,17 +60,6 @@
                     </td>
                     <td>$940</td>
                     <td class="text-end">
-                        <!-- <span class="dropdown">
-                            <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#">
-                                Action
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                Another action
-                            </a>
-                            </div>
-                        </span> -->
                         <div class="btn-group">
                             <button type="button" class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
                                 Actions
@@ -79,7 +68,6 @@
                                 <li>
                                     <button @click.prevent="loginAs(user.id)" class="dropdown-item" type="button">Войти от этого пользователя</button>
                                 </li>
-                                <li><button class="dropdown-item" type="button">Another action</button></li>
                             </ul>
                         </div>
                     </td>
@@ -131,13 +119,18 @@ export default {
         }
     },
     methods: {
-        async loginAs(userId) {
-            const res = await axios({
-                method: "post",
-                url: "/api/login-as",
-                data: {id: userId}
+        loginAs(userId){
+            return new Promise((resolve, reject) => {
+                axios({url: '/api/login-as', data: {'id' : userId}, method: 'POST' })
+                    .then(resp => {
+                        window.location.href = '/';
+                        resolve(resp);
+                    })
+                    .catch(err => {
+                        console.log('Err');
+                        reject(err);
+                    })
             })
-            window.location.href = '/';
         }
     }
 }
