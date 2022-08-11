@@ -85,17 +85,18 @@ class TinkoffService
 
                     if($community){
                         if($payment->type === 'tariff') {
-                            /*$payerName = $payment->telegramUser->publicName()??'';
+                            /** @var \App\Models\Payment $payment */
+                            $payerName = $payment->telegramUser()->first()->publicName()??'';
                             $tariffName = $payment->payable()->first()->title??'';
                             $tariffCost = $payment->add_balance??'';
-                            $tariffEndDate  = Carbon::now()->addDays($payment->tariffs()->first()->days)->format('dd.mm.Y')??'';
+                            $tariffEndDate  =$payment->tariffs()->first()->days;// Carbon::now()->addDays()->format('dd.mm.Y')??'';
 
                             Log::info('send tariff pay message to own author chat bot',[
-                                config('telegram_bot.bot.botName'),
-                                $payment->telegram_user_id,
-                                "Участник $payerName оплатил $tariffName в сообществе {$community->title}, 
+                                'message' =>  "Участник $payerName оплатил $tariffName в сообществе {$community->title}, 
                                     стоимость $tariffCost рублей действует до $tariffEndDate г."
-                            ]);*/
+                            ]);
+/*
+                            */
                             /*$botService = app(TelegramMainBotService::class);
                             $botService->sendMessageFromBot(
                                 config('telegram_bot.bot.botName'),
