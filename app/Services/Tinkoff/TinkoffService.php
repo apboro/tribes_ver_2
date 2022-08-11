@@ -12,6 +12,7 @@ use App\Services\Tinkoff\Payment as Pay;
 use App\Services\Tinkoff\TinkoffApi;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TinkoffService
 {
@@ -96,6 +97,12 @@ class TinkoffService
                                     "Участник $payerName оплатил $tariffName в сообществе {$community->title}, 
                                     стоимость $tariffCost рублей действует до $tariffEndDate г."
                                 );
+                                Log::info('send tariff pay message to own author chat bot',[
+                                    config('telegram_bot.bot.botName'),
+                                    $payment->telegram_user_id,
+                                    "Участник $payerName оплатил $tariffName в сообществе {$community->title}, 
+                                    стоимость $tariffCost рублей действует до $tariffEndDate г."
+                                ]);
                         }
                         TelegramLogService::staticSendLogMessage(
                             "Tinkoff: совершен платёж за " .
