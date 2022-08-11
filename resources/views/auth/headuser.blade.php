@@ -27,6 +27,7 @@
 
             <!-- Drop menu -->
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
+
                 @if (request()->is('*follower*'))
                     <a class="dropdown-item d-flex align-items-center" href="{{ route('community.list') }}">
                         <i data-feather="repeat" class="font-medium-2 me-50"></i>
@@ -52,7 +53,17 @@
                         {{ __('base.profile') }}
                     </a>
                 @endif
-                
+
+                @if(Auth::user()->isAdmin())
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item d-flex align-items-center" href="/manager/users">
+                        <i data-feather="power" class="font-medium-2 me-50"></i>
+                        {{ __('auth.manager_panel') }}
+                    </a>
+
+                @endif
+
                 @if(session()->has('admin_id'))
                 <div class="dropdown-divider"></div>
 
@@ -63,10 +74,11 @@
                         document.getElementById('login-as-form').submit();"
                 >
                     <i data-feather="power" class="font-medium-2 me-50"></i>
-                    {{ __('base.login_as_admin') }}
+                    {{ __('auth.login_as_admin') }}
                 </a>
             
                 @endif
+
                 <div class="dropdown-divider"></div>
 
                 <a
@@ -86,7 +98,7 @@
         @csrf
     </form>
     @if(session()->has('admin_id'))
-    <form id="login-as-form" action="{{ route('auth.login_as') }}" method="POST" class="d-none">
+    <form id="login-as-form" action="{{ route('auth.login_as_admin') }}" method="POST" class="d-none">
         @csrf
         <input type="hidden" name="id" value="{{ session()->get('admin_id') }}">
     </form>

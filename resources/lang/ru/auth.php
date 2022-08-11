@@ -36,4 +36,7 @@ return [
     'rights_message_2' => 'и даю',
     'rights_link_privacy' => 'Политики обработки персональных данных',
     'rights_link_privacy_accept' => 'согласие на обработку персональных данных',
+
+    'login_as_admin' => 'Войти как администратор',
+    'manager_panel' => 'Панель администратора',
 ];
