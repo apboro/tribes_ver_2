@@ -90,19 +90,20 @@ class TinkoffService
                             $tariffCost = $payment->add_balance;
                             $tariffEndDate  = Carbon::now()->addDays($payment->tariffs()->first()->days)->format('dd.mm.Y');
                             /** @var TelegramMainBotService $botService */
-                            $botService = app(TelegramMainBotService::class);
-                                $botService->sendMessageFromBot(
-                                    config('telegram_bot.bot.botName'),
-                                    $payment->telegram_user_id,
-                                    "Участник $payerName оплатил $tariffName в сообществе {$community->title}, 
+                            Log::info('send tariff pay message to own author chat bot',[
+                                config('telegram_bot.bot.botName'),
+                                $payment->telegram_user_id,
+                                "Участник $payerName оплатил $tariffName в сообществе {$community->title}, 
                                     стоимость $tariffCost рублей действует до $tariffEndDate г."
-                                );
-                                Log::info('send tariff pay message to own author chat bot',[
-                                    config('telegram_bot.bot.botName'),
-                                    $payment->telegram_user_id,
-                                    "Участник $payerName оплатил $tariffName в сообществе {$community->title}, 
-                                    стоимость $tariffCost рублей действует до $tariffEndDate г."
-                                ]);
+                            ]);
+                            /*$botService = app(TelegramMainBotService::class);
+                            $botService->sendMessageFromBot(
+                                config('telegram_bot.bot.botName'),
+                                $payment->telegram_user_id,
+                                "Участник $payerName оплатил $tariffName в сообществе {$community->title},
+                                стоимость $tariffCost рублей действует до $tariffEndDate г."
+                            );*/
+
                         }
                         TelegramLogService::staticSendLogMessage(
                             "Tinkoff: совершен платёж за " .
