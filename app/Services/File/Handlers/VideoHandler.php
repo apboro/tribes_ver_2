@@ -58,10 +58,10 @@ class VideoHandler implements HandlerContract
     {
         $data = ['file' => $file];
         Validator::make($data,[
-            'file' => 'mimes:mp4|max:102400',
+            'file' => 'mimes:mp4,avi|max:102400',
         ],[
             'file.max' => 'Размер видио превышает 100MB',
-            'file.mimes' => 'Поддерживаемые форматы MP4',
+            'file.mimes' => 'Поддерживаемые форматы MP4, AVI',
         ])->validate();
     }
 }

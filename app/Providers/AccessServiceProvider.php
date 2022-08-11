@@ -20,10 +20,6 @@ class AccessServiceProvider extends ServiceProvider
      */
     public function register()
     {
-//        $this->app->bind(
-//            \App\Services\FileService::class,
-//            \App\Repositories\Author\AuthorRepository::class
-//        );
         $this->app->bind(
             \App\Repositories\Author\AuthorRepositoryContract::class,
             \App\Repositories\Author\AuthorRepository::class
