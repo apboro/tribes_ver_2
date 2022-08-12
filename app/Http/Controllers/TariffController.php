@@ -202,7 +202,25 @@ class TariffController extends Controller
             $this->tariffRepo->settingsUpdate($community, $request);
             return redirect()->back()->withCommunity($community);
         }
-        return view('common.tariff.settings.pay')->withCommunity($community);
+        return view('common.tariff.publication.pay')->withCommunity($community);
+    }
+
+    public function publication(TariffSettingsRequest $request, Community $community, $tab = 'message')
+    {
+        $tab .= 'Tab';
+
+        if (!method_exists($this, $tab)) abort(404);
+
+        return $this->$tab($request, $community);
+    }
+
+    private function messageTab(TariffSettingsRequest $request, Community $community)
+    {
+        if ($request->isMethod('post')) {
+            $this->tariffRepo->settingsUpdate($community, $request);
+            return redirect()->back()->withCommunity($community);
+        }
+        return view('common.tariff.publication.message')->withCommunity($community);
     }
 
     public function subscriptions(Community $community, TariffFilter $filters)

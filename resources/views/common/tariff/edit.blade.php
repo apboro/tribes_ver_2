@@ -142,6 +142,9 @@
                                             placeholder="{{ __('base.number') }}"
                                     >
                                 </div>
+                                @error('number_button')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
                             @endif
                         @endforeach
                     </div>

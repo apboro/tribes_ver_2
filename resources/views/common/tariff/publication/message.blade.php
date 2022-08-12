@@ -1,4 +1,4 @@
-@extends('common.tariff.settings.index')
+@extends('common.tariff.publication.index')
 
 @section('subtab')
     <form
@@ -50,14 +50,54 @@
                     <hr />
                 </div>
                 @endif
+                {{--<div class="inactive-form-items">
+                    <div class="row align-items-center">
+                        <div class="col-md-12 col-12">
+                            <div class="d-flex align-items-center">
+                                <div class="form-check form-check-primary form-switch">
+                                    <input type="checkbox"
+                                        class="form-check-input pointer"
+                                        id="tariff_notification"
+                                        value="true"
+                                        name="tariff_notification"
+                                        {{ ($community->tariff->tariff_notification == true) ? 'checked' : null }}
+                                    />
+                                </div>
 
-                <!-- Приветственное сообщение -->
-                @include('common.tariff.assets.tariff_welcome')
+                                <label class="ms-1 pointer" for="tariff_notification">
+                                    {{ __('form.receive_notifications') }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                </div>--}}
 
-                <!-- Сообщение благодарности за оплату тарифа -->
-                @include('common.tariff.assets.tariff_success')
+                <!-- Описание к публикации тарифов -->
+                @include('common.tariff.assets.tariff_publication')
 
+                <!-- Отправить в сообщество -->
+                <div class="mt-2">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center">
+                                <div class="form-check form-check-primary form-switch">
+                                    <input
+                                        type="checkbox"
+                                        class="form-check-input pointer"
+                                        id="tariff_item_check_6"
+                                        value="true"
+                                        name="send_to_community"
+                                    />
+                                </div>
 
+                                <label class="ms-1 pointer" for="tariff_item_check_6">
+                                    {{ __('form.send_to_community') }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="card-footer">

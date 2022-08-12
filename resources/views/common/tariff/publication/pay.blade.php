@@ -1,4 +1,4 @@
-@extends('common.tariff.settings.index')
+@extends('common.tariff.publication.index')
 
 @section('subtab')
     <form
