@@ -78,4 +78,5 @@ class LoginController extends Controller
             ? new JsonResponse([], 204)
             : redirect('/');
     }
+
 }

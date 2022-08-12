@@ -22,6 +22,4 @@ Route::middleware(['auth:sanctum', 'admin'])->namespace('App\Http\Controllers\Ma
     Route::post('/communities', 'CommunityController@list')->name('manager.community.list');
     Route::post('/community', 'CommunityController@get')->name('manager.community.get');
 
-    Route::post('/loginAs', 'LoginController@loginAs')->name('manager.login.as');
-    Route::post('/loginBack', 'LoginController@loginBack')->name('manager.login.back');
 });

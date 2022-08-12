@@ -241,9 +241,9 @@ class User extends Authenticatable
 
     public function createTempToken()
     {
-        if ($this->tokens()->count() !== 0) {
+        /*if ($this->tokens()->count() !== 0) {
             $this->tokens()->delete();
-        }
+        }*/
 
         $token = $this->createToken('api-token');
         return $this->withAccessToken($token->plainTextToken)
