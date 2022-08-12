@@ -27,22 +27,22 @@
             </a>
         </li>
 
-        <li class="nav-community__item">
+        <!-- <li class="nav-community__item">
             <a
                 href="{{ route('knowledge.index', $community) }}"
                 class="nav-community__link {{ request()->is('*community/*/knowledge*') ? 'active' : '' }}"    
             >
                 {{ __('base.knowledge_base') }}
             </a>
-        </li>
+        </li> -->
 
-        <!-- <li class="nav-community__item">
+        <li class="nav-community__item">
             <a
                 href="{{ route('community.tariff.subscriptions', $community) }}"
                 class="nav-community__link {{ request()->is('*community/*/subscribers*') ? 'active' : '' }}"    
             >
                 {{ __('base.subscribers') }}
             </a>
-        </li> -->
+        </li>
     </ul>
 </nav>
