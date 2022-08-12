@@ -6,6 +6,7 @@ use App\Filters\API\QuestionsFilter;
 use App\Helper\ArrayHelper;
 use App\Helper\PseudoCrypt;
 use App\Jobs\CheckDaysForUsers;
+use App\Jobs\SendTeleMessageToChatFromBot;
 use App\Models\Community;
 use App\Models\Donate;
 use App\Models\Knowledge\Question;
@@ -721,23 +722,21 @@ class MainBotCommands
                     $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
                     $ctx->replyHTML($image . $message . $defMassage . $invite);
                     //todo отправить сообщение автору через личный чат с ботом,
+                    $ty = TelegramUser::where([
+                        'telegram_id' => $ctx->getUserID()
+                    ])->first();
+
                     $payerName = $ty->publicName()??'';
                     $tariffName = $variant->title??'';
                     $tariffCost = ($payment->amount/100)??0;
-                    $tariffEndDate = Carbon::now()->addDays($variant->period)->format('dd.mm.Y')??'';
-
+                    $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y')??'';
+                    $message = "Участник $payerName оплатил $tariffName в сообществе {$payment->community->title},
+                                стоимость $tariffCost рублей действует до $tariffEndDate г.";
                     Log::info('send tariff pay message to own author chat bot',[
-                        'message' =>  "Участник $payerName оплатил $tariffName в сообществе {$community->title},
-                                стоимость $tariffCost рублей действует до $tariffEndDate г."
+                        'message' =>  $message
                     ]);
-
-                    /*$botService = app(TelegramMainBotService::class);
-                    $botService->sendMessageFromBot(
-                        config('telegram_bot.bot.botName'),
-                        $payment->telegram_user_id,
-                        "Участник $payerName оплатил $tariffName в сообществе {$community->title},
-                        стоимость $tariffCost рублей действует до $tariffEndDate г."
-                    );*/
+                    $authorTeleUserId = $payment->community->connection->telegram_user_id??0;
+                    SendTeleMessageToChatFromBot::dispatch(config('telegram_bot.bot.botName'), $authorTeleUserId,$message);
                 }
             } else {
                 $communityId = str_replace('trial', '', $ctx->var('paymentId'));
