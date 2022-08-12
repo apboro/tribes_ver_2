@@ -2,42 +2,21 @@ export default ({
     LOAD_DATA_LIST({ commit }) {
         const data = {
             subscribers: {
-                title: 'Подписчики',
-                data: [10, 30, 40, 20, 25, 50, 10, 5, 15, 25, 10, 45],
-                infoLeft: {
-                    text: 'Прирост',
-                    value: '+96'
-                },
-                infoRight: {
-                    text: 'Полезных',
-                    value: '+13'    
-                }
+                items: [10, 30, 40, 20, 25, 50, 10, 5, 15, 25, 10, 45],
+                growth: 96,
+                useful: 13,
             },
 
             messages: {
-                title: 'Сообщества',
-                data: [3, 7, 25, 36, 42, 23, 31],
-                infoLeft: {
-                    text: 'Отправлено',
-                    value: '+563'
-                },
-                infoRight: {
-                    text: 'Полезных',
-                    value: '+233'    
-                }
+                items: [3, 7, 25, 36, 42, 23, 31],
+                sent: 563,
+                useful: 233,
             },
 
-            finance: {
-                title: 'Финансы',
-                data: [100, 250, 150, 300, 250, 400, 350, 450],
-                infoLeft: {
-                    text: 'Приход',
-                    value: '₽24.3k'
-                },
-                infoRight: {
-                    text: 'Можно вывести',
-                    value: '₽20,3k'    
-                }
+            payments: {
+                items: [100, 250, 150, 300, 250, 400, 350, 450],
+                income: 24300,
+                available: 20300,
             }
         };
 

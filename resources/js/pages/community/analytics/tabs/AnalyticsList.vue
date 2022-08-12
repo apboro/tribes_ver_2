@@ -5,7 +5,7 @@
         >
             <chart-card
                 class="analytics-community__card-item"
-                v-for="(data, index) in GET_DATA_LIST"
+                v-for="(data, index) in cardsData"
                 :key="index"
                 :data="data"
             />
@@ -16,6 +16,7 @@
 <script>
     import { mapGetters, mapActions } from 'vuex';
     import ChartCard from '../../../../components/pages/community/analytics/ChartCard.vue';
+import { numberFormatting } from '../../../../core/functions';
 
     export default {
         name: 'AnalyticsList',
@@ -33,6 +34,10 @@
 
         computed: {
             ...mapGetters('community_analytics', ['GET_DATA_LIST']),
+
+            cardsData() {
+                return this.convertData();
+            },
         },
 
         watch: {
@@ -46,6 +51,54 @@
             
             filter() {
                 this.$emit('filter', { name: 'list', period: this.period });
+            },
+
+            convertData() {
+                return Object.entries(this.GET_DATA_LIST).map(([category, data]) => {
+                    let obj = {};
+                    switch (category) {
+                        case 'subscribers':
+                            obj.title = 'Подписчики';
+                            obj.data = data.items;
+                            obj.infoLeft = {
+                                text: 'Прирост',
+                                value: `+${ numberFormatting(data.growth) }`
+                            };
+                            obj.infoRight = {
+                                text: 'Полезных',
+                                value: `+${ numberFormatting(data.useful) }`    
+                            };
+                            break;
+                        
+                        case 'messages':
+                            obj.title = 'Сообщения';
+                            obj.data = data.items;
+                            obj.infoLeft = {
+                                text: 'Отправлено',
+                                value: `+${ numberFormatting(data.sent) }`
+                            };
+                            obj.infoRight = {
+                                text: 'Полезных',
+                                value: `+${ numberFormatting(data.useful) }`    
+                            };
+                            break;
+
+                        case 'payments':
+                            obj.title = 'Финансы';
+                            obj.data = data.items;
+                            obj.infoLeft = {
+                                text: 'Приход',
+                                value: `+${ numberFormatting(data.income) }`
+                            };
+                            obj.infoRight = {
+                                text: 'Можно вывести',
+                                value: `+${ numberFormatting(data.available) }`    
+                            };
+                            break;
+                    }
+
+                    return obj;
+                });
             }
         },
 
@@ -53,7 +106,6 @@
             this.LOAD_DATA_LIST();
 
             this.filter();
-
         }
     }
 </script>

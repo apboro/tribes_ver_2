@@ -1,5 +1,5 @@
 <template>
-    <div v-if="data" class="chart-analytics-community">
+    <div v-if="data && data.total" class="chart-analytics-community">
         <div class="chart-analytics-community__header">
             <div class="chart-analytics-community__label">
                 <span class="chart-analytics-community__text">
@@ -7,7 +7,7 @@
                 </span>
 
                 <span class="chart-analytics-community__value">
-                    {{ data.total }}
+                    {{ numberFormat(data.total) }}
                 </span>
             </div>
 
@@ -23,7 +23,7 @@
                     class="chart-analytics-community__value"
                     :style="{ color: joined.color }"
                 >
-                    +{{ data.joined.total }}
+                    +{{ numberFormat(data.joined.total) }}
                 </span>
             </button>
         </div>
@@ -43,7 +43,7 @@
                     class="chart-analytics-community__value"
                     :style="{ color: left.color }"
                 >
-                    -{{ data.left.total }}
+                    -{{ numberFormat(data.left.total) }}
                 </span>
              
                 <span class="chart-analytics-community__text">
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+    import { numberFormatting } from '../../../../../core/functions';
     import LineChart from '../../../../ui/chart/LineChart.vue';
 
     export default {
@@ -142,10 +143,10 @@
             toggleData(value) {
                 this[value].isVisible = !this[value].isVisible;
             },
-        },
 
-        mounted() {
-            console.log(this.data);
-        }
+            numberFormat(value) {
+                return numberFormatting(value);
+            },
+        },
     }
 </script>

@@ -22,11 +22,12 @@
                 </span>
 
                 <span class="card-analytics-community__info-value">
+                    
                     {{ data.infoLeft.value }}
                 </span>
             </div>
 
-            <div class="card-analytics-community__info">
+            <div class="card-analytics-community__info card-analytics-community__info--right">
                 <span class="card-analytics-community__info-label">
                     {{ data.infoRight.text }}
                 </span>

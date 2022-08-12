@@ -1,5 +1,5 @@
 <template>
-    <div v-if="data" class="chart-analytics-community">
+    <div v-if="data && data.all_payments.total" class="chart-analytics-community">
         <div class="chart-analytics-community__header">
             <div class="chart-analytics-community__label">
                 <span class="chart-analytics-community__text">
@@ -7,7 +7,7 @@
                 </span>
 
                 <span class="chart-analytics-community__value">
-                    <span class="chart-analytics-community__currency">₽</span>{{ data.total }}
+                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.total) }}
                 </span>
             </div>
 
@@ -23,7 +23,7 @@
                     class="chart-analytics-community__value"
                     :style="{ color: all_payments.color }"
                 >
-                    <span class="chart-analytics-community__currency">₽</span>{{ data.all_payments.total }}
+                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.all_payments.total) }}
                 </span>
              
             </button>
@@ -44,7 +44,7 @@
                     class="chart-analytics-community__value"
                     :style="{ color: subscriptions.color }"
                 >
-                    <span class="chart-analytics-community__currency">₽</span>{{ data.subscriptions.total }}
+                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.subscriptions.total) }}
                 </span>
              
                 <span
@@ -63,7 +63,7 @@
                     class="chart-analytics-community__value"
                     :style="{ color: donations.color }"
                 >
-                    <span class="chart-analytics-community__currency">₽</span>{{ data.donations.total }}
+                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.donations.total) }}
                 </span>
              
                 <span
@@ -82,7 +82,7 @@
                     class="chart-analytics-community__value"
                     :style="{ color: media.color }"
                 >
-                    <span class="chart-analytics-community__currency">₽</span>{{ data.media.total }}
+                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.media.total) }}
                 </p>
              
                 <p
@@ -97,8 +97,9 @@
 </template>
 
 <script>
+import { numberFormatting } from '../../../../../core/functions';
     import LineChart from '../../../../ui/chart/LineChart.vue';
-
+    
     export default {
         name: 'MessagesChart',
         
@@ -139,8 +140,6 @@
 
         computed: {
             chartData() {
-                console.log(this.data);
-
                 return {
                     labels: this.data.subscriptions.items,
                     datasets: [
@@ -204,6 +203,10 @@
         methods: {
             toggleData(value) {
                 this[value].isVisible = !this[value].isVisible;
+            },
+
+            numberFormat(value) {
+                return numberFormatting(value);
             },
         }
     }

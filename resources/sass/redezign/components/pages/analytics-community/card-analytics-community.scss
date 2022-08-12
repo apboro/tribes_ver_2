@@ -14,7 +14,7 @@
         @include font($text-color-1, 16px, 26px, 400);
     }
 
-    &__chart {}
+    //&__chart {}
 
     &__footer {
         display: grid;
@@ -23,6 +23,15 @@
         row-gap: 20px;
         justify-content: space-between;
         padding: 50px 30px 30px 30px;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+
+        &--right {
+            align-items: flex-end;
+        }
     }
 
     &__info-label {
