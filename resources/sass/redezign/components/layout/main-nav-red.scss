@@ -1,12 +1,26 @@
 .main-nav-red {
-
+    
 
     &__list {
         display: flex;
+        column-gap: 30px;
+        margin: 0;
         list-style: none;
     }
 
     &__item {}
 
-    &__link {}
+    &__link {
+        @include font($text-color-1, 16px, 21px, 700);
+        text-transform: uppercase;
+        transition: $transition;
+
+        &:hover {
+            color: $primary-1;
+        }
+
+        &.active {
+            color: $primary-1;
+        }
+    }
 }

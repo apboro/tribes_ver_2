@@ -1,4 +1,4 @@
-<nav class="main-nav-red main-header__main-nav">
+<nav class="main-nav main-header__main-nav">
     <ul class="main-nav__list">
         @if (request()->is('*follower*'))
         <li class="main-nav__item">

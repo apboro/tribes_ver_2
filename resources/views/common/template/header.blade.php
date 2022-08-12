@@ -1,169 +1,27 @@
-<header data-lock-element>
-    <nav class="header-navbar navbar-expand-lg navbar navbar-fixed navbar-shadow navbar-brand-center d-flex justify-content-center" data-nav="brand-center">
-        <div class="container-xxl w-100 d-flex">
-    
-            <!-- Horizontal menu content-->
-            <div class="navbar-container main-menu-content d-none d-xl-block px-0" data-menu="menu-container">
-                    <!-- Menu -->
-                    <ul class="nav navbar-nav flex-nowrap" id="main-menu-navigation" data-menu="menu-navigation">
+<header class="main-header-red" data-lock-element>
+    <div class="container">
+        <a href="/" class="main-header-red__logo">
+            <svg width="134" height="34" viewBox="0 0 134 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_2_1134)">
+                    <path d="M13.9238 27.5662V6.27925H6.35132V1.20312H27.9469V6.27925H20.3744V27.5662H13.9238Z" fill="#7367F0"/>
+                    <path d="M29.2175 27.5661V9.12442H35.7556L35.9693 10.8363C36.8524 10.3435 37.9492 9.90255 39.2597 9.51348C40.5701 9.09848 41.8806 8.83911 43.1912 8.73535V13.443C42.4504 13.5208 41.6243 13.6506 40.7127 13.8321C39.8295 13.9877 38.9748 14.1822 38.1487 14.4157C37.351 14.6491 36.6672 14.8956 36.0975 15.1549V27.5661H29.2175Z" fill="#7367F0"/>
+                    <path d="M47.9169 4.93545V-0.0523682H54.6245V4.93545H47.9169ZM48.4152 27.5661V12.9324H45.7322L46.2688 8.02707H54.5862V27.5661H48.4152Z" fill="#7367F0"/>
+                    <path d="M72.6744 27.5661C71.414 27.5661 70.311 27.4046 69.3657 27.0816C68.4203 26.7317 67.5669 26.2202 66.8053 25.5472L66.4902 27.1623H60.9756V-0.0523682H67.3174V8.91153C68.0264 8.48083 68.8274 8.15781 69.7202 7.94246C70.6131 7.72712 71.5321 7.61944 72.4775 7.61944C75.2086 7.61944 77.3619 8.40007 78.9375 9.96136C80.5131 11.4957 81.3009 13.9857 81.3009 17.4312C81.3009 20.8769 80.5263 23.4341 78.9768 25.103C77.4275 26.7451 75.3268 27.5661 72.6744 27.5661ZM70.8625 22.8419C72.2805 22.8419 73.2916 22.4112 73.8955 21.5498C74.5258 20.6615 74.8409 19.3021 74.8409 17.4716C74.8409 15.5874 74.5127 14.2683 73.8561 13.5146C73.2259 12.7609 72.228 12.384 70.8625 12.384C69.3657 12.384 68.184 12.7878 67.3174 13.5953V21.3883C68.2627 22.3573 69.4445 22.8419 70.8625 22.8419Z" fill="#7367F0"/>
+                    <path d="M96.595 27.5661C93.1306 27.5661 90.3508 26.7911 88.2554 25.2409C86.16 23.6653 85.1123 21.3019 85.1123 18.1507C85.1123 15.2791 85.9784 12.992 87.7106 11.2893C89.4427 9.58667 92.041 8.73535 95.5054 8.73535C98.6625 8.73535 101.107 9.47232 102.839 10.9463C104.571 12.4202 105.438 14.4024 105.438 16.8928V20.1329H91.3566C91.6639 21.3274 92.3763 22.166 93.4939 22.6488C94.6393 23.1062 96.1899 23.3349 98.1456 23.3349C99.2352 23.3349 100.339 23.246 101.456 23.0681C102.602 22.8902 103.552 22.6615 104.306 22.3819V26.3844C103.356 26.7911 102.225 27.0833 100.912 27.2612C99.5985 27.4645 98.1596 27.5661 96.595 27.5661ZM91.3566 16.5878H99.5705V15.7873C99.5705 14.8979 99.2771 14.1991 98.6904 13.6908C98.1037 13.1571 97.1119 12.8903 95.715 12.8903C94.0945 12.8903 92.963 13.1952 92.3204 13.8051C91.6779 14.3897 91.3566 15.3172 91.3566 16.5878Z" fill="#7367F0"/>
+                    <path d="M117.011 27.5661C115.506 27.5661 114.08 27.4645 112.734 27.2612C111.387 27.0579 110.318 26.8037 109.526 26.4988V21.8101C110.45 22.1913 111.519 22.4836 112.734 22.6869C113.948 22.8903 115.031 22.9918 115.981 22.9918C117.116 22.9918 117.935 22.941 118.436 22.8394C118.964 22.7378 119.229 22.4582 119.229 22.0007C119.229 21.4925 118.806 21.1113 117.961 20.8572C117.116 20.6031 115.954 20.2346 114.476 19.7517C112.76 19.1673 111.453 18.4938 110.555 17.7314C109.684 16.9437 109.249 15.7873 109.249 14.2626C109.249 12.4837 109.935 11.1241 111.308 10.1839C112.707 9.2182 114.925 8.73535 117.961 8.73535C119.149 8.73535 120.324 8.82429 121.486 9.00219C122.647 9.18007 123.598 9.38338 124.337 9.61209V14.2245C123.598 13.8942 122.753 13.6527 121.803 13.5002C120.852 13.3477 119.994 13.2715 119.229 13.2715C118.251 13.2715 117.42 13.335 116.734 13.4621C116.073 13.5638 115.744 13.8306 115.744 14.2626C115.744 14.7454 116.113 15.0885 116.852 15.2918C117.591 15.4697 118.66 15.7747 120.06 16.2066C121.538 16.6387 122.687 17.1088 123.506 17.6171C124.323 18.0999 124.904 18.6844 125.248 19.3705C125.591 20.0567 125.763 20.9207 125.763 21.9626C125.763 23.767 125.023 25.1519 123.545 26.1176C122.066 27.0833 119.888 27.5661 117.011 27.5661Z" fill="#7367F0"/>
+                </g>
+                <defs>
+                    <clipPath id="clip0_2_1134">
+                        <rect width="133.385" height="34" fill="white"/>
+                    </clipPath>
+                </defs>
+            </svg>
+        </a>
 
-                        @if (request()->is('*follower*'))
-                            <li class="nav-item {{ request()->is('*product*') ? 'active' : ''  }}">
-                                <a class="nav-link d-flex align-items-center" href="{{ route('follower.products') }}">
-                                    <i data-feather="file-text" class="font-medium-2"></i>
-                                    <span data-i18n="Apps">
-                                        {{ __('base.mediaProducts') }}
-                                    </span>
-                                </a>
-                            </li>
+        @include('common.template.assets.main_menu_redezign')
 
-                            <li class="nav-item {{ request()->is('*faq*') ? 'active' : ''  }}">
-                                <a class="nav-link d-flex align-items-center" href="{{ route('follower.faq.index') }}">
-                                    <i data-feather="help-circle" class="font-medium-2"></i>
-                                    <span data-i18n="User Interface">
-                                        {{ __('base.help') }}
-                                    </span>
-                                </a>
-                            </li>
-
-                            <li class="nav-item {{ request()->is('*education*') ? 'active' : ''  }}">
-                                <a class="nav-link d-flex align-items-center" href="{{ route('follower.education.index') }}">
-                                    <i data-feather="file" class="font-medium-2"></i>
-                                    <span data-i18n="Forms &amp; Tables">
-                                        {{ __('base.education') }}
-                                    </span>
-                                </a>
-                            </li>
-
-                        @else
-                            <li class="nav-item {{ request()->is('*community*') ? 'active' : ''  }}">
-                                <a class="nav-link d-flex align-items-center" href="{{ route('community.list') }}">
-                                    <i data-feather="file-text" class="font-medium-2"></i>
-                                    <span data-i18n="Dashboards">
-                                        {{ __('base.communities') }}
-                                    </span>
-                                </a>
-                            </li>
-
-                            <li class="nav-item {{ request()->is('*courses*') ? 'active' : ''  }}">
-                                <a class="nav-link d-flex align-items-center" href="{{ route('course.list') }}">
-                                    <i data-feather="book-open" class="font-medium-2"></i>
-                                    <span data-i18n="Dashboards">
-                                       {{ __('base.mediaProducts') }}
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            <li class="nav-item {{ request()->is('*payments*') ? 'active' : ''  }}">
-                                <a class="nav-link d-flex align-items-center" href="{{ route('payment.list') }}">
-                                    <i data-feather="dollar-sign" class="font-medium-2"></i>
-                                    <span data-i18n="Apps">
-                                        {{ __('base.finance') }}
-                                    </span>
-                                </a>
-                            </li>
-
-{{--                            <li class="nav-item {{ request()->is('*audience*') ? 'active' : ''  }}">--}}
-{{--                                <a class="nav-link d-flex align-items-center" href="{{ route('audience.list') }}">--}}
-{{--                                    <i data-feather="users" class="font-medium-2"></i>--}}
-{{--                                    <span data-i18n="Apps">--}}
-{{--                                        {{ __('base.audience') }}--}}
-{{--                                    </span>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-                            
-                            <li class="nav-item {{ request()->is('*faq*') ? 'active' : ''  }}">
-                                <a class="nav-link d-flex align-items-center" href="{{ route('faq.index') }}">
-                                    <i data-feather="help-circle" class="font-medium-2"></i>
-                                    <span data-i18n="User Interface">
-                                        {{ __('base.help') }}
-                                    </span>
-                                </a>
-                            </li>
-
-                            <li class="nav-item {{ request()->is('*education*') ? 'active' : ''  }}">
-                                <a class="nav-link d-flex align-items-center" href="{{ route('education.index') }}">
-                                    <i data-feather="file" class="font-medium-2"></i>
-                                    <span data-i18n="Forms &amp; Tables">
-                                        {{ __('base.education') }}
-                                    </span>
-                                </a>
-                            </li>
-                        @endif
-
-                        
-                    </ul>
-                </div>
-
-            <div class="navbar-header d-none">
-                    <ul class="nav navbar-nav">
-                        <li class="nav-item">
-                            <!-- Logo -->
-                            <a class="navbar-brand" href="{{ route('community.list') }}">
-                                <h2 class="brand-text px-0">Телеграм и дискорд бот</h2>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Headuser -->
-                <div class="navbar-container d-flex align-items-center content px-0">
-                    <div class="bookmark-wrapper d-flex align-items-center">
-                        <ul class="nav navbar-nav d-xl-none">
-                            <li class="nav-item">
-                                <a class="nav-link menu-toggle" data-bs-toggle="offcanvas" href="#offcanvas" role="button" aria-controls="offcanvas">
-                                    <i class="ficon" data-feather="menu"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-10 d-inline-block ms-auto">
-                        <div class="d-flex justify-content-end align-items-center">
-                            @php $locale = App\Http\Middleware\LocaleMiddleware::getLocale() @endphp
-                            <ul class="nav navbar-nav align-items-center ms-auto">
-                                <li class="nav-item dropdown dropdown-user">
-{{--                                    <a--}}
-{{--                                        class="nav-link dropdown-toggle dropdown-user-link"--}}
-{{--                                        id="dropdown-lang"--}}
-{{--                                        href="#"--}}
-{{--                                        data-bs-toggle="dropdown"--}}
-{{--                                        aria-haspopup="true"--}}
-{{--                                        aria-expanded="false"--}}
-{{--                                    >--}}
-{{--                                        <span class="flag-icon">--}}
-{{--                                            <img src="/ico/flag-{{ $locale ?? 'ru' }}.svg" alt="" class="w-100 h-100">--}}
-{{--                                        </span>--}}
-{{--                                    </a>--}}
-
-                                    <!-- Drop menu -->
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lang">
-                                        <button class="dropdown-item d-flex align-items-center w-100" value="ru" onclick = "window.setLocale(this)">
-                                            <span class="flag-icon me-1">
-                                                <img src="/ico/flag-ru.svg" alt="" class="w-100 h-100">
-                                            </span>
-                                            Русский
-                                        </button>
-
-                                        <div class="dropdown-divider"></div>
-
-                                        <button class="dropdown-item d-flex align-items-center w-100" value="en" onclick = "window.setLocale(this)">
-                                            <span class="flag-icon me-1">
-                                                <img src="/ico/flag-en.svg" alt="" class="w-100 h-100">
-                                            </span>
-                                            English
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
-
-                            <div class="d-inline-block">
-                                @include('auth.headuser')
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+        <!-- <div class="main-header__auxiliary"> -->
+            
+        <!-- </div> -->
+    </div>
 </header>
