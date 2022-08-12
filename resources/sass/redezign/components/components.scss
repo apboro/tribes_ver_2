@@ -2,21 +2,8 @@
 @import '../../../../node_modules/quill/dist/quill.bubble';
 @import '../../../../node_modules/quill/dist/quill.snow';
 
-// Components
-@import "./button/button";
-@import "./link/link";
-@import "./breadcrumbs/breadcrumbs";
-@import "./icon/icon";
-@import "./form/form";
-@import "./input/input";
-@import "./label/label";
-@import "./text-editor/text-editor";
-@import "./overlay/overlay";
-@import "./pagination/pagination";
-@import "./popup/popup";
-@import "./dropdown/dropdown";
-@import "./table/table";
+// UI Components
+@import "./ui/components";
 
 // Page components
-// Knowledge
-@import "./knowledge/knowledge-components";
+@import "./pages/components";

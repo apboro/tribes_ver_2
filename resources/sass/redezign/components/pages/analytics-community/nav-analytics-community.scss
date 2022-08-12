@@ -1,0 +1,24 @@
+.nav-analytics-community {
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+    &__list {
+        display: flex;
+        justify-content: center;
+        column-gap: 30px;
+        list-style: none;
+    }
+
+    //&__item {}
+
+    &__link {
+        @include font($text-color-1, 20px, 26px, 700);
+        text-transform: uppercase;
+        text-decoration: underline;
+        transition: $transition;
+
+        &.active {
+            color: $primary-1;
+        }
+    }
+}

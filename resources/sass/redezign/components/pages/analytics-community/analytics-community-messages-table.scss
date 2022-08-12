@@ -1,0 +1,25 @@
+.analytics-community-messages-table {
+    .table__header {
+        grid-template: auto/21% 15% 10% 15% 15% 10% 10%;
+    }
+
+    .table__row {
+        grid-template: auto/21% 15% 10% 15% 15% 10% 10%;
+    }
+
+    &__reaction-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+        list-style: none;
+    }
+
+    &__reaction-item {
+        padding: 2px 10px;
+        background-color: $grey-2;
+        border-radius: 20px;
+    }
+
+    //&__reaction-value {}
+}

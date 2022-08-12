@@ -18,6 +18,7 @@ export default ({
     SET_FILTERS(state, filters) {
         Object.keys(state._filters).forEach((key) => {
             if (filters.hasOwnProperty(key)) {
+                console.log(key);
                 state._filters[key] = filters[key];
             }
         });

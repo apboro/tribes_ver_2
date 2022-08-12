@@ -2,7 +2,7 @@ import { CreateNode } from "../Helper/CreateNode";
 import { Image } from "./Modules/Image";
 import Text from "./Modules/Text";
 import Video from "./Modules/Video";
-import {log10} from "chart.js/helpers";
+
 
 export default class Lesson {
     constructor(id, parent) {

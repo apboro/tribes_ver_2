@@ -1,0 +1,52 @@
+.community {
+    padding-top: 20px;
+    padding-bottom: 50px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    &__title {
+        @include font($text-color-1, 55px, 74px, 700);
+        @include truncate(550px);
+    }
+
+    &__profile {
+        margin-top: 35px;
+    }
+
+    &__profile-btn-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 60px;
+        
+        &:before {
+            content: "";
+            position: absolute;
+            top: calc(50% - 1px);
+            right: 0;
+            left: 0;
+            z-index: -1;
+            height: 1px;
+            background-color: $primary-1;
+        }
+    }
+
+    &__profile-btn {
+        padding: 4px 30px;
+        @include font($white, 16px, 21px, 700);
+        text-transform: uppercase;
+        background-color: $primary-1;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+
+    &__tab {
+        margin-top: 40px;
+    }
+}

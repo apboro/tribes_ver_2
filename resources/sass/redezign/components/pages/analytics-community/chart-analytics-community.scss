@@ -1,0 +1,44 @@
+.chart-analytics-community {
+
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__label {
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+
+        &--pointer {
+            cursor: pointer;
+        }
+
+        &--right {
+            align-items: flex-end;
+        }
+    }
+
+    &__text {
+       @include font($text-color-1, 18px, 24px, 700);
+    }
+
+    &__value {
+       @include font($text-color-1, 40px, 32px, 600);
+    }
+
+    &__currency {
+        @include font(inherit, 40px, 32px, 400);
+    }
+
+    //&__chart {}
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        column-gap: 60px;
+    }
+}
