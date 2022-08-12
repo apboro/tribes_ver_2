@@ -1,4 +1,4 @@
-<div class="profile-community community__profile" >
+<div class="profile-community community__profile" data-tab="profileBlock">
     <div class="profile-community__common-data">
         <div class="profile-community__avatar">
             <img
@@ -54,11 +54,11 @@
                 class="link profile-community__pay-link profile-community__pay-link--divider"
                 onclick="copyText('{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}')"
             >
-                {{ __('base.copy') }}
+                Скопировать
             </button>
         </div>
     </div>
-
+    
     <div class="profile-community__money">
         <div>
             <p class="profile-community__money-label">

@@ -17,6 +17,16 @@
 
 
             @include('common.community.assets.profile')
+
+            <div class="community__profile-btn-wrapper">
+                <button
+                    class="community__profile-btn"
+                    onclick="CommunityPage.toggleProfileVisibility(event)"
+                    data-switch-visibility-btn
+                >
+                    Скрыть профиль
+                </button>
+            </div>
             
             @yield('tab')
         </div>

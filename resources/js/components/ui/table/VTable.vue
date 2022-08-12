@@ -1,5 +1,5 @@
 <template>
-    <div class="table">
+    <div class="table-2">
         <table-header
             :class="{ 'table__header--disabled' : !hasData }"
             :headerSettings="tableOptions.header"
