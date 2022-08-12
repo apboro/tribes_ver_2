@@ -1,3 +1,4 @@
+import { dateFormatting } from "../../functions";
 import { FormattingData } from "./ProfileBlock/FormattingData";
 import { SidebarVisibility } from "./ProfileBlock/SidebarVisibility";
 
@@ -7,12 +8,16 @@ export class ProfileBlock {
         this.container = parent.container.querySelector('[data-tab="profileBlock"]');
         this.isVisible = true;
 
+        this.dateList = this.container.querySelectorAll('[data-date-format]');
+
             /* this.formattingData = new FormattingData(this);
             this.sidebarVisibility = new SidebarVisibility(this); */
-
+        this.init();
     }
 
-    
+    init() {
+        this.dateFormat();
+    }
 
     toggleVisibility() {
         if (this.isVisible) {
@@ -21,5 +26,16 @@ export class ProfileBlock {
             this.container.style.display = 'grid';
         }
         this.isVisible = !this.isVisible;
+    }
+
+    dateFormat() {
+        Object.values(this.dateList).forEach((dateItem) => {
+            dateItem.textContent = dateFormatting({
+                date: Date.parse(dateItem.textContent),
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            });
+        });
     }
 }

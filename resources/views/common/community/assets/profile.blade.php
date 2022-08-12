@@ -12,7 +12,7 @@
         </p>
 
         <p class="profile-community__community-link">
-            https://t.me/techinuk Какие данные?
+            https://t.me/techinuk
         </p>
         
         @if ($community->isTelegram())
@@ -31,7 +31,7 @@
             Дата подключения:
         </p>
 
-        <p class="profile-community__connect-date" id="create_date_title">
+        <p class="profile-community__connect-date" id="create_date_title" data-date-format>
             {{ $community->created_at->format('m-d-y') }}
         </p>
     </div>
