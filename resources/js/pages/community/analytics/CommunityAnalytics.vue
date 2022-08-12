@@ -112,7 +112,7 @@
                     },
                 ],
 
-                visibleTab: 'messages',
+                visibleTab: 'list',
                 filterValue: 'week',
 
                 chartData2: {
