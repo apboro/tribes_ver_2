@@ -26,15 +26,17 @@ class AuthController extends Controller
                 'email' => ['Авторизация не удалась'],
             ]);
         }
+        $token = $user->createToken('api-token');
+        Session::put('current_token',$token->plainTextToken);
         return response()->json([
             'status' => 'ok',
-            'token' => $user->createToken('api-token')->plainTextToken
+            'token' => $token->plainTextToken
         ], 200);
     }
 
     public function loginAs(LoginAsRequest $request)
     {
-        //dd(123);
+        /** @var User $user */
         $user = User::where('id', $request->id)->first();
         $authToken = $request->header('Authorization');
         $adminToken = Arr::last(explode(' ',$authToken));
