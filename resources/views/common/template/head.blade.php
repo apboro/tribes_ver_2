@@ -1,7 +1,7 @@
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @auth
-<meta name="api-token" content="{{ Auth::user()->api_token }}">
+<meta name="api-token" content="{{ Session::get('current_token') }}">
 @endauth
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">

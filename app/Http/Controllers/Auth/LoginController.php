@@ -53,6 +53,7 @@ class LoginController extends Controller
 
             Auth::user()->createTempToken();
 
+            $request->session()->put('auth.password_confirmed_at', time());
             return $this->sendLoginResponse($request);
         }
 

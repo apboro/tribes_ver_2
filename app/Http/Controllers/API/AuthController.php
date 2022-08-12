@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginAsRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -25,16 +26,20 @@ class AuthController extends Controller
                 'email' => ['Авторизация не удалась'],
             ]);
         }
+        $token = $user->createToken('api-token');
+        Session::put('current_token',$token->plainTextToken);
         return response()->json([
             'status' => 'ok',
-            'token' => $user->createToken('api-token')->plainTextToken
+            'token' => $token->plainTextToken
         ], 200);
     }
 
     public function loginAs(LoginAsRequest $request)
     {
-        //dd(123);
+        /** @var User $user */
         $user = User::where('id', $request->id)->first();
+        $authToken = $request->header('Authorization');
+        $adminToken = Arr::last(explode(' ',$authToken));
         $admin = Auth::user();
         if (empty($user)) {
             throw ValidationException::withMessages([
@@ -46,6 +51,7 @@ class AuthController extends Controller
         Session::flush();
         session()->regenerateToken();
         Session::put('admin_id',$admin->id);
+        Session::put('admin_token',$adminToken);
         Session::put('current_token',$token->plainTextToken);
         $csrf = Session::token();
 
@@ -67,6 +73,7 @@ class AuthController extends Controller
         }
         $admin = User::find($adminId);
         $currentUserToken = session()->get('current_token');
+        $token = session()->get('admin_token');
         $user = Auth::user();
 
         $pTokenModel = PersonalAccessToken::findToken($currentUserToken);
@@ -80,11 +87,11 @@ class AuthController extends Controller
         Auth::guard('web')->loginUsingId($admin->id, TRUE);
         Session::flush();
         session()->regenerateToken();
-        //$token = $admin->tokens()
         return response()->json([
             'status' => 'ok',
+            'token' => $token,
             'csrf' => session()->token(),
-            'redirect' => route('manager.users.list'),
+            'redirect' => route('web.manager',['any' => '/users']),
         ], 200);
     }
 }
