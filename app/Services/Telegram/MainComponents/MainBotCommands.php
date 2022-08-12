@@ -26,6 +26,7 @@ use Askoldex\Teletant\Entities\Inline\InputTextMessageContent;
 use Askoldex\Teletant\Exception\MenuxException;
 use Askoldex\Teletant\Exception\TeletantException;
 use App\Repositories\Knowledge\KnowledgeRepositoryContract;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -307,7 +308,7 @@ class MainBotCommands
                     $payment->telegram_user_id = $ctx->getUserID();
                     $payment->save();
                 } else {
-                    $ctx->reply('Ваша подписка уже актевированна, что-бы получить ссылку на ресурс пройдите в раздел "Мои подписки".');
+                    $ctx->reply('Ваша подписка уже активирована, что-бы получить ссылку на ресурс пройдите в раздел "Мои подписки".');
                 }
 
                 if ($payment && $payment->type == 'tariff' && $payment->status == 'CONFIRMED') {
@@ -322,6 +323,7 @@ class MainBotCommands
                     }
 
                     $variant = $community->tariff->variants()->find($payment->payable_id);
+
                     if (!$ty->tariffVariant->find($variant->id)) {
                         foreach ($ty->tariffVariant->where('tariff_id', $community->tariff->id) as $userTariff) {
                             if ($userTariff->id !== $variant->id) 
@@ -329,6 +331,7 @@ class MainBotCommands
                         }
                         $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i')]);
                     } else {
+
                         $ty->tariffVariant()->updateExistingPivot($variant->id, [
                             'days' => $variant->period,
                             'prompt_time' => date('H:i'),
@@ -338,7 +341,6 @@ class MainBotCommands
 
                     $payment->activated = true;
                     $payment->save();
-
                     $menu = Menux::Create('links')->inline();
                     $menu->row()->btn('Получить пригласительную ссылку на ресурс', 'access-' . $community->connection->id);
                     $ctx->reply('Подписка найдена', $menu);
@@ -718,6 +720,24 @@ class MainBotCommands
 
                     $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
                     $ctx->replyHTML($image . $message . $defMassage . $invite);
+                    //todo отправить сообщение автору через личный чат с ботом,
+                    $payerName = $ty->publicName()??'';
+                    $tariffName = $variant->title??'';
+                    $tariffCost = ($payment->amount/100)??0;
+                    $tariffEndDate = Carbon::now()->addDays($variant->period)->format('dd.mm.Y')??'';
+
+                    Log::info('send tariff pay message to own author chat bot',[
+                        'message' =>  "Участник $payerName оплатил $tariffName в сообществе {$community->title},
+                                стоимость $tariffCost рублей действует до $tariffEndDate г."
+                    ]);
+
+                    /*$botService = app(TelegramMainBotService::class);
+                    $botService->sendMessageFromBot(
+                        config('telegram_bot.bot.botName'),
+                        $payment->telegram_user_id,
+                        "Участник $payerName оплатил $tariffName в сообществе {$community->title},
+                        стоимость $tariffCost рублей действует до $tariffEndDate г."
+                    );*/
                 }
             } else {
                 $communityId = str_replace('trial', '', $ctx->var('paymentId'));

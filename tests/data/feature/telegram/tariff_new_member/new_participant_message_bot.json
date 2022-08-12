@@ -1,0 +1,47 @@
+{
+  "update_id": 944985000,
+  "message": {
+    "message_id": 2564,
+    "from": {
+      "id": 1032346420,
+      "is_bot": false,
+      "first_name": "\u0414\u043c\u0438\u0442\u0440\u0438\u0439",
+      "last_name": "\u0421\u0435\u043e\u0448\u0438\u043d",
+      "username": "IDmtro",
+      "language_code": "ru"
+    },
+    "chat": {
+      "id": -608142614,
+      "title": "@test1.spodial.com",
+      "type": "group",
+      "all_members_are_administrators": true
+    },
+    "date": 1660287925,
+    "new_chat_participant": {
+      "id": 1032346420,
+      "is_bot": false,
+      "first_name": "\u0414\u043c\u0438\u0442\u0440\u0438\u0439",
+      "last_name": "\u0421\u0435\u043e\u0448\u0438\u043d",
+      "username": "IDmtro",
+      "language_code": "ru"
+    },
+    "new_chat_member": {
+      "id": 1032346420,
+      "is_bot": false,
+      "first_name": "\u0414\u043c\u0438\u0442\u0440\u0438\u0439",
+      "last_name": "\u0421\u0435\u043e\u0448\u0438\u043d",
+      "username": "IDmtro",
+      "language_code": "ru"
+    },
+    "new_chat_members": [
+      {
+        "id": 1032346420,
+        "is_bot": false,
+        "first_name": "\u0414\u043c\u0438\u0442\u0440\u0438\u0439",
+        "last_name": "\u0421\u0435\u043e\u0448\u0438\u043d",
+        "username": "IDmtro",
+        "language_code": "ru"
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "update_id": 944984999,
+  "message": {
+    "message_id": 2561,
+    "from": {
+      "id": 1032346420,
+      "is_bot": false,
+      "first_name": "\u0414\u043c\u0438\u0442\u0440\u0438\u0439",
+      "last_name": "\u0421\u0435\u043e\u0448\u0438\u043d",
+      "username": "IDmtro",
+      "language_code": "ru"
+    },
+    "chat": {
+      "id": 1032346420,
+      "first_name": "\u0414\u043c\u0438\u0442\u0440\u0438\u0439",
+      "last_name": "\u0421\u0435\u043e\u0448\u0438\u043d",
+      "username": "IDmtro",
+      "type": "private"
+    },
+    "date": 1660287909,
+    "text": "\/start 7j0Ws",
+    "entities": [
+      {
+        "offset": 0,
+        "length": 6,
+        "type": "bot_command"
+      }
+    ]
+  }
+}
