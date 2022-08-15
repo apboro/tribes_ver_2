@@ -1,5 +1,7 @@
 <template>
     <div>
+        <!-- <button @click="append">toast</button> -->
+
         <ul
             class="analytics-community__card-list"
         >
@@ -14,9 +16,9 @@
 </template>
 
 <script>
-    import { mapGetters, mapActions } from 'vuex';
+    import { mapGetters, mapMutations, mapActions } from 'vuex';
     import ChartCard from '../../../../components/pages/community/analytics/ChartCard.vue';
-import { numberFormatting } from '../../../../core/functions';
+    import { numberFormatting } from '../../../../core/functions';
 
     export default {
         name: 'AnalyticsList',
@@ -47,6 +49,7 @@ import { numberFormatting } from '../../../../core/functions';
         },
 
         methods: {
+            ...mapMutations('toast', ['INFO']),
             ...mapActions('community_analytics', ['LOAD_DATA_LIST']),
             
             filter() {
@@ -99,13 +102,17 @@ import { numberFormatting } from '../../../../core/functions';
 
                     return obj;
                 });
+            },
+
+            append() {
+                this.INFO('hi');
             }
         },
 
         mounted() {
             this.LOAD_DATA_LIST();
 
-            this.filter();
+            this.filter();            
         }
     }
 </script>
