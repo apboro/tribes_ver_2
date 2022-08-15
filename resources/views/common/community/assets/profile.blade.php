@@ -6,7 +6,7 @@
                 alt="User avatar"
             >
         </div>
-
+        
         <p class="profile-community__community-title">
             {{ $community->title }}
         </p>

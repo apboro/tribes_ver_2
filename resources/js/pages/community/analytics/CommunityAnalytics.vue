@@ -149,6 +149,7 @@
 
             switchTab(tabName) {
                 this.visibleTab = tabName;
+                /* throw new Error('wewewe') */
             },
             
             toggleData(value) {    

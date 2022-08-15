@@ -1,5 +1,5 @@
 export function timeFormatting(options) {
-    const date = Date.parse(options.date);
+    const date = new Date(options.date);
     const locale = options.locale ?? 'ru';
     
     /* switch (language) {
@@ -34,8 +34,7 @@ export function numberFormatting(value, decimal = 2) {
     if (id < 0) {
         return value.toString();
     }
-
-    console.log(parseFloat((value / Math.pow(1000, id)).toFixed(decimal)));
+    
     return `${ parseFloat((value / Math.pow(1000, id)).toFixed(decimal)) }${ notations[id] }`;
 }
 

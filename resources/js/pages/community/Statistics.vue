@@ -1,6 +1,6 @@
 <template>
-    <!-- <div class="community">
-        <div class="container"> -->
+    <div class="community">
+        <!-- <div class="container"> -->
             <!-- HEAD -->
             <!-- <header class="community__header">
                 <h2
@@ -29,14 +29,17 @@
 
             <!-- Analytics -->
             <community-analytics class="community__tab" />
+
+            <!-- <v-toast/> -->
         <!-- </div> -->
-    <!-- </div> -->
+    </div>
 </template>
 
 <script>
-    import TabsNav from '../../components/pages/Community/TabsNav.vue';
-    import CommunityProfile from '../../components/pages/Community/CommunityProfile.vue';
+    import TabsNav from '../../components/pages/community/TabsNav.vue';
+    import CommunityProfile from '../../components/pages/community/CommunityProfile.vue';
     import CommunityAnalytics from './analytics/CommunityAnalytics.vue';
+    import VToast from '../../components/ui/toast/VToast.vue';
 
     export default {
         name: 'Statistics',
@@ -44,7 +47,8 @@
         components: {
             TabsNav,
             CommunityProfile,
-            CommunityAnalytics
+            CommunityAnalytics,
+            VToast,
         },
 
         data() {

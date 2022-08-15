@@ -40,6 +40,7 @@
         display: inline-block;
         padding-top: 10px;
         @include font($text-color-1, 16px, 19px, 400);
+        white-space: nowrap;
         cursor: pointer;
     }
 }
