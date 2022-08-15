@@ -5,7 +5,7 @@
                 <div class="text-muted">
                     показать
                     <div class="mx-2 d-inline-block">
-                        <input type="text" class="form-control form-control-sm" v-model="filter_data.entries" size="3">
+                        <input type="text" class="form-control form-control-sm" :value="this.filter_data.entries" @input="changePage" size="3">
                     </div>
                     на странице
                 </div>
@@ -25,12 +25,9 @@
                     <th class="w-1">ID
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm text-dark icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 15 12 9 18 15"></polyline></svg>
                     </th>
-                    <th>Invoice Subject</th>
                     <th>Имя</th>
                     <th>Телефон</th>
-                    <th>Created</th>
-                    <th>Status</th>
-                    <th>Price</th>
+                    <th>Создан</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -38,7 +35,6 @@
                 <tr v-for="user in users.data" :key="user.id">
                     <td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
                     <td><span class="text-muted">{{ user.id }}</span></td>
-                    <td><a href="invoice.html" class="text-reset" tabindex="-1">Icons</a></td>
                     <td>
                         <transition>
                             <router-link 
@@ -53,24 +49,19 @@
                         <svg  v-if="user.phone_confirmed" xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
                     </td>
                     <td>
-                        {{ user.created_at }}
+                        {{ formatDateTime(user.created_at) }}
                     </td>
-                    <td>
-                        <span class="badge bg-success me-1"></span> Paid Today
-                    </td>
-                    <td>$940</td>
                     <td class="text-end">
-                        <span class="dropdown">
-                            <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#">
-                                Action
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                Another action
-                            </a>
-                            </div>
-                        </span>
+                        <div class="btn-group">
+                            <button type="button" class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+                                Действия
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <button @click.prevent="loginAs(user.id)" class="dropdown-item" type="button">Войти от этого пользователя</button>
+                                </li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -95,9 +86,11 @@
 
 <script>
 import FilterDataUsers from '../../mixins/filterData';
+import FormatDateTime from '../../mixins/formatDateTime'
+
 export default {
     name: "Users",
-    mixins: [FilterDataUsers],
+    mixins: [FilterDataUsers, FormatDateTime],
 
 
     watch: {
@@ -119,6 +112,26 @@ export default {
             return this.$store.getters.users;
         }
     },
+    methods: {
+        loginAs(userId){
+            return new Promise((resolve, reject) => {
+                axios({url: '/api/login-as', data: {'id' : userId}, method: 'POST' })
+                    .then(resp => {
+                        window.location.href = '/';
+                        resolve(resp);
+                    })
+                    .catch(err => {
+                        console.log('Err');
+                        reject(err);
+                    })
+            })
+        },
+
+        changePage(event) {
+            this.filter_data.entries = event.target.value;
+            this.filter_data.page = 1;
+        }
+    }
 }
 </script>
 

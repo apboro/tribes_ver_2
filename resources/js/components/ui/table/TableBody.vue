@@ -54,6 +54,13 @@
                         ></slot>
                     </template>
 
+                    <!-- Слот для вставки не обычно оформленной ячейки, которое может быть добавлено как колонка в строку таблицы -->
+                    <template #customCol="{ data }">
+                        <slot
+                            name="customCol"
+                            :data="data"
+                        ></slot>
+                    </template>
                 </table-row>
             </template>
             

@@ -51,4 +51,13 @@ export default class CommunityPage extends Page {
     isBlock(selector) {
         return this.container.querySelector(selector) ? true : false;
     }
+
+    toggleProfileVisibility(event) {
+        this.profileBlock.toggleVisibility();
+        if (this.profileBlock.isVisible) {
+            event.target.textContent = 'Скрыть профиль';
+        } else {
+            event.target.textContent = 'Показать профиль';
+        }
+    }
 }

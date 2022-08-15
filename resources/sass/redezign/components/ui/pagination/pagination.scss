@@ -1,0 +1,55 @@
+.pagination {
+    display: flex;
+    align-items: center;
+    //justify-content: space-between;
+    justify-content: center;
+    
+
+    &__item {
+        display: flex;
+        align-items: center;
+    }
+
+    &__description {
+        display: none;
+        @include font($text-color-1, 14px, 22px, 400);
+    }
+
+    &__select {
+        margin-right: 8px;
+        margin-left: 8px;
+    }
+
+    &__control {
+        
+
+        &.active {
+            .pagination__page {
+                font-weight: 600;
+            }
+        }
+    }
+
+    &__page {
+        padding: 2px 5px;
+        @include font($grey-9, 14px, 20px, 400);
+        border-bottom: 1px solid transparent;
+        cursor: pointer;
+        transition: $transition;
+
+        &:hover {
+            color: $primary-1;
+            border-color: $primary-1;
+        }
+    }
+
+    &__btn {
+        .icon__fill {
+            fill: $grey-8;
+        }
+
+        .icon__stroke {
+            stroke: $grey-8;
+        }
+    }
+}

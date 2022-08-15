@@ -1,4 +1,4 @@
-import { addQuestion, doMultipleOperations, editQuestion, filterQuestion, loadQuestions, removeQuestion } from '../../../api';
+import { addQuestion, doMultipleOperations, editQuestion, filterQuestion, loadQuestions, removeQuestion } from '../../../api/knowledge';
 
 export default ({
     async LOAD_QUESTIONS({ state, commit }) {
@@ -99,6 +99,4 @@ export default ({
             console.log(error);
         }
     },
-
-    async SORT_QUESTIONS({ commit }, ) {},
 });

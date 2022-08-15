@@ -5,7 +5,7 @@
                 <div class="text-muted">
                     показать
                     <div class="mx-2 d-inline-block">
-                        <input type="text" class="form-control" v-model="filter_data.entries" size="3">
+                        <input type="text" class="form-control" :value="this.filter_data.entries" @input="changePage" size="3">
                     </div>
                     на странице
                 </div>
@@ -86,7 +86,7 @@
 
 <script>
 
-import Preloader from '../common/Preloader.vue';
+import Preloader from '../common/Preloader.vue'
 import FilterDataPayments from '../../mixins/filterData'
 import Translations from '../../mixins/translations'
 import FormatDateTime from '../../mixins/formatDateTime'
@@ -94,8 +94,8 @@ import FormatCash from '../../mixins/formatCash'
 
 export default {
     name: "Payments",
-    mixins: [FilterDataPayments, Translations, FormatDateTime, FormatCash],
-    components: {Preloader},
+    mixins: [ FilterDataPayments, Translations, FormatDateTime, FormatCash ],
+    components: { Preloader },
 
     watch: {
         filter_data: {
@@ -127,6 +127,14 @@ export default {
             return this.$store.getters.customersHasName;
         }
     },
+
+    methods: {
+
+        changePage(event) {
+            this.filter_data.entries = event.target.value;
+            this.filter_data.page = 1;
+        },
+    }
 }
 </script>
 

@@ -183,12 +183,6 @@
         },
 
         methods: {
-            clickedBTN() {
-                console.log('123')
-            },
-            clicked() {
-                console.log('clicekd')
-            },
             ...mapMutations('knowledge', [
                 'SET_PAGINATION',
                 'SET_IDS_MULTIPLE_OPERATIONS',

@@ -7,9 +7,12 @@ use App\Http\Requests\Auth\LoginAsRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -23,31 +26,72 @@ class AuthController extends Controller
                 'email' => ['Авторизация не удалась'],
             ]);
         }
+        $token = $user->createToken('api-token');
+        Session::put('current_token',$token->plainTextToken);
         return response()->json([
             'status' => 'ok',
-            'token' => $user->createToken('api-token')->plainTextToken
+            'token' => $token->plainTextToken
         ], 200);
     }
 
     public function loginAs(LoginAsRequest $request)
     {
-        //dd(123);
+        /** @var User $user */
         $user = User::where('id', $request->id)->first();
-
+        $authToken = $request->header('Authorization');
+        $adminToken = Arr::last(explode(' ',$authToken));
+        $admin = Auth::user();
         if (empty($user)) {
             throw ValidationException::withMessages([
-                'email' => ["Авторизация не удалась пользователь №{$request->id} не найден"],
+                'id' => ["Авторизация не удалась пользователь №{$request->id} не найден"],
             ]);
         }
         $token = $user->createToken('api-token');
-        Auth::guard('web')->login($user);
+        Auth::guard('web')->loginUsingId($user->id, TRUE);
+        Session::flush();
         session()->regenerateToken();
-        $csrf = session()->token();
+        Session::put('admin_id',$admin->id);
+        Session::put('admin_token',$adminToken);
+        Session::put('current_token',$token->plainTextToken);
+        $csrf = Session::token();
 
         return response()->json([
             'status' => 'ok',
             'token' => $token->plainTextToken,
             'csrf' => $csrf,
+            'redirect' => route('community.list'),
+        ], 200);
+    }
+
+    public function loginAsAdmin(Request $request)
+    {
+
+        if(!($adminId = session()->get('admin_id')) || empty($adminId)) {
+            throw ValidationException::withMessages([
+                'admin_id' => ["Авторизация не удалась сессия не имеет ключа admin_id"],
+            ]);
+        }
+        $admin = User::find($adminId);
+        $currentUserToken = session()->get('current_token');
+        $token = session()->get('admin_token');
+        $user = Auth::user();
+
+        $pTokenModel = PersonalAccessToken::findToken($currentUserToken);
+        if(!empty($pTokenModel)) {
+            $pTokenModel->delete();
+        }
+
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+
+        Auth::guard('web')->loginUsingId($admin->id, TRUE);
+        Session::flush();
+        session()->regenerateToken();
+        return response()->json([
+            'status' => 'ok',
+            'token' => $token,
+            'csrf' => session()->token(),
+            'redirect' => route('web.manager',['any' => '/users']),
         ], 200);
     }
 }

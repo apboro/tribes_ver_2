@@ -1,0 +1,58 @@
+.card-analytics-community {
+    box-shadow: $shadow-1;
+
+    &__header {
+        padding: 30px;
+    }
+
+    &__title {
+        @include font($text-color-1, 20px, 26px, 700);
+    }
+
+    &__subtitle {
+        display: block;
+        @include font($text-color-1, 16px, 26px, 400);
+    }
+
+    //&__chart {}
+
+    &__footer {
+        display: grid;
+        grid-template-rows: 1fr min-content;
+        grid-template-columns: min-content min-content;
+        row-gap: 20px;
+        justify-content: space-between;
+        padding: 50px 30px 30px 30px;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+
+        &--right {
+            align-items: flex-end;
+        }
+    }
+
+    &__info-label {
+        display: block;
+        @include font($text-color-1, 16px, 19px, 400);
+        white-space: nowrap;
+    }
+
+    &__info-value {
+        display: block;
+        @include font($text-color-1, 36px, 43px, 600);
+        white-space: nowrap;
+
+        &--green {
+            color: $green-1;
+        }
+    }
+
+    &__link {
+        grid-column: 1 / 3;
+        text-transform: uppercase;
+        border-radius: 2px;
+    }
+}

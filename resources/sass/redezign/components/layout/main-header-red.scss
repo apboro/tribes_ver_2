@@ -1,0 +1,32 @@
+.main-header-red {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    background-color: #fff;
+    z-index: 10;
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 50px;
+        padding-bottom: 50px;
+
+        @media (max-width: 1199.98px) {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+    }
+
+    &__logo {
+        width: 134px;
+        min-width: 134px;
+
+        svg {
+            width: 100%;
+        }
+    }
+
+    /* &__nav {} */
+}

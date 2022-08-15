@@ -1,0 +1,46 @@
+.filter-analytics-community {
+    display: flex;
+    border-top: 1px solid $primary-1;
+
+    &__title {
+        padding-top: 10px;
+        @include font($text-color-1, 16px, 19px, 400);
+    }
+
+    &__list {
+        display: flex;
+        column-gap: 8px;
+        margin-left: 30px;
+        list-style: none;
+    }
+
+    //&__item {}
+
+    &__radio {
+        display: none;
+
+        &:checked + .filter-analytics-community__label {
+            @include font($primary-1, 16px, 19px, 600);
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 0;
+                height: 4px;
+                background-color: $primary-1;
+                border-radius: 2px;
+            }
+        }
+    }
+
+    &__label {
+        position: relative;
+        display: inline-block;
+        padding-top: 10px;
+        @include font($text-color-1, 16px, 19px, 400);
+        white-space: nowrap;
+        cursor: pointer;
+    }
+}

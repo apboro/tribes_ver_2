@@ -76,6 +76,7 @@ export class PaymentsCardListPage {
     }
 
     async getCardsData() {
+        console.log(this.apiToken);
         try {
             const res = await window.axios({
                 method: 'post',
