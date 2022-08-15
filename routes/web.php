@@ -317,8 +317,3 @@ Route::any('/manager{any}', function () {
 
 Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name('telegram.interface');
 
-
-// X
-Route::get('/{community}/analytics', function () {
-    return view('common.community.analytics');
-})->name('analytics.index');

@@ -1,8 +1,8 @@
 <template>
-    <div class="community">
-        <div class="container">
+    <!-- <div class="community">
+        <div class="container"> -->
             <!-- HEAD -->
-            <header class="community__header">
+            <!-- <header class="community__header">
                 <h2
                     class="community__title"
                     title="Tech in UK"
@@ -11,10 +11,10 @@
                 </h2>
 
                 <tabs-nav class="community__nav" />
-            </header>
+            </header> -->
 
             <!-- Profile -->
-            <transition name="a-community-profile">
+            <!-- <transition name="a-community-profile">
                 <community-profile v-if="isVisibleProfile" class="community__profile"/>
             </transition>
 
@@ -25,12 +25,12 @@
                 >
                     {{ isVisibleProfile ? 'Скрыть профиль' : 'Показать профиль' }}
                 </button>
-            </div>
+            </div> -->
 
             <!-- Analytics -->
             <community-analytics class="community__tab" />
-        </div>
-    </div>
+        <!-- </div> -->
+    <!-- </div> -->
 </template>
 
 <script>

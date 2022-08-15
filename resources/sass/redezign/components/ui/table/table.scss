@@ -262,6 +262,32 @@
             color: $primary-1;
         }
     }
+
+    &__reaction-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+        list-style: none;
+    }
+
+    &__reaction-item {
+        padding: 2px 10px;
+        background-color: $grey-2;
+        border-radius: 20px;
+    }
+
+    &__sort-btn {
+        .button-text__icon {
+            .icon__fill {
+                fill: $white;
+            }
+    
+            .icon__stroke {
+                stroke: $white;
+            }
+        }
+    }
 }
 
 .a-table-row {

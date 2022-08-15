@@ -15,6 +15,17 @@ const { AlertMessage } = require('./plugins/Abstract/Alert');
 const { SidePanel } = require('./plugins/Abstract/SidePanel');
 const { Popup } = require('./plugins/Abstract/Popup');
 
+
+
+import BurgerMenu from './plugins/Helper/BurgerMenu';
+import { Dropdown } from './plugins/Helper/Dropdown';
+
+
+
+window['Dropdown'] = new Dropdown();
+window['Burger'] = new BurgerMenu();
+
+
 new LoadPlugin();
 feather.replace();
 tooltipsInit();

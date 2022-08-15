@@ -6,11 +6,11 @@
         <button
             v-if="value === 'off'"
             :key="`${ sortProps.sortName }_asc`"
-            class="button-text button-text--primary button-text--only-icon"
+            class="table__sort-btn button-text button-text--primary button-text--only-icon"
             @click="sort(sortProps.sortName, 'asc')"
         >
             <v-icon
-                name="sort-asc"
+                name="sort"
                 size="1"
                 class="button-text__icon"
             />
@@ -19,7 +19,7 @@
         <button
             v-else-if="value === 'asc'"
             :key="`${ sortProps.sortName }_asc_active`"
-            class="button-text button-text--primary button-text--only-icon active"
+            class="table__sort-btn button-text button-text--primary button-text--only-icon"
             @click="sort(sortProps.sortName, 'desc')"
         >
             <v-icon
@@ -32,9 +32,10 @@
         <button
             v-else-if="value === 'desc'"
             :key="`${ sortProps.sortName }_desc`"
-            class="button-text button-text--primary button-text--only-icon active"
+            class="table__sort-btn button-text button-text--primary button-text--only-icon" 
             @click="sort(sortProps.sortName, 'off')"
         >
+        <!-- //class="table__sort-btn button-text button-text--primary button-text--only-icon active" -->
             <v-icon
                 name="sort-desc"
                 size="1"

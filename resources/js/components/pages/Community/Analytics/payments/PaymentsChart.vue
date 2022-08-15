@@ -78,19 +78,19 @@
                 class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
                 @click="toggleData('media')"
             >
-                <p
+                <span
                     class="chart-analytics-community__value"
                     :style="{ color: media.color }"
                 >
                     <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.media.total) }}
-                </p>
+                </span>
              
-                <p
+                <span
                     class="chart-analytics-community__text"
                     :style="{ color: media.color }"
                 >
                     Медиатовары
-                </p>
+                </span>
             </button>
         </div>
     </div>

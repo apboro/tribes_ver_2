@@ -23,6 +23,16 @@
             </div>
         </div>
     </header>
+
+    {{--
+        <header class="main-header-red">
+        <div class="container">
+            <div class="main-header-red__logo"></div>
+
+            @include('common.template.assets.main_menu_redezign')
+        </div>
+    </header>
+        --}}
     <div id="app" class="app-content content"></div>
 </body>
 </html>

@@ -23,7 +23,7 @@
     </main>
 
     <!-- Footer-->
-    @include('common.template.footer')
+    {{-- @include('common.template.footer') --}}
     
     <!-- Service container -->
     @include('common.template.service_container')

@@ -71,7 +71,7 @@
     }
 
     &__pay-link {
-
+        @include font($blue-1, 12px, 16px, 400);
 
         &:not(:first-child):before {
             content: "|";
@@ -82,9 +82,9 @@
         grid-row: 1 / 4;
         grid-column: 2 / 3;
         display: grid;
-        grid-template-rows: 1fr 1fr;
-        grid-template-columns: 1fr 1fr;
-        align-items: center;
+        grid-template-rows: min-content min-content;
+        grid-template-columns: min-content min-content;
+        align-self: start;
         justify-content: center;
         column-gap: 30px;
         row-gap: 40px;
@@ -115,11 +115,12 @@
     }
 
     &__money-btn {
+        padding: 15px 10px;
         @include font($primary-1, 16px, 21px, 700);
         text-transform: uppercase;
         white-space: nowrap;
         background-color: #fff;
-        
+        border-radius: 2px;
     }
 }
 
