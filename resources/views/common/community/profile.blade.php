@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app-redezign')
 
 @section('content')
     <div class="community" data-plugin="CommunityPage">
