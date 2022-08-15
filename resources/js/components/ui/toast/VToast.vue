@@ -1,40 +1,39 @@
 <template>
-    <ul class="toasts">
-        <transition-group name="a-toast" tag="ul" class="toasts">
-            <div
-                class="toasts__item"
-                :class="`toasts__item--${ message.type }`"
-                v-for="message in GET_MESSAGES"
-                :key="message.id"
-                @click="REMOVE(message)"
-            >
-                {{ message.message }}
-            </div>
-        </transition-group>
-    </ul>
+    <transition-group
+        name="a-toast"
+        tag="ul"
+        class="toasts"
+    >
+        <toast-item
+            v-for="message in GET_MESSAGES"
+            :key="message.id"
+            :data="message"
+        />
+    </transition-group>
 </template>
 
 <script>
-    import { mapGetters, mapMutations } from 'vuex';
+    import { mapGetters } from 'vuex';
+    import ToastItem from './ToastItem.vue';
 
     export default {
         name: 'VToast',
 
+        components: { ToastItem },
+
+        data() {
+            return {
+                timer: null,
+            }
+        },
+
         computed: {
             ...mapGetters('toast', ['GET_MESSAGES'])
         },
-
-        methods: {
-            ...mapMutations('toast', ['REMOVE'])
-        },
-
-        mounted() {
-            console.log(this.GET_MESSAGES);
-        }
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .toasts {
         position: fixed;
         bottom: 16px;
@@ -57,6 +56,18 @@
             &--success {
                 background-color: green;
             }
+
+            &--warning {
+                background-color: orange;
+            }
+
+            &--danger {
+                background-color: red;
+            }
+        }
+
+        &__message {
+            color: white;
         }
     }
 
@@ -67,17 +78,26 @@
         &-leave-active {
             animation: table-row .3s reverse;
         }
+        &-move {
+            transition: .3s;
+        }
     }
 
     @keyframes table-row {
         0% {
             opacity: 0;
-            transform: translateY(-3px) scaleY(-100%);
+            //transform: translateY(-3px) scaleY(-100%);
+            transform: translateX(-100%) translateY(-100%);
+        }
+
+        90% {
+            transform: translateY(10%);
         }
 
         100% {
             opacity: 1;
-            transform: translateY(0px) scaleY(0px);
+            //transform: translateY(0px) scaleY(0px);
+            transform: translateX(0%) translateY(0%);
         }
     }
 </style>

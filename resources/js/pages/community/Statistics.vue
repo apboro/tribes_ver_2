@@ -30,7 +30,7 @@
             <!-- Analytics -->
             <community-analytics class="community__tab" />
 
-            <!-- <v-toast/> -->
+            <v-toast/>
         <!-- </div> -->
     </div>
 </template>
