@@ -19,7 +19,7 @@ window.axios.interceptors.response.use(function (response) {
 }, function (error) {
     if (error.response.status === 401 || error.response.status === 419) {
         sessionStorage.setItem('token', 'null')
-        window.location.href = '/manager/login';
+        window.location.href = '/manager';
     }
     return Promise.reject(error);
 });

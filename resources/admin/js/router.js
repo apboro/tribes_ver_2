@@ -10,7 +10,7 @@ let router =  new Router({
     // redirect: '/manager/dashboard',
     routes: [
         {
-            path: '/login',
+            path: '/',
             name: 'login',
             meta: {layout: 'auth'},
             component: () => import(/* webpackChunkName: "Login" */ './components/auth/Login')
