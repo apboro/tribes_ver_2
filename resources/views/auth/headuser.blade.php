@@ -72,7 +72,7 @@
                     onclick="Headuser.loginAsAdmin()"
                 >
                     <i data-feather="power" class="font-medium-2 me-50"></i>
-                    {{ __('auth.login_as_admin') }}
+                    {{ __('auth.back_as_admin') }}
                 </a>
             
                 @endif
