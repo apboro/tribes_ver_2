@@ -91,7 +91,6 @@
 
         computed: {
             chartData() {
-                console.log(this.data);
                 return {
                     labels: this.data.joined.items,
                     datasets: [

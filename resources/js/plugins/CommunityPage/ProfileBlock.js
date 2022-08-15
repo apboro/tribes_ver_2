@@ -1,4 +1,4 @@
-import { dateFormatting } from "../../functions";
+import { timeFormatting } from "../../core/functions";
 import { FormattingData } from "./ProfileBlock/FormattingData";
 import { SidebarVisibility } from "./ProfileBlock/SidebarVisibility";
 
@@ -30,8 +30,9 @@ export class ProfileBlock {
 
     dateFormat() {
         Object.values(this.dateList).forEach((dateItem) => {
-            dateItem.textContent = dateFormatting({
-                date: Date.parse(dateItem.textContent),
+            console.log(Date(dateItem.textContent.trim()));
+            dateItem.textContent = timeFormatting({
+                date: Date(dateItem.textContent),
                 year: "numeric",
                 month: "long",
                 day: "numeric",

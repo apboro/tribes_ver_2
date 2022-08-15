@@ -35,11 +35,9 @@
                 const id = Math.floor(Math.log(this.value) / Math.log(1000));
 
                 if (id < 0) {
-                    console.log('hi');
                     return this.value.toString();
                 }
 
-                console.log(this.value);
                 return `${ parseFloat((this.value / Math.pow(1000, id)).toFixed(this.decimal)) }${ notations[id] }`;
             }
         }
