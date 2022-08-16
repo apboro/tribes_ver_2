@@ -3,7 +3,7 @@ import { ContentEditor } from "../../Helper/ContentEditor";
 import { ImagePreview } from "../../Helper/ImagePreview";
 import { CropImageOnMoveCroppController } from "./CropImageOnMoveCroppController";
 
-export class TariffPageSettingsPayBlock {
+export class TariffPagePublicationsPayBlock {
     constructor(options) {
         this.container = options.parent;
         this.previewContainer = this.container.querySelector('#pay_block_preview_container');

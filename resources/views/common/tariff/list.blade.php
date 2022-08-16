@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="card faq-search">
                     <div class="card-header">
-                        <div class="col-6 col-lg-4">
+                        <div class="col-6 col-lg-2">
                             <h4 class="card-title">
                                 {{ __('base.tariffs') }}
                             </h4>   
@@ -14,22 +14,32 @@
                        
                         <div class="mt-1 mt-sm-0">
                             <a
-                                href="{{ route('community.tariff.settings', $community) }}"
-                                class="btn btn-outline-success"
-                            >
-                                <i data-feather='settings' class="font-medium-1"></i>
-                                <span class="d-none d-lg-inline-block">
-                                    {{ __('base.settings') }}
-                                </span>
-                            </a>
-
-                            <a
-                                href="{{ route('community.tariff.add', $community) }}"
-                                class="btn btn-success ms-0 ms-sm-1 "
+                                    href="{{ route('community.tariff.add', $community) }}"
+                                    class="btn btn-success"
                             >
                                 <i data-feather='plus' class="font-medium-1"></i>
                                 <span class="d-none d-lg-inline-block">
                                     {{ __('tariff.add_tariff') }}
+                                </span>
+                            </a>
+
+                            <a
+                                    href="{{ route('community.tariff.publication', $community) }}"{{--сюда роут для публикации--}}
+                                    class="btn btn-success ms-0 ms-sm-1 "
+                            >
+                                <i data-feather='plus' class="font-medium-1"></i>
+                                <span class="d-none d-lg-inline-block">
+                                    {{ __('tariff.tariffs_publication') }}
+                                </span>
+                            </a>
+
+                            <a
+                                href="{{ route('community.tariff.settings', $community) }}"
+                                class="btn btn-outline-success ms-0 ms-sm-1"
+                            >
+                                <i data-feather='settings' class="font-medium-1"></i>
+                                <span class="d-none d-lg-inline-block">
+                                    {{ __('tariff.setting_messages') }}
                                 </span>
                             </a>
                         </div>

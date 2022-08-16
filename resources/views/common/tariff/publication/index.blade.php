@@ -3,7 +3,7 @@
 @section('tab')
     @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors])
 
-    <section class="form-control-repeater" data-tab="tariffPageSettings">
+    <section class="form-control-repeater" data-tab="tariffPagePublications">
         <div class="row">
             <!-- Invoice repeater -->
             <div class="col-12">
@@ -11,7 +11,7 @@
                     <div class="card-header">
                         <div class="col-8 col-xl-10">
                             <h4 class="card-title">
-                                {{ __('tariff.settings_title') }}
+                                Публикация тарифов в сообществе
                             </h4>
                         </div>
                         
@@ -23,6 +23,7 @@
                             
                             <span class="align-middle d-sm-inline-block d-none">
                                 {{ __('base.back') }}
+
                             </span>
                         </a>
                     </div>
@@ -33,9 +34,18 @@
                     <li class="nav-item">
                         <a
                             class="nav-link @if( !request('tab') || request('tab') == 'common') active @endif"
-                            href="{{ route('community.tariff.settings', ['community' => $community]) }}"
+                            href="{{ route('community.tariff.publication', ['community' => $community]) }}"
                         >
-                            {{ __('base.common') }}
+                            Сообщение с тарифами в сообщество
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link @if( request('tab') == 'pay') active @endif"
+                            href="{{ route('community.tariff.publication', ['community' => $community, 'tab' => 'pay']) }}"
+                        >
+                            Посадочная веб-страница с тарифами
                         </a>
                     </li>
                 </ul>

@@ -1,4 +1,4 @@
-@extends('common.tariff.settings.index')
+@extends('common.tariff.publication.index')
 
 @section('subtab')
     <form
@@ -7,6 +7,7 @@
         class=""
         id="pay_form_{{ $community->id }}"
         enctype="multipart/form-data"
+        data-tab="tariffPagePublicationsPay"
     >
         <div class="card">
             <div class="card-body">
@@ -31,7 +32,7 @@
                                 aria-describedby="pay_title"
                                 placeholder="{{ __('form.title_text') }}"
                                 value="{{$community->tariff ? $community->tariff->title : old('title')}}"
-                                oninput="CommunityPage.tariffPageSettings.payBlock.onInputTitle(event)"
+                                oninput="CommunityPage.tariffPagePublications.payBlock.onInputTitle(event)"
                             />
 
                             <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">
@@ -47,6 +48,31 @@
                     
                     <!-- Preview page -->
                     @include('common.tariff.assets.tariff_main_preview')
+                </div>
+
+                <hr/>
+
+                <div class="profile-community__pay-link-block">
+                    <p class="profile-community__pay-link-label">
+                        Ссылка на страницу оплаты для доступа к сообществу
+                    </p>
+
+                    <div class="profile-community__pay-link-wrapper">
+                        <a
+                                href="{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}"
+                                target="_blank"
+                                class="link profile-community__pay-link"
+                        >
+                            Перейти
+                        </a>
+
+                        <button
+                                class="link profile-community__pay-link profile-community__pay-link--divider"
+                                onclick="copyText('{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}')"
+                        >
+                            Скопировать
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -65,6 +91,7 @@
                     </button>
                 </div>
             </div>
+
         </div>
     </form>
 @endsection
