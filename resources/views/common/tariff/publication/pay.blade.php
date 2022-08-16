@@ -48,6 +48,31 @@
                     <!-- Preview page -->
                     @include('common.tariff.assets.tariff_main_preview')
                 </div>
+
+                <hr/>
+
+                <div class="profile-community__pay-link-block">
+                    <p class="profile-community__pay-link-label">
+                        Ссылка на страницу оплаты для доступа к сообществу
+                    </p>
+
+                    <div class="profile-community__pay-link-wrapper">
+                        <a
+                                href="{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}"
+                                target="_blank"
+                                class="link profile-community__pay-link"
+                        >
+                            Перейти
+                        </a>
+
+                        <button
+                                class="link profile-community__pay-link profile-community__pay-link--divider"
+                                onclick="copyText('{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}')"
+                        >
+                            Скопировать
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="card-footer">
@@ -65,6 +90,7 @@
                     </button>
                 </div>
             </div>
+
         </div>
     </form>
 @endsection

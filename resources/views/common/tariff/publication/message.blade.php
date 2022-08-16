@@ -6,7 +6,7 @@
         method="post"
         id="general_form_{{ $community->id }}"
         enctype="multipart/form-data"
-        data-tab="tariffPageSettingsCommon"
+        data-tab="tariffPageSettingsMessage"
     >
         <div class="card">
             <div class="card-body">
