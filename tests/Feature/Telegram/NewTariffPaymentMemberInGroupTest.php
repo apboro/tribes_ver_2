@@ -57,15 +57,13 @@ class NewTariffPaymentMemberInGroupTest extends TestCase
         $this->assertTrue(
             $this->getTestHandler()->hasRecord([
                 'message' => 'send tariff pay message to own author chat bot',
-                'context' => ['message' => 'Участник Дмитрий Сеошин оплатил standart test в сообществе @test1.spodial.com,
-                                стоимость 1 рублей действует до 12.08.2023 г.']
+                /*'context' => ['message' => 'Участник Дмитрий Сеошин оплатил standart test в сообществе @test1.spodial.com,
+                                стоимость 1 рублей действует до 12.08.2023 г.']*/
                 ], 'info'),
             'Сообщение не отправлено в ЛЧ'
         );
 
-        $this->assertDatabaseHas('jobs',[
-            'id' => 2
-        ]);
+        $this->assertDatabaseCount('jobs',1);
     }
 
     public function prepareDB()
