@@ -1,12 +1,12 @@
 <template>
     <div
-        class="toasts__item"
-        :class="`toasts__item--${ data.type }`"
+        class="alerts__item"
+        :class="`alerts__item--${ data.type }`"
         @click="REMOVE(data)"
         @mouseenter="stopTimer"
         @mouseleave="startTimer"
     >
-        <p class="toasts__message">
+        <p class="alerts__message">
             {{ data.message }} {{ data.id }}
         </p>
     </div>
@@ -16,7 +16,7 @@
     import { mapMutations } from 'vuex';
 
     export default {
-        name: 'ToastItem',
+        name: 'VAlert',
 
         props: {
             data: {

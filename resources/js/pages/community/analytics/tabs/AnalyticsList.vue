@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button @click="append">toast</button>
+        <!-- <button @click="append">toast</button> -->
 
         <ul
             class="analytics-community__card-list"
@@ -104,10 +104,9 @@
                 });
             },
 
-            append() {
-                this.$messageDanger('dfdfdfdfdf')
-                //this.INFO('hi');
-            }
+            // append() {
+            //     this.$alertSuccess('dfdfdfdfdf')
+            // }
         },
 
         mounted() {

@@ -2,19 +2,19 @@ import store from '../../store/store';
 
 export default {
     install(Vue, options) {
-        Vue.prototype.$messageSuccess = function(text) {
+        Vue.prototype.$alertSuccess = function(text) {
             store.commit('toast/SET_MESSAGE', 'success', text);
         }
 
-        Vue.prototype.$messageInfo = function(text) {
+        Vue.prototype.$alertInfo = function(text) {
             store.commit('toast/SET_MESSAGE', 'info', text);
         }
 
-        Vue.prototype.$messageDanger = function(text) {
+        Vue.prototype.$alertDanger = function(text) {
             store.commit('toast/SET_MESSAGE', 'danger', text);
         }
 
-        Vue.prototype.$messageWarning = (text) => {
+        Vue.prototype.$alertWarning = (text) => {
             store.commit('toast/SET_MESSAGE', 'warning', text);
         }
     }

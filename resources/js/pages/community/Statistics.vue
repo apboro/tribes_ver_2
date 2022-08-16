@@ -30,7 +30,7 @@
             <!-- Analytics -->
             <community-analytics class="community__tab" />
 
-            <v-toast/>
+            <!-- <v-alerts /> -->
         <!-- </div> -->
     </div>
 </template>
@@ -39,7 +39,7 @@
     import TabsNav from '../../components/pages/community/TabsNav.vue';
     import CommunityProfile from '../../components/pages/community/CommunityProfile.vue';
     import CommunityAnalytics from './analytics/CommunityAnalytics.vue';
-    import VToast from '../../components/ui/toast/VToast.vue';
+    import VAlerts from '../../components/ui/alert/VAlerts.vue';
 
     export default {
         name: 'Statistics',
@@ -48,7 +48,7 @@
             TabsNav,
             CommunityProfile,
             CommunityAnalytics,
-            VToast,
+            VAlerts,
         },
 
         data() {
