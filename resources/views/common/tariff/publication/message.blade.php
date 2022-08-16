@@ -6,14 +6,14 @@
         method="post"
         id="general_form_{{ $community->id }}"
         enctype="multipart/form-data"
-        data-tab="tariffPageSettingsMessage"
+        data-tab="tariffPagePublicationsMessage"
     >
         <div class="card">
             <div class="card-body">
                 @csrf
                 @if (env('USE_TRIAL_PERIOD', true))
                 <!-- Пробный период -->
-                <div>
+                {{--<div>
                     <div class="row align-items-center">
                         <div class="col-sm-10 col-12">
                             <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center">
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <hr />
-                </div>
+                </div>--}}
                 @endif
                 {{--<div class="inactive-form-items">
                     <div class="row align-items-center">
@@ -106,7 +106,6 @@
                     <button
                         class="btn w-100 btn-icon btn-success d-flex align-items-center justify-content-center"
                         type="submit"
-                        onclick="CommunityPage.tariffPageSettings.commonBlock.trialPeriodAttention(event, '{{$community->tariff->test_period}}')"
                         data-repeater-create
                     >
                         <i data-feather="save" class="font-medium-1"></i>

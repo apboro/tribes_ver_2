@@ -7,6 +7,7 @@
         class=""
         id="pay_form_{{ $community->id }}"
         enctype="multipart/form-data"
+        data-tab="tariffPagePublicationsPay"
     >
         <div class="card">
             <div class="card-body">
@@ -31,7 +32,7 @@
                                 aria-describedby="pay_title"
                                 placeholder="{{ __('form.title_text') }}"
                                 value="{{$community->tariff ? $community->tariff->title : old('title')}}"
-                                oninput="CommunityPage.tariffPageSettings.payBlock.onInputTitle(event)"
+                                oninput="CommunityPage.tariffPagePublications.payBlock.onInputTitle(event)"
                             />
 
                             <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">

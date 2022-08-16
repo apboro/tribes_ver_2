@@ -77,7 +77,7 @@
                                 type="file"
                                 accept="image/png,image/jpeg,image/gif"
                                 name="files[welcome][image]"
-                                onchange="CommunityPage.tariffPageSettings.commonBlock.croppImageControllerWelcome.onChange()"
+                                onchange="CommunityPage.tariffPageSettings.settingsMessages.croppImageControllerWelcome.onChange()"
                                 data-crop-image-file
                             >
                             
@@ -118,7 +118,7 @@
                     
                         <span
                             class="col-5 col-lg-4 btn btn-danger px-1"
-                            onclick="CommunityPage.tariffPageSettings.commonBlock.croppImageControllerWelcome.removeLoadedImage()"
+                            onclick="CommunityPage.tariffPageSettings.settingsMessages.croppImageControllerWelcome.removeLoadedImage()"
                         >
                             <i data-feather='trash' class="font-medium-1"></i>    
                         </span>

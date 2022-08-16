@@ -3,7 +3,7 @@
 @section('tab')
     @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors])
 
-    <section class="form-control-repeater" data-tab="tariffPageSettings">
+    <section class="form-control-repeater" data-tab="tariffPagePublications">
         <div class="row">
             <!-- Invoice repeater -->
             <div class="col-12">

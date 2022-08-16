@@ -49,7 +49,7 @@
                             type="file"
                             accept="image/png,image/jpeg,image/gif"
                             name="files[pay][image]"
-                            onchange="CommunityPage.tariffPageSettings.payBlock.croppImageControllerPay.onChange()"
+                            onchange="CommunityPage.tariffPagePublications.payBlock.croppImageControllerPay.onChange()"
                             data-crop-image-file
                         >
                         
@@ -90,7 +90,7 @@
                 
                     <span
                         class="col-5 col-lg-4 btn btn-danger px-1"
-                        onclick="CommunityPage.tariffPageSettings.payBlock.croppImageControllerPay.removeLoadedImage()"
+                        onclick="CommunityPage.tariffPagePublications.payBlock.croppImageControllerPay.removeLoadedImage()"
                     >
                         <i data-feather='trash' class="font-medium-1"></i>    
                     </span>
