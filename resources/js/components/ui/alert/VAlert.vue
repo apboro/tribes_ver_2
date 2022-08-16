@@ -32,7 +32,7 @@
         },
 
         methods: {
-            ...mapMutations('toast', ['REMOVE']),
+            ...mapMutations('alert', ['REMOVE']),
 
             stopTimer() {
                 clearTimeout(this.timer);
@@ -46,6 +46,7 @@
         },
 
         mounted() {
+            console.log(this.data);
             this.startTimer();
         }
     }

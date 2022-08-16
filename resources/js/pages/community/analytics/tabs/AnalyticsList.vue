@@ -1,6 +1,7 @@
 <template>
     <div>
-        <!-- <button @click="append">toast</button> -->
+        <button @click="append">toast</button>
+        <i v-my-directive="1">132</i>
 
         <ul
             class="analytics-community__card-list"
@@ -104,15 +105,15 @@
                 });
             },
 
-            // append() {
-            //     this.$alertSuccess('dfdfdfdfdf')
-            // }
+            append() {
+                this.$alertSuccess('dfdfdfdfdf')
+            }
         },
 
         mounted() {
             this.LOAD_DATA_LIST();
 
-            this.filter();            
+            this.filter();       
         }
     }
 </script>

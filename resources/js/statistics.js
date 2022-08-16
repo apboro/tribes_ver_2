@@ -29,8 +29,10 @@ import store from './store/store';
 import Statistics from './pages/community/Statistics';
 import PortalVue from 'portal-vue';
 import toastPlugin from './core/plugins/toast';
+import api from './core/plugins/api';
 Vue.use(PortalVue);
 Vue.use(toastPlugin);
+Vue.use(api)
 
 let app = new Vue({
     // router,

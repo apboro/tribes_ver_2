@@ -4,7 +4,7 @@ export default ({
         state._messages.splice(index, 1);
     },
 
-    SET_MESSAGE(state, type, message, duration) {
+    SET_MESSAGE(state, { type, message, duration }) {
         /* if (state._messages.length > 5) {
             state._messages.splice(0, 1);
         } */

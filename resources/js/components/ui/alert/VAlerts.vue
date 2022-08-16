@@ -28,7 +28,7 @@
         },
 
         computed: {
-            ...mapGetters('toast', ['GET_MESSAGES'])
+            ...mapGetters('alert', ['GET_MESSAGES'])
         },
     }
 </script>

@@ -2,10 +2,10 @@ async function baseRequest(url, data) {
     return await axios({
         method: 'post',
         url: url,
-        headers: {
+        /* headers: {
             'Authorization': `Bearer ${ window.api_token }`,
             'Accept': 'application/json'
-        },
+        }, */
         data
     });
 }

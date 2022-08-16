@@ -28,8 +28,12 @@ import Vue from 'vue';
 import store from './store/store';
 import Knowledge from './pages/Knowledge';
 import PortalVue from 'portal-vue';
+import toastPlugin from './core/plugins/toast';
+import api from './core/plugins/api';
+Vue.use(PortalVue);
+Vue.use(toastPlugin);
+Vue.use(api);
 
-Vue.use(PortalVue)
 
 let app = new Vue({
     // router,
@@ -58,8 +62,11 @@ window.axios.interceptors.response.use(function (response) {
         document.dispatchEvent(event);
         console.log("Событие " + response.data.event + " объявлено");
     } */
+    console.log(454555);
+    Vue.prototype.$alertWarning('Success upload');
     return response;
 }, function (error) {
+    console.log(111);
     // window.unsetPreloader();
    /*  if (error.response.status === 422 || error.response.status === 200) {
 
