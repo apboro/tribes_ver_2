@@ -138,7 +138,6 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                 Route::get('/{community}/tariff/publication/{tab?}', 'TariffController@publication')->name('community.tariff.publication');
 
                 Route::post('/{community}/tariff/settings/update', 'TariffController@tariffSettings')->name('tariff.settings.update');
-//                Route::post('/{community}/tariff/publication/update', 'TariffController@tariffPublication')->name('tariff.publication.update');
 
 
                 // Knowledge
