@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Services\Telegram\BotInterface\TelegramMainBotServiceContract;
 use App\Services\TelegramMainBotService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
