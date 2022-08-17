@@ -19,10 +19,10 @@ if (window.token) {
 import { Cropper } from 'vue-advanced-cropper';
 import store from './courseStore';
 //import store from './store/store';
-import Text from "./components/pages/Course/media/Text";
-import Video from "./components/pages/Course/media/Video";
-import Audio from "./components/pages/Course/media/Audio";
-import Image from "./components/pages/Course/media/Image";
+import Text from "./components/pages/course/media/Text";
+import Video from "./components/pages/course/media/Video";
+import Audio from "./components/pages/course/media/Audio";
+import Image from "./components/pages/course/media/Image";
 
 
 
