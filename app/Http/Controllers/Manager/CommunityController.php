@@ -17,6 +17,42 @@ class CommunityController extends Controller
         $this->communityRepository = $communityRepository;
     }
 
+    /**
+     * @OA\Post(
+     *     path="/v2/communities",
+     *     tags={"CommunityController"},
+     *     summary="Get list communities",
+     *     operationId="getListCommunities",
+     *     security={{"sanctum": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfuly get list communities",
+     *         @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="id",
+     *                  type="integer",
+     *              ),
+     *              @OA\Property(
+     *                  property="title",
+     *                  type="string",
+     *              ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=302,
+     *         description="Redirect to main page, if user is not admin"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     ),
+     *     @OA\Response(
+     *         response=419,
+     *         description="Page expired",
+     *     ),
+     * )
+     */
+
     public function list(Request $request)
     {
         $communities = $this->communityRepository->getAllCommunity();
@@ -24,6 +60,55 @@ class CommunityController extends Controller
         return CommunityResource::collection($communities);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/v2/community",
+     *     tags={"CommunityController"},
+     *     summary="Get community by id",
+     *     operationId="getCommunityById",
+     *     security={{"sanctum": {} }},
+     *     @OA\RequestBody(
+     *         required=false,
+     *         description="Тело запроса для получения информации об одном сообщества",
+     *         @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="id",
+     *                  type="integer",
+     *              ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfuly get list payments",
+     *         @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="id",
+     *                  type="integer",
+     *              ),
+     *              @OA\Property(
+     *                  property="title",
+     *                  type="string",
+     *              ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=302,
+     *         description="Redirect to main page, if user is not admin"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     ),
+     *     @OA\Response(
+     *         response=419,
+     *         description="Page expired",
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="The given data was invalid",
+     *     ),
+     * )
+     */
 
     public function get(CommunityRequest $request)
     {

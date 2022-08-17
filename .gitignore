@@ -1,6 +1,7 @@
 /node_modules
 /storage/*.key
 /storage/temp.png
+/storage/api-docs
 /public/modules
 /public/temp.png
 /public/css
@@ -52,3 +53,4 @@ test.json
 /videos/donate-success.mp4
 public/mix-manifest.json
 public/temp.png
+/resources/views/vendor/l5-swagger

@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Repositories\Elasticsearch;
+
 class ElasticsearchRepository
 {
     private $elasticsearch;
