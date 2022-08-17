@@ -9,6 +9,7 @@
     data-open="hover"
     data-menu="horizontal-menu"
     data-col=""
+    @if(!session()->has('admin_id')) data-admin="true" @endif
 >
     <!-- Header-->
     @include('common.template.header')
