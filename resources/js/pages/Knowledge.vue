@@ -99,6 +99,8 @@
                 @confirm="confirmDraftQuestions"
             />
         </div>
+
+        <!-- <v-alerts /> -->
     </div>
 </template>
 
@@ -117,6 +119,7 @@
     import ConfirmDraftPopup from '../components/pages/Knowledge/ConfirmDraftPopup.vue';
     import ConfirmDeletePopup from '../components/pages/Knowledge/ConfirmDeletePopup.vue';
     import AuxiliaryPanel from '../components/pages/Knowledge/AuxiliaryPanel.vue';
+    import VAlerts from '../components/ui/alert/VAlerts.vue';
     
     import { bodyLock, bodyUnLock } from '../core/functions';
 
@@ -137,6 +140,7 @@
             ConfirmDraftPopup,
             ConfirmDeletePopup,
             AuxiliaryPanel,
+            VAlerts,
         },
 
         data() {
@@ -343,8 +347,11 @@
             },
         },
 
-        mounted() {
-            this.LOAD_QUESTIONS();
+        async mounted() {
+            await this.LOAD_QUESTIONS();
+
+           /*  const re = await this.$api('https://jsonplaceholder.typicode.com/todos/1')
+            console.log(re); */
         }
     }
 </script>

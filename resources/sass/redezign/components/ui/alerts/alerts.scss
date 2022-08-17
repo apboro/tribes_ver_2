@@ -1,0 +1,64 @@
+.alerts {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+
+    &__item {
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+        width: 300px;
+        padding: 8px 16px;
+
+        &--info {
+            background-color: $info-1;
+        }
+
+        &--success {
+            background-color: $success-1;
+        }
+
+        &--warning {
+            background-color: $warning-1;
+        }
+
+        &--danger {
+            background-color: $danger-1;
+        }
+    }
+
+    &__message {
+        color: white;
+    }
+}
+
+.a-alert {
+    &-enter-active {
+        animation: alert .3s;
+    }
+    &-leave-active {
+        animation: alert .3s reverse;
+    }
+    &-move {
+        transition: .3s;
+    }
+}
+
+@keyframes alert {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%) translateY(-100%);
+    }
+
+    90% {
+        transform: translateY(10%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0%) translateY(0%);
+    }
+}

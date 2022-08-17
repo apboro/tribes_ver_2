@@ -1,6 +1,9 @@
 <template>
     <div>
-        <!-- <button @click="append">toast</button> -->
+        <!-- <button @click="$alertSuccess('dfdfdfdfdf')">toast</button>
+        <span v-long-date="'10.11.2020'"></span>
+        <span v-short-date="'10.11.2020'"></span> -->
+
 
         <ul
             class="analytics-community__card-list"
@@ -103,16 +106,12 @@
                     return obj;
                 });
             },
-
-            append() {
-                this.INFO('hi');
-            }
         },
 
         mounted() {
             this.LOAD_DATA_LIST();
 
-            this.filter();            
+            this.filter();       
         }
     }
 </script>
