@@ -148,7 +148,7 @@
                                                         >
                                                             @if ($community->tariff !== null)
                                                                 <option value="{{ false }}"
-                                                                @if (!$follower->getVariantById($variant->id))
+                                                                @if (!empty($variant) && !$follower->getVariantById($variant->id))
                                                                 selected
                                                                 @endif
                                                                 >{{ __('base.none') }}</option>
