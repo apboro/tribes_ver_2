@@ -111,6 +111,9 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
         Route::group(['prefix' => 'community'], function () {
             Route::get('/', 'CommunityController@index')->name('community.list');
+            Route::get('/{community}', function (){
+                redirect(route('community.statistic'));
+            })->name('community.view');
 
             Route::middleware('sms_confirmed')->group(function () {
                 // Statistic
