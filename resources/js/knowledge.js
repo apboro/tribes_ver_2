@@ -26,7 +26,7 @@ window['Burger'] = new BurgerMenu();
 
 import Vue from 'vue';
 import store from './store/store';
-import Knowledge from './pages/Knowledge';
+import Knowledge from './pages/knowledge/Knowledge';
 import PortalVue from 'portal-vue';
 import toastPlugin from './core/plugins/toast';
 import api from './core/plugins/api';

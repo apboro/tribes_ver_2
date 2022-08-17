@@ -124,7 +124,6 @@
 <script>
     import VCheckbox from"../form/VCheckbox.vue";
     import TimeFormat from '../format/TimeFormat.vue';
-    import HiddenRow from "../../pages/Knowledge/Table/HiddenRow.vue";
     import ColActions from './ColActions.vue';
 
     export default {
@@ -132,7 +131,6 @@
         
         components: {
             VCheckbox,
-            HiddenRow,
             TimeFormat,
             ColActions,
         },

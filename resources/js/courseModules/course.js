@@ -119,15 +119,15 @@ let actions = {
     loadCourse({commit}, id){
         return new Promise((resolve, reject) => {
             axios({url: '/api/course/edit', data: { id : id}, method: 'POST' })
-                .then(resp => {
-                    if(resp.data.status === 'error'){
-                        window.location.href = '/courses'
-                    }
-                    let course = resp.data.course;
-                    course.lessons.forEach((lesson, index) => {
-                        lesson.index = index;
-                        lesson.active = !index
-                    })
+            .then(resp => {
+                if(resp.data.status === 'error'){
+                    window.location.href = '/courses'
+                }
+                let course = resp.data.course;
+                course.lessons.forEach((lesson, index) => {
+                    lesson.index = index;
+                    lesson.active = !index
+                })
                     commit('setCourse', course);
                     resolve(resp);
                 })
