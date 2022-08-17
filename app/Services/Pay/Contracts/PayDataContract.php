@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Pay;
+namespace App\Services\Pay\Contracts;
 
 
 /**

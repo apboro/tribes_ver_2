@@ -26,6 +26,7 @@ class Administrator
         }
 
         if ($user->isAdmin()) {
+
             return  $next($request);
         }
 

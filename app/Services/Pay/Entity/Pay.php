@@ -2,7 +2,7 @@
 
 namespace App\Services\Pay\Entity;
 
-use App\Services\Pay\PayDataContract;
+use App\Services\Pay\Contracts\PayDataContract;
 
 /**
  *  ValueObject объект хранения данных по платежу
