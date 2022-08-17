@@ -36,8 +36,8 @@
 </template>
 
 <script>
-    import TabsNav from '../../components/pages/Community/TabsNav.vue';
-    import CommunityProfile from '../../components/pages/Community/CommunityProfile.vue';
+    import TabsNav from '../../components/pages/community/TabsNav.vue';
+    import CommunityProfile from '../../components/pages/community/CommunityProfile.vue';
     import CommunityAnalytics from './analytics/CommunityAnalytics.vue';
     import VAlerts from '../../components/ui/alert/VAlerts.vue';
 
