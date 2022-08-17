@@ -89,6 +89,9 @@
         
         mounted() {
             this.$store.dispatch('loadCourse', this.id).then((resp) => {
+                if (this.course.lessons.length == 0) {
+                    this.newLesson();
+                }
                 this.showLesson(this.course.lessons[0].id);
                 window.uploads.setFiles(this.course.course_meta.attachments);
             });

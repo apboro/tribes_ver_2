@@ -106,22 +106,22 @@
 
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex';
-    import VButton from '../components/ui/button/VButton.vue';
-    import VBreadcrumbs from '../components/ui/breadcrumbs/VBreadcrumbs.vue';
-    import VPagination from '../components/ui/pagination/VPagination.vue';
-    import VPopup from '../components/ui/popup/VPopup.vue';
-    import VIcon from '../components/ui/icon/VIcon.vue';
-    import SearchField from '../components/ui/form/SearchField.vue';
-    import QuestionsFilter from '../components/pages/Knowledge/QuestionsFilter.vue';
-    import QuestionsTable from '../components/pages/Knowledge/Table/QuestionsTable.vue';
-    import MultipleOperations from '../components/pages/Knowledge/MultipleOperations.vue';
-    import NewQuestionPopup from '../components/pages/Knowledge/NewQuestionPopup.vue';
-    import ConfirmDraftPopup from '../components/pages/Knowledge/ConfirmDraftPopup.vue';
-    import ConfirmDeletePopup from '../components/pages/Knowledge/ConfirmDeletePopup.vue';
-    import AuxiliaryPanel from '../components/pages/Knowledge/AuxiliaryPanel.vue';
-    import VAlerts from '../components/ui/alert/VAlerts.vue';
+    import VButton from '../../components/ui/button/VButton.vue';
+    import VBreadcrumbs from '../../components/ui/breadcrumbs/VBreadcrumbs.vue';
+    import VPagination from '../../components/ui/pagination/VPagination.vue';
+    import VPopup from '../../components/ui/popup/VPopup.vue';
+    import VIcon from '../../components/ui/icon/VIcon.vue';
+    import SearchField from '../../components/ui/form/SearchField.vue';
+    import QuestionsFilter from '../../components/pages/knowledge/QuestionsFilter.vue';
+    import QuestionsTable from '../../components/pages/knowledge/table/QuestionsTable.vue';
+    import MultipleOperations from '../../components/pages/knowledge/MultipleOperations.vue';
+    import NewQuestionPopup from '../../components/pages/knowledge/NewQuestionPopup.vue';
+    import ConfirmDraftPopup from '../../components/pages/knowledge/ConfirmDraftPopup.vue';
+    import ConfirmDeletePopup from '../../components/pages/knowledge/ConfirmDeletePopup.vue';
+    import AuxiliaryPanel from '../../components/pages/knowledge/AuxiliaryPanel.vue';
+    import VAlerts from '../../components/ui/alert/VAlerts.vue';
     
-    import { bodyLock, bodyUnLock } from '../core/functions';
+    import { bodyLock, bodyUnLock } from '../../core/functions';
 
     export default {
         name: 'Knowledge',
