@@ -86,24 +86,28 @@ class TariffRepository implements TariffRepositoryContract
     {
         $newDate = $date . ' ' . $time;
         if ($date !== null) {
-             $this->createPayment($community->id, $ty->telegram_id, $newDate);
-        } 
+            $this->createPayment($community->id, $ty->telegram_id, $newDate);
+        }
     }
 
     private function createPayment($communityId, $tyTelegramId, $date)
     {
-        Payment::create([
-            'OrderId' => 1,
-            'community_id' => $communityId,
-            'add_balance' => 0,
-            'isNotify' => false,
-            'telegram_user_id' => $tyTelegramId,
-            'paymentUrl' => env('APP_DOMAIN'),
-            'type' => 'tariff',
-            'activated' => false,
-            'created_at' => $date,
-            'updated_at' => $date
-        ]);
+        $ty = TelegramUser::where('telegram_id', $tyTelegramId)->first();
+        $variant = $ty->tariffVariant()->first();
+        if (!$variant) {
+            Payment::create([
+                'OrderId' => 1,
+                'community_id' => $communityId,
+                'add_balance' => 0,
+                'isNotify' => false,
+                'telegram_user_id' => $tyTelegramId,
+                'paymentUrl' => env('APP_DOMAIN'),
+                'type' => 'tariff',
+                'activated' => false,
+                'created_at' => $date,
+                'updated_at' => $date
+            ]);
+        }
     }
 
     /**
@@ -113,38 +117,38 @@ class TariffRepository implements TariffRepositoryContract
     {
         foreach ($request->tariff as $tyId => $variantId) {
             $ty = TelegramUser::find($tyId);
-           
+
             if (isset($request->date_payment[$tyId]) && isset($request->time_payment[$tyId])) {
                 $this->updatePaymentDate($request->date_payment[$tyId], $request->time_payment[$tyId], $community, $ty);
-            } else { 
+            } else {
                 if ($variantId)
                     $this->createPayment($community->id, $ty->telegram_id, now()->format('Y-m-d G:i:s'));
             }
-            
-            
+
+
             // if ($ty->telegram_id === config('telegram_bot.bot.botId') || $ty->user_id === $community->owner)        //Отключить возможность дать тариф автору и боту
             //     continue;
 
             $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
 
             if ($variantId === null) {
-                if ($variantForThisCommunity) 
+                if ($variantForThisCommunity)
                     $ty->tariffVariant()->detach($variantForThisCommunity->id);
-                    $payments = Payment::where('telegram_user_id', $ty->telegram_id)->where('type', 'tariff')->get();
-                    foreach ($payments as $payment) {
-                        $payment->delete();
-                    }
+                $payments = Payment::where('telegram_user_id', $ty->telegram_id)->where('type', 'tariff')->get();
+                foreach ($payments as $payment) {
+                    $payment->delete();
+                }
                 continue;
             }
-            
+
             $variant = TariffVariant::find($variantId);
-    
+
             if ($variantForThisCommunity) {
                 $ty->tariffVariant()->detach($variantForThisCommunity->id);
-                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i')]);
+                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
             } else {
-                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i')]);
-            } 
+                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
+            }
         }
     }
 
