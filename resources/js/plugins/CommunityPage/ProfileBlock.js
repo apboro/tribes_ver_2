@@ -30,7 +30,6 @@ export class ProfileBlock {
 
     dateFormat() {
         Object.values(this.dateList).forEach((dateItem) => {
-            console.log(Date(dateItem.textContent.trim()));
             dateItem.textContent = timeFormatting({
                 date: Date(dateItem.textContent),
                 year: "numeric",
