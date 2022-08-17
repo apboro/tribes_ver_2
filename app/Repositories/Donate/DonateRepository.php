@@ -5,7 +5,9 @@ namespace App\Repositories\Donate;
 use App\Models\Donate;
 use App\Models\DonateVariant;
 use App\Repositories\File\FileRepositoryContract;
+use App\Services\File\common\FileEntity;
 use App\Helper\PseudoCrypt;
+use App\Services\File\FileUploadService;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use Askoldex\Teletant\Exception\TeletantException;
@@ -19,20 +21,26 @@ class DonateRepository implements DonateRepositoryContract
     private $donateModel;
     protected TelegramMainBotService $mainBotService;
     private TelegramLogService $telegramLogService;
+    private $fileUploadService;
+    private $fileEntity;
 
 
     public function __construct(
         FileRepositoryContract $fileRepo,
         TelegramMainBotService $mainBotService,
-        TelegramLogService $telegramLogService
+        TelegramLogService $telegramLogService,
+        FileUploadService $fileUploadService,
+        FileEntity $fileEntity
     )
     {
         $this->fileRepo = $fileRepo;
         $this->mainBotService = $mainBotService;
         $this->telegramLogService = $telegramLogService;
+        $this->fileUploadService = $fileUploadService;
+        $this->fileEntity = $fileEntity;
     }
 
-    public function update($community, $data, $id = NULL)
+    public function update($community, $request, $id = NULL)
     {
         $this->initDonateModel($id);
 
@@ -43,26 +51,28 @@ class DonateRepository implements DonateRepositoryContract
         $this->donateModel->community_id = $community->id;
 
         $arrIndex = [0];
+
         foreach ($community->donate as $donate) {
             $arrIndex[] = $donate->index ?? 0;
         }
+
         $this->donateModel->index = max($arrIndex) + 1;
 
-        $this->updateDescriptions($data);
+        $this->updateDescriptions($request);
 
         $this->generateLink();
 
         $this->donateModel->save();
 
-        $this->updateVariants($data);
+        $this->updateVariants($request);
 
-        $this->autoPrompt($data);
+        $this->autoPrompt($request);
 
-        $this->storeImages($data);
+        $this->storeImages($request);
 
         $this->donateModel->save();
 
-        $this->sendToCommunityAction($data, $community, $this->donateModel->id);
+        $this->sendToCommunityAction($request, $community, $this->donateModel->id);
 
         return $this->donateModel;
     }
@@ -95,16 +105,20 @@ class DonateRepository implements DonateRepositoryContract
         }
     }
 
-    private function storeImages($data)
+    private function storeImages($request)
     {
-        if (isset($data['files'])) {
-            foreach ($data['files'] as $key => $file) {
+        $this->fileEntity->getEntity($request);
+
+        if (isset($request['files'])) {
+            foreach ($request['files'] as $key => $file) {
                 $decoded = json_decode($file['crop']);
                 if (isset($file['image'])) {
                     $fileData['file'] = $file['image'];
                     $fileData['crop'] = $decoded->isCrop;
                     $fileData['cropData'] = $decoded->cropData;
-                    $f = $this->fileRepo->storeFile($fileData);
+                    $fileData['entity'] = $request['entity'];
+
+                    $f = $this->fileUploadService->procRequest($fileData)[0];
 
                     switch ($key) {
                         case 'main':
@@ -119,7 +133,6 @@ class DonateRepository implements DonateRepositoryContract
                     }
                 }
                 if ($file['delete'] == "true") {
-
                     switch ($key) {
                         case 'main':
                             $this->donateModel->main_image_id = 0;

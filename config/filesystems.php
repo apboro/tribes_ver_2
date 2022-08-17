@@ -35,6 +35,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'config' => [
+            'driver' => 'local',
+            'root' => storage_path('config'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -49,7 +54,11 @@ return [
             'driver' => 'local',
             'root' => base_path('tests/data'),
         ],
-        'telegram_data' => [
+        'tpm_file'=> [
+            'driver' => 'local',
+            'root' => base_path('storage/app/public/temp'),
+        ],
+        'telegram_data'=> [
             'driver' => 'local',
             'root' => storage_path('app/telegram'),
         ],

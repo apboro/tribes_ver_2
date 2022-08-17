@@ -147,7 +147,7 @@ export default {
                 let reader = new FileReader();
                 let type = f ? f.type : input.files[0].type
 
-                if (this.refComponent.$el.className === 'image') {
+                if (this.refComponent.$el.classList.contains('image')) {
                     if(type === 'image/jpeg' || type === 'image/png' || type === 'image/svg+xml'){
                         reader.readAsDataURL(f ? f : input.files[0]);
                         reader.onload = (e) => {
@@ -158,13 +158,13 @@ export default {
                     }
                 }
 
-                if (this.refComponent.$el.className === 'audio') {
+                if (this.refComponent.$el.classList.contains('audio')) {
                     if(type === 'audio/mpeg'){
                         this.uploadToserver(f);
                     }
                 }
 
-                if (this.refComponent.$el.className === 'video') {
+                if (this.refComponent.$el.classList.contains('video')) {
                     if(type === 'video/mp4'){
                         this.uploadToserver(f);
                     }

@@ -1,5 +1,5 @@
 <template>
-    <div class="course-settings" v-show="show">
+    <div class="course-settings image" v-show="show">
         <div class="course-settings__overlay" @click="show = false"></div>
         <div class="course-settings__container">
             <div class="course-settings__head">

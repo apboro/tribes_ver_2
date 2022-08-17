@@ -7,7 +7,6 @@ use App\Http\Requests\Mediacontent\CourseStoreRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use App\Repositories\Course\CourseRepositoryContract;
-use App\Services\FileService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

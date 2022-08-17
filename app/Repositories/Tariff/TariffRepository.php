@@ -6,6 +6,8 @@ use App\Models\TariffVariant;
 use App\Models\Statistic;
 use App\Models\UserIp;
 use App\Repositories\File\FileRepositoryContract;
+use App\Services\File\common\FileEntity;
+use App\Services\File\FileUploadService;
 use App\Filters\TariffFilter;
 use App\Models\Payment;
 use App\Models\TelegramUser;
@@ -18,11 +20,20 @@ class TariffRepository implements TariffRepositoryContract
     private $tariffModel;
     public $perPage = 15;
     protected TelegramMainBotService $mainServiceBot;
+    private $fileUploadService;
+    private $fileEntity;
 
-    public function __construct(FileRepositoryContract $fileRepo, TelegramMainBotService $mainServiceBot)
+    public function __construct(
+        FileRepositoryContract $fileRepo,
+        TelegramMainBotService $mainServiceBot,
+        FileUploadService $fileUploadService,
+        FileEntity $fileEntity
+    )
     {
         $this->fileRepo = $fileRepo;
         $this->mainServiceBot = $mainServiceBot;
+        $this->fileUploadService = $fileUploadService;
+        $this->fileEntity = $fileEntity;
     }
 
     public function statisticView(Request $request, $community)
@@ -281,39 +292,44 @@ class TariffRepository implements TariffRepositoryContract
         }
     }
 
-    private function storeImages($data)
+    private function storeImages($request)
     {
-        if (isset($data['files'])) {
-            foreach ($data['files'] as $key => $file) {
-                if (isset($file['crop'])) {
-                    $decoded = json_decode($file['crop']);
-                    if (isset($file['image'])) {
-                        $fileData['file'] = $file['image'];
-                        $fileData['crop'] = $decoded->isCrop;
-                        $fileData['cropData'] = $decoded->cropData;
-                        $f = $this->fileRepo->storeFile($fileData);
+        $this->fileEntity->getEntity($request);
 
-                        switch ($key) {
-                            case 'pay':
-                                $this->tariffModel->main_image_id = $f->id;
-                                break;
-                            case 'welcome':
-                                $this->tariffModel->welcome_image_id = $f->id;
-                                break;
-                            case 'success':
-                                $this->tariffModel->thanks_image_id  = $f->id;
-                                break;
-                            case 'reminder':
-                                $this->tariffModel->reminder_image_id  = $f->id;
-                                break;
-                            case 'publication':
-                                $this->tariffModel->publication_image_id  = $f->id;
-                                break;
-                        }
+        if (isset($request['files'])) {
+            foreach ($request['files'] as $key => $file) {
+                $decoded = json_decode($file['crop']);
+
+                if (isset($file['image']) && $decoded->isCrop) {
+                    $fileData['file'] = $file['image'];
+                    $fileData['crop'] = $decoded->isCrop;
+                    $fileData['cropData'] = $decoded->cropData;
+                    $fileData['entity'] = $request['entity'];
+
+                    $f = $this->fileUploadService->procRequest($fileData)[0];
+
+                    $this->fileUploadService->modelsFile = new \Illuminate\Database\Eloquent\Collection();
+
+                    switch ($key) {
+                        case 'pay':
+                            $this->tariffModel->main_image_id = $f->id;
+                            break;
+                        case 'welcome':
+                            $this->tariffModel->welcome_image_id = $f->id;
+                            break;
+                        case 'reminder':
+                            $this->tariffModel->reminder_image_id  = $f->id;
+                            break;
+                        case 'success':
+                            $this->tariffModel->thanks_image_id  = $f->id;
+                            break;
+                        case 'publication':
+                            $this->tariffModel->publication_image_id  = $f->id;
+                            break;
                     }
                 }
-                if ($file['delete'] == "true") {
 
+                if ($file['delete'] == "true") {
                     switch ($key) {
                         case 'pay':
                             $this->tariffModel->main_image_id = 0;

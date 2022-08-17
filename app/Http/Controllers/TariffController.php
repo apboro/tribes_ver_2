@@ -158,6 +158,8 @@ class TariffController extends Controller
 
     public function tariffSettings(Community $community, TariffSettingsRequest $request)
     {
+        $request['entity'] = 'tariff';
+
         if ($request->isMethod('post')) {
             $this->tariffRepo->settingsUpdate($community, $request);
             return redirect()->back()->withCommunity($community)
