@@ -52,16 +52,14 @@
                         {{ formatDateTime(user.created_at) }}
                     </td>
                     <td class="text-end">
-                        <div class="btn-group">
-                            <button type="button" class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
-                                Действия
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <button @click.prevent="loginAs(user.id)" class="dropdown-item" type="button">Войти от этого пользователя</button>
-                                </li>
-                            </ul>
-                        </div>
+                        <button type="button" class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+                            Действия
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <button @click.prevent="loginAs(user.id)" class="dropdown-item" type="button">Войти от этого пользователя</button>
+                            </li>
+                        </ul>
                     </td>
                 </tr>
                 </tbody>
