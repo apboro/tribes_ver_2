@@ -30,7 +30,7 @@
             <!-- Analytics -->
             <community-analytics class="community__tab" />
 
-            <v-alerts />
+            <!-- <v-alerts /> -->
         <!-- </div> -->
     </div>
 </template>

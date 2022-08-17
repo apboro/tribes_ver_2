@@ -1,8 +1,8 @@
 <template>
     <div>
-        <button @click="$alertSuccess('dfdfdfdfdf')">toast</button>
+        <!-- <button @click="$alertSuccess('dfdfdfdfdf')">toast</button>
         <span v-long-date="'10.11.2020'"></span>
-        <span v-short-date="'10.11.2020'"></span>
+        <span v-short-date="'10.11.2020'"></span> -->
 
 
         <ul
