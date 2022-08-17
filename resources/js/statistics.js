@@ -28,8 +28,15 @@ import Vue from 'vue';
 import store from './store/store';
 import Statistics from './pages/community/Statistics';
 import PortalVue from 'portal-vue';
-
-Vue.use(PortalVue)
+import toastPlugin from './core/plugins/toast';
+import longDate from './core/directives/long-date';
+import shortDate from './core/directives/short-date';
+import api from './core/plugins/api';
+Vue.use(PortalVue);
+Vue.use(toastPlugin);
+Vue.use(api);
+Vue.directive('longDate', longDate);
+Vue.directive('shortDate', shortDate);
 
 let app = new Vue({
     // router,
