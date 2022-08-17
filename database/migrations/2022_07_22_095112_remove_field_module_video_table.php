@@ -14,7 +14,13 @@ class RemoveFieldModuleVideoTable extends Migration
     public function up()
     {
         Schema::table('module_video', function (Blueprint $table) {
-            $table->dropColumn('video_id');
+            if (Schema::hasColumn('module_video', 'video_id'))
+            {
+                Schema::table('module_video', function (Blueprint $table)
+                {
+                    $table->dropColumn('video_id');
+                });
+            }
         });
     }
 
