@@ -156,7 +156,11 @@
                                     </div>
                                 </li>
                             </ul>
-
+                            @if(!session()->has('admin_id'))
+                            <span class="badge bg-secondary">
+                                Режим администратора
+                            </span>
+                            @endif
                             <div class="d-inline-block">
                                 @include('auth.headuser')
                             </div>
