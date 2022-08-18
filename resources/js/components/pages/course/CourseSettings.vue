@@ -26,7 +26,7 @@
                         </template>
                     </div>
 
-                    <button class="button button--success course-settings__auxiliary-btn" @click="save()">
+                    <button type="submit" class="button button--success course-settings__auxiliary-btn" @click="save()">
                         Сохранить
                     </button>
                 </div>

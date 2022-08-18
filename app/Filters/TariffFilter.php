@@ -22,6 +22,11 @@ class TariffFilter extends QueryFilter
         });
     }
 
+    public function from($string)
+    {
+        return $this->builder->where('user_name', 'like', '%'. $string . '%');
+    }
+
     public function date($date)
     {
         return $this->builder->whereHas('payment', function ($q) use($date) {

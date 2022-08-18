@@ -14,7 +14,8 @@ const { FillForm } = require('./plugins/Abstract/FillForm');
 const { AlertMessage } = require('./plugins/Abstract/Alert');
 const { SidePanel } = require('./plugins/Abstract/SidePanel');
 const { Popup } = require('./plugins/Abstract/Popup');
-
+const { BlockElements } = require('./plugins/Abstract/BlockElements');
+new BlockElements()
 
 
 import BurgerMenu from './plugins/Helper/BurgerMenu';
@@ -38,6 +39,7 @@ window['Dict'] = new Dictionary();
 window['AlertMessage'] = AlertMessage;
 window['copyText'] = copyText;
 window['Popup'] = Popup;
+
 
 new FillForm();
 

@@ -11,7 +11,7 @@
                                 <div class="input-group input-group-merge">
                                     <input type="text" class="form-control search-product" id="shop-search"
                                         placeholder="{{ __('base.search') }}" aria-label="Search..."
-                                        aria-describedby="shop-search" name="search" value="" />
+                                        aria-describedby="shop-search" name="search" value="{{ request('search') }}" />
 
                                     <span class="input-group-text">
                                         <i data-feather="search" class="font-medium-1 text-muted"></i>
