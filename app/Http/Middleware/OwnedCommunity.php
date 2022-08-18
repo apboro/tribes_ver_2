@@ -23,6 +23,8 @@ class OwnedCommunity
 
         $community = $request->route('community');
 
+        dd($community);
+
         if($community && !$community->isOwnedByUser($user)){
             abort(404);
         }
