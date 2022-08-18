@@ -24,9 +24,7 @@ class TariffFilter extends QueryFilter
 
     public function from($string)
     {
-        return $this->builder->where(function ($q) use ($string){
-            $q->where('first_name', 'like', '%'. $string . '%')->orWhere('last_name', 'like', '%'. $string . '%');
-        });
+        return $this->builder->where('user_name', 'like', '%'. $string . '%');
     }
 
     public function date($date)
