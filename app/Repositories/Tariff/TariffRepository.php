@@ -118,8 +118,10 @@ class TariffRepository implements TariffRepositoryContract
         foreach ($request->tariff as $tyId => $variantId) {
             $ty = TelegramUser::find($tyId);
 
-            if (isset($request->date_payment[$tyId]) && isset($request->time_payment[$tyId])) {
-                $this->updatePaymentDate($request->date_payment[$tyId], $request->time_payment[$tyId], $community, $ty);
+            if (isset($request->date_payment[$tyId]) && !$variantId || isset($request->time_payment[$tyId]) && !$variantId) {
+                redirect()->back()->withCommunity($community)->withErrors('Невозможно установить дату платежа без тарифа.');
+            } elseif (isset($request->date_payment[$tyId]) || isset($request->time_payment[$tyId])) {
+                $this->updatePaymentDate($request->date_payment[$tyId] ?? now()->format('Y-m-d'), $request->time_payment[$tyId] ?? now()->format('G:i:s'), $community, $ty);
             } else {
                 if ($variantId)
                     $this->createPayment($community->id, $ty->telegram_id, now()->format('Y-m-d G:i:s'));
