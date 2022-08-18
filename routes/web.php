@@ -110,9 +110,10 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         // Community
 
         Route::group(['prefix' => 'community'], function () {
+
             Route::get('/', 'CommunityController@index')->name('community.list');
 
-            Route::middleware('sms_confirmed')->group(function () {
+            Route::middleware('sms_confirmed', 'owned_community')->group(function () {
                 // Statistic
                 Route::get('/{community}/statistic', 'CommunityController@statistic')->name('community.statistic');
 
