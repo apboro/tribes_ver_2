@@ -59,19 +59,19 @@
 
                     <div class="profile-community__pay-link-wrapper">
                         <a
-                                href="{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}"
-                                target="_blank"
-                                class="link profile-community__pay-link"
+                            href="{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}"
+                            target="_blank"
+                            class="link profile-community__pay-link"
                         >
                             Перейти
                         </a>
 
-                        <button
-                                class="link profile-community__pay-link profile-community__pay-link--divider"
-                                onclick="copyText('{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}')"
+                        <span
+                            class="link profile-community__pay-link profile-community__pay-link--divider"
+                            onclick="copyText('{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}')"
                         >
                             Скопировать
-                        </button>
+                        </span>
                     </div>
                 </div>
             </div>
