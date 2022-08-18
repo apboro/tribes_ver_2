@@ -27,7 +27,7 @@ class OwnedCommunity
         if ( is_string($community) ){
             $community = Community::whereId($community)->first();
         }
- 
+
         if(!$community || !$community->isOwnedByUser($user)){
             abort(404);
         }
