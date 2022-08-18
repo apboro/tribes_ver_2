@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Community;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,11 @@ class OwnedCommunity
 
         $community = $request->route('community');
 
-        dd($community);
+        if ( is_string($community) ){
+            $community = Community::whereId($community)->first();
+        } else {
+            abort(404);
+        }
 
         if($community && !$community->isOwnedByUser($user)){
             abort(404);
