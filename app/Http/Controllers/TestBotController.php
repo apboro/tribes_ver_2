@@ -45,11 +45,18 @@ class TestBotController extends Controller
 
     public function index(Request $request)
     {
-        dd(now()->format('Y-m-d G:i:s'));
-        $community = Community::find(1);
-        $ty = TelegramUser::find(5);
-        dd($ty->tariffVariant()->first());
-        dd($community->tariffvariants);
+        // another id = 1510955178 or 666997162
+        // kanal id = 1504673809 access_hash = 6334485774387705507
+        $params = [
+            'user_id' => 1,
+            'phone' => '+79194393154',
+            'type' => 'channel',
+            'chat_id' => 1504673809,
+            'access_hash' => '6334485774387705507',
+            'min_id' => 3
+        ];
+        $dialogs = Http::get('http://127.0.0.1:7000/history', $params);
+        dd($dialogs->object());
     }
 
 }
