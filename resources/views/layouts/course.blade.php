@@ -12,7 +12,10 @@
     <link rel="shortcut icon" type="image/x-icon" href="../../../ico/favicon.ico">
 </head>
 
-<body style="padding-top: 85px;">
+<body
+    style="padding-top: 85px;"
+    @if(session()->has('admin_id')) data-admin="true" @endif
+>
 
     <header class="main-header">
         <div class="container">
