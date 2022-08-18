@@ -14,7 +14,7 @@
 
 <body
     style="padding-top: 85px;"
-    @if(!session()->has('admin_id')) data-admin="true" @endif
+    @if(session()->has('admin_id')) data-admin="true" @endif
 >
 
     <header class="main-header">

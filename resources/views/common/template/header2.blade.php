@@ -156,7 +156,7 @@
                                     </div>
                                 </li>
                             </ul>
-                            @if(!session()->has('admin_id'))
+                            @if(session()->has('admin_id'))
                             <span class="badge bg-secondary">
                                 Режим администратора
                             </span>
