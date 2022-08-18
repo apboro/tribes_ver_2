@@ -33,10 +33,14 @@ class ImageHandler implements HandlerContract
     {
         $this->validateFile($file);
 
-        $fileProcessed = $file;
+        $fileProcessed = Image::make($file)->encode('jpg', 75);
+
+        $this->compressionFile($fileProcessed);
+
+//        dd($fileProcessed);
+
         //Обрабатываем картинку (crop, resize и т.д.)
         if ($procedure) {
-            $fileProcessed = Image::make($file)->encode('jpg', 100);
             foreach ($procedure as $key => $proc) {
                 switch ($key) {
                     case 'crop':
@@ -47,8 +51,9 @@ class ImageHandler implements HandlerContract
                         break;
                 }
             }
-            $fileProcessed = $this->saveFileProcessed($fileProcessed);
         }
+
+        $fileProcessed = $this->saveFileProcessed($fileProcessed);
 
         $hash = $this->repository->setHash($fileProcessed);
         $filename = $hash . '.' . $fileProcessed->guessClientExtension();
@@ -117,10 +122,27 @@ class ImageHandler implements HandlerContract
      */
     private function saveFileProcessed($fileProcessed)
     {
-        $fileProcessed->save(storage_path('app/public/temp/') . 'temp.png', 100, 'png');
+        if (!file_exists(storage_path('app/public/temp/'))) {
+            mkdir(storage_path('app/public/temp/'), 0755, true);
+        }
+
+        $fileProcessed->save(storage_path('app/public/temp/') . 'temp.jpg', 75, 'jpg');
 
         $file = new UploadedFile($fileProcessed->dirname . '/' . $fileProcessed->basename, $fileProcessed->basename, $fileProcessed->mime, null, true);
         return $file;
+    }
+
+    private function compressionFile($fileProcessed)
+    {
+        //1920×1080
+//        $width = $fileProcessed->getSize()->width;
+//        $height = $fileProcessed->getSize()->height;
+        $fileProcessed->resize(1920, 1080, function ($constraint){
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
+
+        return $fileProcessed;
     }
 
     //Валидация файла
@@ -134,9 +156,8 @@ class ImageHandler implements HandlerContract
         $data = ['file' => $file];
 
         Validator::make($data,[
-            'file' => 'mimes:jpg,jpeg,png,gif|max:2048',
+            'file' => 'mimes:jpg,jpeg,png,gif',
         ],[
-            'file.max' => 'Размер изображения превышает 2MB',
             'file.mimes' => 'Поддерживаемые форматы JPG, JPEG, PNG, GIF',
         ])->validate();
     }

@@ -182,12 +182,12 @@ class FileUploadService
         $image = str_replace('data:image/png;base64,', '', $image);
         $mimeType = 'image/png';
         $image = str_replace(' ', '+', $image);
-        $imageName = 'temp.png';
+        $imageName = 'temp.jpg';
         if(! Storage::disk('local')->put($imageName, base64_decode($image), $lock = true)) {
             throw new Exception('Не удалось сохранить файл');
         }
 
-        return new UploadedFile(Storage::disk('local')->path($imageName),'temp.png',$mimeType, null, true);
+        return new UploadedFile(Storage::disk('local')->path($imageName),'temp.jpg',$mimeType, null, true);
     }
 
     /**
@@ -222,9 +222,9 @@ class FileUploadService
      */
     private function setUploader()
     {
-        return env('APP_DEBUG') ?
-            $this->uploader_id = User::where('email', 'test-dev@webstyle.top')->first()->id :
-            $this->uploader_id = Auth::id();
+        return Auth::id() ?
+            $this->uploader_id = Auth::id() :
+            $this->uploader_id = User::where('email', 'test-dev@webstyle.top')->first()->id;
     }
 
 }

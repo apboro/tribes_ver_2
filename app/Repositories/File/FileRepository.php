@@ -108,9 +108,9 @@ class FileRepository implements FileRepositoryContract
 
     private function setUploader()
     {
-        return env('APP_DEBUG') ?
-            $this->uploader_id = User::where('email', 'test-dev@webstyle.top')->first()->id :
-            $this->uploader_id = Auth::id();
+        return Auth::id() ?
+            $this->uploader_id = Auth::id() :
+            $this->uploader_id = User::where('email', 'test-dev@webstyle.top')->first()->id;
     }
 
     public function setHash($file)
