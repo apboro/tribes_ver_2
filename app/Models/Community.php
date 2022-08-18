@@ -145,7 +145,7 @@ class Community extends Model
 
     public function isOwnedByUser(User $user) : bool
     {
-        return $this->owner()->first()->id === $user->id;
+        return $this->owner()->first() && $this->owner()->first()->id === $user->id;
     }
 
     function questions()
