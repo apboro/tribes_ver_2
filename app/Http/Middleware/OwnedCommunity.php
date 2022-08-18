@@ -21,8 +21,6 @@ class OwnedCommunity
 
         $user = Auth::user();
 
-        dd($user);
-
         $community = $request->route('community');
 
         if($community && !$community->isOwnedByUser($user)){
