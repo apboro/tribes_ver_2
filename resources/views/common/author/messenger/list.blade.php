@@ -22,6 +22,7 @@
             
                 <div class="mb-0 text-center">
                     <a
+                        type="submit"
                         class="btn btn-success text-white"
                         href="{{ route('community.add') }}"
                     >
