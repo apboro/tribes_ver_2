@@ -23,7 +23,7 @@ let actions = {
             commit("SET_PRELOADER_STATUS", true);
             const resp = await axios({
                 method: "post",
-                url: "http://tribes/api/v2/payments",
+                url: "/api/v2/payments",
                 data: filter_data
             })
             commit("SET_PAYMENTS", resp.data);
