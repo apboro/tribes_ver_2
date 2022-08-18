@@ -45,6 +45,8 @@ import { Dictionary } from './lang/Dictionary';
 
 import BurgerMenu from './plugins/Helper/BurgerMenu';
 import { Dropdown } from './plugins/Helper/Dropdown';
+const { BlockElements } = require('./plugins/Abstract/BlockElements');
+new BlockElements()
 
 
 window['Dict'] = new Dictionary();

@@ -32,27 +32,26 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="user in users.data" :key="user.id">
-                    <td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
-                    <td><span class="text-muted">{{ user.id }}</span></td>
-                    <td>
-                        <transition>
-                            <router-link 
-                                :to="{name:'Profile', params: {id: user.id}}"
-                            >
-                                {{ user.name }}
-                            </router-link>
-                        </transition>
-                    </td>
-                    <td :title="user.phone_confirmed ? 'Подтвержден' : 'Не подтвержден'">
-                        {{ user.phone }}
-                        <svg  v-if="user.phone_confirmed" xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
-                    </td>
-                    <td>
-                        {{ formatDateTime(user.created_at) }}
-                    </td>
-                    <td class="text-end">
-                        <div class="btn-group">
+                    <tr v-for="user in users.data" :key="user.id">
+                        <td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
+                        <td><span class="text-muted">{{ user.id }}</span></td>
+                        <td>
+                            <transition>
+                                <router-link 
+                                    :to="{name:'Profile', params: {id: user.id}}"
+                                >
+                                    {{ user.name }}
+                                </router-link>
+                            </transition>
+                        </td>
+                        <td :title="user.phone_confirmed ? 'Подтвержден' : 'Не подтвержден'">
+                            {{ user.phone }}
+                            <svg  v-if="user.phone_confirmed" xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
+                        </td>
+                        <td>
+                            {{ formatDateTime(user.created_at) }}
+                        </td>
+                        <td class="text-end">
                             <button type="button" class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
                                 Действия
                             </button>
@@ -61,9 +60,8 @@
                                     <button @click.prevent="loginAs(user.id)" class="dropdown-item" type="button">Войти от этого пользователя</button>
                                 </li>
                             </ul>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

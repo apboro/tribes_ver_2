@@ -35,7 +35,7 @@
 
         <div class="course__buttons">
             <div class="course__buttons-wrapper">
-                <button class="button button--success" @click="$root.$emit('autoSave')">
+                <button type="submit" class="button button--success" @click="$root.$emit('autoSave')">
                     Сохранить
                 </button>
 

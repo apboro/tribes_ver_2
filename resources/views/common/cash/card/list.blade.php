@@ -23,6 +23,7 @@
             <!-- Добавить карту -->
             <div class="col-12 col-md-4 mb-2"> 
                 <button
+                    type="submit"
                     id="add_card_btn"
                     class="btn btn-outline-success waves-effect w-100 d-flex align-items-center justify-content-center"
                     onclick="PaymentsPage.paymentsCardListPage.addCard()"
@@ -51,6 +52,7 @@
 
                 <div class="card-footer">
                     <button
+                        type="submit"
                         class="btn btn-success d-flex align-items-center"
                         onclick="PaymentsPage.paymentsCardListPage.finishAddingCard()"
                     >

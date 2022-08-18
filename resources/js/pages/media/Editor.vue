@@ -23,6 +23,7 @@ import Header from "../../components/pages/course/Header";
 import Course from "../../components/pages/course/Course";
 import Uploader from "../../components/pages/course/Uploader";
 import CourseSettings from "../../components/pages/course/CourseSettings";
+import {BlockElements} from "../../plugins/Abstract/BlockElements";
 
 export default {
     name: "Editor.vue",
@@ -42,6 +43,12 @@ export default {
     },
     
     mounted() {
+        const a = new BlockElements();
+        
+        if (a.isAdminModeActive) {
+            return false;
+        }
+
         setInterval(() => {
             this.$root.$emit('autoSave');
             this.recentlySaved = true;

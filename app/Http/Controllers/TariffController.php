@@ -175,7 +175,7 @@ class TariffController extends Controller
         $tariffs = $community->tariffVariants()
             ->where('isActive', $isActive)
             ->where('price', '>', 0)
-            ->orderBy('created_at', 'ASC')
+            ->orderBy('number_button', 'ASC')
             ->get();
         return view('common.tariff.list')->withCommunity($community)->withTariffs($tariffs);
     }
