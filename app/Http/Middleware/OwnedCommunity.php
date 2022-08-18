@@ -20,6 +20,9 @@ class OwnedCommunity
         $response = $next($request);
 
         $user = Auth::user();
+
+        dd($user);
+
         $community = $request->route('community');
 
         if($community && !$community->isOwnedByUser($user)){
