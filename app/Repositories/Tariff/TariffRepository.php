@@ -300,7 +300,7 @@ class TariffRepository implements TariffRepositoryContract
             foreach ($request['files'] as $key => $file) {
                 $decoded = json_decode($file['crop']);
 
-                if (isset($file['image']) && $decoded->isCrop) {
+                if (isset($file['image']) && isset($decoded->isCrop)) {
                     $fileData['file'] = $file['image'];
                     $fileData['crop'] = $decoded->isCrop;
                     $fileData['cropData'] = $decoded->cropData;
