@@ -1,0 +1,47 @@
+include:
+- project: tribes/ci-templates
+  file: base.yaml
+- project: tribes/ci-templates
+  file: build.yaml
+- project: tribes/ci-templates
+  file: conditions.yaml
+- project: tribes/ci-templates
+  file: deploy.yaml
+- project: tribes/ci-templates
+  file: notify.yaml
+- project: tribes/ci-templates
+  file: push_chart.yaml
+
+stages:
+  - build
+  - deploy
+
+image: docker-registry.fitdev.ru:15500/docker-io/docker:20.10.14
+
+variables:
+  APP_NAME: tribes
+
+build_image:
+  stage: build
+  extends:
+  - .base_template
+  - .docker_build_image_template
+  - .build_image_args_template
+  when: on_success
+  
+# push_chart:
+#   stage: build
+#   extends:
+#   - .base_template
+#   - .push_chart
+
+deploy_staging:
+  stage: deploy
+  # extends:
+  # - .base_template
+  # - .commit_versions_template
+  # - .common_deploy
+  # variables: 
+  #   DEPLOYMENT: staging-kzrf
+  script:
+    - echo "pass"

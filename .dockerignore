@@ -1,0 +1,9 @@
+.git
+.gitignore
+/wiki
+/vendor
+/changelogs
+/node_modules
+.gitlab-ci.yml
+docker-compose.yaml
+README.md
