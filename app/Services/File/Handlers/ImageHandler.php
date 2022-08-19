@@ -35,10 +35,6 @@ class ImageHandler implements HandlerContract
 
         $fileProcessed = Image::make($file)->encode('jpg', 75);
 
-        $this->compressionFile($fileProcessed);
-
-//        dd($fileProcessed);
-
         //Обрабатываем картинку (crop, resize и т.д.)
         if ($procedure) {
             foreach ($procedure as $key => $proc) {
@@ -52,6 +48,8 @@ class ImageHandler implements HandlerContract
                 }
             }
         }
+
+        $this->compressionFile($fileProcessed);
 
         $fileProcessed = $this->saveFileProcessed($fileProcessed);
 
@@ -134,9 +132,6 @@ class ImageHandler implements HandlerContract
 
     private function compressionFile($fileProcessed)
     {
-        //1920×1080
-//        $width = $fileProcessed->getSize()->width;
-//        $height = $fileProcessed->getSize()->height;
         $fileProcessed->resize(1920, 1080, function ($constraint){
             $constraint->aspectRatio();
             $constraint->upsize();
