@@ -15,8 +15,8 @@ const { AlertMessage } = require('./plugins/Abstract/Alert');
 const { SidePanel } = require('./plugins/Abstract/SidePanel');
 const { Popup } = require('./plugins/Abstract/Popup');
 const { BlockElements } = require('./plugins/Abstract/BlockElements');
-new BlockElements()
 
+window['AdminState'] = new BlockElements();
 
 import BurgerMenu from './plugins/Helper/BurgerMenu';
 import { Dropdown } from './plugins/Helper/Dropdown';
