@@ -35,9 +35,9 @@ class TariffRequest extends FormRequest
         return [
             'tariff_name.max' => 'Максимально количество знаков 255',
             'tariff_cost.min' => 'Стоимость не может быть отрицательным числом.',
-            'number_button.between' => 'Значение поля должно быть больше или равно 0.',
-            'number_button.integer' => 'Значение поля должно быть больше или равно 0.',
-            'number_button.numeric' => 'Значение поля должно быть числом.'
+            'number_button.between' => 'Значение поля "Номер кнопки" должно быть от 0 до 9999.',
+            'number_button.integer' => 'Значение поля "Номер кнопки" должно быть больше или равно 0.',
+            'number_button.numeric' => 'Значение поля "Номер кнопки" должно быть числом.'
         ];
     }
 }
