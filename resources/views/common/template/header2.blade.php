@@ -96,6 +96,7 @@
                 </div>
 
             <div class="navbar-header d-none">
+                <div>
                     <ul class="nav navbar-nav">
                         <li class="nav-item">
                             <!-- Logo -->
