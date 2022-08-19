@@ -251,7 +251,7 @@ export class PaymentsCardListPage {
                 </div>
 
                 <div class="card-footer text-center">
-                    <button id="remove_btn" class="btn btn-flat-danger waves-effect">
+                    <button id="remove_btn" class="btn btn-flat-danger waves-effect ${ AdminState.isAdminModeActive ? 'disabled' : '' }">
                         ${ Dict.write('payments', 'exclude') }
                     </button>
                 </div>
