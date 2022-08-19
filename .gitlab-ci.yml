@@ -37,8 +37,8 @@ build_image:
 
 deploy_staging:
   stage: deploy
-  # extends:
-  # - .base_template
+  extends:
+  - .base_template
   # - .commit_versions_template
   # - .common_deploy
   # variables: 
