@@ -61,7 +61,6 @@
                         <i data-feather="power" class="font-medium-2 me-50"></i>
                         {{ __('auth.manager_panel') }}
                     </a>
-
                 @endif
 
                 @if(session()->has('admin_id'))
@@ -74,7 +73,6 @@
                     <i data-feather="power" class="font-medium-2 me-50"></i>
                     {{ __('auth.back_as_admin') }}
                 </a>
-            
                 @endif
 
                 <div class="dropdown-divider"></div>
