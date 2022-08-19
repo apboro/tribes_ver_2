@@ -1,5 +1,5 @@
 @auth
-    <div class="dropdown-lk main-header__dropdown">
+    <div class="dropdown-lk main-header__dropdown" data-plugin="Headuser">
         <button class="dropdown-lk__head" data-dropdown-btn onclick="Dropdown.toggle(this)">
             <span
                 class="dropdown-lk__name"
