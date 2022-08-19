@@ -115,7 +115,7 @@ class Donate extends Model
         if ($image) {
             return $image->url;
         }
-        return '/images/no-image.svg';
+        return '/images/thanks.jpg';
     }
 
     public function getDonateMainDescription()
