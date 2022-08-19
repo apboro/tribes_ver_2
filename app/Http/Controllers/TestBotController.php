@@ -33,8 +33,7 @@ use App\Services\Tinkoff\Payment as Pay;
 use App\Services\WebcasterPro;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Telegram\MainComponents\Madeline;
-
-
+use App\Services\Telegram\TelegramApi\Mtproto;
 use Carbon\Carbon;
 
 use DateTime;
@@ -47,16 +46,10 @@ class TestBotController extends Controller
     {
         // another id = 1510955178 or 666997162
         // kanal id = 1504673809 access_hash = 6334485774387705507
-        $params = [
-            'user_id' => 1,
-            'phone' => '+79194393154',
-            'type' => 'channel',
-            'chat_id' => 1504673809,
-            'access_hash' => '6334485774387705507',
-            'min_id' => 3
-        ];
-        $dialogs = Http::get('http://127.0.0.1:7000/history', $params);
-        dd($dialogs->object());
+        // webstyle id = 738071830
+        $mtproto = new Mtproto();
+        $auth = $mtproto->getMessages(1, '+79194393154', 'channel', 1504673809, '6334485774387705507');
+        dd($auth);
     }
 
 }
