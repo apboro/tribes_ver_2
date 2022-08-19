@@ -21,6 +21,7 @@ use App\Helper\PseudoCrypt;
 use App\Filters\TariffFilter;
 
 
+use Discord\Http\Exceptions\NotFoundException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -120,10 +121,15 @@ class TariffController extends Controller
     }
 
 
-
+    /**
+     * @throws NotFoundException
+     */
     public function tariffPayment($hash, Request $request)
     {
         $community = Community::find(PseudoCrypt::unhash($hash));
+        if(empty($community)) {
+            abort(404);
+        }
         $this->tariffRepo->statisticView($request, $community);
         return view('common.tariff.index')->withCommunity($community);
     }

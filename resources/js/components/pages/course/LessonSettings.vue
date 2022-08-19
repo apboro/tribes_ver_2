@@ -15,6 +15,7 @@
         </div>
 
         <button
+            type="submit"
             class="button-flat button-flat--danger lesson-settings__remove-btn"
             @click="showModal=true"    
         >

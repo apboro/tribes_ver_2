@@ -43,8 +43,12 @@ export default {
     },
     
     mounted() {
-        new BlockElements();
-        //console.log(document.querySelectorAll('[type="submit"]'));
+        const a = new BlockElements();
+        
+        if (a.isAdminModeActive) {
+            return false;
+        }
+
         setInterval(() => {
             this.$root.$emit('autoSave');
             this.recentlySaved = true;

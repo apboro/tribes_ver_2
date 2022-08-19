@@ -20,10 +20,25 @@
     <header class="main-header">
         <div class="container">
             @include('common.template.assets.main_menu')
+            
+            @if(session()->has('admin_id'))
+            <span style="
+                display: inline-block;
+                padding: 0.3rem 0.5rem;
+                font-size: 85%;
+                color: #FFF;
+                border-radius: 0.358rem;
+                text-align: center;
+                white-space: nowrap;
+                background-color: grey;
+                "
+                class="badge bg-secondary"
+            >Режим администратора</span>
+            @endif
 
             <div class="main-header__auxiliary">
                 @include('auth.headuser-v2')
-            </div>
+                            </div>
         </div>
     </header>
 

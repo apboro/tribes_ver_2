@@ -109,11 +109,14 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::any('/video/add', 'PostController@saveVideo')->name('save.video');
         // Community
 
+
         Route::group(['prefix' => 'community'], function () {
 
             Route::get('/', 'CommunityController@index')->name('community.list');
 
             Route::middleware('sms_confirmed', 'owned_community')->group(function () {
+
+                Route::get('{community}', 'CommunityController@statistic')->where(['community' => '[0-9]+'])->name('community.view');
                 // Statistic
                 Route::get('/{community}/statistic', 'CommunityController@statistic')->name('community.statistic');
 
@@ -159,6 +162,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                 // Route::get('/{community}/knowledge/settings', 'KnowledgeController@settings')->name('knowledge.settings');
                 // Route::post('/{community}/knowledge/store', 'KnowledgeController@store')->name('knowledge.store');
             });
+
         });
 
 

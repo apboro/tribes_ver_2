@@ -107,6 +107,7 @@
                                         <div class="col-12">
                                             @if(request('active') == null)
                                                 <a
+                                                    type="submit"
                                                     href="{{ route('community.tariff.edit', [$community, $tariff->id, $activate = 0]) }}"
                                                     class="btn btn-flat-danger waves-effect text-nowrap w-100"
                                                 >
@@ -115,6 +116,7 @@
                                                 </a>
                                             @else
                                                 <a
+                                                    type="submit"
                                                     href="{{ route('community.tariff.edit', [$community, $tariff->id, $activate = 1]) }}"
                                                     class="btn btn-flat-success waves-effect text-nowrap w-100"
                                                 >

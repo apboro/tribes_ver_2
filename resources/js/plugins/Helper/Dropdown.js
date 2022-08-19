@@ -54,7 +54,7 @@ export class Dropdown {
 
     toInactiveAllContents() {
         this.contents.forEach((content) => {
-            if (content.classList.contains('active')) {
+            if (content.classList.contains('active') && this.btn) {
                 content.classList.remove('active');
                 this.btn.classList.remove('active');
             }

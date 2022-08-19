@@ -40,7 +40,10 @@
     </div>
 
     <div class="card-footer text-center">
-        <button class="btn btn-flat-danger waves-effect">
+        <button
+            type="submit"
+            class="btn btn-flat-danger waves-effect"
+        >
             {{ __('payment.unpin_card') }}
         </button>
     </div>
