@@ -9,7 +9,7 @@
                         <img src="{{ $payment->payable()->first()->donate()->first()->getSuccessImage()->url }}" alt=""
                             class="active-image__img w-100">
                     @else
-                        <img src="/images/chuck.jpg" alt=""
+                        <img src="/images/thanks.jpg" alt=""
                             class="active-image__img w-100">
                     @endif
                 @endif
@@ -18,7 +18,7 @@
                         <img src="{{ $payment->payable()->first()->tariff()->first()->getThanksImage()->url }}" alt=""
                             class="active-image__img w-100">
                     @else
-                        <img src="/images/chuck.jpg" alt=""
+                        <img src="/images/thanks.jpg" alt=""
                             class="active-image__img w-100">
                     @endif
                 @endif

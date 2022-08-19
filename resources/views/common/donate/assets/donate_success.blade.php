@@ -49,7 +49,7 @@
                         <!-- Описание загрузки -->
                         <div style="padding: 0; border:none;" data-crop-image-instructions>
                             <img
-                                src="/images/chuck.jpg"
+                                src="/images/thanks.jpg"
                                 alt=""
                                 class="active-image__img rounded w-100"
                             >
