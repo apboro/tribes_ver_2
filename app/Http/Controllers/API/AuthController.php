@@ -87,6 +87,7 @@ class AuthController extends Controller
         Auth::guard('web')->loginUsingId($admin->id, TRUE);
         Session::flush();
         session()->regenerateToken();
+        Session::put('current_token',$token);
         return response()->json([
             'status' => 'ok',
             'token' => $token,
