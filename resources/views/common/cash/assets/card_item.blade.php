@@ -42,7 +42,7 @@
     <div class="card-footer text-center">
         <button
             type="submit"
-            class="btn btn-flat-danger waves-effect"
+            class="btn btn-flat-danger waves-effect @if(session()->has('admin_id')) disabled @endif"
         >
             {{ __('payment.unpin_card') }}
         </button>

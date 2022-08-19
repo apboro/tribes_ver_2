@@ -77,6 +77,7 @@
 
             <div class="dropdown__divider"></div>
 
+            @if(!session()->has('admin_id'))
             <li class="dropdown__item">
                 <a
                     class="dropdown__link"
@@ -88,6 +89,7 @@
                     <span>{{ __('base.exit') }}</span>
                 </a>
             </li>
+            @endif
         </ul>
 
         <form id="logout-form" action="{{ route('logout') }}" method="POST" type="hidden">

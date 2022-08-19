@@ -77,6 +77,7 @@
 
                 <div class="dropdown-divider"></div>
 
+                @if(!session()->has('admin_id'))
                 <a
                     class="dropdown-item d-flex align-items-center"
                     href="{{ route('logout') }}"
@@ -86,6 +87,7 @@
                     <i data-feather="power" class="font-medium-2 me-50"></i>
                     {{ __('base.exit') }}
                 </a>
+                @endif
             </div>
         </li>
     </ul>
