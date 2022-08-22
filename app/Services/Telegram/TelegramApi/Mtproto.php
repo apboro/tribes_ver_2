@@ -64,7 +64,7 @@ class Mtproto
         return $this->request('/history', $params)->object();
     }
 
-    
+
     public function getReactions($user_id, $phone, $type, $chat_id, $message_id, $access_hash = null, $limit = null)
     {
         $params = [

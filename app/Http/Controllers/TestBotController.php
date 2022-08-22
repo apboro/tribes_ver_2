@@ -46,9 +46,14 @@ class TestBotController extends Controller
     {
         // another id = 1510955178 or 666997162
         // kanal id = 1504673809 access_hash = 6334485774387705507
-        // webstyle id = 738071830
+        // webstyle id = 738071830 
         $mtproto = new Mtproto();
         $auth = $mtproto->getMessages(1, '+79194393154', 'channel', 1504673809, '6334485774387705507');
+
+        TestData::create([
+            'data' => json_encode($auth)
+        ]);
+
         dd($auth);
     }
 
