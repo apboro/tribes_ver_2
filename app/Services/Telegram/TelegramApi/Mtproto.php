@@ -64,6 +64,21 @@ class Mtproto
         return $this->request('/history', $params)->object();
     }
 
+    
+    public function getReactions($user_id, $phone, $type, $chat_id, $message_id, $access_hash = null, $limit = null)
+    {
+        $params = [
+            'ident' => env('APP_NAME') . $user_id,
+            'phone' => $phone,
+            'type' => $type,
+            'chat_id' => $chat_id,
+            'id' => $message_id,
+            'access_hash' => $access_hash,
+            'limit' => $limit
+        ];
+        return $this->request('/reactions', $params)->object();
+    }
+
     /**
      * Возвращает информация о ГРУППЕ в том числе и всех её участников
      *
