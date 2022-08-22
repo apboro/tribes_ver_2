@@ -16,6 +16,12 @@ server {
         try_files $uri $uri/ /index.php;
     }
 
+    location = /healthCheck {
+            access_log off;
+            add_header 'Content-Type' 'application/json';
+            return 200 '{"status":"OK"}';
+    }
+
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
 }

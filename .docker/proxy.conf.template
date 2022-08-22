@@ -17,9 +17,16 @@ server {
     }
 
     location ~ \.php$ {
-        fastcgi_pass backend:9000;
+        fastcgi_pass /var/run/php/php-fpm.sock;
         fastcgi_param DOCUMENT_ROOT   /app/public;
         fastcgi_param SCRIPT_FILENAME /app/public/$fastcgi_script_name;
         include fastcgi_params;
+    }
+
+
+    location = /healthCheck {
+            access_log off;
+            add_header 'Content-Type' 'application/json';
+            return 200 '{"status":"OK"}';
     }
 }

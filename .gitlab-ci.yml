@@ -29,11 +29,11 @@ build_image:
   - .build_image_args_template
   when: on_success
   
-# push_chart:
-#   stage: build
-#   extends:
-#   - .base_template
-#   - .push_chart
+push_chart:
+  stage: build
+  extends:
+  - .base_template
+  - .push_chart
 
 deploy_staging:
   stage: deploy
