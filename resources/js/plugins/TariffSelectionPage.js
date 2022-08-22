@@ -457,8 +457,13 @@ export default class TariffSelectionPage extends Page {
             if (res.data.status == 'ok' && res.data.redirect != 'undefined'){
                 window.location.href = res.data.redirect;
             }
+
             return res.data;
         } catch(error) {
+            if (error.response.data.errors.email) {
+                this.showErrorMessage(error.response.data.errors.email[0]);
+            }
+            this.isRequestComplete = false;
             new Toasts({
                 type: 'error',
                 message: createServerErrorMessage(error)
