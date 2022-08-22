@@ -309,7 +309,7 @@ export default class TariffSelectionPage extends Page {
             tag: 'input',
             class: 'form-control',
             id: 'email',
-            placeholder: 'john@mail.com',
+            placeholder: 'ivan@moyapochta.ru',
             name: 'email',
             required: true
         }).init();
