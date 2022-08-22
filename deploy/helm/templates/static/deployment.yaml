@@ -18,10 +18,10 @@ spec:
         {{- include "..labels.standard" . | nindent 8 }}
         app: {{ include "..names.fullname" . }}
       annotations:
-        checksum/container-registry: {{ include (print $.Template.BasePath "/docker-secret.yaml") . | sha256sum }}
+        checksum/container-registry: {{ include (print $.Template.BasePath "/static/docker-secret.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
-        - name: {{ include "..names.fullname" . }}-pull-secret
+        - name: {{ include "..names.fullname" . }}-static-pull-secret
       {{- if .Values.static.tolerations }}
       tolerations: {{- include "..tplvalues.render" (dict "value" .Values.static.tolerations "context" .) | nindent 8 }}
       {{- end }}

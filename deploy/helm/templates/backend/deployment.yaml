@@ -18,10 +18,10 @@ spec:
         {{- include "..labels.standard" . | nindent 8 }}
         app: {{ include "..names.fullname" . }}
       annotations:
-        checksum/container-registry: {{ include (print $.Template.BasePath "/docker-secret.yaml") . | sha256sum }}
+        checksum/container-registry: {{ include (print $.Template.BasePath "/backend/docker-secret.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
-        - name: {{ include "..names.fullname" . }}-pull-secret
+        - name: {{ include "..names.fullname" . }}-backend-pull-secret
       {{- if .Values.backend.tolerations }}
       tolerations: {{- include "..tplvalues.render" (dict "value" .Values.backend.tolerations "context" .) | nindent 8 }}
       {{- end }}
@@ -117,21 +117,21 @@ spec:
             - name: REDIS_PORT
               value: {{ .Values.config.redis.port }}
             - name: MAIL_DRIVER
-              value:  {{ .Values.config.main.driver }}
+              value:  {{ .Values.config.mail.driver }}
             - name: MAIL_HOST
-              value: {{ .Values.config.main.host }}
+              value: {{ .Values.config.mail.host }}
             - name: MAIL_PORT
-              value: {{ .Values.config.main.port }}
+              value: {{ .Values.config.mail.port }}
             - name: MAIL_USERNAME
-              value: {{ .Values.config.main.username }}
+              value: {{ .Values.config.mail.username }}
             - name: MAIL_PASSWORD
-              value: {{ .Values.config.main.password }}
+              value: {{ .Values.config.mail.password }}
             - name: MAIL_ENCRYPTION
-              value: {{ .Values.config.main.encryption }}
+              value: {{ .Values.config.mail.encryption }}
             - name: MAIL_FROM_ADDRESS
-              value: {{ .Values.config.main.from.address }}
+              value: {{ .Values.config.mail.from.address }}
             - name: MAIL_FROM_NAME
-              value: {{ .Values.config.main.from.name }}
+              value: {{ .Values.config.mail.from.name }}
             - name: AWS_ACCESS_KEY_ID
               value: {{ .Values.config.s3.accessKey }}
             - name: AWS_SECRET_ACCESS_KEY
