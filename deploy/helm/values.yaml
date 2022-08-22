@@ -110,23 +110,23 @@ config:
     driver: "file"
     lifetime: "120"
   mail:
-    driver: smtp
-    host: smtp-host.example
-    port: 587
-    username: username
-    password: password
-    encryption: tls
+    driver: "smtp"
+    host: "smtp-host.example"
+    port: "587"
+    username: "username"
+    password: "password"
+    encryption: "tls"
     from:
-      address: no-reply@example.com
-      name: Support
+      address: "no-reply@example.com"
+      name: "Support"
   s3:
     accessKey: ""
     secretKey: ""
-    region: us-east-1
+    region: "us-east-1"
     bucket: ""
-    pathStyleEndpoint: "false"
+    pathStyleEndpoint: 'false'
   postgresql:
-    host: localhost
+    host: "localhost"
     port: 5432
     database: kzrf
     username: username
@@ -169,7 +169,7 @@ config:
       id: "api_id"
       hash: "api_hash"
       proto: "api_proto"
-    logChat: 507752964
+    logChat: "507752964"
   smsRuCode: "sms_code"
   smsMaxAttempts: "5"
   webcaster:
