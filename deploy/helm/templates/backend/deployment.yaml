@@ -81,151 +81,151 @@ spec:
             name: fpm-socket-volume
           env: 
             - name: APP_NAME
-              value: {{ .Values.config.app.name }}
+              value: {{ quote .Values.config.app.name }}
             - name: APP_ENV
-              value: {{ .Values.config.app.env }}
+              value: {{ quote .Values.config.app.env }}
             - name: APP_KEY
-              value: {{ .Values.config.app.key }}
+              value: {{ quote .Values.config.app.key }}
             - name: APP_DEBUG
-              value: {{ .Values.config.app.debug }}
+              value: {{ quote .Values.config.app.debug }}
             - name: APP_URL
-              value: {{ .Values.config.app.url }}
+              value: {{ quote .Values.config.app.url }}
             - name: LOG_CHANNEL
-              value: {{ .Values.config.log.channel }}
+              value: {{ quote .Values.config.log.channel }}
             - name: LOG_DEPRECATIONS_CHANNEL
-              value: {{ .Values.config.log.deprecationsChannel }}
+              value: {{ quote .Values.config.log.deprecationsChannel }}
             - name: LOG_LEVEL
-              value: {{ .Values.config.log.level }}
+              value: {{ quote .Values.config.log.level }}
             - name: BROADCAST_DRIVER
-              value: {{ .Values.config.broadcast.driver }}
+              value: {{ quote .Values.config.broadcast.driver }}
             - name: CACHE_DRIVER
-              value: {{ .Values.config.cache.driver }}
+              value: {{ quote .Values.config.cache.driver }}
             - name: FILESYSTEM_DRIVER
-              value: {{ .Values.config.filesystem.driver }}
+              value: {{ quote .Values.config.filesystem.driver }}
             - name: QUEUE_CONNECTION
-              value: {{ .Values.config.queue.connection }}
+              value: {{ quote .Values.config.queue.connection }}
             - name: SESSION_DRIVER
-              value: {{ .Values.config.session.driver }}
+              value: {{ quote .Values.config.session.driver }}
             - name: SESSION_LIFETIME
-              value: {{ .Values.config.session.lifetime }}
+              value: {{ quote .Values.config.session.lifetime }}
             - name: MEMCACHED_HOST
-              value: {{ .Values.config.memcached.host }}
+              value: {{ quote .Values.config.memcached.host }}
             - name: REDIS_HOST
-              value: {{ .Values.config.redis.host }}
+              value: {{ quote .Values.config.redis.host }}
             - name: REDIS_PASSWORD
-              value: {{ .Values.config.redis.password }}
+              value: {{ quote .Values.config.redis.password }}
             - name: REDIS_PORT
-              value: {{ .Values.config.redis.port }}
+              value: {{ quote .Values.config.redis.port }}
             - name: MAIL_DRIVER
-              value:  {{ .Values.config.mail.driver }}
+              value:  {{ quote .Values.config.mail.driver }}
             - name: MAIL_HOST
-              value: {{ .Values.config.mail.host }}
+              value: {{ quote .Values.config.mail.host }}
             - name: MAIL_PORT
-              value: {{ .Values.config.mail.port }}
+              value: {{ quote .Values.config.mail.port }}
             - name: MAIL_USERNAME
-              value: {{ .Values.config.mail.username }}
+              value: {{ quote .Values.config.mail.username }}
             - name: MAIL_PASSWORD
-              value: {{ .Values.config.mail.password }}
+              value: {{ quote .Values.config.mail.password }}
             - name: MAIL_ENCRYPTION
-              value: {{ .Values.config.mail.encryption }}
+              value: {{ quote .Values.config.mail.encryption }}
             - name: MAIL_FROM_ADDRESS
-              value: {{ .Values.config.mail.from.address }}
+              value: {{ quote .Values.config.mail.from.address }}
             - name: MAIL_FROM_NAME
-              value: {{ .Values.config.mail.from.name }}
+              value: {{ quote .Values.config.mail.from.name }}
             - name: AWS_ACCESS_KEY_ID
-              value: {{ .Values.config.s3.accessKey }}
+              value: {{ quote .Values.config.s3.accessKey }}
             - name: AWS_SECRET_ACCESS_KEY
-              value: {{ .Values.config.s3.secretKey }}
+              value: {{ quote .Values.config.s3.secretKey }}
             - name: AWS_DEFAULT_REGION
-              value: {{ .Values.config.s3.region }}
+              value: {{ quote .Values.config.s3.region }}
             - name: AWS_BUCKET
-              value: {{ .Values.config.s3.bucket }}
+              value: {{ quote .Values.config.s3.bucket }}
             - name: AWS_USE_PATH_STYLE_ENDPOINT
-              value: {{ .Values.config.s3.pathStyleEndpoint }}
+              value: {{ quote .Values.config.s3.pathStyleEndpoint }}
             - name: PUSHER_APP_ID
-              value: {{ .Values.config.pusherApp.id }}
+              value: {{ quote .Values.config.pusherApp.id }}
             - name: PUSHER_APP_KEY
-              value: {{ .Values.config.pusherApp.key }}
+              value: {{ quote .Values.config.pusherApp.key }}
             - name: PUSHER_APP_SECRET
-              value: {{ .Values.config.pusherApp.secret }}
+              value: {{ quote .Values.config.pusherApp.secret }}
             - name: PUSHER_APP_CLUSTER
-              value: {{ .Values.config.pusherApp.cluster }}
+              value: {{ quote .Values.config.pusherApp.cluster }}
             - name: MIX_PUSHER_APP_KEY
-              value: {{ .Values.config.pusherApp.key }}
+              value: {{ quote .Values.config.pusherApp.key }}
             - name: MIX_PUSHER_APP_CLUSTER
-              value: {{ .Values.config.pusherApp.cluster }}
+              value: {{ quote .Values.config.pusherApp.cluster }}
             - name: TINKOFF_TERMINAL_KEY
-              value: {{ .Values.config.tinkoff.terminalKey }}
+              value: {{ quote .Values.config.tinkoff.terminalKey }}
             - name: TINKOFF_SECRET_KEY
-              value: {{ .Values.config.tinkoff.secretKey }}
+              value: {{ quote .Values.config.tinkoff.secretKey }}
             - name: TINKOFF_TERMINAL_KEY_E2C
-              value: {{ .Values.config.tinkoff.termicalKeyE2E }}
+              value: {{ quote .Values.config.tinkoff.termicalKeyE2E }}
             - name: TINKOFF_SECRET_KEY_E2C
-              value: {{ .Values.config.tinkoff.secretKeyE2E }}
+              value: {{ quote .Values.config.tinkoff.secretKeyE2E }}
             - name: TINKOFF_X509SERIAL
-              value: {{ .Values.config.tinkoff.x509serial }}
+              value: {{ quote .Values.config.tinkoff.x509serial }}
             - name: TELEGRAM_BOT_TOKEN
-              value: {{ .Values.config.telegram.bot.token }}
+              value: {{ quote .Values.config.telegram.bot.token }}
             - name: TELEGRAM_BOT_HOOK_ON_FIRST_REQUEST
-              value: {{ .Values.config.telegram.bot.hookOnFirstRequest }}
+              value: {{ quote .Values.config.telegram.bot.hookOnFirstRequest }}
             - name: TELEGRAM_BOT_KN_TOKEN
-              value: {{ .Values.config.telegram.botKn.token }}
+              value: {{ quote .Values.config.telegram.botKn.token }}
             - name: TELEGRAM_BOT_KN_HOOK_ON_FIRST_REQUEST
-              value: {{ .Values.config.telegram.botKn.hookOnFirstRequest }}
+              value: {{ quote .Values.config.telegram.botKn.hookOnFirstRequest }}
             - name: TELEGRAM_BASE_URL
-              value: {{ .Values.config.telegram.baseUrl }}
+              value: {{ quote .Values.config.telegram.baseUrl }}
             - name: TELEGRAM_API_ID
-              value: {{ .Values.config.telegram.api.id }}
+              value: {{ quote .Values.config.telegram.api.id }}
             - name: TELEGRAM_API_HASH
-              value: {{ .Values.config.telegram.api.hash }}
+              value: {{ quote .Values.config.telegram.api.hash }}
             - name: TELEGRAM_API_PROTO
-              value: {{ .Values.config.telegram.api.proto }}
+              value: {{ quote .Values.config.telegram.api.proto }}
             - name: DB_HOST_MAIN
-              value: {{ .Values.config.postgresql.host }}
+              value: {{ quote .Values.config.postgresql.host }}
             - name: DB_PORT_MAIN
-              value: {{ .Values.config.postgresql.port }}
+              value: {{ quote .Values.config.postgresql.port }}
             - name: DB_DATABASE_MAIN
-              value: {{ .Values.config.postgresql.database }}
+              value: {{ quote .Values.config.postgresql.database }}
             - name: DB_USERNAME_MAIN
-              value: {{ .Values.config.postgresql.username }}
+              value: {{ quote .Values.config.postgresql.username }}
             - name: DB_PASSWORD_MAIN
-              value: {{ .Values.config.postgresql.password }}
+              value: {{ quote .Values.config.postgresql.password }}
             - name: DB_SCHEMA_MAIN
-              value: {{ .Values.config.postgresql.schemas.main }}
+              value: {{ quote .Values.config.postgresql.schemas.main }}
             - name: DB_SCHEMA_KNOWLEDGE
-              value: {{ .Values.config.postgresql.schemas.knowledge }}
+              value: {{ quote .Values.config.postgresql.schemas.knowledge }}
             - name: SMS_RU_CODE
-              value: {{ .Values.config.smsRuCode }}
+              value: {{ quote .Values.config.smsRuCode }}
             - name: SMS_MAX_ATTEMPTS
-              value: {{ .Values.config.smsMaxAttempts }}
+              value: {{ quote .Values.config.smsMaxAttempts }}
             - name: TELEGRAM_BOT_FIRST_NAME
-              value: {{ .Values.config.telegram.bot.firstName }}
+              value: {{ quote .Values.config.telegram.bot.firstName }}
             - name: TELEGRAM_BOT_NAME
-              value: {{ .Values.config.telegram.bot.name }}
+              value: {{ quote .Values.config.telegram.bot.name }}
             - name: TELEGRAM_BOT_ID
-              value: {{ .Values.config.telegram.bot.id }}
+              value: {{ quote .Values.config.telegram.bot.id }}
             - name: TELEGRAM_BOT_KN_FIRST_NAME
-              value: {{ .Values.config.telegram.botKn.firstName }}
+              value: {{ quote .Values.config.telegram.botKn.firstName }}
             - name: TELEGRAM_BOT_KN_NAME
-              value: {{ .Values.config.telegram.botKn.name }}
+              value: {{ quote .Values.config.telegram.botKn.name }}
             - name: TELEGRAM_BOT_KN_ID
-              value: {{ .Values.config.telegram.botKn.id }}
+              value: {{ quote .Values.config.telegram.botKn.id }}
             - name: WEBCASTER_CLIENT_NAME
-              value: {{ .Values.config.webcaster.client.name }}
+              value: {{ quote .Values.config.webcaster.client.name }}
             - name: WEBCASTER_CLIENT_PASSWORD
-              value: {{ .Values.config.webcaster.client.password }}
+              value: {{ quote .Values.config.webcaster.client.password }}
             - name: TELEGRAM_LOG_CHAT
-              value: {{ .Values.config.telegram.logChat }}
+              value: {{ quote .Values.config.telegram.logChat }}
             - name: ELASTICSEARCH_ENABLED
-              value: {{ .Values.config.elk.enabled }}
+              value: {{ quote .Values.config.elk.enabled }}
             - name: ELASTICSEARCH_HOSTS
-              value: {{ .Values.config.elk.hosts }}
+              value: {{ quote .Values.config.elk.hosts }}
             - name: GRAB_TEST_DATA
-              value: {{ .Values.config.grabTestData }}
+              value: {{ quote .Values.config.grabTestData }}
             - name: USE_TRIAL_PERIOD
-              value: {{ .Values.config.useTrialPeriod }}
+              value: {{ quote .Values.config.useTrialPeriod }}
             - name: FOR_TESTER
-              value: {{ .Values.config.forTester }}
+              value: {{ quote .Values.config.forTester }}
             - name: DEBUG_TINKOFF
-              value: {{ .Values.config.debugTinkoff }}
+              value: {{ quote .Values.config.debugTinkoff }}
 {{- end }}
