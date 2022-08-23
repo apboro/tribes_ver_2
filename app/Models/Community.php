@@ -214,7 +214,7 @@ class Community extends Model
                 return $image->url;
             }
         }
-        return '/images/no-image.svg';
+        return '/images/thanks.jpg';
     }
 
     public function addition($summ)

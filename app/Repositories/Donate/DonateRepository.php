@@ -112,7 +112,7 @@ class DonateRepository implements DonateRepositoryContract
         if (isset($request['files'])) {
             foreach ($request['files'] as $key => $file) {
                 $decoded = json_decode($file['crop']);
-                if (isset($file['image'])) {
+                if (isset($file['image']) && isset($decoded->isCrop)) {
                     $fileData['file'] = $file['image'];
                     $fileData['crop'] = $decoded->isCrop;
                     $fileData['cropData'] = $decoded->cropData;

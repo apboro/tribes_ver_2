@@ -25,6 +25,7 @@
                         <p>Время подтверждения: {{ $user->confirmationUserDate() }}</p>
                         <span>
                             <a
+                                type="submit"
                                 class="btn btn-primary text-white"
                                 href="{{ route('author.mobile.reset') }}"
                             >
@@ -91,7 +92,7 @@
                         <div class="col-12">
                             <button
                                 class="btn w-100 btn-icon btn-primary d-flex align-items-center justify-content-center"
-                                type="button"
+                                type="submit"
                                 onclick = "AuthorPage.mobileConfirmedPage.onSubmit()"
                                 data-repeater-create
                                 

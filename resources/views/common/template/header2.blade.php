@@ -95,7 +95,7 @@
                     </ul>
                 </div>
 
-            <div class="navbar-header d-none">
+                <div class="navbar-header d-none">
                     <ul class="nav navbar-nav">
                         <li class="nav-item">
                             <!-- Logo -->
@@ -156,7 +156,11 @@
                                     </div>
                                 </li>
                             </ul>
-
+                            @if(session()->has('admin_id'))
+                            <span class="badge bg-secondary">
+                                Режим администратора
+                            </span>
+                            @endif
                             <div class="d-inline-block">
                                 @include('auth.headuser')
                             </div>
