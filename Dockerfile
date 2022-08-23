@@ -23,7 +23,7 @@ RUN apk add --no-cache nginx gettext tzdata ca-certificates && rm /etc/nginx/htt
 
 COPY .docker/docker-entrypoint.sh /
 COPY .docker/*.conf.template /etc/nginx/templates/
-COPY .docker/fpm.conf /usr/local/etc/php-fpm.d/99-fpm.conf
+COPY .docker/fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD [""]
