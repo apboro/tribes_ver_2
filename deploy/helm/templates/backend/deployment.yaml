@@ -29,7 +29,8 @@ spec:
       - name: fpm-socket
         emptyDir: {}
       - name: fpm-config
-        configMap: {{ include "..names.fullname" . }}-fpm
+        configMap: 
+          name: {{ include "..names.fullname" . }}-fpm
       containers:
         - name: proxy
           image: {{ include "..imageName" .Values.backend.image}}
