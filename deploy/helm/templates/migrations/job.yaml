@@ -6,6 +6,8 @@ metadata:
   name: {{ include "..names.fullname" . }}-{{ .Release.Revision }}
   labels:
     {{- include "..labels.standard" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-upgrade
 spec:
   activeDeadlineSeconds: {{ .Values.migrations.activeDeadlineSeconds }}
   backoffLimit: {{ .Values.migrations.backoffLimit }}
@@ -26,23 +28,23 @@ spec:
         imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
         env: 
         - name: DB_HOST_MAIN
-          value: {{ .Values.config.postgresql.host }}
+          value: {{ quote .Values.config.postgresql.host }}
         - name: DB_PORT_MAIN
-          value: {{ .Values.config.postgresql.port }}
+          value: {{ quote .Values.config.postgresql.port }}
         - name: DB_DATABASE_MAIN
-          value: {{ .Values.config.postgresql.database }}
+          value: {{ quote .Values.config.postgresql.database }}
         - name: DB_USERNAME_MAIN
-          value: {{ .Values.config.postgresql.username }}
+          value: {{ quote .Values.config.postgresql.username }}
         - name: DB_PASSWORD_MAIN
-          value: {{ .Values.config.postgresql.password }}
+          value: {{ quote .Values.config.postgresql.password }}
         - name: DB_SCHEMA_MAIN
-          value: {{ .Values.config.postgresql.schemas.main }}
+          value: {{ quote .Values.config.postgresql.schemas.main }}
         - name: DB_SCHEMA_KNOWLEDGE
-          value: {{ .Values.config.postgresql.schemas.knowledge }}
+          value: {{ quote .Values.config.postgresql.schemas.knowledge }}
         - name: REDIS_HOST
-          value: {{ .Values.config.redis.host }}
+          value: {{ quote .Values.config.redis.host }}
         - name: REDIS_PASSWORD
-          value: {{ .Values.config.redis.password }}
+          value: {{ quote .Values.config.redis.password }}
         - name: REDIS_PORT
-          value: {{ .Values.config.redis.port }}
+          value: {{ quote .Values.config.redis.port }}
 {{- end }}

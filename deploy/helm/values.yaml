@@ -8,7 +8,7 @@ mode:
 backend:
   image:
     registry: registry.fabit.ru
-    repository: kzrf/backend
+    repository: tribes/tribes
     tag: latest
     pullPolicy: IfNotPresent
     credentials:
@@ -127,24 +127,24 @@ config:
     pathStyleEndpoint: 'false'
   postgresql:
     host: "localhost"
-    port: 5432
-    database: kzrf
-    username: username
-    password: password
+    port: "5432"
+    database: "kzrf"
+    username: "username"
+    password: "password"
     schemas:
-      main: public
-      knowledge: knowledge
+      main: "public"
+      knowledge: "knowledge"
   redis:
-    host: localhost
-    port: 6379
-    password: null
+    host: "localhost"
+    port: "6379"
+    password: "null"
   memcached:
-    host: localhost
+    host: "localhost"
   pusherApp:
     id: ""
     key: ""
     secret: ""
-    cluster: mt1
+    cluster: "mt1"
   tinkoff:
     terminalKey: ""
     secretKey: ""
