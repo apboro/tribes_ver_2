@@ -47,14 +47,20 @@ class TestBotController extends Controller
         // another id = 1510955178 or 666997162
         // kanal id = 1504673809 access_hash = 6334485774387705507
         // webstyle id = 738071830 
+        // ni si id = 1716122891, hash = 1057009408142334119, mes_id = 1116
         $mtproto = new Mtproto();
-        $auth = $mtproto->getMessages(1, '+79194393154', 'channel', 1504673809, '6334485774387705507');
+        // $reactions = $mtproto->getChannelReactions(1716122891, [1142], '1057009408142334119');
+        // $views = $mtproto->getMessagesViews(1716122891, [1116], '1057009408142334119');
+        // $messages = $mtproto->getMessages('channel', 1716122891, '1057009408142334119');
+        // $reactions = $mtproto->getChannelReactions(1, '+79194393154', 1504673809, 3, '6334485774387705507');
+        // $groupReaction = $mtproto->getMessagesViews(1754252633, 27666, '2761241755512446778');
+        $getDialogs = $mtproto->getDialogs();
+        // $webHook = $mtproto->setWebhook('http://tribes'); 
+        // TestData::create([
+        //     'data' => json_encode($auth)
+        // ]);
 
-        TestData::create([
-            'data' => json_encode($auth)
-        ]);
-
-        dd($auth);
+        dd($getDialogs);
     }
 
 }

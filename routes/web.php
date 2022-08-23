@@ -4,6 +4,8 @@ use App\Http\Controllers\DonateController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestBotController;
 use App\Http\Controllers\TelegramBotController;
+use App\Http\Controllers\TelegramUserBotController;
+use App\Models\TelegramUser;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -312,6 +314,8 @@ Route::group(['prefix' => 'bot'], function () {
     Route::match(['get', 'post'], 'webhook', [TelegramBotController::class, 'index']);
     Route::match(['get', 'post'], 'webhook-bot2', [TelegramBotController::class, 'index-bot2']);
 });
+
+Route::any('/webhook-user-bot', [TelegramUserBotController::class, 'index']);
 
 Route::any('/test', [TestBotController::class, 'index']);
 
