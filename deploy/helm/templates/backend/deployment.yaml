@@ -26,8 +26,10 @@ spec:
       tolerations: {{- include "..tplvalues.render" (dict "value" .Values.backend.tolerations "context" .) | nindent 8 }}
       {{- end }}
       volumes:
-      - name: fpm-socket-volume
+      - name: fpm-socket
         emptyDir: {}
+      - name: fpm-config
+        configMap: {{ include "..names.fullname" . }}-fpm
       containers:
         - name: proxy
           image: {{ include "..imageName" .Values.backend.image}}
@@ -36,16 +38,18 @@ spec:
           - proxy
           volumeMounts:
           - mountPath: /var/run/php
-            name: fpm-socket-volume
+            name: fpm-socket
+          - mountPath: /usr/local/etc
+            name: fpm-config
           ports:
-          - name: html
+          - name: http
             containerPort: {{ .Values.backend.service.port }}
             protocol: TCP
         {{- if .Values.backend.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
               path: /healthCheck
-              port: html
+              port: http
             initialDelaySeconds: {{ .Values.backend.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.backend.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.backend.livenessProbe.timeoutSeconds }}
@@ -56,7 +60,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /healthCheck
-              port: html
+              port: http
             initialDelaySeconds: {{ .Values.backend.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.backend.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.backend.readinessProbe.timeoutSeconds }}
@@ -67,7 +71,7 @@ spec:
           startupProbe:
             httpGet:
               path: /healthCheck
-              port: html
+              port: http
             failureThreshold: {{ .Values.backend.startupProbe.failureThreshold }}
             periodSeconds: {{ .Values.backend.startupProbe.periodSeconds }}
         {{- end }}
@@ -78,7 +82,7 @@ spec:
           - php-fpm 
           volumeMounts:
           - mountPath: /var/run/php
-            name: fpm-socket-volume
+            name: fpm-socket
           env: 
             - name: APP_NAME
               value: {{ quote .Values.config.app.name }}

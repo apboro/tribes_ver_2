@@ -11,12 +11,12 @@ spec:
   selector:
     matchLabels:
       {{- include "..labels.matchLabels" . | nindent 6 }}
-      app: {{ include "..names.fullname" . }}
+      app: {{ include "..names.fullname" . }}-static
   template:
     metadata:
       labels:
         {{- include "..labels.standard" . | nindent 8 }}
-        app: {{ include "..names.fullname" . }}
+        app: {{ include "..names.fullname" . }}-static
       annotations:
         checksum/container-registry: {{ include (print $.Template.BasePath "/static/docker-secret.yaml") . | sha256sum }}
     spec:
@@ -32,14 +32,14 @@ spec:
           args:
           - frontend 
           ports:
-          - name: html
+          - name: http
             containerPort: {{ .Values.static.service.port }}
             protocol: TCP
         {{- if .Values.static.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
               path: /healthCheck
-              port: html
+              port: http
             initialDelaySeconds: {{ .Values.static.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.static.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.static.livenessProbe.timeoutSeconds }}
@@ -50,7 +50,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /healthCheck
-              port: html
+              port: http
             initialDelaySeconds: {{ .Values.static.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.static.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.static.readinessProbe.timeoutSeconds }}
@@ -61,7 +61,7 @@ spec:
           startupProbe:
             httpGet:
               path: /healthCheck
-              port: html
+              port: http
             failureThreshold: {{ .Values.static.startupProbe.failureThreshold }}
             periodSeconds: {{ .Values.static.startupProbe.periodSeconds }}
         {{- end }}

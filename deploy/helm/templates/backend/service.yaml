@@ -13,8 +13,4 @@ spec:
     - name: http
       port: {{ .Values.backend.service.port }}
       targetPort: {{ .Values.backend.service.port }}
-  selector:
-    {{- include "..labels.matchLabels" . | nindent 4 }}
-    app: {{ include "..names.fullname" . }}
-
 {{- end }}
