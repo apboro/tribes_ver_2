@@ -17,7 +17,7 @@ server {
     }
 
     location ~ \.php$ {
-        fastcgi_pass /var/run/php/php-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php-fpm.sock;
         fastcgi_param DOCUMENT_ROOT   /app/public;
         fastcgi_param SCRIPT_FILENAME /app/public/$fastcgi_script_name;
         include fastcgi_params;
