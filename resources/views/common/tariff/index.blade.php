@@ -17,9 +17,13 @@
         <div class="tariff-public__content">
             <div class="tariff-public__image">
                 <img
-                    src="@if ($community->tariff->getMainImage()){{ $community->tariff->getMainImage()->url }}@endif"
+                    src="@if ($community->tariff->getMainImage()){{ $community->tariff->getMainImage()->url }} @else /images/no-tariff-image.jpg @endif"
                     alt=""
+                    @if ($community->tariff->getMainImage()) data-no-image="true" @endif
                 >
+
+                <span class="decor-1"></span>
+                <span class="decor-2"></span>
             </div>
 
             <div class="tariff-public__description">
@@ -34,7 +38,9 @@
         </div>
 
         <div class="tariff-public__variants">
-            <h3 class="tariff-public__variants-title"></h3>
+            <h3 class="tariff-public__variants-title">
+                Приобрести доступ
+            </h3>
 
             <ul class="tariff-public__list">
                 @foreach ($community->tariff->getTariffVariants() as $tariff)
@@ -50,22 +56,26 @@
                                 url: `{{ $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
                             })"
                         >
-                            <h4 class="tariff-public__variant-title">
-                                {{ $tariff->title }}
-                            </h4>
-
-                            <span class="tariff-public__time">
-                                {{ $tariff->period }} {{App\Traits\Declination::defineDeclination($tariff->period)}}
-                            </span>
-
-                            <div class="tariff-public__price-wrapper">
-                                <span class="tariff-public__price-discount"></span>
-
-                                <span class="tariff-public__price">
-                                    {{ $tariff->price }}₽
+                            <div class="tariff-public__variant-header">
+                                <h4 class="tariff-public__variant-title" title="{{ $tariff->title }}">
+                                    {{ $tariff->title }}
+                                </h4>
+                            </div>
+                            
+                            <div class="tariff-public__variant-wrapper">
+                                <span class="tariff-public__time">
+                                    {{ $tariff->period }} {{App\Traits\Declination::defineDeclination($tariff->period)}}
                                 </span>
-
-                                <span class="tariff-public__old-price"></span>
+    
+                                <div class="tariff-public__price-wrapper">
+                                    <span class="tariff-public__price-discount"></span>
+    
+                                    <span class="tariff-public__price">
+                                        {{ $tariff->price }}₽
+                                    </span>
+    
+                                    <span class="tariff-public__old-price"></span>
+                                </div>
                             </div>
                         </button>
                     </li>
