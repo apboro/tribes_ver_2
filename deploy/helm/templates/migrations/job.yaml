@@ -23,10 +23,12 @@ spec:
       - name: migrations
         args:
         - artisan
-        - base:fresh  
+        - migrate
         image: {{ include "..imageName" .Values.backend.image}}
         imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
         env: 
+        - name: DB_DRIVER
+          value: "pgsql"
         - name: DB_HOST_MAIN
           value: {{ quote .Values.config.postgresql.host }}
         - name: DB_PORT_MAIN

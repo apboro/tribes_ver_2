@@ -185,6 +185,8 @@ spec:
               value: {{ quote .Values.config.telegram.api.hash }}
             - name: TELEGRAM_API_PROTO
               value: {{ quote .Values.config.telegram.api.proto }}
+            - name: DB_DRIVER
+              value: "pgsql"
             - name: DB_HOST_MAIN
               value: {{ quote .Values.config.postgresql.host }}
             - name: DB_PORT_MAIN
