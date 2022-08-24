@@ -59,6 +59,7 @@ class TestBotController extends Controller
         // TestData::create([
         //     'data' => json_encode($auth)
         // ]);
+        // $auth = $mtproto->auth();
 
         dd($getDialogs);
     }

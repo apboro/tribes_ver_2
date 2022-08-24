@@ -17,7 +17,7 @@ class Mtproto
     public function setWebhook($url, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
             'url' => $url
         ];
         return $this->request('/start-listen', $params)->object();
@@ -30,10 +30,10 @@ class Mtproto
      * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function auth($user_id = 1, $code = null)
+    public function auth($code = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
             'code' => $code
         ];
         return $this->request('/auth', $params)->object();
@@ -48,7 +48,7 @@ class Mtproto
     public function logOut($user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
         ];
         return $this->request('/logout', $params)->object();
     }
@@ -67,7 +67,7 @@ class Mtproto
     public function getMessages($type, $chat_id, $access_hash = null, $min_id = null, $limit = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
             'type' => $type,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
@@ -90,7 +90,7 @@ class Mtproto
     public function getMessagesViews($chat_id, $message_id, $access_hash = null, $type = 'channel', $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
             'message_id' => $message_id,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
@@ -112,7 +112,7 @@ class Mtproto
     public function getChannelReactions($chat_id, $message_id, $access_hash = null, $type = 'channel', $user_id = 1) 
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
             'message_id' => $message_id,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
@@ -133,7 +133,7 @@ class Mtproto
     public function getReactions($chat_id, $message_id, $limit = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
             'message_id' => $message_id,
             'chat_id' => $chat_id,
             'limit' => $limit
@@ -151,7 +151,7 @@ class Mtproto
     public function getChatInfo($chat_id, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
             'chat_id' => $chat_id
         ];
         return $this->request('/chat-info', $params)->object();
@@ -167,7 +167,7 @@ class Mtproto
     public function getDialogs($limit = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
             'limit' => $limit
         ];
         return $this->request('/dialogs', $params)->object();
@@ -185,7 +185,7 @@ class Mtproto
     public function getUsersInChannel($channel_id, $access_hash, $limit = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
             'channel_id' => $channel_id,
             'access_hash' => $access_hash,
             'limit' => $limit
