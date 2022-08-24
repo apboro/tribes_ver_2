@@ -19,13 +19,13 @@ class UserBotFormController extends Controller
                     $data = $userBot->getMessages($request->chat_id, $request->type, $request->access_hash ?? null);
                     break;
                 case 'getMessagesViews':
-                    $data = $userBot->getMessagesViews($request->chat_id, $request->type, $request->message_id, $request->access_hash ?? null);
+                    $data = $userBot->getMessagesViews($request->chat_id, $request->type, [$request->message_id], $request->access_hash ?? null);
                     break;
                 case 'getChannelReactions':
-                    $data = $userBot->getChannelReactions($request->chat_id, $request->message_id, $request->access_hash);
+                    $data = $userBot->getChannelReactions($request->chat_id, [$request->message_id], $request->access_hash);
                     break;
                 case 'getReactions':
-                    $data = $userBot->getReactions($request->chat_id, $request->message_id);
+                    $data = $userBot->getReactions($request->chat_id, [$request->message_id]);
                     break;
                 case 'getChatInfo':
                     $data = $userBot->getChatInfo($request->chat_id);

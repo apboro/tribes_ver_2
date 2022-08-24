@@ -87,11 +87,11 @@ class UserBot
      * @param integer $user_id
      * @return void
      */
-    public function getMessagesViews($chat_id, $type, $message_id, $access_hash = null, $user_id = 1)
+    public function getMessagesViews($chat_id, $type, $messages_id, $access_hash = null, $user_id = 1)
     {
         $params = [
             'ident' => 'Laravel' . $user_id,
-            'message_id' => $message_id,
+            'message_id' => $messages_id,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
             'type' => $type
@@ -109,11 +109,11 @@ class UserBot
      * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getChannelReactions($chat_id, $message_id, $access_hash = null, $type = 'channel', $user_id = 1) 
+    public function getChannelReactions($chat_id, $messages_id, $access_hash = null, $type = 'channel', $user_id = 1) 
     {
         $params = [
             'ident' => 'Laravel' . $user_id,
-            'message_id' => $message_id,
+            'message_id' => $messages_id,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
             'type' => $type
@@ -130,11 +130,11 @@ class UserBot
      * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getReactions($chat_id, $message_id, $limit = null, $user_id = 1)
+    public function getReactions($chat_id, $messages_id, $limit = null, $user_id = 1)
     {
         $params = [
             'ident' => 'Laravel' . $user_id,
-            'message_id' => $message_id,
+            'message_id' => $messages_id,
             'chat_id' => $chat_id,
             'limit' => $limit
         ];
