@@ -81,7 +81,7 @@ class UserBot
      * Получить просмотры сообщения
      *
      * @param int $chat_id
-     * @param array $message_id
+     * @param array $messages_id
      * @param string $access_hash
      * @param string $type
      * @param integer $user_id
@@ -103,7 +103,7 @@ class UserBot
      * Получить реакции сообщения в канале или группе
      *
      * @param int $chat_id
-     * @param array $message_id
+     * @param array $messages_id
      * @param string $access_hash
      * @param string $type
      * @param int $user_id        id пользователя
@@ -125,7 +125,7 @@ class UserBot
      * Получить реакции на сообщение в группе с пользователями их оставившие
      *
      * @param int $chat_id
-     * @param array $message_id
+     * @param array $messages_id
      * @param int|null $limit
      * @param int $user_id        id пользователя
      * @return object|array
