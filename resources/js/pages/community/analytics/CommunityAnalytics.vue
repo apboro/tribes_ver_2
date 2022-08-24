@@ -7,11 +7,16 @@
             @switchTab="switchTab"    
         /> -->
 
-        <analytics-filter
-            class="analytics-community__filter"
-            :filterValue="filterValue"
-            @setPeriod="setPeriod"
-        />
+        <div class="analytics-community__title-wrap">
+            <h2 class="analytics-community__title">
+                Аналитика
+            </h2>
+            <analytics-filter
+                class="analytics-community__filter"
+                :filterValue="filterValue"
+                @setPeriod="setPeriod"
+            />
+        </div>
 
         <transition name="a-page-tabs" mode="out-in">
             <analytics-list

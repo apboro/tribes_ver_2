@@ -1,5 +1,15 @@
 .analytics-community {
-    //&__filter {}
+
+    &__title-wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__title {
+        @include font($text-color-1, 30px, 36px, 600);
+        margin: 0;
+    }
 
     &__card-list {
         display: grid;

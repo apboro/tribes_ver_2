@@ -1,13 +1,4 @@
 .filter-analytics-community {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    // border-top: 1px solid $primary-1;
-
-    &__title {
-        // padding-top: 10px;
-        @include font($text-color-1, 30px, 36px, 600);
-    }
 
     &__list {
         padding: 5px 10px;
@@ -20,33 +11,31 @@
 
     }
 
-    //&__item {}
+    // &__radio {
+    //     display: none;
 
-    &__radio {
-        display: none;
+    //     &:checked + .filter-analytics-community__label {
+    //         @include font($primary-1, 16px, 19px, 600);
 
-        &:checked + .filter-analytics-community__label {
-            @include font($primary-1, 16px, 19px, 600);
+    //         &:before {
+    //             content: "";
+    //             position: absolute;
+    //             top: 0;
+    //             right: 0;
+    //             left: 0;
+    //             height: 4px;
+    //             background-color: $primary-1;
+    //             border-radius: 2px;
+    //         }
+    //     }
+    // }
 
-            &:before {
-                content: "";
-                position: absolute;
-                top: 0;
-                right: 0;
-                left: 0;
-                height: 4px;
-                background-color: $primary-1;
-                border-radius: 2px;
-            }
-        }
-    }
-
-    &__label {
-        position: relative;
-        display: inline-block;
-        padding-top: 10px;
-        @include font($text-color-1, 16px, 19px, 400);
-        white-space: nowrap;
-        cursor: pointer;
-    }
+    // &__label {
+    //     position: relative;
+    //     display: inline-block;
+    //     padding-top: 10px;
+    //     @include font($text-color-1, 16px, 19px, 400);
+    //     white-space: nowrap;
+    //     cursor: pointer;
+    // }
 }

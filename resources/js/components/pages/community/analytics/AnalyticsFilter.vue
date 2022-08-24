@@ -1,8 +1,5 @@
 <template>
     <div class="filter-analytics-community">
-        <span class="filter-analytics-community__title">
-            Аналитика
-        </span>
 
         <!-- <ul class="filter-analytics-community__list">
             <li
@@ -27,26 +24,17 @@
             </li>
         </ul> -->
         
-        <select class="filter-analytics-community__list">
+        <select 
+            class="filter-analytics-community__list"
+            v-model="periods"
+        >
             <option
                 class="filter-analytics-community__item"
                 v-for="filter in filters"
                 :key="filter.value"
+                :value="filter.value"
             >
-                <input
-                    type="radio"
-                    :id="filter.value"
-                    class="filter-analytics-community__radio"
-                    :value="filter.value"
-                    v-model="periods"
-                >
-
-                <label
-                    :for="filter.value"
-                    class="filter-analytics-community__label"
-                >
-                    {{ filter.text }}
-                </label>
+                {{ filter.text }}
             </option>
         </select>
     </div>
