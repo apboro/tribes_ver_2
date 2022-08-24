@@ -19,8 +19,16 @@ FROM php:${PHP_VERSION}-fpm-alpine3.15
 ARG WORKDIR
 WORKDIR ${WORKDIR}
 
-RUN apk add --no-cache php-pgsql postgresql14-dev php7-pdo_pgsql nginx gettext tzdata ca-certificates && rm /etc/nginx/http.d/*
-RUN docker-php-ext-install pdo_pgsql 
+RUN apk add --no-cache nginx gettext tzdata ca-certificates && rm /etc/nginx/http.d/*
+
+RUN apk add --no-cache php-pgsql postgresql14-dev php7-pdo_pgsql \
+ && docker-php-ext-install pdo_pgsql   
+
+RUN apk --no-cache add pcre-dev \
+  && pecl install redis \
+  && docker-php-ext-enable redis \
+  && apk del pcre-dev \
+  && rm -rf /tmp/pear
 
 COPY .docker/docker-entrypoint.sh /
 COPY .docker/*.conf.template /etc/nginx/templates/
