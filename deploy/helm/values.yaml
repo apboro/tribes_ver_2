@@ -44,6 +44,19 @@ backend:
     failureThreshold: 120
     periodSeconds: 5
 
+queueWorker:
+  image:
+    registry: registry.fabit.ru
+    repository: tribes/tribes
+    tag: latest
+    pullPolicy: IfNotPresent
+    credentials:
+      username: username
+      password: password
+
+  replicaCount: 1
+  tolerations: []
+
 static:
   image:
     registry: registry.fabit.ru
@@ -105,7 +118,7 @@ config:
   filesystem:
     driver: "local"
   queue:
-    connection: "sync"
+    connection: "redis"
   session:
     driver: "file"
     lifetime: "120"
