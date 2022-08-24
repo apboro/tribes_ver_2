@@ -4,7 +4,7 @@ namespace App\Services\Telegram\TelegramApi;
 
 use Illuminate\Support\Facades\Http;
 
-class Mtproto
+class UserBot
 {
 
     /**
@@ -64,7 +64,7 @@ class Mtproto
      * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getMessages($type, $chat_id, $access_hash = null, $min_id = null, $limit = null, $user_id = 1)
+    public function getMessages($chat_id, $type, $access_hash = null, $min_id = null, $limit = null, $user_id = 1)
     {
         $params = [
             'ident' => 'Laravel' . $user_id,
@@ -87,7 +87,7 @@ class Mtproto
      * @param integer $user_id
      * @return void
      */
-    public function getMessagesViews($chat_id, $message_id, $access_hash = null, $type = 'channel', $user_id = 1)
+    public function getMessagesViews($chat_id, $type, $message_id, $access_hash = null, $user_id = 1)
     {
         $params = [
             'ident' => 'Laravel' . $user_id,

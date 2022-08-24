@@ -33,7 +33,7 @@ use App\Services\Tinkoff\Payment as Pay;
 use App\Services\WebcasterPro;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Telegram\MainComponents\Madeline;
-use App\Services\Telegram\TelegramApi\Mtproto;
+use App\Services\Telegram\TelegramApi\UserBot;
 use Carbon\Carbon;
 
 use DateTime;
@@ -48,7 +48,7 @@ class TestBotController extends Controller
         // kanal id = 1504673809 access_hash = 6334485774387705507
         // webstyle id = 738071830 
         // ni si id = 1716122891, hash = 1057009408142334119, mes_id = 1116
-        $mtproto = new Mtproto();
+        $mtproto = new UserBot();
         // $reactions = $mtproto->getChannelReactions(1716122891, [1142], '1057009408142334119');
         // $views = $mtproto->getMessagesViews(1716122891, [1116], '1057009408142334119');
         // $messages = $mtproto->getMessages('channel', 1716122891, '1057009408142334119');
