@@ -38,6 +38,8 @@ spec:
           args:
           - artisan 
           - queue:work 
+          - redis
+          - -vvv
           env: 
             - name: APP_NAME
               value: {{ quote .Values.config.app.name }}
