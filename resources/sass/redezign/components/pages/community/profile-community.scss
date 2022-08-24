@@ -37,7 +37,13 @@
     &__community-link {
         grid-column: 2/3;
         grid-row: 2/3;
-        @include font($grey-5, 16px, 26px, 400);
+        display: flex;
+        align-items: center;
+        @include font($blue-1, 14px, 20px, 500);
+    }
+
+    &__community-link-telegram {
+        margin: 0 0 0 10px;
     }
 
     &__community-badge {
@@ -49,21 +55,28 @@
         border-radius: 2px;
     }
 
-    &__connect {}
+    &__connect {
+        display: inline-block;
+        padding: 0 50px 0 0;
+    }
 
-    &__connect-label {
-        @include font($text-color-1, 16px, 19px, 600);
+    &__connect-subscribers-label {
+        @include font($text-color-1, 16px, 22px, 500);
     }
     
-    &__connect-date {
+    &__connect-date, &__subscribers-qty {
         margin-top: 6px;
-        @include font($grey-5, 16px, 19px, 400);
+        @include font($grey-10, 14px, 20px, 400);
+    }
+
+    &__subscribers {
+        display: inline-block;
     }
 
     &__pay-link-block {}
 
     &__pay-link-label {
-        @include font($text-color-1, 16px, 19px, 400);
+        @include font($text-color-1, 16px, 22px, 500);
     }
 
     &__pay-link-wrapper {
@@ -78,36 +91,49 @@
         }
     }
 
-    &__money {
+    &__block-money {
         grid-row: 1 / 4;
         grid-column: 2 / 3;
-        display: grid;
-        grid-template-rows: min-content min-content;
-        grid-template-columns: min-content min-content;
-        align-self: start;
+        min-width: 460px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
-        column-gap: 30px;
-        row-gap: 40px;
-        padding: 40px;
         background-color: $primary-1;
-        border-radius: 2px;
-        box-shadow: $shadow-1;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba($primary-1, 0.25);
+    }
+
+    &__money-info {
+        padding: 20px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+
+        &:first-child {
+            border-bottom: 2px solid rgba($white, .3);
+        }
+    }
+
+    &__money {
+        width: 50%;
     }
 
     &__money-label {
-        @include font($white, 16px, 19px, 700);
+        margin: 0 0 6px;
+        @include font($white, 12px, 14px, 600);
         white-space: nowrap;
     }
 
     &__money-value {
-        margin-top: 6px;
-        @include font($white, 18px, 21px, 400);
+        @include font($white, 30px, 36px, 600);
         white-space: nowrap;
     }
 
     &__money-difference {
         display: inline-block;
-        @include font($white, 18px, 21px, 400);
+        @include font($white, 16px, 22px, 400);
 
         &--plus {
             color: $green-1;
@@ -115,8 +141,9 @@
     }
 
     &__money-btn {
-        padding: 15px 10px;
-        @include font($primary-1, 16px, 21px, 700);
+        width: 50%;
+        padding: 10px 30px;
+        @include font($primary-1, 14px, 20px, 600);
         text-transform: uppercase;
         white-space: nowrap;
         background-color: #fff;

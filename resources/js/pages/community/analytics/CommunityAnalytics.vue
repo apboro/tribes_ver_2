@@ -1,11 +1,11 @@
 <template>
     <div class="analytics-community">
-        <analytics-nav
+        <!-- <analytics-nav
             class="analytics-community__nav"
             :links="navigationLinks"
             :visibleTab="visibleTab"
             @switchTab="switchTab"    
-        />
+        /> -->
 
         <analytics-filter
             class="analytics-community__filter"

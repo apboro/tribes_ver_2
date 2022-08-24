@@ -10,6 +10,7 @@ return [
     'amount' => 'Amount',
     'amount_min' => 'Min. amount',
     'amount_max' => 'Max. amount',
+    'analytics' => 'Analytics',
     'answer' => 'Answer',
     'arbitrary_amount' => 'Arbitrary amount',
 

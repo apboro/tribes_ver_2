@@ -11,7 +11,7 @@
     &__item {}
 
     &__link {
-        @include font($text-color-1, 16px, 21px, 700);
+        @include font($text-color-1, 16px, 21px, 500);
         text-transform: uppercase;
         transition: $transition;
 

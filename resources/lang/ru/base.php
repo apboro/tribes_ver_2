@@ -10,6 +10,7 @@ return [
     'amount' => 'Сумма',
     'amount_min' => 'Мин. сумма',
     'amount_max' => 'Макс. сумма',
+    'analytics' => 'Аналитика',
     'answer' => 'Ответ',
     'arbitrary_amount' => 'Произвольная сумма',
 
