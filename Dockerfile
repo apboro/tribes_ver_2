@@ -24,10 +24,10 @@ RUN apk add --no-cache nginx gettext tzdata ca-certificates && rm /etc/nginx/htt
 RUN apk add --no-cache php-pgsql postgresql14-dev php7-pdo_pgsql \
  && docker-php-ext-install pdo_pgsql   
 
-RUN apk --no-cache add pcre-dev \
+RUN apk --no-cache add pcre-dev $PHPIZE_DEPS \
   && pecl install redis \
   && docker-php-ext-enable redis \
-  && apk del pcre-dev \
+  && apk del pcre-dev $PHPIZE_DEPS\
   && rm -rf /tmp/pear
 
 COPY .docker/docker-entrypoint.sh /
