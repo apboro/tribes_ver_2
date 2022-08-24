@@ -35,13 +35,11 @@ push_chart:
   - .base_template
   - .push_chart
 
-deploy_staging:
+deploy_dev:
   stage: deploy
   extends:
   - .base_template
-  # - .commit_versions_template
-  # - .common_deploy
-  # variables: 
-  #   DEPLOYMENT: staging-kzrf
-  script:
-    - echo "pass"
+  - .commit_versions_template
+  - .common_deploy
+  variables: 
+    DEPLOYMENT: dev-tribes
