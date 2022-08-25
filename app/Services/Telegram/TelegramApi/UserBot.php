@@ -61,10 +61,11 @@ class UserBot
      * @param string|null $access_hash   Хеш доступа обязательно в строке. Хеш доступа есть только у типа 'channel'. Получить можно через getDialogs()
      * @param int|null $min_id           Если было передано положительное значение, метод вернет только сообщения с идентификаторами больше min_id. 
      * @param int|null $limit            Сколько вернуть результатов. 
+     * @param int|null $offset_id
      * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getMessages($chat_id, $type, $access_hash = null, $min_id = null, $limit = null, $user_id = 1)
+    public function getMessages($chat_id, $type, $access_hash = null, $min_id = null, $limit = null, $offset_id = null, $user_id = 1)
     {
         $params = [
             'ident' => 'Laravel' . $user_id,
@@ -72,7 +73,8 @@ class UserBot
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
             'min_id' => $min_id,
-            'limit' => $limit
+            'limit' => $limit,
+            'offset_id' => $offset_id
         ];
         return $this->request('/history', $params)->object();
     }
@@ -127,16 +129,18 @@ class UserBot
      * @param int $chat_id
      * @param array $messages_id
      * @param int|null $limit
+     * @param int|null $offset
      * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getReactions($chat_id, $messages_id, $limit = null, $user_id = 1)
+    public function getReactions($chat_id, $messages_id, $limit = null, $offset = null, $user_id = 1)
     {
         $params = [
             'ident' => 'Laravel' . $user_id,
             'message_id' => $messages_id,
             'chat_id' => $chat_id,
-            'limit' => $limit
+            'limit' => $limit,
+            'offset' => $offset
         ];
         return $this->request('/reactions', $params)->object();
     }
@@ -162,13 +166,15 @@ class UserBot
      *
      * @param int|null $limit
      * @param int $user_id        id пользователя
+     * @param int|null $offset_id
      * @return object|array
      */
-    public function getDialogs($limit = null, $user_id = 1)
+    public function getDialogs($limit = null, $offset_id = null, $user_id = 1)
     {
         $params = [
             'ident' => 'Laravel' . $user_id,
-            'limit' => $limit
+            'limit' => $limit,
+            'offset_id' => $offset_id
         ];
         return $this->request('/dialogs', $params)->object();
     }
@@ -182,13 +188,14 @@ class UserBot
      * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getUsersInChannel($channel_id, $access_hash, $limit = null, $user_id = 1)
+    public function getUsersInChannel($channel_id, $access_hash, $limit = null, $offset = null, $user_id = 1)
     {
         $params = [
             'ident' => 'Laravel' . $user_id,
             'channel_id' => $channel_id,
             'access_hash' => $access_hash,
-            'limit' => $limit
+            'limit' => $limit,
+            'offset' => $offset
         ];
         return $this->request('/participants', $params)->object();
     }

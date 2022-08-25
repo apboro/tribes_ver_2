@@ -22,17 +22,17 @@
                     Выберите метод
                 </label>
                 <select name="method">
-                    <option value="getMessages" checked>getMessages($chat_id, $type, $access_hash = null) Получить сообщения
+                    <option value="getMessages" checked>getMessages($chat_id, $type, $access_hash = null, $limit = null, $offset_id = null) Получить сообщения
                         чата</option>
                     <option value="getMessagesViews">getMessagesViews($chat_id, $type, $message_id, $access_hash = null)
                         Получить количесво просмотров сообщения</option>
                     <option value="getChannelReactions" checked>getChannelReactions($chat_id, $message_id, $access_hash)
                         Получить реакции сообщения в канале</option>
-                    <option value="getReactions" checked>getReactions($chat_id, $message_id) Получить реакции сообщения в
+                    <option value="getReactions" checked>getReactions($chat_id, $messages_id, $limit = null, $offset = null) Получить реакции сообщения в
                         группе</option>
                     <option value="getChatInfo" checked>getChatInfo($chat_id) Получить информацию о группе. В отм числе и её
                         участников</option>
-                    <option value="getUsersInChannel" checked>getUsersInChannel($channel_id, $access_hash) Получить
+                    <option value="getUsersInChannel" checked>getUsersInChannel($channel_id, $access_hash, $limit = null, $offset = null) Получить
                         пользователей канала</option>
                 </select>
                 <p>
@@ -59,6 +59,16 @@
                         Введите message_id если это необходимо методу
                     </label><p>
                     <input type="text" class="form-control pointer" placeholder="message_id" name="message_id">
+                <p>
+                    <label for="limit" class="form-label mt-2">
+                        Введите limit если это необходимо методу
+                    </label><p>
+                    <input type="text" class="form-control pointer" placeholder="limit" name="limit">
+                <p>
+                    <label for="offset" class="form-label mt-2">
+                        Введите offset или offset_id если это необходимо методу
+                    </label><p>
+                    <input type="text" class="form-control pointer" placeholder="offset" name="offset">
                 <p>
                     <button type="submit" class="btn btn-primary w-30">
                        Отправить

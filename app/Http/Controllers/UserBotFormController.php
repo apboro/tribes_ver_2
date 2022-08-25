@@ -16,7 +16,7 @@ class UserBotFormController extends Controller
         if ($request->method) {
             switch ($request->method) {
                 case 'getMessages':
-                    $data = $userBot->getMessages($request->chat_id, $request->type, $request->access_hash ?? null);
+                    $data = $userBot->getMessages($request->chat_id, $request->type, $request->access_hash ?? null, null, $request->limit ?? null, $request->offset ?? null);
                     break;
                 case 'getMessagesViews':
                     $data = $userBot->getMessagesViews($request->chat_id, $request->type, [$request->message_id], $request->access_hash ?? null);
@@ -25,13 +25,13 @@ class UserBotFormController extends Controller
                     $data = $userBot->getChannelReactions($request->chat_id, [$request->message_id], $request->access_hash);
                     break;
                 case 'getReactions':
-                    $data = $userBot->getReactions($request->chat_id, [$request->message_id]);
+                    $data = $userBot->getReactions($request->chat_id, [$request->message_id], $request->limit ?? null, $request->offset ?? null);
                     break;
                 case 'getChatInfo':
                     $data = $userBot->getChatInfo($request->chat_id);
                     break;
                 case 'getUsersInChannel':
-                    $data = $userBot->getUsersInChannel($request->chat_id, $request->access_hash);
+                    $data = $userBot->getUsersInChannel($request->chat_id, $request->access_hash, $request->limit ?? null, $request->offset ?? null);
                     break;
             }
         }
