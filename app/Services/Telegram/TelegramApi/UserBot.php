@@ -1,24 +1,39 @@
 <?php 
 
-namespace App\Services\Telegram\TelegramAPI;
+namespace App\Services\Telegram\TelegramApi;
 
 use Illuminate\Support\Facades\Http;
 
 class UserBot
 {
+
+    /**
+     * Установить вебхук для получения обновлений
+     *
+     * @param string $url // Куда стучаться
+     * @param integer $user_id
+     * @return void
+     */
+    public function setWebhook($url, $user_id = 1)
+    {
+        $params = [
+            'ident' => 'Laravel' . $user_id,
+            'url' => $url
+        ];
+        return $this->request('/start-listen', $params)->object();
+    }
+
     /**
      * Авторизация пользователя
      *
-     * @param int $user_id        id пользователя
-     * @param string $phone       номер телефона пользователя в формате '+79191234567'
      * @param int $code           код подтверждения. Приходит в телеграм пользователя после первой отправки запроса авторизации.
+     * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function auth($user_id, $phone, $code = null)
+    public function auth($code = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
-            'phone' => $phone,
+            'ident' => 'Laravel' . $user_id,
             'code' => $code
         ];
         return $this->request('/auth', $params)->object();
@@ -30,10 +45,10 @@ class UserBot
      * @param int $user_id
      * @return object|array
      */
-    public function logOut($user_id)
+    public function logOut($user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
+            'ident' => 'Laravel' . $user_id,
         ];
         return $this->request('/logout', $params)->object();
     }
@@ -41,40 +56,91 @@ class UserBot
     /**
      * Получить историю сообщений
      *
-     * @param int $user_id 
-     * @param string $phone
      * @param string $type               Тип чата - 'channel' 'group'.    Супергруппа и гигагруппа относится к channel
      * @param int $chat_id       
      * @param string|null $access_hash   Хеш доступа обязательно в строке. Хеш доступа есть только у типа 'channel'. Получить можно через getDialogs()
      * @param int|null $min_id           Если было передано положительное значение, метод вернет только сообщения с идентификаторами больше min_id. 
      * @param int|null $limit            Сколько вернуть результатов. 
+     * @param int|null $offset_id
+     * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getMessages($user_id, $phone, $type, $chat_id, $access_hash = null, $min_id = null, $limit = null)
+    public function getMessages($chat_id, $type, $access_hash = null, $min_id = null, $limit = null, $offset_id = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
-            'phone' => $phone,
+            'ident' => 'Laravel' . $user_id,
             'type' => $type,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
             'min_id' => $min_id,
-            'limit' => $limit
+            'limit' => $limit,
+            'offset_id' => $offset_id
         ];
         return $this->request('/history', $params)->object();
     }
 
-
-    public function getReactions($user_id, $phone, $type, $chat_id, $message_id, $access_hash = null, $limit = null)
+    /**
+     * Получить просмотры сообщения
+     *
+     * @param int $chat_id
+     * @param array $messages_id
+     * @param string $access_hash
+     * @param string $type
+     * @param integer $user_id
+     * @return void
+     */
+    public function getMessagesViews($chat_id, $type, $messages_id, $access_hash = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
-            'phone' => $phone,
-            'type' => $type,
+            'ident' => 'Laravel' . $user_id,
+            'message_id' => $messages_id,
             'chat_id' => $chat_id,
-            'id' => $message_id,
             'access_hash' => $access_hash,
-            'limit' => $limit
+            'type' => $type
+        ];
+        return $this->request('/views', $params)->object();
+    }
+
+    /**
+     * Получить реакции сообщения в канале или группе
+     *
+     * @param int $chat_id
+     * @param array $messages_id
+     * @param string $access_hash
+     * @param string $type
+     * @param int $user_id        id пользователя
+     * @return object|array
+     */
+    public function getChannelReactions($chat_id, $messages_id, $access_hash = null, $type = 'channel', $user_id = 1) 
+    {
+        $params = [
+            'ident' => 'Laravel' . $user_id,
+            'message_id' => $messages_id,
+            'chat_id' => $chat_id,
+            'access_hash' => $access_hash,
+            'type' => $type
+        ];
+        return $this->request('/channel-reactions', $params)->object();
+    }
+
+    /**
+     * Получить реакции на сообщение в группе с пользователями их оставившие
+     *
+     * @param int $chat_id
+     * @param array $messages_id
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param int $user_id        id пользователя
+     * @return object|array
+     */
+    public function getReactions($chat_id, $messages_id, $limit = null, $offset = null, $user_id = 1)
+    {
+        $params = [
+            'ident' => 'Laravel' . $user_id,
+            'message_id' => $messages_id,
+            'chat_id' => $chat_id,
+            'limit' => $limit,
+            'offset' => $offset
         ];
         return $this->request('/reactions', $params)->object();
     }
@@ -82,16 +148,14 @@ class UserBot
     /**
      * Возвращает информация о ГРУППЕ в том числе и всех её участников
      *
-     * @param int $user_id
-     * @param string $phone
      * @param int $chat_id
+     * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getChatInfo($user_id, $phone, $chat_id)
+    public function getChatInfo($chat_id, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
-            'phone' => $phone,
+            'ident' => 'Laravel' . $user_id,
             'chat_id' => $chat_id
         ];
         return $this->request('/chat-info', $params)->object();
@@ -100,17 +164,17 @@ class UserBot
     /**
      * Получить диалоги пользователя и информацию о них
      *
-     * @param int $user_id
-     * @param string $phone
      * @param int|null $limit
+     * @param int $user_id        id пользователя
+     * @param int|null $offset_id
      * @return object|array
      */
-    public function getDialogs($user_id, $phone, $limit = null)
+    public function getDialogs($limit = null, $offset_id = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
-            'phone' => $phone,
-            'limit' => $limit
+            'ident' => 'Laravel' . $user_id,
+            'limit' => $limit,
+            'offset_id' => $offset_id
         ];
         return $this->request('/dialogs', $params)->object();
     }
@@ -118,21 +182,20 @@ class UserBot
     /**
      * Получить информацию о пользователях канала
      *
-     * @param int $user_id
-     * @param string $phone
      * @param int $channel_id
      * @param string $access_hash
      * @param int|null $limit
+     * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getUsersInChannel($user_id, $phone, $channel_id, $access_hash, $limit = null)
+    public function getUsersInChannel($channel_id, $access_hash, $limit = null, $offset = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('APP_NAME') . $user_id,
-            'phone' => $phone,
+            'ident' => 'Laravel' . $user_id,
             'channel_id' => $channel_id,
             'access_hash' => $access_hash,
-            'limit' => $limit
+            'limit' => $limit,
+            'offset' => $offset
         ];
         return $this->request('/participants', $params)->object();
     }
