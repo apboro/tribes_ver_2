@@ -55,9 +55,18 @@ export default class TariffSelectionPage extends Page {
                 text: Dict.write('base', 'agency_contract')
             }
         ];
+
+        this.tariffImage = this.container.querySelector('img');
     }
     
-    init() {}
+    init() {
+        const tariffImage = this.container.querySelector('img');
+        if (document.documentElement.clientWidth < 576 && !tariffImage.dataset.noImage) {
+            console.log(tariffImage.parentNode);
+            tariffImage.parentNode.style.display = 'none';
+        }
+        //if ()
+    }
 
     openRightsModal(data) {
         // сохраняем данные от сервера
@@ -460,14 +469,16 @@ export default class TariffSelectionPage extends Page {
 
             return res.data;
         } catch(error) {
+            // new Toasts({
+            //     type: 'error',
+            //     message: createServerErrorMessage(error)
+            // });
+
             if (error.response.data.errors.email) {
                 this.showErrorMessage(error.response.data.errors.email[0]);
             }
             this.isRequestComplete = false;
-            new Toasts({
-                type: 'error',
-                message: createServerErrorMessage(error)
-            });
+            
         } finally {
             this.spinner.remove();
         }
