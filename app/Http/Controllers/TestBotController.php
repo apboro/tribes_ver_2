@@ -45,11 +45,7 @@ class TestBotController extends Controller
 
     public function index(Request $request)
     {
-        dd(now()->format('Y-m-d G:i:s'));
-        $community = Community::find(1);
-        $ty = TelegramUser::find(5);
-        dd($ty->tariffVariant()->first());
-        dd($community->tariffvariants);
+        
     }
 
 }

@@ -25,7 +25,7 @@
             </div>
 
             <div class="card-body d-flex flex-column align-items-center">
-                <h2 class="card-text mb-2">
+                <h2 class="card-text mb-2" style="white-space: pre-wrap">
                     @if ($payment->type == 'donate')
                         {{ $payment->payable()->first()->donate()->first()->success_description ? $payment->payable()->first()->donate()->first()->success_description : __('donate.thanks_for_donation') }}
                     @endif
