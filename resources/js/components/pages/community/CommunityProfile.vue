@@ -51,8 +51,13 @@
                 </p>
 
                 <p class="profile-community__money-value">
-                    ₽ 20344,34 <span class="profile-community__money-difference profile-community__money-difference--plus">+1900 ₽</span>
+                    ₽ 20344,34 
+                    <span class="profile-community__money-difference profile-community__money-difference--plus">+1900 ₽</span>
                 </p>
+
+                <button class="button-filled profile-community__money-btn">
+                    Вывести
+                </button>
             </div>
 
             <div>
@@ -63,15 +68,11 @@
                 <p class="profile-community__money-value">
                     ₽ 150332,43
                 </p>
+
+                <button class="button-filled profile-community__money-btn button-filled--disabled">
+                    Все транзакции
+                </button>
             </div>
-
-            <button class="button-filled profile-community__money-btn">
-                Вывести
-            </button>
-
-            <button class="button-filled profile-community__money-btn button-filled--disabled">
-                Все транзакции
-            </button>
         </div>
     </div>
 </template>

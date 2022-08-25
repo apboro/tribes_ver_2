@@ -5,7 +5,7 @@
                 href="{{ route('community.statistic', $community) }}"
                 class="nav-community__link {{ request()->is('*community/*/statistic*') ? 'active' : '' }}"    
             >
-                {{ __('base.statistics') }}
+                {{ __('base.analytics') }}
             </a>
         </li>
 
