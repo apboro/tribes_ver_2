@@ -124,6 +124,7 @@ return [
     // T
     'tariff' => 'Тариф',
     'tariffs' => 'Тарифы',
+    'term_access_community' => 'Срок доступа в сообщество',
     'time' => 'Время',
     'total' => 'Всего',
     'title' => 'Заголовок',

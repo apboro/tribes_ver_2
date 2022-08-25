@@ -55,7 +55,7 @@
                                 </label>
 
                                 <label class="form-label" for="tariff_pay_period">
-                                    {{ __('base.payment_period') }}
+                                    {{ __('base.term_access_community') }}
                                 </label>
                             </div>
 

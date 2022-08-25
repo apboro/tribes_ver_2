@@ -120,6 +120,7 @@ return [
     // T
     'tariff' => 'Tariff',
     'tariffs' => 'Tariffs',
+    'term_access_community' => 'Term of access to the community',
     'time' => 'Time',
     'total' => 'Total',
     'title' => 'Title',
