@@ -10,7 +10,7 @@ class UserBot
     /**
      * Установить вебхук для получения обновлений
      *
-     * @param string $url
+     * @param string $url // Куда стучаться
      * @param integer $user_id
      * @return void
      */

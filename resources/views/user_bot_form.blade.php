@@ -15,24 +15,24 @@
                 @endforeach
             @endif
         </div>
-
         <div class="col-md-4">
             <form method="GET" action="{{ route('user.bot.form') }}">
                 <label for="method" class="form-label">
                     Выберите метод
                 </label>
+                
                 <select name="method">
-                    <option value="getMessages" checked>getMessages($chat_id, $type, $access_hash = null, $limit = null, $offset_id = null) Получить сообщения
+                    <option value="getMessages" {{ request()->get('method') == 'getMessages' ? 'selected' : '' }}>getMessages($chat_id, $type, $access_hash = null, $limit = null, $offset_id = null) Получить сообщения
                         чата</option>
-                    <option value="getMessagesViews">getMessagesViews($chat_id, $type, $message_id, $access_hash = null)
+                    <option value="getMessagesViews" {{ request()->get('method') == 'getMessagesViews' ? 'selected' : '' }} >getMessagesViews($chat_id, $type, $message_id, $access_hash = null)
                         Получить количесво просмотров сообщения</option>
-                    <option value="getChannelReactions" checked>getChannelReactions($chat_id, $message_id, $access_hash)
+                    <option value="getChannelReactions" {{ request()->get('method') == 'getChannelReactions' ? 'selected' : ''}} >getChannelReactions($chat_id, $message_id, $access_hash)
                         Получить реакции сообщения в канале</option>
-                    <option value="getReactions" checked>getReactions($chat_id, $messages_id, $limit = null, $offset = null) Получить реакции сообщения в
+                    <option value="getReactions" {{ request()->get('method') == 'getReactions' ? 'selected' : '' }}  >getReactions($chat_id, $messages_id, $limit = null, $offset = null) Получить реакции сообщения в
                         группе</option>
-                    <option value="getChatInfo" checked>getChatInfo($chat_id) Получить информацию о группе. В отм числе и её
+                    <option value="getChatInfo" {{ request()->get('method') == "getChatInfo" ? 'selected' : ''}} >getChatInfo($chat_id) Получить информацию о группе. В отм числе и её
                         участников</option>
-                    <option value="getUsersInChannel" checked>getUsersInChannel($channel_id, $access_hash, $limit = null, $offset = null) Получить
+                    <option value="getUsersInChannel" {{ request()->get('method') == 'getUsersInChannel' ? 'selected' : ''}} >getUsersInChannel($channel_id, $access_hash, $limit = null, $offset = null) Получить
                         пользователей канала</option>
                 </select>
                 <p>
@@ -41,34 +41,34 @@
                         Выберите тип чата
                     </label><p>
                     <select name="type">
-                        <option value="channel" checked>Канал</option>
-                        <option value="group">Группа</option>
+                        <option value="channel" {{ request()->get('type') == 'channel' ? 'selected' : '' }} >Канал</option>
+                        <option value="group" {{request()->get('type') == 'group' ? 'selected' : '' }} >Группа</option>
                     </select><p>
                 
                     <label for="chat_id" class="form-label mt-2">
                         Введите id чата
                     </label><p>
-                    <input type="text" class="form-control pointer" placeholder="id чата" name="chat_id">
+                    <input type="text" class="form-control pointer" placeholder="id чата" name="chat_id" value="{{ request()->get('chat_id') ?? old('chat_id')}}">
                 <p>
                     <label for="access_hash" class="form-label mt-2">
                         Введите access_hash если тип чата - канал
                     </label><p>
-                    <input type="text" class="form-control pointer" placeholder="access_hash" name="access_hash">
+                    <input type="text" class="form-control pointer" placeholder="access_hash" name="access_hash" value="{{ request()->get('access_hash') ?? old('access_hash')}}">
                 <p>
                     <label for="message_id" class="form-label mt-2">
                         Введите message_id если это необходимо методу
                     </label><p>
-                    <input type="text" class="form-control pointer" placeholder="message_id" name="message_id">
+                    <input type="text" class="form-control pointer" placeholder="message_id" name="message_id" value="{{ request()->get('message_id') ?? old('message_id')}}">
                 <p>
                     <label for="limit" class="form-label mt-2">
                         Введите limit если это необходимо методу
                     </label><p>
-                    <input type="text" class="form-control pointer" placeholder="limit" name="limit">
+                    <input type="text" class="form-control pointer" placeholder="limit" name="limit" value="{{ request()->get('limit') ?? old('limit')}}">
                 <p>
                     <label for="offset" class="form-label mt-2">
                         Введите offset или offset_id если это необходимо методу
                     </label><p>
-                    <input type="text" class="form-control pointer" placeholder="offset" name="offset">
+                    <input type="text" class="form-control pointer" placeholder="offset" name="offset" value="{{ request()->get('offset') ?? old('offset')}}">
                 <p>
                     <button type="submit" class="btn btn-primary w-30">
                        Отправить
