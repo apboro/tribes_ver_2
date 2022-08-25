@@ -319,7 +319,10 @@ Route::group(['prefix' => 'bot'], function () {
     Route::match(['get', 'post'], 'webhook-bot2', [TelegramBotController::class, 'index-bot2']);
 });
 
-Route::get('/user-bot-form', [UserBotFormController::class, 'index'])->name('user.bot.form');
+Route::middleware(['auth:sanctum', 'admin'])->namespace('App\Http\Controllers\Manager')->group(function() {
+    Route::get('/user-bot-form', [UserBotFormController::class, 'index'])->name('user.bot.form');
+});
+
 Route::any('/webhook-user-bot', [TelegramUserBotController::class, 'index']);
 
 Route::any('/test', [TestBotController::class, 'index']);
