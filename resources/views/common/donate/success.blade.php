@@ -25,14 +25,14 @@
             </div>
 
             <div class="card-body d-flex flex-column align-items-center">
-                <h2 class="card-text mb-2" style="overflow: hidden; text-overflow: ellipsis;">
+                <p class="card-text mb-2" style="word-break: break-all;">
                     @if ($payment->type == 'donate')
                         {{ $payment->payable()->first()->donate()->first()->success_description ? $payment->payable()->first()->donate()->first()->success_description : __('donate.thanks_for_donation') }}
                     @endif
                     @if ($payment->type == 'tariff')
                         {{ $payment->payable()->first()->tariff()->first()->thanks_description ? $payment->payable()->first()->tariff()->first()->thanks_description : __('tariff.success_activate_tariff')}}
                     @endif
-                </h2>
+                </p>
 
                 <a href="https://t.me/{{ env('TELEGRAM_BOT_NAME') }}?start={{ App\Helper\PseudoCrypt::hash($payment->id) }}"
                     type="btn" class="btn btn-primary mt-1 mb-1">
