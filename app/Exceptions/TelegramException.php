@@ -47,12 +47,12 @@ class TelegramException extends Exception
         ]);
         $data  = array_merge($data,['context' => $this->getContext()]);
             /** channel('telegram-bot-log') */
-        Log::channel('single')->debug($this->message, $data);
-        Log::channel('single')->error(
-            $this->getExceptionTraceAsString($this) . PHP_EOL
-        );
-
-
+        Log::debug($this->message, $data);
+        if(env('LOG_LEVEL')=='debug'){
+            Log::error(
+                $this->getExceptionTraceAsString($this) . PHP_EOL
+            );
+        }
     }
 
     private function getContext()
