@@ -52,18 +52,19 @@ class TestBotController extends Controller
         $mtproto = new UserBot();
         // $reactions = $mtproto->getChannelReactions(1716122891, [1142], '1057009408142334119');
         // $views = $mtproto->getMessagesViews(1716122891, [1116], '1057009408142334119');
-        // $messages = $mtproto->getMessages('channel', 1716122891, '1057009408142334119');
-        // $reactions = $mtproto->getChannelReactions(1, '+79194393154', 1504673809, 3, '6334485774387705507');
-        // $groupReaction = $mtproto->getMessagesViews(1754252633, 27666, '2761241755512446778');
-        // $getDialogs = $mtproto->getDialogs();
-        $usersInChannel = $mtproto->getUsersInChannel(1510955178,'8077972812704298091', 50, 1);
+        // $messages = $mtproto->getMessages('channel', 1175704430, '6539262809277150285');
+        // $reactionsGroup = $mtproto->getReactions(784578767, 105921);
+        // $groupReaction = $mtproto->getMessagesViews(1504673809, 'channel', 3, '6334485774387705507');
+        $getDialogs = $mtproto->getDialogs(200);
+        // $usersInChannel = $mtproto->getUsersInChannel(1510955178,'8077972812704298091');
+        // $usersInGroup = $mtproto->getChatInfo(784578767);
         // $webHook = $mtproto->setWebhook('http://tribes'); 
         // TestData::create([
         //     'data' => json_encode($auth)
         // ]);
         // $auth = $mtproto->auth();
 
-        dd($usersInChannel);
+        dd($getDialogs[0]->allDialogs->dialogs);
     }
 
 }
