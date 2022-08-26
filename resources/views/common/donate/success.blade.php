@@ -9,7 +9,7 @@
                         <img src="{{ $payment->payable()->first()->donate()->first()->getSuccessImage()->url }}" alt=""
                             class="active-image__img w-100">
                     @else
-                        <img src="/images/chuck.jpg" alt=""
+                        <img src="/images/thanks.jpg" alt=""
                             class="active-image__img w-100">
                     @endif
                 @endif
@@ -18,14 +18,14 @@
                         <img src="{{ $payment->payable()->first()->tariff()->first()->getThanksImage()->url }}" alt=""
                             class="active-image__img w-100">
                     @else
-                        <img src="/images/chuck.jpg" alt=""
+                        <img src="/images/thanks.jpg" alt=""
                             class="active-image__img w-100">
                     @endif
                 @endif
             </div>
 
             <div class="card-body d-flex flex-column align-items-center">
-                <h2 class="card-text mb-2">
+                <h2 class="card-text mb-2" style="white-space: pre-wrap">
                     @if ($payment->type == 'donate')
                         {{ $payment->payable()->first()->donate()->first()->success_description ? $payment->payable()->first()->donate()->first()->success_description : __('donate.thanks_for_donation') }}
                     @endif

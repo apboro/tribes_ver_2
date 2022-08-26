@@ -10,6 +10,7 @@ return [
     'amount' => 'Amount',
     'amount_min' => 'Min. amount',
     'amount_max' => 'Max. amount',
+    'analytics' => 'Analytics',
     'answer' => 'Answer',
     'arbitrary_amount' => 'Arbitrary amount',
 
@@ -119,6 +120,7 @@ return [
     // T
     'tariff' => 'Tariff',
     'tariffs' => 'Tariffs',
+    'term_access_community' => 'Term of access to the community',
     'time' => 'Time',
     'total' => 'Total',
     'title' => 'Title',
