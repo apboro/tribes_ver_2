@@ -4,7 +4,7 @@
     &__header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        column-gap: 90px;
     }
 
     &__label {
@@ -33,12 +33,14 @@
         @include font(inherit, 40px, 32px, 400);
     }
 
-    //&__chart {}
+    &__chart {
+        margin-top: $indent-3;
+    }
 
     &__footer {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
-        column-gap: 60px;
+        justify-content: space-between;
+        margin-top: $indent-3;
     }
 }

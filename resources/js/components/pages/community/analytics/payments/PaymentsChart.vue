@@ -1,31 +1,61 @@
 <template>
     <div v-if="data && data.all_payments.total" class="chart-analytics-community">
         <div class="chart-analytics-community__header">
-            <div class="chart-analytics-community__label">
-                <span class="chart-analytics-community__text">
-                    Всего заработано
-                </span>
-
-                <span class="chart-analytics-community__value">
-                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.total) }}
-                </span>
-            </div>
-
             <button
                 class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
-                @click="toggleData('all_payments')"
+                @click="toggleData('donations')"
             >
-                <span class="chart-analytics-community__text">
-                    Поступления  за период
+                <span
+                    class="chart-analytics-community__text"
+                    :style="{ color: donations.color }"
+                >
+                    Донаты
                 </span>
 
                 <span
                     class="chart-analytics-community__value"
-                    :style="{ color: all_payments.color }"
+                    :style="{ color: donations.color }"
                 >
-                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.all_payments.total) }}
+                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.donations.total) }}
                 </span>
-             
+            </button>
+
+            <button
+                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                @click="toggleData('subscriptions')"
+            >
+                <span
+                    class="chart-analytics-community__text"
+                    :style="{ color: subscriptions.color }"
+                >
+                    Подписки
+                </span>
+                
+                <span
+                    class="chart-analytics-community__value"
+                    :style="{ color: subscriptions.color }"
+                >
+                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.subscriptions.total) }}
+                </span>
+            </button>
+
+            <button
+                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                @click="toggleData('media')"
+            >
+                <span
+                    class="chart-analytics-community__text"
+                    :style="{ color: media.color }"
+                >
+                    Медиатовары
+                </span>
+                
+                <span
+                    class="chart-analytics-community__value"
+                    :style="{ color: media.color }"
+                >
+                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.media.total) }}
+                </span>
             </button>
         </div>
 
@@ -36,62 +66,25 @@
         />
 
         <div class="chart-analytics-community__footer">
-            <button
-                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
-                @click="toggleData('subscriptions')"
-            >
-                <span
-                    class="chart-analytics-community__value"
-                    :style="{ color: subscriptions.color }"
-                >
-                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.subscriptions.total) }}
+            <div class="chart-analytics-community__label">
+                <span class="chart-analytics-community__value">
+                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.total) }}
                 </span>
-             
-                <span
-                    class="chart-analytics-community__text"
-                    :style="{ color: subscriptions.color }"
-                >
-                    Подписки
-                </span>
-            </button>
 
-            <button
-                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
-                @click="toggleData('donations')"
-            >
-                <span
-                    class="chart-analytics-community__value"
-                    :style="{ color: donations.color }"
-                >
-                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.donations.total) }}
+                <span class="chart-analytics-community__text">
+                    Всего заработано
                 </span>
-             
-                <span
-                    class="chart-analytics-community__text"
-                    :style="{ color: donations.color }"
-                >
-                    Донаты
-                </span>
-            </button>
+            </div>
 
-            <button
-                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
-                @click="toggleData('media')"
-            >
-                <span
-                    class="chart-analytics-community__value"
-                    :style="{ color: media.color }"
-                >
-                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.media.total) }}
+            <div class="chart-analytics-community__label chart-analytics-community__label--right">
+                <span class="chart-analytics-community__value">
+                    <span class="chart-analytics-community__currency">₽</span>{{ numberFormat(data.all_payments.total) }}
                 </span>
              
-                <span
-                    class="chart-analytics-community__text"
-                    :style="{ color: media.color }"
-                >
-                    Медиатовары
+                <span class="chart-analytics-community__text">
+                    Поступления  за период
                 </span>
-            </button>
+            </div>
         </div>
     </div>
 </template>
@@ -121,11 +114,6 @@ import { numberFormatting } from '../../../../../core/functions';
 
         data() {
             return {
-                all_payments: {
-                    isVisible: false,
-                    color: '#21C169',
-                },
-                
                 subscriptions: {
                     isVisible: false,
                     color: '#E24041',
@@ -133,7 +121,7 @@ import { numberFormatting } from '../../../../../core/functions';
                 
                 donations: {
                     isVisible: false,
-                    color: '#30AAF0',
+                    color: '#363440',
                 },
 
                 media: {
@@ -148,12 +136,6 @@ import { numberFormatting } from '../../../../../core/functions';
                 return {
                     labels: this.data.subscriptions.items,
                     datasets: [
-                        {
-                            data: this.data.all_payments.items,                           
-                            borderColor: this.all_payments.color,
-                            hidden: this.all_payments.isVisible,
-                        },
-
                         {
                             data: this.data.subscriptions.items,                           
                             borderColor: this.subscriptions.color,

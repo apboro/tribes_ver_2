@@ -4,9 +4,9 @@
         class="chart-analytics-community"
     >
         <div class="chart-analytics-community__header">
-            <div class="chart-analytics-community__label">
+            <div class="chart-analytics-community__label chart-analytics-community__label--right">
                 <span class="chart-analytics-community__text">
-                    Всего подписчиков в сообществе
+                    Всего сообщений
                 </span>
 
                 <span class="chart-analytics-community__value">
@@ -16,10 +16,26 @@
 
             <button
                 class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                @click="toggleData('useful')"
+            >
+                <span class="chart-analytics-community__text">
+                    За период
+                </span>
+
+                <span
+                    class="chart-analytics-community__value"
+                    :style="{ color: useful.color }"
+                >
+                    +{{ numberFormat(data.useful.total) }}
+                </span>
+            </button>
+
+            <button
+                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
                 @click="toggleData('joined')"
             >
                 <span class="chart-analytics-community__text">
-                    Вступили в сообщество
+                    Полезных
                 </span>
 
                 <span
@@ -36,24 +52,6 @@
             :chartData="chartData"
             :chartOptions="chartOptionsData"
         />
-
-        <div class="chart-analytics-community__footer">
-            <button
-                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
-                @click="toggleData('useful')"
-            >
-                <span
-                    class="chart-analytics-community__value"
-                    :style="{ color: useful.color }"
-                >
-                    +{{ numberFormat(data.useful.total) }}
-                </span>
-             
-                <span class="chart-analytics-community__text">
-                    Полезных сообщений
-                </span>
-            </button>
-        </div>
     </div>
 </template>
 

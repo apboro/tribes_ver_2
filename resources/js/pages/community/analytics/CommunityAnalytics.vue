@@ -128,7 +128,7 @@
                     maintainAspectRatio: false,
                     radius: 1,
                     hoverRadius: 0,
-                    borderWidth: 4,
+                    borderWidth: 2,
                     pointBorderColor: 'transparent',
                     //tension: 0.1,
                     
