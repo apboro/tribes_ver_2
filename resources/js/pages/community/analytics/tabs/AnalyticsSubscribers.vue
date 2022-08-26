@@ -14,15 +14,20 @@
             :subscribers="GET_TABLE_DATA"
         />
 
-        <!-- Pagination -->
-        <v-pagination
-            v-if="GET_TABLE_DATA && GET_TABLE_DATA.length && !IS_LOADING"
-            class="analytics-community__pagination"
-            :paginateData="GET_PAGINATE_DATA"
-            :selectOptions="paginationSelectedOptions"
-            @onPageClick="setPage"
-            @onChangePerPage="setPerPage"
-        />
+        <div class="analytics-community__footer">
+
+            <v-export-data/>
+
+             <!-- Pagination -->
+            <v-pagination
+                v-if="GET_TABLE_DATA && GET_TABLE_DATA.length && !IS_LOADING"
+                class="analytics-community__pagination"
+                :paginateData="GET_PAGINATE_DATA"
+                :selectOptions="paginationSelectedOptions"
+                @onPageClick="setPage"
+                @onChangePerPage="setPerPage"
+            />
+        </div>
     </div>
 </template>
 
@@ -32,6 +37,7 @@
     import SubscribersTable from '../../../../components/pages/community/analytics/subscribers/SubscribersTable.vue';
     import ProgressList from '../../../../components/pages/community/analytics/ProgressList.vue';
     import VPagination from '../../../../components/ui/pagination/VPagination.vue';
+    import VExportData from '../../../../components/ui/table/VExportData.vue'
 
     export default {
         name: 'AnalyticsSubscribers',
@@ -41,6 +47,7 @@
             SubscribersTable,
             ProgressList,
             VPagination,
+            VExportData
         },
 
         props: {
