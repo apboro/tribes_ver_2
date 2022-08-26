@@ -34,7 +34,7 @@
         <line-chart
             class="chart-analytics-community__chart"
             :chartData="chartData"
-            :chartOptions="chartOptions"
+            :chartOptions="chartOptionsData"
         />
 
         <div class="chart-analytics-community__footer">
@@ -72,6 +72,11 @@
             data: {
                 type: [Object, null],
                 default: () => null
+            },
+
+            chartOptions: {
+                type: Object,
+                default: () => {}
             }
         },
 
@@ -109,33 +114,8 @@
                 }
             },
 
-            chartOptions() {
-                return {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    radius: 1,
-                    hoverRadius: 0,
-                    borderWidth: 4,
-                    pointBorderColor: 'transparent',
-                    tension: 0.1,
-                    
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeInOutCubic'
-                    },
-                    
-                    scales: {
-                        x: { display: false },
-                        y: { display: false }
-                    },
-
-                    plugins: {
-                        legend: { display: false },
-                        title: { display: false },
-                        tooltip: { enabled: false },
-                    }
-                    
-                }
+            chartOptionsData() {
+                return this.chartOptions;
             }
         },
 
