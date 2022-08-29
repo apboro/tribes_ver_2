@@ -120,7 +120,7 @@
                     },
                 ],
 
-                visibleTab: 'messages',
+                visibleTab: 'list',
                 filterValue: 'week',
 
                 bigChartOptions: {
