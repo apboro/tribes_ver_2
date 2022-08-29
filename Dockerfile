@@ -26,12 +26,12 @@ RUN apk --no-cache add php-pgsql postgresql14-dev pcre-dev $PHPIZE_DEPS \
   && docker-php-ext-enable redis \
   && rm -rf /tmp/pear \
   && docker-php-ext-install pdo \
-  && docker-php-ext-install pdo_pgsql
+  && docker-php-ext-install pdo_pgsql \
+  && apk del pcre-dev $PHPIZE_DEPS\
 
 COPY .docker/docker-entrypoint.sh /
 COPY .docker/*.conf.template /etc/nginx/templates/
 COPY .docker/fpm.conf /usr/local/etc/php-fpm.conf
-
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD [""]
 

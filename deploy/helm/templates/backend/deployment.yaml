@@ -28,9 +28,6 @@ spec:
       volumes:
       - name: fpm-socket
         emptyDir: {}
-      - name: fpm-config
-        configMap: 
-          name: {{ include "..names.fullname" . }}-fpm
       containers:
         - name: proxy
           image: {{ include "..imageName" .Values.backend.image}}
