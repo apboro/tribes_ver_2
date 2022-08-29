@@ -1,10 +1,7 @@
 <template>
     <div class="filter-analytics-community">
-        <span class="filter-analytics-community__title">
-            Период:
-        </span>
 
-        <ul class="filter-analytics-community__list">
+        <!-- <ul class="filter-analytics-community__list">
             <li
                 class="filter-analytics-community__item"
                 v-for="filter in filters"
@@ -25,7 +22,21 @@
                     {{ filter.text }}
                 </label>
             </li>
-        </ul>
+        </ul> -->
+        
+        <select 
+            class="filter-analytics-community__list"
+            v-model="periods"
+        >
+            <option
+                class="filter-analytics-community__item"
+                v-for="filter in filters"
+                :key="filter.value"
+                :value="filter.value"
+            >
+                {{ filter.text }}
+            </option>
+        </select>
     </div>
 </template>
 

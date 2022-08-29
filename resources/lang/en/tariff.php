@@ -17,7 +17,7 @@ return [
     'welcome_default_description' => 'Welcome to our community!',
     'reminder_description_title' => 'Payment reminder message',
     'reminder_default_description' => 'Thank you for being part of our community! In order for me to continue to please you with the novelties of my community, I ask you to support me by extending your tariff',
-    'success_description_title' => 'Thank you message for payment',
+    'success_description_title' => 'Message to the user, which he receives after paying the tariff. Write gratitude or useful recommendations',
     'success_default_description' => 'Thank you for subscribing to my channel! Thanks to your support, I can continue to delight you with new releases. I will do my best to ensure that you are satisfied with your stay in my community!',
     'success_message' => 'Tariffs have been successfully updated',
     'settings_success_message' => 'Tariff settings have been successfully updated',

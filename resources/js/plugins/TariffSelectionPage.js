@@ -55,9 +55,18 @@ export default class TariffSelectionPage extends Page {
                 text: Dict.write('base', 'agency_contract')
             }
         ];
+
+        this.tariffImage = this.container.querySelector('img');
     }
     
-    init() {}
+    init() {
+        const tariffImage = this.container.querySelector('img');
+        if (document.documentElement.clientWidth < 576 && !tariffImage.dataset.noImage) {
+            console.log(tariffImage.parentNode);
+            tariffImage.parentNode.style.display = 'none';
+        }
+        //if ()
+    }
 
     openRightsModal(data) {
         // сохраняем данные от сервера
@@ -309,7 +318,7 @@ export default class TariffSelectionPage extends Page {
             tag: 'input',
             class: 'form-control',
             id: 'email',
-            placeholder: 'john@mail.com',
+            placeholder: 'ivan@moyapochta.ru',
             name: 'email',
             required: true
         }).init();
@@ -457,12 +466,19 @@ export default class TariffSelectionPage extends Page {
             if (res.data.status == 'ok' && res.data.redirect != 'undefined'){
                 window.location.href = res.data.redirect;
             }
+
             return res.data;
         } catch(error) {
-            new Toasts({
-                type: 'error',
-                message: createServerErrorMessage(error)
-            });
+            // new Toasts({
+            //     type: 'error',
+            //     message: createServerErrorMessage(error)
+            // });
+
+            if (error.response.data.errors.email) {
+                this.showErrorMessage(error.response.data.errors.email[0]);
+            }
+            this.isRequestComplete = false;
+            
         } finally {
             this.spinner.remove();
         }
