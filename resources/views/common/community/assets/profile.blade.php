@@ -76,8 +76,7 @@
                 Скопировать
             </button>
             <a
-                href="{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}"
-                target="_blank"
+                href="{{ route('community.tariff.publication', ['community' => $community, 'tab' => 'pay']) }}"
                 class="link profile-community__pay-link profile-community__pay-link--divider"
             >
                 Редактировать
