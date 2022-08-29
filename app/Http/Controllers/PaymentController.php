@@ -76,8 +76,10 @@ class PaymentController extends Controller
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
 
-        $v = view('mail.telegram_invitation')->withPayment($payment)->render();
-        new Mailer('Сервис TRIBES', $v, 'Приглашение', $payment->payer->email);
+        if($payment->isTariff()) {
+            $v = view('mail.telegram_invitation')->withPayment($payment)->render();
+            new Mailer('Сервис TRIBES', $v, 'Приглашение', $payment->payer->email);
+        }
 
         return view('common.donate.success')->withPayment($payment);
     }

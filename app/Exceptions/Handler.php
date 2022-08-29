@@ -71,7 +71,7 @@ class Handler extends ExceptionHandler
         if(in_array($e->getCode(),$this->alertCodes)) {
             $this->telegramLogService->sendLogMessage((string)view('telegram.report', $data));
         }
-        Log::channel('single')->error(
+        Log::error(
             $this->getExceptionTraceAsString($e) . PHP_EOL
             /*.$this->arrayToPrettyString($_SERVER)*/
         );
