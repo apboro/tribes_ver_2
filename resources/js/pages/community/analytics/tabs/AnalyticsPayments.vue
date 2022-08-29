@@ -2,6 +2,7 @@
     <div>
         <payments-chart
             :data="GET_PAYMENTS_CHART_DATA"
+            :chartOptions="chartOptions"
         />
 
         <payments-table
@@ -48,6 +49,11 @@
             period: {
                 type: String,
                 default: () => '',
+            },
+
+            chartOptions: {
+                type: Object,
+                default: () => {},
             }
         },
 

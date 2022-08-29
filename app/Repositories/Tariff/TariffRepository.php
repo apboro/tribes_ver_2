@@ -360,15 +360,21 @@ class TariffRepository implements TariffRepositoryContract
 
     private function updateDescriptions($data)
     {
-        $this->tariffModel->welcome_description = $data['welcome_description'] ?? null;
-
-        $this->tariffModel->reminder_description = $data['reminder_description'] ?? null;
-
-        $this->tariffModel->thanks_description = $data['success_description'] ?? null;
-
-        $this->tariffModel->main_description = $data['main_description'] ?? null;
-
-        $this->tariffModel->publication_description = $data['publication_description'] ?? null;
+        if (isset($data['welcome_description'])){
+            $this->tariffModel->welcome_description = $data['welcome_description'];
+        }
+        if (isset($data['reminder_description'])){
+            $this->tariffModel->reminder_description = $data['reminder_description'];
+        }
+        if (isset($data['success_description'])){
+            $this->tariffModel->thanks_description = $data['success_description'];
+        }
+        if (isset($data['main_description'])){
+            $this->tariffModel->main_description = $data['main_description'];
+        }
+        if (isset($data['publication_description'])){
+            $this->tariffModel->publication_description = $data['publication_description'];
+        }
     }
 
     private function clearImages()

@@ -2,6 +2,7 @@
     <div >
         <subscribers-chart
             :data="GET_SUBSCRIBERS_CHART_DATA"
+            :chartOptions="chartOptions"
         />
         
         <progress-list
@@ -54,6 +55,11 @@
             period: {
                 type: String,
                 default: () => '',
+            },
+
+            chartOptions: {
+                type: Object,
+                default: () => {}
             }
         },
 

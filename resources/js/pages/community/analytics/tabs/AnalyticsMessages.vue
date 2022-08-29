@@ -2,6 +2,7 @@
     <div >
         <messages-chart
             :data="GET_MESSAGES_CHART_DATA"
+            :chartOptions="chartOptions"
         />
 
         <messages-table
@@ -47,6 +48,11 @@
             period: {
                 type: String,
                 default: () => '',
+            },
+
+            chartOptions: {
+                type: Object,
+                default: () => {}
             }
         },
 

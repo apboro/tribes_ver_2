@@ -11,7 +11,7 @@
             {{ $community->title }}
         </p>
 
-        <a href="https://t.me/techinuk" class="profile-community__community-link">
+        <!-- <a href="https://t.me/techinuk" class="profile-community__community-link">
             <svg height="16" viewBox="0 0 176 176" width="16" xmlns="http://www.w3.org/2000/svg">
                 <g id="Layer_2" data-name="Layer 2">
                     <g id="_16.telegram" data-name="16.telegram">
@@ -21,7 +21,7 @@
                 </g>
             </svg>
             <span class="profile-community__community-link-telegram">https://t.me/techinuk</span>
-        </a>
+        </a> -->
         
         <!-- @if ($community->isTelegram())
         <span class="profile-community__community-badge">
@@ -76,8 +76,7 @@
                 Скопировать
             </button>
             <a
-                href="{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($community->id, 8)]) }}"
-                target="_blank"
+                href="{{ route('community.tariff.publication', ['community' => $community, 'tab' => 'pay']) }}"
                 class="link profile-community__pay-link profile-community__pay-link--divider"
             >
                 Редактировать

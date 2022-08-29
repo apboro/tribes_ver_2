@@ -12,7 +12,8 @@
     import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement, Filler } from 'chart.js';
 
     ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement, Filler);
-
+    ChartJS.defaults.font.family = "Montserrat, Helvetica, Arial, sans-serif";
+    
     export default {
         name: 'LineChart',
         components: { LineChartGenerator },
@@ -68,44 +69,48 @@
                     }, */
                     scales: {
                         x: {
-                            display: false,
-                            /* scaleLabel: {
-                                display: true
+                            ticks: {    
+                                color: '#000000',
+
+                                font: {
+                                    //family: "'Montserrat', 'sans-serif'",
+                                    size: 14,
+                                    weight: 600,
+                                    lineHeight: '20px',
+                                },
+
+                                // callback: (label, index, labels) => {
+                                //     return this.labels[index];
+                                // },
                             },
-                            gridLines: {
-                                display: true,
-                                color: 'rgb(100, 0, 0)',
-                                zeroLineColor: 'rgb(0, 100, 0)'
+                            
+                            grid: {
+                                borderColor: '#7367F0',
+                                color: 'transparent',
+                                tickColor: '#7367F0'
                             },
-                            ticks: {
-                                fontColor: 'rgb(0, 0, 100)'
-                            } */
                         },
                         y: {
-                            display: false,
+                            ticks: {    
+                                color: '#000000',
+
+                                font: {
+                                    //family: "'Montserrat', 'sans-serif'",
+                                    size: 14,
+                                    weight: 600,
+                                    lineHeight: '20px',
+                                },
+
+                                // callback: (label, index, labels) => {
+                                //     return this.labels[index];
+                                // },
+                            },
                             
-                            scaleLabel: {
-                                display: true,
-                                
+                            grid: {
+                                borderColor: '#7367F0',
+                                color: 'transparent',
+                                tickColor: '#7367F0'
                             },
-                            ticks: {
-                                stepSize: 0,
-                                min: 0,
-                                max: 400,
-                                fontColor: 'rgb(0, 0, 100)',
-                                callback: (label, index, labels) => {
-                                    return this.currency
-                                    ?
-                                        new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', minimumFractionDigits: 0 }).format(label)
-                                    :
-                                        label 
-                                }
-                            },
-                            gridLines: {
-                                display: true,
-                                color: 'rgb(0, 100, 0)',
-                                zeroLineColor: 'rgb(0, 100, 0)'
-                            }
                         }
                     },
 
@@ -164,9 +169,5 @@
                 return this.chartOptions ?? this.baseOptions;
             }
         },
-
-        mounted() {
-            /* this.styles = "padding: 50px 0 0 0" */
-        }
     }
 </script>

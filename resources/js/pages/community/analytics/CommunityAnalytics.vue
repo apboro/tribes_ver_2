@@ -30,6 +30,7 @@
                 v-else-if="visibleTab == 'subscribers'"
                 class="analytics-community__tab"
                 :period="filterValue"
+                :chartOptions="bigChartOptions"
                 @filter="filter"
             />
 
@@ -37,6 +38,7 @@
                 v-else-if="visibleTab == 'messages'"
                 class="analytics-community__tab"
                 :period="filterValue"
+                :chartOptions="bigChartOptions"
                 @filter="filter"
             />
 
@@ -44,6 +46,7 @@
                 v-else-if="visibleTab == 'payments'"
                 class="analytics-community__tab"
                 :period="filterValue"
+                :chartOptions="bigChartOptions"
                 @filter="filter"
             />
         </transition>
@@ -119,6 +122,73 @@
 
                 visibleTab: 'list',
                 filterValue: 'week',
+
+                bigChartOptions: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    radius: 1,
+                    hoverRadius: 0,
+                    borderWidth: 2,
+                    pointBorderColor: 'transparent',
+                    //tension: 0.1,
+                    
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutCubic'
+                    },
+                    
+                    scales: {
+                        x: {
+                            ticks: {    
+                                color: '#000000',
+
+                                font: {
+                                    //family: "'Montserrat', 'sans-serif'",
+                                    size: 14,
+                                    weight: 600,
+                                    lineHeight: '20px',
+                                },
+
+                                // callback: (label, index, labels) => {
+                                //     return this.labels[index];
+                                // },
+                            },
+                            grid: {
+                                borderColor: '#7367F0',
+                                color: 'transparent',
+                                tickColor: '#7367F0'
+                            },
+                        },
+                        
+                        y: {
+                            ticks: {    
+                                color: '#000000',
+
+                                font: {
+                                    size: 14,
+                                    weight: 600,
+                                    lineHeight: '20px',
+                                },
+
+                                // callback: (label, index, labels) => {
+                                //     return this.labels[index];
+                                // },
+                            },
+                            
+                            grid: {
+                                borderColor: '#7367F0',
+                                color: 'transparent',
+                                tickColor: '#7367F0'
+                            },
+                        }
+                    },
+
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: false },
+                        tooltip: { enabled: false },
+                    }
+                },
 
                 chartData2: {
                     labels: [ '1', '2', '3' ],
