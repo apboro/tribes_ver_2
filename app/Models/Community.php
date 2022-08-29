@@ -143,6 +143,11 @@ class Community extends Model
         return $this->connection()->first()->chat_type === 'channel';
     }
 
+    public function isOwnedByUser(User $user) : bool
+    {
+        return $this->owner()->first() && $this->owner()->first()->id === $user->id;
+    }
+
     function questions()
     {
         return $this->hasMany(Question::class, 'community_id', 'id');
@@ -209,7 +214,7 @@ class Community extends Model
                 return $image->url;
             }
         }
-        return '/images/no-image.svg';
+        return '/images/thanks.jpg';
     }
 
     public function addition($summ)

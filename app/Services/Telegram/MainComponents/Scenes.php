@@ -67,7 +67,7 @@ class Scenes
                     if ($donate->checkForNonStaticVariant() == true)
                         $menu->row()->btn('Отмена', 'concellation');
 
-                    $img = ($donate->getMainImage()) ? '<a href="' . route('main') . $donate->getMainImage()->url . '">&#160</a>' : '1';
+                    $img = ($donate->getMainImage()) ? '<a href="' . route('main') . $donate->getMainImage()->url . '">&#160</a>' : '';
                     $description = ($donate->description) ? $donate->description : 'Описания нет';
                     $text = $description . $img;
 

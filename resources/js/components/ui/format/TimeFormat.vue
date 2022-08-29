@@ -12,7 +12,7 @@
 
         props: {
             value: {
-                type: String,
+                type: [String, Date],
                 default: ''
             },
 

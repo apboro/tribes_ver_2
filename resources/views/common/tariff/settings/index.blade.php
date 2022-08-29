@@ -38,15 +38,6 @@
                             {{ __('base.common') }}
                         </a>
                     </li>
-
-                    <li class="nav-item">
-                        <a
-                            class="nav-link @if( request('tab') == 'pay') active @endif"
-                            href="{{ route('community.tariff.settings', ['community' => $community, 'tab' => 'pay']) }}"
-                        >
-                            {{ __('tariff.payment_page') }}
-                        </a>
-                    </li>
                 </ul>
                     
                 <!-- TABS -->

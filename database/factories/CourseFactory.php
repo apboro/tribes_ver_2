@@ -42,25 +42,6 @@ class CourseFactory extends Factory
         ];
     }
 
-    /*public function loadImage()
-    {
-
-        $imgs = glob('public/testData/files/testImages/*');
-
-        $img =  $imgs[0]
-
-        dd($img);
-    }*/
-
-    /*public function withImage($img): CourseFactory
-    {
-        return $this->state(function (array $attributes) use ($img) {
-            return [
-                'preview' => $img,
-            ];
-        });
-    }*/
-
     public function loadImage($preview): CourseFactory
     {
         return $this->state(function (array $attributes) use ($preview) {

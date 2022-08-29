@@ -70,6 +70,7 @@
                         @switch($accumulation->status)
                             @case('active')
                                 <span
+                                    type="submit"
                                     class="btn btn-success"
                                     onclick="PaymentsPage.outcomePage.showCards(this)"
                                     data-sp-accumulation-id="{{ $accumulation->SpAccumulationId }}"

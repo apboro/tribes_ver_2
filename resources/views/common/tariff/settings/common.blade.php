@@ -6,14 +6,14 @@
         method="post"
         id="general_form_{{ $community->id }}"
         enctype="multipart/form-data"
-        data-tab="tariffPageSettingsCommon"
+        data-tab="tariffPageSettingsMessages"
     >
         <div class="card">
             <div class="card-body">
                 @csrf
                 @if (env('USE_TRIAL_PERIOD', true))
                 <!-- Пробный период -->
-                <div>
+                {{-- <div>
                     <div class="row align-items-center">
                         <div class="col-sm-10 col-12">
                             <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center">
@@ -48,71 +48,33 @@
                         </div>
                     </div>
                     <hr />
-                </div>
-                    @endif
-                    <div class="inactive-form-items">
-                    <div class="row align-items-center">
-                        <div class="col-md-12 col-12">
-                            <div class="d-flex align-items-center">
-                                <div class="form-check form-check-primary form-switch">
-                                    <input type="checkbox"
-                                        class="form-check-input pointer"
-                                        id="tariff_notification"
-                                        value="true"
-                                        name="tariff_notification"
-                                        {{ ($community->tariff->tariff_notification == true) ? 'checked' : null }}
-                                    />
-                                </div>
-
-                                <label class="ms-1 pointer" for="tariff_notification">
-                                    {{ __('form.receive_notifications') }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <hr />
-                </div>
+                </div> --}}
+                @endif
 
                 <!-- Приветственное сообщение -->
                 @include('common.tariff.assets.tariff_welcome')
 
-                <!-- Сообщение о напоминании оплатить тариф -->
-                @include('common.tariff.assets.tariff_reminder')
-
                 <!-- Сообщение благодарности за оплату тарифа -->
                 @include('common.tariff.assets.tariff_success')
 
-                <!-- Сообщение благодарности за оплату тарифа -->
-                @include('common.tariff.assets.tariff_publication')
 
-                <!-- Отправить в сообщество -->
-                <div class="mt-2">
-                    <div class="row d-flex align-items-center">
-                        <div class="col-12">
-                            <div class="d-flex align-items-center">
-                                <div class="form-check form-check-primary form-switch">
-                                    <input
-                                        type="checkbox"
-                                        class="form-check-input pointer"
-                                        id="tariff_item_check_6"
-                                        value="true"
-                                        name="send_to_community"
-                                    />
-                                </div>
-
-                                <label class="ms-1 pointer" for="tariff_item_check_6">
-                                    {{ __('form.send_to_community') }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="card-footer">
                 <!-- Submit -->
                 <div class="col-sm-5 col-lg-4 col-xl-3">
                     <button
+                        class="btn w-100 btn-icon btn-success d-flex align-items-center justify-content-center"
+                        type="submit"
+                        data-repeater-create
+                    >
+                        <i data-feather="save" class="font-medium-1"></i>
+                        <span class="ms-1">
+                            {{ __('base.save') }}
+                        </span>
+                    </button>
+
+                    <!-- <button
                         class="btn w-100 btn-icon btn-success d-flex align-items-center justify-content-center"
                         type="submit"
                         onclick="CommunityPage.tariffPageSettings.commonBlock.trialPeriodAttention(event, '{{$community->tariff->test_period}}')"
@@ -122,7 +84,7 @@
                         <span class="ms-1">
                             {{ __('base.save') }}
                         </span>
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>

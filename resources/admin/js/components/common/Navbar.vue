@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import NavbarSide from "./../layout/NavbarSide";
+import NavbarSide from "./NavbarSide";
 import Preloader from "../common/Preloader"
 import { mapGetters  } from 'vuex';
 export default {

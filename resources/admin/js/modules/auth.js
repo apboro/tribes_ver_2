@@ -8,7 +8,9 @@ let getters = {
     GET_USER (state){
         return state._user;
     },
-    isAuthenticated: (state) => !!state._user,
+    isAuthenticated (state) { return !!state._user },
+    
+    isAuthen (state) { return sessionStorage.getItem('token') != 'null' }
 }
 
 let mutations = {

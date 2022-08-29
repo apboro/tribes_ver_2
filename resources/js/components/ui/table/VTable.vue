@@ -1,5 +1,5 @@
 <template>
-    <div class="table knowledge-table">
+    <div class="table-2">
         <table-header
             :class="{ 'table__header--disabled' : !hasData }"
             :headerSettings="tableOptions.header"
@@ -38,6 +38,14 @@
                     :data="data"
                 ></slot>
             </template>
+
+            <!-- Слот для вставки не обычно оформленной ячейки, которое может быть добавлено как колонка в строку таблицы -->
+            <template #customCol="{ data }">
+                <slot
+                    name="customCol"
+                    :data="data"
+                ></slot>
+            </template>
         </table-body>
     </div>
 </template>
@@ -66,8 +74,8 @@
             },
 
             sortAttrs: {
-                type: Object,
-                default: {},
+                type: [Object, null],
+                default: null,
             },
 
             isLoading: {

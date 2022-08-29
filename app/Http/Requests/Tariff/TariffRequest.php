@@ -25,7 +25,8 @@ class TariffRequest extends FormRequest
     {
         return [
             'tariff_name' => ['string', 'max:255'],
-            'tariff_cost' => ['integer', 'min:0']
+            'tariff_cost' => ['integer', 'min:0'],
+            'number_button' => ['nullable', 'integer', 'numeric', 'between:0,9999']
         ];
     }
 
@@ -34,6 +35,10 @@ class TariffRequest extends FormRequest
         return [
             'tariff_name.max' => 'Максимально количество знаков 255',
             'tariff_cost.min' => 'Стоимость не может быть отрицательным числом.',
+            'tariff_cost.integer' => 'Значение "Стоимость" должно быть числом.',
+            'number_button.between' => 'Значение поля должно быть больше или равно 0.',
+            'number_button.integer' => 'Значение поля должно быть больше или равно 0.',
+            'number_button.numeric' => 'Значение поля должно быть числом.'
         ];
     }
 }

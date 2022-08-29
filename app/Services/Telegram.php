@@ -176,10 +176,10 @@ class Telegram extends Messenger
             ->whereStatus('connected')
             ->first();
 
-        if (config('app.debug')) {
+        /*if (config('app.debug')) {
             Artisan::call('telegram:' . 'group' . ':connect');
             Artisan::call('telegram:' . 'channel' . ':connect');
-        }
+        }*/
 
         if ($tc) {
 
@@ -224,7 +224,7 @@ class Telegram extends Messenger
         if (!$ty) {
             $ty = TelegramUser::create([
                 'telegram_id' => config('telegram_bot.bot.botId'),
-                'auth_date' => now(),
+                'auth_date' => time(),
                 'first_name' => config('telegram_bot.bot.botName'),
                 'user_name' =>  config('telegram_bot.bot.botFullName'),
             ]);

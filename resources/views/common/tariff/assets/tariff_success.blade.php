@@ -1,6 +1,7 @@
 <div>                                   
     <div class="row">
         <!-- Текст -->
+
         <div class="col-md-12 col-lg-6">
             <div class="mb-1 mb-lg-0">
                 <label class="form-label pointer" for="thanks_description">
@@ -13,7 +14,8 @@
                     name="success_description"
                     rows="5"
                     placeholder="{{ __('form.message_text') }}"
-                >@if($community->tariff && $community->tariff->thanks_description){{$community->tariff->thanks_description}}@endif</textarea>
+                >@if($community->tariff && $community->tariff->thanks_description){{$community->tariff->thanks_description}}@elseif(is_null($community->tariff->thanks_description))Спасибо вам! Ваша оплата успешно прошла.@endif</textarea>
+                
 
                 <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">
                     <i data-feather='save' class="font-medium-1" ></i>
@@ -51,7 +53,7 @@
                         <!-- Описание загрузки -->
                         <div style="padding: 0; border:none;" data-crop-image-instructions>
                             <img
-                                src="/images/chuck.jpg"
+                                src="/images/thanks.jpg"
                                 alt=""
                                 class="active-image__img rounded w-100"
                             >
@@ -83,7 +85,7 @@
                                 accept="image/png,image/jpeg,image/gif"
 
                                 name="files[success][image]"
-                                onchange="CommunityPage.tariffPageSettings.commonBlock.croppImageControllerSuccess.onChange()"
+                                onchange="CommunityPage.tariffPageSettings.settingsMessages.croppImageControllerSuccess.onChange()"
                                 data-crop-image-file
                             >
                             
@@ -141,7 +143,7 @@
                     
                         <span
                             class="col-5 col-lg-4 btn btn-danger px-1"
-                            onclick="CommunityPage.tariffPageSettings.commonBlock.croppImageControllerSuccess.removeLoadedImage()"
+                            onclick="CommunityPage.tariffPageSettings.settingsMessages.croppImageControllerSuccess.removeLoadedImage()"
                         >
                             <i data-feather='trash' class="font-medium-1"></i>    
                         </span>
@@ -150,5 +152,5 @@
             </div>
         </div>
     </div>
-    <hr />
+
 </div>

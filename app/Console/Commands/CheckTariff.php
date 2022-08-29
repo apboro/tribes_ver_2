@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\TelegramUser;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Services\Tinkoff\Payment as Pay;
 use App\Models\User;
@@ -81,8 +82,21 @@ class CheckTariff extends Command
                                         $this->telegramService->sendMessageFromBot(
                                             config('telegram_bot.bot.botName'),
                                             env('TELEGRAM_LOG_CHAT'),
-                                            "Рекуррентное списание от " . $firstName . $lastName . " в сообщетво "
+                                            "Рекуррентное списание от " . $firstName . $lastName . " в сообщество "
                                         );
+                                        //todo
+                                        $payerName = $user->publicName()??'';
+                                        $tariffName = $variant->title??'';
+                                        $tariffCost = ($payment->amount/100)??0;
+                                        $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y')??'';
+                                        $message = "Участник $payerName оплатил $tariffName в сообществе {$payment->community->title},
+                                стоимость $tariffCost рублей действует до $tariffEndDate г.";
+                                        $this->telegramService->sendMessageFromBot(
+                                            config('telegram_bot.bot.botName'),
+                                            $payment->community->connection->telegram_user_id,
+                                            $message
+                                        );
+
                                         $user->tariffVariant()->updateExistingPivot($variant->id, [
                                             'days' => $variant->period,
                                             'prompt_time' => date('H:i')

@@ -39,4 +39,5 @@ return [
     'rights_link_privacy' => 'Personal data processing policies',
     'rights_link_privacy_accept' => 'consent to the processing of personal data',
 
+    'back_as_admin' => 'Back as admin',
 ];

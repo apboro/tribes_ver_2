@@ -17,6 +17,15 @@ Route::namespace('App\Http\Controllers\API')->group(function() {
     Route::post('/login', 'AuthController@login')->name('auth.login');
 });
 
+Route::namespace('App\Http\Controllers\API')->group(function() {
+    Route::post('/login-as-admin', 'AuthController@loginAsAdmin')->name('auth.login_as_admin');
+});
+
+Route::namespace('App\Http\Controllers\API')->middleware(['auth:sanctum', 'admin'])->group(function() {
+    Route::post('/login-as', 'AuthController@loginAs')->name('auth.login_as');
+});
+
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

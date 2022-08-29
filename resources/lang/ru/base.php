@@ -10,6 +10,7 @@ return [
     'amount' => 'Сумма',
     'amount_min' => 'Мин. сумма',
     'amount_max' => 'Макс. сумма',
+    'analytics' => 'Аналитика',
     'answer' => 'Ответ',
     'arbitrary_amount' => 'Произвольная сумма',
 
@@ -123,6 +124,7 @@ return [
     // T
     'tariff' => 'Тариф',
     'tariffs' => 'Тарифы',
+    'term_access_community' => 'Срок доступа в сообщество',
     'time' => 'Время',
     'total' => 'Всего',
     'title' => 'Заголовок',

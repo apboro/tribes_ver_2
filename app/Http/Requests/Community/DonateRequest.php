@@ -18,11 +18,15 @@ class DonateRequest extends FormRequest
             'donate.1.cost' => 'exclude_without:donate.1.status|required',
             'donate.2.cost' => 'exclude_without:donate.2.status|required',
             'donate.3.min_price' => 'exclude_without:donate.3.status|required',
-            'donate.3.max_price' => 'exclude_without:donate.3.status|required',
+            'donate.3.max_price' => 'exclude_without:donate.3.status|required|gte:donate.3.min_price',
 
-            'title' => ['required', 'max:255'],
+            'title' => ['sometimes ', 'required', 'max:255'],
             'description' => ['sometimes', 'required', 'max:600'],
             'success_description' => ['sometimes', 'max:600'],
+
+            'entity' => 'nullable',
+            'entityId' => 'nullable',
+            'entityModel' => 'nullable',
         ];
     }
 
@@ -41,6 +45,7 @@ class DonateRequest extends FormRequest
             'donate.2.cost.required' => 'Поле "Сумма", в третьей кнопке, обязательно для заполнения.',
             'donate.3.min_price.required' => 'Поле "Мин. сумма", в произвольной сумме, обязательно для заполнения.',
             'donate.3.max_price.required' => 'Поле "Макс. сумма", в произвольной сумме, обязательно для заполнения.',
+            'donate.3.max_price.gte' => 'Поле "Макс. сумма", должно быть больше или равно чем "Мин. сумма".',
 
             'title.required' => 'Поле "Наименование доната", обязательно для заполнения.',
             'title.max' => 'Максимальное количество знаков поля "Наименование доната" 255',
@@ -49,7 +54,6 @@ class DonateRequest extends FormRequest
             'description.max' => 'Максимальное количество знаков поля "Общее описание доната" 600',
 
             'success_description.max' => 'Максимальное количество знаков поля "Текст сообщения" 600',
-
         ];
     }
 }

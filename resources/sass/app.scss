@@ -18,16 +18,18 @@
 @import 'bootstrap-extended.scss';
 @import 'colors.scss';
 
+// RESET
+@import './core/bootstrap-reset';
+
 // Pages
 @import 'pages/authentication';
-@import 'pages/page-pricing';
+@import "pages/page-pricing";
 @import 'pages/page-misc.scss';
 @import 'pages/page-course';
 
 
 // Plugins
 @import '~croppr/dist/croppr.css';
-@import '~dragula/dist/dragula.css';
 
 @import 'style.scss';
 

@@ -1,19 +1,23 @@
 import axios from 'axios';
 
 let state = {
-    _cutomers: [],
+    _customers: [],
 }
 
 let mutations = {
     SET_CUSTOMERS (state, customersData) {
-        state._cutomers = customersData;
+        state._customers = customersData;
     },
 }
 
 let getters = {
     getCustomers (state) {
-        return state._cutomers;
+        return state._customers;
     },
+
+    customersHasName (state) {
+        return state._customers.filter((customer) => customer.name != null)
+    }
 }
 
 let actions = {
@@ -24,10 +28,10 @@ let actions = {
             commit("SET_PRELOADER_STATUS", true);
             const resp = await axios({
                 method: "post",
-                url: "http://tribes/api/v2/customers",
+                url: "/api/v2/customers",
                 data: customer_data
             })
-            commit("SET_CUSTOMERS", resp.data);
+            commit("SET_CUSTOMERS", resp.data.customers);
             commit("SET_PRELOADER_STATUS", false);
         } catch (error) {
             console.log(error);

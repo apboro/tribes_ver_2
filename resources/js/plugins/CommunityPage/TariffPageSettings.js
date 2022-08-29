@@ -1,5 +1,6 @@
 import { TariffPageSettingsCommonBlock } from "./TariffPageSettings/TariffPageSettingsCommonBlock";
-import { TariffPageSettingsPayBlock } from "./TariffPageSettings/TariffPageSettingsPayBlock";
+import { tariffPageSettingsMessages } from "./TariffPageSettings/TariffPageSettingsMessages";
+import { TariffPageSettingsPayBlock } from "./TariffPageSettings/TariffPagePublicationsPayBlock";
 
 export class TariffPageSettings {
     constructor(parent) {
@@ -10,14 +11,20 @@ export class TariffPageSettings {
     }
 
     init() {
-        if (this.isBlock('[data-tab="tariffPageSettingsCommon"]')) {
-            this.commonBlock = new TariffPageSettingsCommonBlock({
-                parent: this.container,
-            });
-        }
+        // if (this.isBlock('[data-tab="tariffPageSettingsCommon"]')) {
+        //     this.commonBlock = new TariffPageSettingsCommonBlock({
+        //         parent: this.container,
+        //     });
+        // }
 
-        if (this.isBlock('[data-tab="tariffPageSettingsPay"]')) {
-            this.payBlock = new TariffPageSettingsPayBlock({
+        // if (this.isBlock('[data-tab="tariffPageSettingsPay"]')) {
+        //     this.payBlock = new TariffPageSettingsPayBlock({
+        //         parent: this.container,
+        //     });
+        // }
+
+        if (this.isBlock('[data-tab="tariffPageSettingsMessages"]')) {
+            this.settingsMessages = new tariffPageSettingsMessages({
                 parent: this.container,
             });
         }

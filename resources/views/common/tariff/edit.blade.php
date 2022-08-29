@@ -60,7 +60,7 @@
                                         </label>
 
                                         <label class="form-label" for="tariff_pay_period">
-                                            {{ __('base.payment_period') }}
+                                            {{ __('base.term_access_community') }}
                                         </label>
                                     </div>
 
@@ -107,7 +107,7 @@
                                 </div>
 
                                 <!-- Активировать тариф -->
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center mb-1">
                                     <div class="form-check form-check-primary form-switch">
                                         <input type="hidden" name="tariff" value="0" />
 
@@ -124,6 +124,27 @@
                                         {{ __('tariff.activate_tariff') }}
                                     </label>
                                 </div>
+
+                                <div class="col-sm-7 col-md-10 col-lg-7 mb-1">
+                                    <label
+                                            class="form-label"
+                                            for="tariff_name">
+                                        {{ __('tariff.number_button') }}
+                                    </label>
+
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            id="number_button"
+                                            name="number_button"
+                                            aria-describedby="number_button"
+                                            value="{{ $tariff->number_button ? $tariff->number_button : '' }}"
+                                            placeholder="{{ __('base.number') }}"
+                                    >
+                                </div>
+                                @error('number_button')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
                             @endif
                         @endforeach
                     </div>

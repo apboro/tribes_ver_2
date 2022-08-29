@@ -54,7 +54,7 @@
                     <div>
                         <p><b>Как начать пользоваться?</b></p>
                         <p>
-                            Зарегистриуйтесь по адресу <a target="_blank" href="https://spodial.com/register" class="btn-link">{{ env('APP_URL') }}.com/register</a> и создайте свой первый проект.
+                            Зарегистриуйтесь по адресу <a target="_blank" href="{{ env('APP_URL') }}/register" class="btn-link">{{ env('APP_URL') }}/register</a> и создайте свой первый проект.
                         </p>
                     </div>
                     <div>
@@ -150,7 +150,7 @@
                     <div>
                         <p><b>Для чего нужен личный кабинет на сайте?</b></p>
                         <p>
-                            В <a target="_blank" href="https://spodial.com/" class="btn-link">личном кабинете</a> на сайте вы можете удобно следить за несколькими проектами и настраивать сквозную аналитику Facebook, а также устанавливать счетчики Google, Yandex на вашу платежную страницу.
+                            В <a target="_blank" href="{{ env('APP_URL') }}" class="btn-link">личном кабинете</a> на сайте вы можете удобно следить за несколькими проектами и настраивать сквозную аналитику Facebook, а также устанавливать счетчики Google, Yandex на вашу платежную страницу.
                         </p>
                     </div>
                     <div>

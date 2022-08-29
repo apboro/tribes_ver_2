@@ -21,6 +21,7 @@ use App\Helper\PseudoCrypt;
 use App\Filters\TariffFilter;
 
 
+use Discord\Http\Exceptions\NotFoundException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -120,10 +121,15 @@ class TariffController extends Controller
     }
 
 
-
+    /**
+     * @throws NotFoundException
+     */
     public function tariffPayment($hash, Request $request)
     {
         $community = Community::find(PseudoCrypt::unhash($hash));
+        if(empty($community)) {
+            abort(404);
+        }
         $this->tariffRepo->statisticView($request, $community);
         return view('common.tariff.index')->withCommunity($community);
     }
@@ -158,6 +164,8 @@ class TariffController extends Controller
 
     public function tariffSettings(Community $community, TariffSettingsRequest $request)
     {
+        $request['entity'] = 'tariff';
+
         if ($request->isMethod('post')) {
             $this->tariffRepo->settingsUpdate($community, $request);
             return redirect()->back()->withCommunity($community)
@@ -173,6 +181,7 @@ class TariffController extends Controller
         $tariffs = $community->tariffVariants()
             ->where('isActive', $isActive)
             ->where('price', '>', 0)
+            ->orderBy('number_button', 'ASC')
             ->get();
         return view('common.tariff.list')->withCommunity($community)->withTariffs($tariffs);
     }
@@ -201,7 +210,25 @@ class TariffController extends Controller
             $this->tariffRepo->settingsUpdate($community, $request);
             return redirect()->back()->withCommunity($community);
         }
-        return view('common.tariff.settings.pay')->withCommunity($community);
+        return view('common.tariff.publication.pay')->withCommunity($community);
+    }
+
+    public function publication(TariffSettingsRequest $request, Community $community, $tab = 'message')
+    {
+        $tab .= 'Tab';
+
+        if (!method_exists($this, $tab)) abort(404);
+
+        return $this->$tab($request, $community);
+    }
+
+    private function messageTab(TariffSettingsRequest $request, Community $community)
+    {
+        if ($request->isMethod('post')) {
+            $this->tariffRepo->settingsUpdate($community, $request);
+            return redirect()->back()->withCommunity($community);
+        }
+        return view('common.tariff.publication.message')->withCommunity($community);
     }
 
     public function subscriptions(Community $community, TariffFilter $filters)

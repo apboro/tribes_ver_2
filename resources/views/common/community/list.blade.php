@@ -18,6 +18,7 @@
             <div class="col-4 col-sm-6 col-md-4 col-lg-4">
                 <div class="text-end mb-0">
                     <a
+                        type="submit"
                         class="btn btn-success text-white"
                         href="{{ route('community.add') }}"
                     >

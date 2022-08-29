@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\SmsConfirmations;
 
@@ -229,6 +230,11 @@ class User extends Authenticatable
         return $phone ? '+7 ' . $this->phoneNumber($phone) : '-';
     }
 
+    public function isAdmin()
+    {
+        return Administrator::where('user_id',$this->id)->exists();
+    }
+
     public function administrator()
     {
         return $this->hasOne(Administrator::class, 'user_id','id');
@@ -236,10 +242,6 @@ class User extends Authenticatable
 
     public function createTempToken()
     {
-        if ($this->tokens()->count() !== 0) {
-            $this->tokens()->delete();
-        }
-
         $token = $this->createToken('api-token');
         return $this->withAccessToken($token->plainTextToken)
             ->setTempToken($token->plainTextToken);
@@ -248,7 +250,7 @@ class User extends Authenticatable
     private function setTempToken($token) //todo при переходе на FullRest - Удалить
     {
         $this->api_token = $token;
-
+        Session::put('current_token',$token);
         return $this->save();
     }
 

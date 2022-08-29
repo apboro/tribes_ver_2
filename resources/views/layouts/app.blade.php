@@ -9,9 +9,10 @@
     data-open="hover"
     data-menu="horizontal-menu"
     data-col=""
+    @if(session()->has('admin_id')) data-admin="true" @endif
 >
     <!-- Header-->
-    @include('common.template.header')
+    @include('common.template.header2')
 
     <!-- Main Menu-->
     @include('common.template.main_menu')
@@ -23,7 +24,7 @@
     </main>
 
     <!-- Footer-->
-    @include('common.template.footer')
+    {{-- @include('common.template.footer') --}}
     
     <!-- Service container -->
     @include('common.template.service_container')

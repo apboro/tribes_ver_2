@@ -1,5 +1,5 @@
 export function timeFormatting(options) {
-    const date = Date.parse(options.date);
+    const date = new Date(options.date);
     const locale = options.locale ?? 'ru';
     
     /* switch (language) {
@@ -21,6 +21,21 @@ export function timeFormatting(options) {
     });
 
     return formatter.format(date);
+}
+
+export function numberFormatting(value, decimal = 2) {
+    if (value === 0) {
+        return n.toFixed(decimal);
+    }
+
+    const notations = ["", "K", "M", "B", "T", "P", "E", "Z", "Y"];
+    const id = Math.floor(Math.log(value) / Math.log(1000));
+
+    if (id < 0) {
+        return value.toString();
+    }
+    
+    return `${ parseFloat((value / Math.pow(1000, id)).toFixed(decimal)) }${ notations[id] }`;
 }
 
 export function copyText(value) {

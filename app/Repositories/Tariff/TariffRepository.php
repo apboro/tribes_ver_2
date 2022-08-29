@@ -6,7 +6,10 @@ use App\Models\TariffVariant;
 use App\Models\Statistic;
 use App\Models\UserIp;
 use App\Repositories\File\FileRepositoryContract;
+use App\Services\File\common\FileEntity;
+use App\Services\File\FileUploadService;
 use App\Filters\TariffFilter;
+use App\Models\Payment;
 use App\Models\TelegramUser;
 use App\Services\TelegramMainBotService;
 use Illuminate\Http\Request;
@@ -17,22 +20,31 @@ class TariffRepository implements TariffRepositoryContract
     private $tariffModel;
     public $perPage = 15;
     protected TelegramMainBotService $mainServiceBot;
+    private $fileUploadService;
+    private $fileEntity;
 
-    public function __construct(FileRepositoryContract $fileRepo, TelegramMainBotService $mainServiceBot)
+    public function __construct(
+        FileRepositoryContract $fileRepo,
+        TelegramMainBotService $mainServiceBot,
+        FileUploadService $fileUploadService,
+        FileEntity $fileEntity
+    )
     {
         $this->fileRepo = $fileRepo;
         $this->mainServiceBot = $mainServiceBot;
+        $this->fileUploadService = $fileUploadService;
+        $this->fileEntity = $fileEntity;
     }
 
     public function statisticView(Request $request, $community)
     {
         $ips = UserIp::where('ip', $request->getClientIp())
-            ->where('statistic_id', $community->statistic->id)
+            ->where('statistic_id', $community->statistic->id ?? null)
             ->whereDate('created_at', date('Y-m-d'))
             ->get();
 
         $ipsAll = UserIp::where('ip', $request->getClientIp())
-            ->where('statistic_id', $community->statistic->id)
+            ->where('statistic_id', $community->statistic->id ?? null)
             ->get();
 
         $statistic = Statistic::firstOrCreate([
@@ -42,7 +54,7 @@ class TariffRepository implements TariffRepositoryContract
         if ($ips->first() == NULL) {
             UserIp::create([
                 'ip' => $request->getClientIp(),
-                'statistic_id' => $community->statistic->id,
+                'statistic_id' => $community->statistic->id ?? null,
             ]);
             if ($ipsAll->first() == NULL) {
                 $statistic->hosts++;
@@ -57,37 +69,132 @@ class TariffRepository implements TariffRepositoryContract
 
     public function perm($request, $community)
     {
-        if (isset($request->days)) {
-            foreach ($request->days as $userId => $days) {
-                $ty = TelegramUser::find($userId);
-                $variantId = $ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first()->id;
-                $ty->tariffVariant()->updateExistingPivot($variantId, [
-                    'days' => $days,
-                ]);
+        if (isset($request->days)) 
+            $this->updateDaysForUser($request, $community);
+
+        if (isset($request->excluded))
+            $this->excludedUser($request, $community);
+
+        if (isset($request->tariff))
+            $this->updateTariffForUser($request, $community);
+    }
+
+    /**
+     * Обновить или добавить дату оплаты тарифа
+     */
+    private function updatePaymentDate($date, $time, $community, $ty)
+    {
+        $newDate = $date . ' ' . $time;
+        if ($date !== null) {
+            $this->createPayment($community->id, $ty->telegram_id, $newDate);
+        }
+    }
+
+    private function createPayment($communityId, $tyTelegramId, $date)
+    {
+        $ty = TelegramUser::where('telegram_id', $tyTelegramId)->first();
+        $variant = $ty->tariffVariant()->first();
+        if (!$variant) {
+            Payment::create([
+                'OrderId' => 1,
+                'community_id' => $communityId,
+                'add_balance' => 0,
+                'isNotify' => false,
+                'telegram_user_id' => $tyTelegramId,
+                'paymentUrl' => env('APP_DOMAIN'),
+                'type' => 'tariff',
+                'activated' => false,
+                'created_at' => $date,
+                'updated_at' => $date
+            ]);
+        }
+    }
+
+    /**
+     * Обновить тариф пользователю
+     */
+    private function updateTariffForUser($request, $community)
+    {
+        foreach ($request->tariff as $tyId => $variantId) {
+            $ty = TelegramUser::find($tyId);
+
+            if (isset($request->date_payment[$tyId]) && !$variantId || isset($request->time_payment[$tyId]) && !$variantId) {
+                redirect()->back()->withCommunity($community)->withErrors('Невозможно установить дату платежа без тарифа.');
+            } elseif (isset($request->date_payment[$tyId]) || isset($request->time_payment[$tyId])) {
+                $this->updatePaymentDate($request->date_payment[$tyId] ?? now()->format('Y-m-d'), $request->time_payment[$tyId] ?? now()->format('G:i:s'), $community, $ty);
+            } else {
+                if ($variantId)
+                    $this->createPayment($community->id, $ty->telegram_id, now()->format('Y-m-d G:i:s'));
+            }
+
+
+            // if ($ty->telegram_id === config('telegram_bot.bot.botId') || $ty->user_id === $community->owner)        //Отключить возможность дать тариф автору и боту
+            //     continue;
+
+            $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
+
+            if ($variantId === null) {
+                if ($variantForThisCommunity)
+                    $ty->tariffVariant()->detach($variantForThisCommunity->id);
+                $payments = Payment::where('telegram_user_id', $ty->telegram_id)->where('type', 'tariff')->get();
+                foreach ($payments as $payment) {
+                    $payment->delete();
+                }
+                continue;
+            }
+
+            $variant = TariffVariant::find($variantId);
+
+            if ($variantForThisCommunity) {
+                $ty->tariffVariant()->detach($variantForThisCommunity->id);
+                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
+            } else {
+                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
             }
         }
+    }
 
-        if (isset($request->excluded)) {
-            foreach ($request->excluded as $userId => $excluded) {
-                $ty = TelegramUser::find($userId);
-                if ($excluded != $ty->communities()->where('community_id', $community->id)->first()->pivot->excluded) {
+    /**
+     * Обновить количество дней пользователю
+     */
+    private function updateDaysForUser($request, $community)
+    {
+        foreach ($request->days as $userId => $days) {
+            $ty = TelegramUser::find($userId);
+            $variantId = $ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first()->id;
+            $ty->tariffVariant()->updateExistingPivot($variantId, [
+                'days' => $days,
+            ]);
+        }
+    }
 
-                    if ($excluded == true) {
-                        $ty->communities()->updateExistingPivot($community->id, [
-                            'excluded' => $excluded,
-                        ]);
-                        // $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
-                    }
-                    
-                    if ($excluded == false) {
-                        $ty->communities()->updateExistingPivot($community->id, [
-                            'excluded' => $excluded,
-                        ]);
-                        // $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
-                    }
+    /**
+     * Забанить пользователя или отменить бан
+     */
+    private function excludedUser($request, $community)
+    {
+        foreach ($request->excluded as $userId => $excluded) {
+            $ty = TelegramUser::find($userId);
+            if ($ty->telegram_id === config('telegram_bot.bot.botId') || $ty->user_id === $community->owner)
+                continue;
+
+            if ($excluded != $ty->communities()->where('community_id', $community->id)->first()->pivot->excluded) {
+
+                if ($excluded === true) {
+                    $ty->communities()->updateExistingPivot($community->id, [
+                        'excluded' => $excluded,
+                    ]);
+                    $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
                 }
                 
+                if ($excluded === false) {
+                    $ty->communities()->updateExistingPivot($community->id, [
+                        'excluded' => $excluded,
+                    ]);
+                    $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
+                }
             }
+            
         }
     }
 
@@ -112,6 +219,7 @@ class TariffRepository implements TariffRepositoryContract
         $variant->price = $data['tariff_cost'];
         $variant->period = $data['tariff_pay_period'];
         $variant->isActive = $data['tariff'];
+        $variant->number_button = $data['number_button'];
         $variant->save();
 
         $this->tariffWithUser($community, $variant);
@@ -190,39 +298,44 @@ class TariffRepository implements TariffRepositoryContract
         }
     }
 
-    private function storeImages($data)
+    private function storeImages($request)
     {
-        if (isset($data['files'])) {
-            foreach ($data['files'] as $key => $file) {
-                if (isset($file['crop'])) {
-                    $decoded = json_decode($file['crop']);
-                    if (isset($file['image'])) {
-                        $fileData['file'] = $file['image'];
-                        $fileData['crop'] = $decoded->isCrop;
-                        $fileData['cropData'] = $decoded->cropData;
-                        $f = $this->fileRepo->storeFile($fileData);
+        $this->fileEntity->getEntity($request);
 
-                        switch ($key) {
-                            case 'pay':
-                                $this->tariffModel->main_image_id = $f->id;
-                                break;
-                            case 'welcome':
-                                $this->tariffModel->welcome_image_id = $f->id;
-                                break;
-                            case 'success':
-                                $this->tariffModel->thanks_image_id  = $f->id;
-                                break;
-                            case 'reminder':
-                                $this->tariffModel->reminder_image_id  = $f->id;
-                                break;
-                            case 'publication':
-                                $this->tariffModel->publication_image_id  = $f->id;
-                                break;
-                        }
+        if (isset($request['files'])) {
+            foreach ($request['files'] as $key => $file) {
+                $decoded = json_decode($file['crop']);
+
+                if (isset($file['image']) && isset($decoded->isCrop)) {
+                    $fileData['file'] = $file['image'];
+                    $fileData['crop'] = $decoded->isCrop;
+                    $fileData['cropData'] = $decoded->cropData;
+                    $fileData['entity'] = $request['entity'];
+
+                    $f = $this->fileUploadService->procRequest($fileData)[0];
+
+                    $this->fileUploadService->modelsFile = new \Illuminate\Database\Eloquent\Collection();
+
+                    switch ($key) {
+                        case 'pay':
+                            $this->tariffModel->main_image_id = $f->id;
+                            break;
+                        case 'welcome':
+                            $this->tariffModel->welcome_image_id = $f->id;
+                            break;
+                        case 'reminder':
+                            $this->tariffModel->reminder_image_id  = $f->id;
+                            break;
+                        case 'success':
+                            $this->tariffModel->thanks_image_id  = $f->id;
+                            break;
+                        case 'publication':
+                            $this->tariffModel->publication_image_id  = $f->id;
+                            break;
                     }
                 }
-                if ($file['delete'] == "true") {
 
+                if ($file['delete'] == "true") {
                     switch ($key) {
                         case 'pay':
                             $this->tariffModel->main_image_id = 0;
@@ -247,15 +360,21 @@ class TariffRepository implements TariffRepositoryContract
 
     private function updateDescriptions($data)
     {
-        $this->tariffModel->welcome_description = $data['welcome_description'] ?? null;
-
-        $this->tariffModel->reminder_description = $data['reminder_description'] ?? null;
-
-        $this->tariffModel->thanks_description = $data['success_description'] ?? null;
-
-        $this->tariffModel->main_description = $data['main_description'] ?? null;
-
-        $this->tariffModel->publication_description = $data['publication_description'] ?? null;
+        if (isset($data['welcome_description'])){
+            $this->tariffModel->welcome_description = $data['welcome_description'];
+        }
+        if (isset($data['reminder_description'])){
+            $this->tariffModel->reminder_description = $data['reminder_description'];
+        }
+        if (isset($data['success_description'])){
+            $this->tariffModel->thanks_description = $data['success_description'];
+        }
+        if (isset($data['main_description'])){
+            $this->tariffModel->main_description = $data['main_description'];
+        }
+        if (isset($data['publication_description'])){
+            $this->tariffModel->publication_description = $data['publication_description'];
+        }
     }
 
     private function clearImages()

@@ -24,7 +24,7 @@
                             Пароль
                         </label>
                         <div class="form-validation">
-                        <div class="input-group input-group-flat">
+                        <div class="input-group input-group-flat" :class="{invalid: errors.password}">
                             <input
                                 :type="fieldType"
                                 class="form-control"
@@ -71,13 +71,11 @@
 
 <script>
 import axios from 'axios';
-import { mapGetters  } from 'vuex';
 
 export default {
     name: "login",
     data() {
         return {
-            errors: [],
             email: '',
             password: '',
             showPassword: false,
@@ -89,37 +87,13 @@ export default {
             }
         };
     },
-    computed: {
-        // ...mapGetters(['isLogged'])
-    },
     methods: {
         switchField() {
             this.fieldType = 
             this.fieldType === "password" ? "text" : "password";
             this.showPassword = !this.showPassword;
         },
-        // formIsValid() {
-        //     let isValid = true;
 
-            // if (this.email.length || this.password.length === 0) {
-            //     this.errors.email = "Введите email",
-            //     this.errors.password = "Введите пароль"
-            //     isValid = false;
-            // } else {
-            //     this.errors.email = null;
-            //     this.errors.password = null;
-            // }
-
-
-        //     this.email.length === 0 || this.email !== 'test-dev@webstyle.top' ?
-        //         this.errors.email = "Email введен неверно" :
-        //         this.errors.email = null;
-        //     this.password.length === 0 || this.password !== '12345' ?
-        //         this.errors.password = "Пароль введен неверно" :
-        //         this.errors.password = null;
-        //
-        //     return  isValid
-        // },
         async login() {
             try {
                 let result = await axios({
@@ -128,29 +102,18 @@ export default {
                     url:'/api/login'
                 })
 
-                if(result.status == 200 && result.data.token) {
+                if (result.status == 200 && result.data.token) {
                     sessionStorage.setItem('token', result.data.token)
                     this.$router.push({name: 'users'}).catch((err) => {console.warn(err)})
                     window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + result.data.token;
+                    this.$store.dispatch('LOAD_USER');                    
                 }
-            }catch(err) {
+            } catch (err) {
                 if (err.response && err.response.status === 422){
-                    this.formIsValid();
+                    this.errors.email = err.response.data.errors.email[0] ?? null;
+                    this.errors.password = err.response.data.errors.password[0] ?? null;
                 }
             }
-
-            // let result = await axios(
-            //     {
-            //         method: 'POST',
-            //         data: {email : this.email, password : this.password},
-            //         url:'/api/login'
-            //     }
-            // )
-            
-            // if(result.status == 200 && result.data.token) {
-            //     localStorage.setItem('token', result.data.token)
-            //     this.$router.push({name: 'users'}).catch((err) => {console.warn(err)})
-            // }
         },
     }
 }
@@ -162,7 +125,9 @@ export default {
     color: #e53935;
 }
 
-.form-validation > .invalid {
+.form-validation > .invalid,
+.invalid > .input-group-text,
+.invalid > input.form-control {
     border-color: #e53935;
 }
 

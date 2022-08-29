@@ -22,15 +22,16 @@
         @if($community->tariff)
         <div class="col-12 row">
             @if ($community->tariff->test_period !== 0 && env('USE_TRIAL_PERIOD', true))
-            <button class="btn btn-outline-success waves-effect mb-1">
+            <span class="btn btn-outline-success waves-effect mb-1">
                 Пробный период — {{$community->tariff->test_period}} {{App\Traits\Declination::defineDeclination($community->tariff->test_period)}}
-            </button>
+            </span>
             @endif
-            @foreach ($community->tariff->variants as $tariff)
+            
+            @foreach ($community->tariff->getTariffVariants() as $tariff)
                 @if ($tariff->isActive == true && $tariff->price !== 0)
-                    <button class="btn btn-outline-success waves-effect mb-1">
+                    <span class="btn btn-outline-success waves-effect mb-1">
                         {{$tariff->title}} {{$tariff->price}}₽ — {{$tariff->period}} {{App\Traits\Declination::defineDeclination($tariff->period)}}
-                    </button>
+                    </span>
                 @endif
             @endforeach
             

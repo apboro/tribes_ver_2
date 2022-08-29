@@ -100,6 +100,8 @@ class DonateController extends Controller
 
     public function donateUpdate(Community $community, DonateRequest $request, $id = NULL)
     {
+        $request['entity'] = 'donate';
+
         $donate = $this->donateRepo->update($community, $request, $id);
         
         $messages = [];
@@ -113,6 +115,8 @@ class DonateController extends Controller
 
     public function donateSettingsUpdate(Community $community, DonateSettingsRequest $request, $id = null)
     {
+        $request['entity'] = 'donate';
+
         $this->donateRepo->update($community, $request, $id);
         $messages = [];
 

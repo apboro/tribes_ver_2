@@ -8,8 +8,8 @@ let api_token = sessionStorage.getItem('token');
 let token = document.head.querySelector('meta[name="csrf-token"]');
 
 if(api_token){
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-    window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + api_token.content;
+    // window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + api_token;
 } else {
     console.error('TOKEN Не найден');
 }
@@ -18,14 +18,11 @@ window.axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     if (error.response.status === 401 || error.response.status === 419) {
-        window.location.href = '/manager/login';
+        sessionStorage.setItem('token', 'null')
+        window.location.href = '/manager';
     }
     return Promise.reject(error);
 });
-
-
-
-
 
 
 window.getParameterByName = function(name, url = window.location.href) {

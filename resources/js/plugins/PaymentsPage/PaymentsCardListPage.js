@@ -76,6 +76,7 @@ export class PaymentsCardListPage {
     }
 
     async getCardsData() {
+        console.log(this.apiToken);
         try {
             const res = await window.axios({
                 method: 'post',
@@ -250,7 +251,7 @@ export class PaymentsCardListPage {
                 </div>
 
                 <div class="card-footer text-center">
-                    <button id="remove_btn" class="btn btn-flat-danger waves-effect">
+                    <button id="remove_btn" class="btn btn-flat-danger waves-effect ${ AdminState.isAdminModeActive ? 'disabled' : '' }">
                         ${ Dict.write('payments', 'exclude') }
                     </button>
                 </div>

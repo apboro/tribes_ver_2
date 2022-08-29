@@ -1,10 +1,7 @@
 <template>
-<!-- <body v-bind:class="currentTheme">
-    {{currentTheme}} -->
     <div class="loading" v-bind:class="{'load' : this.$store.getters.loading}">
         <component :is="layout" />
     </div>
-<!-- </body> -->
 </template>
 
 <script>
@@ -21,7 +18,6 @@ export default {
     },
     computed: {
         layout() {
-          console.log((this.$route.meta.layout || 'main') + '-layout');
             return (this.$route.meta.layout || 'main') + '-layout'
         },
     },
@@ -37,13 +33,15 @@ export default {
         }
     },
     mounted(){
-        if(sessionStorage.getItem('token').length && sessionStorage.getItem('token').length !== null){
+        if(!sessionStorage.getItem('token') || sessionStorage.getItem('token') === null){
           this.$router.push({name: 'login'}).catch((err) => {console.warn(err)})
         }
 
-
         this.addBodyClassForSwitchThemeOnLoad();
 
+        if (this.$store.getters.isAuthen) {
+            this.$store.dispatch('LOAD_USER');
+        }
     }
 }
 </script>

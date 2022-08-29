@@ -14,6 +14,18 @@ const { FillForm } = require('./plugins/Abstract/FillForm');
 const { AlertMessage } = require('./plugins/Abstract/Alert');
 const { SidePanel } = require('./plugins/Abstract/SidePanel');
 const { Popup } = require('./plugins/Abstract/Popup');
+const { BlockElements } = require('./plugins/Abstract/BlockElements');
+
+window['AdminState'] = new BlockElements();
+
+import BurgerMenu from './plugins/Helper/BurgerMenu';
+import { Dropdown } from './plugins/Helper/Dropdown';
+
+
+
+window['Dropdown'] = new Dropdown();
+window['Burger'] = new BurgerMenu();
+
 
 new LoadPlugin();
 feather.replace();
@@ -27,6 +39,7 @@ window['Dict'] = new Dictionary();
 window['AlertMessage'] = AlertMessage;
 window['copyText'] = copyText;
 window['Popup'] = Popup;
+
 
 new FillForm();
 
