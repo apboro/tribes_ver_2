@@ -82,8 +82,6 @@ spec:
           volumeMounts:
           - mountPath: /var/run/php
             name: fpm-socket
-          - mountPath: /usr/local/etc
-            name: fpm-config
           env: 
             - name: APP_NAME
               value: {{ quote .Values.config.app.name }}

@@ -30,7 +30,7 @@ RUN apk --no-cache add php-pgsql postgresql14-dev pcre-dev $PHPIZE_DEPS \
 
 COPY .docker/docker-entrypoint.sh /
 COPY .docker/*.conf.template /etc/nginx/templates/
-COPY .docker/fpm.conf /usr/local/etc/php-fpm.d/www.conf
+COPY .docker/fpm.conf /usr/local/etc/php-fpm.conf
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD [""]
