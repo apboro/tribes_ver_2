@@ -87,6 +87,11 @@ class Payment extends Model
         return $type;
     }
 
+    public function isTariff()
+    {
+       return  $this->type === 'tariff';
+    }
+
     public function checkAccumulation($id, $owner)
     {
         $accumulation = Accumulation::where('SpAccumulationId', $id)->first();
