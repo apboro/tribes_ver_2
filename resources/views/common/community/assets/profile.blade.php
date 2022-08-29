@@ -103,9 +103,12 @@
             
 
 
-            <button class="button-filled profile-community__money-btn">
+            <a
+                href="{{ route('payment.outcome.list') }}"
+                class="button-filled profile-community__money-btn"
+            >
                 Вывести
-            </button>
+            </a>
         </div>
 
         <div class="profile-community__money-info" style="justify-content: flex-end">
@@ -119,9 +122,12 @@
                 </p>
             </div> -->
 
-            <button class="button-filled profile-community__money-btn button-filled--disabled">
+            <a 
+                class="button-filled profile-community__money-btn"
+                href="{{ route('payment.income.list') }}"
+            >
                 Все транзакции
-            </button>
+            </a>
         </div>
     </div>
 
