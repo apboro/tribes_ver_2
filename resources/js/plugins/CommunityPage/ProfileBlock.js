@@ -17,15 +17,24 @@ export class ProfileBlock {
 
     init() {
         this.dateFormat();
+        this.container.style.maxHeight = this.container.scrollHeight + 'px';
     }
 
     toggleVisibility() {
         if (this.isVisible) {
+            this.container.style.maxHeight = 0;
+            // this.container.style.opacity = 0;
+        } else {
+            this.container.style.maxHeight = this.container.scrollHeight + 'px';
+            // this.container.style.opacity = 1;
+        }
+        this.isVisible = !this.isVisible;
+        /* if (this.isVisible) {
             this.container.style.display = 'none';
         } else {
             this.container.style.display = 'grid';
         }
-        this.isVisible = !this.isVisible;
+        this.isVisible = !this.isVisible; */
     }
 
     dateFormat() {
