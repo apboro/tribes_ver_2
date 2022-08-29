@@ -27,7 +27,7 @@ RUN apk --no-cache add php-pgsql postgresql14-dev pcre-dev $PHPIZE_DEPS \
   && rm -rf /tmp/pear \
   && docker-php-ext-install pdo \
   && docker-php-ext-install pdo_pgsql \
-  && apk del pcre-dev $PHPIZE_DEPS\
+  && apk del pcre-dev $PHPIZE_DEPS
 
 COPY .docker/docker-entrypoint.sh /
 COPY .docker/*.conf.template /etc/nginx/templates/
