@@ -29,12 +29,12 @@ export class ProfileBlock {
             // this.container.style.opacity = 1;
         }
         this.isVisible = !this.isVisible;
-        /* if (this.isVisible) {
-            this.container.style.display = 'none';
-        } else {
-            this.container.style.display = 'grid';
-        }
-        this.isVisible = !this.isVisible; */
+        // if (this.isVisible) {
+        //     this.container.style.display = 'none';
+        // } else {
+        //     this.container.style.display = 'grid';
+        // }
+        // this.isVisible = !this.isVisible;
     }
 
     dateFormat() {
