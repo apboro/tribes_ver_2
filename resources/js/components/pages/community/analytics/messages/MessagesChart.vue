@@ -88,14 +88,16 @@
                 useful: {
                     isVisible: false,
                     color: '#30AAF0',
-                }
+                },
+
+                labels: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
             }
         },
 
         computed: {
             chartData() {
                 return {
-                    labels: this.data.joined.items,
+                    labels: this.labels,
                     datasets: [
                         {
                             data: this.data.joined.items,                           

@@ -127,14 +127,16 @@ import { numberFormatting } from '../../../../../core/functions';
                 media: {
                     isVisible: false,
                     color: '#FF9F43',
-                }
+                },
+
+                labels: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
             }
         },
 
         computed: {
             chartData() {
                 return {
-                    labels: this.data.subscriptions.items,
+                    labels: this.labels,
                     datasets: [
                         {
                             data: this.data.subscriptions.items,                           

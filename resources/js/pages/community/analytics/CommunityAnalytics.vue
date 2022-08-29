@@ -120,7 +120,7 @@
                     },
                 ],
 
-                visibleTab: 'payments',
+                visibleTab: 'messages',
                 filterValue: 'week',
 
                 bigChartOptions: {
@@ -165,7 +165,6 @@
                                 color: '#000000',
 
                                 font: {
-                                    //family: "'Montserrat', 'sans-serif'",
                                     size: 14,
                                     weight: 600,
                                     lineHeight: '20px',
