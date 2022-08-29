@@ -11,7 +11,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         loading : false,
-        isPreloader: false
+        isPreloader: false,
+        GetUser: sessionStorage.getItem('store') ? JSON.parse(sessionStorage.getItem("store")) : null
     },
 
     getters : {

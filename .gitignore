@@ -11,6 +11,8 @@
 /public/ico/*
 /public/admin/js
 /public/admin/js/*
+/public/admin/css
+/public/admin/css/*
 /public/fonts
 /public/images
 /public/images/*
@@ -24,7 +26,6 @@
 .env
 /*.testing
 .env.backup
-composer.lock
 .idea
 .phpunit.result.cache
 Homestead.json
@@ -46,10 +47,8 @@ _ide_helper.php
 /lib/tdLib
 /tdLib
 /tests/Browser
-/tdLib
 
 test.json
 /videos/donate-success.mp4
-package-lock.json
 public/mix-manifest.json
 public/temp.png

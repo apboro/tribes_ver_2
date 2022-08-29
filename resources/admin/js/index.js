@@ -4,17 +4,29 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['Accept'] = 'application/json';
 window.axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-let api_token = document.querySelector('[name="api-token"]');
+let api_token = sessionStorage.getItem('token');
 let token = document.head.querySelector('meta[name="csrf-token"]');
 
 if(api_token){
-    localStorage.setItem('token', api_token.content)
     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
     window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + api_token.content;
 } else {
-    localStorage.removeItem('token')
     console.error('TOKEN Не найден');
 }
+
+window.axios.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    if (error.response.status === 401 || error.response.status === 419) {
+        window.location.href = '/manager/login';
+    }
+    return Promise.reject(error);
+});
+
+
+
+
+
 
 window.getParameterByName = function(name, url = window.location.href) {
     name = name.replace(/[\[\]]/g, '\\$&');

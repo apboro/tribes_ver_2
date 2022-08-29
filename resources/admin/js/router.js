@@ -19,7 +19,7 @@ let router =  new Router({
             path: '/',
             name: 'dashboard',
             meta: {layout: 'main', requiresAuth: true},
-            component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Dashboard.vue')
+            component: () => import(/* webpackChunkName: "Dashboard" */ './components/pages/Dashboard.vue')
         },
         {
             path: '/users',
@@ -39,7 +39,14 @@ let router =  new Router({
             name: 'payments',
             meta: {layout: 'main', requiresAuth: true},
             // meta: {layout: 'main', requiresAuth: true},
-            component: () => import(/* webpackChunkName: "Actions" */ './components/pages/Payments.vue')
+            component: () => import(/* webpackChunkName: "Payments" */ './components/pages/Payments.vue')
+        },
+
+        {
+            path: '/user/:id',
+            name: 'Profile',
+            // meta: {layout: 'main'},
+            component: () => import(/* webpackChunkName: "Profile" */ './components/pages/Profile.vue'),
         },
 
 
@@ -65,7 +72,7 @@ let router =  new Router({
 
 router.beforeEach((to, from, next) => {
     const authRequired = !['/login'].includes(to.path);
-    const loggedIn = localStorage.getItem('token');
+    const loggedIn = sessionStorage.getItem('token');
     if (authRequired && !loggedIn) next({ name: 'login' })
     else next();
 });

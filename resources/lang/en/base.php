@@ -12,7 +12,7 @@ return [
     'amount_max' => 'Max. amount',
     'answer' => 'Answer',
     'arbitrary_amount' => 'Arbitrary amount',
-    'audience' => 'Audience',
+
     'avatar' => 'Avatar',
     // B
     'back' => 'Back',
@@ -76,6 +76,8 @@ return [
     'months' => 'Months',
     'months_2_low' => 'months',
     'months_3_low' => 'months',
+    'minute_low' => 'minute',
+    'minutes_low' => 'minutes',
     // N
     'name' => 'Name',
     'next' => 'Next',

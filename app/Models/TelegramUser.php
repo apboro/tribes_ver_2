@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Community;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filters\QueryFilter;
+use danog\MadelineProto\stats;
 
 use function PHPUnit\Framework\returnSelf;
 

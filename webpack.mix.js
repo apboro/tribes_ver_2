@@ -10,6 +10,7 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+
 let path = require('path');
 
 mix.js('resources/js/app.js', 'public/js')
@@ -19,8 +20,11 @@ mix.js('resources/js/app.js', 'public/js')
 mix.js('resources/js/courseEditor.js', 'public/js').vue();
 mix.sass('resources/sass/courseEditor.scss', 'public/css');
 
+
+mix.sass('resources/sass/redesignStyles.scss', 'public/css');
+
 mix.js('resources/js/knowledge.js', 'public/js').vue();
-mix.sass('resources/sass/knowledgeStyles.scss', 'public/css');
+mix.js('resources/js/statistics.js', 'public/js').vue();
 
 
 mix.js('resources/admin/js/index.js', 'public/admin/js').vue();

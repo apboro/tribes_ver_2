@@ -28,18 +28,18 @@ class Controller extends BaseController
 
         return response()->json(['status' => 'ok'], 200);
     }
+
     public function sessionGet(Request $request)
     {
         $user = Auth::user();
 
         $data = Data::where('key', $request['key'])->where('user_id', $user->id)->first();
 
-
-
         return isset($data->value) ?
             response()->json(['status' => 'ok', 'value' => $data->value], 200) :
             response()->json(['status' => 'fail', 'message' => 'В сессии нет такой записи'], 404);
     }
+
     public function sessionFlush(Request $request)
     {
         $user = Auth::user();

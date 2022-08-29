@@ -70,7 +70,7 @@ class TariffController extends Controller
         ### Регистрация плательщика #####
         $password = Str::random(6);
 
-        $email = $request['email'];
+        $email = strtolower($request['email']);
 
         $user = User::where('email',  strtolower($email))->first();
 

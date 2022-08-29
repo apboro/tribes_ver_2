@@ -42,83 +42,10 @@ use DateTime;
 
 class TestBotController extends Controller
 {
-    protected TelegramMainBotService $telegramService;
-    private TelegramLogService $telegramLogService;
-    private CommunityRepositoryContract $communityRepo;
-
-    public function __construct(
-        CommunityRepositoryContract $communityRepo,
-        TelegramMainBotService $telegramService,
-        TelegramLogService $telegramLogService
-    )
-    {
-        $this->telegramService = $telegramService;
-        $this->telegramLogService = $telegramLogService;
-        $this->communityRepo = $communityRepo;
-    }
 
     public function index(Request $request)
     {
-        dd($this->communityRepo->getCommunitiesForMemberByTeleUserId(1234567));
-//        try {
-//            $telegramUsers = TelegramUser::with('tariffVariant')->get();
-//            foreach ($telegramUsers as $user) {
-//                $follower = User::find($user->user_id);
-//                if ($follower) {
-//                    if ($user->tariffVariant->first()) {
-//                        foreach ($user->tariffVariant as $variant) {
-//
-//                            $userName = ($user->user_name) ? '<a href="t.me/' . $user->user_name . '">' . $user->user_name . '</a>' : $user->telegram_id;
-//
-//                            if ($variant->pivot->days < 1) {
-//                                if ($variant->pivot->isAutoPay === true) {
-//                                    $p = new Pay();
-//                                    $p->amount($variant->price * 100)
-//                                        ->charged(true)
-//                                        ->payFor($variant)
-//                                        ->payer($follower);
-//
-//                                    $payment = $p->pay();
-//                                } else $payment = NULL;
-//                                if ($payment) {
-//                                    $lastName = $user->last_name ?? '';
-//                                    $firstName = $user->first_name ?? '';
-//                                    $this->telegramService->sendMessageFromBot(config('telegram_bot.bot.botName'), env('TELEGRAM_LOG_CHAT'),
-//                                        "Рекуррентное списание от " . $firstName . $lastName . " в сообщетво ");
-//                                    $user->tariffVariant()->updateExistingPivot($variant->id, [
-//                                        'days' => $variant->period,
-//                                        'prompt_time' => date('H:i')
-//                                    ]);
-//                                } else {
-//                                    $user->tariffVariant()->updateExistingPivot($variant->id, [
-//                                        'days' => 0,
-//                                        'isAutoPay' => false
-//                                    ]);
-//
-//                                    $this->telegramService->kickUser(config('telegram_bot.bot.botName'),
-//                                        $user->telegram_id, $variant->tariff->community->connection->chat_id);
-//                                    $user->communities()->detach($variant->tariff->community->id);
-//
-//                                    if ($variant->tariff->tariff_notification == true) {
-//                                        $this->telegramService->sendMessageFromBot(
-//                                            config('telegram_bot.bot.botName'),
-//                                            $variant->tariff->community->connection->telegram_user_id,
-//                                            'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа'
-//                                        );
-//                                    }
-//                                }
-//
-//                            } else $user->tariffVariant()->updateExistingPivot($variant->id, [
-//                                'days' => 0,
-//                            ]);
-//                        }
-//                    }
-//                }
-//            }
-//            return 0;
-//        } catch (\Exception $e) {
-//            $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-//        }
+        
     }
 
 }

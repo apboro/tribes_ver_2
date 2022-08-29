@@ -53,15 +53,18 @@ class CheckTariff extends Command
         try {
             $telegramUsers = TelegramUser::with('tariffVariant')->get();
             foreach ($telegramUsers as $user) {
+                //echo "user{$user->user_id} \n";
                 $follower = User::find($user->user_id);
                 if ($follower) {
                     if ($user->tariffVariant->first()) {
                         foreach ($user->tariffVariant as $variant) {
-                            if (date('H:i') == $variant->pivot->prompt_time) {
+                            //echo "var{$variant->title} \n";
+                            if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
                                 $userName = ($user->user_name) ? '<a href="t.me/' . $user->user_name . '">' . $user->user_name . '</a>' : $user->telegram_id;
-
+                                //echo "job for {$variant->title} \n";
                                 if ($variant->pivot->days < 1) {
                                     if ($variant->pivot->isAutoPay === true) {
+                                        //echo "create pay {$variant->title} \n";
                                         $p = new Pay();
                                         $p->amount($variant->price * 100)
                                             ->charged(true)
@@ -69,6 +72,8 @@ class CheckTariff extends Command
                                             ->payer($follower);
 
                                         $payment = $p->pay();
+                                        $payId = $payment->id??'undefined';
+                                        //echo "create pay  $payId\n";
                                     } else $payment = NULL;
                                     if ($payment) {
                                         $lastName = $user->last_name ?? '';
@@ -83,27 +88,27 @@ class CheckTariff extends Command
                                             'prompt_time' => date('H:i')
                                         ]);
                                     } else {
-
+                                        //echo "not create payment  \n";
                                         if ($variant->pivot->isAutoPay === true) {
                                             $user->tariffVariant()->updateExistingPivot($variant->id, [
                                                 'days' => 0,
                                                 'isAutoPay' => false
                                             ]);
 
-                                            $this->telegramService->kickUser(
-                                                config('telegram_bot.bot.botName'),
-                                                $user->telegram_id,
-                                                $variant->tariff->community->connection->chat_id
-                                            );
-                                            $user->communities()->detach($variant->tariff->community->id);
+                                            // $this->telegramService->kickUser(
+                                            //     config('telegram_bot.bot.botName'),
+                                            //     $user->telegram_id,
+                                            //     $variant->tariff->community->connection->chat_id
+                                            // );
+                                            // $user->communities()->detach($variant->tariff->community->id);
 
-                                            if ($variant->tariff->tariff_notification == true) {
-                                                $this->telegramService->sendMessageFromBot(
-                                                    config('telegram_bot.bot.botName'),
-                                                    $variant->tariff->community->connection->telegram_user_id,
-                                                    'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа'
-                                                );
-                                            }
+                                            // if ($variant->tariff->tariff_notification == true) {
+                                            //     $this->telegramService->sendMessageFromBot(
+                                            //         config('telegram_bot.bot.botName'),
+                                            //         $variant->tariff->community->connection->telegram_user_id,
+                                            //         'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа'
+                                            //     );
+                                            // }
                                         }
                                     }
                                 }
@@ -112,9 +117,10 @@ class CheckTariff extends Command
                     }
                 }
             }
-            return 0;
+
         } catch (\Exception $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
+        return 0;
     }
 }

@@ -9,12 +9,12 @@
                     <h2 class="card-title text-center mb-4">Вход в свой аккаунт</h2>
                     <div class="mb-3 form-validation">
                         <label for="email" class="form-label">Email</label>
-                        <input 
-                            type="email" 
+                        <input
+                            type="email"
                             class="form-control"
                             :class="{invalid: errors.email}"
-                            name="email" v-model.trim="email" 
-                            placeholder="Введите email" 
+                            name="email" v-model.trim="email"
+                            placeholder="Введите email"
                             autocomplete="off"
                         >
                         <small v-if="errors.email">{{ errors.email }}</small>
@@ -25,12 +25,12 @@
                         </label>
                         <div class="form-validation">
                         <div class="input-group input-group-flat">
-                            <input 
-                                :type="fieldType" 
+                            <input
+                                :type="fieldType"
                                 class="form-control"
-                                name="password" 
-                                v-model.trim="password"  
-                                placeholder="Введите пароль"  
+                                name="password"
+                                v-model.trim="password"
+                                placeholder="Введите пароль"
                                 autocomplete="off"
                             >
                             <span class="input-group-text">
@@ -90,7 +90,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['isLogged'])
+        // ...mapGetters(['isLogged'])
     },
     methods: {
         switchField() {
@@ -98,8 +98,8 @@ export default {
             this.fieldType === "password" ? "text" : "password";
             this.showPassword = !this.showPassword;
         },
-        formIsValid() {
-            let isValid = true;
+        // formIsValid() {
+        //     let isValid = true;
 
             // if (this.email.length || this.password.length === 0) {
             //     this.errors.email = "Введите email",
@@ -109,15 +109,17 @@ export default {
             //     this.errors.email = null;
             //     this.errors.password = null;
             // }
-            this.email.length === 0 || this.email !== 'test-dev@webstyle.top' ? 
-                this.errors.email = "Email введен неверно" : 
-                this.errors.email = null;
-            this.password.length === 0 || this.password !== '12345' ? 
-                this.errors.password = "Пароль введен неверно" : 
-                this.errors.password = null;
 
-            return  isValid
-        },
+
+        //     this.email.length === 0 || this.email !== 'test-dev@webstyle.top' ?
+        //         this.errors.email = "Email введен неверно" :
+        //         this.errors.email = null;
+        //     this.password.length === 0 || this.password !== '12345' ?
+        //         this.errors.password = "Пароль введен неверно" :
+        //         this.errors.password = null;
+        //
+        //     return  isValid
+        // },
         async login() {
             try {
                 let result = await axios({
@@ -125,16 +127,18 @@ export default {
                     data: {email : this.email, password : this.password},
                     url:'/api/login'
                 })
-            
+
                 if(result.status == 200 && result.data.token) {
-                    localStorage.setItem('token', result.data.token)
+                    sessionStorage.setItem('token', result.data.token)
                     this.$router.push({name: 'users'}).catch((err) => {console.warn(err)})
+                    window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + result.data.token;
                 }
             }catch(err) {
                 if (err.response && err.response.status === 422){
                     this.formIsValid();
                 }
             }
+
             // let result = await axios(
             //     {
             //         method: 'POST',

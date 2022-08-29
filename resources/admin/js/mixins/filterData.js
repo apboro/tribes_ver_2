@@ -2,7 +2,7 @@ let initialState = () =>  {
     return {
         filter_data:{
             search : null,
-            entries : 10,
+            entries : 5,
             page : 1,
             date: null,
         },
