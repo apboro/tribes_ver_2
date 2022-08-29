@@ -23,7 +23,7 @@ command="$1"
 
 case "$command" in
   "php-fpm" )
-    php-fpm -c /etc/php7
+    php-fpm -c /etc/php7/php.ini
   ;;
   "frontend" | "proxy" )
     ln -sf /dev/stdout /var/log/nginx/access.log
