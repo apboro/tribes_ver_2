@@ -22,7 +22,7 @@ WORKDIR ${WORKDIR}
 RUN apk add --no-cache nginx gettext tzdata ca-certificates && rm /etc/nginx/http.d/*
 
 RUN apk add --no-cache php-pgsql postgresql14-dev php7-pdo_pgsql \
- && docker-php-ext-install pdo_pgsql   
+ && docker-php-ext-install pdo_pgsql && docker-php-ext-enable pdo_pgsql  
 
 RUN apk --no-cache add pcre-dev $PHPIZE_DEPS \
   && pecl install redis \
