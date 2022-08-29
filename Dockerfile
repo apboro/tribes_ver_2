@@ -23,7 +23,7 @@ RUN apk add --no-cache nginx gettext tzdata ca-certificates && rm /etc/nginx/htt
 
 RUN docker-php-ext-install pdo && docker-php-ext-enable pdo 
 
-RUN apk add --no-cache php-pgsql postgresql14-dev php7-pdo_pgsql \
+RUN apk add --no-cache php-pgsql postgresql14-dev php7-pdo_pgsql php7-pdo\
  && docker-php-ext-install pdo_pgsql && docker-php-ext-enable pdo_pgsql  
 
 RUN apk --no-cache add pcre-dev $PHPIZE_DEPS \
