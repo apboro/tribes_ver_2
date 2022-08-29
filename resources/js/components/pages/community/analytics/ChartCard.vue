@@ -69,10 +69,10 @@
                         {
                             data: this.data.data,                           
                             borderColor: "#2AB0EE",
-                            fill: {
+                            /* fill: {
                                 target: 'origin',
                                 above: '#2AB0EE10',
-                            },
+                            }, */
                             hidden: false,
                         }
                     ]
