@@ -6,6 +6,28 @@
         align-items: center;
     }
 
+    &__analytics-wrap {
+        display: flex;
+        align-items: center
+    }
+
+    &__filter {
+        display: inline-block;
+
+        &:not(:last-child){
+            margin: 0 20px 0 0;
+        }
+    }
+
+    &__btn-back {
+        margin: 0 20px 0 0;
+        transition: .3s;
+
+        &:hover {
+            opacity: .5;
+        }
+    }
+
     &__title {
         @include font($text-color-1, 30px, 36px, 600);
         margin: 0;

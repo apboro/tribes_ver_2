@@ -13,6 +13,8 @@
                 v-for="(data, index) in cardsData"
                 :key="index"
                 :data="data"
+                @switchValue="switchValue"
+
             />
         </ul>
     </div>
@@ -74,6 +76,7 @@
                                 text: 'Полезных',
                                 value: `+${ numberFormatting(data.useful) }`    
                             };
+                            obj.tabValue = 'subscribers'
                             break;
                         
                         case 'messages':
@@ -87,6 +90,7 @@
                                 text: 'Полезных',
                                 value: `+${ numberFormatting(data.useful) }`    
                             };
+                            obj.tabValue = 'messages'
                             break;
 
                         case 'payments':
@@ -100,12 +104,17 @@
                                 text: 'Можно вывести',
                                 value: `+${ numberFormatting(data.available) }`    
                             };
+                            obj.tabValue = 'payments'
                             break;
                     }
 
                     return obj;
                 });
             },
+
+            switchValue(tabValue) {
+                this.$emit('switchValue', tabValue);
+            }
         },
 
         mounted() {

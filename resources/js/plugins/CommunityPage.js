@@ -59,10 +59,15 @@ export default class CommunityPage extends Page {
 
     toggleProfileVisibility(event) {
         this.profileBlock.toggleVisibility();
+        let active = document.getElementById("btn_profile");
+
         if (this.profileBlock.isVisible) {
             event.target.textContent = 'Скрыть профиль';
+            active.classList.remove("active");
+
         } else {
-            event.target.textContent = 'Показать профиль';
+            event.target.textContent = 'Открыть профиль';
+            active.className += " active";
         }
     }
 }

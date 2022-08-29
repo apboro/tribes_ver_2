@@ -1,5 +1,6 @@
 <template>
     <div >
+
         <subscribers-chart
             :data="GET_SUBSCRIBERS_CHART_DATA"
         />
@@ -28,6 +29,7 @@
 
 <script>
     import { mapGetters, mapActions } from 'vuex';
+    import AnalyticsFilter from '../../../../components/pages/Community/Analytics/AnalyticsFilter.vue';
     import SubscribersChart from '../../../../components/pages/community/analytics/subscribers/SubscribersChart.vue';
     import SubscribersTable from '../../../../components/pages/community/analytics/subscribers/SubscribersTable.vue';
     import ProgressList from '../../../../components/pages/community/analytics/ProgressList.vue';
@@ -37,6 +39,7 @@
         name: 'AnalyticsSubscribers',
 
         components: {
+            AnalyticsFilter,
             SubscribersChart,
             SubscribersTable,
             ProgressList,
@@ -53,6 +56,9 @@
         data() {
             return {
                 name: 'subscribers',
+
+                filterValue2: 'subscribers',
+                filterValue: 'week',
 
                 paginationSelectedOptions: [
                     { label: 15, value: 15 },
@@ -96,6 +102,14 @@
 
             filter() {
                 this.$emit('filter', { name: this.name, period: this.period });
+            },
+
+            setPeriod(period) {
+                this.filterValue = period;
+            },
+
+            setPeriod2(period2) {
+                this.filterValue2 = period2;
             },
 
             // переключение страницы пагинации

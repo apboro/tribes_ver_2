@@ -37,7 +37,10 @@
                 </span>
             </div>
 
-            <button class="button-filled button-filled--primary card-analytics-community__link">
+            <button 
+                class="button-filled button-filled--primary card-analytics-community__link"
+                @click="switchValue()"
+            >
                 Подробнее
             </button>
         </div>
@@ -58,7 +61,7 @@
             data: {
                 type: Object,
                 default: () => {}
-            }
+            },
         },
 
         computed: {
@@ -108,5 +111,11 @@
                 }
             }
         },
+
+        methods: {
+            switchValue() {
+                this.$emit('switchValue', this.data.tabValue);
+            }
+        }
     }
 </script>
