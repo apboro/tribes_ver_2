@@ -21,16 +21,12 @@ WORKDIR ${WORKDIR}
 
 RUN apk add --no-cache nginx gettext tzdata ca-certificates && rm /etc/nginx/http.d/*
 
-RUN docker-php-ext-install pdo && docker-php-ext-enable pdo 
-
-RUN apk add --no-cache php-pgsql postgresql14-dev php7-pdo_pgsql php7-pdo\
- && docker-php-ext-install pdo_pgsql && docker-php-ext-enable pdo_pgsql  
-
-RUN apk --no-cache add pcre-dev $PHPIZE_DEPS \
+RUN apk --no-cache add php-pgsql postgresql14-dev pcre-dev $PHPIZE_DEPS \
   && pecl install redis \
   && docker-php-ext-enable redis \
-  && apk del pcre-dev $PHPIZE_DEPS\
-  && rm -rf /tmp/pear
+  && rm -rf /tmp/pear \
+  && docker-php-ext-install pdo \
+  && docker-php-ext-install pdo_pgsql
 
 COPY .docker/docker-entrypoint.sh /
 COPY .docker/*.conf.template /etc/nginx/templates/
