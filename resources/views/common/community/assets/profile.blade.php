@@ -95,7 +95,7 @@
                 <p class="profile-community__money-value">
                     &#8381; 20344,34 
                 </p>
-                <p class="profile-community__money-difference">+&#8381; 1900</p>
+                <!-- <p class="profile-community__money-difference">+&#8381; 1900</p> -->
             </div>
 
             <button class="button-filled profile-community__money-btn">
