@@ -21,7 +21,7 @@ WORKDIR ${WORKDIR}
 
 RUN apk add --no-cache nginx gettext tzdata ca-certificates && rm /etc/nginx/http.d/*
 
-RUN docker-php-ext-install php_pdo && docker-php-ext-enable php_pdo 
+RUN php -i && docker-php-ext-install pdo && docker-php-ext-enable pdo 
 
 RUN apk add --no-cache php-pgsql postgresql14-dev php7-pdo_pgsql \
  && docker-php-ext-install pdo_pgsql && docker-php-ext-enable pdo_pgsql  
