@@ -70,4 +70,24 @@ export default class CommunityPage extends Page {
             active.className += " active";
         }
     }
+
+
+    /*  let content;
+        if (direction === 'next') {
+            content = el.nextElementSibling;
+        } else if (direction === 'previous') {
+            content = el.previousElementSibling;
+        }
+        
+        el.classList.toggle('active');
+        el.parentNode.classList.toggle('active');
+        content.classList.toggle('active');
+
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+            if (isChangeText) el.textContent = "Показать всё";
+        } else {
+            content.style.maxHeight = content.scrollHeight + 'px';
+            if (isChangeText) el.textContent = "Скрыть";
+        } */
 }

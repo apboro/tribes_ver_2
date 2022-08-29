@@ -5,6 +5,8 @@
     justify-content: space-between;
     column-gap: 20px;
     row-gap: 35px;
+    overflow: hidden;
+    transition: $transition;
 
     &__common-data {
         display: grid;
@@ -108,7 +110,7 @@
         padding: 20px;
         width: 100%;
         display: flex;
-        align-items: end;
+        align-items: flex-end;
         flex-direction: row;
 
         &:first-child {

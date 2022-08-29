@@ -35,7 +35,7 @@
 
 <script>
     import { mapGetters, mapActions } from 'vuex';
-    import AnalyticsFilter from '../../../../components/pages/Community/Analytics/AnalyticsFilter.vue';
+    import AnalyticsFilter from '../../../../components/pages/community/analytics/AnalyticsFilter.vue';
     import SubscribersChart from '../../../../components/pages/community/analytics/subscribers/SubscribersChart.vue';
     import SubscribersTable from '../../../../components/pages/community/analytics/subscribers/SubscribersTable.vue';
     import ProgressList from '../../../../components/pages/community/analytics/ProgressList.vue';

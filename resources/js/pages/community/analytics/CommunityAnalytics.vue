@@ -99,8 +99,8 @@
     import { mapActions } from 'vuex';
     /* import BarChart from '../../../components/ui/chart/BarChart.vue';
     import LineChart from '../../../components/ui/chart/LineChart.vue'; */
-    import AnalyticsFilter from '../../../components/pages/Community/Analytics/AnalyticsFilter.vue';
-    import AnalyticsPages from '../../../components/pages/Community/Analytics/AnalyticsPages.vue';
+    import AnalyticsFilter from '../../../components/pages/community/analytics/AnalyticsFilter.vue';
+    import AnalyticsPages from '../../../components/pages/community/analytics/AnalyticsPages.vue';
     import AnalyticsSubscribers from './tabs/AnalyticsSubscribers.vue';
     import AnalyticsMessages from './tabs/AnalyticsMessages.vue';
     import AnalyticsPayments from './tabs/AnalyticsPayments.vue';
