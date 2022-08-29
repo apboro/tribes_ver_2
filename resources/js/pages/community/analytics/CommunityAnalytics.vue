@@ -8,14 +8,37 @@
         /> -->
 
         <div class="analytics-community__title-wrap">
-            <h2 class="analytics-community__title">
-                Аналитика
-            </h2>
-            <analytics-filter
-                class="analytics-community__filter"
-                :filterValue="filterValue"
-                @setPeriod="setPeriod"
-            />
+            <div class="analytics-community__analytics-wrap">
+                <button 
+                    v-if="visibleTab == 'subscribers' || visibleTab == 'messages' || visibleTab == 'payments'"
+                    type="button" 
+                    class="analytics-community__btn-back"
+                    @click="back()"
+                >
+                    <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 9C21.5523 9 22 8.55228 22 8C22 7.44772 21.5523 7 21 7L21 9ZM0.292892 7.2929C-0.0976315 7.68342 -0.0976314 8.31658 0.292893 8.70711L6.65686 15.0711C7.04738 15.4616 7.68054 15.4616 8.07107 15.0711C8.46159 14.6805 8.46159 14.0474 8.07107 13.6569L2.41421 8L8.07107 2.34315C8.46159 1.95262 8.46159 1.31946 8.07107 0.928933C7.68054 0.538409 7.04738 0.538409 6.65685 0.928933L0.292892 7.2929ZM21 7L1 7L1 9L21 9L21 7Z" fill="#7367F0"/>
+                    </svg>
+                </button>
+                <h2 class="analytics-community__title">
+                    Аналитика
+                </h2>
+            </div>
+
+            <div>
+                <analytics-pages
+                    v-if="visibleTab == 'subscribers' || visibleTab == 'messages' || visibleTab == 'payments'"
+                    class="analytics-community__filter"
+                    :page="visibleTab"
+                    :visibleTab="visibleTab"
+                    @setPage="setPage"
+                />
+
+                <analytics-filter
+                    class="analytics-community__filter"
+                    :filterValue="filterValue"
+                    @setPeriod="setPeriod"
+                />
+            </div>
         </div>
 
         <transition name="a-page-tabs" mode="out-in">
@@ -24,12 +47,14 @@
                 class="analytics-community__tab"
                 :period="filterValue"
                 @filter="filter"
+                @switchValue="switchTab"
             />
             
             <analytics-subscribers
                 v-else-if="visibleTab == 'subscribers'"
                 class="analytics-community__tab"
                 :period="filterValue"
+                :chartOptions="bigChartOptions"
                 @filter="filter"
             />
 
@@ -37,6 +62,7 @@
                 v-else-if="visibleTab == 'messages'"
                 class="analytics-community__tab"
                 :period="filterValue"
+                :chartOptions="bigChartOptions"
                 @filter="filter"
             />
 
@@ -44,6 +70,7 @@
                 v-else-if="visibleTab == 'payments'"
                 class="analytics-community__tab"
                 :period="filterValue"
+                :chartOptions="bigChartOptions"
                 @filter="filter"
             />
         </transition>
@@ -73,6 +100,7 @@
     /* import BarChart from '../../../components/ui/chart/BarChart.vue';
     import LineChart from '../../../components/ui/chart/LineChart.vue'; */
     import AnalyticsFilter from '../../../components/pages/community/analytics/AnalyticsFilter.vue';
+    import AnalyticsPages from '../../../components/pages/community/analytics/AnalyticsPages.vue';
     import AnalyticsSubscribers from './tabs/AnalyticsSubscribers.vue';
     import AnalyticsMessages from './tabs/AnalyticsMessages.vue';
     import AnalyticsPayments from './tabs/AnalyticsPayments.vue';
@@ -87,6 +115,7 @@
             LineChart, */
             AnalyticsNav,
             AnalyticsFilter,
+            AnalyticsPages,
             AnalyticsList,
             AnalyticsSubscribers,
             AnalyticsMessages,
@@ -119,6 +148,73 @@
 
                 visibleTab: 'list',
                 filterValue: 'week',
+
+                bigChartOptions: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    radius: 1,
+                    hoverRadius: 0,
+                    borderWidth: 2,
+                    pointBorderColor: 'transparent',
+                    //tension: 0.1,
+                    
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutCubic'
+                    },
+                    
+                    scales: {
+                        x: {
+                            ticks: {    
+                                color: '#000000',
+
+                                font: {
+                                    //family: "'Montserrat', 'sans-serif'",
+                                    size: 14,
+                                    weight: 600,
+                                    lineHeight: '20px',
+                                },
+
+                                // callback: (label, index, labels) => {
+                                //     return this.labels[index];
+                                // },
+                            },
+                            grid: {
+                                borderColor: '#7367F0',
+                                color: 'transparent',
+                                tickColor: '#7367F0'
+                            },
+                        },
+                        
+                        y: {
+                            ticks: {    
+                                color: '#000000',
+
+                                font: {
+                                    size: 14,
+                                    weight: 600,
+                                    lineHeight: '20px',
+                                },
+
+                                // callback: (label, index, labels) => {
+                                //     return this.labels[index];
+                                // },
+                            },
+                            
+                            grid: {
+                                borderColor: '#7367F0',
+                                color: 'transparent',
+                                tickColor: '#7367F0'
+                            },
+                        }
+                    },
+
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: false },
+                        tooltip: { enabled: false },
+                    }
+                },
 
                 chartData2: {
                     labels: [ '1', '2', '3' ],
@@ -182,6 +278,13 @@
                     this.dataList.messages.data = [10, 200, 30, 50, 20];
                     this.dataList.finance.data = [150, 20, 300, 200, 100];
                 } */
+            },
+            setPage(page){
+                this.visibleTab = page;
+            },
+
+            back() {
+                this.visibleTab = 'list'
             },
 
             filter(data) {

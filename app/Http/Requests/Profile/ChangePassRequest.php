@@ -33,7 +33,7 @@ class ChangePassRequest extends FormRequest
         return [
             'password.required' => 'Пароль обязателен для заполнения',
             'password.string' => 'Неверный формат',
-            'password.min' => 'Минимальная длинна - 8 символов',
+            'password.min' => 'Минимальная длина - 8 символов',
             'password.confirmed' => 'Пароль должен быть подтвержден',
         ];
     }

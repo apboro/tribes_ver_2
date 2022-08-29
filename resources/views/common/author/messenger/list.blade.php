@@ -13,7 +13,7 @@
             <!-- Discord Card -->
             {{--@include('common.author.assets.discord_card')--}}
         </div>
-        @if(!Auth::user()->hasTelegramAccount())
+        @if(Auth::user()->hasTelegramAccount())
         <div class="card">
             <div class="card-body">
                 <h5 class="mb-1 text-center">
