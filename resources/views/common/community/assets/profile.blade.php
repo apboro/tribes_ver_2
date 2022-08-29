@@ -87,8 +87,8 @@
 
     <div class="profile-community__block-money">
 
-        <div class="profile-community__money-info">
-            <div class="profile-community__money">
+        <div class="profile-community__money-info" style="justify-content: flex-end">
+            <!-- <div class="profile-community__money">
                 <p class="profile-community__money-label">
                     Доступный баланс
                 </p>
@@ -97,15 +97,15 @@
                     &#8381; 20344,34 
                 </p>
                 <p class="profile-community__money-difference">+&#8381; 1900</p>
-            </div>
+            </div> -->
 
             <button class="button-filled profile-community__money-btn">
                 Вывести
             </button>
         </div>
 
-        <div class="profile-community__money-info">
-            <div class="profile-community__money">
+        <div class="profile-community__money-info" style="justify-content: flex-end">
+            <!-- <div class="profile-community__money">
                 <p class="profile-community__money-label">
                     Всего заработано
                 </p>
@@ -113,7 +113,7 @@
                 <p class="profile-community__money-value">
                     &#8381; 150332,43
                 </p>
-            </div>
+            </div> -->
 
             <button class="button-filled profile-community__money-btn button-filled--disabled">
                 Все транзакции
