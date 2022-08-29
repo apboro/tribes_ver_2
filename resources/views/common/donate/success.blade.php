@@ -5,8 +5,8 @@
         <div class="card mb-0 overflow-hidden">
             <div class="card-title d-flex flex-column align-items-center">
                 @if ($payment->type == 'donate')
-                    @if ($payment->payable()->first()->donate()->first()->getSuccessImage())
-                        <img src="{{ $payment->payable()->first()->donate()->first()->getSuccessImage()->url }}" alt=""
+                    @if ($payment->payable()->first()->donate()->first()->getSuccessImage()??null)
+                        <img src="{{ $payment->payable()->first()->donate()->first()->getSuccessImage()->url??'' }}" alt=""
                             class="active-image__img w-100">
                     @else
                         <img src="/images/thanks.jpg" alt=""
