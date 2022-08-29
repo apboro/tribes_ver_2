@@ -50,5 +50,5 @@ RUN cp -v .env.example .env && \
     php composer.phar install --no-dev --no-autoloader --prefer-dist
 
 COPY --chown=www-data:www-data . ${WORKDIR}/
-RUN php composer.phar install --no-dev --prefer-dist
+RUN php composer.phar install --no-dev --optimize-autoloader --prefer-dist
 COPY --chown=www-data:www-data --from=frontend-builder ${WORKDIR}/public ${WORKDIR}/public/
