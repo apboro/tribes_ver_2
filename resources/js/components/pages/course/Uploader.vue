@@ -126,7 +126,7 @@ export default {
                 this.uploadFile(file, ref._data);
             } else {
                 this.videoRef = ref;
-                this.$refs.file.click(ref._data);
+                this.$refs.file.click();
             }
         },
 
@@ -149,6 +149,10 @@ export default {
             if ((input.files && input.files[0]) || f) {
                 let reader = new FileReader();
                 let type = f ? f.type : input.files[0].type
+
+                if (this.refComponent.$el.classList.contains('uploads')) {
+                    this.uploadToserver(f);
+                }
 
                 if (this.refComponent.$el.classList.contains('image')) {
                     if (type === 'image/jpeg' || type === 'image/png' || type === 'image/svg+xml'){
