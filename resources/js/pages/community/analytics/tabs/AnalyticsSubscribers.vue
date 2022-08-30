@@ -1,7 +1,9 @@
 <template>
     <div >
+
         <subscribers-chart
             :data="GET_SUBSCRIBERS_CHART_DATA"
+            :chartOptions="chartOptions"
         />
         
         <progress-list
@@ -14,45 +16,62 @@
             :subscribers="GET_TABLE_DATA"
         />
 
-        <!-- Pagination -->
-        <v-pagination
-            v-if="GET_TABLE_DATA && GET_TABLE_DATA.length && !IS_LOADING"
-            class="analytics-community__pagination"
-            :paginateData="GET_PAGINATE_DATA"
-            :selectOptions="paginationSelectedOptions"
-            @onPageClick="setPage"
-            @onChangePerPage="setPerPage"
-        />
+        <div class="analytics-community__footer">
+
+            <v-export-data/>
+
+             <!-- Pagination -->
+            <v-pagination
+                v-if="GET_TABLE_DATA && GET_TABLE_DATA.length && !IS_LOADING"
+                class="analytics-community__pagination"
+                :paginateData="GET_PAGINATE_DATA"
+                :selectOptions="paginationSelectedOptions"
+                @onPageClick="setPage"
+                @onChangePerPage="setPerPage"
+            />
+        </div>
     </div>
 </template>
 
 <script>
     import { mapGetters, mapActions } from 'vuex';
+    import AnalyticsFilter from '../../../../components/pages/community/analytics/AnalyticsFilter.vue';
     import SubscribersChart from '../../../../components/pages/community/analytics/subscribers/SubscribersChart.vue';
     import SubscribersTable from '../../../../components/pages/community/analytics/subscribers/SubscribersTable.vue';
     import ProgressList from '../../../../components/pages/community/analytics/ProgressList.vue';
     import VPagination from '../../../../components/ui/pagination/VPagination.vue';
+    import VExportData from '../../../../components/ui/table/VExportData.vue'
 
     export default {
         name: 'AnalyticsSubscribers',
 
         components: {
+            AnalyticsFilter,
             SubscribersChart,
             SubscribersTable,
             ProgressList,
             VPagination,
+            VExportData
         },
 
         props: {
             period: {
                 type: String,
                 default: () => '',
+            },
+
+            chartOptions: {
+                type: Object,
+                default: () => {}
             }
         },
 
         data() {
             return {
                 name: 'subscribers',
+
+                filterValue2: 'subscribers',
+                filterValue: 'week',
 
                 paginationSelectedOptions: [
                     { label: 15, value: 15 },
@@ -96,6 +115,14 @@
 
             filter() {
                 this.$emit('filter', { name: this.name, period: this.period });
+            },
+
+            setPeriod(period) {
+                this.filterValue = period;
+            },
+
+            setPeriod2(period2) {
+                this.filterValue2 = period2;
             },
 
             // переключение страницы пагинации

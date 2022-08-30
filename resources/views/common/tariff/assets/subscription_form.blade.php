@@ -118,7 +118,7 @@
 
                                     <tbody>
                                         @if (!count($followers))
-                                            <tr c`lass="odd">
+                                            <tr class="odd">
                                                 <td valign="top" colspan="5" class="dataTables_empty">
                                                     Записи отсутствуют
                                                 </td>
