@@ -45,7 +45,7 @@ class TestBotController extends Controller
 
     public function index(Request $request)
     {
-        
+        dd(time());
     }
 
 }

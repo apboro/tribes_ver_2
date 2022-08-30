@@ -80,4 +80,9 @@ class TelegramUser extends Model
     {
         return $this->hasMany(Payment::class, 'telegram_user_id', 'telegram_id');
     }
+
+    function messages()
+    {
+        return $this->hasMany(TelegramMessage::class, 'telegram_user_id', 'telegram_id');
+    }
 }
