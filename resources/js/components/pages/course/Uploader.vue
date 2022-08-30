@@ -90,6 +90,8 @@ export default {
             instantUpload : null,
             demension : {width:100, height:100},
             isLoadImage: false,
+
+            videoRef: null
         };
     },
 
@@ -121,9 +123,10 @@ export default {
             this.aspect = aspect ?? this.defaultAspect;
             this.refComponent = ref;
             if(file){
-                this.uploadFile(file);
+                this.uploadFile(file, ref._data);
             } else {
-                this.$refs.file.click();
+                this.videoRef = ref;
+                this.$refs.file.click(ref._data);
             }
         },
 
@@ -166,6 +169,7 @@ export default {
 
                 if (this.refComponent.$el.classList.contains('video')) {
                     if(type === 'video/mp4'){
+                        this.videoRef._data.isVideoReady = false;
                         this.uploadToserver(f);
                     }
                 }
