@@ -1,8 +1,8 @@
 .table {
-    display: grid;
+   /*  display: grid;
     grid-template: 50px 1fr / 1fr;
     border: 1px solid $grey-3;
-    border-radius: 5px;
+    border-radius: 5px; */
 
     &__header {
         position: sticky;
@@ -278,6 +278,9 @@
     }
 
     &__sort-btn {
+        margin: 0 0 0 8px;
+        transition: all .3s;
+
         .button-text__icon {
             .icon__fill {
                 fill: $white;
@@ -286,6 +289,10 @@
             .icon__stroke {
                 stroke: $white;
             }
+        }
+
+        &:hover {
+            opacity: .5;
         }
     }
 }

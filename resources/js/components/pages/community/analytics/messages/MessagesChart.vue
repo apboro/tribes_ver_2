@@ -4,9 +4,9 @@
         class="chart-analytics-community"
     >
         <div class="chart-analytics-community__header">
-            <div class="chart-analytics-community__label">
+            <div class="chart-analytics-community__label chart-analytics-community__label--right">
                 <span class="chart-analytics-community__text">
-                    Всего подписчиков в сообществе
+                    Всего сообщений
                 </span>
 
                 <span class="chart-analytics-community__value">
@@ -16,10 +16,26 @@
 
             <button
                 class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                @click="toggleData('useful')"
+            >
+                <span class="chart-analytics-community__text">
+                    За период
+                </span>
+
+                <span
+                    class="chart-analytics-community__value"
+                    :style="{ color: useful.color }"
+                >
+                    +{{ numberFormat(data.useful.total) }}
+                </span>
+            </button>
+
+            <button
+                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
                 @click="toggleData('joined')"
             >
                 <span class="chart-analytics-community__text">
-                    Вступили в сообщество
+                    Полезных
                 </span>
 
                 <span
@@ -34,26 +50,8 @@
         <line-chart
             class="chart-analytics-community__chart"
             :chartData="chartData"
-            :chartOptions="chartOptions"
+            :chartOptions="chartOptionsData"
         />
-
-        <div class="chart-analytics-community__footer">
-            <button
-                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
-                @click="toggleData('useful')"
-            >
-                <span
-                    class="chart-analytics-community__value"
-                    :style="{ color: useful.color }"
-                >
-                    +{{ numberFormat(data.useful.total) }}
-                </span>
-             
-                <span class="chart-analytics-community__text">
-                    Полезных сообщений
-                </span>
-            </button>
-        </div>
     </div>
 </template>
 
@@ -72,6 +70,11 @@
             data: {
                 type: [Object, null],
                 default: () => null
+            },
+
+            chartOptions: {
+                type: Object,
+                default: () => {}
             }
         },
 
@@ -85,14 +88,16 @@
                 useful: {
                     isVisible: false,
                     color: '#30AAF0',
-                }
+                },
+
+                labels: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
             }
         },
 
         computed: {
             chartData() {
                 return {
-                    labels: this.data.joined.items,
+                    labels: this.labels,
                     datasets: [
                         {
                             data: this.data.joined.items,                           
@@ -109,33 +114,8 @@
                 }
             },
 
-            chartOptions() {
-                return {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    radius: 1,
-                    hoverRadius: 0,
-                    borderWidth: 4,
-                    pointBorderColor: 'transparent',
-                    tension: 0.1,
-                    
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeInOutCubic'
-                    },
-                    
-                    scales: {
-                        x: { display: false },
-                        y: { display: false }
-                    },
-
-                    plugins: {
-                        legend: { display: false },
-                        title: { display: false },
-                        tooltip: { enabled: false },
-                    }
-                    
-                }
+            chartOptionsData() {
+                return this.chartOptions;
             }
         },
 

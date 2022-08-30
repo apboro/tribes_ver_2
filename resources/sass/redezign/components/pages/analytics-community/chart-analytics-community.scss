@@ -1,16 +1,18 @@
 .chart-analytics-community {
+    padding: 0 0  50px 0;
+    border-bottom: 1px solid $primary-1;
 
 
     &__header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        column-gap: 90px;
     }
 
     &__label {
         display: flex;
         flex-direction: column;
-        row-gap: 20px;
+        row-gap: $indent-1;
 
         &--pointer {
             cursor: pointer;
@@ -22,23 +24,25 @@
     }
 
     &__text {
-       @include font($text-color-1, 18px, 24px, 700);
+       @include font($text-color-1, 18px, 24px, 500);
     }
 
     &__value {
-       @include font($text-color-1, 40px, 32px, 600);
+       @include font($text-color-1, 34px, 40px, 600);
     }
 
     &__currency {
-        @include font(inherit, 40px, 32px, 400);
+        @include font(inherit, 34px, 40px, 400);
     }
 
-    //&__chart {}
+    &__chart {
+        margin-top: $indent-3;
+    }
 
     &__footer {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
-        column-gap: 60px;
+        justify-content: space-between;
+        margin-top: $indent-3;
     }
 }

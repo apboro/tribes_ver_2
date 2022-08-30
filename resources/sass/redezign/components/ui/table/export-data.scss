@@ -1,0 +1,26 @@
+.export-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__title {
+        margin: 0 10px 0 0;
+        @include font($text-color-2, 16px, 22px, 500);
+    }
+
+    &__btn {
+        padding: 5px 20px;
+        @include font($primary-1, 14px, 20px, 500);
+        border: 1px solid $primary-1;
+        border-radius: 100px;
+        transition: all .3s;
+
+        &:not(:last-child) {
+            margin: 0 10px 0 0;
+        }
+
+        &:hover {
+            opacity: .5;
+        }
+    }
+}

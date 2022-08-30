@@ -52,7 +52,7 @@
 
                 <p class="profile-community__money-value">
                     ₽ 20344,34 
-                    <span class="profile-community__money-difference profile-community__money-difference--plus">+1900 ₽</span>
+                    <!-- <span class="profile-community__money-difference profile-community__money-difference--plus">+1900 ₽</span> -->
                 </p>
 
                 <button class="button-filled profile-community__money-btn">

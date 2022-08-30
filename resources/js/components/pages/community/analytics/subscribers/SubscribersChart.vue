@@ -1,9 +1,9 @@
 <template>
     <div v-if="data && data.total" class="chart-analytics-community">
         <div class="chart-analytics-community__header">
-            <div class="chart-analytics-community__label">
-                <span class="chart-analytics-community__text">
-                    Всего подписчиков в сообществе
+            <div class="chart-analytics-community__label chart-analytics-community__label--right">
+                <span class="chart-analytics-community__text a">
+                    Всего подписчиков
                 </span>
 
                 <span class="chart-analytics-community__value">
@@ -13,10 +13,26 @@
 
             <button
                 class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                @click="toggleData('left')"
+            >
+                <span class="chart-analytics-community__text">
+                    Покинули
+                </span>
+                
+                <span
+                    class="chart-analytics-community__value"
+                    :style="{ color: left.color }"
+                >
+                    -{{ numberFormat(data.left.total) }}
+                </span>
+            </button>
+
+            <button
+                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
                 @click="toggleData('joined')"
             >
                 <span class="chart-analytics-community__text">
-                    Вступили в сообщество
+                    Вступили
                 </span>
 
                 <span
@@ -31,26 +47,8 @@
         <line-chart
             class="chart-analytics-community__chart"
             :chartData="chartData"
-            :chartOptions="chartOptions"
+            :chartOptions="chartOptionsData"
         />
-
-        <div class="chart-analytics-community__footer">
-            <button
-                class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
-                @click="toggleData('left')"
-            >
-                <span
-                    class="chart-analytics-community__value"
-                    :style="{ color: left.color }"
-                >
-                    -{{ numberFormat(data.left.total) }}
-                </span>
-             
-                <span class="chart-analytics-community__text">
-                    Покинули сообщество
-                </span>
-            </button>
-        </div>
     </div>
 </template>
 
@@ -69,6 +67,11 @@
             data: {
                 type: [Object, null],
                 default: null
+            },
+
+            chartOptions: {
+                type: Object,
+                default: () => {}
             }
         },
 
@@ -82,7 +85,9 @@
                 left: {
                     isVisible: false,
                     color: '#E24041',
-                }
+                },
+
+                labels: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
             }
         },
 
@@ -91,7 +96,7 @@
                 
                 return {
 
-                    labels: this.data.joined.items,
+                    labels: this.labels,
                     datasets: [
                         {
                             data: this.data.joined.items,                           
@@ -104,38 +109,14 @@
                             borderColor: this.left.color,
                             hidden: this.left.isVisible,
                         }
-                    ]
+                    ],
+                    
                 }
                 
             },
 
-            chartOptions() {
-                return {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    radius: 1,
-                    hoverRadius: 0,
-                    borderWidth: 4,
-                    pointBorderColor: 'transparent',
-                    tension: 0.1,
-                    
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeInOutCubic'
-                    },
-                    
-                    scales: {
-                        x: { display: false },
-                        y: { display: false }
-                    },
-
-                    plugins: {
-                        legend: { display: false },
-                        title: { display: false },
-                        tooltip: { enabled: false },
-                    }
-                    
-                }
+            chartOptionsData() {
+                return this.chartOptions;
             }
         },
 
@@ -150,3 +131,7 @@
         },
     }
 </script>
+
+<style lang="scss" scoped src="./s.scss">
+    
+</style>

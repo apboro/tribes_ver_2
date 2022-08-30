@@ -50,6 +50,7 @@
                                 @error('tariff_name')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
+                                
                                 <!-- Money -->
                                 <div class="col-sm-7 col-md-10 col-lg-7 mb-1">
                                     <div class="d-flex justify-content-between">
