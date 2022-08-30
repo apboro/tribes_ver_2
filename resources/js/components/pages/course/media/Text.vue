@@ -56,6 +56,17 @@ export default {
                 },
             });
 
+            const Link = Quill.import('formats/link');
+            const builtInFunc = Link.sanitize;
+            Link.sanitize = function customSanitizeLinkInput(linkValueInput) {
+                let val = linkValueInput;
+                // do nothing, since this implies user already using a custom protocol
+                if (/^\w+:/.test(val));
+                else if (!/^https?:/.test(val))
+                    val = "https://" + val;
+                return builtInFunc.call(this, val); // retain the built-in logic
+            };
+
             if (this.data.value) {
                 this.quill.root.innerHTML = this.data.value;
             }

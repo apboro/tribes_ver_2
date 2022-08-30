@@ -39,8 +39,8 @@ export class ProfileBlock {
 
     dateFormat() {
         Object.values(this.dateList).forEach((dateItem) => {
-            dateItem.textContent = timeFormatting({
-                date: Date(dateItem.textContent),
+            dateItem.innerText = timeFormatting({
+                date: dateItem.innerText,
                 year: "numeric",
                 month: "long",
                 day: "numeric",
