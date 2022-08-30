@@ -36,12 +36,4 @@ class Madeline
         return $MadelineProto;
     }
 
-    public function example()
-    {
-        $madeline = new Madeline();
-        $setMade = $madeline->setSettings('new');
-
-        $pwr_chat = $setMade->stats->getMessageStats(['dark' => false, 'channel' => -1001557146625, 'msg_id' => 4]);
-        dd($pwr_chat);
-    }
 }
