@@ -1,5 +1,6 @@
 export function timeFormatting(options) {
-    const date = new Date(options.date);
+    const date = new Date(options.date.replace(/-/g, "/"));
+    
     const locale = options.locale ?? 'ru';
     
     /* switch (language) {
@@ -19,7 +20,7 @@ export function timeFormatting(options) {
         minute: options.minute ?? undefined, // 2-digit, numeric
         second: options.second ?? undefined, // 2-digit, numeric
     });
-
+    
     return formatter.format(date);
 }
 
