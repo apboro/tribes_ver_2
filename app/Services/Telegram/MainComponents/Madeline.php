@@ -6,7 +6,9 @@ use danog\MadelineProto\Settings;
 use danog\MadelineProto\Settings\AppInfo;
 use danog\MadelineProto\API;
 
-require_once base_path() . '/lib/Madeline/vendor/autoload.php';
+if(env('APP_ENV') === 'production'){
+    require_once base_path() . '/lib/Madeline/vendor/autoload.php';
+}
 
 class Madeline
 {
@@ -36,12 +38,4 @@ class Madeline
         return $MadelineProto;
     }
 
-    public function example()
-    {
-        $madeline = new Madeline();
-        $setMade = $madeline->setSettings('new');
-
-        $pwr_chat = $setMade->stats->getMessageStats(['dark' => false, 'channel' => -1001557146625, 'msg_id' => 4]);
-        dd($pwr_chat);
-    }
 }

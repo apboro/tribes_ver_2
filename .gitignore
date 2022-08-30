@@ -24,6 +24,7 @@
 /videos/donate-success.mp4n
 /vendor
 /lib/Madeline/vendor
+/lib/Madeline/composer.lock
 .env
 /*.testing
 .env.backup
