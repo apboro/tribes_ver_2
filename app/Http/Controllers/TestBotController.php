@@ -45,7 +45,8 @@ class TestBotController extends Controller
 
     public function index(Request $request)
     {
-        
+        $pwr_chat = Madeline::settings()->getPwrChat(-743948980);
+        dd($pwr_chat);
     }
 
 }
