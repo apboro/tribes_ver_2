@@ -6,9 +6,7 @@ use danog\MadelineProto\Settings;
 use danog\MadelineProto\Settings\AppInfo;
 use danog\MadelineProto\API;
 
-if(env('APP_ENV')==='production'){
-    require_once base_path() . '/lib/Madeline/vendor/autoload.php';
-}
+require_once base_path() . '/lib/Madeline/vendor/autoload.php';
 
 class Madeline
 {
