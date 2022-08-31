@@ -16,11 +16,6 @@ class TelegramConnection extends Model
 
     protected $guarded = [];
 
-    /*protected static function newFactory()
-    {
-        return new TelegramConnectionFactory();
-    }*/
-
     public function community()
     {
         return $this->hasOne(Community::class, 'connection_id', 'id');
