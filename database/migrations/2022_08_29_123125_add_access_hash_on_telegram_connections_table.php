@@ -14,7 +14,6 @@ class AddAccessHashOnTelegramConnectionsTable extends Migration
     public function up()
     {
         Schema::table('telegram_connections', function (Blueprint $table) {
-            $table->string('chat_id')->unique()->change();
             $table->string('access_hash')->nullable();
             $table->string('comment_chat_id',255)->nullable();
             $table->string('comment_chat_hash')->nullable();
