@@ -20,6 +20,7 @@
 /public/icons
 /public/dependencies
 /public/storage
+public/MadelineProto*
 /public/mix-manifest.json
 /videos/donate-success.mp4n
 /vendor
