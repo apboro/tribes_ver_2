@@ -14,7 +14,8 @@ class AddAccessionDateOnTelegramUsersCommunityTable extends Migration
     public function up()
     {
         Schema::table('telegram_users_community', function (Blueprint $table) {
-            
+            $table->bigInteger('accession_date')->nullable();
+            $table->bigInteger('exit_date')->nullable();
         });
     }
 
