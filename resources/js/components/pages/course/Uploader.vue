@@ -90,6 +90,8 @@ export default {
             instantUpload : null,
             demension : {width:100, height:100},
             isLoadImage: false,
+
+            videoRef: null
         };
     },
 
@@ -121,8 +123,9 @@ export default {
             this.aspect = aspect ?? this.defaultAspect;
             this.refComponent = ref;
             if(file){
-                this.uploadFile(file);
+                this.uploadFile(file, ref._data);
             } else {
+                this.videoRef = ref;
                 this.$refs.file.click();
             }
         },
@@ -147,26 +150,37 @@ export default {
                 let reader = new FileReader();
                 let type = f ? f.type : input.files[0].type
 
+                if (this.refComponent.$el.classList.contains('uploads')) {
+                    this.uploadToserver(f);
+                }
+
                 if (this.refComponent.$el.classList.contains('image')) {
-                    if(type === 'image/jpeg' || type === 'image/png' || type === 'image/svg+xml'){
+                    if (type === 'image/jpeg' || type === 'image/png' || type === 'image/svg+xml'){
                         reader.readAsDataURL(f ? f : input.files[0]);
                         reader.onload = (e) => {
                             this.img = e.target.result;
                             this.showModal = true;
                             this.clearFileStorage();
                         };
+                    } else {
+                        alert('Неподходящий файл');
                     }
                 }
 
                 if (this.refComponent.$el.classList.contains('audio')) {
-                    if(type === 'audio/mpeg'){
+                    if (type === 'audio/mpeg'){
                         this.uploadToserver(f);
+                    } else {
+                        alert('Неподходящий файл');
                     }
                 }
 
                 if (this.refComponent.$el.classList.contains('video')) {
-                    if(type === 'video/mp4'){
+                    if (type === 'video/mp4'){
+                        this.videoRef._data.isVideoReady = false;
                         this.uploadToserver(f);
+                    } else {
+                        alert('Неподходящий файл');
                     }
                 }
             }
