@@ -33,7 +33,7 @@
     import PaymentsChart from '../../../../components/pages/community/analytics/payments/PaymentsChart.vue';
     import PaymentsTable from '../../../../components/pages/community/analytics/payments/PaymentsTable.vue';
     import VPagination from '../../../../components/ui/pagination/VPagination.vue';
-    import VExportData from '../../../../components/ui/table/VExportData.vue';
+    import VExportData from '../../../../components/ui/export/VExportData.vue';
 
     export default {
         name: 'AnalyticsPayments',

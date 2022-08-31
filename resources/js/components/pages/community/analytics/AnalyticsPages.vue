@@ -1,12 +1,12 @@
 <template>
-    <div class="filter-analytics-community">
+    <div class="select2">
         
         <select 
-            class="filter-analytics-community__list"
+            class="select2__list"
             v-model="pages"
         >
             <option
-                class="filter-analytics-community__item"
+                class="select2__item"
                 v-for="tab in tabs"
                 :key="tab.value"
                 :value="tab.value"
