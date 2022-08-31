@@ -35,4 +35,13 @@ class TelegramMessageReactionsFactory extends Factory
         });
     }
 
+    public function setTelegramUserId($telegramUser): TelegramMessageReactionsFactory
+    {
+        return $this->state(function (array $attributes) use ($telegramUser) {
+            return [
+                'telegram_user_id' => $telegramUser->id,
+            ];
+        });
+    }
+
 }
