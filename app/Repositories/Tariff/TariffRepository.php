@@ -119,6 +119,12 @@ class TariffRepository implements TariffRepositoryContract
         foreach ($request->tariff as $tyId => $variantId) {
             $ty = TelegramUser::find($tyId);
 
+            if ($ty->telegram_id === config('telegram_bot.bot.botId')) 
+                return redirect()->back()->withCommunity($community)->withErrors('Невозможно установить тариф боту.');
+             
+            if ($ty->user_id === $community->owner)
+                return redirect()->back()->withCommunity($community)->withErrors('Невозможно установить тариф себе.');
+
             if (isset($request->date_payment[$tyId]) && !$variantId || isset($request->time_payment[$tyId]) && !$variantId) {
                 return redirect()->back()->withCommunity($community)->withErrors('Невозможно установить дату платежа без тарифа.');
             } elseif (isset($request->date_payment[$tyId]) || isset($request->time_payment[$tyId])) {
@@ -138,8 +144,8 @@ class TariffRepository implements TariffRepositoryContract
             }
 
 
-            // if ($ty->telegram_id === config('telegram_bot.bot.botId') || $ty->user_id === $community->owner)        //Отключить возможность дать тариф автору и боту
-            //     continue;
+           
+                
 
             $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
 
