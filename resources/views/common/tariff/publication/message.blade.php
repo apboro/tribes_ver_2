@@ -106,7 +106,6 @@
                 {{ __('base.save') }}
             </button>
 
-
             <a
                 href="{{ route('community.tariff.list', $community) }}"
                 class="button-filled button-filled--primary"

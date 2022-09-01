@@ -3,42 +3,32 @@
 @section('tab')
     @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors])
 
-    <section class="form-control-repeater" data-tab="tariffPageSettings">
+    <section class="community-tab" data-tab="tariffPageSettings">
+        <div class="community-tab__header">
+            <a
+                href="{{ route('community.tariff.list', $community) }}"
+                class="community-tab__prev-page-btn"
+            >
+                <i data-feather="arrow-left" class="font-medium-1"></i>
+            </a>
+
+            <p class="community-tab__prev-page-title">Тарифы</p>
+            <h2 class="community-tab__title">
+                {{ __('tariff.settings_title') }}
+            </h2>
+        </div>
+
+
         <div class="row">
             <!-- Invoice repeater -->
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="col-8 col-xl-10">
-                            <h4 class="card-title">
-                                {{ __('tariff.settings_title') }}
-                            </h4>
-                        </div>
-                        
-                        <a
-                            href="{{ route('community.tariff.list', $community) }}"
-                            class="btn btn-outline-primary custom waves-effect"
-                        >
-                            <i data-feather="arrow-left" class="font-medium-1"></i>
-                            
-                            <span class="align-middle d-sm-inline-block d-none">
-                                {{ __('base.back') }}
-                            </span>
-                        </a>
-                    </div>
-                </div>
-            
                 <!-- Nav -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                        <a
-                            class="nav-link @if( !request('tab') || request('tab') == 'common') active @endif"
-                            href="{{ route('community.tariff.settings', ['community' => $community]) }}"
-                        >
-                            {{ __('base.common') }}
-                        </a>
-                    </li>
-                </ul>
+                <!-- <a
+                    class="nav-link @if( !request('tab') || request('tab') == 'common') active @endif"
+                    href="{{ route('community.tariff.settings', ['community' => $community]) }}"
+                >
+                    {{ __('base.common') }}
+                </a> -->
                     
                 <!-- TABS -->
                 @yield('subtab')    

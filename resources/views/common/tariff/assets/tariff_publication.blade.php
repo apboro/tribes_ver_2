@@ -16,7 +16,7 @@
             placeholder="Доступные тарифы"
         >@if($community->tariff && $community->tariff->publication_description){{$community->tariff->publication_description}}@endif</textarea>
         
-        <span
+        <!-- <span
             class="badge bg-warning hide"
             title="{{ __('base.unsaved_data') }}"
         >
@@ -24,7 +24,7 @@
                 data-feather='save'
                 class="font-medium-1"
             ></i>
-        </span>
+        </span> -->
         
         @error('publication_description')
             <div class="form-message form-message--danger">{{ $message }}</div>
@@ -42,7 +42,6 @@
 
         <div
             class="settings-text-image__image"
-            data-crop-image-container="publication"
         >
             <div
                 class="settings-text-image__image-message hide"
