@@ -2,6 +2,11 @@
     max-width: 610px !important;
     margin-top: $indent-1;
 
+    &--preview {
+        max-width: 100%;
+        margin-top: 0;
+    }
+
     &__content {
         display: grid;
         grid-template-rows: 1fr;
@@ -160,6 +165,10 @@
         
         @media (min-width: $sm) {
             grid-template-columns: repeat(auto-fill, 300px);
+        }
+
+        &--preview {
+            grid-template-columns: repeat(auto-fill, 49%);
         }
     }
 
