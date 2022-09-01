@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TelegramMessageReactionsFactory extends Factory
+class TelegramMessageReactionFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -15,18 +15,18 @@ class TelegramMessageReactionsFactory extends Factory
     {
         return [
 //            'id' => '',
-            'message_id' => '',
-            'reaction_id' => '',
-            'telegram_user_id' => '',
-            'datetime_record' => '',
-            'group_chat_id' => '',
+            'message_id' => null,
+            'reaction_id' => null,
+            'telegram_user_id' => null,
+            'datetime_record' => null,
+            'group_chat_id' => null,
 //            'created_at' => '',
 //            'updated_at' => '',
 
         ];
     }
 
-    public function setMessageId($message): TelegramMessageReactionsFactory
+    public function setMessageId($message): TelegramMessageReactionFactory
     {
         return $this->state(function (array $attributes) use ($message) {
             return [
@@ -35,7 +35,7 @@ class TelegramMessageReactionsFactory extends Factory
         });
     }
 
-    public function setTelegramUserId($telegramUser): TelegramMessageReactionsFactory
+    public function setTelegramUserId($telegramUser): TelegramMessageReactionFactory
     {
         return $this->state(function (array $attributes) use ($telegramUser) {
             return [
