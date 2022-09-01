@@ -12,6 +12,7 @@ use App\Filters\TariffFilter;
 use App\Models\Payment;
 use App\Models\TelegramUser;
 use App\Services\TelegramMainBotService;
+use DateTime;
 use Illuminate\Http\Request;
 
 class TariffRepository implements TariffRepositoryContract
@@ -119,8 +120,17 @@ class TariffRepository implements TariffRepositoryContract
             $ty = TelegramUser::find($tyId);
 
             if (isset($request->date_payment[$tyId]) && !$variantId || isset($request->time_payment[$tyId]) && !$variantId) {
-                redirect()->back()->withCommunity($community)->withErrors('Невозможно установить дату платежа без тарифа.');
+                return redirect()->back()->withCommunity($community)->withErrors('Невозможно установить дату платежа без тарифа.');
             } elseif (isset($request->date_payment[$tyId]) || isset($request->time_payment[$tyId])) {
+
+                if (isset($request->date_payment[$tyId]) && $request->date_payment[$tyId] !== now()->format('Y-m-d')) {
+                    $date1 = new DateTime(now()->format('Y-m-d'));
+                    $date2 = new DateTime($request->date_payment[$tyId]);
+                    if ($date1 < $date2) {
+                        return redirect()->back()->withCommunity($community)->withErrors('Невозможно установить дату платежа будущим числом.');
+                    }
+                }
+
                 $this->updatePaymentDate($request->date_payment[$tyId] ?? now()->format('Y-m-d'), $request->time_payment[$tyId] ?? now()->format('G:i:s'), $community, $ty);
             } else {
                 if ($variantId)
@@ -145,15 +155,22 @@ class TariffRepository implements TariffRepositoryContract
 
             $variant = TariffVariant::find($variantId);
 
+            $days = $variant->period;
+            if (isset($request->date_payment[$tyId]) && $request->date_payment[$tyId] !== now()->format('Y-m-d')) {
+                $date1 = new DateTime(now()->format('Y-m-d'));
+                $date2 = new DateTime($request->date_payment[$tyId]);
+                $difference = date_diff($date1, $date2)->d;
+                $days = $variant->period - $difference;
+            }
+
             if ($variantForThisCommunity) {
                 $ty->tariffVariant()->detach($variantForThisCommunity->id);
-                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
+                $ty->tariffVariant()->attach($variant, ['days' => $days, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
             } else {
-                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
+                $ty->tariffVariant()->attach($variant, ['days' => $days, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
             }
         }
     }
-
     /**
      * Обновить количество дней пользователю
      */
