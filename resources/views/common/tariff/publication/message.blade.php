@@ -5,6 +5,7 @@
         action="{{ route('tariff.settings.update', $community) }}"
         method="post"
         id="general_form_{{ $community->id }}"
+        class="community-settings"
         enctype="multipart/form-data"
         data-tab="tariffPagePublicationsMessage"
     >
@@ -75,42 +76,43 @@
         @include('common.tariff.assets.tariff_publication')
 
         <!-- Отправить в сообщество -->
-        <div class="mt-2">
-            <div class="row d-flex align-items-center">
-                <div class="col-12">
-                    <div class="d-flex align-items-center">
-                        <div class="form-check form-check-primary form-switch">
-                            <input
-                                type="checkbox"
-                                class="form-check-input pointer"
-                                id="tariff_item_check_6"
-                                value="true"
-                                name="send_to_community"
-                            />
-                        </div>
+        <div class="toggle-switch community-settings__item">        
+            <label class="toggle-switch__switcher">
+                <input
+                    type="checkbox"
+                    id="tariff_item_check_6"
+                    class="toggle-switch__input"
+                    value="true"
+                    name="send_to_community"
+                >
+                <span class="toggle-switch__slider"></span>
+            </label>
 
-                        <label class="ms-1 pointer" for="tariff_item_check_6">
-                            {{ __('form.send_to_community') }}
-                        </label>
-                    </div>
-                </div>
-            </div>
+            <label
+                for="tariff_item_check_6"
+                class="toggle-switch__label"
+            >
+            {{ __('form.send_to_community') }}
+            </label>
         </div>
     
-
-    
         <!-- Submit -->
-        <div class="col-sm-5 col-lg-4 col-xl-3">
+        <div class="community-settings__buttons">
             <button
-                class="btn w-100 btn-icon btn-success d-flex align-items-center justify-content-center"
+                class="button-filled button-filled--primary"
                 type="submit"
                 data-repeater-create
             >
-                <i data-feather="save" class="font-medium-1"></i>
-                <span class="ms-1">
-                    {{ __('base.save') }}
-                </span>
+                {{ __('base.save') }}
             </button>
+
+
+            <a
+                href="{{ route('community.tariff.list', $community) }}"
+                class="button-filled button-filled--primary"
+            >
+                Отменить
+            </a>
         </div>
     </form>
 @endsection

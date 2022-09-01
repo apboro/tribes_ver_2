@@ -5,6 +5,16 @@
 
     &__image {
         position: relative;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 50px;
+            left: -40px;
+            width: 40px;
+            height: 1px;
+            background-color: $grey-4;
+        }
     }
 
     &__image-message {
@@ -109,7 +119,7 @@
 }
 
 
-/* [data-crop-image-load-container] {
+[data-crop-image-load-container] {
     &.highlight {
         & [data-crop-image-instructions] {
             color: #fff;
@@ -121,21 +131,21 @@
             }
         }
     }
-} */
+}
 
-/* [data-crop-image-container] {
+[data-crop-image-container] {
     position: relative;
-} */
+}
 
-/* [data-image-alert] {
+[data-image-alert] {
     position: absolute;
     top: 50%;
     left: 0;
     background-color: #fff;
     z-index: 5;
-} */
+}
 
-/* [data-crop-image-instructions] {
+[data-crop-image-instructions] {
     padding: 15px 25px;
     text-align: center;
     background-color: transparent;
@@ -156,7 +166,7 @@
                 color: #fff;
             }
     }
-} */
+}
 
 [data-donate-item-id] {
     &.inactive-form-items {

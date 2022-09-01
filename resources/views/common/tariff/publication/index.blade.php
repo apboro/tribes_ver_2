@@ -3,7 +3,10 @@
 @section('tab')
     @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors])
 
-    <section class="community-tab" data-tab="tariffPagePublications">
+    <section
+        class="community-tab"
+        data-tab="tariffPagePublications"
+    >
         <div class="community-tab__header">
             <a
                 href="{{ route('community.tariff.list', $community) }}"
@@ -38,11 +41,7 @@
             </ul>
         </nav>
 
-        
-
         <!-- TABS -->
         @yield('subtab')
     </section>
-
-    
 @endsection
