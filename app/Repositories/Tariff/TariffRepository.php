@@ -87,18 +87,18 @@ class TariffRepository implements TariffRepositoryContract
     {
         $newDate = $date . ' ' . $time;
         if ($date !== null) {
-            $this->createPayment($community->id, $ty->telegram_id, $newDate);
+            $this->createPayment($community, $ty->telegram_id, $newDate);
         }
     }
 
-    private function createPayment($communityId, $tyTelegramId, $date)
+    private function createPayment($community, $tyTelegramId, $date)
     {
         $ty = TelegramUser::where('telegram_id', $tyTelegramId)->first();
-        $variant = $ty->tariffVariant()->first();
+        $variant = $ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first();
         if (!$variant) {
             Payment::create([
                 'OrderId' => 1,
-                'community_id' => $communityId,
+                'community_id' => $community->id,
                 'add_balance' => 0,
                 'isNotify' => false,
                 'telegram_user_id' => $tyTelegramId,
@@ -134,7 +134,7 @@ class TariffRepository implements TariffRepositoryContract
                 $this->updatePaymentDate($request->date_payment[$tyId] ?? now()->format('Y-m-d'), $request->time_payment[$tyId] ?? now()->format('G:i:s'), $community, $ty);
             } else {
                 if ($variantId)
-                    $this->createPayment($community->id, $ty->telegram_id, now()->format('Y-m-d G:i:s'));
+                    $this->createPayment($community, $ty->telegram_id, now()->format('Y-m-d G:i:s'));
             }
 
 
