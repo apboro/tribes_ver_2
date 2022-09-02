@@ -20,8 +20,6 @@ class TelegramMessageReactionFactory extends Factory
             'telegram_user_id' => null,
             'datetime_record' => null,
             'group_chat_id' => null,
-//            'created_at' => '',
-//            'updated_at' => '',
 
         ];
     }

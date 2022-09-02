@@ -8,11 +8,11 @@ use App\Models\TelegramPost;
 use App\Models\TelegramUser;
 use App\Models\TelegramPostReaction;
 use App\Models\TelegramMessageReaction;
-use Doctrine\DBAL\Schema\Sequence;
 use Illuminate\Database\Seeder;
 use App\Models\TelegramDictReaction;
 use Carbon\Carbon;
 use App\Models\TelegramConnection;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class TelegramStatisticSeeder extends Seeder
 {
@@ -37,39 +37,39 @@ class TelegramStatisticSeeder extends Seeder
         $connectionsChannel= TelegramConnection::where('chat_type', 'channel')->get();
         $dates = $this->getDateArray();
         $telegramUsers = TelegramUser::all()->toArray();
+        $reactions = TelegramDictReaction::all()->toArray();
 
+        //КАНАЛЫ
         foreach ($connectionsChannel as $chanelConnection) {
 
-            foreach ($dates as $eachDate) {
-                $telegramPost = TelegramPost::factory()
-                    ->count(2)
-                    ->create([
-                        'channel_id' => $chanelConnection['chat_id'],
-                        'datetime_record_reaction' => $eachDate,
-                    ]);
-            }
+            $telegramPosts = TelegramPost::factory()
+                ->count(rand(1,3))
+                ->create([
+                    'channel_id' => $chanelConnection['chat_id'],
+                    'datetime_record_reaction' => end($dates),
+                ]);
 
-            $reactions = TelegramDictReaction::all()->toArray();
-
-            foreach (TelegramPost::all() as $eachTelegramPost) {
-                TelegramPostReaction::factory()
-                    ->count(2)
-                    ->create([
-                        'post_id' => $eachTelegramPost['id'],
-                        'reaction_id' => $reactions[array_rand($reactions)]['id'],
-                        'datetime_record' => null,//TODO записать время
-                        'chat_id' => $chanelConnection->chat_id,
-                    ]);
+            foreach ($telegramPosts as $eachTelegramPost) {
+                foreach ($dates as $eachDate) {
+                    if($count = rand(0,5))
+                    TelegramPostReaction::factory()
+                        ->count($count)
+                        ->create([
+                            'post_id' => $eachTelegramPost['post_id'],
+                            'reaction_id' => $reactions[array_rand($reactions)]['id'],
+                            'datetime_record' => $eachDate,
+                            'chat_id' => $chanelConnection->chat_id,
+                        ]);
+                }
 
                 //Коменты
                 $messages = TelegramMessage::factory()
                     ->count(3/*rand(10,20)*/)
                     ->create([
                         'group_chat_id' => $chanelConnection->chat_id,
-                        'post_id' => $eachTelegramPost['id'],
+                        'post_id' => $eachTelegramPost['post_id'],
                         'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
-                        //'message_id' => rand(1000000000,1269912109),//TODO узнать что за поле
-                        'datetime_record_reaction' => null,
+                        'datetime_record_reaction' => end($dates),
                         'chat_type' => $chanelConnection->chat_type,
                         'parrent_message_id' => null,
                     ]);
@@ -77,52 +77,78 @@ class TelegramStatisticSeeder extends Seeder
                 //Ответы на коменты
                 foreach ($messages as $message) {
                     $parentMessages = TelegramMessage::factory()
-                        ->count(2/*rand(10,20)*/)
+                        ->count(2/*rand(10,20)*/)//TODO раскоментировать
                         ->create([
                             'group_chat_id' => $chanelConnection->chat_id,
-                            'post_id' => $eachTelegramPost['id'],
+                            'post_id' => $eachTelegramPost['post_id'],
                             'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
-                            //'message_id' => rand(1000000000,1269912109),//TODO узнать что за поле
-                            'datetime_record_reaction' => null,
+                            'datetime_record_reaction' => end($dates),
                             'chat_type' => $chanelConnection->chat_type,
                             'parrent_message_id' => $message->message_id,
                         ]);
                 }
 
-
-                foreach ($parentMessages as $parentMessage) {
-//                    dd($parentMessage);
-                    TelegramMessageReaction::factory()
-                        ->count(10)
-//                        ->state(['reaction_id' => $reactions[array_rand($reactions)]['id']])
-                        ->create([
-                            'message_id' => $parentMessage->id,
-                            'reaction_id' => $reactions[array_rand($reactions)]['id'],
-                            'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
-                            'datetime_record' => null,
-                            'group_chat_id' => $chanelConnection->chat_id,
-                        ]);
-                }
-//                dd($messages);
             }
-//            dd($chanelConnection);
-//            foreach ()
 
         }
 
-        /*foreach ($connectionsGroup as $groupConnection) {
-            foreach ($dates as $eachDate) {
-                $telegramMessage = TelegramMessage::factory()
-                    ->count(2)
+        //ГРУППЫ
+        foreach ($connectionsGroup as $groupConnection) {
+
+            $groupMessages = TelegramMessage::factory()
+                ->count(3/*rand(10,20)*/)//TODO раскоментировать
+                ->create([
+                    'group_chat_id' => $groupConnection->chat_id,
+                    'post_id' => null,
+                    'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
+                    'datetime_record_reaction' => end($dates),
+                    'chat_type' => $groupConnection->chat_type,
+                    'parrent_message_id' => null,
+                ]);
+
+            foreach ($groupMessages as $groupMessage) {
+                $parentGroupMessages = TelegramMessage::factory()
+                    ->count(2/*rand(10,20)*/)//TODO раскоментировать
                     ->create([
-                        'group_chat_id' => $groupConnection['chat_id'],
-                        'datetime_record_reaction' => $eachDate,
+                        'group_chat_id' => $groupConnection->chat_id,
+                        'post_id' => null,
+                        'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
+                        'datetime_record_reaction' => end($dates),
+                        'chat_type' => $chanelConnection->chat_type,
+                        'parrent_message_id' => $groupMessage->message_id,
                     ]);
             }
-        }*/
+
+        }
+
+        //Реакции
+
+        foreach ($dates as $eachDate) {
+            foreach (TelegramMessage::all() as $message) {
+//                dd($message);
+                if ($count = rand(0,5)) {
+                    TelegramMessageReaction::factory()
+                        ->count($count)
+                        ->state(new Sequence(
+                            [ 'reaction_id' => $reactions[array_rand($reactions)]['id'], 'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'] ],
+                            [ 'reaction_id' => $reactions[array_rand($reactions)]['id'], 'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'] ],
+                            [ 'reaction_id' => $reactions[array_rand($reactions)]['id'], 'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'] ],
+                            [ 'reaction_id' => $reactions[array_rand($reactions)]['id'], 'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'] ],
+                            [ 'reaction_id' => $reactions[array_rand($reactions)]['id'], 'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'] ],
+                        ))
+                        ->create([
+                            'message_id' => $message->message_id,
+                            'datetime_record' => $eachDate,
+                            'group_chat_id' => $message->group_chat_id,
+                        ]);
+                }
+
+            }
+        }
     }
 
     private function getDateArray() {
+        //Предусмотрен разрез времени в два года от текущего времени (с шагом в 30 минут)
         $date = Carbon::now()->subYears(2);
         $dateArr = [];
 
