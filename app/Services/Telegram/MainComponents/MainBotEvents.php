@@ -168,7 +168,7 @@ class MainBotEvents
                         $this->getPhoto($chatId)
                     );
                     if ($this->bot->getExtentionApi()->getChatCount($chatId) > 2) {
-                        dispatch(new SetNewTelegramUsers($chatId))->delay(60);
+                        dispatch(new SetNewTelegramUsers($chatId))->delay(10);
                     }
 
                 }
@@ -195,7 +195,7 @@ class MainBotEvents
                         $chatId
                     );
                     if ($this->bot->getExtentionApi()->getChatCount($chatId) > 2) {
-                        dispatch(new SetNewTelegramUsers($chatId))->delay(60);
+                        dispatch(new SetNewTelegramUsers($chatId))->delay(10);
                     }
                 }
             }
