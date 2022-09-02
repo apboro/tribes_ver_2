@@ -3,7 +3,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "..names.name" . }}-{{ .Release.Revision }}
+  name: {{ include "..names.name" . }}-migration-{{ .Release.Revision }}
   labels:
     {{- include "..labels.standard" . | nindent 4 }}
   annotations:
