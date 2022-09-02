@@ -29,18 +29,18 @@
             }
         }
     }
-}
 
-.input-group-red {
-    display: grid;
-    grid-template-columns: 180px 1fr;
+    &__input-group {
+        display: grid;
+        grid-template-columns: 180px 1fr;
 
-    div:first-child input {
-        border-right: none;
-        border-radius: 5px 0 0 5px;
-    }
+        div:first-child input {
+            border-right: none;
+            border-radius: 5px 0 0 5px;
+        }
 
-    div:last-child select {
-        border-radius: 0 5px 5px 0;
+        div:last-child select {
+            border-radius: 0 5px 5px 0;
+        }
     }
 }

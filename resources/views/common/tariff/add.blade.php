@@ -53,7 +53,7 @@
                     @enderror
                 </div>
 
-                <div class="community-settings__form-item input-group-red">
+                <div class="community-settings__form-item community-settings__input-group">
                     <div class="community-settings__input-wrapper">
                         <label
                             class="form-label-red"
@@ -91,22 +91,22 @@
                             @else
                                 <option value="1" checked>1 {{ __('base.day_low') }}</option>
                             @endif
-
-                            <option value="3">3 {{ __('base.days_rus_low') }}</option>
                             <option value="7">7 {{ __('base.days_low') }}</option>
                             <option value="14">14 {{ __('base.days_low') }}</option>
                             <option value="30">30 {{ __('base.days_low') }} </option>
                             <option value="90">90 {{ __('base.days_low') }}</option>
                             <option value="180">180 {{ __('base.days_low') }}</option>
                             <option value="365">365 {{ __('base.days_low') }}</option>
+                            <!-- <option value="set">Свое значение</option> -->
                         </select>
                     </div>
                 </div>
 
                 <div class="">
                     <label
-                            class="form-label-red"
-                            for="tariff_name">
+                        class="form-label-red"
+                        for="tariff_name"
+                    >
                         {{ __('tariff.number_button') }}
                     </label>
 
@@ -124,6 +124,8 @@
 
             <div class="toggle-switch community-settings__item">        
                 <label class="toggle-switch__switcher">
+                    <input type="hidden" name="tariff" value="0" />
+                    
                     <input
                         type="checkbox"
                         id="tariff_active"
