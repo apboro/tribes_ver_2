@@ -1,0 +1,25 @@
+.community-tab {
+    margin-top: 30px;
+
+    &__header {
+        display: grid;
+        grid-template-rows: min-content min-content;
+        grid-template-columns: min-content 1fr;
+        row-gap: 5px;
+    }
+
+    &__prev-page-btn {}
+
+    &__prev-page-title {
+        @include font($text-color-2, 20px, 26px, 500);
+    }
+
+    &__title {
+        grid-column: 1 / 3;
+        @include font($text-color-1, 30px, 36px, 600);
+    }
+
+    &__nav {
+        margin-top: 30px;
+    }
+}

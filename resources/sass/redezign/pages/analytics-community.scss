@@ -1,12 +1,12 @@
 .analytics-community {
 
-    &__title-wrap {
+    &__analytics-wrap {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-    &__analytics-wrap {
+    &__title-wrap {
         display: flex;
         align-items: center
     }
@@ -16,15 +16,6 @@
 
         &:not(:last-child){
             margin: 0 20px 0 0;
-        }
-    }
-
-    &__btn-back {
-        margin: 0 20px 0 0;
-        transition: .3s;
-
-        &:hover {
-            opacity: .5;
         }
     }
 

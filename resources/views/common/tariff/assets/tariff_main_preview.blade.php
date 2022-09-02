@@ -49,8 +49,8 @@
     </div>
 </div> -->
 
-<div class="right col-12 col-xl-6">
-    <label class="form-label">
+<div class="">
+    <label class="form-label-red">
             {{ __('base.preview') }}
     </label>
     <div 
@@ -63,8 +63,6 @@
                 <img
                     src="@if($community->tariff && $community->tariff->getMainImage()){{$community->tariff->getMainImage()->url }}@else/images/no-image.svg @endif"
                     alt=""  
-                    class="active-image__img rounded w-100 h-100"
-                    style="object-fit: contain;"
                     data-default-image
                 >
 
@@ -92,15 +90,8 @@
                 @foreach ($community->tariff->getTariffVariants() as $tariff)
                     @if ($tariff->isActive == true && $tariff->price !== 0)
                     <li class="tariff-public__item">
-                        <button
+                        <span
                             class="tariff-public__variant"
-                            onclick="TariffSelectionPage.openRightsModal({ 
-                                communityName: '{{ $community->title }}',
-                                communityTariff: '{{ $tariff->title }}',
-                                communityTariffID: '{{ $tariff->id }}',
-                                communityAmount: '{{ $tariff->price }}',
-                                url: `{{ $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
-                            })"
                         >
                             <div class="tariff-public__variant-header">
                                 <h4 class="tariff-public__variant-title" title="{{ $tariff->title }}">
@@ -123,7 +114,7 @@
                                     <span class="tariff-public__old-price"></span>
                                 </div>
                             </div>
-                        </button>
+                        </span>
                     </li>
                     @endif
                 @endforeach
@@ -132,4 +123,3 @@
         @endif
     </div>
 </div>
-

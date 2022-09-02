@@ -40,7 +40,7 @@
     import SubscribersTable from '../../../../components/pages/community/analytics/subscribers/SubscribersTable.vue';
     import ProgressList from '../../../../components/pages/community/analytics/ProgressList.vue';
     import VPagination from '../../../../components/ui/pagination/VPagination.vue';
-    import VExportData from '../../../../components/ui/table/VExportData.vue'
+    import VExportData from '../../../../components/ui/export/VExportData.vue'
 
     export default {
         name: 'AnalyticsSubscribers',

@@ -1,5 +1,5 @@
 export function timeFormatting(options) {
-    const date = new Date(options.date.replace(/-/g, "/"));
+    const date = typeof options.date == 'string' ? new Date(options.date.replace(/-/g, "/")) : options.date;
     
     const locale = options.locale ?? 'ru';
     

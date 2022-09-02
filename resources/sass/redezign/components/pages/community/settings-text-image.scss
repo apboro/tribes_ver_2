@@ -1,0 +1,223 @@
+.settings-text-image {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+    gap: 30px 40px;
+
+    &__image {
+        position: relative;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 50px;
+            left: -40px;
+            width: 40px;
+            height: 1px;
+            background-color: $grey-4;
+        }
+
+        &--no-line {
+            &:before {
+                display: none;
+            }
+        }
+    }
+
+    &__image-message {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        z-index: 5;
+    }
+
+    &__load-container {
+        &--hidden {
+            display: none;
+        }
+
+        &.highlight {
+            .settings-text-image__instructions {
+                color: #fff;
+                background-color: #28c76f;
+                border: 2px solid #ff9f43;
+
+                & h3 {
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    &__instructions {
+        padding: 10px 20px;
+        text-align: center;
+        background-color: transparent;
+        border: 2px dashed $grey-5;
+        border-radius: 5px;
+        transition: .3s;
+
+        & h3 {
+            transition: .3s;
+        }
+
+        &.highlight {
+            color: #fff;
+                background-color: #28c76f;
+                border: 2px solid #ff9f43;
+
+                & h3 {
+                    color: #fff;
+                }
+        }
+    }
+
+    &__instructions-text {
+        @include font($text-color-2, 14px, 20px, 400);
+
+        &--bold {
+            font-weight: 600;
+        }
+    }
+
+    &__instructions-formats {
+        margin-top: $indent-1;
+    }
+
+    &__instructions-size {
+        margin-top: 5px;
+    }
+
+    &__instructions-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        cursor: pointer;
+    }
+
+    &__active-image {
+        
+
+        img {
+            width: 100%;
+            border-radius: 5px;
+        }
+    }
+
+    &__cropper {
+        
+
+        .croppr-container {
+            border: 1px dashed $grey-5;
+        }
+    }
+
+    &__buttons {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        column-gap: $indent-3;
+        margin-top: $indent-2;
+    }
+}
+
+
+[data-crop-image-load-container] {
+    &.highlight {
+        & [data-crop-image-instructions] {
+            color: #fff;
+            background-color: #28c76f;
+            border: 2px solid #ff9f43;
+
+            & h3 {
+                color: #fff;
+            }
+        }
+    }
+}
+
+[data-crop-image-container] {
+    position: relative;
+}
+
+[data-image-alert] {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    background-color: #fff;
+    z-index: 5;
+}
+
+[data-crop-image-instructions] {
+    padding: 15px 25px;
+    text-align: center;
+    background-color: transparent;
+    border: 2px dashed rgb(110, 107, 123);
+    border-radius: 10px;
+    transition: .3s;
+
+    & h3 {
+        transition: .3s;
+    }
+
+    &.highlight {
+        color: #fff;
+            background-color: #28c76f;
+            border: 2px solid #ff9f43;
+
+            & h3 {
+                color: #fff;
+            }
+    }
+}
+
+[data-donate-item-id] {
+    &.inactive-form-items {
+        input[type="text"],
+        input[type="number"],
+        input[type="time"],
+        select,
+        textarea,
+        div[data-load-image_block],
+        .croppr-handleContainer,
+        img,
+        button {
+            pointer-events: none;
+            filter: blur(2px);
+        }
+    }
+}
+
+.active-image {
+    &:hover {
+        & .active-image__remove-btn,
+        & .active-image__change-btn {
+            opacity: .8;
+            visibility: visible;
+        }
+    }
+
+    &__img {}
+
+    &__remove-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: .3s;
+    }
+
+    &__change-btn {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        opacity: 0;
+        visibility: hidden;
+        transition: .3s;
+    }
+}
