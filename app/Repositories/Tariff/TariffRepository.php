@@ -29,8 +29,7 @@ class TariffRepository implements TariffRepositoryContract
         TelegramMainBotService $mainServiceBot,
         FileUploadService $fileUploadService,
         FileEntity $fileEntity
-    )
-    {
+    ) {
         $this->fileRepo = $fileRepo;
         $this->mainServiceBot = $mainServiceBot;
         $this->fileUploadService = $fileUploadService;
@@ -70,7 +69,7 @@ class TariffRepository implements TariffRepositoryContract
 
     public function perm($request, $community)
     {
-        if (isset($request->days)) 
+        if (isset($request->days))
             $this->updateDaysForUser($request, $community);
 
         if (isset($request->excluded))
@@ -164,8 +163,10 @@ class TariffRepository implements TariffRepositoryContract
             }
 
             if ($variantForThisCommunity) {
-                $ty->tariffVariant()->detach($variantForThisCommunity->id);
-                $ty->tariffVariant()->attach($variant, ['days' => $days, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
+                if ($variantForThisCommunity->id !== $variant->id) {
+                    $ty->tariffVariant()->detach($variantForThisCommunity->id);
+                    $ty->tariffVariant()->attach($variant, ['days' => $days, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
+                }
             } else {
                 $ty->tariffVariant()->attach($variant, ['days' => $days, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
             }
@@ -203,7 +204,7 @@ class TariffRepository implements TariffRepositoryContract
                     ]);
                     $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
                 }
-                
+
                 if ($excluded === false) {
                     $ty->communities()->updateExistingPivot($community->id, [
                         'excluded' => $excluded,
@@ -211,7 +212,6 @@ class TariffRepository implements TariffRepositoryContract
                     $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
                 }
             }
-            
         }
     }
 
@@ -275,9 +275,9 @@ class TariffRepository implements TariffRepositoryContract
             $this->tariffModel->title = $data['title'];
         }
 
-//        if ($data['trial_period']  && env('USE_TRIAL_PERIOD')) {
-//            $this->tariffModel->test_period = $data['trial_period'];
-//        }
+        //        if ($data['trial_period']  && env('USE_TRIAL_PERIOD')) {
+        //            $this->tariffModel->test_period = $data['trial_period'];
+        //        }
 
         $this->tariffModel->test_period = $data['trial_period']  && env('USE_TRIAL_PERIOD', true)
             ? $data['trial_period']
@@ -377,19 +377,19 @@ class TariffRepository implements TariffRepositoryContract
 
     private function updateDescriptions($data)
     {
-        if (isset($data['welcome_description'])){
+        if (isset($data['welcome_description'])) {
             $this->tariffModel->welcome_description = $data['welcome_description'];
         }
-        if (isset($data['reminder_description'])){
+        if (isset($data['reminder_description'])) {
             $this->tariffModel->reminder_description = $data['reminder_description'];
         }
-        if (isset($data['success_description'])){
+        if (isset($data['success_description'])) {
             $this->tariffModel->thanks_description = $data['success_description'];
         }
-        if (isset($data['main_description'])){
+        if (isset($data['main_description'])) {
             $this->tariffModel->main_description = $data['main_description'];
         }
-        if (isset($data['publication_description'])){
+        if (isset($data['publication_description'])) {
             $this->tariffModel->publication_description = $data['publication_description'];
         }
     }
