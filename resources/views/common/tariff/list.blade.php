@@ -173,7 +173,7 @@
                                     </div>
                                     <a
                                         href="{{ route('community.tariff.add', $community) }}"
-                                        class="button-filled button-filled--secondary tariff-list__btn"
+                                        class="button-filled button-filled--primary tariff-list__btn"
                                     >
                                         <!-- <i data-feather='plus' class="font-medium-1"></i> -->
                                         <span>
