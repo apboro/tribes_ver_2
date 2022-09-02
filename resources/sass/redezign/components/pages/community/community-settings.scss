@@ -43,4 +43,10 @@
             border-radius: 0 5px 5px 0;
         }
     }
+
+    &__tariff-public-settings {
+        display: grid;
+        grid-template-columns: minmax(470px, 1fr) 1fr;
+        column-gap: 30px;
+    }
 }

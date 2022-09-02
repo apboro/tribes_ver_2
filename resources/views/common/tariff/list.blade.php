@@ -11,7 +11,6 @@
                                 {{ __('base.tariffs') }}
                             </h4>
 
-                            
                             <div class="dropdown-red main-header__dropdown">
                                 <button class="button-text button-text--primary button-text--only-icon dropdown-red__head" data-dropdown-btn onclick="Dropdown.toggle(this)">
                                     <span
@@ -131,11 +130,13 @@
                                 <p class="tariff-list__price-days"><span class="tariff-list__price">{{ $tariff->price }}&#8381; </span> / {{ $tariff->period }} {{App\Traits\Declination::defineDeclination($tariff->period)}}</p>
                                 <div class="tariff-list__community">
                                     <h4 class="tariff-list__community-label">{{ __('base.community') }}</h4>
-                                    <p class="tariff-list__community-title">Канал Димы Коваля</p>
+                                    <p class="tariff-list__community-title">
+                                        {{ $community->title }}
+                                    </p>
                                 </div>
                                 <div class="toggle-switch">
                                     <label class="toggle-switch__switcher">
-                                        <input type="checkbox" id="is_tariff-list" class="toggle-switch__input" value=""> 
+                                        <input type="checkbox" id="is_tariff-list" class="toggle-switch__input" value="" @if($tariff->isActive) checked @endif> 
                                         <span class="toggle-switch__slider"></span>
                                     </label> 
                                     <label for="is_tariff-list" class="toggle-switch__label">

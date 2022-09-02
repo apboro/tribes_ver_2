@@ -3,8 +3,19 @@
     margin-top: $indent-1;
 
     &--preview {
+        position: relative;
         max-width: 100%;
         margin-top: 0;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -15px;
+            width: 1px;
+            height: 100%;
+            background-color: $grey-4;
+        }
     }
 
     &__content {

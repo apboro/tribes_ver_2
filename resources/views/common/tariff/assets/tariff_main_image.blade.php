@@ -1,6 +1,6 @@
 <!-- Изображение -->
 <div
-    class="settings-text-image__image-block"
+    class="settings-text-image__image-block community-settings__item"
     data-crop-image-container="pay"
 >
     <label class="form-label-red">
