@@ -3,6 +3,7 @@ $button-background-color: $white;
 $button-text-color-primary-1: $primary-1;
 $button-border-color-primary: $primary-1;
 $button-background-color-primary: $primary-2;
+$button-background-color-primary-1: $primary-1;
 
 $button-text-color-success-1: $success-1;
 $button-border-color-success: $success-1;
@@ -55,5 +56,9 @@ $button-background-color-danger: $danger-2;
     &--disabled {
         pointer-events: none;
         opacity: .4;
+    }
+
+    &--active-tab {
+        background-color: rgba($button-background-color-primary-1, .15);
     }
 }

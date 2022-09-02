@@ -33,6 +33,20 @@ $button-background-color-danger-2: $danger-4;
         }
     }
 
+    &--secondary {
+        border-radius: 2px;
+        color: $white;
+        background-color: $button-background-color-primary-1;
+        text-transform: uppercase;
+
+        &:hover,
+        &:focus {
+            color: $white;
+            background-color: $button-background-color-primary-2;
+            box-shadow: $button-shadow;
+        }
+    }
+
     &--success {
         background-color: $button-background-color-success-1;
 
