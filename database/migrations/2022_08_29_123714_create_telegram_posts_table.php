@@ -14,15 +14,17 @@ class CreateTelegramPostsTable extends Migration
      */
     public function up()
     {
-        Schema::table('telegram_connections', function (Blueprint $table) {
-            $table->unique('chat_id');
-        });
+        // Schema::table('telegram_connections', function (Blueprint $table) {
+        //     $table->unique('chat_id');
+        // });
         Schema::create('telegram_posts', function (Blueprint $table) {
             $table->id();
             $table->string('channel_id')->nullable();
-            $table->bigInteger('post_id')->nullable();
+            $table->bigInteger('post_id')->unique()->nullable();
             $table->text('text')->nullable();
             $table->integer('datetime_record_reaction')->nullable();
+            $table->bigInteger('views')->default(0);
+            $table->boolean('flag_observation')->default(true);
             $table->timestamps();
 
             $table->foreign('channel_id')->references('chat_id')->on('telegram_connections')->onDelete('cascade');
