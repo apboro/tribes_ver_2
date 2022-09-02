@@ -158,8 +158,9 @@ class TariffRepository implements TariffRepositoryContract
             if (isset($request->date_payment[$tyId]) && $request->date_payment[$tyId] !== now()->format('Y-m-d')) {
                 $date1 = new DateTime(now()->format('Y-m-d'));
                 $date2 = new DateTime($request->date_payment[$tyId]);
-                $difference = date_diff($date1, $date2)->d;
-                $days = $variant->period - $difference;
+                $difference = date_diff($date1, $date2);
+                
+                $days = $variant->period - $difference->days;
                 if ($days < 0) {
                     $days = 0;
                 }
