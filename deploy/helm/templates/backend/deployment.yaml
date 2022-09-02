@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "..names.fullname" . }}-backend
+  name: {{ include "..names.name" . }}-backend
   labels:
     {{- include "..labels.standard" . | nindent 4 }}
 spec:
@@ -11,17 +11,17 @@ spec:
   selector:
     matchLabels:
       {{- include "..labels.matchLabels" . | nindent 6 }}
-      app: {{ include "..names.fullname" . }}
+      app: {{ include "..names.name" . }}
   template:
     metadata:
       labels:
         {{- include "..labels.standard" . | nindent 8 }}
-        app: {{ include "..names.fullname" . }}
+        app: {{ include "..names.name" . }}
       annotations:
         checksum/container-registry: {{ include (print $.Template.BasePath "/backend/docker-secret.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
-        - name: {{ include "..names.fullname" . }}-backend-pull-secret
+        - name: {{ include "..names.name" . }}-backend-pull-secret
       {{- if .Values.backend.tolerations }}
       tolerations: {{- include "..tplvalues.render" (dict "value" .Values.backend.tolerations "context" .) | nindent 8 }}
       {{- end }}

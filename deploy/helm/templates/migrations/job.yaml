@@ -3,7 +3,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "..names.fullname" . }}-{{ .Release.Revision }}
+  name: {{ include "..names.name" . }}-{{ .Release.Revision }}
   labels:
     {{- include "..labels.standard" . | nindent 4 }}
   annotations:
@@ -18,7 +18,7 @@ spec:
     spec:
       restartPolicy: Never
       imagePullSecrets:
-        - name: {{ include "..names.fullname" . }}-migration-pull-secret
+        - name: {{ include "..names.name" . }}-migration-pull-secret
       containers:
       - name: migrations
         args:
