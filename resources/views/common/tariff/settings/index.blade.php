@@ -13,6 +13,7 @@
             </a>
 
             <p class="community-tab__prev-page-title">Тарифы</p>
+            
             <h2 class="community-tab__title">
                 {{ __('tariff.settings_title') }}
             </h2>

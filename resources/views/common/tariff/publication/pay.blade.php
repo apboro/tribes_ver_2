@@ -14,19 +14,18 @@
                 <div class="row" data-tab="tariffPageSettingsPay">
                     <div class="left col-12 col-xl-6">
                         @csrf
-                        <!-- Изображение -->
-                        @include('common.tariff.assets.tariff_main_image')
-                        <hr>
-
                         <!-- TITLE -->
                         <div class="col-12">
-                            <label class="form-label pointer" for="pay_title">
+                            <label
+                                class="form-label-red"
+                                for="pay_title"
+                            >
                                 {{ __('base.title') }}
                             </label>
                             
                             <input
                                 type="text"
-                                class="form-control @error('title') error @enderror"
+                                class="form-control-red @error('title') form-control-red--danger @enderror"
                                 id="pay_title"
                                 name="title"
                                 aria-describedby="pay_title"
@@ -35,13 +34,14 @@
                                 oninput="CommunityPage.tariffPagePublications.payBlock.onInputTitle(event)"
                             />
 
-                            <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">
+                            <!-- <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">
                                 <i data-feather='save' class="font-medium-1" ></i>
-                            </span>
-                            
+                            </span> -->
                         </div>
-                        <hr>
 
+                        <!-- Изображение -->
+                        @include('common.tariff.assets.tariff_main_image')
+                        
                         <!-- EDITOR -->
                         @include('common.tariff.assets.tariff_main_editor')
                     </div>
@@ -50,7 +50,6 @@
                     @include('common.tariff.assets.tariff_main_preview')
                 </div>
 
-                <hr/>
 
                 <div class="profile-community__pay-link-block">
                     <p class="profile-community__pay-link-label">
@@ -76,20 +75,25 @@
                 </div>
             </div>
 
-            <div class="card-footer">
+            <div class="community-settings__buttons">
                 <!-- Submit -->
-                <div class="col-sm-5 col-lg-4 col-xl-3">
-                    <button
-                        class="btn w-100 btn-icon btn-success d-flex align-items-center justify-content-center"
-                        type="submit"
-                        data-repeater-create
-                    >
-                        <i data-feather="save" class="font-medium-1"></i>
-                        <span class="ms-1">
-                            {{ __('base.save') }}
-                        </span>
-                    </button>
-                </div>
+                <button
+                    class="button-filled button-filled--primary"
+                    type="submit"
+                    data-repeater-create
+                >
+                    <i data-feather="save" class="font-medium-1"></i>
+                    <span class="ms-1">
+                        {{ __('base.save') }}
+                    </span>
+                </button>
+
+                <a
+                    href="{{ route('community.tariff.list', $community) }}"
+                    class="button-filled button-filled--primary"
+                >
+                    Отменить
+                </a>
             </div>
 
         </div>

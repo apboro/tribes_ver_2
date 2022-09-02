@@ -15,6 +15,12 @@
             height: 1px;
             background-color: $grey-4;
         }
+
+        &--no-line {
+            &:before {
+                display: none;
+            }
+        }
     }
 
     &__image-message {
