@@ -4,10 +4,10 @@
     <section data-tab="tariffPage">
         <div class="row">
             <div class="col-12">
-                <div class="card faq-search">
-                    <div class="card-header">
-                        <div class="col-6 col-lg-2">
-                            <h4 class="card-title">
+                <div class="card faq-search tariff-list-header">
+                    <div class="card-header tariff-list-header__wrapper">
+                        <div class="col-6 col-lg-2 tariff-list-header__wrap">
+                            <h4 class="card-title tariff-list-header__title">
                                 {{ __('base.tariffs') }}
                             </h4>
 
@@ -51,8 +51,13 @@
                                 </ul>
                             </div>
                         </div>
+
+                        <select name="tariff-states" id="tariff-list-state" class="tariff-list-header__select">
+                            <option value="active">Активный</option>
+                            <option value="inactive">Неактивный</option>
+                        </select>
                        
-                        <div class="mt-1 mt-sm-0">
+                        <!-- <div class="mt-1 mt-sm-0">
                             <a
                                     href="{{ route('community.tariff.add', $community) }}"
                                     class="btn btn-success"
@@ -82,7 +87,7 @@
                                     {{ __('tariff.setting_messages') }}
                                 </span>
                             </a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 
@@ -118,12 +123,12 @@
                                     <h4 class="tariff-list__month" title="{{ $tariff->title }}">{{ $tariff->title }}</h4>
                                     <a
                                         href="{{ route('community.tariff.edit', [$community, $tariff->id]) }}"
-                                        class="tariff-list__change"
+                                        class="button-text button-text--primary button-text--only-icon tariff-list__change"
                                     >
                                         <!-- <i data-feather='edit' class="font-medium-1"></i> -->
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M15.5858 4.41421C16.3668 3.63317 17.6332 3.63317 18.4142 4.41421L19.5858 5.58579C20.3668 6.36684 20.3668 7.63316 19.5858 8.41421L8.58579 19.4142C8.21071 19.7893 7.70201 20 7.17157 20L4 20L4 16.8284C4 16.298 4.21071 15.7893 4.58579 15.4142L15.5858 4.41421Z" stroke="#B5B4B8"/>
-                                            <path d="M14 6L18 10" stroke="#B5B4B8"/>
+                                            <path class="icon__stroke" fill-rule="evenodd" clip-rule="evenodd" d="M15.5858 4.41421C16.3668 3.63317 17.6332 3.63317 18.4142 4.41421L19.5858 5.58579C20.3668 6.36684 20.3668 7.63316 19.5858 8.41421L8.58579 19.4142C8.21071 19.7893 7.70201 20 7.17157 20L4 20L4 16.8284C4 16.298 4.21071 15.7893 4.58579 15.4142L15.5858 4.41421Z" stroke="#B5B4B8"/>
+                                            <path class="icon__stroke" d="M14 6L18 10" stroke="#B5B4B8"/>
                                         </svg>
                                     </a>
                                 </div>

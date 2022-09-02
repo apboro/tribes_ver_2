@@ -60,11 +60,19 @@
     >
         <div class="tariff-public__content">
             <div id="preview_img" class="tariff-public__image">
-                <img
+                <!-- <img
                     src="@if($community->tariff && $community->tariff->getMainImage()){{$community->tariff->getMainImage()->url }}@else/images/no-image.svg @endif"
                     alt=""  
                     data-default-image
+                > -->
+                <img
+                    src="@if ($community->tariff->getMainImage()){{ $community->tariff->getMainImage()->url }} @else /images/no-tariff-image.jpg @endif"
+                    alt=""
+                    @if ($community->tariff->getMainImage()) data-no-image="true" @endif
                 >
+
+                <span class="decor-1"></span>
+                <span class="decor-2"></span>
 
                 <canvas class="hide" style="object-fit: contain; width: 100%;"></canvas>
             </div>

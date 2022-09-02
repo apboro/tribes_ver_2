@@ -10,7 +10,7 @@
         margin: 0 0 10px;
         display: flex;
         justify-content: space-between;
-        align-items: baseline;
+        align-items: center;
     }
 
     &__month {
@@ -19,15 +19,17 @@
     }
 
     &__change {
-        color: $grey-6;
-        transition: all .3s
+        // color: $grey-6;
+        transition: all .3s;
     }
 
-    // .tariff-list__change {
-    //     &:hover {
-    //         color: $grey-8;
-    //     }
-    // }
+    .tariff-list__change:hover {
+
+        .icon__stroke {
+            stroke: #7367f0;
+        }
+
+    }
 
     &__price {
         @include font($primary-1, 16px, 22px, 500);
