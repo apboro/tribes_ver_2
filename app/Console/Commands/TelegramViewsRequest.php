@@ -44,35 +44,16 @@ class TelegramViewsRequest extends Command
         try {
             $telegramConnections = TelegramConnection::select('chat_id', 'access_hash', 'isGroup', 'comment_chat_id', 'comment_chat_hash')->where('is_there_userbot', true)->get();
             foreach ($telegramConnections as $connect) {
-                $type = $this->getType($connect);
+                $posts = $connect->posts()->select('post_id')->where('flag_observation', true)->get();
+                $postsId = [];
+                foreach ($posts as $post) {
+                    $postsId[] = $post->post_id;
+                }
 
-                if ($type === $this->type[0])
-                    $this->forGroup($connect, $type);
-
-                if ($type === $this->type[1])
-                    $this->forChannel($connect, $type);
+                $views = $this->userBot->getMessagesViews($connect->chat_id, 'channel', $postsId, $connect->access_hash);
             }
         } catch (\Exception $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
-    }
-
-    protected function getType($connect)
-    {
-        $type = $this->type[1];
-        if ($connect->isGroup == true)
-            $type = $this->type[0];
-
-        return $type;
-    }
-
-    protected function forGroup($connect, $type)
-    {
-
-    }
-
-    protected function forChannel($connect, $type)
-    {
-
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\TelegramConnection;
+use App\Models\TelegramMessage;
 use App\Services\Telegram\TelegramMtproto\UserBot;
 use Illuminate\Console\Command;
 
@@ -67,13 +68,53 @@ class TelegramReactionsRequest extends Command
         return $type;
     }
 
-    protected function forGroup($connect, $type)
+    protected function forGroup($connect)
     {
-        
+        $messages = $connect->messages()->select('message_id')->where('flag_observation', true)->get();
+        if ($messages->first()) {
+            $messagesId = [];
+            foreach ($messages as $message) {
+                $messagesId[] = $message->message_id;
+            }
+
+            $limit = 200;
+            if (count($messagesId) > $limit) {
+                $offset = 0;
+                for ($i = 0; $i <= count($messagesId) / $limit; $i++) {
+                    $reactions = $this->userBot->getReactions($connect->chat_id, $messagesId, $limit, $offset);
+                    $offset += 200;
+                }
+            } else {
+                $reactions = $this->userBot->getReactions($connect->chat_id, $messagesId, $limit);
+            }
+        }
     }
 
-    protected function forChannel($connect, $type)
+    protected function forChannel($connect)
     {
+        $posts = $connect->posts()->select('post_id')->where('flag_observation', true)->get();
+        if ($posts->first()) {
+            $postsId = [];
+            foreach ($posts as $post) {
+                $postsId[] = $post->post_id;
+            }
 
+            $reactions = $this->userBot->getChannelReactions($connect->chat_id, $postsId, $connect->access_hash);
+        }
+    }
+
+    protected function forComment($connect, $post)
+    {
+        $messages = $post->comment()->where('flag_observation', true)->get();
+        if ($messages->first()) {
+            $messagesId = [];
+            foreach ($messages as $message) {
+                $messagesId[] = $message->message_id;
+            }
+
+            $access_hash = $connect->comment_chat_hash ?? null;
+
+            $reactions = $this->userBot->getChannelReactions($connect->comment_chat_id, $messagesId, $access_hash);
+        }
     }
 }
