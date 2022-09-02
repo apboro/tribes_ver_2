@@ -23,6 +23,3 @@ class MediaViewResource extends JsonResource
         ];
     }
 }
-{
-
-}

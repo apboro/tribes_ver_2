@@ -35,6 +35,7 @@ class TelegramBotServiceProvider extends ServiceProvider
             \App\Services\Telegram\BotInterface\BotContract::class,
             \App\Services\Telegram\MainBot::class
         );
+
     }
 
     /**
