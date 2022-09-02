@@ -27,7 +27,7 @@
         </span> -->
         
         @error('success_description')
-            <div class="form-message form-message--danger">{{ $message }}</div>
+            <span class="form-message form-message--danger">{{ $message }}</span>
         @enderror
     </div>
 
@@ -151,7 +151,3 @@
         </div>
     </div>
 </div>    
-
-
-
-

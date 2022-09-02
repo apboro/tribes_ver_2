@@ -17,22 +17,8 @@
                 {{ __('tariff.settings_title') }}
             </h2>
         </div>
-
-
-        <div class="row">
-            <!-- Invoice repeater -->
-            <div class="col-12">
-                <!-- Nav -->
-                <!-- <a
-                    class="nav-link @if( !request('tab') || request('tab') == 'common') active @endif"
-                    href="{{ route('community.tariff.settings', ['community' => $community]) }}"
-                >
-                    {{ __('base.common') }}
-                </a> -->
                     
-                <!-- TABS -->
-                @yield('subtab')    
-            </div>
-        </div>
+        <!-- TABS -->
+        @yield('subtab')    
     </section>
 @endsection
