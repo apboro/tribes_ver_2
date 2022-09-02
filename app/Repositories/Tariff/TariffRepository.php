@@ -160,6 +160,9 @@ class TariffRepository implements TariffRepositoryContract
                 $date2 = new DateTime($request->date_payment[$tyId]);
                 $difference = date_diff($date1, $date2)->d;
                 $days = $variant->period - $difference;
+                if ($days < 0) {
+                    $days = 0;
+                }
             }
 
             if ($variantForThisCommunity) {
