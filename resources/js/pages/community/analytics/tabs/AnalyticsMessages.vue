@@ -32,7 +32,7 @@
     import MessagesChart from '../../../../components/pages/community/analytics/messages/MessagesChart.vue';
     import MessagesTable from '../../../../components/pages/community/analytics/messages/MessagesTable.vue';
     import VPagination from '../../../../components/ui/pagination/VPagination.vue';
-    import VExportData from '../../../../components/ui/table/VExportData.vue'
+    import VExportData from '../../../../components/ui/export/VExportData.vue'
 
     export default {
         name: 'AnalyticsMessages',
