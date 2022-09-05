@@ -2,6 +2,22 @@
     max-width: 610px !important;
     margin-top: $indent-1;
 
+    &--preview {
+        position: relative;
+        max-width: 100%;
+        margin-top: 0;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -15px;
+            width: 1px;
+            height: 100%;
+            background-color: $grey-4;
+        }
+    }
+
     &__content {
         display: grid;
         grid-template-rows: 1fr;
@@ -160,6 +176,10 @@
         
         @media (min-width: $sm) {
             grid-template-columns: repeat(auto-fill, 300px);
+        }
+
+        &--preview {
+            grid-template-columns: repeat(auto-fill, 49%);
         }
     }
 

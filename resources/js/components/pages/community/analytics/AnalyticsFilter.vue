@@ -25,11 +25,10 @@
         </ul> -->
         
         <select 
-            class="filter-analytics-community__list"
+            class="select-rounded"
             v-model="periods"
         >
             <option
-                class="filter-analytics-community__item"
                 v-for="filter in filters"
                 :key="filter.value"
                 :value="filter.value"
