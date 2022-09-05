@@ -1,8 +1,9 @@
-<div class="col-sm-12">
+<div class="community-settings__item">
     <div id="editor_container" class="">
-        <label class="form-label">
+        <label class="form-label-red">
             {{ __('base.content') }}
         </label>
+
         <div id="snow-container">
             <div id="toolbar">
                 <span class="ql-formats">

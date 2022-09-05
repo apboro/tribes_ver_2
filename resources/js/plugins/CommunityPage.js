@@ -8,6 +8,7 @@ import { StatisticPage } from "./CommunityPage/StatisticPage";
 import { TariffPage } from "./CommunityPage/TariffPage";
 import { TariffPageSettings } from "./CommunityPage/TariffPageSettings";
 import { TariffPagePublications } from "./CommunityPage/TariffPagePublications";
+import { TariffPageAdd } from "./CommunityPage/TariffPageSettings/TariffPageAdd";
 
 export default class CommunityPage extends Page {
     constructor(container) {
@@ -41,6 +42,10 @@ export default class CommunityPage extends Page {
 
         if (this.isBlock('[data-tab="tariffPagePublications"]')) {
             this.tariffPagePublications = new TariffPagePublications(this);
+        }
+
+        if (this.isBlock('[data-tab="tariffPageAdd"]')) {
+            this.tariffPageAdd = new TariffPageAdd(this);
         }
         
         if (this.isBlock('[data-tab="knowledgeBasePage"]')) {

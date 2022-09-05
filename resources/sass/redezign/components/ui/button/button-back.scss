@@ -1,0 +1,21 @@
+.button-back {
+    margin: 0 20px 0 0;
+    width: 27px;
+    position: relative;
+    display: block;
+
+    > svg {
+        width: 20px;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all .3s;
+    }
+
+    &:hover {
+        svg {
+            width: 100%;
+        }
+    }
+}

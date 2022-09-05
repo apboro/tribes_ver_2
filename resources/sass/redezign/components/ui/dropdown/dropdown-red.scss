@@ -1,0 +1,121 @@
+.dropdown-red {
+    
+
+    @media (min-width: $md) {
+        position: relative;
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        cursor: pointer;
+        
+        &.active,
+        &:hover {
+            .dropdown-lk__name {
+                color: $main-hover-color;
+            }
+
+            .icon__fill {
+                fill: $primary-1;
+            }
+        }
+    }
+    
+    &__name {
+        display: none;
+
+        @media (min-width: $sm) {
+            display: inline-block;
+            @include font($text-color-1, 16px, 21px, 500);
+            @include truncate(200px);
+            pointer-events: none;
+            text-transform: uppercase;
+            transition: $transition;
+    
+            &:hover {
+                color: $primary-1;
+            }
+    
+            &.active {
+                color: $primary-1;
+            }
+        }
+    }
+
+    &__list {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        z-index: 15;
+        display: none;
+        min-width: 100%;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        list-style: none;
+        background-clip: padding-box;
+        background-color: $panel-bg;
+        border: 1px solid rgba(34,41,47,.05);
+        border-radius: 0.357rem;
+        box-shadow: 0 5px 25px rgb(34 41 47 / 10%);
+        animation-duration: .3s;
+        animation-name: dropdown-slidein;
+
+        &.active {
+            display: block;
+        }
+    }
+
+    &__item {}
+
+    &__link {
+        display: flex;
+        padding: 10px 20px;
+        @include font($text-color-1, 14px, 20px, 500);
+        clear: both;
+        transition: .3s;
+
+        &:hover,
+        &:focus {
+            color: $primary-1;
+
+            span {
+                color: $primary-1;
+            }
+
+            svg {
+                stroke: $primary-1;
+            }
+        }
+
+        span {
+            margin-left: 7px;
+            text-align: inherit;
+            @include font($text-color, 12px, 13px, 400);
+            white-space: nowrap;
+        }
+
+        svg {
+            stroke: $text-color;
+        }
+    }
+
+    &__divider {
+        border-top: 1px solid rgba(34,41,47,.08);
+        height: 0;
+        margin-top: 7px;
+        margin-bottom: 7px;
+        overflow: hidden;
+    }
+}
+
+@keyframes dropdown-slidein {
+    from {
+        margin-top: 10%;
+    }
+  
+    to {
+        margin-top: 0;
+    }
+}

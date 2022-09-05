@@ -1,12 +1,11 @@
 <template>
-    <div class="filter-analytics-community">
+    
         
         <select 
-            class="filter-analytics-community__list"
+            class="select-rounded"
             v-model="pages"
         >
             <option
-                class="filter-analytics-community__item"
                 v-for="tab in tabs"
                 :key="tab.value"
                 :value="tab.value"
@@ -15,7 +14,7 @@
                 {{ tab.text }}
             </option>
         </select>
-    </div>
+    
 </template>
 
 <script>
