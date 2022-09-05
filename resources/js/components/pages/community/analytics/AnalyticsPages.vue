@@ -1,12 +1,11 @@
 <template>
-    <div class="select-rounded">
+    
         
         <select 
-            class="select-rounded__list"
+            class="select-rounded"
             v-model="pages"
         >
             <option
-                class="select-rounded__item"
                 v-for="tab in tabs"
                 :key="tab.value"
                 :value="tab.value"
@@ -15,7 +14,7 @@
                 {{ tab.text }}
             </option>
         </select>
-    </div>
+    
 </template>
 
 <script>

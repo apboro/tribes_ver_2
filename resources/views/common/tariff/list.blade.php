@@ -50,7 +50,7 @@
             <!-- Nav -->
             <select
                 id="tariff-list-state"
-                class="tariff-list-header__select"
+                class="select-rounded"
             >
                 <option
                     value="{{ route('community.tariff.list', $community) }}"
