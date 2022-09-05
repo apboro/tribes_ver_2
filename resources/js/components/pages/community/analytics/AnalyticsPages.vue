@@ -1,12 +1,12 @@
 <template>
-    <div class="select2">
+    <div class="select-rounded">
         
         <select 
-            class="select2__list"
+            class="select-rounded__list"
             v-model="pages"
         >
             <option
-                class="select2__item"
+                class="select-rounded__item"
                 v-for="tab in tabs"
                 :key="tab.value"
                 :value="tab.value"
