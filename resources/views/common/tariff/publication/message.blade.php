@@ -108,7 +108,7 @@
 
             <a
                 href="{{ route('community.tariff.list', $community) }}"
-                class="button-filled button-filled--primary"
+                class="button-filled button-filled--primary-15"
             >
                 Отменить
             </a>

@@ -41,7 +41,7 @@ window['copyText'] = copyText;
 window['Popup'] = Popup;
 
 
-new FillForm();
+// new FillForm();
 
 try {
     require('bootstrap');

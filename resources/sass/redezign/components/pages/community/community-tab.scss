@@ -1,6 +1,21 @@
 .community-tab {
     margin-top: 30px;
 
+    &__main-header {
+        display: grid;
+        grid-template-columns: min-content 20px 1fr;
+        align-items: center;
+
+        h2 {
+            margin: 0;
+            @include font($text-color-1, 30px, 36px, 600);
+        }
+
+        select {
+            justify-self: end;
+        }
+    }
+
     &__header {
         display: grid;
         grid-template-rows: min-content min-content;

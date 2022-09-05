@@ -15,6 +15,7 @@ $button-background-color-danger-2: $danger-4;
     padding: 10px 40px;
     text-align: center;
     @include font($button-text-color-light, 14px, 20px, 600);
+    text-transform: uppercase;
     border-radius: 66px;
     cursor: pointer;
     transition: $transition;
@@ -23,7 +24,6 @@ $button-background-color-danger-2: $danger-4;
         border-radius: 2px;
         color: $white;
         background-color: $button-background-color-primary-1;
-        text-transform: uppercase;
 
         &:hover,
         &:focus {
