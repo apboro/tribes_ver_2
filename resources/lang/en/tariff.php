@@ -13,7 +13,7 @@ return [
     'settings_title' => 'Tariff settings in the community',
     'setting_messages' => 'Message settings',
     'payment_page' => 'Landing page',
-    'welcome_description_textarea' => 'Message text',
+    'payment_thanks_message' => 'Thank you for subscribing to my channel! Thanks to your support, I can continue to delight you with new releases. I will do my best to ensure that you are satisfied with your stay in my community!',
     'welcome_description_title' => 'A welcome message on behalf of your community to a new member. Dispatched after joining a community.',
     'welcome_default_description' => 'Welcome to our community!',
     'reminder_description_title' => 'Payment reminder message',

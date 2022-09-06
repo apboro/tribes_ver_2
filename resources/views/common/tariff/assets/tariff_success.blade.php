@@ -14,7 +14,8 @@
             name="success_description"
             rows="5"
             placeholder="{{ __('form.message_text') }}"
-        >@if($community->tariff && $community->tariff->thanks_description){{$community->tariff->thanks_description}}@elseif(is_null($community->tariff->thanks_description))Спасибо вам! Ваша оплата успешно прошла.@endif</textarea>
+        >@if($community->tariff && $community->tariff->thanks_description){{$community->tariff->thanks_description}}@elseif(is_null($community->tariff->thanks_description)){{__('tariff.payment_thanks_message')}}@endif
+        </textarea>
         
         <!-- <span
             class="badge bg-warning hide"
