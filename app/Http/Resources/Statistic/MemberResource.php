@@ -10,8 +10,9 @@ class MemberResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'tele_id' => $this->resource->tele_id,
             "name" => $this->resource->name,
-            "nick_name" => $this->resource->username,
+            "nick_name" => $this->resource->nick_name,
             "accession_date" => $this->resource->accession_date,
             "exit_date" => $this->resource->exit_date,
             "c_messages" => $this->resource->c_messages,

@@ -13,7 +13,7 @@ class MembersResource extends ApiResourceCollection
         parent::__construct($resource);
 
         $this->collection = $this->collection->map(function ($item) {
-            return new MediaViewResource($item);
+            return new MemberResource($item);
         });
     }
 }

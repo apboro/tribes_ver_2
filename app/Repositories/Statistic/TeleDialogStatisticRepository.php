@@ -22,16 +22,16 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
             ->join($tuc, "$tu.telegram_id", "=", "$tuc.telegram_user_id")
             ->leftJoin($tm, "$tm.telegram_user_id", "=", "$tu.telegram_id")
             ->leftJoin($gmr, "gmr.message_id", "=", "$tm.message_id")
-            ->leftJoin($pmr, "pmr.telegram_user_id", "=", "$tu.telegram_id")
+            ->leftJoin($pmr, "pmr.telegram_user_id", "=", "$tuc.telegram_user_id")
             ->select([
                 "$tu.telegram_id as tele_id",
                 DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
                 "$tu.user_name as nick_name",
                 "$tuc.accession_date as accession_date",
                 "$tuc.exit_date as exit_date",
-                DB::raw("COUNT($tm.message_id) as c_messages"),
-                DB::raw("COUNT(gmr.id) as c_put_reactions"),
-                DB::raw("COUNT(pmr.id) as c_got_reactions"),
+                DB::raw("COUNT(distinct($tm.message_id)) as c_messages"),
+                DB::raw("COUNT(distinct(gmr.id)) as c_put_reactions"),
+                DB::raw("COUNT(distinct(pmr.id)) as c_got_reactions"),
             ]);
         $builder->groupBy("$tu.telegram_id","$tu.first_name","$tu.last_name","$tu.user_name","$tuc.accession_date","$tuc.exit_date");
 
