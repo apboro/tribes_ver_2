@@ -59,7 +59,29 @@
 
     &__tariff-public-settings {
         display: grid;
-        grid-template-columns: minmax(470px, 1fr) 1fr;
+        grid-template-columns: 1fr;
+
         column-gap: 30px;
+        
+        @media (min-width: $lg) {
+            grid-template-columns: minmax(470px, 1fr) 1fr;
+        }
+    }
+
+    &__tariff-preview {
+        margin-top: $indent-2;
+
+        @media (min-width: $lg) {
+            margin-top: 0;
+        }
+    }
+
+    &__tariff-public-controls {
+        margin-top: 30px;
+        text-align: center;
+
+        @media (min-width: $lg) {
+            text-align: left;
+        }
     }
 }

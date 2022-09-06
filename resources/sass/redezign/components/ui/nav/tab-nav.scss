@@ -4,45 +4,29 @@
         display: inline-flex;
         align-items: center;
         flex-wrap: wrap;
-        row-gap: $indent-1;
+        gap: $indent-1;
         margin: 0;
         list-style: none;
-
-        &:before {
-            
-        }
     }
 
     &__item {
-        padding: 5px 20px;
+        position: relative;
+        
         @include font($text-color-2, 14px, 20px, 500);
-        background-color: rgba(115, 103, 240, 0.05);
-        border-top: 1px solid $primary-2;
-        border-bottom: 1px solid $primary-2;
-
-        &:first-child {
-            border-left: 1px solid $primary-2;
-            border-radius: 100px 0 0 100px;
+        
+        &:not(:last-child):after {
+            content: "|";
+            color: $text-color-2;
+            margin-left: 10px;
         }
 
-        &:last-child {
-            border-right: 1px solid $primary-2;
-            border-radius: 0 100px 100px 0;
-        }
+        
 
         &.active {
             position: relative;
-            padding: 5px 0px;
-            color: $primary-1;
-            
-
-            .tab-nav__link {
-                padding: 5px 20px;
-                background-color: rgba(115, 103, 240, 0.15);
-                border: 1px solid $primary-1;
-                border-radius: 100px;
-            }
+            color: $primary-1;   
         }
+
     }
 
     &__link {
