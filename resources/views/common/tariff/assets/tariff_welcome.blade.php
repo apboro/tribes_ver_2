@@ -13,7 +13,7 @@
             id="welcome_description"
                 name="welcome_description"
                 rows="5"
-                placeholder="@ссылка_на_профиль_участника, приветствуем вас в нашем сообществе!"
+                placeholder="{{__('tariff.welcome_description_textarea')}}"
             >@if($community->tariff && $community->tariff->welcome_description){{$community->tariff->welcome_description}}@endif</textarea>
         
         <!-- <span
