@@ -5,18 +5,31 @@
         margin-top: 30px;
     }
 
+    &__form-item {
+        margin-top: $indent-3;
+    }
+
     &__buttons {
         display: flex;
-        column-gap: $indent-3;
+        flex-wrap: wrap;
+        gap: $indent-3;
         margin-top: 30px;
+
+        @media (min-width: $sm) {
+            margin-top: 60px;
+        }
     }
 
     &__change-tariff {
         display: grid;
-        grid-template-columns: 300px 400px;
+        grid-template-columns: 1fr;
         align-items: flex-end;
         gap: 20px 40px;
         margin-top: 30px;
+
+        @media (min-width: $md) {
+            grid-template-columns: 300px 400px;
+        }
     }
 
     &__input-wrapper {
@@ -32,7 +45,7 @@
 
     &__input-group {
         display: grid;
-        grid-template-columns: 180px 1fr;
+        grid-template-columns: 45% 55%;
 
         div:first-child input {
             border-right: none;
