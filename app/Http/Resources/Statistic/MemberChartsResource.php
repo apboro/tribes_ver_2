@@ -12,15 +12,15 @@ class MemberChartsResource extends JsonResource
 
     public function toArray($request)
     {
-        return $this->resource->values;
+        return $this->resource->getValues();
     }
 
     public function toResponse($request): JsonResponse
     {
         $data = array_merge([
-            'items' => $this->resource->values,
-            'meta' => array_merge($this->resource->additions, [
-                'marks' => $this->resource->marks,
+            'items' => $this->resource->getValues(),
+            'meta' => array_merge($this->resource->getAdditions(), [
+                'marks' => $this->resource->getMarks(),
             ]),
         ]);
         return response()->json($data);

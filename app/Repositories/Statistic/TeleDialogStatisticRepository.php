@@ -2,8 +2,11 @@
 
 namespace App\Repositories\Statistic;
 
+use App\Exceptions\StatisticException;
+use App\Filters\API\MembersChartFilter;
 use App\Filters\API\MembersFilter;
 use App\Repositories\Statistic\DTO\ChartData;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -34,14 +37,14 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 DB::raw("COUNT(distinct(pmr.id)) as c_got_reactions"),
             ]);
         $builder->groupBy("$tu.telegram_id","$tu.first_name","$tu.last_name","$tu.user_name","$tuc.accession_date","$tuc.exit_date");
-
+        $builder->where(["$tuc.community_id" => $communityId]);
         $filterData = $filter->filters();
         Log::debug("TeleDialogStatisticRepository::getMembersList", [
             'filter' => $filterData,
         ]);
 
         $builder = $filter->apply($builder);
-        //dd($builder->toSql());
+
         $perPage = $filterData['per-page'] ?? 15;
         $page = $filterData['page'] ?? 15;
         return new LengthAwarePaginator(
@@ -53,25 +56,68 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
     }
 
     /**
-     пример формирования диапазона по дням и джойна нужной таблицы с полем даты
-    select d.dt
-    from
-    generate_series(date'2019-10-01', date'2019-10-25', interval '1' day) as d(dt)
-    left join telegram_users_community t
-    on t.accession_date >= d.dt
-    and t.accession_date < d.dt + interval '1' day
-    group by d.dt
-    order by d.dt;
+     * @throws StatisticException
      */
-    public function getJoiningMembersChart(int $communityId, MembersFilter $filter): ChartData
+    public function getJoiningMembersChart(int $communityId, MembersChartFilter $filter): ChartData
     {
-        $chart = new ChartData();
+        $filterData = $filter->filters();
+        Log::debug("TeleDialogStatisticRepository::getJoiningMembersChart", [
+            'filter' => $filterData,
+        ]);
+        $scale = $filter->getScale();
+        $start = $filter->getStartDate($filterData['period']??'day')->format('U');
+        $end = $filter->getEndDate()->format('U');
+
+        $tuc = 'telegram_users_community';
         //todo заполнить свойства values marks
+
+        $builder = DB::table($tuc)
+            ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
+            ->leftJoin($tuc, function (JoinClause $join) use($tuc, $scale) {
+                $join->on("$tuc.accession_date", '>=', 'd.dt')->on("$tuc.accession_date", '<', DB::raw("d.dt + $scale"));
+            })
+            ->select([
+                DB::raw("to_timestamp(d.dt::int) as scale"),
+                DB::raw("COUNT(distinct($tuc.telegram_user_id)) as users"),
+            ]);
+        $builder->where(['telegram_users_community.community_id' => $communityId]);
+        $builder->groupBy("d.dt");
+
+        $builder = $filter->apply($builder);
+        //dd($builder->toSql());
+        $result = $builder->get()->slice(0, -1);
+        $chart = new ChartData();
+        $chart->initChart($result);
         return $chart;
     }
 
-    public function getExitingMembersChart(int $communityId, MembersFilter $filter): ChartData
+    public function getExitingMembersChart(int $communityId, MembersChartFilter $filter): ChartData
     {
-        // TODO: Implement getExitingMembersChart() method.
+        $filterData = $filter->filters();
+        Log::debug("TeleDialogStatisticRepository::getJoiningMembersChart", [
+            'filter' => $filterData,
+        ]);
+        $scale = $filter->getScale();
+        $start = $filter->getStartDate($filterData['period']??'day')->format('U');
+        $end = $filter->getEndDate()->format('U');
+
+        $tuc = 'telegram_users_community';
+        //todo заполнить свойства values marks
+
+        $builder = DB::table($tuc)
+            ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
+            ->leftJoin($tuc, function (JoinClause $join) use($tuc, $scale) {
+                $join->on("$tuc.exit_date", '>=', 'd.dt')->on("$tuc.exit_date", '<', DB::raw("d.dt + $scale"));
+            })
+            ->select([
+                DB::raw("to_timestamp(d.dt::int) as scale"),
+                DB::raw("COUNT(distinct($tuc.telegram_user_id)) as users"),
+            ]);
+        $builder->groupBy("d.dt");
+
+        $result = $builder->get()->slice(0, -1);
+        $chart = new ChartData();
+        $chart->initChart($result);
+        return $chart;
     }
 }

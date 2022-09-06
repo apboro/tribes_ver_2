@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Filters\API\MembersChartFilter;
 use App\Filters\API\MembersFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\TeleDialogStatRequest;
@@ -21,13 +22,11 @@ class TeleDialogStatisticController extends Controller
     public function members(TeleDialogStatRequest $request, MembersFilter $filter)
     {
         $members = $this->statisticRepository->getMembersList($request->get('community_id'),$filter);
-        //$chartJoiningData = $this->statisticRepository->getJoiningMembersChart($request->get('community_id'),$filter);
-        //$chartExitingData = $this->statisticRepository->getExitingMembersChart($request->get('community_id'),$filter);
 
         return (new MembersResource($members))->forApi();
     }
 
-    public function memberCharts(TeleDialogStatRequest $request, MembersFilter $filter)
+    public function memberCharts(TeleDialogStatRequest $request, MembersChartFilter $filter)
     {
         $chartJoiningData = $this->statisticRepository->getJoiningMembersChart($request->get('community_id'),$filter);
         //$chartExitingData = $this->statisticRepository->getExitingMembersChart($request->get('community_id'),$filter);

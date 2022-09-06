@@ -37,7 +37,7 @@ abstract class QueryFilter
      * @return Builder|QueryBuilder
      * @throws Exception
      */
-    public function apply( $builder)
+    public function apply($builder)
     {
         $this->builder = $builder;
         foreach ($this->filters() as $name => $value) {

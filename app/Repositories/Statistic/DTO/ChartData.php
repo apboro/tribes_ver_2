@@ -1,16 +1,51 @@
 <?php
 
 namespace App\Repositories\Statistic\DTO;
+
+use App\Exceptions\StatisticException;
+use Illuminate\Support\Collection;
+
 /**
  * @todo допилить , спрятать прямое обращение к переменным, добавить метод заполнения графика
  */
 class ChartData
 {
     // массив временных меток, количество всегда должно совпадать с количеством значений
-    public array $marks = [];
+    private array $marks = [];
     // массив значений всегда хранится по уникальному имени
-    public array $values = [];
-    public array $additions = [];
+    private array $values = [];
+    private array $additions = [];
+
+    public function initChart(Collection $data)//todo переопределять через массив имен названия графиков
+    {
+        foreach ($data as $key => $eachObjectValues) {
+            if ($key === 0) {
+                $props = array_keys(get_object_vars($eachObjectValues));
+            }
+            if (empty($props) || !in_array('scale', $props)) {
+                throw new StatisticException('В коллекции нету столбца "scale" для меток времени графика.');
+            }
+            $this->marks[$key] = $eachObjectValues->scale;
+            foreach ($props as $eachProp) {
+                if ($eachProp == 'scale') {
+                    continue;
+                }
+                $this->values[$eachProp][$key] = $eachObjectValues->{$eachProp};
+            }
+        }
+
+        return $this;
+    }
+
+    public function getValues()
+    {
+        return $this->values;
+    }
+
+    public function addAdditionParam(string $name, $paramValue)
+    {
+        $this->additions[$name] = $paramValue;
+    }
 
     public function includeChart(ChartData $chart)
     {
@@ -27,5 +62,15 @@ class ChartData
             }
         }
         return $this;
+    }
+
+    public function getAdditions(): array
+    {
+        return $this->additions;
+    }
+
+    public function getMarks(): array
+    {
+        return $this->marks;
     }
 }
