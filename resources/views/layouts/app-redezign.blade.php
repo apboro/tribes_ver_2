@@ -18,7 +18,7 @@
     @include('common.template.main_menu')
 
     <!-- Content -->
-    <main class="app-content content">
+    <main class="main">
         <div class="content-overlay"></div>
         @yield('content')
     </main>

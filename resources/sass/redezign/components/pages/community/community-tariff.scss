@@ -3,15 +3,16 @@
 
     &__list {
         display: grid;
-        grid-template-columns: repeat(auto-fill, 255px);
         gap: 30px;
         margin-top: 30px;
         list-style: none;
+        
+        @media (min-width: $sm) {
+            grid-template-columns: repeat(auto-fill, 255px);
+        }
     }
 
-    &__item {
-        
-    }
+    // &__item {}
 
     &__empty-wrapper {
         display: flex;
@@ -19,7 +20,12 @@
         align-items: center;
         justify-content: center;
         grid-column: 1 / -1;
-        margin-top: 125px;
+        margin-top: 250px;
+        text-align: center;
+
+        @media (min-width: $sm) {
+            margin-top: 125px;
+        }
     }
 
     &__empty-text {

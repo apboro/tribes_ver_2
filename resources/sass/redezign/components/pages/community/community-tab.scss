@@ -6,11 +6,6 @@
         grid-template-columns: min-content 20px 1fr;
         align-items: center;
 
-        h2 {
-            margin: 0;
-            @include font($text-color-1, 30px, 36px, 600);
-        }
-
         select {
             justify-self: end;
         }
@@ -27,6 +22,17 @@
 
     &__prev-page-title {
         @include font($text-color-2, 20px, 26px, 500);
+    }
+
+    &__main-title {
+        margin: 0;
+        @include font($text-color-2, 20px, 26px, 700);
+
+        @media (min-width: $md) {
+            font-size: 30px;
+            line-height: 36px;
+            font-weight: 600;
+        }
     }
 
     &__title {
