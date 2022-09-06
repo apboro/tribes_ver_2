@@ -24,20 +24,25 @@ class TelegramStatisticSeeder extends Seeder
     public function run()
     {
 
-//        $telegramUsers = TelegramUser::factory()->count(10)->create();
-
-        foreach (Community::all() as $community) {
-            $community->followers()->attach(TelegramUser::factory()->count(5)->create(),[
-                'accession_date' => Carbon::now()->timestamp,
-                'exit_date' => Carbon::now()->timestamp
-            ]);
-        }
-
         $connectionsGroup = TelegramConnection::where('chat_type', 'group')->get();
         $connectionsChannel= TelegramConnection::where('chat_type', 'channel')->get();
         $dates = $this->getDateArray();
-        $telegramUsers = TelegramUser::all()->toArray();
+
         $reactions = TelegramDictReaction::all()->toArray();
+
+        foreach ($dates as $eachDate) {
+            foreach (Community::all() as $community) {
+                $community->followers()->attach(TelegramUser::factory()->count(5)->create(),[
+                    'accession_date' => $eachDate,
+                    'exit_date' => null
+                ]);
+
+                $this->removeUsersFromCommunity($community, $eachDate);
+
+            }
+        }
+
+        $telegramUsers = TelegramUser::all()->toArray();
 
         //КАНАЛЫ
         foreach ($connectionsChannel as $chanelConnection) {
@@ -158,5 +163,13 @@ class TelegramStatisticSeeder extends Seeder
         }
 
         return $dateArr;
+    }
+
+    private function removeUsersFromCommunity($community, $eachDate) {
+        if ($count = rand(0,2)) {
+            foreach ($community->followers()->where('exit_date', null)->get()->random($count) as $follower) {
+                $community->followers()->updateExistingPivot($follower->telegram_id, ['exit_date' => $eachDate]);
+            }
+        }
     }
 }
