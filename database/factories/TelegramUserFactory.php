@@ -19,7 +19,7 @@ class TelegramUserFactory extends Factory
     {
         return [
             //'user_id' => null,
-            'telegram_id' => rand(1000000000,1269912109),
+            'telegram_id' => rand(1000000000,9999999999),
             'auth_date' => rand(1643000000,1643999999),
             'hash' => Str::random(32),
             'scene' => null,

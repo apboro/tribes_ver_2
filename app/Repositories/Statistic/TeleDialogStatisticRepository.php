@@ -43,9 +43,9 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $builder = $filter->apply($builder);
         //dd($builder->toSql());
         $perPage = $filterData['per-page'] ?? 15;
-
+        $page = $filterData['page'] ?? 15;
         return new LengthAwarePaginator(
-            $builder->limit($perPage)->get(),
+            $builder->offset($page)->limit($perPage)->get(),
             $builder->count(),
             $perPage,
             $filterData['page'] ?? null
