@@ -38,7 +38,7 @@ class TelegramUser extends Model
 
     function communities()
     {
-        return $this->belongsToMany(Community::class, 'telegram_users_community', 'telegram_user_id', 'community_id', 'telegram_id', 'id')->withPivot(['excluded', 'role']);
+        return $this->belongsToMany(Community::class, 'telegram_users_community', 'telegram_user_id', 'community_id', 'telegram_id', 'id')->withPivot(['excluded', 'role', 'accession_date', 'exit_date']);
     }
 
     public function publicName()

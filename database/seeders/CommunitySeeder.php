@@ -26,7 +26,7 @@ class CommunitySeeder extends Seeder
         $teleuser = $userTest->telegramMeta ?? TelegramUser::factory()->for($userTest)->create();
 
         $connections = TelegramConnection::factory()
-            ->count(3)->botAdmin()->groupConn()->active()
+            ->count(10)->botAdmin()->active()
             ->sequence(fn ($sequence) => ['chat_title' => 'Group for Test Testov'.$sequence->index])
             ->create([
                 'user_id' => $userTest->id,
