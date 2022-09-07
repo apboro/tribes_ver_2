@@ -11,7 +11,7 @@ class TelegramPostReaction extends Model
 
     protected $guarded = [];
 
-    protected $table = ' telegram_post_reactions';
+    protected $table = 'telegram_post_reactions';
 
     function post()
     {
