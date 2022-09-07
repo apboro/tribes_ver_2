@@ -70,20 +70,28 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
 
         $tuc = 'telegram_users_community';
 
-        $builder = DB::table($tuc)
+        $sub = DB::table($tuc)
             ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
             ->leftJoin($tuc, function (JoinClause $join) use($tuc, $scale) {
                 $join->on("$tuc.accession_date", '>=', 'd.dt')->on("$tuc.accession_date", '<', DB::raw("d.dt + $scale"));
             })
             ->select([
-                DB::raw("to_timestamp(d.dt::int) as scale"),
+                DB::raw("d.dt"),
                 DB::raw("COUNT(distinct($tuc.telegram_user_id)) as users"),
             ]);
-        $builder->where(["$tuc.community_id" => $communityId]);
-        $builder->groupBy("d.dt");
+        $sub->where(["$tuc.community_id" => $communityId]);
+        $sub->groupBy("d.dt");
+        $sub = $filter->apply($sub);
 
-        $builder = $filter->apply($builder);
-        dd($builder->toSql());
+        $builder = DB::table( DB::raw("generate_series($start, $end, $scale) as d1(dt)") )
+            ->leftJoin(DB::raw("({$sub->toSql()}) as sub"),'sub.dt','=','d1.dt')
+            ->select([
+                DB::raw("to_timestamp(d1.dt::int) as scale"),
+                DB::raw("coalesce(sub.users,0) as users"),
+            ])
+            ->mergeBindings($sub)
+            ->orderBy('scale');
+
         $result = $builder->get()->slice(0, -1);
         $chart = new ChartData();
         $chart->initChart($result);
@@ -102,17 +110,27 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
 
         $tuc = 'telegram_users_community';
 
-        $builder = DB::table($tuc)
+        $sub = DB::table($tuc)
             ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
             ->leftJoin($tuc, function (JoinClause $join) use($tuc, $scale) {
                 $join->on("$tuc.exit_date", '>=', 'd.dt')->on("$tuc.exit_date", '<', DB::raw("d.dt + $scale"));
             })
             ->select([
-                DB::raw("to_timestamp(d.dt::int) as scale"),
+                DB::raw("d.dt"),
                 DB::raw("COUNT(distinct($tuc.telegram_user_id)) as users"),
             ]);
-        $builder->where(["$tuc.community_id" => $communityId]);
-        $builder->groupBy("d.dt");
+        $sub->where(["$tuc.community_id" => $communityId]);
+        $sub->groupBy("d.dt");
+        $sub = $filter->apply($sub);
+
+        $builder = DB::table( DB::raw("generate_series($start, $end, $scale) as d1(dt)") )
+            ->leftJoin(DB::raw("({$sub->toSql()}) as sub"),'sub.dt','=','d1.dt')
+            ->select([
+                DB::raw("to_timestamp(d1.dt::int) as scale"),
+                DB::raw("coalesce(sub.users,0) as users"),
+            ])
+            ->mergeBindings($sub)
+            ->orderBy('scale');
 
         $result = $builder->get()->slice(0, -1);
         $chart = new ChartData();

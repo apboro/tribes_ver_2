@@ -47,13 +47,23 @@ class ChartData
         $this->additions[$name] = $paramValue;
     }
 
-    public function includeChart(ChartData $chart)
+    public function includeChart(ChartData $chart, $replaces = [])
     {
         //проверить идентичность массива меток, если не идентичны, то вложенность не разрешается
         if (!empty(array_diff_assoc($this->marks, $chart->marks))) {
             return null;
         }
         // подмешать другие графики
+        if(!empty($replaces)){
+            foreach($replaces as $oldName => $newName){
+                $items = $chart->values[$oldName]??null;
+                if(!empty($items)) {
+                    unset($chart->values[$oldName]);
+                    $chart->values[$newName] = $items;
+                }
+            }
+
+        }
         $this->values = array_merge($chart->values, $this->values);
         // подмешать дополнительную информацию
         foreach ($chart->additions as $key => $eachAddition) {
