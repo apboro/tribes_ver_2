@@ -1,0 +1,14 @@
+.export-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__title {
+        margin: 0 10px 0 0;
+        @include font($text-color-2, 16px, 22px, 500);
+    }
+
+    > button:not(:last-child) {
+        margin: 0 10px 0 0;
+    }
+}

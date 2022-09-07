@@ -2,6 +2,7 @@
     <div >
         <messages-chart
             :data="GET_MESSAGES_CHART_DATA"
+            :chartOptions="chartOptions"
         />
 
         <messages-table
@@ -9,15 +10,20 @@
             :messages="GET_TABLE_DATA"
         />
 
-        <!-- Pagination -->
-        <v-pagination
-            v-if="GET_TABLE_DATA && GET_TABLE_DATA.length && !IS_LOADING"
-            class="analytics-community__pagination"
-            :paginateData="GET_PAGINATE_DATA"
-            :selectOptions="paginationSelectedOptions"
-            @onPageClick="setPage"
-            @onChangePerPage="setPerPage"
-        />
+        <div class="analytics-community__footer">
+
+            <v-export-data/>
+
+             <!-- Pagination -->
+            <v-pagination
+                v-if="GET_TABLE_DATA && GET_TABLE_DATA.length && !IS_LOADING"
+                class="analytics-community__pagination"
+                :paginateData="GET_PAGINATE_DATA"
+                :selectOptions="paginationSelectedOptions"
+                @onPageClick="setPage"
+                @onChangePerPage="setPerPage"
+            />
+        </div>
     </div>
 </template>
 
@@ -26,6 +32,7 @@
     import MessagesChart from '../../../../components/pages/community/analytics/messages/MessagesChart.vue';
     import MessagesTable from '../../../../components/pages/community/analytics/messages/MessagesTable.vue';
     import VPagination from '../../../../components/ui/pagination/VPagination.vue';
+    import VExportData from '../../../../components/ui/export/VExportData.vue';
 
     export default {
         name: 'AnalyticsMessages',
@@ -34,12 +41,18 @@
             MessagesChart,
             MessagesTable,
             VPagination,
+            VExportData
         },
 
         props: {
             period: {
                 type: String,
                 default: () => '',
+            },
+
+            chartOptions: {
+                type: Object,
+                default: () => {}
             }
         },
 

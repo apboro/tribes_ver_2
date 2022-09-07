@@ -1,0 +1,52 @@
+.community-settings {
+
+
+    &__item {
+        margin-top: 30px;
+    }
+
+    &__buttons {
+        display: flex;
+        column-gap: $indent-3;
+        margin-top: 30px;
+    }
+
+    &__change-tariff {
+        display: grid;
+        grid-template-columns: 300px 400px;
+        align-items: flex-end;
+        gap: 20px 40px;
+        margin-top: 30px;
+    }
+
+    &__input-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        &:last-child {
+            label {
+                align-self: flex-end;
+            }
+        }
+    }
+
+    &__input-group {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+
+        div:first-child input {
+            border-right: none;
+            border-radius: 5px 0 0 5px;
+        }
+
+        div:last-child select {
+            border-radius: 0 5px 5px 0;
+        }
+    }
+
+    &__tariff-public-settings {
+        display: grid;
+        grid-template-columns: minmax(470px, 1fr) 1fr;
+        column-gap: 30px;
+    }
+}

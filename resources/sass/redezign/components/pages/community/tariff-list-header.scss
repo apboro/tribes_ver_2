@@ -1,0 +1,26 @@
+.tariff-list-header {
+    box-shadow: none!important;
+    margin-bottom: 30px!important;
+
+    &__wrapper {
+        padding: 30px 0 0!important;
+    }
+
+    &__wrap {
+        display: flex;
+        align-items: center;
+    }
+
+    &__title {
+        @include font($grey-10, 30px, 36px, 600);
+        font-size: 30px!important;
+        font-weight: 600px!important;
+    }
+
+    &__select {
+        padding: 4px 12px;
+        border-radius: 100px;
+        border: 1px solid $grey-4;
+        cursor: pointer;
+    }
+}

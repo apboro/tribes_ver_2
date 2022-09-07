@@ -12,6 +12,7 @@ use App\Filters\TariffFilter;
 use App\Models\Payment;
 use App\Models\TelegramUser;
 use App\Services\TelegramMainBotService;
+use DateTime;
 use Illuminate\Http\Request;
 
 class TariffRepository implements TariffRepositoryContract
@@ -28,8 +29,7 @@ class TariffRepository implements TariffRepositoryContract
         TelegramMainBotService $mainServiceBot,
         FileUploadService $fileUploadService,
         FileEntity $fileEntity
-    )
-    {
+    ) {
         $this->fileRepo = $fileRepo;
         $this->mainServiceBot = $mainServiceBot;
         $this->fileUploadService = $fileUploadService;
@@ -69,7 +69,7 @@ class TariffRepository implements TariffRepositoryContract
 
     public function perm($request, $community)
     {
-        if (isset($request->days)) 
+        if (isset($request->days))
             $this->updateDaysForUser($request, $community);
 
         if (isset($request->excluded))
@@ -86,18 +86,18 @@ class TariffRepository implements TariffRepositoryContract
     {
         $newDate = $date . ' ' . $time;
         if ($date !== null) {
-            $this->createPayment($community->id, $ty->telegram_id, $newDate);
+            $this->createPayment($community, $ty->telegram_id, $newDate);
         }
     }
 
-    private function createPayment($communityId, $tyTelegramId, $date)
+    private function createPayment($community, $tyTelegramId, $date)
     {
         $ty = TelegramUser::where('telegram_id', $tyTelegramId)->first();
-        $variant = $ty->tariffVariant()->first();
+        $variant = $ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first();
         if (!$variant) {
             Payment::create([
                 'OrderId' => 1,
-                'community_id' => $communityId,
+                'community_id' => $community->id,
                 'add_balance' => 0,
                 'isNotify' => false,
                 'telegram_user_id' => $tyTelegramId,
@@ -119,12 +119,21 @@ class TariffRepository implements TariffRepositoryContract
             $ty = TelegramUser::find($tyId);
 
             if (isset($request->date_payment[$tyId]) && !$variantId || isset($request->time_payment[$tyId]) && !$variantId) {
-                redirect()->back()->withCommunity($community)->withErrors('Невозможно установить дату платежа без тарифа.');
+                return redirect()->back()->withCommunity($community)->withErrors('Невозможно установить дату платежа без тарифа.');
             } elseif (isset($request->date_payment[$tyId]) || isset($request->time_payment[$tyId])) {
+
+                if (isset($request->date_payment[$tyId]) && $request->date_payment[$tyId] !== now()->format('Y-m-d')) {
+                    $date1 = new DateTime(now()->format('Y-m-d'));
+                    $date2 = new DateTime($request->date_payment[$tyId]);
+                    if ($date1 < $date2) {
+                        return redirect()->back()->withCommunity($community)->withErrors('Невозможно установить дату платежа будущим числом.');
+                    }
+                }
+
                 $this->updatePaymentDate($request->date_payment[$tyId] ?? now()->format('Y-m-d'), $request->time_payment[$tyId] ?? now()->format('G:i:s'), $community, $ty);
             } else {
                 if ($variantId)
-                    $this->createPayment($community->id, $ty->telegram_id, now()->format('Y-m-d G:i:s'));
+                    $this->createPayment($community, $ty->telegram_id, now()->format('Y-m-d G:i:s'));
             }
 
 
@@ -145,15 +154,28 @@ class TariffRepository implements TariffRepositoryContract
 
             $variant = TariffVariant::find($variantId);
 
+            $days = $variant->period;
+            if (isset($request->date_payment[$tyId]) && $request->date_payment[$tyId] !== now()->format('Y-m-d')) {
+                $date1 = new DateTime(now()->format('Y-m-d'));
+                $date2 = new DateTime($request->date_payment[$tyId]);
+                $difference = date_diff($date1, $date2);
+                
+                $days = $variant->period - $difference->days;
+                if ($days < 0) {
+                    $days = 0;
+                }
+            }
+
             if ($variantForThisCommunity) {
-                $ty->tariffVariant()->detach($variantForThisCommunity->id);
-                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
+                if ($variantForThisCommunity->id !== $variant->id) {
+                    $ty->tariffVariant()->detach($variantForThisCommunity->id);
+                    $ty->tariffVariant()->attach($variant, ['days' => $days, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
+                }
             } else {
-                $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
+                $ty->tariffVariant()->attach($variant, ['days' => $days, 'prompt_time' => date('H:i'), 'isAutoPay' => false]);
             }
         }
     }
-
     /**
      * Обновить количество дней пользователю
      */
@@ -186,7 +208,7 @@ class TariffRepository implements TariffRepositoryContract
                     ]);
                     $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
                 }
-                
+
                 if ($excluded === false) {
                     $ty->communities()->updateExistingPivot($community->id, [
                         'excluded' => $excluded,
@@ -194,7 +216,6 @@ class TariffRepository implements TariffRepositoryContract
                     $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
                 }
             }
-            
         }
     }
 
@@ -220,6 +241,7 @@ class TariffRepository implements TariffRepositoryContract
         $variant->period = $data['tariff_pay_period'];
         $variant->isActive = $data['tariff'];
         $variant->number_button = $data['number_button'];
+        $variant->arbitrary_term = $data['arbitrary_term'];
         $variant->save();
 
         $this->tariffWithUser($community, $variant);
@@ -258,9 +280,9 @@ class TariffRepository implements TariffRepositoryContract
             $this->tariffModel->title = $data['title'];
         }
 
-//        if ($data['trial_period']  && env('USE_TRIAL_PERIOD')) {
-//            $this->tariffModel->test_period = $data['trial_period'];
-//        }
+        //        if ($data['trial_period']  && env('USE_TRIAL_PERIOD')) {
+        //            $this->tariffModel->test_period = $data['trial_period'];
+        //        }
 
         $this->tariffModel->test_period = $data['trial_period']  && env('USE_TRIAL_PERIOD', true)
             ? $data['trial_period']
@@ -360,19 +382,19 @@ class TariffRepository implements TariffRepositoryContract
 
     private function updateDescriptions($data)
     {
-        if (isset($data['welcome_description'])){
+        if (isset($data['welcome_description'])) {
             $this->tariffModel->welcome_description = $data['welcome_description'];
         }
-        if (isset($data['reminder_description'])){
+        if (isset($data['reminder_description'])) {
             $this->tariffModel->reminder_description = $data['reminder_description'];
         }
-        if (isset($data['success_description'])){
+        if (isset($data['success_description'])) {
             $this->tariffModel->thanks_description = $data['success_description'];
         }
-        if (isset($data['main_description'])){
+        if (isset($data['main_description'])) {
             $this->tariffModel->main_description = $data['main_description'];
         }
-        if (isset($data['publication_description'])){
+        if (isset($data['publication_description'])) {
             $this->tariffModel->publication_description = $data['publication_description'];
         }
     }

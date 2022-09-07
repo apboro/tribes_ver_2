@@ -1,9 +1,22 @@
 .analytics-community {
 
-    &__title-wrap {
+    &__analytics-wrap {
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+
+    &__title-wrap {
+        display: flex;
+        align-items: center
+    }
+
+    &__filter {
+        display: inline-block;
+
+        &:not(:last-child){
+            margin: 0 20px 0 0;
+        }
     }
 
     &__title {
@@ -36,8 +49,11 @@
         margin-top: 50px;
     }
 
-    &__pagination {
-        margin-top: 40px;
+    &__footer {
+        margin: 30px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 }
 

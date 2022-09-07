@@ -67,15 +67,9 @@ class TestBotController extends Controller
         // dd($reactionsGroup);
         // dd($messages[0]->messages->messages);
         dd($getDialogs[0]->allDialogs->chats);
-
-
         // $telegramConnection = TelegramConnection::select('chat_id', 'access_hash', 'isGroup')->where('is_there_userbot', true)->get();
 
         // dd($telegramConnection);
-
-        
-
-        
     }
 
 }

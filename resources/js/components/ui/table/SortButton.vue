@@ -4,6 +4,16 @@
         mode="out-in"
     >
         <button
+            class="table__sort-btn"
+        >
+            <v-icon
+                name="sort2"
+                size="1"
+                class="button-text__icon"
+            />
+        </button>
+
+        <!-- <button
             v-if="value === 'off'"
             :key="`${ sortProps.sortName }_asc`"
             class="table__sort-btn button-text button-text--primary button-text--only-icon"
@@ -35,13 +45,13 @@
             class="table__sort-btn button-text button-text--primary button-text--only-icon" 
             @click="sort(sortProps.sortName, 'off')"
         >
-        <!-- //class="table__sort-btn button-text button-text--primary button-text--only-icon active" -->
+        
             <v-icon
                 name="sort-desc"
                 size="1"
                 class="button-text__icon"
             />
-        </button>
+        </button> -->
     </transition>
 </template>
 
@@ -53,22 +63,22 @@
 
         components: { VIcon },
 
-        props: {
-            sortProps: {
-                type: Object,
-                default: {},
-            },
+        // props: {
+        //     sortProps: {
+        //         type: Object,
+        //         default: {},
+        //     },
 
-            value: {
-                type: String,
-                default: 'off'
-            }
-        },
+        //     value: {
+        //         type: String,
+        //         default: 'off'
+        //     }
+        // },
 
-        methods: {
-            sort(sortName, sortRule) {
-                this.$emit('sort', sortName, sortRule);
-            },
-        },
+        // methods: {
+        //     sort(sortName, sortRule) {
+        //         this.$emit('sort', sortName, sortRule);
+        //     },
+        // },
     }
 </script>

@@ -96,9 +96,10 @@ return [
     'payment_period' => 'Период действия',
     'phone' => 'Телефон',
     'popular_name' => 'Иван Иванов',
+    'preview' => 'Превью',
+    'price' => 'Стоимость',
     'profile' => 'Профиль',
     'profile_low' => 'профиль',
-    'price' => 'Стоимость',
     // R
     'remove' => 'Удалить',
     // S

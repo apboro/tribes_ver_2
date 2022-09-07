@@ -8,6 +8,7 @@ import { StatisticPage } from "./CommunityPage/StatisticPage";
 import { TariffPage } from "./CommunityPage/TariffPage";
 import { TariffPageSettings } from "./CommunityPage/TariffPageSettings";
 import { TariffPagePublications } from "./CommunityPage/TariffPagePublications";
+import { TariffPageAdd } from "./CommunityPage/TariffPageSettings/TariffPageAdd";
 
 export default class CommunityPage extends Page {
     constructor(container) {
@@ -42,6 +43,10 @@ export default class CommunityPage extends Page {
         if (this.isBlock('[data-tab="tariffPagePublications"]')) {
             this.tariffPagePublications = new TariffPagePublications(this);
         }
+
+        if (this.isBlock('[data-tab="tariffPageAdd"]')) {
+            this.tariffPageAdd = new TariffPageAdd(this);
+        }
         
         if (this.isBlock('[data-tab="knowledgeBasePage"]')) {
             this.knowledgeBasePage = new KnowledgeBasePage(this);
@@ -59,10 +64,35 @@ export default class CommunityPage extends Page {
 
     toggleProfileVisibility(event) {
         this.profileBlock.toggleVisibility();
+        let active = document.getElementById("btn_profile");
+
         if (this.profileBlock.isVisible) {
             event.target.textContent = 'Скрыть профиль';
+            active.classList.remove("active");
+
         } else {
-            event.target.textContent = 'Показать профиль';
+            event.target.textContent = 'Открыть профиль';
+            active.className += " active";
         }
     }
+
+
+    /*  let content;
+        if (direction === 'next') {
+            content = el.nextElementSibling;
+        } else if (direction === 'previous') {
+            content = el.previousElementSibling;
+        }
+        
+        el.classList.toggle('active');
+        el.parentNode.classList.toggle('active');
+        content.classList.toggle('active');
+
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+            if (isChangeText) el.textContent = "Показать всё";
+        } else {
+            content.style.maxHeight = content.scrollHeight + 'px';
+            if (isChangeText) el.textContent = "Скрыть";
+        } */
 }

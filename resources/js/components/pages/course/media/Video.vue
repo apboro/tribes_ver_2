@@ -197,7 +197,7 @@ export default {
 
         initUploader(ev, clickRef = false){
             ev.preventDefault();
-            this.isVideoReady = false
+            //this.isVideoReady = false
             // if(!this.dragState) return;
             let file = ev.dataTransfer && ev.dataTransfer.items.length ? ev.dataTransfer.items[0].getAsFile() : null;
             

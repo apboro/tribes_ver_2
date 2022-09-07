@@ -1,7 +1,8 @@
 <template>
-    <div >
+    <div>
         <payments-chart
             :data="GET_PAYMENTS_CHART_DATA"
+            :chartOptions="chartOptions"
         />
 
         <payments-table
@@ -9,15 +10,21 @@
             :payments="GET_TABLE_DATA"
         />
 
-         <!-- Pagination -->
-        <v-pagination
-            v-if="GET_TABLE_DATA && GET_TABLE_DATA.length && !IS_LOADING"
-            class="analytics-community__pagination"
-            :paginateData="GET_PAGINATE_DATA"
-            :selectOptions="paginationSelectedOptions"
-            @onPageClick="setPage"
-            @onChangePerPage="setPerPage"
-        />
+        <div class="analytics-community__footer">
+
+            <v-export-data
+            />
+             <!-- Pagination -->
+            <v-pagination
+                v-if="GET_TABLE_DATA && GET_TABLE_DATA.length && !IS_LOADING"
+                class="analytics-community__pagination"
+                :paginateData="GET_PAGINATE_DATA"
+                :selectOptions="paginationSelectedOptions"
+                @onPageClick="setPage"
+                @onChangePerPage="setPerPage"
+            />
+        </div>
+        
     </div>
 </template>
 
@@ -26,6 +33,7 @@
     import PaymentsChart from '../../../../components/pages/community/analytics/payments/PaymentsChart.vue';
     import PaymentsTable from '../../../../components/pages/community/analytics/payments/PaymentsTable.vue';
     import VPagination from '../../../../components/ui/pagination/VPagination.vue';
+    import VExportData from '../../../../components/ui/export/VExportData.vue';
 
     export default {
         name: 'AnalyticsPayments',
@@ -34,12 +42,18 @@
             PaymentsChart,
             PaymentsTable,
             VPagination,
+            VExportData
         },
 
         props: {
             period: {
                 type: String,
                 default: () => '',
+            },
+
+            chartOptions: {
+                type: Object,
+                default: () => {},
             }
         },
 
