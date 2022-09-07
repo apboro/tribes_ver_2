@@ -1,19 +1,28 @@
 @auth
     <div class="dropdown-lk main-header__dropdown" data-plugin="Headuser">
         <button class="dropdown-lk__head" data-dropdown-btn onclick="Dropdown.toggle(this)">
-            <span
+            <!-- <span
                 class="dropdown-lk__name"
                 title="{{ Auth::user()->name }}"
             >
                 Личный кабинет
+            </span> -->
+
+            <span class="dropdown-lk__avatar">
+                <img src="/images/no-user-avatar.svg" alt="">
             </span>
+
+            <i class="dropdown-lk__arrow">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="icon__fill" d="M3.53317 5.53317C3.6665 5.39984 3.79984 5.33317 3.99984 5.33317C4.19984 5.33317 4.33317 5.39984 4.4665 5.53317L7.99984 9.0665L11.5332 5.53317C11.7998 5.2665 12.1998 5.2665 12.4665 5.53317C12.7332 5.79984 12.7332 6.19984 12.4665 6.4665L8.4665 10.4665C8.19984 10.7332 7.79984 10.7332 7.53317 10.4665L3.53317 6.4665C3.2665 6.19984 3.2665 5.79984 3.53317 5.53317Z" fill="#4C4957"/>
+                </svg>
+            </i>
         </button>
 
         <ul class="dropdown-lk__list" data-dropdown-content>
             @if (request()->is('*follower*'))
                 <li class="dropdown-lk__item">
-                    <a class="dropdown__link" href="{{ route('community.list') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-repeat"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                    <a class="dropdown-lk__link" href="{{ route('community.list') }}">
                         <span>{{ __('base.panel_author') }}</span>
                     </a>
                 </li>
@@ -22,14 +31,20 @@
 
                 <li class="dropdown-lk__item">
                     <a class="dropdown-lk__link" href="{{ route('follower.mobile.form') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user font-medium-2 me-50"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         <span>{{ __('base.profile') }}</span>
                     </a>
                 </li>
             @else
                 <li class="dropdown-lk__item">
                     <a class="dropdown-lk__link" href="{{ route('follower.products') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-repeat"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                        <span>Мои проекты</span>
+                    </a> 
+                </li>
+                
+                <div class="dropdown-lk__divider"></div>
+
+                <li class="dropdown-lk__item">
+                    <a class="dropdown-lk__link" href="{{ route('follower.products') }}">
                         <span>{{ __('base.panel_follower') }}</span>
                     </a> 
                 </li>
@@ -38,7 +53,6 @@
             
                 <li class="dropdown-lk__item">
                     <a class="dropdown-lk__link" href="{{ route('author.profile') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user font-medium-2 me-50"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         <span>{{ __('base.profile') }}</span>
                     </a>
                 </li>
@@ -49,7 +63,6 @@
 
                 <li class="dropdown-lk__item">
                     <a class="dropdown-lk__link" href="/manager/users">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-power font-medium-2 me-50"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
                         <span>{{ __('auth.manager_panel') }}</span>
                     </a>
                 </li>
@@ -63,7 +76,6 @@
                         class="dropdown-lk__link"
                         onclick="Headuser.loginAsAdmin()"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-power font-medium-2 me-50"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
                         <span>{{ __('auth.back_as_admin') }}</span>
                     </a>
                 </li>
@@ -79,7 +91,6 @@
                     onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-power font-medium-2 me-50"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
                     <span>{{ __('base.exit') }}</span>
                 </a>
             </li>

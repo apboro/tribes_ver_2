@@ -1,0 +1,44 @@
+.main-nav-new {
+    
+    &__list {
+        display: flex;
+        column-gap: 30px;
+        margin: 0;
+        list-style: none;
+    }
+
+    &__item {
+    }
+    
+    &__link {
+        display: flex;
+        align-items: center;
+        @include font($text-color-1, 16px, 21px, 500);
+        text-transform: uppercase;
+        transition: $transition;
+
+        &:hover,
+        &.active {
+            color: $primary-1;
+
+            .main-nav-new__arrow {
+                .icon__fill {
+                    fill: $primary-1;
+                }
+            }
+        }
+    }
+
+    &__arrow {
+        margin-left: $indent-1;
+        pointer-events: none;
+
+        svg {
+            transition: $transition;
+
+            .icon__fill {
+                transition: $transition;
+            }
+        }
+    }
+}

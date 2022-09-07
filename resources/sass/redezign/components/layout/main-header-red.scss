@@ -29,5 +29,25 @@
         }
     }
 
+    &__auxiliary {
+        display: flex;
+        align-items: center;
+    }
+
+    &__search {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        margin-right: 20px;
+        border: 1px solid $grey-5;
+        border-radius: 50%;
+
+        .icon-stroke {
+            stroke: $grey-5;
+        }
+    }
+
     /* &__nav {} */
 }
