@@ -33,8 +33,7 @@ use App\Services\Tinkoff\Payment as Pay;
 use App\Services\WebcasterPro;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Telegram\MainComponents\Madeline;
-
-
+use App\Services\Telegram\TelegramMtproto\UserBot;
 use Carbon\Carbon;
 
 use DateTime;
@@ -45,8 +44,32 @@ class TestBotController extends Controller
 
     public function index(Request $request)
     {
-        $pwr_chat = Madeline::settings()->getPwrChat(-743948980);
-        dd($pwr_chat);
+        // another id = 1510955178 or 666997162
+        // another id = 1510955178, hash = 8077972812704298091
+        // kanal id = 1504673809 access_hash = 6334485774387705507
+        // webstyle id = 738071830 
+        // ni si id = 1716122891, hash = 1057009408142334119, mes_id = 1116          комментарии к "Канал"  1677549150           7443666494376549445
+        $mtproto = new UserBot();
+        // $reactions = $mtproto->getChannelReactions(1716122891, [1142], '1057009408142334119');
+        // $views = $mtproto->getMessagesViews(1716122891, [1116], '1057009408142334119');
+        // $messages = $mtproto->getMessages(1504673809, 'channel', '6334485774387705507');
+        // $reactionsGroup = $mtproto->getReactions(602000865, 108846);
+        // $groupReaction = $mtproto->getMessagesViews(1504673809, 'channel', 3, '6334485774387705507');
+        $getDialogs = $mtproto->getDialogs(200);
+        // $usersInChannel = $mtproto->getUsersInChannel(1510955178,'8077972812704298091');
+        // $usersInGroup = $mtproto->getChatInfo(784578767);
+        // $webHook = $mtproto->setWebhook('http://tribes'); 
+        // TestData::create([
+        //     'data' => json_encode($auth)
+        // ]);
+        // $auth = $mtproto->auth();
+
+        // dd($reactionsGroup);
+        // dd($messages[0]->messages->messages);
+        dd($getDialogs[0]->allDialogs->chats);
+        // $telegramConnection = TelegramConnection::select('chat_id', 'access_hash', 'isGroup')->where('is_there_userbot', true)->get();
+
+        // dd($telegramConnection);
     }
 
 }

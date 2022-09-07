@@ -54,6 +54,8 @@ class DatabaseSeeder extends Seeder
             TemplateSeeder::class,
             FileSeeder::class,
             CourseSeeder::class,
+
+            TelegramStatisticSeeder::class,
         ],
         [
             'user' => $user,
