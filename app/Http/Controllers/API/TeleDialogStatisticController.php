@@ -29,8 +29,8 @@ class TeleDialogStatisticController extends Controller
     public function memberCharts(TeleDialogStatRequest $request, MembersChartFilter $filter)
     {
         $chartJoiningData = $this->statisticRepository->getJoiningMembersChart($request->get('community_id'),$filter);
-        //$chartExitingData = $this->statisticRepository->getExitingMembersChart($request->get('community_id'),$filter);
-
+        $chartExitingData = $this->statisticRepository->getExitingMembersChart($request->get('community_id'),$filter);
+        $chartJoiningData->includeChart($chartExitingData);
         return (new MemberChartsResource($chartJoiningData));
     }
 }

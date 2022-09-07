@@ -69,7 +69,6 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $end = $filter->getEndDate()->format('U');
 
         $tuc = 'telegram_users_community';
-        //todo заполнить свойства values marks
 
         $builder = DB::table($tuc)
             ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
@@ -80,11 +79,11 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 DB::raw("to_timestamp(d.dt::int) as scale"),
                 DB::raw("COUNT(distinct($tuc.telegram_user_id)) as users"),
             ]);
-        $builder->where(['telegram_users_community.community_id' => $communityId]);
+        $builder->where(["$tuc.community_id" => $communityId]);
         $builder->groupBy("d.dt");
 
         $builder = $filter->apply($builder);
-        //dd($builder->toSql());
+        dd($builder->toSql());
         $result = $builder->get()->slice(0, -1);
         $chart = new ChartData();
         $chart->initChart($result);
@@ -102,7 +101,6 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $end = $filter->getEndDate()->format('U');
 
         $tuc = 'telegram_users_community';
-        //todo заполнить свойства values marks
 
         $builder = DB::table($tuc)
             ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
@@ -113,6 +111,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 DB::raw("to_timestamp(d.dt::int) as scale"),
                 DB::raw("COUNT(distinct($tuc.telegram_user_id)) as users"),
             ]);
+        $builder->where(["$tuc.community_id" => $communityId]);
         $builder->groupBy("d.dt");
 
         $result = $builder->get()->slice(0, -1);
