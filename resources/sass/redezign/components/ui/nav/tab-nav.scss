@@ -3,30 +3,36 @@
     &__list {
         display: inline-flex;
         align-items: center;
-        flex-wrap: wrap;
         gap: $indent-1;
+        max-width: 100%;
         margin: 0;
         list-style: none;
+        overflow: auto;
+        
+        @media (min-width: $md) {
+            overflow: visible;
+            flex-wrap: wrap;
+        }
     }
 
     &__item {
         position: relative;
-        
         @include font($text-color-2, 14px, 20px, 500);
-        
+        white-space: nowrap;
+
         &:not(:last-child):after {
             content: "|";
             color: $text-color-2;
             margin-left: 10px;
         }
 
-        
-
         &.active {
-            position: relative;
             color: $primary-1;   
         }
-
+        
+        @media (min-width: $md) {
+            white-space: normal;
+        }
     }
 
     &__link {
