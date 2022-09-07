@@ -1,0 +1,70 @@
+.confirmation_subscription {
+    padding: 30px;
+    border: 1px solid $grey-3;
+    border-radius: 6px;
+
+    &__title {
+        margin: 0 0 30px;
+        @include font($text-color-3, 20px, 26px, 500);
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+    }
+
+    &__avatar {
+        margin: 0 10px 0 0;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        border: 2px solid $primary-1;
+    }
+
+    &__header-col1 {
+        display: flex;
+        align-items: center;
+
+        &--right {
+            padding: 0 60px 0 0;
+        }
+    }
+
+    &__header-col1-title {
+        margin: 0 0 3px;
+        @include font($text-color-2, 14px, 20px, 600);
+    }
+
+    &__name-value {
+        line-height: 0;
+    }
+
+    &__name {
+        @include font($text-color-2, 14px, 20px, 400);
+        &.col1 {
+            display: block;
+        }
+    }
+
+    &__value {
+        @include font($text-color-1, 14px, 20px, 500);
+    }
+
+    &__subscribers {
+        @include font($text-color-1, 12px, 16px, 400);
+    }
+
+    // &__header-col2 {
+    //     &__name-value {
+
+    //     }
+    // }
+
+    &__body {
+        background-color: lightcoral;
+    }
+
+    &__footer {
+        background-color: lightcyan;
+    }
+}
