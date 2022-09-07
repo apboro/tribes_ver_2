@@ -56,8 +56,8 @@ class UserBot
     /**
      * Получить историю сообщений
      *
-     * @param string $type               Тип чата - 'channel' 'group'.    Супергруппа и гигагруппа относится к channel
-     * @param int $chat_id       
+     * @param int $chat_id 
+     * @param string $type               Тип чата - 'channel' 'group'.    Супергруппа и гигагруппа относится к channel      
      * @param string|null $access_hash   Хеш доступа обязательно в строке. Хеш доступа есть только у типа 'channel'. Получить можно через getDialogs()
      * @param int|null $min_id           Если было передано положительное значение, метод вернет только сообщения с идентификаторами больше min_id. 
      * @param int|null $limit            Сколько вернуть результатов. 
@@ -127,17 +127,17 @@ class UserBot
      * Получить реакции на сообщение в группе с пользователями их оставившие
      *
      * @param int $chat_id
-     * @param array $messages_id
+     * @param int $message_id
      * @param int|null $limit
      * @param int|null $offset
      * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getReactions($chat_id, $messages_id, $limit = null, $offset = null, $user_id = 1)
+    public function getReactions($chat_id, $message_id, $limit = null, $offset = null, $user_id = 1)
     {
         $params = [
             'ident' => 'Laravel' . $user_id,
-            'message_id' => $messages_id,
+            'message_id' => $message_id,
             'chat_id' => $chat_id,
             'limit' => $limit,
             'offset' => $offset

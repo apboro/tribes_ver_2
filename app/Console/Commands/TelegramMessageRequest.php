@@ -3,7 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\TelegramConnection;
+use App\Repositories\Telegram\TeleMessageRepositoryContract;
+use App\Repositories\Telegram\TelePostRepositoryContract;
 use App\Services\Telegram\TelegramMtproto\UserBot;
+use App\Services\TelegramLogService;
 use Illuminate\Console\Command;
 
 class TelegramMessageRequest extends Command
@@ -24,13 +27,19 @@ class TelegramMessageRequest extends Command
 
     protected $userBot;
     protected $type = ['group', 'channel'];
+    protected $messageRepository;
+    protected $postRepository;
+    protected $telegramLogService;
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(TeleMessageRepositoryContract $messageRepository, TelePostRepositoryContract $postRepository, TelegramLogService $telegramLogService)
     {
+        $this->telegramLogService = $telegramLogService;
+        $this->messageRepository = $messageRepository;
+        $this->postRepository = $postRepository;
         $this->userBot = new UserBot;
         parent::__construct();
     }
@@ -61,7 +70,7 @@ class TelegramMessageRequest extends Command
     protected function getType($connect)
     {
         $type = $this->type[1];
-        if ($connect->isGroup == true)
+        if ($connect->isGroup === true)
             $type = $this->type[0];
 
         return $type;
@@ -82,9 +91,11 @@ class TelegramMessageRequest extends Command
         $access_hash = $connect->access_hash ?? null;
         if (!$telegramMessages->first()) {
             $messages = $this->userBot->getMessages($connect->chat_id, $type, $access_hash);
+            $this->saveMessage($messages);
         } else {
             $min_id = $connect->messages()->latest()->first()->message_id;
             $messages = $this->userBot->getMessages($connect->comment_chat_id, $type, $access_hash, $min_id);
+            $this->saveMessage($messages);
         }
     }
 
@@ -94,10 +105,11 @@ class TelegramMessageRequest extends Command
 
         if (!$telegramPosts->first()) {
             $messages = $this->userBot->getMessages($connect->chat_id, $type, $connect->access_hash);
+            $this->saveMessage($messages);
         } else {
             $min_id = $connect->posts()->latest()->first()->post_id;
             $messages = $this->userBot->getMessages($connect->chat_id, $type, $connect->access_hash, $min_id);
-
+            $this->saveMessage($messages);
             foreach ($telegramPosts as $post) {
                 $this->forComment($connect, $post);
             }
@@ -109,12 +121,28 @@ class TelegramMessageRequest extends Command
         $telegramPostComments = $post->comment()->get();
         $commentType = $this->getCommentType($connect);
         $comment_access_hash = $connect->comment_chat_hash ?? null;
-
+    
         if (!$telegramPostComments->first()) {
             $messages = $this->userBot->getMessages($connect->comment_chat_id, $commentType, $comment_access_hash);
+            $this->saveMessage($messages, true);
         } else {
             $min_id = $post->comment()->latest()->first()->message_id;
             $messages = $this->userBot->getMessages($connect->comment_chat_id, $commentType, $comment_access_hash, $min_id);
+            $this->saveMessage($messages, true);
+        }
+    }
+
+    protected function saveMessage($messages, $isComment = false)
+    {
+        if (isset($messages[0]->messages->messages)) {
+            foreach ($messages[0]->messages->messages as $message) {
+                if ($message->post === true) {
+                    $this->postRepository->savePost($message);
+                } else {
+                    if (isset($message->message))
+                        $this->messageRepository->saveChatMessage($message, $isComment);
+                }
+            }
         }
     }
 }

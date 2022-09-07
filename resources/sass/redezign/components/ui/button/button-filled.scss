@@ -15,21 +15,41 @@ $button-background-color-danger-2: $danger-4;
     padding: 10px 40px;
     text-align: center;
     @include font($button-text-color-light, 14px, 20px, 600);
+    text-transform: uppercase;
     border-radius: 66px;
     cursor: pointer;
     transition: $transition;
 
     &--primary {
+        border-radius: 2px;
+        color: $white;
         background-color: $button-background-color-primary-1;
 
         &:hover,
         &:focus {
-            background-color: $button-background-color-primary-2;
+            color: $white;
+            background-color: $primary-4;
             box-shadow: $button-shadow;
         }
 
         &:active {
-            background-color: $button-background-color-primary-1;
+            background-color: $primary-4;
+        }
+    }
+
+    &--primary-15 {
+        border-radius: 2px;
+        color: $primary-1;
+        background-color: rgba($primary-4, .15);
+
+        &:hover,
+        &:focus {
+            color: $primary-1;
+            box-shadow: $button-shadow;
+        }
+
+        &:active {
+            box-shadow: $button-shadow;
         }
     }
 

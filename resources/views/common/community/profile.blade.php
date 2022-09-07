@@ -20,6 +20,7 @@
 
             <div class="community__profile-btn-wrapper">
                 <button
+                    id="btn_profile"
                     class="community__profile-btn"
                     onclick="CommunityPage.toggleProfileVisibility(event)"
                     data-switch-visibility-btn

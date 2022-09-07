@@ -22,9 +22,9 @@ class CreateTelegramPostReactions extends Migration
             $table->string('datetime_record')->nullable();
             $table->timestamps();
 
-            $table->foreign('post_id')->references('post_id')->on('telegram_posts')->onDelete('cascade');
             $table->foreign('reaction_id')->references('id')->on('telegram_dict_reactions')->onDelete('cascade');
             $table->foreign('chat_id')->references('chat_id')->on('telegram_connections')->onDelete('cascade');
+            
         });
     }
 

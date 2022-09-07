@@ -1,0 +1,53 @@
+.community-tariff-card {
+    padding: 15px 20px;
+    background-color: $white;
+    border: 1px solid $grey-3;
+    border-radius: 10px;
+    box-shadow: $shadow-1;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__title {
+        @include font($text-color-2, 14px, 20px, 600);
+        @include truncate(170px);
+    }
+
+    &__text {
+        margin-top: $indent-1;
+        @include font($text-color-1, 14px, 20px, 400);
+    }
+
+    &__price {
+        color: $primary-1;
+        weight: 500;
+    }
+
+    &__period {
+    }
+
+    &__community {
+        @include font($primary-1, 14px, 20px, 400);
+    }
+
+    &__switcher {
+        margin-top: 10px;
+        
+        label {
+            pointer-events: none;
+        }
+    }
+
+    &__edit {
+        transition: $transition;
+        
+        &:hover {
+            .icon__stroke {
+                stroke: #7367f0;
+            }
+        }
+    }
+}

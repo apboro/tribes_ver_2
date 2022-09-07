@@ -4,7 +4,10 @@ namespace App\Console\Commands;
 
 use App\Models\TelegramConnection;
 use App\Models\TelegramMessage;
+use App\Repositories\Telegram\TeleMessageReactionRepositoryContract;
+use App\Repositories\Telegram\TelePostReactionRepositoryContract;
 use App\Services\Telegram\TelegramMtproto\UserBot;
+use App\Services\TelegramLogService;
 use Illuminate\Console\Command;
 
 class TelegramReactionsRequest extends Command
@@ -25,13 +28,19 @@ class TelegramReactionsRequest extends Command
 
     protected $userBot;
     protected $type = ['group', 'channel'];
+    protected $postReactionRepo;
+    protected $messageReactionRepo;
+    protected $telegramLogService;
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(TeleMessageReactionRepositoryContract $messageReactionRepo, TelePostReactionRepositoryContract $postReactionRepo, TelegramLogService $telegramLogService)
     {
+        $this->messageReactionRepo = $messageReactionRepo;
+        $this->postReactionRepo = $postReactionRepo;
+        $this->telegramLogService = $telegramLogService;
         $this->userBot = new UserBot;
         parent::__construct();
     }
@@ -71,21 +80,17 @@ class TelegramReactionsRequest extends Command
     protected function forGroup($connect)
     {
         $messages = $connect->messages()->select('message_id')->where('flag_observation', true)->get();
-        if ($messages->first()) {
-            $messagesId = [];
-            foreach ($messages as $message) {
-                $messagesId[] = $message->message_id;
-            }
 
-            $limit = 200;
-            if (count($messagesId) > $limit) {
-                $offset = 0;
-                for ($i = 0; $i <= count($messagesId) / $limit; $i++) {
-                    $reactions = $this->userBot->getReactions($connect->chat_id, $messagesId, $limit, $offset);
-                    $offset += 200;
+        if ($messages->first()) {
+            foreach ($messages as $message) {
+                if ($connect->access_hash === null) {
+                    $limit = 200;
+                    $reactions = $this->userBot->getReactions($connect->chat_id, $message->message_id, $limit);
+                    $this->messageReactionRepo->saveReaction($reactions, $connect->chat_id, $message->message_id);
+                } else {
+                    $reactions = $this->userBot->getChannelReactions($connect->chat_id, [$message->message_id], $connect->access_hash);
+                    $this->messageReactionRepo->saveReaction($reactions, $connect->chat_id, $message->message_id);
                 }
-            } else {
-                $reactions = $this->userBot->getReactions($connect->chat_id, $messagesId, $limit);
             }
         }
     }
@@ -100,6 +105,7 @@ class TelegramReactionsRequest extends Command
             }
 
             $reactions = $this->userBot->getChannelReactions($connect->chat_id, $postsId, $connect->access_hash);
+            $this->postReactionRepo->saveReaction($reactions);
         }
     }
 
@@ -115,6 +121,7 @@ class TelegramReactionsRequest extends Command
             $access_hash = $connect->comment_chat_hash ?? null;
 
             $reactions = $this->userBot->getChannelReactions($connect->comment_chat_id, $messagesId, $access_hash);
+            $this->postReactionRepo->saveReaction($reactions);
         }
     }
 }

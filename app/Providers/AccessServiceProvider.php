@@ -91,6 +91,36 @@ class AccessServiceProvider extends ServiceProvider
             MediaProductStatisticRepository::class
         );
 
+        $this->app->bind(
+            \App\Repositories\Telegram\TeleMessageRepositoryContract::class,
+            \App\Repositories\Telegram\TeleMessageRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Telegram\TelePostRepositoryContract::class,
+            \App\Repositories\Telegram\TelePostRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Telegram\TelePostViewsReposirotyContract::class,
+            \App\Repositories\Telegram\TelePostViewsReposirory::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Telegram\TeleMessageReactionRepositoryContract::class,
+            \App\Repositories\Telegram\TeleMessageReactionRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Telegram\TelePostReactionRepositoryContract::class,
+            \App\Repositories\Telegram\TelePostReactionRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Telegram\TeleDictReactionRepositoryContract::class,
+            \App\Repositories\Telegram\TeleDictReactionRepository::class
+        );
+
         $this->bindSearchClient();
 
     }

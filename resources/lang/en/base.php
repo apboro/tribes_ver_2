@@ -91,10 +91,11 @@ return [
     'password' => 'Password',
     'payment_period' => 'Payment period',
     'phone' => 'Phone',
+    'popular_name' => 'John Smith',
+    'preview' => 'Preview',
     'price' => 'Price',
     'profile' => 'Profile',
     'profile_low' => 'profile',
-    'popular_name' => 'John Smith',
     // R
     'remove' => 'Remove',
     // S

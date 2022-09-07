@@ -18,3 +18,5 @@
     window.botName = '{{ env('TELEGRAM_BOT_FIRST_NAME') }}';
     window.botLogin = '{{ env('TELEGRAM_BOT_NAME') }}';
 </script>
+
+<script src="//code.jivo.ru/widget/Fp7nrxvh0u" async></script>
