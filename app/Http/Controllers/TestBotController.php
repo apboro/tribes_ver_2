@@ -48,14 +48,14 @@ class TestBotController extends Controller
         // another id = 1510955178, hash = 8077972812704298091
         // kanal id = 1504673809 access_hash = 6334485774387705507
         // webstyle id = 738071830 
-        // ni si id = 1716122891, hash = 1057009408142334119, mes_id = 1116
-        // $mtproto = new UserBot();
+        // ni si id = 1716122891, hash = 1057009408142334119, mes_id = 1116          комментарии к "Канал"  1677549150           7443666494376549445
+        $mtproto = new UserBot();
         // $reactions = $mtproto->getChannelReactions(1716122891, [1142], '1057009408142334119');
         // $views = $mtproto->getMessagesViews(1716122891, [1116], '1057009408142334119');
-        // $messages = $mtproto->getMessages('channel', 1175704430, '6539262809277150285');
-        // $reactionsGroup = $mtproto->getReactions(784578767, 105921);
+        // $messages = $mtproto->getMessages(1504673809, 'channel', '6334485774387705507');
+        // $reactionsGroup = $mtproto->getReactions(602000865, 108846);
         // $groupReaction = $mtproto->getMessagesViews(1504673809, 'channel', 3, '6334485774387705507');
-        // $getDialogs = $mtproto->getDialogs(200);
+        $getDialogs = $mtproto->getDialogs(200);
         // $usersInChannel = $mtproto->getUsersInChannel(1510955178,'8077972812704298091');
         // $usersInGroup = $mtproto->getChatInfo(784578767);
         // $webHook = $mtproto->setWebhook('http://tribes'); 
@@ -64,12 +64,18 @@ class TestBotController extends Controller
         // ]);
         // $auth = $mtproto->auth();
 
-        // dd($getDialogs[0]->allDialogs->dialogs);
+        // dd($reactionsGroup);
+        // dd($messages[0]->messages->messages);
+        dd($getDialogs[0]->allDialogs->chats);
 
 
-        $telegramConnection = TelegramConnection::select('chat_id', 'access_hash', 'isGroup')->where('is_there_userbot', true)->get();
+        // $telegramConnection = TelegramConnection::select('chat_id', 'access_hash', 'isGroup')->where('is_there_userbot', true)->get();
 
-        dd($telegramConnection);
+        // dd($telegramConnection);
+
+        
+
+        
     }
 
 }

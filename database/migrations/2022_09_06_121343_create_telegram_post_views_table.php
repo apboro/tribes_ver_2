@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTelegramPostReactions extends Migration
+class CreateTelegramPostViewsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,15 @@ class CreateTelegramPostReactions extends Migration
      */
     public function up()
     {
-        Schema::create('telegram_post_reactions', function (Blueprint $table) {
+        Schema::create('telegram_post_views', function (Blueprint $table) {
             $table->id();
             $table->string('chat_id')->nullable();
             $table->unsignedBigInteger('post_id')->nullable();
-            $table->unsignedBigInteger('reaction_id')->nullable();
-            $table->string('count')->nullable();
+            $table->bigInteger('views_count')->nullable();
             $table->string('datetime_record')->nullable();
             $table->timestamps();
 
-            $table->foreign('reaction_id')->references('id')->on('telegram_dict_reactions')->onDelete('cascade');
             $table->foreign('chat_id')->references('chat_id')->on('telegram_connections')->onDelete('cascade');
-            
         });
     }
 
@@ -35,6 +32,6 @@ class CreateTelegramPostReactions extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telegram_post_reactions');
+        Schema::dropIfExists('telegram_post_views');
     }
 }

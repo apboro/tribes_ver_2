@@ -13,13 +13,13 @@ class TelegramDictReaction extends Model
 
     protected $table = 'telegram_dict_reactions';
 
-    function posts()
+    function postReactions()
     {
-        return $this->belongsToMany(TelegramPost::class, 'telegram_post_reactions', 'reaction_id', 'post_id')->withPivot(['count', 'datetime_record']);
+        return $this->hasMany(TelegramPostReaction::class, 'reaction_id', 'id');
     }
 
-    function messages()
+    function messageReactions()
     {
-        return $this->belongsToMany(TelegramMessage::class, 'telegram_message_reactions', 'reaction_id', 'message_id')->withPivot(['telegram_user_id', 'datetime_record']);
+        return $this->hasMany(TelegramMessageReaction::class, 'reaction_id', 'id');
     }
 }

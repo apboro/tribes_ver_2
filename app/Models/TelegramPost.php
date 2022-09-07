@@ -15,16 +15,21 @@ class TelegramPost extends Model
 
     function telegramConnection()
     {
-        return $this->belongsTo(TelegramConnection::class, 'channel_id');
+        return $this->belongsTo(TelegramConnection::class, 'channel_id', 'chat_id');
     }
 
     function comment()
     {
-        return $this->hasMany(TelegramMessage::class, 'post_id', 'id');
+        return TelegramMessage::where('post_id', $this->post_id)->where('comment_chat_id', $this->telegramConnection->comment_chat_id);   
     }
 
     function reactions()
     {
-        return $this->belongsToMany(TelegramDictReaction::class, 'telegram_post_reactions', 'post_id', 'reaction_id')->withPivot(['count', 'datetime_record']);
+        return TelegramPostReaction::where('post_id', $this->post_id)->where('chat_id', $this->channel_id)->first();
+    }
+
+    function views()
+    {
+        return TelegramPostViews::where('post_id', $this->post_id)->where('chat_id', $this->channel_id)->first();
     }
 }
