@@ -6,10 +6,11 @@
 }
 
 html {
-    width: auto !important;
-    //margin-left: calc(100vw - 100%);
-    margin-right: calc(-1 * (100vw - 100%));
-    //margin-right: 0;
+    // width: auto !important;
+    // margin-right: calc(-1 * (100vw - 100%));
+    //убрать эффект тряски верстки
+    margin-left: calc(100vw - 100%);
+    margin-right: 0;
 }
 
 body {
