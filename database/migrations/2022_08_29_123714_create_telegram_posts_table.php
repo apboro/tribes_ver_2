@@ -15,7 +15,7 @@ class CreateTelegramPostsTable extends Migration
     public function up()
     {
         Schema::table('telegram_connections', function (Blueprint $table) {
-            // $table->unique('chat_id');
+            $table->unique('chat_id');
         });
         Schema::create('telegram_posts', function (Blueprint $table) {
             $table->id();
