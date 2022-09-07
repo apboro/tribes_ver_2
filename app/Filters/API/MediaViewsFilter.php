@@ -16,17 +16,6 @@ class MediaViewsFilter extends QueryAPIFilter
         return $list[$name] ?? $list['create_date'];
     }
 
-    public function page()
-    {
-        return $this->builder;
-    }
-
-    //зарезервировано под пагинацию
-    public function perPage()
-    {
-        return $this->builder;
-    }
-
     public function owner($value)
     {
         return $this->builder->where(['courses.owner' => $value]);
