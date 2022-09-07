@@ -1,4 +1,5 @@
 export default ({
+    _communityId: window.location.pathname.split('/')[2],
     _dataList: {},
 
     _items: [],
