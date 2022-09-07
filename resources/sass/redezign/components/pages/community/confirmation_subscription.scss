@@ -9,6 +9,7 @@
     }
 
     &__header {
+        margin: 0 0 30px;
         display: flex;
         align-items: center;
     }
@@ -37,13 +38,18 @@
 
     &__name-value {
         line-height: 0;
+
+        &.subscribers {
+            @include font($text-color-1, 12px, 16px, 400);
+
+            .col1 {
+                display: block;
+            }
+        }
     }
 
     &__name {
         @include font($text-color-2, 14px, 20px, 400);
-        &.col1 {
-            display: block;
-        }
     }
 
     &__value {
@@ -54,17 +60,68 @@
         @include font($text-color-1, 12px, 16px, 400);
     }
 
-    // &__header-col2 {
-    //     &__name-value {
+    &__header-col2 {
 
-    //     }
-    // }
+        .confirmation_subscription__name-value {
+            margin: 0 0 9px;
+        }
+    }
 
-    &__body {
-        background-color: lightcoral;
+    &__confirm-check {
+        margin: 0 0 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    &__confirm-check-input {
+        margin: 0 10px 0 0;
+        // appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 2px;
+        border: 1px solid $grey-12;
+        background-color: $white;
+    }
+
+    &__confirm-check-label {
+        @include font($text-color-1, 14px, 20px, 400);
+    }
+
+    &__confirm-check-rights {
+        padding: 0 0 0 25px;
+        margin: 0 0 30px;
+    }
+
+    &__btn-link.confirmation_subscription__btn-link {
+        @include font($primary-1, 14px, 20px, 400);
     }
 
     &__footer {
-        background-color: lightcyan;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+
+    &__email-label {
+        @include font($text-color-2, 12px, 16px, 400);
+    }
+
+    &__email-input {
+        min-width: 260px;
+        display: block;
+        width: 100%;
+        padding: 8px 20px;
+        background-color: $white;
+        background-clip: padding-box;
+        border: 1px solid $grey-4;
+        appearance: none;
+        border-radius: 5px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+        &:focus {
+            border-color: #7367f0;
+            outline: 0;
+            box-shadow: 0 3px 10px 0 rgb(34 41 47 / 10%);
+        }
     }
 }
