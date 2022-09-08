@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources\Statistic;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ApiResourceCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-class FinancesResource extends JsonResource
+/** @property LengthAwarePaginator $resource */
+class FinancesResource extends ApiResourceCollection
 {
     public function __construct($resource)
     {
