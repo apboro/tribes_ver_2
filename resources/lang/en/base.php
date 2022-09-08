@@ -86,6 +86,7 @@ return [
     'not_available' => 'Not available',
     'none' => 'None',
     'number' => 'Number',
+    'number_access_days' => 'Number of access days',
     // P
     'payout' => 'Payout',
     'password' => 'Password',

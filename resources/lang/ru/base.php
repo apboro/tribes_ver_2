@@ -90,6 +90,7 @@ return [
     'no_entries' => 'Записи отсутствуют',
     'not_available' => 'Недоступен',
     'number' => 'Номер',
+    'number_access_days' => 'Кол-во дней доступа',
     // P
     'payout' => 'Выплаты',
     'password' => 'Пароль',
