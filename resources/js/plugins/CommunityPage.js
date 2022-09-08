@@ -26,7 +26,7 @@ export default class CommunityPage extends Page {
         }
 
         if (this.isBlock('[data-tab="analyticsListPage"]')) {
-            this.statisticPage = new AnalyticsListPage(this);
+            this.analyticsListPage = new AnalyticsListPage(this);
         }
 
         if (this.isBlock('[data-tab="donatePage"]')) {

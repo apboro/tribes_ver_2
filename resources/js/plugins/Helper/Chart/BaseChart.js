@@ -8,14 +8,37 @@ export class BaseChart {
         this.data = options.data;
         this.options = options.options;
 
+        this.chartInstance = null;
+
         this.init();
     }
 
     init() {
-        new Chart(this.id, {
+        this.chartInstance = new Chart(this.id, {
             type: this.type,
             data: this.data,
             options: this.options,
         });
-    }    
+    }
+
+    update() {
+        this.chartInstance.update();
+    }
+
+    changeData(labels, data) {
+        this.chartInstance.data.labels = labels;
+        this.chartInstance.data.datasets.forEach((dataset) => {
+            dataset.data = data;
+        });
+
+        this.update();
+    }
+
+    removeData() {
+        this.chartInstance.data.labels.pop();
+        this.chartInstance.data.datasets.forEach((dataset) => {
+            dataset.data.pop();
+        });
+        this.update();
+    }
 }

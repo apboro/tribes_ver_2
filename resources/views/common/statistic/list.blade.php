@@ -15,22 +15,16 @@
             
             <div>
                 <div class="filter-analytics-community analytics-community__filter">
-                    <select class="select-rounded">
-                        <option value="day">
-                            День
-                        </option>
-                        <option value="week">
-                            Неделя
-                        </option>
-                        <option value="month">
-                            Месяц
-                        </option>
-                        <option value="year">
-                            Год
-                        </option>
-                        <option value="all_time">
-                            За все время
-                        </option>
+                    <select
+                        id="period_filter"
+                        class="select-rounded"
+                        onchange="CommunityPage.analyticsListPage.switchFilter(event)"
+                    >
+                        <option value="day">День</option>
+                        <option value="week" selected>Неделя</option>
+                        <option value="month">Месяц</option>
+                        <option value="year">Год</option>
+                        <option value="all_time">За все время</option>
                     </select>
                 </div>
             </div>
@@ -43,7 +37,10 @@
                         <h3 class="card-analytics-community__title">
                             Подписчики
                         </h3>
-                        <span class="card-analytics-community__subtitle">за период</span>
+                        
+                        <span class="card-analytics-community__subtitle">
+                            за период
+                        </span>
                     </div>
                     
                     <div class="card-analytics-community__chart">
@@ -82,7 +79,10 @@
                         <h3 class="card-analytics-community__title">
                             Сообщения
                         </h3>
-                        <span class="card-analytics-community__subtitle">за период</span>
+                        
+                        <span class="card-analytics-community__subtitle">
+                            за период
+                        </span>
                     </div>
                     
                     <div class="card-analytics-community__chart">
@@ -104,6 +104,7 @@
                             <span class="card-analytics-community__info-label">
                                 Полезных
                             </span>
+                            
                             <span class="card-analytics-community__info-value card-analytics-community__info-value--green">
                                 +233
                             </span>

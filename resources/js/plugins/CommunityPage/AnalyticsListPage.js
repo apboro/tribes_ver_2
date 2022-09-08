@@ -3,10 +3,16 @@ import { BaseChart } from "../Helper/Chart/BaseChart";
 export class AnalyticsListPage {
     constructor(parent) {
         this.container = parent.container.querySelector('[data-tab="analyticsListPage"]');
+
+        this.filterNode = this.container.querySelector('#period_filter');
         
         this.subscribersId = 'subscribers_chart';
         this.messagesId = 'messages_chart';
         this.paymentsId = 'payments_chart';
+        
+        this.subscribersChart = null;
+        this.messagesChart = null;
+        this.paymentsChart = null;
 
         this.data = {};
 
@@ -15,13 +21,12 @@ export class AnalyticsListPage {
 
     init() {
         this.loadData();
-        
         this.initCharts();
     }
 
     loadData() {
         this.data = {
-            marks: ['Пон', 'Вт', 'Ср', 'ЧТ', 'Пт', 'Сб', 'Вс'],
+            marks: ['Пон', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
             subscribers: {
                 items: [12, 19, 3, 5, 2, 3, 31],
             },
@@ -36,14 +41,31 @@ export class AnalyticsListPage {
         }
     }
 
+    loadYear() {
+        this.data = {
+            marks: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+            subscribers: {
+                items: [12, 19, 3, 5, 2, 3, 31, 12, 19, 3, 5, 2,],
+            },
+
+            messages: {
+                items: [102, 190, 30, 20, 30, 31, 102, 190, 30, 50, 20, 30],
+            },
+
+            payments: {
+                items: [12, 109, 300, 500, 20, 300, 301, 12, 109, 300, 20, 300],
+            },
+        }
+    }
+
     initCharts() {
-        this.initChart(this.subscribersId, this.subscribersItems);
-        this.initChart(this.messagesId, this.messagesItems);
-        this.initChart(this.paymentsId, this.paymentsItems);
+        this.subscribersChart = this.initChart(this.subscribersId, this.subscribersItems);
+        this.messagesChart = this.initChart(this.messagesId, this.messagesItems);
+        this.paymentsChart = this.initChart(this.paymentsId, this.paymentsItems);
     }
 
     initChart(id, data) {
-        new BaseChart({
+        return new BaseChart({
             id,
             type: 'line',
             data: {
@@ -80,6 +102,13 @@ export class AnalyticsListPage {
                 }
             }
         });
+    }
+
+    switchFilter(event) {
+        this.loadYear();
+        this.subscribersChart.changeData(this.marks, this.subscribersItems);
+        this.messagesChart.changeData(this.marks, this.messagesItems);
+        this.paymentsChart.changeData(this.marks, this.paymentsItems);
     }
 
     get marks() {
