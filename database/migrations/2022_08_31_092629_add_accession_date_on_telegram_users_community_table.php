@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddAccessionDateOnTelegramUsersCommunityTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('telegram_users_community', function (Blueprint $table) {
+            $table->bigInteger('accession_date')->nullable();
+            $table->bigInteger('exit_date')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('telegram_users_community', function (Blueprint $table) {
+            $table->dropColumn(['accession_date']);
+            $table->dropColumn(['exit_date']);
+        });
+    }
+}

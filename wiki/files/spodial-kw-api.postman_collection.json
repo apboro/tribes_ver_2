@@ -168,7 +168,7 @@
 						}
 					]
 				},
-				"url": "{{host}}/api/login-as",
+				"url": "{{host}}/api/v2/user/appoint-admin",
 				"description": "запросить список доступных вопросов"
 			},
 			"response": []
@@ -847,6 +847,132 @@
 					"formdata": []
 				},
 				"url": "{{host}}/api/media-statistic/views-list"
+			},
+			"response": []
+		},
+		{
+			"name": "теле статистика members-list",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "accession_date",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[page]",
+							"value": "15",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/members"
+			},
+			"response": []
+		},
+		{
+			"name": "теле статистика member-charts",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/member-charts"
 			},
 			"response": []
 		}
