@@ -66,15 +66,15 @@
                     data-default-image
                 > -->
                 <img
-                    src="@if ($community->tariff->getMainImage()){{ $community->tariff->getMainImage()->url }} @else /images/no-tariff-image.jpg @endif"
+                    src="@if ($community->tariff->getMainImage()){{ $community->tariff->getMainImage()->url }} @else /images/no-tariff-img-telegram.jpg @endif"
                     alt=""
                     @if ($community->tariff->getMainImage()) data-no-image="true" @endif
                 >
 
-                <span class="decor-1"></span>
-                <span class="decor-2"></span>
+                <!-- <span class="decor-1"></span>
+                <span class="decor-2"></span> -->
 
-                <canvas class="hide" style="object-fit: contain; width: 100%;"></canvas>
+                <canvas class="hide" style="width: 100%; height: 100%;"></canvas>
             </div>
 
             <div class="tariff-public__description">

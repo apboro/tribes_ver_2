@@ -27,7 +27,7 @@ class CreateTelegramMessageReactions extends Migration
             $table->foreign('message_id')->references('message_id')->on('telegram_messages')->onDelete('cascade');
             $table->foreign('reaction_id')->references('id')->on('telegram_dict_reactions')->onDelete('cascade');
 
-            $table->unique(['telegram_user_id', 'message_id']);
+            //$table->unique(['telegram_user_id', 'message_id']);
         });
     }
 
