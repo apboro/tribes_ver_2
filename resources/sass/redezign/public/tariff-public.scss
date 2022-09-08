@@ -36,11 +36,19 @@
     }
 
     &__image {
-        position: relative;
-        width: 150px;
-        height: 350px;
+        // position: relative;
+        // width: 150px;
+        // height: 350px;
+        // order: 1;
+        // padding-bottom: $indent-3;
+        
         order: 1;
-        padding-bottom: $indent-3;
+        object-fit: cover;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 20px 0 0;
+        overflow: hidden;
 
         .decor-1,
         .decor-2 {
@@ -91,10 +99,18 @@
         }
         
         @media (min-width: $sm) {
-            width: auto;
-            height: auto;
-            padding-bottom: 0;
+            // width: auto;
+            // height: auto;
+            // padding-bottom: 0;
+            // order: 0;
+
             order: 0;
+            object-fit: cover;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 20px 0 0;
+            overflow: hidden;
 
             .decor-1,
             .decor-2 {
@@ -259,4 +275,13 @@
     &__right {
         text-align: justify;
     }
+
+    // canvas {
+    //     object-fit: cover;
+    //     width: 120px;
+    //     height: 120px;
+    //     border-radius: 50%;
+    //     margin: 20px 0 0;
+    //     overflow: hidden;
+    // }
 }
