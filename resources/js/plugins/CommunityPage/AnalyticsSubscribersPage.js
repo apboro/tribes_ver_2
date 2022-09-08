@@ -1,4 +1,5 @@
 import { BaseChart } from "../Helper/Chart/BaseChart";
+import { SubscribersTable } from "./StatisticPage/SubscribersTable";
 
 export class AnalyticsSubscribersPage {
     constructor(parent) {
@@ -9,6 +10,7 @@ export class AnalyticsSubscribersPage {
 
         this.data = {};
 
+        this.table = new SubscribersTable(this.container.querySelector('#subscribers_table'));
         this.init();
     }
 
