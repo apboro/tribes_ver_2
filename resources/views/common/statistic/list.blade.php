@@ -4,7 +4,6 @@
     <section
         class="analytics-community community__tab"
         data-tab="analyticsListPage"
-        
     >
         <div class="analytics-community__analytics-wrap">
             <div class="analytics-community__title-wrap">
