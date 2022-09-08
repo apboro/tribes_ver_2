@@ -52,18 +52,20 @@
                             <span class="card-analytics-community__info-label">
                                 Прирост
                             </span>
-                            <span class="card-analytics-community__info-value">
-                                +96
-                            </span>
+                            <span
+                                id="subscribers_left_label"
+                                class="card-analytics-community__info-value"
+                            ></span>
                         </div>
                         
                         <div class="card-analytics-community__info card-analytics-community__info--right">
                             <span class="card-analytics-community__info-label">
                                 Полезных
                             </span>
-                            <span class="card-analytics-community__info-value card-analytics-community__info-value--green">
-                                +13
-                            </span>
+                            <span
+                                id="subscribers_right_label"
+                                class="card-analytics-community__info-value card-analytics-community__info-value--green"
+                            ></span>
                         </div>
                         <a
                             href="{{ route('community.statistic.subscribers', $community) }}"
@@ -95,9 +97,10 @@
                                 Отправлено
                             </span>
                             
-                            <span class="card-analytics-community__info-value">
-                                +563
-                            </span>
+                            <span
+                                id="messages_left_label"
+                                class="card-analytics-community__info-value"
+                            ></span>
                         </div>
                         
                         <div class="card-analytics-community__info card-analytics-community__info--right">
@@ -105,9 +108,10 @@
                                 Полезных
                             </span>
                             
-                            <span class="card-analytics-community__info-value card-analytics-community__info-value--green">
-                                +233
-                            </span>
+                            <span
+                                id="messages_right_label"
+                                class="card-analytics-community__info-value card-analytics-community__info-value--green"
+                            ></span>
                         </div>
                         
                         <a
@@ -140,9 +144,10 @@
                                 Приход
                             </span>
                             
-                            <span class="card-analytics-community__info-value">
-                                +24.3K
-                            </span>
+                            <span
+                                id="payments_left_label"
+                                class="card-analytics-community__info-value"
+                            ></span>
                         </div>
                         
                         <div class="card-analytics-community__info card-analytics-community__info--right">
@@ -150,9 +155,10 @@
                                 Можно вывести
                             </span>
                             
-                            <span class="card-analytics-community__info-value card-analytics-community__info-value--green">
-                                +20.3K
-                            </span>
+                            <span
+                                id="payments_right_label"
+                                class="card-analytics-community__info-value card-analytics-community__info-value--green"
+                            ></span>
                         </div>
                         
                         <a
