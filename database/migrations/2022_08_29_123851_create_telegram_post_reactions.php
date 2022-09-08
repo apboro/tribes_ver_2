@@ -19,13 +19,13 @@ class CreateTelegramPostReactions extends Migration
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('reaction_id');
             $table->string('count')->nullable();
-            $table->string('datetime_record')->nullable();
+            $table->string('datetime_record');
             $table->timestamps();
 
             $table->foreign('reaction_id')->references('id')->on('telegram_dict_reactions')->onDelete('cascade');
             $table->foreign('chat_id')->references('chat_id')->on('telegram_connections')->onDelete('cascade');
             
-            $table->unique(['chat_id', 'post_id', 'reaction_id']);
+            $table->unique(['chat_id', 'post_id', 'reaction_id', 'datetime_record']);
         });
     }
 
