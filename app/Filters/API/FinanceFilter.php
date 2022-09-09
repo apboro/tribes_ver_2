@@ -26,8 +26,6 @@ class FinanceFilter extends QueryAPIFilter
         ];
     }
 
-
-
     /** @var Builder */
     protected $builder;
     protected function _sortingName($name): string

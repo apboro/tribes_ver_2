@@ -17,7 +17,6 @@ class FinanceResource extends JsonResource
             "status" => $this->resource->status,
             "tele_login" => $this->resource->tele_login,
             "first_name" => $this->resource->first_name,
-
         ];
     }
 
