@@ -17,13 +17,10 @@
         <div class="tariff-public__content">
             <div class="tariff-public__image">
                 <img
-                    src="@if ($community->tariff->getMainImage()){{ $community->tariff->getMainImage()->url }} @else /images/no-tariff-image.jpg @endif"
+                    src="@if ($community->tariff->getMainImage()){{ $community->tariff->getMainImage()->url }} @else /images/no-tariff-img-telegram.jpg @endif"
                     alt=""
                     @if ($community->tariff->getMainImage()) data-no-image="true" @endif
                 >
-
-                <span class="decor-1"></span>
-                <span class="decor-2"></span>
             </div>
 
             <div class="tariff-public__description">
