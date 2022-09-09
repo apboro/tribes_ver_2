@@ -1,9 +1,11 @@
+import { timeFormatting } from "../../core/functions";
 import { BaseChart } from "../Helper/Chart/BaseChart";
 import { SubscribersTable } from "./StatisticPage/SubscribersTable";
 
 export class AnalyticsSubscribersPage {
     constructor(parent) {
         this.container = parent.container.querySelector('[data-tab="analyticsSubscribersPage"]');
+        this.communityId = parent.communityId;
 
         this.messagesId = 'messages_chart';
         this.messagesChart = null;
@@ -12,11 +14,13 @@ export class AnalyticsSubscribersPage {
 
         this.table = null;
         this.tableData = null;
+
+        this.filterPeriodValue = 'week';
         this.init();
     }
 
-    init() {
-        this.loadData();
+    async init() {
+        await this.loadData();
         this.fillLabels();
         this.initChart();
         this.initTable();
@@ -26,22 +30,29 @@ export class AnalyticsSubscribersPage {
         window.location.href = event.target.value;
     }
 
-    loadData() {
-        this.data = {
-            marks: ['Пон', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-            messages: {
-                items: [102, 190, 30, 50, 20, 30, 31],
-                items2: [190, 20, 30, 102, 30, 50, 31],
-                left: 563,
-                right: 233
-            },
-        };
+    async loadData() {
+        try {
+            const { data } = await axios({
+                method: 'post',
+                url: '/api/tele-statistic/member-charts',
+                data: {
+                    community_id: this.communityId,
+                    filter: {
+                        period: this.filterPeriodValue
+                    }
+                }
+            });
 
-        this.tableData = [
-            { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 },
-            { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 }
-
-        ]
+            this.data = data;
+            
+            this.tableData = [
+                { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 },
+                { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 }
+    
+            ]
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     fillLabels() {}
@@ -52,18 +63,7 @@ export class AnalyticsSubscribersPage {
             type: 'line',
             data: {
                 labels: this.marks,
-                datasets: [
-                    {
-                        data: this.messagesItems,
-                        borderColor: "#21C169",
-                        hidden: false,
-                    },
-                    {
-                        data: this.messagesItems2,
-                        borderColor: "#E24041",
-                        hidden: false,
-                    }
-                ]
+                datasets: this.chartDatasets
             },
             options: {
                 responsive: true,
@@ -154,31 +154,64 @@ export class AnalyticsSubscribersPage {
                 { type: 'text', key: 'reaction_g' },
                 { type: 'text', key: 'reaction_b' },
                 { type: 'text', key: 'profit' },
-                // { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 }
             ],
             data: this.tableData,
         });
     }
 
-    switchFilter(event) {
-        console.log(event.target.value);
-        // this.loadYear();
-        // this.fillLabels()
-        // this.subscribersChart.changeData(this.marks, this.subscribersItems);
-        // this.messagesChart.changeData(this.marks, this.messagesItems);
-        // this.paymentsChart.changeData(this.marks, this.paymentsItems);
+    async switchFilter(event) {
+        this.filterPeriodValue = event.target.value;
+        await this.loadData()
+        this.messagesChart.changeData(this.marks, this.chartDatasets);
     }
 
     get marks() {
-        return this.data.marks;
+        if (this.filterPeriodValue === 'week') {
+            return this.data.meta.marks.map((mark) => timeFormatting({
+                date: mark,
+                weekday: 'long'
+            }));
+        } else if (this.filterPeriodValue === 'day') {
+            return this.data.meta.marks.map((mark) => timeFormatting({
+                date: mark,
+                hour: 'numeric',
+                minute: 'numeric',
+            }));
+        } else if (this.filterPeriodValue === 'month') {
+            return this.data.meta.marks.map((mark) => timeFormatting({
+                date: mark,
+                month: 'long',
+                day: 'numeric'
+            }));
+        } else if (this.filterPeriodValue === 'year') {
+            return this.data.meta.marks.map((mark) => timeFormatting({
+                date: mark,
+                month: 'long',
+            }));
+        }
     }
 
     get messagesItems() {
-        return this.data.messages.items;
+        return this.data.items.users;
     }
 
     get messagesItems2() {
-        return this.data.messages.items2;
+        return this.data.items.exit_users;
+    }
+
+    get chartDatasets() {
+        return [
+            {
+                data: this.messagesItems,
+                borderColor: "#21C169",
+                hidden: false,
+            },
+            {
+                data: this.messagesItems2,
+                borderColor: "#E24041",
+                hidden: false,
+            }
+        ]
     }
 
     get messagesLeft() {

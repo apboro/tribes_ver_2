@@ -25,11 +25,9 @@ export class BaseChart {
         this.chartInstance.update();
     }
 
-    changeData(labels, data) {
+    changeData(labels, datasets) {
         this.chartInstance.data.labels = labels;
-        this.chartInstance.data.datasets.forEach((dataset) => {
-            dataset.data = data;
-        });
+        this.chartInstance.data.datasets = datasets;
 
         this.update();
     }
