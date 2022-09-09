@@ -105,60 +105,6 @@ export class SubscribersTable {
         })
     }
 
-    /* <div class="table__body">
-            <div class="table__row-wrapper">
-                <div class="table__row">
-                    <div>
-                        <div class="table__item table__item--changable">
-                            <a href="#" class="link">
-                                name text
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="table__item table__item--changable">
-                            <a href="#" class="link">
-                                username text
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="table__item table__item--changable">
-                            <span>
-                                08.09.2022
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="table__item table__item--changable">
-                            messages text
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="table__item table__item--changable">
-                            reaction out text
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="table__item table__item--changable">
-                            reaction in text
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="table__item table__item--changable">
-                            utility text
-                        </div>
-                    </div>
-                </div>
-            </div> 
-        </div> */
-
     sort(node, value) {
         if (this.sortValue != value) {
             this.resetFilterState();
