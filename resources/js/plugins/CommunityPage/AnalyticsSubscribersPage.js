@@ -21,6 +21,7 @@ export class AnalyticsSubscribersPage {
 
     async init() {
         await this.loadData();
+        await this.loadTableData();
         this.fillLabels();
         this.initChart();
         this.initTable();
@@ -45,11 +46,30 @@ export class AnalyticsSubscribersPage {
 
             this.data = data;
             
-            this.tableData = [
-                { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 },
-                { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 }
+            // this.tableData = [
+            //     { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 },
+            //     { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 }
     
-            ]
+            // ]
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async loadTableData() {
+        try {
+            const { data } = await axios({
+                method: 'post',
+                url: '/api/tele-statistic/members',
+                data: {
+                    community_id: this.communityId,
+                    filter: {
+                        period: this.filterPeriodValue
+                    }
+                }
+            });
+            console.log(data);
+            this.tableData = data.items;
         } catch (error) {
             console.log(error);
         }
@@ -138,22 +158,22 @@ export class AnalyticsSubscribersPage {
         this.table = new SubscribersTable({
             parent: this.container.querySelector('#subscribers_table'),
             headerItems: [
-                { text: 'Имя подписчика', sortValue: 'a' },
-                { text: 'Никнейм', sortValue: 'b' },
-                { text: 'Дата', sortValue: 'c' },
-                { text: 'Сообщения', sortValue: 'd' },
-                { text: 'Реакции (оставил)', sortValue: 'e' },
-                { text: 'Реакции (получил)', sortValue: 'f' },
-                { text: 'Полезность', sortValue: 'g' },
+                { text: 'Имя подписчика', sortValue: 'name' },
+                { text: 'Никнейм', sortValue: 'nick_name' },
+                { text: 'Дата', sortValue: 'accession_date' },
+                { text: 'Сообщения', sortValue: 'c_messages' },
+                { text: 'Реакции (оставил)', sortValue: 'c_put_reactions' },
+                { text: 'Реакции (получил)', sortValue: 'c_got_reactions' },
+                { text: 'Телеграм (id)', sortValue: 'tele_id' },
             ],
             rowItemsFormat: [
                 { type: 'text', key: 'name' },
-                { type: 'text', key: 'username' },
-                { type: 'date', key: 'date' },
-                { type: 'text', key: 'messages' },
-                { type: 'text', key: 'reaction_g' },
-                { type: 'text', key: 'reaction_b' },
-                { type: 'text', key: 'profit' },
+                { type: 'text', key: 'nick_name' },
+                { type: 'date', key: 'accession_date' },
+                { type: 'text', key: 'c_messages' },
+                { type: 'text', key: 'c_put_reactions' },
+                { type: 'text', key: 'c_got_reactions' },
+                { type: 'text', key: 'tele_id' },
             ],
             data: this.tableData,
         });
@@ -161,8 +181,10 @@ export class AnalyticsSubscribersPage {
 
     async switchFilter(event) {
         this.filterPeriodValue = event.target.value;
-        await this.loadData()
+        await this.loadData();
+        await this.loadTableData();
         this.messagesChart.changeData(this.marks, this.chartDatasets);
+        this.table.clear();
     }
 
     get marks() {

@@ -95,7 +95,7 @@ export class SubscribersTable {
                     parent: rowItemWrapper,
                     class: 'table__item table__item--changable',
                     text: timeFormatting({
-                        date: data[itemFormat.key],
+                        date: data[itemFormat.key] * 1000,
                         year: 'numeric',
                         month: 'numeric',
                         day: 'numeric',
@@ -159,5 +159,11 @@ export class SubscribersTable {
             `;
         });
         this.sortType = 'off';
+    }
+
+    clear() {
+        this.container.innerHTML = '';
+        this.createTableHeader();
+        this.createTableBody();
     }
 }
