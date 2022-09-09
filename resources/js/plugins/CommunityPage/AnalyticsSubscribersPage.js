@@ -11,6 +11,7 @@ export class AnalyticsSubscribersPage {
         this.data = {};
 
         this.table = null;
+        this.tableData = null;
         this.init();
     }
 
@@ -36,7 +37,11 @@ export class AnalyticsSubscribersPage {
             },
         };
 
-        this.tableData = [{ a: 1, b: 2, c: 3 }]
+        this.tableData = [
+            { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 },
+            { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 }
+
+        ]
     }
 
     fillLabels() {}
@@ -137,9 +142,19 @@ export class AnalyticsSubscribersPage {
                 { text: 'Никнейм', sortValue: 'b' },
                 { text: 'Дата', sortValue: 'c' },
                 { text: 'Сообщения', sortValue: 'd' },
-                { text: 'Реакции (Оставил)', sortValue: 'e' },
-                { text: 'Реакции (Получил)', sortValue: 'f' },
+                { text: 'Реакции (оставил)', sortValue: 'e' },
+                { text: 'Реакции (получил)', sortValue: 'f' },
                 { text: 'Полезность', sortValue: 'g' },
+            ],
+            rowItemsFormat: [
+                { type: 'text', key: 'name' },
+                { type: 'text', key: 'username' },
+                { type: 'date', key: 'date' },
+                { type: 'text', key: 'messages' },
+                { type: 'text', key: 'reaction_g' },
+                { type: 'text', key: 'reaction_b' },
+                { type: 'text', key: 'profit' },
+                // { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 }
             ],
             data: this.tableData,
         });

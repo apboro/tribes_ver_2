@@ -282,13 +282,13 @@
         transition: all .3s;
 
         .button-text__icon {
-            .icon__fill {
-                fill: $white;
-            }
+            // .icon__fill {
+            //     fill: $white;
+            // }
     
-            .icon__stroke {
-                stroke: $white;
-            }
+            // .icon__stroke {
+            //     stroke: $white;
+            // }
         }
 
         &:hover {
