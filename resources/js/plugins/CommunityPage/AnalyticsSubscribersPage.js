@@ -10,7 +10,7 @@ export class AnalyticsSubscribersPage {
 
         this.data = {};
 
-        this.table = new SubscribersTable(this.container.querySelector('#subscribers_table'));
+        this.table = null;
         this.init();
     }
 
@@ -18,6 +18,7 @@ export class AnalyticsSubscribersPage {
         this.loadData();
         this.fillLabels();
         this.initChart();
+        this.initTable();
     }
 
     switchTab(event) {
@@ -33,7 +34,9 @@ export class AnalyticsSubscribersPage {
                 left: 563,
                 right: 233
             },
-        }
+        };
+
+        this.tableData = [{ a: 1, b: 2, c: 3 }]
     }
 
     fillLabels() {}
@@ -123,6 +126,22 @@ export class AnalyticsSubscribersPage {
                     tooltip: { enabled: false },
                 }
             }
+        });
+    }
+
+    initTable() {
+        this.table = new SubscribersTable({
+            parent: this.container.querySelector('#subscribers_table'),
+            headerItems: [
+                { text: 'Имя подписчика', sortValue: 'a' },
+                { text: 'Никнейм', sortValue: 'b' },
+                { text: 'Дата', sortValue: 'c' },
+                { text: 'Сообщения', sortValue: 'd' },
+                { text: 'Реакции (Оставил)', sortValue: 'e' },
+                { text: 'Реакции (Получил)', sortValue: 'f' },
+                { text: 'Полезность', sortValue: 'g' },
+            ],
+            data: this.tableData,
         });
     }
 
