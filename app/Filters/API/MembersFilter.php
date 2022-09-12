@@ -34,8 +34,15 @@ class MembersFilter extends QueryAPIFilter
     protected function _sortingName($name): string
     {
         $list = [
+            'name' => 'name',
+            'nick_name' => 'nick_name',
             'accession_date' => 'telegram_users_community.accession_date', 
             'exit_date' => 'telegram_users_community.exit_date',
+            'c_messages' => 'c_messages',
+            'c_put_reactions' => 'c_put_reactions',
+            'c_got_reactions' => 'c_got_reactions',
+            'utility' => 'utility',
+
         ];
         return $list[$name] ?? $list['accession_date'];
     }

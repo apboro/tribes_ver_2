@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Statistic;
 
+use App\Filters\API\FinanceChartFilter;
 use App\Filters\API\FinanceFilter;
 use App\Models\Payment;
 use App\Repositories\Statistic\DTO\ChartData;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
 {
 
-    public function getPaymentsCharts(int $communityId, FinanceFilter $filter, $type): ChartData
+    public function getPaymentsCharts(int $communityId, FinanceChartFilter $filter, $type): ChartData
     {
         $filterData = $filter->filters();
         Log::debug("FinanceStatisticRepository::getBuilderForFinance", [
@@ -74,9 +75,9 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $builder = DB::table($p)
             ->join($tu, "$p.user_id", "=", "$tu.id")
             ->select([
-                "$p.add_balance",
+                "$p.amount",
                 "$p.payable_type",
-                "$p.created_at as buy_date",
+                DB::raw("$p.created_at as buy_date"),
                 "$p.status",
                 "$tu.user_name as tele_login",
                 "$tu.first_name",
