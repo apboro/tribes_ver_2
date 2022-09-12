@@ -73,11 +73,11 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
 
         $builder = $filter->apply($builder);
         $perPage = $filterData['per-page'] ?? 15;
-        $page = $filterData['page'] ?? 0;
+        $page = $filterData['page'] ?? 1;
 
         return new LengthAwarePaginator(
-            $builder->offset($page)->limit($perPage)->get(),
-            $builder->count(),
+            $builder->offset(($page-1)*$perPage)->limit($perPage)->get(),
+            $builder->getCountForPagination(),
             $perPage,
             $filterData['page'] ?? null
         );
