@@ -5,6 +5,7 @@ namespace App\Repositories\Statistic;
 use App\Exceptions\StatisticException;
 use App\Filters\API\MembersChartFilter;
 use App\Filters\API\MembersFilter;
+use App\Helper\ArrayHelper;
 use App\Repositories\Statistic\DTO\ChartData;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -44,14 +45,15 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         ]);
 
         $builder = $filter->apply($builder);
+        //$builder;
 
         $perPage = $filterData['per-page'] ?? 15;
-        $page = $filterData['page'] ?? 15;
+        $page = $filterData['page'] ?? 1;
         return new LengthAwarePaginator(
-            $builder->offset($page)->limit($perPage)->get(),
-            $builder->count(),
+            $builder->offset(($page-1)*$perPage)->limit($perPage)->get(),
+            $builder->getCountForPagination(),
             $perPage,
-            $filterData['page'] ?? null
+            $page
         );
     }
 
@@ -95,6 +97,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $result = $builder->get()->slice(0, -1);
         $chart = new ChartData();
         $chart->initChart($result);
+        $chart->addAdditionParam('count_join_users', array_sum(ArrayHelper::getColumn($result, 'users')));
         return $chart;
     }
 
@@ -135,6 +138,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $result = $builder->get()->slice(0, -1);
         $chart = new ChartData();
         $chart->initChart($result);
+        $chart->addAdditionParam('count_exit_users', array_sum(ArrayHelper::getColumn($result, 'users')));
         return $chart;
     }
 }
