@@ -977,7 +977,75 @@
 			"response": []
 		},
 		{
-			"name": "теле статистика finances",
+			"name": "теле статистика finances-list",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "accession_date",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[page]",
+							"value": "15",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/payments-list"
+			},
+			"response": []
+		},
+		{
+			"name": "теле статистика finances-charts",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1019,13 +1087,13 @@
 						{
 							"key": "filter[period]",
 							"value": "day",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "filter[period]",
 							"value": "week",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						},
 						{
 							"key": "filter[period]",
