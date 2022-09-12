@@ -23,10 +23,10 @@ class FinanceStatisticController extends Controller
 
     public function paymentsCharts(FinanceStatRequest $request, FinanceFilter $filter)
     {
-        $chartPaymentsData = $this->financeRepository->getBuilderForFinance($request->get('community_id'),$filter, $type = 'all');
-        $coursePaymentsData = $this->financeRepository->getBuilderForFinance($request->get('community_id'),$filter, $type = 'course');
-        $donatePaymentsData = $this->financeRepository->getBuilderForFinance($request->get('community_id'),$filter, $type = 'donate');
-        $tariffPaymentsData = $this->financeRepository->getBuilderForFinance($request->get('community_id'),$filter, $type = 'tariff');
+        $chartPaymentsData = $this->financeRepository->getPaymentsCharts($request->get('community_id'),$filter, $type = 'all');
+        $coursePaymentsData = $this->financeRepository->getPaymentsCharts($request->get('community_id'),$filter, $type = 'course');
+        $donatePaymentsData = $this->financeRepository->getPaymentsCharts($request->get('community_id'),$filter, $type = 'donate');
+        $tariffPaymentsData = $this->financeRepository->getPaymentsCharts($request->get('community_id'),$filter, $type = 'tariff');
 
         $chartPaymentsData->includeChart($coursePaymentsData,['balance' => 'course_balance']);
         $chartPaymentsData->includeChart($donatePaymentsData,['balance' => 'donate_balance']);

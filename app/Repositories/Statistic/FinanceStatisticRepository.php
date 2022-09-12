@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
 {
 
-    public function getBuilderForFinance(int $communityId, FinanceFilter $filter, $type): ChartData
+    public function getPaymentsCharts(int $communityId, FinanceFilter $filter, $type): ChartData
     {
         $filterData = $filter->filters();
         Log::debug("FinanceStatisticRepository::getBuilderForFinance", [
@@ -96,7 +96,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
 
         return new LengthAwarePaginator(
             $builder->offset($page)->limit($perPage)->get(),
-            $builder->count(),
+            $builder->getCountForPagination(),
             $perPage,
             $filterData['page'] ?? null
         );
