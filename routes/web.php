@@ -335,6 +335,3 @@ Route::any('/manager{any}', function () {
 
 Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name('telegram.interface');
 
-Route::get('messages/test', [TeleMessageStatisticController::class, 'messageCharts'])->name('api.tele-statistic.messages.test');
-Route::get('/members/test', [TeleDialogStatisticController::class, 'members']);
-
