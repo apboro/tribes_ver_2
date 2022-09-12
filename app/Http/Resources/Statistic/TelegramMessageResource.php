@@ -33,7 +33,7 @@ class TelegramMessageResource extends JsonResource
             "utility" => $this->resource->utility,
             "count_reactions" => $this->resource->count_reactions,
             "message_date" => $this->resource->message_date,
-            "reactions" => TelegramMessageReactionResource::collection($reactions)
+            "reactions" => (new TelegramMessageReactionsResours($reactions))
         ];
     }
 }
