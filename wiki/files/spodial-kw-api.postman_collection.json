@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "03d13310-152b-42bc-a6f1-6a935d8c4cc1",
+		"_postman_id": "be2c6080-9879-4ad1-8eca-ccf3d6ff3a98",
 		"name": "spodial-kw-api",
 		"description": "запросы для обращения к АПИ базы знаний",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "6194295"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
@@ -950,7 +949,8 @@
 						{
 							"key": "filter[period]",
 							"value": "day",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "filter[period]",
@@ -973,6 +973,148 @@
 					]
 				},
 				"url": "{{host}}/api/tele-statistic/member-charts"
+			},
+			"response": []
+		},
+		{
+			"name": "теле статистика finances-list",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "accession_date",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[page]",
+							"value": "15",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/payments-list"
+			},
+			"response": []
+		},
+		{
+			"name": "теле статистика finances-charts",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "payable_type",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "add_balance",
+							"type": "default",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[page]",
+							"value": "15",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/payments-charts"
 			},
 			"response": []
 		},
