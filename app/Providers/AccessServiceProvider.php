@@ -125,6 +125,11 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Telegram\TeleDictReactionRepository::class
         );
 
+        $this->app->bind(
+            \App\Repositories\Statistic\TeleMessageStatisticRepositoryContract::class,
+            \App\Repositories\Statistic\TeleMessageStatisticRepository::class
+        );
+
         $this->bindSearchClient();
 
     }

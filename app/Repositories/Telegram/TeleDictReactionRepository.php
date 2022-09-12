@@ -9,7 +9,8 @@ class TeleDictReactionRepository implements TeleDictReactionRepositoryContract
     public function saveReaction($reaction)
     {
        $reaction = TelegramDictReaction::create([
-            'code' => $reaction
+            'code' => $reaction,
+            'flag_value' => 1
        ]);
        
        return $reaction;

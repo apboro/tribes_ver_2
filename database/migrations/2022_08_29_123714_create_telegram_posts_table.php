@@ -23,6 +23,8 @@ class CreateTelegramPostsTable extends Migration
             $table->bigInteger('post_id');
             $table->text('text')->nullable();
             $table->integer('datetime_record_reaction')->nullable();
+            $table->bigInteger('comments')->default(0);
+            $table->bigInteger('utility')->default(0);
             $table->boolean('flag_observation')->default(true);
             $table->bigInteger('post_date')->nullable();
             $table->timestamps();
