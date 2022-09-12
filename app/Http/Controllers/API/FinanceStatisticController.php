@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Filters\API\FinanceChartFilter;
 use App\Filters\API\FinanceFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Statistic\FinancesResource;
@@ -21,7 +22,7 @@ class FinanceStatisticController extends Controller
         $this->financeRepository = $financeRepository;
     }
 
-    public function paymentsCharts(FinanceStatRequest $request, FinanceFilter $filter)
+    public function paymentsCharts(FinanceStatRequest $request, FinanceChartFilter $filter)
     {
         $chartPaymentsData = $this->financeRepository->getPaymentsCharts($request->get('community_id'),$filter, $type = 'all');
         $coursePaymentsData = $this->financeRepository->getPaymentsCharts($request->get('community_id'),$filter, $type = 'course');

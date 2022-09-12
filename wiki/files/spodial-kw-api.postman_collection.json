@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "be2c6080-9879-4ad1-8eca-ccf3d6ff3a98",
+		"_postman_id": "6d198a53-912c-4c61-9ee5-d02624ae8c65",
 		"name": "spodial-kw-api",
 		"description": "запросы для обращения к АПИ базы знаний",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "6194295"
 	},
 	"item": [
 		{
@@ -880,13 +881,19 @@
 						},
 						{
 							"key": "filter[sort][name]",
-							"value": "accession_date",
+							"value": "utility",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][rule]",
+							"value": "asc",
 							"type": "text"
 						},
 						{
 							"key": "filter[period]",
 							"value": "day",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "filter[period]",
@@ -897,8 +904,7 @@
 						{
 							"key": "filter[period]",
 							"value": "month",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						},
 						{
 							"key": "filter[period]",
@@ -908,7 +914,7 @@
 						},
 						{
 							"key": "filter[page]",
-							"value": "15",
+							"value": "1",
 							"type": "text"
 						}
 					]
@@ -1007,13 +1013,19 @@
 						},
 						{
 							"key": "filter[sort][name]",
-							"value": "accession_date",
+							"value": "amount",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][rule]",
+							"value": "desc",
 							"type": "text"
 						},
 						{
 							"key": "filter[period]",
 							"value": "day",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "filter[period]",
@@ -1024,8 +1036,7 @@
 						{
 							"key": "filter[period]",
 							"value": "month",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						},
 						{
 							"key": "filter[period]",
@@ -1035,7 +1046,7 @@
 						},
 						{
 							"key": "filter[page]",
-							"value": "15",
+							"value": "1",
 							"type": "text"
 						}
 					]
@@ -1076,11 +1087,12 @@
 						{
 							"key": "filter[sort][name]",
 							"value": "payable_type",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "filter[sort][name]",
-							"value": "add_balance",
+							"value": "amount",
 							"type": "default",
 							"disabled": true
 						},
@@ -1093,13 +1105,13 @@
 						{
 							"key": "filter[period]",
 							"value": "week",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "filter[period]",
 							"value": "month",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						},
 						{
 							"key": "filter[period]",

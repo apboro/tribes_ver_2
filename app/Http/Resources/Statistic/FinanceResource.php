@@ -11,7 +11,7 @@ class FinanceResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "add_balance" => $this->resource->add_balance,
+            "amount" => $this->resource->amount,
             "payable_type" => $this->resource->payable_type,
             "buy_date" => $this->resource->buy_date,
             "status" => $this->resource->status,
