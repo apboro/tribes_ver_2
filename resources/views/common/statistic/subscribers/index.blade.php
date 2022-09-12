@@ -80,14 +80,14 @@
                 
                 <!-- График -->
                 <div class="chart-analytics-community__chart">
-                    <canvas id="messages_chart" height="400"></canvas>
+                    <canvas id="chart" height="400"></canvas>
                 </div>
             </div>
             
             <!-- Таблица -->
             <div class="analytics-community__table">
                 <div
-                    id="subscribers_table"
+                    id="table"
                     class="table-2 analytics-community-subscribers-table"
                 ></div>
             </div>

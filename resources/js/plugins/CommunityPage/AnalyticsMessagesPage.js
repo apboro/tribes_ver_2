@@ -1,11 +1,11 @@
 import { BaseAnalyticsPage } from "./BaseAnalyticsPage";
 
-export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
+export class analyticsMessagesPage extends BaseAnalyticsPage {
     constructor(parent) {
         super(parent);
-        this.container = parent.container.querySelector('[data-tab="analyticsSubscribersPage"]');
+        this.container = parent.container.querySelector('[data-tab="analyticsMessagesPage"]');
         // Настройки таблицы
-        this.headerItems = [
+        /* this.headerItems = [
             { text: 'Имя подписчика', sortName: 'name' },
             { text: 'Никнейм', sortName: 'nick_name' },
             { text: 'Дата', sortName: 'accession_date' },
@@ -22,19 +22,19 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
             { type: 'text', key: 'c_put_reactions' },
             { type: 'text', key: 'c_got_reactions' },
             { type: 'text', key: 'tele_id' },
-        ];
+        ]; */
         // Настройки пагинации
-        this.paginationEvent = 'pagination: subscribers';
+        this.paginationEvent = 'pagination: messages';
         // Настройки соритровки
         this.sortName = 'accession_date';
-        this.sortEvent = 'sort: subscribers';
+        this.sortEvent = 'sort: messages';
     }
 
     async loadData() {
         try {
             const { data } = await axios({
                 method: 'post',
-                url: '/api/tele-statistic/member-charts',
+                url: '/api/tele-statistic/member-charts1',
                 data: {
                     community_id: this.communityId,
                     filter: {
@@ -44,8 +44,10 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
             });
 
             this.data = data;
+            return true;
         } catch (error) {
             console.log(error);
+            return false;
         }
     }
 
@@ -53,7 +55,7 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
         try {
             const { data } = await axios({
                 method: 'post',
-                url: '/api/tele-statistic/members',
+                url: '/api/tele-statistic/members1',
                 data: {
                     community_id: this.communityId,
                     filter: {
@@ -72,30 +74,5 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
         } catch (error) {
             console.log(error);
         }
-    }
-
-    fillLabels() {}
-    
-    get users() {
-        return this.data.items.users;
-    }
-
-    get exitUsers() {
-        return this.data.items.exit_users;
-    }
-
-    get chartDatasets() {
-        return [
-            {
-                data: this.users,
-                borderColor: "#21C169",
-                hidden: false,
-            },
-            {
-                data: this.exitUsers,
-                borderColor: "#E24041",
-                hidden: false,
-            }
-        ]
     }
 }

@@ -4,7 +4,7 @@ export class Pagination {
     constructor(options) {
         this.container = options.parent;
         this.data = options.data;
-        this.event = 'pagination: change';
+        this.event = options.event;
 
         this.init();
     }

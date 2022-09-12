@@ -11,6 +11,7 @@ import { TariffPagePublications } from "./CommunityPage/TariffPagePublications";
 import { TariffPageAdd } from "./CommunityPage/TariffPageSettings/TariffPageAdd";
 import { AnalyticsListPage } from "./CommunityPage/AnalyticsListPage";
 import { AnalyticsSubscribersPage } from "./CommunityPage/AnalyticsSubscribersPage";
+import { analyticsMessagesPage } from "./CommunityPage/AnalyticsMessagesPage";
 
 export default class CommunityPage extends Page {
     constructor(container) {
@@ -34,6 +35,10 @@ export default class CommunityPage extends Page {
 
         if (this.isBlock('[data-tab="analyticsSubscribersPage"]')) {
             this.analyticsSubscribersPage = new AnalyticsSubscribersPage(this);
+        }
+
+        if (this.isBlock('[data-tab="analyticsMessagesPage"]')) {
+            this.analyticsMessagesPage = new analyticsMessagesPage(this);
         }
 
         if (this.isBlock('[data-tab="donatePage"]')) {

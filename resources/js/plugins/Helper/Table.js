@@ -58,19 +58,33 @@ export class Table {
             class: 'table__body',
         }).init();
 
-        this.data.forEach((dataItem) => {
-            const tableRowWrapper = new CreateNode({
+        if (this.data.length) {
+            this.data.forEach((dataItem) => {
+                const tableRowWrapper = new CreateNode({
+                    parent: body,
+                    class: 'table__row-wrapper',
+                }).init();
+    
+                const rowWrapper = new CreateNode({
+                    parent: tableRowWrapper,
+                    class: 'table__row',
+                }).init();
+    
+                this.createTableRowItems(rowWrapper, dataItem);
+            });
+        } else {
+            const wrapper = new CreateNode({
                 parent: body,
-                class: 'table__row-wrapper',
+                class: 'table__row table__row--special'
             }).init();
 
-            const rowWrapper = new CreateNode({
-                parent: tableRowWrapper,
-                class: 'table__row',
+            new CreateNode({
+                parent: wrapper,
+                tag: 'primary',
+                text: 'Таблица пуста'
             }).init();
+        }
 
-            this.createTableRowItems(rowWrapper, dataItem);
-        });
     }
 
     createTableRowItems(parent, data) {
@@ -160,6 +174,7 @@ export class Table {
 
     update(data) {
         this.data = data;
+        console.log(this.data);
         this.container.innerHTML = '';
         this.createTableHeader();
         this.createTableBody();
