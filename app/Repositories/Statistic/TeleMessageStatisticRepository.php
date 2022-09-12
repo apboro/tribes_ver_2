@@ -4,6 +4,7 @@ namespace App\Repositories\Statistic;
 
 use App\Filters\API\TeleMessagesChartFilter;
 use App\Filters\API\TeleMessagesFilter;
+use App\Helper\ArrayHelper;
 use App\Models\TelegramMessage;
 use App\Repositories\Statistic\DTO\ChartData;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -27,6 +28,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
                 $query->select('id')
                     ->from('telegram_connections')
                     ->whereColumn("$tm.group_chat_id", "=", "$tc.chat_id")
+                    ->orWhereColumn("$tm.group_chat_id", "=", "$tc.comment_chat_id")
                     ->whereExists(function ($q) use ($tc, $com, $communityId) {
                         $q->select('id')
                             ->from('communities')
@@ -71,7 +73,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
 
         $builder = $filter->apply($builder);
         $perPage = $filterData['per-page'] ?? 15;
-        $page = $filterData['page'] ?? 0; // Почему 15 по умолчанию? 
+        $page = $filterData['page'] ?? 0;
 
         return new LengthAwarePaginator(
             $builder->offset($page)->limit($perPage)->get(),
@@ -108,6 +110,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
             $query->select('id')
                 ->from('telegram_connections')
                 ->whereColumn("$tm.group_chat_id", "=", "$tc.chat_id")
+                ->orWhereColumn("$tm.group_chat_id", "=", "$tc.comment_chat_id")
                 ->whereExists(function ($q) use ($tc, $com, $communityId) {
                     $q->select('id')
                         ->from('communities')
@@ -133,6 +136,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
 
         $chart = new ChartData();
         $chart->initChart($result);
+        $chart->addAdditionParam('count_new_message', array_sum(ArrayHelper::getColumn($result, 'messages')));
 
         return $chart;
     }
@@ -154,16 +158,17 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
         $sub = DB::table($tm)
             ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
             ->leftJoin($tm, function (JoinClause $join) use ($tm, $scale) {
-                $join->on("$tm.message_date", '>=', 'd.dt')->on("$tm.message_date", '<', DB::raw("d.dt + $scale"));
+                $join->on("$tm.message_date", '>=', 'd.dt')->on("$tm.message_date", '<', DB::raw("d.dt + $scale"))->where("$tm.utility", ">", 0);
             })
             ->select([
                 DB::raw("d.dt"),
-                DB::raw("COUNT(distinct($tm.utility > 0)) as utility"),
+                DB::raw("COUNT(distinct($tm.id)) as utility"),
             ]);
         $sub->whereExists(function ($query) use ($tc, $tm, $com, $communityId) {
             $query->select('id')
                 ->from('telegram_connections')
                 ->whereColumn("$tm.group_chat_id", "=", "$tc.chat_id")
+                ->orWhereColumn("$tm.group_chat_id", "=", "$tc.comment_chat_id")
                 ->whereExists(function ($q) use ($tc, $com, $communityId) {
                     $q->select('id')
                         ->from('communities')
@@ -187,6 +192,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
         $result = $builder->get()->slice(0, -1);
         $chart = new ChartData();
         $chart->initChart($result);
+        $chart->addAdditionParam('count_new_utility', array_sum(ArrayHelper::getColumn($result, 'utility')));
         return $chart;
     }
 }

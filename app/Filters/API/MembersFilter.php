@@ -34,7 +34,7 @@ class MembersFilter extends QueryAPIFilter
     protected function _sortingName($name): string
     {
         $list = [
-            'accession_date' => 'telegram_users_community.accession_date', // Почему сортировка только по 2 полям? 
+            'accession_date' => 'telegram_users_community.accession_date', 
             'exit_date' => 'telegram_users_community.exit_date',
         ];
         return $list[$name] ?? $list['accession_date'];
