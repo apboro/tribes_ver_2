@@ -1,6 +1,7 @@
 import { timeFormatting } from "../../core/functions";
 import { BaseChart } from "../Helper/Chart/BaseChart";
-import { SubscribersTable } from "./StatisticPage/SubscribersTable";
+import { Pagination } from "../Helper/Pagination";
+import { Table } from "../Helper/Table";
 
 export class AnalyticsSubscribersPage {
     constructor(parent) {
@@ -9,11 +10,18 @@ export class AnalyticsSubscribersPage {
 
         this.messagesId = 'messages_chart';
         this.messagesChart = null;
-
         this.data = {};
 
         this.table = null;
         this.tableData = null;
+
+        this.pagination = null;
+        this.paginationData = null;
+        this.activePage = 1;
+
+        this.sortName = 'accession_date';
+        this.sortRule = 'off';  // asc, desc
+
 
         this.filterPeriodValue = 'week';
         this.init();
@@ -25,6 +33,22 @@ export class AnalyticsSubscribersPage {
         this.fillLabels();
         this.initChart();
         this.initTable();
+        this.initPagination();
+        this.listeners();
+    }
+
+    listeners() {
+        Emitter.subscribe(this.pagination.event, async ({ pageNumber }) => {
+            this.activePage = pageNumber;
+            this.updateTable();
+        });
+
+        Emitter.subscribe(this.table.sortEvent, async ({ name, rule }) => {
+            this.sortName = name;
+            this.sortRule = rule;
+            this.activePage = 1;
+            this.updateTable();
+        });
     }
 
     switchTab(event) {
@@ -45,12 +69,6 @@ export class AnalyticsSubscribersPage {
             });
 
             this.data = data;
-            
-            // this.tableData = [
-            //     { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 },
-            //     { name: 'Oleg', username: 'Pyatak', date: new Date(), messages: 11, reaction_g: 7, reaction_b: 5, profit: 5 }
-    
-            // ]
         } catch (error) {
             console.log(error);
         }
@@ -64,12 +82,18 @@ export class AnalyticsSubscribersPage {
                 data: {
                     community_id: this.communityId,
                     filter: {
-                        period: this.filterPeriodValue
+                        period: this.filterPeriodValue,
+                        sort: {
+                            name: this.sortName,
+                            rule: this.sortRule
+                        },
+                        page: this.activePage
                     }
                 }
             });
-            console.log(data);
+        
             this.tableData = data.items;
+            this.paginationData = data.meta;
         } catch (error) {
             console.log(error);
         }
@@ -105,15 +129,10 @@ export class AnalyticsSubscribersPage {
                             color: '#000000',
 
                             font: {
-                                //family: "'Montserrat', 'sans-serif'",
                                 size: 14,
                                 weight: 600,
                                 lineHeight: '20px',
                             },
-
-                            // callback: (label, index, labels) => {
-                            //     return this.labels[index];
-                            // },
                         },
                         grid: {
                             borderColor: '#7367F0',
@@ -131,10 +150,6 @@ export class AnalyticsSubscribersPage {
                                 weight: 600,
                                 lineHeight: '20px',
                             },
-
-                            // callback: (label, index, labels) => {
-                            //     return this.labels[index];
-                            // },
                         },
                         
                         grid: {
@@ -155,16 +170,16 @@ export class AnalyticsSubscribersPage {
     }
 
     initTable() {
-        this.table = new SubscribersTable({
+        this.table = new Table({
             parent: this.container.querySelector('#subscribers_table'),
             headerItems: [
-                { text: 'Имя подписчика', sortValue: 'name' },
-                { text: 'Никнейм', sortValue: 'nick_name' },
-                { text: 'Дата', sortValue: 'accession_date' },
-                { text: 'Сообщения', sortValue: 'c_messages' },
-                { text: 'Реакции (оставил)', sortValue: 'c_put_reactions' },
-                { text: 'Реакции (получил)', sortValue: 'c_got_reactions' },
-                { text: 'Телеграм (id)', sortValue: 'tele_id' },
+                { text: 'Имя подписчика', sortName: 'name' },
+                { text: 'Никнейм', sortName: 'nick_name' },
+                { text: 'Дата', sortName: 'accession_date' },
+                { text: 'Сообщения', sortName: 'c_messages' },
+                { text: 'Реакции (оставил)', sortName: 'c_put_reactions' },
+                { text: 'Реакции (получил)', sortName: 'c_got_reactions' },
+                { text: 'Телеграм (id)', sortName: 'tele_id' },
             ],
             rowItemsFormat: [
                 { type: 'text', key: 'name' },
@@ -176,15 +191,33 @@ export class AnalyticsSubscribersPage {
                 { type: 'text', key: 'tele_id' },
             ],
             data: this.tableData,
+            sortEvent: 'sort: subscribers',
+            sortName: this.sortName,
+            sortRule: this.sortRule
+        });
+    }
+
+    async updateTable() {
+        await this.loadTableData();
+        this.table.update(this.tableData);
+        this.pagination.update(this.paginationData);
+    }
+
+    initPagination() {
+        this.pagination = new Pagination({
+            parent: this.container.querySelector('#pagination'),
+            data: this.paginationData
         });
     }
 
     async switchFilter(event) {
         this.filterPeriodValue = event.target.value;
+        this.activePage = 1;
         await this.loadData();
         await this.loadTableData();
         this.messagesChart.changeData(this.marks, this.chartDatasets);
-        this.table.clear();
+        this.table.update(this.tableData);
+        this.pagination.update(this.paginationData);
     }
 
     get marks() {
