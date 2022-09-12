@@ -26,6 +26,10 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Statistic\TeleDialogStatisticRepository::class
         );
         $this->app->bind(
+            \App\Repositories\Statistic\FinanceStatisticRepositoryContract::class,
+            \App\Repositories\Statistic\FinanceStatisticRepository::class
+        );
+        $this->app->bind(
             \App\Repositories\Author\AuthorRepositoryContract::class,
             \App\Repositories\Author\AuthorRepository::class
         );
