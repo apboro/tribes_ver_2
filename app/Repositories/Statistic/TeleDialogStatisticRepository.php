@@ -36,6 +36,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 DB::raw("COUNT(distinct($tm.message_id)) as c_messages"),
                 DB::raw("COUNT(distinct(gmr.id)) as c_put_reactions"),
                 DB::raw("COUNT(distinct(pmr.id)) as c_got_reactions"),
+                DB::raw("SUM(coalesce($tm.utility,0)) as utility")
             ]);
         $builder->groupBy("$tu.telegram_id","$tu.first_name","$tu.last_name","$tu.user_name","$tuc.accession_date","$tuc.exit_date");
         $builder->where(["$tuc.community_id" => $communityId]);
@@ -45,13 +46,13 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         ]);
 
         $builder = $filter->apply($builder);
-        //$builder;
 
         $perPage = $filterData['per-page'] ?? 15;
         $page = $filterData['page'] ?? 1;
+
         return new LengthAwarePaginator(
             $builder->offset(($page-1)*$perPage)->limit($perPage)->get(),
-            $builder->getCountForPagination(),
+            $builder->getCountForPagination(['tele_id']),
             $perPage,
             $page
         );
