@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Filters\API\FinanceFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Statistic\FinancesResource;
+use App\Http\Resources\Statistic\FinancesChartsResource;
 use App\Repositories\Statistic\FinanceStatisticRepositoryContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,12 +21,24 @@ class FinanceStatisticController extends Controller
         $this->financeRepository = $financeRepository;
     }
 
-    public function paymentsList(FinanceStatRequest $request, FinanceFilter $filter)
+    public function paymentsCharts(FinanceStatRequest $request, FinanceFilter $filter)
     {
-        $finances = $this->financeRepository->getBuilderForFinance($request->get('community_id'),$filter);
-//dd($finances);
-        return (new FinancesResource($finances))->forApi();
+        $chartPaymentsData = $this->financeRepository->getBuilderForFinance($request->get('community_id'),$filter, $type = 'all');
+        $coursePaymentsData = $this->financeRepository->getBuilderForFinance($request->get('community_id'),$filter, $type = 'course');
+        $donatePaymentsData = $this->financeRepository->getBuilderForFinance($request->get('community_id'),$filter, $type = 'donate');
+        $tariffPaymentsData = $this->financeRepository->getBuilderForFinance($request->get('community_id'),$filter, $type = 'tariff');
+
+        $chartPaymentsData->includeChart($coursePaymentsData,['balance' => 'course_balance']);
+        $chartPaymentsData->includeChart($donatePaymentsData,['balance' => 'donate_balance']);
+        $chartPaymentsData->includeChart($tariffPaymentsData,['balance' => 'tariff_balance']);
+
+        return (new FinancesChartsResource($chartPaymentsData));
     }
 
+    public function paymentsList(FinanceStatRequest $request, FinanceFilter $filter)
+    {
+        $payments = $this->financeRepository->getPaymentsList($request->get('community_id'),$filter);
 
+        return (new FinancesResource($payments))->forApi();
+    }
 }

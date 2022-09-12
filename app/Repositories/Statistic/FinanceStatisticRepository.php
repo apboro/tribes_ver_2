@@ -3,7 +3,9 @@
 namespace App\Repositories\Statistic;
 
 use App\Filters\API\FinanceFilter;
+use App\Models\Payment;
 use App\Repositories\Statistic\DTO\ChartData;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -14,117 +16,57 @@ use Illuminate\Support\Facades\Log;
 class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
 {
 
-    /*public function getFinancesList(int $communityId, FinanceFilter $filter): LengthAwarePaginator
-    {
-        $filterData = $filter->filters();
-        Log::debug("FinanceStatisticRepository::getFinance", [
-            'filter' => $filterData,
-        ]);
-
-        $scale = $filter->getScale();
-
-        $builder = $this->getBuilderForFinance();
-        $builder = $filter->apply($builder);
-        $perPage = $filterData['per-page'] ?? 15;
-
-        $result = $builder->get()->slice(0, -1);
-        $chart = new ChartData();
-        $chart->initChart($result);
-
-        return new LengthAwarePaginator(
-            $builder->limit($perPage)->get(),
-            $builder->count(),
-            $perPage,
-            $filterData['page'] ?? null
-        );
-    }*/
-
-    public function getBuilderForFinance(int $communityId, FinanceFilter $filter): ChartData
+    public function getBuilderForFinance(int $communityId, FinanceFilter $filter, $type): ChartData
     {
         $filterData = $filter->filters();
         Log::debug("FinanceStatisticRepository::getBuilderForFinance", [
             'filter' => $filterData,
         ]);
 
-//        $start = $filter->getStartDate($filterData['period']??'day')->format('Y-m-d\TH:i:s.uP');
         $scale = $filter->getScale();
         $start = $filter->getStartDate($filterData['period']??'day')->format('U');
         $end = $filter->getEndDate()->format('U');
-//dd($start);
+
         $p = 'payments';
-        $tu = 'telegram_users';
 
         $sub = DB::table($p)
             ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
             ->leftJoin($p, function (JoinClause $join) use($p, $scale) {
-                $join->on( "$p.created_at", '>=', 'd.dt')->on("$p.created_at", '<', DB::raw("d.dt + $scale"));
+                $join->on( DB::raw("extract('epoch' from $p.created_at)"), '>=', 'd.dt')->on(DB::raw("extract('epoch' from $p.created_at)"), '<', DB::raw("d.dt + $scale"));
             })
-//            timestamp USING ('2000-1-1'::date + time_since_missing_schedule_notification)
             ->select([
                 DB::raw("d.dt"),
-//                DB::raw("COUNT(distinct($p.add_balance)) as balance"),
-            ]);
+                DB::raw("SUM($p.amount) as balance"),
+            ])
+            ->orderBy('d.dt');
         $sub->where(["$p.community_id" => $communityId]);
+        if ($type == 'all') {
+            $sub->where("$p.type", '!=', 'payout');
+        } else {
+            $sub->where(["$p.type" => $type]);
+        }
+
+        $sub->where(["$p.status" => "COMPLETED"]);
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
 
-
-
-        dd($sub->get());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        dd(1);
-
-
-
-//        dd($collection);
-
-        /*$builder = DB::table($p)
-            ->whereBetween('payments.created_at', [$start, $end])
-            ->rightJoin($tu, "$p.user_id", "=", "$tu.id")
+        $builder = DB::table( DB::raw("generate_series($start, $end, $scale) as d1(dt)") )
+            ->leftJoin(DB::raw("({$sub->toSql()}) as sub"),'sub.dt','=','d1.dt')
             ->select([
-                "$p.add_balance",
-                "$p.payable_type",
-                "$p.created_at as scale",
-                "$p.status",
-                "$tu.user_name as tele_login",
-                "$tu.first_name",
-            ])*/
-            /*->groupBy('payable_type')*/;
+                DB::raw("to_timestamp(d1.dt::int) as scale"),
+                DB::raw("coalesce(sub.balance,0) as balance"),
+            ])
+            ->mergeBindings($sub)
+            ->orderBy('scale');
 
-//        $result = $builder->get()->slice(0, -1);
-        $result = $builder->get()->groupBy('payable_type');
-
-//dd($result);
+        $result = $builder->get()->slice(0, -1);
         $chart = new ChartData();
+        $chart->initChart($result);
 
-        $chart->initChart($result['App\Models\Course']);
-//        dd($chart);
-//        $result = array_merge($result, );
         return $chart;
     }
 
-    /*protected function getBuilderForFinance(int $communityId, FinanceFilter $filter): Builder
+    public function getPaymentsList(int $communityId, FinanceFilter $filter): LengthAwarePaginator
     {
         $p = 'payments';
         $tu = 'telegram_users';
@@ -139,7 +81,25 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
                 "$tu.user_name as tele_login",
                 "$tu.first_name",
             ]);
-        return $builder;
-    }*/
+
+        $builder->where(["$p.community_id" => $communityId]);
+        $filterData = $filter->filters();
+
+        Log::debug("FinanceStatisticRepository::getPaymentsList", [
+            'filter' => $filterData,
+        ]);
+
+        $builder = $filter->apply($builder);
+
+        $perPage = $filterData['per-page'] ?? 15;
+        $page = $filterData['page'] ?? 0;
+
+        return new LengthAwarePaginator(
+            $builder->offset($page)->limit($perPage)->get(),
+            $builder->count(),
+            $perPage,
+            $filterData['page'] ?? null
+        );
+    }
 
 }

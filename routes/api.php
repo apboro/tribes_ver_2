@@ -105,9 +105,10 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
 
     Route::group(['prefix' => 'tele-statistic'], function () {
         Route::post('members', 'TeleDialogStatisticController@members')->name('api.tele-statistic.members');
-        Route::post('member-charts', 'TeleDialogStatisticController@memberCharts')->name('api.tele-statistic.member-charts');
+        Route::post('member-charts', 'TeleDialogStatisticController@memberCharts')->name('api.tele-statistic.');
 
-        Route::post('finances', 'FinanceStatisticController@paymentsList')->name('api.tele-statistic.finances');
+        Route::post('payments-list', 'FinanceStatisticController@paymentsList')->name('api.tele-statistic.payments-list');
+        Route::post('payments-charts', 'FinanceStatisticController@paymentsCharts')->name('api.tele-statistic.payments-charts');
     });
 
 });

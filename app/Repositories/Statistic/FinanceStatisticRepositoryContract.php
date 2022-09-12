@@ -9,5 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface FinanceStatisticRepositoryContract
 {
-    public function getBuilderForFinance(int $communityId, FinanceFilter $filters): ChartData;
+    public function getPaymentsList(int $communityId, FinanceFilter $filters): LengthAwarePaginator;
+
+    public function getBuilderForFinance(int $communityId, FinanceFilter $filters, $type): ChartData;
 }

@@ -48,7 +48,6 @@ class FinanceFilter extends QueryAPIFilter
     public function period($value)
     {
         if ($date = $this->getStartDate($value)) {
-//            dd($date->format('U'));
             return $this->builder
                 ->where('payments.created_at', '>', $date);
         }
