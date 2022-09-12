@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\API\TeleDialogStatisticController;
+use App\Http\Controllers\API\TeleMessageStatisticController;
 use App\Http\Controllers\DonateController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestBotController;
@@ -332,4 +334,7 @@ Route::any('/manager{any}', function () {
 })->where('any', '.*')->name('web.manager');
 
 Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name('telegram.interface');
+
+Route::get('messages/test', [TeleMessageStatisticController::class, 'messageCharts'])->name('api.tele-statistic.messages.test');
+Route::get('/members/test', [TeleDialogStatisticController::class, 'members']);
 

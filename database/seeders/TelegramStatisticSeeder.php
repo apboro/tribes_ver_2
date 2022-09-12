@@ -63,6 +63,9 @@ class TelegramStatisticSeeder extends Seeder
                 ->count(rand(1,3))
                 ->create([
                     'channel_id' => $chanelConnection['chat_id'],
+                    'comments' => rand(0, 100),
+                    'utility' => rand(-100, 200),
+                    'post_date' => end($dates),
                     'datetime_record_reaction' => end($dates),
                 ]);
 
@@ -93,6 +96,9 @@ class TelegramStatisticSeeder extends Seeder
                         'group_chat_id' => $chanelConnection->chat_id,
                         'post_id' => $eachTelegramPost['post_id'],
                         'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
+                        'message_date' => end($dates),
+                        'answers' => rand(0, 50),
+                        'utility' => rand(-100, 200),
                         'datetime_record_reaction' => end($dates),
                         'chat_type' => $chanelConnection->chat_type,
                         'parrent_message_id' => null,
@@ -107,6 +113,9 @@ class TelegramStatisticSeeder extends Seeder
                             'post_id' => $eachTelegramPost['post_id'],
                             'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
                             'datetime_record_reaction' => end($dates),
+                            'message_date' => end($dates),
+                            'answers' => rand(0, 50),
+                            'utility' => rand(-100, 200),
                             'chat_type' => $chanelConnection->chat_type,
                             'parrent_message_id' => $message->message_id,
                         ]);
@@ -128,6 +137,9 @@ class TelegramStatisticSeeder extends Seeder
                         'group_chat_id' => $groupConnection->chat_id,
                         'post_id' => null,
                         'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
+                        'message_date' => end($dates),
+                        'answers' => rand(0, 50),
+                        'utility' => rand(-100, 200),
                         'datetime_record_reaction' => end($dates),
 
                         'chat_type' => $groupConnection->chat_type,
@@ -141,7 +153,9 @@ class TelegramStatisticSeeder extends Seeder
                             'group_chat_id' => $groupConnection->chat_id,
                             'post_id' => null,
                             'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
-                            //todo Женя сделает поле 'date' => teledatecreate
+                            'message_date' => end($dates),
+                            'answers' => rand(0, 50),
+                            'utility' => rand(-100, 200),
                             'datetime_record_reaction' => end($dates),
                             'chat_type' => $groupConnection->chat_type,
                             'parrent_message_id' => $groupMessage->message_id,
