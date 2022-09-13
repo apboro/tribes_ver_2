@@ -1,18 +1,18 @@
 import { BaseAnalyticsPage } from "./BaseAnalyticsPage";
 
-export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
+export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
     constructor(parent) {
         super(parent);
-        this.container = parent.container.querySelector('[data-tab="analyticsSubscribersPage"]');
+        this.container = parent.container.querySelector('[data-tab="analyticsMessagesPage"]');
         // Настройки таблицы
-        this.headerItems = [
+        /* this.headerItems = [
             { text: 'Имя подписчика', sortName: 'name' },
             { text: 'Никнейм', sortName: 'nick_name' },
             { text: 'Дата', sortName: 'accession_date' },
             { text: 'Сообщения', sortName: 'c_messages' },
             { text: 'Реакции (оставил)', sortName: 'c_put_reactions' },
             { text: 'Реакции (получил)', sortName: 'c_got_reactions' },
-            { text: 'Полезность', sortName: 'utility' },
+            { text: 'Телеграм (id)', sortName: 'tele_id' },
         ];
         this.rowItemsFormat = [
             { type: 'text', key: 'name' },
@@ -21,24 +21,20 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
             { type: 'text', key: 'c_messages' },
             { type: 'text', key: 'c_put_reactions' },
             { type: 'text', key: 'c_got_reactions' },
-            { type: 'text', key: 'utility' },
-        ];
+            { type: 'text', key: 'tele_id' },
+        ]; */
         // Настройки пагинации
-        this.paginationEvent = 'pagination: subscribers';
+        this.paginationEvent = 'pagination: messages';
         // Настройки соритровки
         this.sortName = 'accession_date';
-        this.sortNameDefault = 'accession_date';
-        this.sortEvent = 'sort: subscribers';
-
-        this.countExitUsersNode = this.container.querySelector('#count_exit_users');
-        this.countJoinUsersNode = this.container.querySelector('#count_join_users');
+        this.sortEvent = 'sort: messages';
     }
 
     async loadData() {
         try {
             const { data } = await axios({
                 method: 'post',
-                url: '/api/tele-statistic/member-charts',
+                url: '/api/tele-statistic/payments-charts',
                 data: {
                     community_id: this.communityId,
                     filter: {
@@ -48,9 +44,10 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
             });
 
             this.data = data;
+            return true;
         } catch (error) {
             console.log(error);
-            this.data = false;
+            return false;
         }
     }
 
@@ -58,7 +55,7 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
         try {
             const { data } = await axios({
                 method: 'post',
-                url: '/api/tele-statistic/members',
+                url: '/api/tele-statistic/payments-list',
                 data: {
                     community_id: this.communityId,
                     filter: {
@@ -77,49 +74,38 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
             this.paginationData = data.meta;
         } catch (error) {
             console.log(error);
-            this.tableData = false;
-            this.paginationData = false;
         }
     }
 
-    fillLabels() {
-        console.log(this.countExitUsersNode, this.countExitUsers);
-        console.log(this.countJoinUsersNode, this.countJoinUsers);
-        this.countExitUsersNode.textContent = `-${ this.countExitUsers }`;
-        this.countExitUsersNode.style.color = this.chartDatasets[1].borderColor;
-
-        this.countJoinUsersNode.textContent = `+${ this.countJoinUsers }`;
-        this.countJoinUsersNode.style.color = this.chartDatasets[0].borderColor;
-    }
-    
-    get users() {
-        return this.data.items.users;
+    get donations() {
+        return this.data.items.donate_balance;
     }
 
-    get exitUsers() {
-        return this.data.items.exit_users;
+    get tariffs() {
+        return this.data.items.tariff_balance;
+    }
+
+    get courses() {
+        return this.data.items.course_balance;
     }
 
     get chartDatasets() {
         return [
             {
-                data: this.users,
-                borderColor: "#21C169",
+                data: this.donations,
+                borderColor: "#363440",
                 hidden: false,
             },
             {
-                data: this.exitUsers,
+                data: this.tariffs,
                 borderColor: "#E24041",
+                hidden: false,
+            },
+            {
+                data: this.courses,
+                borderColor: "#FF9F43",
                 hidden: false,
             }
         ]
-    }
-
-    get countExitUsers() {
-        return this.data.meta.count_exit_users;
-    }
-    
-    get countJoinUsers() {
-        return this.data.meta.count_join_users;
     }
 }

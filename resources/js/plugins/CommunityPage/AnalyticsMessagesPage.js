@@ -1,6 +1,6 @@
 import { BaseAnalyticsPage } from "./BaseAnalyticsPage";
 
-export class analyticsMessagesPage extends BaseAnalyticsPage {
+export class AnalyticsMessagesPage extends BaseAnalyticsPage {
     constructor(parent) {
         super(parent);
         this.container = parent.container.querySelector('[data-tab="analyticsMessagesPage"]');
@@ -34,7 +34,7 @@ export class analyticsMessagesPage extends BaseAnalyticsPage {
         try {
             const { data } = await axios({
                 method: 'post',
-                url: '/api/tele-statistic/member-charts1',
+                url: '/api/tele-statistic/message-charts',
                 data: {
                     community_id: this.communityId,
                     filter: {
@@ -55,7 +55,7 @@ export class analyticsMessagesPage extends BaseAnalyticsPage {
         try {
             const { data } = await axios({
                 method: 'post',
-                url: '/api/tele-statistic/members1',
+                url: '/api/tele-statistic/messages',
                 data: {
                     community_id: this.communityId,
                     filter: {
@@ -74,5 +74,28 @@ export class analyticsMessagesPage extends BaseAnalyticsPage {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    get utility() {
+        return this.data.items.utility;
+    }
+
+    get messages() {
+        return this.data.items.messages;
+    }
+
+    get chartDatasets() {
+        return [
+            {
+                data: this.utility,
+                borderColor: "#21C169",
+                hidden: false,
+            },
+            {
+                data: this.messages,
+                borderColor: "#E24041",
+                hidden: false,
+            }
+        ]
     }
 }

@@ -58,7 +58,7 @@ export class Table {
             class: 'table__body',
         }).init();
 
-        if (this.data.length) {
+        if (this.data.length || this.data) {
             this.data.forEach((dataItem) => {
                 const tableRowWrapper = new CreateNode({
                     parent: body,
@@ -102,7 +102,7 @@ export class Table {
                     parent: rowItemWrapper,
                     class: 'table__item table__item--changable',
                     text: timeFormatting({
-                        date: data[itemFormat.key] * 1000,
+                        date: data[itemFormat.key],
                         year: 'numeric',
                         month: 'numeric',
                         day: 'numeric',

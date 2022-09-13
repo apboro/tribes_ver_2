@@ -10,14 +10,16 @@ export class Pagination {
     }
 
     init() {
-        const wrapper = new CreateNode({
-            parent: this.container,
-            class: 'pagination__item'
-        }).init();
-
-        this.createArrowItem(wrapper, 'prev');
-        this.createItems(wrapper);
-        this.createArrowItem(wrapper, 'next');
+        if (this.data) {
+            const wrapper = new CreateNode({
+                parent: this.container,
+                class: 'pagination__item'
+            }).init();
+    
+            this.createArrowItem(wrapper, 'prev');
+            this.createItems(wrapper);
+            this.createArrowItem(wrapper, 'next');
+        }
     }
 
     createArrowItem(container, type) {

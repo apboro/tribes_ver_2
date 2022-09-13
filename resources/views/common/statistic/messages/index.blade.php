@@ -22,7 +22,7 @@
             <div>
                 <select
                     class="select-rounded analytics-community__filter"
-                    onchange="CommunityPage.analyticsSubscribersPage.switchTab(event)"
+                    onchange="CommunityPage.analyticsMessagesPage.switchTab(event)"
                 >
                     <option value="{{ route('community.statistic.subscribers', $community) }}">Подписчики</option>
                     <option value="{{ route('community.statistic.messages', $community) }}" selected>Сообщения</option>

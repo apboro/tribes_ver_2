@@ -62,8 +62,8 @@
                             Покинули
                         </span>
                         
-                        <span class="chart-analytics-community__value" style="color: rgb(226, 64, 65);">
-                            -19
+                        <span id="count_exit_users" class="chart-analytics-community__value">
+                            0
                         </span>
                     </button>
                     
@@ -72,8 +72,8 @@
                             Вступили
                         </span>
                         
-                        <span class="chart-analytics-community__value" style="color: rgb(33, 193, 105);">
-                            +96
+                        <span id="count_join_users" class="chart-analytics-community__value">
+                            0
                         </span>
                     </button>
                 </div>

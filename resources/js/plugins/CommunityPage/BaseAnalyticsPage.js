@@ -21,6 +21,7 @@ export class BaseAnalyticsPage {
         this.paginationEvent = '';
         // Настройки соритровки
         this.sortName = '';
+        this.sortNameDefault = '';
         this.sortRule = 'off';  // asc, desc
         this.sortEvent = '';
         // Настройки фильтров
@@ -30,15 +31,16 @@ export class BaseAnalyticsPage {
     }
 
     async init() {
-        let resData = await this.loadData();
-        let resTableData = await this.loadTableData();
-        if (!resData || !resTableData) {
-            return false;
+        await this.loadData();
+        if (this.data) {
+            this.initChart();
+            this.fillLabels();
         }
-        this.fillLabels();
-        this.initChart();
-        this.initTable();
-        this.initPagination();
+        await this.loadTableData();
+        //if (this.tableData) {
+            this.initTable();
+            this.initPagination();
+        //}
         this.listeners();
     }
 
@@ -49,8 +51,12 @@ export class BaseAnalyticsPage {
         });
 
         Emitter.subscribe(this.table.sortEvent, async ({ name, rule }) => {
+            console.log(rule);
             this.sortName = name;
             this.sortRule = rule;
+            if (rule == 'off') {
+                this.sortName = this.sortNameDefault;
+            }
             this.resetPagination();
             this.updateTable();
         });
@@ -59,52 +65,11 @@ export class BaseAnalyticsPage {
     switchTab(event) {
         window.location.href = event.target.value;
     }
+
     loadData() {}
+
     loadTableData() {}
-    // async loadData() {
-    //     try {
-    //         const { data } = await axios({
-    //             method: 'post',
-    //             url: '/api/tele-statistic/member-charts',
-    //             data: {
-    //                 community_id: this.communityId,
-    //                 filter: {
-    //                     period: this.filterPeriodValue
-    //                 }
-    //             }
-    //         });
-
-    //         this.data = data;
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
-    // async loadTableData() {
-    //     try {
-    //         const { data } = await axios({
-    //             method: 'post',
-    //             url: '/api/tele-statistic/members',
-    //             data: {
-    //                 community_id: this.communityId,
-    //                 filter: {
-    //                     period: this.filterPeriodValue,
-    //                     sort: {
-    //                         name: this.sortName,
-    //                         rule: this.sortRule
-    //                     },
-    //                     page: this.activePage
-    //                 }
-    //             }
-    //         });
-        
-    //         this.tableData = data.items;
-    //         this.paginationData = data.meta;
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
+    
     fillLabels() {}
 
     initChart() {
@@ -197,13 +162,17 @@ export class BaseAnalyticsPage {
 
     async updateChart() {
         await this.loadData();
-        this.сhart.changeData(this.marks, this.chartDatasets);
+        if (this.data.length || this.data) {
+            this.сhart.changeData(this.marks, this.chartDatasets);
+        }
     }
 
     async updateTable() {
         await this.loadTableData();
+        //if (this.dataTable) {
         this.table.update(this.tableData);
         this.pagination.update(this.paginationData);
+        //}
     }
 
     async switchFilter(event) {
