@@ -41,9 +41,7 @@ class DecrementTariffDays extends Command
     {
         $telegramUsers = TelegramUser::with('tariffVariant')->get();
         foreach ($telegramUsers as $user) {
-            $follower = User::find($user->user_id);
             $this->decrement($user);
-            $this->decrement($follower);
         }
     }
 
