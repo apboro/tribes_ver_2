@@ -13,6 +13,7 @@ class CreateTelegramMessagesTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('telegram_messages');
         Schema::create('telegram_messages', function (Blueprint $table) {
             $table->id();
             $table->string('group_chat_id')->nullable();
