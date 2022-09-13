@@ -1,19 +1,25 @@
 .settings-text-image {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
-    gap: 30px 40px;
+    grid-template-columns: 1fr;
+    gap: 20px 40px;
+
+    @media (min-width: $lg) {
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    }
 
     &__image {
         position: relative;
 
-        &:before {
-            content: "";
-            position: absolute;
-            top: 50px;
-            left: -40px;
-            width: 40px;
-            height: 1px;
-            background-color: $grey-4;
+        @media (min-width: $lg) {
+            &:before {
+                content: "";
+                position: absolute;
+                top: 50px;
+                left: -40px;
+                width: 40px;
+                height: 1px;
+                background-color: $grey-4;
+            }
         }
 
         &--no-line {
@@ -102,7 +108,7 @@
         
 
         img {
-            width: 100%;
+            max-width: 100%;
             border-radius: 5px;
         }
     }
@@ -118,9 +124,14 @@
     &__buttons {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
-        column-gap: $indent-3;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: $indent-1 $indent-3;
         margin-top: $indent-2;
+        
+        @media (min-width: 768px) {
+            justify-content: flex-end;
+        }
     }
 }
 

@@ -35,8 +35,13 @@
             @foreach ($community->tariff->variants as $tariff)
                 @if ($tariff->id == $variantId)
                 <!-- Название тарифа -->
+
+                <!-- <div class="community-settings__change-tariff">
+                    <div class=""> -->
+
                 <div class="community-settings__change-tariff" data-plugin="TariffYourValue">
                     <div class="community-settings__form-item">
+
                         <label
                             class="form-label-red"
                             for="tariff_name"
@@ -59,7 +64,7 @@
                         @enderror
                     </div>
 
-                    <div class="community-settings__form-item community-settings__input-group">
+                    <div class="community-settings__input-group">
                         <div class="community-settings__input-wrapper">
                             <label
                                 class="form-label-red"
@@ -150,7 +155,7 @@
                     </div>
                 </div>
 
-                <div class="toggle-switch community-settings__item">        
+                <div class="toggle-switch community-settings__form-item">        
                     <label class="toggle-switch__switcher">
                         <input type="hidden" name="tariff" value="0" />
 

@@ -1,5 +1,17 @@
 .dropdown-red {
-    
+    position: relative;
+
+    &--left {
+        .dropdown-red__list {
+            left: 0;
+        }
+    }
+
+    &--right {
+        .dropdown-red__list {
+            right: 0;
+        }
+    }
 
     @media (min-width: $md) {
         position: relative;
@@ -24,30 +36,30 @@
     }
     
     &__name {
-        display: none;
+        // display: none;
 
+        display: inline-block;
+        @include font($text-color-1, 16px, 21px, 500);
+        @include truncate(200px);
+        pointer-events: none;
+        text-transform: uppercase;
+        transition: $transition;
+
+        &:hover {
+            color: $primary-1;
+        }
+
+        &.active {
+            color: $primary-1;
+        }
         @media (min-width: $sm) {
-            display: inline-block;
-            @include font($text-color-1, 16px, 21px, 500);
-            @include truncate(200px);
-            pointer-events: none;
-            text-transform: uppercase;
-            transition: $transition;
-    
-            &:hover {
-                color: $primary-1;
-            }
-    
-            &.active {
-                color: $primary-1;
-            }
         }
     }
 
     &__list {
         position: absolute;
         top: 50px;
-        right: 0;
+        // right: 0;
         z-index: 15;
         display: none;
         min-width: 100%;

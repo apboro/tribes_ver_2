@@ -1,4 +1,4 @@
-<div class="community-settings__item">
+<div class="community-settings__form-item">
     <div id="editor_container" class="">
         <label class="form-label-red">
             {{ __('base.content') }}

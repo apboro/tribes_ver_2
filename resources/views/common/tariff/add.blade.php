@@ -31,7 +31,7 @@
         >
             <!-- Название тарифа -->
             <div class="community-settings__change-tariff">
-                <div class="community-settings__form-item">
+                <div class="">
                     <label
                         class="form-label-red"
                         for="tariff_name"
@@ -53,7 +53,7 @@
                     @enderror
                 </div>
 
-                <div class="community-settings__form-item community-settings__input-group">
+                <div class="community-settings__input-group">
                     <div class="community-settings__input-wrapper">
                         <label
                             class="form-label-red"
@@ -122,7 +122,7 @@
                 </div>
             </div>
 
-            <div class="toggle-switch community-settings__item">        
+            <div class="toggle-switch community-settings__form-item">        
                 <label class="toggle-switch__switcher">
                     <input type="hidden" name="tariff" value="0" />
                     
