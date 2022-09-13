@@ -292,6 +292,10 @@ Route::get('/agency_contract', function () {
     return view('common.agency_contract.index');
 })->name('agency_contract.index');
 
+Route::get('/confirm_subscription', function () {
+    return view('common.tariff.confirm-subscription');
+})->name('agency_contract.index');
+
 
 Route::get('setlocale/{lang}', function ($lang) {
 
