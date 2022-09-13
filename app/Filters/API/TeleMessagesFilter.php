@@ -5,10 +5,12 @@ namespace App\Filters\API;
 use App\Exceptions\StatisticException;
 use App\Helper\ArrayHelper;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
-class FinanceFilter extends QueryAPIFilter
+
+class TeleMessagesFilter extends QueryAPIFilter
 {
     const DAY = 'day';
     const WEEK = 'week';
@@ -25,28 +27,26 @@ class FinanceFilter extends QueryAPIFilter
             self::YEAR => self::YEAR,
         ];
     }
-
-    /** @var Builder */
-    protected $builder;
-
+    
     protected function _sortingName($name): string
     {
         $list = [
-            'first_name' => 'telegram_users.first_name',//Имя подписчика
-            'user_name' => 'telegram_users.user_name',//Никнейм - формат @vasyan
-            'amount' => 'payments.amount',//Сумма
-            'payable_type' => 'payments.payable_type',//Тип транзакции
-            'create_date' => 'payments.created_at',
-            'update_date' => 'payments.updated_at',
+            'message_date' => 'message_date',
+            'message' => 'text',
+            'author_name' => 'name',
+            'author_nick' => 'nick_name',
+            'answers' => 'answers',
+            'utility' => 'utility',
+            'count_reactions' => 'count_reactions'
         ];
-        return $list[$name] ?? $list['create_date'];
+        return $list[$name] ?? $list['message_date'];
     }
 
     public function period($value)
     {
         if ($date = $this->getStartDate($value)) {
             return $this->builder
-                ->where('payments.created_at', '>', $date);
+                ->where('message_date', '>', $date->format('U'));
         }
     }
 
@@ -70,7 +70,7 @@ class FinanceFilter extends QueryAPIFilter
         ]);
     }
 
-    public function getEndDate(): Carbon
+    protected function getEndDate(): Carbon
     {
         return Carbon::now();
     }
@@ -95,5 +95,4 @@ class FinanceFilter extends QueryAPIFilter
         }
         return 3600;
     }
-
 }

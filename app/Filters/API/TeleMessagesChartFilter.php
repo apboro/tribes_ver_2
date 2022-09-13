@@ -5,11 +5,13 @@ namespace App\Filters\API;
 use App\Exceptions\StatisticException;
 use App\Helper\ArrayHelper;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
-class FinanceFilter extends QueryAPIFilter
+class TeleMessagesChartFilter extends QueryAPIFilter
 {
+
     const DAY = 'day';
     const WEEK = 'week';
     const MONTH = 'month';
@@ -26,28 +28,14 @@ class FinanceFilter extends QueryAPIFilter
         ];
     }
 
-    /** @var Builder */
-    protected $builder;
-
     protected function _sortingName($name): string
     {
-        $list = [
-            'first_name' => 'telegram_users.first_name',//Имя подписчика
-            'user_name' => 'telegram_users.user_name',//Никнейм - формат @vasyan
-            'amount' => 'payments.amount',//Сумма
-            'payable_type' => 'payments.payable_type',//Тип транзакции
-            'create_date' => 'payments.created_at',
-            'update_date' => 'payments.updated_at',
-        ];
-        return $list[$name] ?? $list['create_date'];
+        return 'none';
     }
 
-    public function period($value)
+    public function sort(array $data)
     {
-        if ($date = $this->getStartDate($value)) {
-            return $this->builder
-                ->where('payments.created_at', '>', $date);
-        }
+        return $this->builder;
     }
 
     public function getStartDate($value): Carbon
@@ -95,5 +83,4 @@ class FinanceFilter extends QueryAPIFilter
         }
         return 3600;
     }
-
 }

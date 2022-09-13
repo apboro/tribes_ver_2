@@ -29,11 +29,19 @@
             id="tariff_edit_form"
             class="community-settings"
         >
+
+            <input type="hidden" name="arbitrary_term" value="false"/>
+
             @foreach ($community->tariff->variants as $tariff)
                 @if ($tariff->id == $variantId)
                 <!-- Название тарифа -->
-                <div class="community-settings__change-tariff">
-                    <div class="">
+
+                <!-- <div class="community-settings__change-tariff">
+                    <div class=""> -->
+
+                <div class="community-settings__change-tariff" data-plugin="TariffYourValue">
+                    <div class="community-settings__form-item">
+
                         <label
                             class="form-label-red"
                             for="tariff_name"
@@ -85,13 +93,15 @@
                             </label>
 
                             <select
-                                class="form-control-red "
+                                class="form-control-red tariff_pay_period"
                                 id="tariff_pay_period"
                                 name="tariff_pay_period"
+                                onchange="TariffYourValue.changeYourValue(this)"
                             >
                                 @if(env('FOR_TESTER'))
                                     <option value="0" @if ($tariff->period === 0) selected @endif>1 {{ __('base.minute_low') }}</option>
                                 @endif
+                                <option style="display: none" value="{{ $tariff->period }}" selected="selected" >{{ $tariff->period }} {{App\Traits\Declination::defineDeclination($tariff->period)}}</option>
                                 <option value="1" @if ($tariff->period == 1) selected @endif>1 {{ __('base.day_low') }}</option>
                                 <option value="3" @if ($tariff->period == 3) selected @endif>3 {{ __('base.days_rus_low') }}</option>
                                 <option value="7" @if ($tariff->period == 7) selected @endif>7 {{ __('base.days_low') }}</option>
@@ -102,12 +112,28 @@
                                 </option>
                                 <option value="365" @if ($tariff->period == 365) selected @endif>365 {{ __('base.days_low') }}
                                 </option>
-                                <!-- <option value="set">Свое значение</option> -->
+                                <option id="yourValue" value="set">Свое значение</option>
                             </select>
-                            <div>Переменная для "флаг(признак) выбора произвольного срока"{{$tariff->arbitrary_term}}</div>
+                            <!-- <div>Переменная для "флаг(признак) выбора произвольного срока"{{$tariff->arbitrary_term}}</div> -->
+                        </div>
+
+
+                        <div class="community-settings__input-wrapper your-value-wrap">
+                            <label
+                                class="form-label-red"
+                                for="your_value"
+                            >
+                                {{ __('base.number_access_days') }}
+                            </label>
+                            <input 
+                                class="form-control-red your-value-input" 
+                                type="number" 
+                                id="your_value" 
+                                onchange="TariffYourValue.getChanges(this.value)"
+                            >
                         </div>
                     </div>
-
+                    
                     <div class="">
                         <label
                             class="form-label-red"

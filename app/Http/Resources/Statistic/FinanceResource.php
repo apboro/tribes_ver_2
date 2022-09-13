@@ -2,23 +2,21 @@
 
 namespace App\Http\Resources\Statistic;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @property object $resource */
 class FinanceResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
     public function toArray($request)
     {
         return [
-            "first_name" => $this->resource->first_name,
-            "user_name" => $this->resource->user_name,
-            "add_balance" => $this->resource->add_balance,
+            "amount" => $this->resource->amount,
             "payable_type" => $this->resource->payable_type,
+            "buy_date" => $this->resource->buy_date,
+            "status" => $this->resource->status,
+            "tele_login" => $this->resource->tele_login,
+            "first_name" => $this->resource->first_name,
         ];
     }
 }

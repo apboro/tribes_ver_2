@@ -28,8 +28,12 @@ class TelegramStatisticSeeder extends Seeder
     {
         $startScriptDate = date('H:i:s');
         echo "\n Start statistic seeder{date($startScriptDate)} \n";
-        $connectionsGroup = TelegramConnection::where('chat_type', 'group')->limit(1)->get();
-        $connectionsChannel= TelegramConnection::where('chat_type', 'channel')->limit(1)->get();
+        $connectionsGroup = TelegramConnection::where('chat_type', 'group')->whereHas('users',function ($query){
+            $query->where(['email' => 'test-dev@webstyle.top']);
+        })->limit(1)->get();
+        $connectionsChannel= TelegramConnection::where('chat_type', 'channel')->whereHas('users',function ($query){
+            $query->where(['email' => 'test-dev@webstyle.top']);
+        })->limit(1)->get();
         $dates = $this->getDateArray();
 
         $reactions = TelegramDictReaction::all()->toArray();
@@ -59,6 +63,9 @@ class TelegramStatisticSeeder extends Seeder
                 ->count(rand(1,3))
                 ->create([
                     'channel_id' => $chanelConnection['chat_id'],
+                    'comments' => rand(0, 100),
+                    'utility' => rand(-100, 200),
+                    'post_date' => end($dates),
                     'datetime_record_reaction' => end($dates),
                 ]);
 
@@ -89,6 +96,9 @@ class TelegramStatisticSeeder extends Seeder
                         'group_chat_id' => $chanelConnection->chat_id,
                         'post_id' => $eachTelegramPost['post_id'],
                         'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
+                        'message_date' => end($dates),
+                        'answers' => rand(0, 50),
+                        'utility' => rand(-100, 200),
                         'datetime_record_reaction' => end($dates),
                         'chat_type' => $chanelConnection->chat_type,
                         'parrent_message_id' => null,
@@ -103,6 +113,9 @@ class TelegramStatisticSeeder extends Seeder
                             'post_id' => $eachTelegramPost['post_id'],
                             'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
                             'datetime_record_reaction' => end($dates),
+                            'message_date' => end($dates),
+                            'answers' => rand(0, 50),
+                            'utility' => rand(-100, 200),
                             'chat_type' => $chanelConnection->chat_type,
                             'parrent_message_id' => $message->message_id,
                         ]);
@@ -124,6 +137,9 @@ class TelegramStatisticSeeder extends Seeder
                         'group_chat_id' => $groupConnection->chat_id,
                         'post_id' => null,
                         'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
+                        'message_date' => end($dates),
+                        'answers' => rand(0, 50),
+                        'utility' => rand(-100, 200),
                         'datetime_record_reaction' => end($dates),
 
                         'chat_type' => $groupConnection->chat_type,
@@ -137,7 +153,9 @@ class TelegramStatisticSeeder extends Seeder
                             'group_chat_id' => $groupConnection->chat_id,
                             'post_id' => null,
                             'telegram_user_id' => $telegramUsers[array_rand($telegramUsers)]['telegram_id'],
-                            //todo Женя сделает поле 'date' => teledatecreate
+                            'message_date' => end($dates),
+                            'answers' => rand(0, 50),
+                            'utility' => rand(-100, 200),
                             'datetime_record_reaction' => end($dates),
                             'chat_type' => $groupConnection->chat_type,
                             'parrent_message_id' => $groupMessage->message_id,
@@ -145,24 +163,22 @@ class TelegramStatisticSeeder extends Seeder
                 }
                 // реакции
                 $rmessages = TelegramMessage::where('group_chat_id',$groupConnection->chat_id)->inRandomOrder()->limit(rand(3,5))->get();
+
                 foreach ($rmessages as $message) {
+                    //echo "{$message->message_id}\n";
+                    $excludeTurIds = ArrayHelper::getColumn(TelegramMessageReaction::where(['message_id'=>$message->message_id])->get(),'telegram_user_id');
                     $reactIds =ArrayHelper::getColumn($reactions,'id');
                     $reactIds =array_rand(array_flip($reactIds), 5);
                     $telegramUsersForReact = DB::table('telegram_users')
                         ->from('telegram_users as tu')
                         ->select('tu.telegram_id')
                         ->join('telegram_users_community as tuc','tu.telegram_id','=','tuc.telegram_user_id')
-                        ->leftJoin('telegram_messages as tm','tuc.telegram_user_id','=','tm.telegram_user_id')
-                        ->leftJoin('telegram_message_reactions as tmr','tm.message_id','=','tmr.message_id')
                         ->where('tuc.community_id','=',$groupConnection->community->id)
-                        ->where(function ($query) use ($message) {
-                            $query->where('tm.message_id', '=', $message->message_id)
-                                ->orWhereNull('tm.message_id');
-                        })
-                        ->whereNull('tmr.id')->limit(5)->get();
+                        ->whereNotIn('tu.telegram_id',$excludeTurIds)
+                        ->inRandomOrder()->limit(5)->get();
 
                     $turIds = ArrayHelper::getColumn($telegramUsersForReact->toArray(),'telegram_id');
-
+                    //echo "turIds - ".implode(',',$turIds)."\n";
                     if ($count = rand(0,1) && !empty($turIds)) {
                         $reactSequence = [];
                         foreach ($turIds as $key => $id) {
@@ -177,8 +193,8 @@ class TelegramStatisticSeeder extends Seeder
 
                         $fact= TelegramMessageReaction::factory();
                         $fact = call_user_func_array([$fact, 'sequence'], $reactSequence);
-                        $fact->count(3)->create();
-                        //dd($fact);
+                        $usersOfReact = $fact->count(rand(1,count(($turIds))))->create();
+                        //echo "users - ".implode(',',ArrayHelper::getColumn($usersOfReact,'telegram_user_id'))."\n";
                     }
 
                 }
