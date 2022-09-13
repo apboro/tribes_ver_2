@@ -1,3 +1,4 @@
+import { numberFormatting } from "../../core/functions";
 import { BaseAnalyticsPage } from "./BaseAnalyticsPage";
 
 export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
@@ -83,12 +84,10 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
     }
 
     fillLabels() {
-        console.log(this.countExitUsersNode, this.countExitUsers);
-        console.log(this.countJoinUsersNode, this.countJoinUsers);
-        this.countExitUsersNode.textContent = `-${ this.countExitUsers }`;
+        this.countExitUsersNode.textContent = `-${ numberFormatting(this.countExitUsers) }`;
         this.countExitUsersNode.style.color = this.chartDatasets[1].borderColor;
 
-        this.countJoinUsersNode.textContent = `+${ this.countJoinUsers }`;
+        this.countJoinUsersNode.textContent = `+${ numberFormatting(this.countJoinUsers) }`;
         this.countJoinUsersNode.style.color = this.chartDatasets[0].borderColor;
     }
     

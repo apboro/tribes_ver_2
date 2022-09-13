@@ -129,6 +129,20 @@
                 cursor: pointer;
             }
 
+            &--empty {
+                position: relative;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    width: 30px;
+                    height: 1px;
+                    background-color: $text-color-1;
+                }
+            }
+
             //&--changable {}
 
             &-arrow-icon {
@@ -289,6 +303,10 @@
         padding: 2px 10px;
         background-color: $grey-2;
         border-radius: 20px;
+    }
+
+    &__reaction-value {
+        margin-left: 5px;
     }
 
     &__sort-btn {

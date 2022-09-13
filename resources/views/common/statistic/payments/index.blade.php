@@ -99,7 +99,7 @@
                         </span>
                         
                         <span class="chart-analytics-community__text">
-                            Поступления  за период
+                            Поступления  за период 
                         </span>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
             <div class="analytics-community__table">
                 <div
                     id="table"
-                    class="table-2 analytics-community-messages-table"
+                    class="table-2 analytics-community-payments-table"
                 ></div>
             </div>
 

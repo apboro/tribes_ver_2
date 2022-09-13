@@ -84,31 +84,65 @@ export class Table {
                 text: 'Таблица пуста'
             }).init();
         }
-
     }
 
     createTableRowItems(parent, data) {
         this.rowItemsFormat.forEach((itemFormat) => {
             const rowItemWrapper = new CreateNode({ parent }).init();
-            
-            if (itemFormat.type === 'text') {
+            if (data[itemFormat.key] == null) {
                 new CreateNode({
                     parent: rowItemWrapper,
-                    class: 'table__item table__item--changable',
-                    text: data[itemFormat.key]
+                    class: 'table__item table__item--changable table__item--empty',
                 }).init();
-            } else if (itemFormat.type === 'date') {
-                new CreateNode({
-                    parent: rowItemWrapper,
-                    class: 'table__item table__item--changable',
-                    text: timeFormatting({
-                        date: data[itemFormat.key],
-                        year: 'numeric',
-                        month: 'numeric',
-                        day: 'numeric',
-                    })
-                }).init();
+            } else {
+                if (itemFormat.type === 'text') {
+                    new CreateNode({
+                        parent: rowItemWrapper,
+                        class: 'table__item table__item--changable',
+                        text: data[itemFormat.key]
+                    }).init();
+                } else if (itemFormat.type === 'date') {
+                    new CreateNode({
+                        parent: rowItemWrapper,
+                        class: 'table__item table__item--changable',
+                        text: timeFormatting({
+                            date: data[itemFormat.key],
+                            year: 'numeric',
+                            month: 'numeric',
+                            day: 'numeric',
+                        })
+                    }).init();
+                } else if (itemFormat.type === 'text&array') {
+                    const item = new CreateNode({
+                        parent: rowItemWrapper,
+                        class: 'table__item',
+                        text: data[itemFormat.key]
+                    }).init();
+
+                    const list = new CreateNode({
+                        parent: item,
+                        tag: 'ul',
+                        class: 'table__reaction-list',
+                    }).init();
+
+                    data[itemFormat.arrayKey].forEach((reaction) => {
+                        const listItem = new CreateNode({
+                            parent: list,
+                            tag: 'li',
+                            class: 'table__reaction-item',
+                        }).init();
+                        listItem.innerHTML = JSON.parse(`"${ reaction.reaction_code }"`);
+
+                        new CreateNode({
+                            parent: listItem,
+                            tag: 'span',
+                            class: 'table__reaction-value',
+                            text: reaction.count_reactions
+                        }).init();
+                    });
+                }
             }
+
         })
     }
 

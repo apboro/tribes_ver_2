@@ -61,8 +61,8 @@
                         <span class="chart-analytics-community__text">
                             За период
                         </span>
-                        <span class="chart-analytics-community__value" style="color: rgb(48, 170, 240);">
-                            +219
+                        <span id="count_new_message" class="chart-analytics-community__value">
+                            0
                         </span>
                     </button>
                     
@@ -71,8 +71,8 @@
                             Полезных
                         </span>
                         
-                        <span class="chart-analytics-community__value" style="color: rgb(33, 193, 105);">
-                            +96
+                        <span id="count_new_utility" class="chart-analytics-community__value">
+                            0
                         </span>
                     </button>
                 </div>

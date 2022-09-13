@@ -1,3 +1,4 @@
+import { numberFormatting } from "../../core/functions";
 import { BaseAnalyticsPage } from "./BaseAnalyticsPage";
 
 export class AnalyticsMessagesPage extends BaseAnalyticsPage {
@@ -5,29 +6,32 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
         super(parent);
         this.container = parent.container.querySelector('[data-tab="analyticsMessagesPage"]');
         // Настройки таблицы
-        /* this.headerItems = [
-            { text: 'Имя подписчика', sortName: 'name' },
+        this.headerItems = [
+            { text: 'Сообщения/реакция', sortName: 'text' },
+            { text: 'Имя автора', sortName: 'name' },
             { text: 'Никнейм', sortName: 'nick_name' },
-            { text: 'Дата', sortName: 'accession_date' },
-            { text: 'Сообщения', sortName: 'c_messages' },
-            { text: 'Реакции (оставил)', sortName: 'c_put_reactions' },
-            { text: 'Реакции (получил)', sortName: 'c_got_reactions' },
-            { text: 'Телеграм (id)', sortName: 'tele_id' },
+            { text: 'Дата', sortName: 'message_date' },
+            { text: 'Реакции', sortName: 'count_reactions' },
+            { text: 'Ответы', sortName: 'answers' },
+            { text: 'Полезность', sortName: 'utility' },
         ];
         this.rowItemsFormat = [
+            { type: 'text&array', key: 'text', arrayKey: 'reactions' },
             { type: 'text', key: 'name' },
             { type: 'text', key: 'nick_name' },
-            { type: 'date', key: 'accession_date' },
-            { type: 'text', key: 'c_messages' },
-            { type: 'text', key: 'c_put_reactions' },
-            { type: 'text', key: 'c_got_reactions' },
-            { type: 'text', key: 'tele_id' },
-        ]; */
+            { type: 'date', key: 'message_date' },
+            { type: 'text', key: 'count_reactions' },
+            { type: 'text', key: 'answers' },
+            { type: 'text', key: 'utility' },
+        ];
         // Настройки пагинации
         this.paginationEvent = 'pagination: messages';
         // Настройки соритровки
-        this.sortName = 'accession_date';
+        this.sortName = 'message_date';
         this.sortEvent = 'sort: messages';
+
+        this.countNewMessageNode = this.container.querySelector('#count_new_message');
+        this.countNewUtilityNode = this.container.querySelector('#count_new_utility');
     }
 
     async loadData() {
@@ -44,10 +48,9 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
             });
 
             this.data = data;
-            return true;
         } catch (error) {
             console.log(error);
-            return false;
+            this.data = false;
         }
     }
 
@@ -64,7 +67,8 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
                             name: this.sortName,
                             rule: this.sortRule
                         },
-                        page: this.activePage
+                        page: this.activePage,
+                        per_page: 10
                     }
                 }
             });
@@ -73,7 +77,17 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
             this.paginationData = data.meta;
         } catch (error) {
             console.log(error);
+            this.tableData = false;
+            this.paginationData = false;
         }
+    }
+
+    fillLabels() {
+        this.countNewMessageNode.textContent = `+${ numberFormatting(this.countNewMessage) }`;
+        this.countNewMessageNode.style.color = this.chartDatasets[1].borderColor;
+
+        this.countNewUtilityNode.textContent = `+${ numberFormatting(this.countNewUtility) }`;
+        this.countNewUtilityNode.style.color = this.chartDatasets[0].borderColor;
     }
 
     get utility() {
@@ -93,9 +107,17 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
             },
             {
                 data: this.messages,
-                borderColor: "#E24041",
+                borderColor: "#30AAF0",
                 hidden: false,
             }
         ]
+    }
+
+    get countNewMessage() {
+        return this.data.meta.count_new_message;
+    }
+    
+    get countNewUtility() {
+        return this.data.meta.count_new_utility;
     }
 }
