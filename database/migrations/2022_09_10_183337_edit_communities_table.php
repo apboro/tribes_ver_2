@@ -15,7 +15,7 @@ class EditCommunitiesTable extends Migration
     {
         $comms = \App\Models\Community::all();
         foreach ($comms as $comm){
-            if(!$comm->connection()){
+            if(!$comm->connection()->count()){
                 $comm->delete();
             }
         }
