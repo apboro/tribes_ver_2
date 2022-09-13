@@ -64,6 +64,12 @@
                 >
                     Неактивный
                 </option>
+                <option
+                    value="{{ route('community.tariff.list', $community) . '?isPersonal=true' }}"
+                    @if(request('active') == null && request('isPersonal') == true) selected @endif
+                >
+                    Персональный
+                </option>
             </select>
         </div>
 

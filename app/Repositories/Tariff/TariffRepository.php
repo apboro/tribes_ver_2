@@ -51,6 +51,7 @@ class TariffRepository implements TariffRepositoryContract
             'community_id' => $community->id
         ]);
 
+        
         if ($ips->first() == NULL) {
             UserIp::create([
                 'ip' => $request->getClientIp(),
