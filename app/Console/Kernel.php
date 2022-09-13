@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
         env('USE_TRIAL_PERIOD', true) ?
             $schedule->command('check:trial')->everyMinute()->timezone('Europe/Moscow')
             : null;
-        $schedule->command('tariff:decrement')->dailyAt('23:59')->timezone('Europe/Moscow');
+        $schedule->command('tariff:decrement')->everyMinute()->timezone('Europe/Moscow');
     }
 
     /**
