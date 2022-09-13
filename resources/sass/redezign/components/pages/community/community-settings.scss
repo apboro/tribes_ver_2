@@ -1,6 +1,5 @@
 .community-settings {
 
-
     &__item {
         margin-top: 30px;
     }
@@ -13,7 +12,7 @@
 
     &__change-tariff {
         display: grid;
-        grid-template-columns: 300px 400px;
+        grid-template-columns: 300px 600px;
         align-items: flex-end;
         gap: 20px 40px;
         margin-top: 30px;
@@ -23,16 +22,41 @@
         display: flex;
         flex-direction: column;
 
-        &:last-child {
-            label {
-                align-self: flex-end;
+        // &:last-child {
+        //     label {
+        //         align-self: flex-end;
+        //     }
+        // }
+
+        .tariff_pay_period {
+            border-radius: 0 5px 5px 0;
+        }
+
+        &.your-value-wrap {
+            opacity: 0;
+            transition: all .3s;
+            padding: 0 0 0 40px;
+            position: relative;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 21px;
+                width: 40px;
+                height: 1px;
+                background-color: $grey-4;
             }
+        }
+
+        .your-value-input {
+            max-width: 135px;
         }
     }
 
     &__input-group {
         display: grid;
-        grid-template-columns: 180px 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
 
         div:first-child input {
             border-right: none;
@@ -48,5 +72,11 @@
         display: grid;
         grid-template-columns: minmax(470px, 1fr) 1fr;
         column-gap: 30px;
+    }
+
+    &.active {
+        .community-settings__input-wrapper.your-value-wrap {
+            opacity: 1;
+        }
     }
 }
