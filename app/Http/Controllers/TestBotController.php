@@ -50,7 +50,7 @@ class TestBotController extends Controller
         // kanal id = 1504673809 access_hash = 6334485774387705507
         // webstyle id = 738071830 
         // ni si id = 1716122891, hash = 1057009408142334119, mes_id = 1116          комментарии к "Канал"  1677549150           7443666494376549445
-        // $mtproto = new UserBot();
+        $mtproto = new UserBot();
         // $reactions = $mtproto->getChannelReactions(1716122891, [1142], '1057009408142334119');
         // $views = $mtproto->getMessagesViews(1716122891, [1116], '1057009408142334119');
         // $messages = $mtproto->getMessages(1541725271, 'channel', '14492483521633917353');
@@ -70,13 +70,7 @@ class TestBotController extends Controller
         // dd($getDialogs[0]->allDialogs->chats);
         // $telegramConnection = TelegramConnection::select('chat_id', 'access_hash', 'isGroup')->where('is_there_userbot', true)->get();
         // dd($telegramConnection);
-            dd(json_encode('😥'));
-            dd(json_decode('"\ud83d\udd25"'));
-        if (htmlentities('😥') == '\xF0\x9F\x98\xA5') {
-            dd(123);
-        } else {
-            dd('no');
-        }
+          
     }
 
 }
