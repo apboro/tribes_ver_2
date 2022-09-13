@@ -12,7 +12,7 @@
                 </p>--}}
                 <p class="mb-0">
                     {{ __('base.contact_phone') }}:
-                    <a href="tel:+79155267861" class="btn-link">+7 915 526 78 61</a>
+                    <a href="tel:+78007003378" class="btn-link">8-800-700-33-78</a>
                 </p>
             </div>
         </div>
