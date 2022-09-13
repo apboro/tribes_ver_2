@@ -13,6 +13,13 @@ class EditCommunitiesTable extends Migration
      */
     public function up()
     {
+        $comms = \App\Models\Community::all();
+        foreach ($comms as $comm){
+            if(!$comm->connection()){
+                $comm->delete();
+            }
+        }
+
         Schema::table('communities', function (Blueprint $table) {
             $table->foreign('connection_id')->references('id')->on('telegram_connections')->onDelete('cascade');
         });
