@@ -9,11 +9,8 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
-/**
- * @property EloquentBuilder $builder
- * @method EloquentBuilder apply(EloquentBuilder $builder)
- */
-class MembersFilter extends QueryAPIFilter
+
+class TeleMessagesFilter extends QueryAPIFilter
 {
     const DAY = 'day';
     const WEEK = 'week';
@@ -30,33 +27,26 @@ class MembersFilter extends QueryAPIFilter
             self::YEAR => self::YEAR,
         ];
     }
-
+    
     protected function _sortingName($name): string
     {
         $list = [
-            'name' => 'name',
-            'nick_name' => 'nick_name',
-            'accession_date' => 'telegram_users_community.accession_date', 
-            'exit_date' => 'telegram_users_community.exit_date',
-            'c_messages' => 'c_messages',
-            'c_put_reactions' => 'c_put_reactions',
-            'c_got_reactions' => 'c_got_reactions',
+            'message_date' => 'message_date',
+            'message' => 'text',
+            'author_name' => 'name',
+            'author_nick' => 'nick_name',
+            'answers' => 'answers',
             'utility' => 'utility',
-
+            'count_reactions' => 'count_reactions'
         ];
-        return $list[$name] ?? $list['accession_date'];
-    }
-
-    public function communityId($value)
-    {
-        return $this->builder->where(['telegram_users_community.community_id' => $value]);
+        return $list[$name] ?? $list['message_date'];
     }
 
     public function period($value)
     {
         if ($date = $this->getStartDate($value)) {
             return $this->builder
-                ->where('telegram_users_community.accession_date', '>', $date->format('U'));
+                ->where('message_date', '>', $date->format('U'));
         }
     }
 
@@ -80,7 +70,7 @@ class MembersFilter extends QueryAPIFilter
         ]);
     }
 
-    public function getEndDate(): Carbon
+    protected function getEndDate(): Carbon
     {
         return Carbon::now();
     }

@@ -9,12 +9,9 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
-/**
- * @property EloquentBuilder $builder
- * @method EloquentBuilder apply(EloquentBuilder $builder)
- */
-class MembersFilter extends QueryAPIFilter
+class TeleMessagesChartFilter extends QueryAPIFilter
 {
+
     const DAY = 'day';
     const WEEK = 'week';
     const MONTH = 'month';
@@ -33,31 +30,12 @@ class MembersFilter extends QueryAPIFilter
 
     protected function _sortingName($name): string
     {
-        $list = [
-            'name' => 'name',
-            'nick_name' => 'nick_name',
-            'accession_date' => 'telegram_users_community.accession_date', 
-            'exit_date' => 'telegram_users_community.exit_date',
-            'c_messages' => 'c_messages',
-            'c_put_reactions' => 'c_put_reactions',
-            'c_got_reactions' => 'c_got_reactions',
-            'utility' => 'utility',
-
-        ];
-        return $list[$name] ?? $list['accession_date'];
+        return 'none';
     }
 
-    public function communityId($value)
+    public function sort(array $data)
     {
-        return $this->builder->where(['telegram_users_community.community_id' => $value]);
-    }
-
-    public function period($value)
-    {
-        if ($date = $this->getStartDate($value)) {
-            return $this->builder
-                ->where('telegram_users_community.accession_date', '>', $date->format('U'));
-        }
+        return $this->builder;
     }
 
     public function getStartDate($value): Carbon

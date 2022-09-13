@@ -9,6 +9,7 @@ use App\Models\Community;
 use App\Models\TelegramUser;
 use App\Models\TariffVariant;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 
@@ -42,25 +43,41 @@ class PaymentSeeder extends Seeder
 
             $cv = Course::where('community_id', $community->id)->first();
 
-            Payment::factory()
-                ->count(3)
-                ->state(new Sequence(
-                    ['payable_id' => $tv->id ?? 1, 'payable_type' => 'App\Models\TariffVariant'],
-                    ['payable_id' => $dv->id ?? 1, 'payable_type' => 'App\Models\DonateVariant'],
-                    ['payable_id' => $cv->id ?? 1, 'payable_type' => 'App\Models\Course']
-                ))
+            foreach($this->getDateArray() as $date){
+//                dd($date->toDateTimeString());
+                Payment::factory()
+                    ->count(rand(2,4))
+                    ->state(new Sequence(
+                        ['payable_id' => $tv->id ?? 1, 'payable_type' => 'App\Models\TariffVariant'],
+                        ['payable_id' => $dv->id ?? 1, 'payable_type' => 'App\Models\DonateVariant'],
+                        ['payable_id' => $cv->id ?? 1, 'payable_type' => 'App\Models\Course']
+                    ))
 //                ->typeDonate()
 //                ->typeTariffVariant($tv->id)
-                ->create([
-                    'from' => $teleuser->first_name,
-                    'community_id' => $community->id,
-                    'telegram_user_id' => $teleuser->telegram_id,
-                    'user_id' => $userBuyer->id,
-                    'author' => $userTest->id,
-                ]);
+                    ->create([
+                        'from' => $teleuser->first_name,
+                        'community_id' => $community->id,
+                        'telegram_user_id' => $teleuser->telegram_id,
+                        'user_id' => $userBuyer->id,
+                        'author' => $userTest->id,
+                        'created_at' => $date
+                    ]);
+            }
+
         }
 
+    }
 
+    private function getDateArray() {
+        $date = Carbon::now()->subMonths(1);
+        $dateArr = [];
+
+        while ($date < Carbon::now()) {
+            array_push($dateArr, $date->toDateTimeString());
+            $date = $date->addMinutes(720);
+        }
+
+        return $dateArr;
     }
 }
 

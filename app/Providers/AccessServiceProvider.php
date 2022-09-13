@@ -26,6 +26,10 @@ class AccessServiceProvider extends ServiceProvider
             \App\Repositories\Statistic\TeleDialogStatisticRepository::class
         );
         $this->app->bind(
+            \App\Repositories\Statistic\FinanceStatisticRepositoryContract::class,
+            \App\Repositories\Statistic\FinanceStatisticRepository::class
+        );
+        $this->app->bind(
             \App\Repositories\Author\AuthorRepositoryContract::class,
             \App\Repositories\Author\AuthorRepository::class
         );
@@ -119,6 +123,11 @@ class AccessServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Repositories\Telegram\TeleDictReactionRepositoryContract::class,
             \App\Repositories\Telegram\TeleDictReactionRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Statistic\TeleMessageStatisticRepositoryContract::class,
+            \App\Repositories\Statistic\TeleMessageStatisticRepository::class
         );
 
         $this->bindSearchClient();

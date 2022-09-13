@@ -5,15 +5,10 @@ namespace App\Filters\API;
 use App\Exceptions\StatisticException;
 use App\Helper\ArrayHelper;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
-/**
- * @property EloquentBuilder $builder
- * @method EloquentBuilder apply(EloquentBuilder $builder)
- */
-class MembersFilter extends QueryAPIFilter
+class FinanceChartFilter extends QueryAPIFilter
 {
     const DAY = 'day';
     const WEEK = 'week';
@@ -31,32 +26,32 @@ class MembersFilter extends QueryAPIFilter
         ];
     }
 
+    /** @var Builder */
+    protected $builder;
+
     protected function _sortingName($name): string
     {
         $list = [
-            'name' => 'name',
-            'nick_name' => 'nick_name',
-            'accession_date' => 'telegram_users_community.accession_date', 
-            'exit_date' => 'telegram_users_community.exit_date',
-            'c_messages' => 'c_messages',
-            'c_put_reactions' => 'c_put_reactions',
-            'c_got_reactions' => 'c_got_reactions',
-            'utility' => 'utility',
-
+            'first_name' => 'telegram_users.first_name',//Имя подписчика
+            'user_name' => 'telegram_users.user_name',//Никнейм - формат @vasyan
+            'amount' => 'payments.amount',//Сумма
+            'payable_type' => 'payments.payable_type',//Тип транзакции
+            'create_date' => 'payments.created_at',
+            'update_date' => 'payments.updated_at',
         ];
-        return $list[$name] ?? $list['accession_date'];
+        return $list[$name] ?? $list['create_date'];
     }
 
-    public function communityId($value)
+    public function sort(array $data)
     {
-        return $this->builder->where(['telegram_users_community.community_id' => $value]);
+        return $this->builder;
     }
 
     public function period($value)
     {
         if ($date = $this->getStartDate($value)) {
             return $this->builder
-                ->where('telegram_users_community.accession_date', '>', $date->format('U'));
+                ->where('payments.created_at', '>', $date);
         }
     }
 
@@ -105,4 +100,5 @@ class MembersFilter extends QueryAPIFilter
         }
         return 3600;
     }
+
 }
