@@ -115,7 +115,10 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $tu = 'telegram_users';
 
         $builder = DB::table($p)
-            ->join($tu, "$p.user_id", "=", "$tu.id")
+            ->join($tu,function (JoinClause $join) use ($p,$tu) {
+                $join->on("$tu.telegram_id", '=', "$p.telegram_user_id")
+                    ->on("$tu.user_id", '=',"$p.user_id",'OR');
+            })
             ->select([
                 "$p.amount",
                 "$p.type",
