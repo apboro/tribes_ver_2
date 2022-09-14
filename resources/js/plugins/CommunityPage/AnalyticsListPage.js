@@ -4,8 +4,14 @@ import { BaseChart } from "../Helper/Chart/BaseChart";
 export class AnalyticsListPage {
     constructor(parent) {
         this.container = parent.container.querySelector('[data-tab="analyticsListPage"]');
+        this.communityId = parent.communityId;
 
-        this.filterNode = this.container.querySelector('#period_filter');
+        // Настройки фильтров
+        this.filterPeriodValue = 'week';
+
+        this.subscribersData = null;
+        this.messagesData = null;
+        this.paymentsData = null;
         
         this.subscribersId = 'subscribers_chart';
         this.messagesId = 'messages_chart';
@@ -24,68 +30,87 @@ export class AnalyticsListPage {
         this.paymentsLeftLabel = this.container.querySelector('#payments_left_label');
         this.paymentsRightLabel = this.container.querySelector('#payments_right_label');
 
-        this.data = {};
-
         this.init();
     }
 
-    init() {
-        this.loadData();
-        this.fillLabels();
+    async init() {
+        await this.loadData();
         this.initCharts();
+        this.fillLabels();
     }
 
-    loadData() {
-        this.data = {
-            marks: ['Пон', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-            subscribers: {
-                items: [12, 19, 3, 5, 2, 3, 31],
-                left: 96,
-                right: 13
-            },
+    async loadData() {
+        await this.loadSubscribers();
+        await this.loadMessages();
+        await this.loadPayments();
+    }
 
-            messages: {
-                items: [102, 190, 30, 50, 20, 30, 31],
-                left: 563,
-                right: 233
-            },
+    async loadSubscribers() {
+        try {
+            const { data } = await axios({
+                method: 'post',
+                url: '/api/tele-statistic/member-charts',
+                data: {
+                    community_id: this.communityId,
+                    filter: {
+                        period: this.filterPeriodValue
+                    }
+                }
+            });
 
-            payments: {
-                items: [12, 109, 300, 500, 20, 300, 301],
-                left: 24300,
-                right: 20300
-            },
+            this.subscribersData = data;
+        } catch (error) {
+            console.log(error);
+            this.subscribersData = false;
         }
     }
 
-    loadYear() {
-        this.data = {
-            marks: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
-            subscribers: {
-                items: [12, 19, 3, 5, 2, 3, 31, 12, 19, 3, 5, 2,],
-                left: 196,
-                right: 113
-            },
+    async loadMessages() {
+        try {
+            const { data } = await axios({
+                method: 'post',
+                url: '/api/tele-statistic/message-charts',
+                data: {
+                    community_id: this.communityId,
+                    filter: {
+                        period: this.filterPeriodValue
+                    }
+                }
+            });
 
-            messages: {
-                items: [102, 190, 30, 20, 30, 31, 102, 190, 30, 50, 20, 30],
-                left: 1563,
-                right: 1233
-            },
+            this.messagesData = data;
+        } catch (error) {
+            console.log(error);
+            this.messagesData = false;
+        }
+    }
 
-            payments: {
-                items: [12, 109, 300, 500, 20, 300, 301, 12, 109, 300, 20, 300],
-                left: 214300,
-                right: 210300
-            },
+    async loadPayments() {
+        try {
+            const { data } = await axios({
+                method: 'post',
+                url: '/api/tele-statistic/payments-charts',
+                data: {
+                    community_id: this.communityId,
+                    filter: {
+                        period: this.filterPeriodValue
+                    }
+                }
+            });
+
+            this.paymentsData = data;
+            return true;
+        } catch (error) {
+            console.log(error);
+            this.paymentsData = false;
         }
     }
 
     fillLabels() {
-        this.subdcribersLeftLabel.textContent = `+${ numberFormatting(this.subscribersLeft) }`;
+        this.subdcribersLeftLabel.textContent = `-${ numberFormatting(this.subscribersLeft) }`;
         this.subdcribersRightLabel.textContent = `+${ numberFormatting(this.subscribersRight) }`;
         this.messagesLeftLabel.textContent = `+${ numberFormatting(this.messagesLeft) }`;
-        this.messagesRightLabel.textContent = `+${ numberFormatting(this.messagesRight) }`;
+        this.messagesRightLabel.textContent = `+${ this.messagesRight ? numberFormatting(this.messagesRight) : '0' }`;
         this.paymentsLeftLabel.textContent = `+${ numberFormatting(this.paymentsLeft) }`;
         this.paymentsRightLabel.textContent = `+${ numberFormatting(this.paymentsRight) }`;
     }
@@ -136,51 +161,60 @@ export class AnalyticsListPage {
         });
     }
 
-    switchFilter(event) {
-        this.loadYear();
-        this.fillLabels()
-        this.subscribersChart.changeData(this.marks, this.subscribersItems);
-        this.messagesChart.changeData(this.marks, this.messagesItems);
-        this.paymentsChart.changeData(this.marks, this.paymentsItems);
+    async switchFilter(event) {
+        this.filterPeriodValue = event.target.value;
+        await this.loadData();
+        this.fillLabels();
+        this.subscribersChart.changeData(this.marks, this.setDataset(this.subscribersItems));
+        this.messagesChart.changeData(this.marks, this.setDataset(this.messagesItems));
+        this.paymentsChart.changeData(this.marks, this.setDataset(this.paymentsItems));
+    }
+
+    setDataset(data) {
+        return [{
+            data,
+            borderColor: "#2AB0EE",
+            hidden: false,
+        }];
     }
 
     get marks() {
-        return this.data.marks;
+        return this.subscribersData.meta.marks;
     }
 
     get subscribersItems() {
-        return this.data.subscribers.items;
+        return this.subscribersData.items.users;
     }
 
     get subscribersLeft() {
-        return this.data.subscribers.left;
+        return this.subscribersData.meta.count_exit_users;
     }
 
     get subscribersRight() {
-        return this.data.subscribers.right;
+        return this.subscribersData.meta.count_join_users;
     }
 
     get messagesItems() {
-        return this.data.messages.items;
+        return this.messagesData.items.messages;
     }
 
     get messagesLeft() {
-        return this.data.messages.left;
+        return this.messagesData.meta.count_new_message;
     }
 
     get messagesRight() {
-        return this.data.messages.right;
+        return this.messagesData.meta.count_new_utility;
     }
 
     get paymentsItems() {
-        return this.data.payments.items;
+        return this.paymentsData.items.balance;
     }
 
     get paymentsLeft() {
-        return this.data.payments.left;
+        return this.paymentsData.meta.total_amount;
     }
 
     get paymentsRight() {
-        return this.data.payments.right;
+        return this.paymentsData.meta.all;
     }
 }

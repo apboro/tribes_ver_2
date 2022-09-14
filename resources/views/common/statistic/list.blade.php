@@ -48,22 +48,26 @@
                     <div class="card-analytics-community__footer">
                         <div class="card-analytics-community__info">
                             <span class="card-analytics-community__info-label">
-                                Прирост
+                                Покинули
                             </span>
                             <span
                                 id="subscribers_left_label"
-                                class="card-analytics-community__info-value"
-                            ></span>
+                                class="card-analytics-community__info-value card-analytics-community__info-value--red"
+                            >
+                                0
+                            </span>
                         </div>
                         
                         <div class="card-analytics-community__info card-analytics-community__info--right">
                             <span class="card-analytics-community__info-label">
-                                Полезных
+                                Вступили
                             </span>
                             <span
                                 id="subscribers_right_label"
                                 class="card-analytics-community__info-value card-analytics-community__info-value--green"
-                            ></span>
+                            >
+                                0
+                            </span>
                         </div>
                         <a
                             href="{{ route('community.statistic.subscribers', $community) }}"
@@ -98,7 +102,9 @@
                             <span
                                 id="messages_left_label"
                                 class="card-analytics-community__info-value"
-                            ></span>
+                            >
+                                0
+                            </span>
                         </div>
                         
                         <div class="card-analytics-community__info card-analytics-community__info--right">
@@ -109,7 +115,9 @@
                             <span
                                 id="messages_right_label"
                                 class="card-analytics-community__info-value card-analytics-community__info-value--green"
-                            ></span>
+                            >
+                                0
+                            </span>
                         </div>
                         
                         <a
@@ -139,24 +147,28 @@
                     <div class="card-analytics-community__footer">
                         <div class="card-analytics-community__info">
                             <span class="card-analytics-community__info-label">
-                                Приход
+                                Всего
                             </span>
                             
                             <span
                                 id="payments_left_label"
                                 class="card-analytics-community__info-value"
-                            ></span>
+                            >
+                                0
+                            </span>
                         </div>
                         
                         <div class="card-analytics-community__info card-analytics-community__info--right">
                             <span class="card-analytics-community__info-label">
-                                Можно вывести
+                                За период
                             </span>
                             
                             <span
                                 id="payments_right_label"
                                 class="card-analytics-community__info-value card-analytics-community__info-value--green"
-                            ></span>
+                            >
+                                0
+                            </span>
                         </div>
                         
                         <a
