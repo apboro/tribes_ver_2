@@ -218,5 +218,52 @@ export class BaseAnalyticsPage {
         }
     }
 
+    async loadFile(type) {
+        let exportType = type == 'csv' ? 'csv' : 'xlsx';
+        try {
+            const res = await axios({
+                method: 'post',
+                url: '/api/tele-statistic/export-members',
+                data: {
+                    community_id: this.communityId,
+                    export_type: exportType,
+                    filter: {
+                        period: this.filterPeriodValue,
+                    }
+                }
+            });
+        
+            console.log(res);
+            // var encodedUri = encodeURI(data);
+            // var link = document.createElement("a");
+            // link.setAttribute("href", encodedUri);
+            // link.setAttribute("download", `my_data.${ type }`);
+            // document.body.appendChild(link); // Required for FF
+            // link.click();
+            //let filename = "TestReport.xlsx";
+        //     let filename = type == 'csv' ? 'TestReport.csv' : 'Test.xlsx';
+        //     var blob = data;
+        // if(window.navigator.msSaveOrOpenBlob) {
+        //     window.navigator.msSaveBlob(blob, filename);
+        // }
+        // else{
+        //     var downloadLink = window.document.createElement('a');
+        //     downloadLink.href = window.URL.createObjectURL(new Blob([blob], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
+        //     downloadLink.target = '_blank';
+        //     downloadLink.download = filename;
+        //     document.body.appendChild(downloadLink);
+        //     downloadLink.click();
+        //     document.body.removeChild(downloadLink);
+        //    }
+        var blob = new Blob([res.data], {type: 'text/csv; charset=UTF-8'});
+        var objectUrl = URL.createObjectURL(blob);
+        window.open(objectUrl);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     get chartDatasets() {}
 }
+
+

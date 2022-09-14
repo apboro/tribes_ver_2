@@ -127,11 +127,17 @@
                         Экспорт: 
                     </h3>
                     
-                    <button type="button" class="button-empty button-empty--primary">
+                    <button
+                        class="button-empty button-empty--primary"
+                        onclick="CommunityPage.analyticsPaymentsPage.loadFile('excel')"
+                    >
                         Excel
                     </button>
                     
-                    <button type="button" class="button-empty button-empty--primary">
+                    <button
+                        class="button-empty button-empty--primary"
+                        onclick="CommunityPage.analyticsPaymentsPage.loadFile('excel')"
+                    >
                         CSV
                     </button>
                 </div>
