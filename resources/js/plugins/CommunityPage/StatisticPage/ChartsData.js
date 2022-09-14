@@ -6,7 +6,7 @@ import { UniqueVisitors } from "./UniqueVisitiors";
 
 export class ChartsData {
     constructor(parent) {   
-        this.communityId = parent.container.dataset.communityId;
+        //this.communityId = parent.container.dataset.communityId;
 
         this._data = {
             tariffAmounts: {},
@@ -42,10 +42,10 @@ export class ChartsData {
 
     // загрузка данных
     async loadData() {      
-        await this.loadTariffAmountsData();
+       /*  await this.loadTariffAmountsData();
         await this.loadUniqueVisitorsData();
         await this.loadPaidTariffsCountData();
-        await this.loadPaidDonationsCountData();
+        await this.loadPaidDonationsCountData(); */
      
         // создаем событие загрузки данных
         Emitter.emit(this.loadDataEvent, {

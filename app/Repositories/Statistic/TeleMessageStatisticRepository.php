@@ -63,18 +63,12 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
                 DB::raw("d.dt"),
                 DB::raw("COUNT(distinct($tm.message_id)) as messages"),
             ]);
-        $sub->whereExists(function ($query) use ($tc, $tm, $com, $communityId) {
-            $query->select('id')
-                ->from('telegram_connections')
-                ->whereColumn("$tm.group_chat_id", "=", "$tc.chat_id")
-                ->orWhereColumn("$tm.group_chat_id", "=", "$tc.comment_chat_id")
-                ->whereExists(function ($q) use ($tc, $com, $communityId) {
-                    $q->select('id')
-                        ->from('communities')
-                        ->whereColumn("$tc.id", "$com.connection_id")
-                        ->where('id', $communityId);
-                });
-        });
+            $sub->join('telegram_connections',function (JoinClause $join) use ($tm) {
+                $join->on("$tm.group_chat_id", '=', 'telegram_connections.chat_id')
+                    ->on("$tm.group_chat_id", '=','telegram_connections.comment_chat_id','OR');
+            })
+            ->join('communities','communities.connection_id',"=","telegram_connections.id")
+            ->where('communities.id',"=",$communityId);
         $sub->groupBy("d.dt");
 
 
@@ -103,7 +97,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
             ->join('communities','communities.connection_id',"=","telegram_connections.id")
             ->where('communities.id',"=",$communityId)
             ->value('c');
-        //dd($allMessages->toSql());
+
         $chart->addAdditionParam('count_all_message', $allMessages);
         return $chart;
     }
@@ -131,18 +125,12 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
                 DB::raw("d.dt"),
                 DB::raw("COUNT(distinct($tm.id)) as utility"),
             ]);
-        $sub->whereExists(function ($query) use ($tc, $tm, $com, $communityId) {
-            $query->select('id')
-                ->from('telegram_connections')
-                ->whereColumn("$tm.group_chat_id", "=", "$tc.chat_id")
-                ->orWhereColumn("$tm.group_chat_id", "=", "$tc.comment_chat_id")
-                ->whereExists(function ($q) use ($tc, $com, $communityId) {
-                    $q->select('id')
-                        ->from('communities')
-                        ->whereColumn("$tc.id", "$com.connection_id")
-                        ->where('id', $communityId);
-                });
-        });
+            $sub->join('telegram_connections',function (JoinClause $join) use ($tm) {
+                $join->on("$tm.group_chat_id", '=', 'telegram_connections.chat_id')
+                    ->on("$tm.group_chat_id", '=','telegram_connections.comment_chat_id','OR');
+            })
+            ->join('communities','communities.connection_id',"=","telegram_connections.id")
+            ->where('communities.id',"=",$communityId);
 
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
@@ -178,18 +166,12 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
         $tmr = 'telegram_message_reactions';
 
         $builder = DB::table($tm)
-            ->whereExists(function ($query) use ($tc, $tm, $com, $communityId) {
-                $query->select('id')
-                    ->from('telegram_connections')
-                    ->whereColumn("$tm.group_chat_id", "=", "$tc.chat_id")
-                    ->orWhereColumn("$tm.group_chat_id", "=", "$tc.comment_chat_id")
-                    ->whereExists(function ($q) use ($tc, $com, $communityId) {
-                        $q->select('id')
-                            ->from('communities')
-                            ->whereColumn("$tc.id", "$com.connection_id")
-                            ->where('id', $communityId);
-                    });
+            ->join('telegram_connections',function (JoinClause $join) use ($tm) {
+                $join->on("$tm.group_chat_id", '=', 'telegram_connections.chat_id')
+                    ->on("$tm.group_chat_id", '=','telegram_connections.comment_chat_id','OR');
             })
+            ->join('communities','communities.connection_id',"=","telegram_connections.id")
+            ->where('communities.id',"=",$communityId)
             ->join($tu, "$tm.telegram_user_id", "=", "$tu.telegram_id")
             ->leftJoin($tmr, function ($join) use ($tm, $tmr) {
                 $join->on("$tm.message_id", "=", "$tmr.message_id")
