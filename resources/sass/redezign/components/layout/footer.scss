@@ -1,0 +1,33 @@
+.footer {
+    &__telegram-link {
+        margin: 0 0 10px;
+        display: flex;
+        align-items: center;
+        @include font($blue-1, 14px, 20px, 600);
+        transition: all .5s;
+
+        &:hover {
+            color: $blue-1;
+            opacity: .7;
+        }
+    }
+
+    &__telegram-img {
+        margin: 0 10px 0 0;
+    }
+
+    &__phone {
+        display: flex;
+        align-items: center;
+        @include font($grey-8, 14px, 20px, 600);
+
+        > svg {
+            margin: 0 10px 0 0;
+        }
+    }
+
+    &__item {
+        margin: 0 0 10px;
+        width: 50%;
+    }
+}
