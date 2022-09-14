@@ -80,29 +80,13 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
 
     public function getPaymentsList(int $communityId, FinanceFilter $filter): LengthAwarePaginator
     {
-        $p = 'payments';
-        $tu = 'telegram_users';
+        $builder = $this->queryPayments($communityId, $filter);
 
-        $builder = DB::table($p)
-            ->join($tu, "$p.user_id", "=", "$tu.id")
-            ->select([
-                "$p.amount",
-                "$p.type",
-                DB::raw("$p.created_at as buy_date"),
-                "$p.status",
-                "$tu.user_name as tele_login",
-                "$tu.first_name",
-            ]);
-
-        $builder->where(["$p.community_id" => $communityId]);
         $filterData = $filter->filters();
 
         Log::debug("FinanceStatisticRepository::getPaymentsList", [
             'filter' => $filterData,
         ]);
-
-        $builder = $filter->apply($builder);
-
         $perPage = $filterData['per-page'] ?? 15;
         $page = $filterData['page'] ?? 0;
 
@@ -114,4 +98,38 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         );
     }
 
+    public function getPaymentsListForFile(int $communityId, FinanceFilter $filter): Builder
+    {
+        return $this->queryPayments($communityId, $filter);
+    }
+
+    /**
+     * @param int $communityId
+     * @param FinanceFilter $filter
+     * @return \Illuminate\Database\Eloquent\Builder|Builder
+     * @throws Exception
+     */
+    protected function queryPayments(int $communityId, FinanceFilter $filter)
+    {
+        $p = 'payments';
+        $tu = 'telegram_users';
+
+        $builder = DB::table($p)
+            ->join($tu,function (JoinClause $join) use ($p,$tu) {
+                $join->on("$tu.telegram_id", '=', "$p.telegram_user_id")
+                    ->on("$tu.user_id", '=',"$p.user_id",'OR');
+            })
+            ->select([
+                "$p.amount",
+                "$p.type",
+                DB::raw("$p.created_at as buy_date"),
+                "$p.status",
+                "$tu.user_name as tele_login",
+                "$tu.first_name",
+            ]);
+
+        $builder->where(["$p.community_id" => $communityId]);
+        $builder = $filter->apply($builder);
+        return $builder;
+    }
 }

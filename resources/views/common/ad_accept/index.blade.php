@@ -31,7 +31,7 @@
                         </li>
                         <li>
                             Согласие дается на осуществление Индивидуальному предпринимателю Бордияну Андрею Сергеевичу рассылки информационных и (или) рекламных сообщений Пользователю в Чат-боте {{ env('APP_URL') }}&nbsp;
-                            <a href="https://t.me/spodial_paybot" class="text-primary">@ {{ env('APP_URL') }}_paybot</a>.
+                            <a href="https://t.me/@lms_9388Bot" class="text-primary">@lms_9388Bot</a>.
                         </li>
                         <li>
                             Действия, указанные в п.&nbsp;3&nbsp;Согласия, осуществляются для целей, включая, но не ограничиваясь, 
@@ -42,7 +42,7 @@
                         </li>
                         <li>
                             Пользователь имеет право отозвать свое Согласие в любое время путем направления соответствующего запроса в службу поддержки&nbsp;
-                            <a href="https://t.me/spodialsupportbot" class="text-primary">@ {{ env('APP_URL') }}supportbot</a> в Мессенджере, а также путем удаления Чат-бота {{ env('APP_URL') }}.
+                            <a href="support@trbs.co " class="text-primary">support@trbs.co</a> или в Мессенджере: <a href="@TribesSupport_bot">@TribesSupport_bot</a>, а также путем удаления Чат-бота <a href="https://t.me/@lms_9388Bot" class="text-primary">@lms_9388Bot</a>.
                         </li>
                     </ol>
 
