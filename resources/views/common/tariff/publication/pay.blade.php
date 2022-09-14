@@ -49,7 +49,7 @@
         </div>
 
 
-        <div class="profile-community__pay-link-block">
+        <div class="profile-community__pay-link-block community-settings__tariff-public-controls">
             <p class="profile-community__pay-link-label">
                 Ссылка на страницу оплаты для доступа к сообществу
             </p>

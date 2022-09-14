@@ -34,7 +34,7 @@
                     header: [
                         {
                             type: 'sorting',
-                            text: 'Имя автора',
+                            text: 'Имя подписчика',
                             sortName: 'name',
                             sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
                         },
