@@ -1293,6 +1293,213 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "теле статистика export members",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "export_type",
+							"value": "csv",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "export_type",
+							"value": "xlsx",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/export-members"
+			},
+			"response": []
+		},
+		{
+			"name": "теле статистика export messages",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "export_type",
+							"value": "csv",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "export_type",
+							"value": "xlsx",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/export-messages"
+			},
+			"response": []
+		},
+		{
+			"name": "теле статистика export payments",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "export_type",
+							"value": "csv",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "export_type",
+							"value": "xlsx",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/export-payments"
+			},
+			"response": []
 		}
 	]
 }

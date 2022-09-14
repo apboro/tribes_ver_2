@@ -7,8 +7,10 @@ use App\Filters\API\MembersChartFilter;
 use App\Filters\API\MembersFilter;
 use App\Helper\ArrayHelper;
 use App\Repositories\Statistic\DTO\ChartData;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -17,35 +19,12 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
 
     public function getMembersList(int $communityId, MembersFilter $filter): LengthAwarePaginator
     {
-        $tu = 'telegram_users';
-        $tuc = 'telegram_users_community';
-        $tm = 'telegram_messages';
-        $pmr = 'telegram_message_reactions as pmr';
-        $gmr = 'telegram_message_reactions as gmr';
-        $builder = DB::table($tu)
-            ->join($tuc, "$tu.telegram_id", "=", "$tuc.telegram_user_id")
-            ->leftJoin($tm, "$tm.telegram_user_id", "=", "$tu.telegram_id")
-            ->leftJoin($gmr, "gmr.message_id", "=", "$tm.message_id")
-            ->leftJoin($pmr, "pmr.telegram_user_id", "=", "$tuc.telegram_user_id")
-            ->select([
-                "$tu.telegram_id as tele_id",
-                DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
-                "$tu.user_name as nick_name",
-                DB::raw("to_timestamp($tuc.accession_date) as accession_date"),
-                DB::raw("to_timestamp($tuc.exit_date) as exit_date"),
-                DB::raw("COUNT(distinct($tm.message_id)) as c_messages"),
-                DB::raw("COUNT(distinct(gmr.id)) as c_put_reactions"),
-                DB::raw("COUNT(distinct(pmr.id)) as c_got_reactions"),
-                DB::raw("SUM(coalesce($tm.utility,0)) as utility")
-            ]);
-        $builder->groupBy("$tu.telegram_id","$tu.first_name","$tu.last_name","$tu.user_name","$tuc.accession_date","$tuc.exit_date");
-        $builder->where(["$tuc.community_id" => $communityId]);
+
         $filterData = $filter->filters();
         Log::debug("TeleDialogStatisticRepository::getMembersList", [
             'filter' => $filterData,
         ]);
-
-        $builder = $filter->apply($builder);
+        $builder = $this->queryMembers($communityId, $filter);
 
         $perPage = $filterData['per-page'] ?? 15;
         $page = $filterData['page'] ?? 1;
@@ -56,6 +35,11 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
             $perPage,
             $page
         );
+    }
+
+    public function getMembersListForFile(int $communityId, MembersFilter $filter): Builder
+    {
+        return $this->queryMembers($communityId, $filter);
     }
 
     /**
@@ -149,4 +133,42 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $chart->addAdditionParam('count_exit_users', array_sum(ArrayHelper::getColumn($result, 'users')));
         return $chart;
     }
+
+    /**
+     * @param int $communityId
+     * @param MembersFilter $filter
+     * @return Builder|\Illuminate\Database\Eloquent\Builder
+     * @throws \Exception
+     */
+    protected function queryMembers(int $communityId, MembersFilter $filter)
+    {
+        $tu = 'telegram_users';
+        $tuc = 'telegram_users_community';
+        $tm = 'telegram_messages';
+        $pmr = 'telegram_message_reactions as pmr';
+        $gmr = 'telegram_message_reactions as gmr';
+        $builder = DB::table($tu)
+            ->join($tuc, "$tu.telegram_id", "=", "$tuc.telegram_user_id")
+            ->leftJoin($tm, "$tm.telegram_user_id", "=", "$tu.telegram_id")
+            ->leftJoin($gmr, "gmr.message_id", "=", "$tm.message_id")
+            ->leftJoin($pmr, "pmr.telegram_user_id", "=", "$tuc.telegram_user_id")
+            ->select([
+                "$tu.telegram_id as tele_id",
+                DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
+                "$tu.user_name as nick_name",
+                DB::raw("to_timestamp($tuc.accession_date) as accession_date"),
+                DB::raw("to_timestamp($tuc.exit_date) as exit_date"),
+                DB::raw("COUNT(distinct($tm.message_id)) as c_messages"),
+                DB::raw("COUNT(distinct(gmr.id)) as c_put_reactions"),
+                DB::raw("COUNT(distinct(pmr.id)) as c_got_reactions"),
+                DB::raw("SUM(coalesce($tm.utility,0)) as utility")
+            ]);
+        $builder->groupBy("$tu.telegram_id", "$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tuc.exit_date");
+        $builder->where(["$tuc.community_id" => $communityId]);
+
+        $builder = $filter->apply($builder);
+        return $builder;
+    }
+
+
 }
