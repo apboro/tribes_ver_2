@@ -12,11 +12,25 @@ class FinanceResource extends JsonResource
     {
         return [
             "amount" => $this->resource->amount,
-            "payable_type" => $this->resource->payable_type,
+            "type" => [
+                'value' => $this->resource->type,
+                'name' => $this->getTypeName($this->resource->type),
+            ],
             "buy_date" => $this->resource->buy_date,
             "status" => $this->resource->status,
             "tele_login" => $this->resource->tele_login,
             "first_name" => $this->resource->first_name,
         ];
+    }
+
+    protected function getTypeName(string $code): string
+    {
+        $list = [
+            "donate" => 'Донат',
+            "tariff" => 'Оплата подписки',
+            "course" => 'Медиа товар',
+            "payout" => 'Вывод средств',
+        ];
+        return $list[$code]?? 'Не определено';
     }
 }

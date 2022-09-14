@@ -32,9 +32,9 @@ class TeleMessagesFilter extends QueryAPIFilter
     {
         $list = [
             'message_date' => 'message_date',
-            'message' => 'text',
-            'author_name' => 'name',
-            'author_nick' => 'nick_name',
+            'text' => 'text',
+            'name' => 'name',
+            'nick_name' => 'nick_name',
             'answers' => 'answers',
             'utility' => 'utility',
             'count_reactions' => 'count_reactions'

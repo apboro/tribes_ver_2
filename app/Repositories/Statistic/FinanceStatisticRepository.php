@@ -4,6 +4,7 @@ namespace App\Repositories\Statistic;
 
 use App\Filters\API\FinanceChartFilter;
 use App\Filters\API\FinanceFilter;
+use App\Helper\ArrayHelper;
 use App\Models\Payment;
 use App\Repositories\Statistic\DTO\ChartData;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Log;
 class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
 {
 
-    public function getPaymentsCharts(int $communityId, FinanceChartFilter $filter, $type): ChartData
+    public function getPaymentsCharts(int $communityId, FinanceChartFilter $filter, string $type): ChartData
     {
         $filterData = $filter->filters();
         Log::debug("FinanceStatisticRepository::getBuilderForFinance", [
@@ -64,6 +65,16 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $chart = new ChartData();
         $chart->initChart($result);
 
+        $chart->addAdditionParam($type, array_sum(ArrayHelper::getColumn($result, 'balance')));
+
+        $totalAmount = DB::table($p)
+            ->select(DB::raw("SUM(amount) as s"))
+            ->where('community_id',"=",$communityId)
+            ->where('status',"=",'CONFIRMED')
+            ->where('type','!=','payout')
+            ->value('s');
+        $chart->addAdditionParam('total_amount', $totalAmount);
+
         return $chart;
     }
 
@@ -76,7 +87,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
             ->join($tu, "$p.user_id", "=", "$tu.id")
             ->select([
                 "$p.amount",
-                "$p.payable_type",
+                "$p.type",
                 DB::raw("$p.created_at as buy_date"),
                 "$p.status",
                 "$tu.user_name as tele_login",

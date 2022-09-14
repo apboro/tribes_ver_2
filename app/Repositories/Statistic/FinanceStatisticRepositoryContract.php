@@ -12,5 +12,5 @@ interface FinanceStatisticRepositoryContract
 {
     public function getPaymentsList(int $communityId, FinanceFilter $filters): LengthAwarePaginator;
 
-    public function getPaymentsCharts(int $communityId, FinanceChartFilter $filters, $type): ChartData;
+    public function getPaymentsCharts(int $communityId, FinanceChartFilter $filters,string $type): ChartData;
 }
