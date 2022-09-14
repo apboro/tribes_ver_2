@@ -97,10 +97,6 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
         this.countJoinUsersNode.style.color = this.chartDatasets[0].borderColor;
     }
 
-    updateLabels() {
-        this.fillLabels();
-    }
-
     toggleChartVisibility(name) {
         if (name == 'exit_users') {
             this.isExitUsersHidden = !this.isExitUsersHidden;

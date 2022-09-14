@@ -51,8 +51,11 @@
                             Всего сообщений
                         </span>
                         
-                        <span class="chart-analytics-community__value">
-                            2.36K
+                        <span
+                            id="count_all_message"
+                            class="chart-analytics-community__value"
+                        >
+                            0
                         </span>
                     </div>
                     

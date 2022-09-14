@@ -166,7 +166,9 @@ export class BaseAnalyticsPage {
         }
     }
 
-    updateLabels() {}
+    updateLabels() {
+        this.fillLabels();
+    }
 
     async updateTable() {
         await this.loadTableData();

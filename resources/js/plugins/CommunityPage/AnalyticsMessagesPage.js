@@ -31,6 +31,7 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
         this.sortNameDefault = 'message_date';
         this.sortEvent = 'sort: messages';
 
+        this.countAllMessageNode = this.container.querySelector('#count_all_message');
         this.countNewMessageNode = this.container.querySelector('#count_new_message');
         this.countNewUtilityNode = this.container.querySelector('#count_new_utility');
 
@@ -87,6 +88,8 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
     }
 
     fillLabels() {
+        this.countAllMessageNode.textContent = numberFormatting(this.countAllMessage);
+
         this.countNewMessageNode.textContent = `+${ numberFormatting(this.countNewMessage) }`;
         this.countNewMessageNode.style.color = this.chartDatasets[1].borderColor;
 
@@ -124,6 +127,10 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
                 hidden: this.isMessageHidden,
             }
         ]
+    }
+
+    get countAllMessage() {
+        return this.data.meta.count_all_message;
     }
 
     get countNewMessage() {
