@@ -124,6 +124,9 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                 Route::get('{community}', 'CommunityController@statistic')->where(['community' => '[0-9]+'])->name('community.view');
                 // Statistic
                 Route::get('/{community}/statistic', 'CommunityController@statistic')->name('community.statistic');
+                Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
+                Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
+                Route::get('/{community}/statistic/payments', 'CommunityController@statisticPayments')->name('community.statistic.payment');
 
                 // Donate
                 Route::get('/{community}/donate/list', 'DonateController@list')->name('community.donate.list');
