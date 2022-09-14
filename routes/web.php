@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\API\TeleDialogStatisticController;
+use App\Http\Controllers\API\TeleMessageStatisticController;
 use App\Http\Controllers\DonateController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestBotController;
@@ -288,6 +290,10 @@ Route::get('/ad_accept', function () {
 
 Route::get('/agency_contract', function () {
     return view('common.agency_contract.index');
+})->name('agency_contract.index');
+
+Route::get('/confirm_subscription', function () {
+    return view('common.tariff.confirm-subscription');
 })->name('agency_contract.index');
 
 

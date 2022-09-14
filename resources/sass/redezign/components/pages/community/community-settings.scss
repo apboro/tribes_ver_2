@@ -21,17 +21,14 @@
 
     &__change-tariff {
         display: grid;
-<<<<<<< HEAD
-        grid-template-columns: 300px 600px;
-=======
         grid-template-columns: 1fr;
->>>>>>> origin/2022-09-06-oleg-TBS-382
         align-items: flex-end;
         gap: 20px 40px;
         margin-top: 30px;
 
         @media (min-width: $md) {
-            grid-template-columns: 300px 400px;
+            //grid-template-columns: 300px 400px;
+            grid-template-columns: 300px 600px;
         }
     }
 
@@ -73,11 +70,8 @@
 
     &__input-group {
         display: grid;
-<<<<<<< HEAD
-        grid-template-columns: 1fr 1fr 1fr;
-=======
+        // grid-template-columns: 1fr 1fr 1fr;
         grid-template-columns: 45% 55%;
->>>>>>> origin/2022-09-06-oleg-TBS-382
 
         div:first-child input {
             border-right: none;

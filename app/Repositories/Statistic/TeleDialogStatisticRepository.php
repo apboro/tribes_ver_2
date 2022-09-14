@@ -5,6 +5,7 @@ namespace App\Repositories\Statistic;
 use App\Exceptions\StatisticException;
 use App\Filters\API\MembersChartFilter;
 use App\Filters\API\MembersFilter;
+use App\Helper\ArrayHelper;
 use App\Repositories\Statistic\DTO\ChartData;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -30,11 +31,12 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 "$tu.telegram_id as tele_id",
                 DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
                 "$tu.user_name as nick_name",
-                "$tuc.accession_date as accession_date",
-                "$tuc.exit_date as exit_date",
+                DB::raw("to_timestamp($tuc.accession_date) as accession_date"),
+                DB::raw("to_timestamp($tuc.exit_date) as exit_date"),
                 DB::raw("COUNT(distinct($tm.message_id)) as c_messages"),
                 DB::raw("COUNT(distinct(gmr.id)) as c_put_reactions"),
                 DB::raw("COUNT(distinct(pmr.id)) as c_got_reactions"),
+                DB::raw("SUM(coalesce($tm.utility,0)) as utility")
             ]);
         $builder->groupBy("$tu.telegram_id","$tu.first_name","$tu.last_name","$tu.user_name","$tuc.accession_date","$tuc.exit_date");
         $builder->where(["$tuc.community_id" => $communityId]);
@@ -46,12 +48,13 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $builder = $filter->apply($builder);
 
         $perPage = $filterData['per-page'] ?? 15;
-        $page = $filterData['page'] ?? 15;
+        $page = $filterData['page'] ?? 1;
+
         return new LengthAwarePaginator(
-            $builder->offset($page)->limit($perPage)->get(),
-            $builder->count(),
+            $builder->offset(($page-1)*$perPage)->limit($perPage)->get(),
+            $builder->getCountForPagination(['tele_id']),
             $perPage,
-            $filterData['page'] ?? null
+            $page
         );
     }
 
@@ -95,6 +98,14 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $result = $builder->get()->slice(0, -1);
         $chart = new ChartData();
         $chart->initChart($result);
+        $chart->addAdditionParam('count_join_users', array_sum(ArrayHelper::getColumn($result, 'users')));
+        $allMembers = DB::table($tuc)
+            ->select(DB::raw("COUNT(telegram_user_id) as c"))
+            ->where('community_id',"=",$communityId)
+            ->where('role',"=",'member')
+            ->whereNull('exit_date')
+        ->value('c');
+        $chart->addAdditionParam('all_users', $allMembers);
         return $chart;
     }
 
@@ -135,6 +146,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $result = $builder->get()->slice(0, -1);
         $chart = new ChartData();
         $chart->initChart($result);
+        $chart->addAdditionParam('count_exit_users', array_sum(ArrayHelper::getColumn($result, 'users')));
         return $chart;
     }
 }

@@ -30,4 +30,9 @@ class TelegramConnection extends Model
     {
         return $this->hasMany(TelegramMessage::class, 'group_chat_id', 'chat_id');
     }
+
+    function users()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }

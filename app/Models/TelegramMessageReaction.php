@@ -15,7 +15,7 @@ class TelegramMessageReaction extends Model
 
     function message()
     {
-        return $this->belongsTo(TelegramMessage::class, 'message_id', 'message_id');
+        return TelegramMessage::where('group_chat_id', $this->group_chat_id)->where('message_id', $this->message_id);
     }
 
     function chat()

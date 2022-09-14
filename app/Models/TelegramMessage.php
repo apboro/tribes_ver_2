@@ -15,7 +15,7 @@ class TelegramMessage extends Model
 
     function telegramConnection()
     {
-        return $this->belongsTo(TelegramConnection::class, 'group_chat_id');
+        return $this->belongsTo(TelegramConnection::class, 'group_chat_id', 'chat_id');
     }
 
     function telegtamUser()

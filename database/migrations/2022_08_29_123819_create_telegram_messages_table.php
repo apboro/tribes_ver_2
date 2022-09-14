@@ -13,19 +13,22 @@ class CreateTelegramMessagesTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('telegram_messages');
         Schema::create('telegram_messages', function (Blueprint $table) {
             $table->id();
             $table->string('group_chat_id')->nullable();
             $table->unsignedBigInteger('post_id')->nullable();
             $table->unsignedBigInteger('telegram_user_id')->nullable();
-            $table->bigInteger('message_id')->unique()->nullable();
+            $table->bigInteger('message_id');
             $table->bigInteger('comment_chat_id')->nullable();
             $table->text('text')->nullable();
-            $table->string('chat_type')->nullable();
+            $table->string('chat_type');
             $table->bigInteger('parrent_message_id')->nullable();
+            $table->bigInteger('answers')->default(0);
+            $table->bigInteger('utility')->default(0);
             $table->integer('datetime_record_reaction')->nullable();
             $table->boolean('flag_observation')->default(true);
-            $table->bigInteger('message_date')->nullable();
+            $table->bigInteger('message_date');
             $table->timestamps();
 
             $table->foreign('group_chat_id')->references('chat_id')->on('telegram_connections')->onDelete('cascade');

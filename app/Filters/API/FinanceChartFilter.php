@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
-class FinanceFilter extends QueryAPIFilter
+class FinanceChartFilter extends QueryAPIFilter
 {
     const DAY = 'day';
     const WEEK = 'week';
@@ -40,6 +40,11 @@ class FinanceFilter extends QueryAPIFilter
             'update_date' => 'payments.updated_at',
         ];
         return $list[$name] ?? $list['create_date'];
+    }
+
+    public function sort(array $data)
+    {
+        return $this->builder;
     }
 
     public function period($value)
