@@ -32,7 +32,7 @@ class TelegramMessageResource extends JsonResource
             "answers" => $this->resource->answers,
             "utility" => $this->resource->utility,
             "count_reactions" => $this->resource->count_reactions,
-            "message_date" => date("d-m-Y H:s", $this->resource->message_date),
+            "message_date" => $this->resource->message_date,
             "reactions" => (new TelegramMessageReactionsResours($reactions))
         ];
     }

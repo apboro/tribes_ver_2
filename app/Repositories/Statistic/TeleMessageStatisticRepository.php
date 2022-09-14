@@ -46,7 +46,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
                 "$tm.message_id",
                 "$tm.group_chat_id",
                 "$tm.text",
-                "$tm.message_date",
+                DB::raw("to_timestamp($tm.message_date) as message_date"),
                 "$tm.answers",
                 "$tm.utility",
                 "$tu.user_name as nick_name",
@@ -63,7 +63,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
                 "$tm.utility",
                 "$tu.first_name",
                 "$tu.last_name",
-                "$tu.user_name"
+                "$tu.user_name",
             );
 
         $filterData = $filter->filters();
@@ -137,7 +137,17 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
         $chart = new ChartData();
         $chart->initChart($result);
         $chart->addAdditionParam('count_new_message', array_sum(ArrayHelper::getColumn($result, 'messages')));
-
+        $allMessages = DB::table($tm)
+            ->select(DB::raw("COUNT($tm.message_id) as c"))
+            ->join('telegram_connections',function (JoinClause $join) use ($tm) {
+                $join->on("$tm.group_chat_id", '=', 'telegram_connections.chat_id')
+                    ->on("$tm.group_chat_id", '=','telegram_connections.comment_chat_id','OR');
+            })
+            ->join('communities','communities.connection_id',"=","telegram_connections.id")
+            ->where('communities.id',"=",$communityId)
+            ->value('c');
+        //dd($allMessages->toSql());
+        $chart->addAdditionParam('count_all_message', $allMessages);
         return $chart;
     }
 
