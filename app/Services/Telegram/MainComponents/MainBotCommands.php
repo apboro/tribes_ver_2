@@ -767,11 +767,15 @@ class MainBotCommands
 
     private function createAndSaveInviteLink($telegramConnection)
     {
-        $invite = $this->bot->getExtentionApi()->createInviteLink($telegramConnection->chat_id);
-        $telegramConnection->update([
-            'chat_invite_link' => $invite
-        ]);
-        return $invite;
+        try {
+            $invite = $this->bot->getExtentionApi()->createInviteLink($telegramConnection->chat_id);
+            $telegramConnection->update([
+                'chat_invite_link' => $invite
+            ]);
+            return $invite;
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
     }
 
     private function createMenu()
