@@ -23,7 +23,6 @@
                         <option value="week" selected>Неделя</option>
                         <option value="month">Месяц</option>
                         <option value="year">Год</option>
-                        <option value="all_time">За все время</option>
                     </select>
                 </div>
             </div>

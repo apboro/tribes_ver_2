@@ -1,3 +1,4 @@
+import { numberFormatting } from "../../core/functions";
 import { BaseAnalyticsPage } from "./BaseAnalyticsPage";
 
 export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
@@ -8,8 +9,8 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.headerItems = [
             { text: 'Имя подписчика', sortName: 'first_name' },
             { text: 'Никнейм', sortName: 'tele_login' },
-            { text: 'Название транзакций', sortName: 'status' },
-            { text: 'Тип транзакции', sortName: 'payable_type' },
+            { text: 'Название транзакций', sortName: false },
+            { text: 'Тип транзакции', sortName: false },
             { text: 'Дата', sortName: 'buy_date' },
             { text: 'Сумма', sortName: 'amount' }
         ];
@@ -17,7 +18,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
             { type: 'text', key: 'first_name' },
             { type: 'text', key: 'tele_login' },
             { type: 'text', key: 'status' },
-            { type: 'text', key: 'payable_type' },
+            { type: 'object', key: 'type', value: 'name' },
             { type: 'date', key: 'buy_date' },
             { type: 'text', key: 'amount' },
         ];
@@ -28,6 +29,8 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.sortNameDefault = 'buy_date';
         this.sortEvent = 'sort: payments';
 
+        this.countTotalAmountNode = this.container.querySelector('#count_total_amount');
+        this.countAllNode = this.container.querySelector('#count_all');
         this.countDonationsNode = this.container.querySelector('#count_donations');
         this.countDonationsValueNode = this.countDonationsNode.querySelector('#count_donations_value');
         this.countTariffsNode = this.container.querySelector('#count_tariffs');
@@ -88,19 +91,17 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
     }
 
     fillLabels() {
+        this.countTotalAmountNode.textContent = numberFormatting(this.countTotalAmount);
+        this.countAllNode.textContent = numberFormatting(this.countAll);
+
+        this.countDonationsValueNode.textContent = numberFormatting(this.countDonations);
         this.countDonationsNode.style.color = this.chartDatasets[0].borderColor;
-        //this.countDonationsValueNode = this.countDonationsNode.querySelector('#count_donations_value');
+
+        this.countTariffsValueNode.textContent = numberFormatting(this.countTariffs);
         this.countTariffsNode.style.color = this.chartDatasets[1].borderColor;
-        //this.countTariffsValueNode = this.countTariffsNode.querySelector('#count_tariffs_value');
+
+        this.countCoursesValueNode.textContent = numberFormatting(this.countCourses);
         this.countCoursesNode.style.color = this.chartDatasets[2].borderColor;
-        //this.countCoursesValueNode = this.countCoursesNode.querySelector('#count_courses_value');
-
-
-        // this.countNewMessageNode.textContent = `+${ numberFormatting(this.countNewMessage) }`;
-        // this.countNewMessageNode.style.color = this.chartDatasets[1].borderColor;
-
-        // this.countNewUtilityNode.textContent = `+${ numberFormatting(this.countNewUtility) }`;
-        // this.countNewUtilityNode.style.color = this.chartDatasets[0].borderColor;
     }
 
     toggleChartVisibility(name) {
@@ -144,5 +145,25 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
                 hidden: this.isCoursesHidden,
             }
         ]
+    }
+
+    get countAll() {
+        return this.data.meta.all;
+    }
+
+    get countTotalAmount() {
+        return this.data.meta.total_amount;
+    }
+
+    get countDonations() {
+        return this.data.meta.donate;
+    }
+
+    get countTariffs() {
+        return this.data.meta.tariff;
+    }
+
+    get countCourses() {
+        return this.data.meta.course;
     }
 }

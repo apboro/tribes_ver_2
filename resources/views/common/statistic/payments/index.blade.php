@@ -38,7 +38,6 @@
                         <option value="week" selected>Неделя</option>
                         <option value="month">Месяц</option>
                         <option value="year">Год</option>
-                        <option value="all_time">За все время</option>
                     </select>
                 </div>
             </div>
@@ -94,7 +93,7 @@
                 <div class="chart-analytics-community__footer">
                     <div class="chart-analytics-community__label">
                         <span class="chart-analytics-community__value">
-                            <span class="chart-analytics-community__currency">₽</span>150.33K
+                            <span class="chart-analytics-community__currency">₽</span><span id="count_total_amount">0</span>
                         </span>
                         
                         <span class="chart-analytics-community__text">
@@ -104,7 +103,7 @@
                     
                     <div class="chart-analytics-community__label chart-analytics-community__label--right">
                         <span class="chart-analytics-community__value">
-                            <span class="chart-analytics-community__currency">₽</span>1.15M
+                            <span class="chart-analytics-community__currency">₽</span><span id="count_all">0</span>
                         </span>
                         
                         <span class="chart-analytics-community__text">

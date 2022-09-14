@@ -144,9 +144,17 @@ export class Table {
                             }).init();
                         });
                     }
+                } else if (itemFormat.type === 'object') {
+                    const obj = data[itemFormat.key];
+                    const key = itemFormat.value
+
+                    new CreateNode({
+                        parent: rowItemWrapper,
+                        class: 'table__item table__item--changable',
+                        text: obj[key]
+                    }).init();
                 }
             }
-
         })
     }
 
