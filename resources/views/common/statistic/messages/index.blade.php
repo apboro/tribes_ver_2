@@ -38,7 +38,6 @@
                         <option value="week" selected>Неделя</option>
                         <option value="month">Месяц</option>
                         <option value="year">Год</option>
-                        <option value="all_time">За все время</option>
                     </select>
                 </div>
             </div>
@@ -61,7 +60,10 @@
                         <span class="chart-analytics-community__text">
                             За период
                         </span>
-                        <span id="count_new_message" class="chart-analytics-community__value">
+                        <span
+                            id="count_new_message"
+                            class="chart-analytics-community__value"
+                        >
                             0
                         </span>
                     </button>
@@ -71,7 +73,10 @@
                             Полезных
                         </span>
                         
-                        <span id="count_new_utility" class="chart-analytics-community__value">
+                        <span
+                            id="count_new_utility"
+                            class="chart-analytics-community__value"
+                        >
                             0
                         </span>
                     </button>

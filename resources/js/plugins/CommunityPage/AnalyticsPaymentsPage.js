@@ -3,31 +3,30 @@ import { BaseAnalyticsPage } from "./BaseAnalyticsPage";
 export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
     constructor(parent) {
         super(parent);
-        this.container = parent.container.querySelector('[data-tab="analyticsMessagesPage"]');
+        this.container = parent.container.querySelector('[data-tab="analyticsPaymentsPage"]');
         // Настройки таблицы
-        /* this.headerItems = [
-            { text: 'Имя подписчика', sortName: 'name' },
-            { text: 'Никнейм', sortName: 'nick_name' },
-            { text: 'Дата', sortName: 'accession_date' },
-            { text: 'Сообщения', sortName: 'c_messages' },
-            { text: 'Реакции (оставил)', sortName: 'c_put_reactions' },
-            { text: 'Реакции (получил)', sortName: 'c_got_reactions' },
-            { text: 'Телеграм (id)', sortName: 'tele_id' },
+        this.headerItems = [
+            { text: 'Имя подписчика', sortName: 'first_name' },
+            { text: 'Никнейм', sortName: 'tele_login' },
+            { text: 'Название транзакций', sortName: 'status' },
+            { text: 'Тип транзакции', sortName: 'payable_type' },
+            { text: 'Дата', sortName: 'buy_date' },
+            { text: 'Сумма', sortName: 'amount' }
         ];
         this.rowItemsFormat = [
-            { type: 'text', key: 'name' },
-            { type: 'text', key: 'nick_name' },
-            { type: 'date', key: 'accession_date' },
-            { type: 'text', key: 'c_messages' },
-            { type: 'text', key: 'c_put_reactions' },
-            { type: 'text', key: 'c_got_reactions' },
-            { type: 'text', key: 'tele_id' },
-        ]; */
+            { type: 'text', key: 'first_name' },
+            { type: 'text', key: 'tele_login' },
+            { type: 'text', key: 'status' },
+            { type: 'text', key: 'payable_type' },
+            { type: 'date', key: 'buy_date' },
+            { type: 'text', key: 'amount' },
+        ];
         // Настройки пагинации
-        this.paginationEvent = 'pagination: messages';
+        this.paginationEvent = 'pagination: payments';
         // Настройки соритровки
-        this.sortName = 'accession_date';
-        this.sortEvent = 'sort: messages';
+        this.sortName = 'buy_date';
+        this.sortNameDefault = 'buy_date';
+        this.sortEvent = 'sort: payments';
     }
 
     async loadData() {

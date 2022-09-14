@@ -79,7 +79,7 @@
                 </div>
                 
                 <div class="chart-analytics-community__chart">
-                    <canvas id="chart"height="400"></canvas>
+                    <canvas id="chart" height="400"></canvas>
                 </div>
                 
                 <div class="chart-analytics-community__footer">

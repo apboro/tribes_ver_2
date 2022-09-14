@@ -38,7 +38,6 @@
                         <option value="week" selected>Неделя</option>
                         <option value="month">Месяц</option>
                         <option value="year">Год</option>
-                        <option value="all_time">За все время</option>
                     </select>
                 </div>
             </div>
@@ -62,7 +61,10 @@
                             Покинули
                         </span>
                         
-                        <span id="count_exit_users" class="chart-analytics-community__value">
+                        <span
+                            id="count_exit_users"
+                            class="chart-analytics-community__value"
+                        >
                             0
                         </span>
                     </button>
@@ -72,7 +74,10 @@
                             Вступили
                         </span>
                         
-                        <span id="count_join_users" class="chart-analytics-community__value">
+                        <span
+                            id="count_join_users"
+                            class="chart-analytics-community__value"
+                        >
                             0
                         </span>
                     </button>

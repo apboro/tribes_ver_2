@@ -28,6 +28,7 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
         this.paginationEvent = 'pagination: messages';
         // Настройки соритровки
         this.sortName = 'message_date';
+        this.sortNameDefault = 'message_date';
         this.sortEvent = 'sort: messages';
 
         this.countNewMessageNode = this.container.querySelector('#count_new_message');

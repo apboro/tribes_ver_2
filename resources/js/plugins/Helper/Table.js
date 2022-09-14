@@ -208,7 +208,6 @@ export class Table {
 
     update(data) {
         this.data = data;
-        console.log(this.data);
         this.container.innerHTML = '';
         this.createTableHeader();
         this.createTableBody();

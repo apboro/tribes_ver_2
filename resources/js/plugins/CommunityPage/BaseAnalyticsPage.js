@@ -51,7 +51,6 @@ export class BaseAnalyticsPage {
         });
 
         Emitter.subscribe(this.table.sortEvent, async ({ name, rule }) => {
-            console.log(rule);
             this.sortName = name;
             this.sortRule = rule;
             if (rule == 'off') {

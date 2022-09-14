@@ -59,21 +59,43 @@ export class Pagination {
     }
 
     createItems(container) {
+        let placeholder = false;
         for (let page = 1; page <= this.pageCount; page += 1) {
-            const item = new CreateNode({
-                parent: container,
-                class: `pagination__control ${ this.isActive(page) }`
-            }).init();
-    
-            const itemBtn = new CreateNode({
-                parent: item,
-                tag: 'button',
-                class: 'pagination__page',
-                text: page
-            }).init();
-
-            itemBtn.onclick = () => this.onPageClick(page);
+            if (page == 1 || page == this.pageCount || page == this.data.current_page || page == this.data.current_page - 1 || page == this.data.current_page + 1) {
+                this.createItem(container, page);
+            } else if (page >= 2 && page < this.data.current_page - 1 && !placeholder) {
+                placeholder = true;
+                this.createPlaceholder(container);
+            } else if (page < this.pageCount - 1 && page > this.data.current_page + 1) {
+                
+            } else if (page == this.pageCount - 1) {
+                this.createPlaceholder(container);
+            }
         }
+    }
+
+    createItem(container, page) {
+        const item = new CreateNode({
+            parent: container,
+            class: `pagination__control ${ this.isActive(page) }`
+        }).init();
+
+        const itemBtn = new CreateNode({
+            parent: item,
+            tag: 'button',
+            class: 'pagination__page',
+            text: page
+        }).init();
+
+        itemBtn.onclick = () => this.onPageClick(page);
+    }
+
+    createPlaceholder(container) {
+        const item = new CreateNode({
+            parent: container,
+            class: `pagination__control`,
+            text: '...'
+        }).init();
     }
     
     update(data) {
