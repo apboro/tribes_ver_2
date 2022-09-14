@@ -62,7 +62,7 @@ class CommunityController extends Controller
 
     public function statisticPayments(Community $community)
     {
-        return view('common.statistic.payments.index')
+        return view('common.statistic.payment.index')
             ->withCommunity($community);
     }
 

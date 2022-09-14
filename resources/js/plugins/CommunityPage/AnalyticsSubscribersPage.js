@@ -31,6 +31,7 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
         this.sortNameDefault = 'accession_date';
         this.sortEvent = 'sort: subscribers';
 
+        this.countAllUsersNode = this.container.querySelector('#count_all_users');
         this.countExitUsersNode = this.container.querySelector('#count_exit_users');
         this.countJoinUsersNode = this.container.querySelector('#count_join_users');
 
@@ -87,11 +88,17 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
     }
 
     fillLabels() {
+        this.countAllUsersNode.textContent = numberFormatting(this.countAllUsers);
+
         this.countExitUsersNode.textContent = `-${ numberFormatting(this.countExitUsers) }`;
         this.countExitUsersNode.style.color = this.chartDatasets[1].borderColor;
 
         this.countJoinUsersNode.textContent = `+${ numberFormatting(this.countJoinUsers) }`;
         this.countJoinUsersNode.style.color = this.chartDatasets[0].borderColor;
+    }
+
+    updateLabels() {
+        this.fillLabels();
     }
 
     toggleChartVisibility(name) {
@@ -124,6 +131,10 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
                 hidden: this.isExitUsersHidden,
             }
         ]
+    }
+
+    get countAllUsers() {
+        return this.data.meta.all_users;
     }
 
     get countExitUsers() {

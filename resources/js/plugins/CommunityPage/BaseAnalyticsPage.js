@@ -166,6 +166,8 @@ export class BaseAnalyticsPage {
         }
     }
 
+    updateLabels() {}
+
     async updateTable() {
         await this.loadTableData();
         //if (this.dataTable) {
@@ -178,6 +180,7 @@ export class BaseAnalyticsPage {
         this.filterPeriodValue = event.target.value;
         this.resetPagination();
         await this.updateChart();
+        this.updateLabels();
         await this.updateTable();
     }
 

@@ -26,7 +26,7 @@
                 >
                     <option value="{{ route('community.statistic.subscribers', $community) }}">Подписчики</option>
                     <option value="{{ route('community.statistic.messages', $community) }}">Сообщения</option>
-                    <option value="{{ route('community.statistic.payments', $community) }}" selected>Финансы</option>
+                    <option value="{{ route('community.statistic.payment', $community) }}" selected>Финансы</option>
                 </select>
                 
                 <div class="filter-analytics-community analytics-community__filter">

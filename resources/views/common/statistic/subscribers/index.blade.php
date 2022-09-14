@@ -26,7 +26,7 @@
                 >
                     <option value="{{ route('community.statistic.subscribers', $community) }}" selected>Подписчики</option>
                     <option value="{{ route('community.statistic.messages', $community) }}">Сообщения</option>
-                    <option value="{{ route('community.statistic.payments', $community) }}">Финансы</option>
+                    <option value="{{ route('community.statistic.payment', $community) }}">Финансы</option>
                 </select>
                 
                 <div class="filter-analytics-community analytics-community__filter">
@@ -51,8 +51,8 @@
                             Всего подписчиков
                         </span>
                         
-                        <span class="chart-analytics-community__value">
-                            2.36K
+                        <span id="count_all_users" class="chart-analytics-community__value">
+                            0
                         </span>
                     </div>
                     

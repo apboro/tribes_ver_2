@@ -161,7 +161,7 @@
                         </div>
                         
                         <a
-                            href="{{ route('community.statistic.payments', $community) }}"
+                            href="{{ route('community.statistic.payment', $community) }}"
                             class="button-filled button-filled--primary card-analytics-community__link"
                         >
                             Подробнее
