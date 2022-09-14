@@ -39,16 +39,18 @@ export class Table {
                 text: headerItem.text
             }).init();
             
-            const sortBtn = new CreateNode({
-                parent: itemWrapper,
-                tag: 'button',
-                class: 'table__sort-btn',
-            }).init();
-            
-            sortBtn.innerHTML = this.getSortIcon(headerItem.sortName);
-            headerItem.node = sortBtn;
-
-            sortBtn.onclick = () => this.sort(sortBtn, headerItem.sortName);
+            if (headerItem.sortName) {
+                const sortBtn = new CreateNode({
+                    parent: itemWrapper,
+                    tag: 'button',
+                    class: 'table__sort-btn',
+                }).init();
+                
+                sortBtn.innerHTML = this.getSortIcon(headerItem.sortName);
+                headerItem.node = sortBtn;
+    
+                sortBtn.onclick = () => this.sort(sortBtn, headerItem.sortName);
+            }
         });
     }
 

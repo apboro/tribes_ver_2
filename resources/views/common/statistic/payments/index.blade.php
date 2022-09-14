@@ -47,33 +47,42 @@
         <div class="analytics-community__tab">
             <div class="chart-analytics-community">
                 <div class="chart-analytics-community__header">
-                    <button class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right">
-                        <span class="chart-analytics-community__text" style="color: rgb(54, 52, 64);">
+                    <button
+                        class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                        onclick="CommunityPage.analyticsPaymentsPage.toggleChartVisibility('donations')"
+                    >
+                        <span class="chart-analytics-community__text">
                             Донаты
                         </span>
                         
-                        <span class="chart-analytics-community__value" style="color: rgb(54, 52, 64);">
-                            <span class="chart-analytics-community__currency">₽</span>1.32K
+                        <span class="chart-analytics-community__value" id="count_donations">
+                            <span class="chart-analytics-community__currency">₽</span><span id="count_donations_value">0</span>
                         </span>
                     </button>
                     
-                    <button class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right">
-                        <span class="chart-analytics-community__text" style="color: rgb(226, 64, 65);">
+                    <button
+                        class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                        onclick="CommunityPage.analyticsPaymentsPage.toggleChartVisibility('tariffs')"    
+                    >
+                        <span class="chart-analytics-community__text">
                             Подписки
                         </span>
                         
-                        <span class="chart-analytics-community__value" style="color: rgb(226, 64, 65);">
-                            <span class="chart-analytics-community__currency">₽</span>219
+                        <span class="chart-analytics-community__value" id="count_tariffs">
+                            <span class="chart-analytics-community__currency">₽</span><span id="count_tariffs_value">0</span>
                         </span>
                     </button>
                     
-                    <button class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right">
-                        <span class="chart-analytics-community__text" style="color: rgb(255, 159, 67);">
+                    <button
+                        class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                        onclick="CommunityPage.analyticsPaymentsPage.toggleChartVisibility('courses')"    
+                    >
+                        <span class="chart-analytics-community__text">
                             Медиатовары
                         </span>
                         
-                        <span class="chart-analytics-community__value" style="color: rgb(255, 159, 67);">
-                            <span class="chart-analytics-community__currency">₽</span>2.32K
+                        <span class="chart-analytics-community__value" id="count_courses">
+                            <span class="chart-analytics-community__currency">₽</span><span id="count_courses_value">0</span>
                         </span>
                     </button>
                 </div>

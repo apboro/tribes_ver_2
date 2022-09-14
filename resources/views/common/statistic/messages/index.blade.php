@@ -56,7 +56,10 @@
                         </span>
                     </div>
                     
-                    <button class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right">
+                    <button
+                        class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                        onclick="CommunityPage.analyticsMessagesPage.toggleChartVisibility('messages')"
+                    >
                         <span class="chart-analytics-community__text">
                             За период
                         </span>
@@ -68,7 +71,10 @@
                         </span>
                     </button>
                     
-                    <button class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right">
+                    <button
+                        class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                        onclick="CommunityPage.analyticsMessagesPage.toggleChartVisibility('utility')"
+                    >
                         <span class="chart-analytics-community__text">
                             Полезных
                         </span>

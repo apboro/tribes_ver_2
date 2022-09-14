@@ -185,6 +185,8 @@ export class BaseAnalyticsPage {
         this.activePage = 1;
     }
 
+    toggleChartVisibility() {}
+
     get marks() {
         if (this.filterPeriodValue === 'week') {
             return this.data.meta.marks.map((mark) => timeFormatting({

@@ -56,7 +56,10 @@
                         </span>
                     </div>
                     
-                    <button class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right">
+                    <button
+                        class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                        onclick="CommunityPage.analyticsSubscribersPage.toggleChartVisibility('exit_users')"
+                    >
                         <span class="chart-analytics-community__text">
                             Покинули
                         </span>
@@ -69,7 +72,10 @@
                         </span>
                     </button>
                     
-                    <button class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right">
+                    <button
+                        class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                        onclick="CommunityPage.analyticsSubscribersPage.toggleChartVisibility('users')"
+                    >
                         <span class="chart-analytics-community__text">
                             Вступили
                         </span>

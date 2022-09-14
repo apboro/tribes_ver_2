@@ -7,7 +7,7 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
         this.container = parent.container.querySelector('[data-tab="analyticsMessagesPage"]');
         // Настройки таблицы
         this.headerItems = [
-            { text: 'Сообщения/реакция', sortName: 'text' },
+            { text: 'Сообщения/реакция', sortName: false },
             { text: 'Имя автора', sortName: 'name' },
             { text: 'Никнейм', sortName: 'nick_name' },
             { text: 'Дата', sortName: 'message_date' },
@@ -33,6 +33,9 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
 
         this.countNewMessageNode = this.container.querySelector('#count_new_message');
         this.countNewUtilityNode = this.container.querySelector('#count_new_utility');
+
+        this.isMessageHidden = false;
+        this.isUtilityHidden = false;
     }
 
     async loadData() {
@@ -91,6 +94,15 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
         this.countNewUtilityNode.style.color = this.chartDatasets[0].borderColor;
     }
 
+    toggleChartVisibility(name) {
+        if (name == 'messages') {
+            this.isMessageHidden = !this.isMessageHidden;
+        } else if (name == 'utility') {
+            this.isUtilityHidden = !this.isUtilityHidden;
+        }
+        this.сhart.changeData(this.marks, this.chartDatasets);
+    }
+
     get utility() {
         return this.data.items.utility;
     }
@@ -104,12 +116,12 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
             {
                 data: this.utility,
                 borderColor: "#21C169",
-                hidden: false,
+                hidden: this.isUtilityHidden,
             },
             {
                 data: this.messages,
                 borderColor: "#30AAF0",
-                hidden: false,
+                hidden: this.isMessageHidden,
             }
         ]
     }

@@ -27,6 +27,17 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.sortName = 'buy_date';
         this.sortNameDefault = 'buy_date';
         this.sortEvent = 'sort: payments';
+
+        this.countDonationsNode = this.container.querySelector('#count_donations');
+        this.countDonationsValueNode = this.countDonationsNode.querySelector('#count_donations_value');
+        this.countTariffsNode = this.container.querySelector('#count_tariffs');
+        this.countTariffsValueNode = this.countTariffsNode.querySelector('#count_tariffs_value');
+        this.countCoursesNode = this.container.querySelector('#count_courses');
+        this.countCoursesValueNode = this.countCoursesNode.querySelector('#count_courses_value');
+
+        this.isDonationsHidden = false;
+        this.isTariffsHidden = false;
+        this.isCoursesHidden = false;
     }
 
     async loadData() {
@@ -76,6 +87,33 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         }
     }
 
+    fillLabels() {
+        this.countDonationsNode.style.color = this.chartDatasets[0].borderColor;
+        //this.countDonationsValueNode = this.countDonationsNode.querySelector('#count_donations_value');
+        this.countTariffsNode.style.color = this.chartDatasets[1].borderColor;
+        //this.countTariffsValueNode = this.countTariffsNode.querySelector('#count_tariffs_value');
+        this.countCoursesNode.style.color = this.chartDatasets[2].borderColor;
+        //this.countCoursesValueNode = this.countCoursesNode.querySelector('#count_courses_value');
+
+
+        // this.countNewMessageNode.textContent = `+${ numberFormatting(this.countNewMessage) }`;
+        // this.countNewMessageNode.style.color = this.chartDatasets[1].borderColor;
+
+        // this.countNewUtilityNode.textContent = `+${ numberFormatting(this.countNewUtility) }`;
+        // this.countNewUtilityNode.style.color = this.chartDatasets[0].borderColor;
+    }
+
+    toggleChartVisibility(name) {
+        if (name == 'donations') {
+            this.isDonationsHidden = !this.isDonationsHidden;
+        } else if (name == 'tariffs') {
+            this.isTariffsHidden = !this.isTariffsHidden;
+        } else if (name == 'courses') {
+            this.isCoursesHidden = !this.isCoursesHidden;
+        }
+        this.сhart.changeData(this.marks, this.chartDatasets);
+    }
+
     get donations() {
         return this.data.items.donate_balance;
     }
@@ -93,17 +131,17 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
             {
                 data: this.donations,
                 borderColor: "#363440",
-                hidden: false,
+                hidden: this.isDonationsHidden,
             },
             {
                 data: this.tariffs,
                 borderColor: "#E24041",
-                hidden: false,
+                hidden: this.isTariffsHidden,
             },
             {
                 data: this.courses,
                 borderColor: "#FF9F43",
-                hidden: false,
+                hidden: this.isCoursesHidden,
             }
         ]
     }

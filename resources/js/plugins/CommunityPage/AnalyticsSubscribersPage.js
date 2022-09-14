@@ -33,6 +33,9 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
 
         this.countExitUsersNode = this.container.querySelector('#count_exit_users');
         this.countJoinUsersNode = this.container.querySelector('#count_join_users');
+
+        this.isUsersHidden = false;
+        this.isExitUsersHidden = false;
     }
 
     async loadData() {
@@ -90,6 +93,15 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
         this.countJoinUsersNode.textContent = `+${ numberFormatting(this.countJoinUsers) }`;
         this.countJoinUsersNode.style.color = this.chartDatasets[0].borderColor;
     }
+
+    toggleChartVisibility(name) {
+        if (name == 'exit_users') {
+            this.isExitUsersHidden = !this.isExitUsersHidden;
+        } else if (name == 'users') {
+            this.isUsersHidden = !this.isUsersHidden;
+        }
+        this.сhart.changeData(this.marks, this.chartDatasets);
+    }
     
     get users() {
         return this.data.items.users;
@@ -104,12 +116,12 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
             {
                 data: this.users,
                 borderColor: "#21C169",
-                hidden: false,
+                hidden: this.isUsersHidden,
             },
             {
                 data: this.exitUsers,
                 borderColor: "#E24041",
-                hidden: false,
+                hidden: this.isExitUsersHidden,
             }
         ]
     }
