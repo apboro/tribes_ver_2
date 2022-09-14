@@ -80,6 +80,37 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
 
     public function getPaymentsList(int $communityId, FinanceFilter $filter): LengthAwarePaginator
     {
+        $builder = $this->queryPayments($communityId, $filter);
+
+        $filterData = $filter->filters();
+
+        Log::debug("FinanceStatisticRepository::getPaymentsList", [
+            'filter' => $filterData,
+        ]);
+        $perPage = $filterData['per-page'] ?? 15;
+        $page = $filterData['page'] ?? 0;
+
+        return new LengthAwarePaginator(
+            $builder->offset($page)->limit($perPage)->get(),
+            $builder->getCountForPagination(),
+            $perPage,
+            $filterData['page'] ?? null
+        );
+    }
+
+    public function getPaymentsListForFile(int $communityId, FinanceFilter $filter): Builder
+    {
+        return $this->queryPayments($communityId, $filter);
+    }
+
+    /**
+     * @param int $communityId
+     * @param FinanceFilter $filter
+     * @return \Illuminate\Database\Eloquent\Builder|Builder
+     * @throws Exception
+     */
+    protected function queryPayments(int $communityId, FinanceFilter $filter)
+    {
         $p = 'payments';
         $tu = 'telegram_users';
 
@@ -95,23 +126,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
             ]);
 
         $builder->where(["$p.community_id" => $communityId]);
-        $filterData = $filter->filters();
-
-        Log::debug("FinanceStatisticRepository::getPaymentsList", [
-            'filter' => $filterData,
-        ]);
-
         $builder = $filter->apply($builder);
-
-        $perPage = $filterData['per-page'] ?? 15;
-        $page = $filterData['page'] ?? 0;
-
-        return new LengthAwarePaginator(
-            $builder->offset($page)->limit($perPage)->get(),
-            $builder->getCountForPagination(),
-            $perPage,
-            $filterData['page'] ?? null
-        );
+        return $builder;
     }
-
 }
