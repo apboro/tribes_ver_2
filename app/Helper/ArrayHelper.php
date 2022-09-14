@@ -3,6 +3,7 @@
 namespace App\Helper;
 
 use ArrayAccess;
+use Illuminate\Support\Collection;
 use Traversable;
 use Exception;
 
@@ -519,7 +520,7 @@ class ArrayHelper
      * });
      * ```
      *
-     * @param array $array
+     * @param array|Collection $array
      * @param int|string|array|\Closure $name
      * @param bool $keepKeys whether to maintain the array keys. If false, the resulting array
      * will be re-indexed with integers.

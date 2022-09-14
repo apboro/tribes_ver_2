@@ -49,7 +49,7 @@
     </div>
 </div> -->
 
-<div class="">
+<div class="community-settings__tariff-preview">
     <label class="form-label-red">
             {{ __('base.preview') }}
     </label>

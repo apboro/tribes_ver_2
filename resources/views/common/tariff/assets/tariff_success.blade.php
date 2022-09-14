@@ -14,8 +14,7 @@
             name="success_description"
             rows="5"
             placeholder="{{__('form.message_text')}}"
-        >@if($community->tariff && $community->tariff->thanks_description){{$community->tariff->thanks_description}}@elseif(is_null($community->tariff->thanks_description))@endif
-        </textarea>
+        >@if($community->tariff && $community->tariff->thanks_description){{$community->tariff->thanks_description}}@elseif(is_null($community->tariff->thanks_description))@endif</textarea>
         
         <!-- <span
             class="badge bg-warning hide"

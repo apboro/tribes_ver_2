@@ -3,11 +3,11 @@
 @section('tab')
     <section class="community-tab" data-tab="tariffPage">
         <div class="community-tab__main-header">
-            <h2 class="">
+            <h2 class="community-tab__main-title">
                 {{ __('base.tariffs') }}
             </h2>
 
-            <div class="dropdown-red main-header__dropdown">
+            <div class="dropdown-red dropdown-red--left main-header__dropdown">
                 <button class="button-text button-text--primary button-text--only-icon dropdown-red__head" data-dropdown-btn onclick="Dropdown.toggle(this)">
                     <span
                         class="dropdown-red__name"
@@ -64,46 +64,17 @@
                 >
                     Неактивный
                 </option>
+                <option
+                    value="{{ route('community.tariff.list', $community) . '?isPersonal=true' }}"
+                    @if(request('active') == null && request('isPersonal') == true) selected @endif
+                >
+                    Персональный
+                </option>
             </select>
         </div>
-
-       
-            
-                
-                <!-- <div class="mt-1 mt-sm-0">
-                    <a
-                            href="{{ route('community.tariff.add', $community) }}"
-                            class="btn btn-success"
-                    >
-                        <i data-feather='plus' class="font-medium-1"></i>
-                        <span class="d-none d-lg-inline-block">
-                            {{ __('tariff.add_tariff') }}
-                        </span>
-                    </a>
-
-                    <a
-                            href="{{ route('community.tariff.publication', $community) }}"{{--сюда роут для публикации--}}
-                            class="btn btn-success ms-0 ms-sm-1 "
-                    >
-                        <i data-feather='plus' class="font-medium-1"></i>
-                        <span class="d-none d-lg-inline-block">
-                            {{ __('tariff.tariffs_publication') }}
-                        </span>
-                    </a>
-
-                    <a
-                        href="{{ route('community.tariff.settings', $community) }}"
-                        class="btn btn-outline-success ms-0 ms-sm-1"
-                    >
-                        <i data-feather='settings' class="font-medium-1"></i>
-                        <span class="d-none d-lg-inline-block">
-                            {{ __('tariff.setting_messages') }}
-                        </span>
-                    </a>
-                </div> -->
-            
         
         <!-- TARIFF LIST -->
+        @if(isset($tariffs[0]))
         <ul class="community-tariff__list">
             @forelse ($tariffs ?? [] as $tariff)
             <li class="community-tariff-card community-tariff__item">
@@ -167,24 +138,32 @@
                 </a>        
             </li>
             @empty
-                <!-- Empty tariffs -->
-                <div class="community-tariff__empty-wrapper">
-                    <p class="community-tariff__empty-text">
-                        @if(request()->has('active') && request()->get('active') == "false")
-                            {{ __('tariff.create_tariff_instruction_inactive') }}
-                        @else
-                            {{ __('tariff.create_tariff_instruction_active') }}
-                        @endif
-                    </p>
-
-                    <a
-                        href="{{ route('community.tariff.add', $community) }}"
-                        class="button-filled button-filled--primary community-tariff__empty-btn"
-                    >
-                        {{ __('tariff.add_tariff') }}
-                    </a>
-                </div>
+            
             @endforelse
         </ul>
+        @else
+        <!-- Empty tariffs -->
+        <div class="community-tariff__empty-wrapper">
+            @if(request()->has('active') && request()->get('active') == "false")
+                <p class="community-tariff__empty-text">
+                    Отсутствуют неактивные тарифы. 
+                </p>
+            @else
+                <p class="community-tariff__empty-text">
+                    Отсутствуют активные тарифы. 
+                </p>
+                <p class="community-tariff__empty-text">
+                    Добавьте активный тариф или измените статус неактивного тарифа
+                </p>
+            @endif
+
+            <a
+                href="{{ route('community.tariff.add', $community) }}"
+                class="button-filled button-filled--primary community-tariff__empty-btn"
+            >
+                {{ __('tariff.add_tariff') }}
+            </a>
+        </div>
+        @endif
     </section>
 @endsection

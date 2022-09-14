@@ -99,6 +99,13 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $chart = new ChartData();
         $chart->initChart($result);
         $chart->addAdditionParam('count_join_users', array_sum(ArrayHelper::getColumn($result, 'users')));
+        $allMembers = DB::table($tuc)
+            ->select(DB::raw("COUNT(telegram_user_id) as c"))
+            ->where('community_id',"=",$communityId)
+            ->where('role',"=",'member')
+            ->whereNull('exit_date')
+        ->value('c');
+        $chart->addAdditionParam('all_users', $allMembers);
         return $chart;
     }
 

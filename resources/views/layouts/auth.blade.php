@@ -18,6 +18,8 @@
     @yield("og")
 
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+
+    <script src="//code.jivo.ru/widget/Fp7nrxvh0u" async></script>
 </head>
 <!-- END: Head-->
 

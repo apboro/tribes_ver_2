@@ -4,18 +4,36 @@
         margin-top: 30px;
     }
 
+    &__form-item {
+        margin-top: $indent-3;
+    }
+
     &__buttons {
         display: flex;
-        column-gap: $indent-3;
+        flex-wrap: wrap;
+        gap: $indent-3;
         margin-top: 30px;
+
+        @media (min-width: $sm) {
+            margin-top: 60px;
+        }
     }
 
     &__change-tariff {
         display: grid;
+
+        //grid-template-columns: 1fr;
+
         grid-template-columns: 300px 600px;
+
         align-items: flex-end;
         gap: 20px 40px;
         margin-top: 30px;
+
+        @media (min-width: $md) {
+            //grid-template-columns: 300px 400px;
+            grid-template-columns: 300px 600px;
+        }
     }
 
     &__input-wrapper {
@@ -56,7 +74,11 @@
 
     &__input-group {
         display: grid;
+
+        //grid-template-columns: 45% 55%;
+
         grid-template-columns: 1fr 1fr 1fr;
+
 
         div:first-child input {
             border-right: none;
@@ -70,8 +92,30 @@
 
     &__tariff-public-settings {
         display: grid;
-        grid-template-columns: minmax(470px, 1fr) 1fr;
+        grid-template-columns: 1fr;
+
         column-gap: 30px;
+        
+        @media (min-width: $lg) {
+            grid-template-columns: minmax(470px, 1fr) 1fr;
+        }
+    }
+
+    &__tariff-preview {
+        margin-top: $indent-2;
+
+        @media (min-width: $lg) {
+            margin-top: 0;
+        }
+    }
+
+    &__tariff-public-controls {
+        margin-top: 30px;
+        text-align: center;
+
+        @media (min-width: $lg) {
+            text-align: left;
+        }
     }
 
     &.active {

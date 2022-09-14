@@ -193,9 +193,9 @@
             grid-template-columns: repeat(auto-fill, 300px);
         }
 
-        &--preview {
-            grid-template-columns: repeat(auto-fill, 49%);
-        }
+        // &--preview {
+        //     grid-template-columns: repeat(auto-fill, 49%);
+        // }
     }
 
     &__item {
