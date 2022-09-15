@@ -45,7 +45,10 @@ class TestBotController extends Controller
 
     public function index(Request $request)
     {
-        
+        $ty = TelegramUser::where('telegram_id', 7263762482)->first() ?? null;
+        // dd($ty->communities()->find(1));
+        if ($ty->communities()->find(1)) 
+            $ty->communities()->updateExistingPivot(1, ['exit_date' => time()]);
         // Канал для теста комментариев Chat  id = 1541725271  access_hash = 14492483521633917353
         // another id = 1510955178 or 666997162
         // another id = 1510955178, hash = 8077972812704298091

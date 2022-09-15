@@ -145,7 +145,7 @@ class Telegram extends Messenger
                 if ($variantForThisCommunity)
                     $ty->tariffVariant()->detach($variantForThisCommunity->id);
 
-                if ($ty->communities()->first()) 
+                if ($ty->communities()->find($community->id)) 
                     $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time()]);
             }
         } catch (\Exception $e) {
