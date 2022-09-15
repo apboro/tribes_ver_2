@@ -124,6 +124,19 @@ class ExtentionApi extends Api implements ExtentionApiInterface
     }
 
     /**
+     * Список администраторов в чате
+     *
+     * @param integer $chatId
+     * @return int
+     */
+    public function getChatAdministratorsList(int $chatId) 
+    {
+        return $this->invokeAction('getChatAdministrators', [
+            'chat_id' => $chatId
+        ])->getResult();
+    }
+
+    /**
      * получить список изображений профиля для пользователя
      *
      * @param integer $userId
