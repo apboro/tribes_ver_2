@@ -255,6 +255,7 @@ class MainBotEvents
     {
         try {
             if (isset($this->data->message->left_chat_member)) {
+                $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Есть событие');
                 $telegram = new Telegram;
                 $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
             }
