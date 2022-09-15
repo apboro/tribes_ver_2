@@ -84,7 +84,7 @@ class SetNewTelegramUsers implements ShouldQueue
     protected function getChannelRole($participant) 
     {
         if ($participant->_ == 'channelParticipantAdmin')
-            $role = 'admin';
+            $role = 'administrator';
         elseif ($participant->_ == 'channelParticipantCreator')
             $role = 'creator';
         else 
@@ -110,7 +110,7 @@ class SetNewTelegramUsers implements ShouldQueue
     protected function getGroupRole($participant) 
     {
         if ($participant->_ == 'chatParticipantAdmin')
-            $role = 'admin';
+            $role = 'administrator';
         elseif ($participant->_ == 'chatParticipantCreator')
             $role = 'creator';
         else 

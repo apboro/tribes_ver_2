@@ -127,7 +127,7 @@ class ExtentionApi extends Api implements ExtentionApiInterface
      * Список администраторов в чате
      *
      * @param integer $chatId
-     * @return int
+     * @return array
      */
     public function getChatAdministratorsList(int $chatId) 
     {

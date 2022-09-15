@@ -45,9 +45,29 @@ class TestBotController extends Controller
 
     public function index(Request $request)
     {
+
+
+
         $admins = TelegramMainBotService::staticGetChatAdministratorsList(config('telegram_bot.bot.botName'), -1001702194344);
-        dd($admins);
+        $tele_users = TelegramUser::select('telegram_id')->get();
         
+        foreach ($admins as $admin) {
+            foreach ($tele_users as $tu) {
+                if ($tu->telegram_id === $admin['user']['id']) {
+                    $teleConnections = TelegramConnection::select('id')->where('chat_id', -1001702194344)->first();
+                    if ($tu->communities()->find($teleConnections->community->id) === null) {
+                        $tu->communities()->attach($teleConnections->community->id, ['role' => $admin['status'], 'accession_date' => time()]);
+                    } else {
+                        $tu->communities()->updateExistingPivot($teleConnections->community->id, [
+                            'role' => $admin['status']
+                        ]);
+                    }
+                    
+                }
+            }
+        }
+
+
         // Канал для теста комментариев Chat  id = 1541725271  access_hash = 14492483521633917353
         // another id = 1510955178 or 666997162
         // another id = 1510955178, hash = 8077972812704298091
@@ -77,8 +97,7 @@ class TestBotController extends Controller
         // dd($getDialogs[0]->allDialogs->chats);
         // $telegramConnection = TelegramConnection::select('chat_id', 'access_hash', 'isGroup')->where('is_there_userbot', true)->get();
         // dd($telegramConnection);
-          
+
         //    dd($usersInGroup);
     }
-
 }
