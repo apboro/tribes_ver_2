@@ -33,6 +33,7 @@ class MainBotEvents
         'newChatPhoto',
         'deleteChat',
         'newChatTitle',
+        'deleteUser'
     ])
     {
         foreach ($config as $configItem) {
