@@ -16,7 +16,6 @@ export default class TariffYourValue extends Page {
     }
 
     getChanges(value){
-
         let option = document.getElementById('yourValue');
         option.textContent = value;
         option.value = value;
@@ -26,5 +25,21 @@ export default class TariffYourValue extends Page {
         // if (selectCustom.value = 'set') {
         //     console.log(value);
         // }
+    }
+
+    changeYourValueAdd(obj){
+
+        let active = document.getElementById('tariff_add_form');
+        if(obj.value == 'set') {
+            active.classList.add("active")
+        } else {
+            active.classList.remove("active");
+        }
+    }
+
+    getChangesAdd(value){
+        let option = document.getElementById('yourValueAdd');
+        option.textContent = value;
+        option.value = value;
     }
 }

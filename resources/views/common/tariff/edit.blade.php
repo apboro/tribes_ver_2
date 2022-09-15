@@ -65,7 +65,7 @@
 
                     <div class="community-settings__wrap-input-group">
                         <div class="community-settings__input-group">
-                            <div class="community-settings__form-item">
+                            <div class="community-settings__form-item tariff-cost">
                                 <label
                                     class="form-label-red"
                                     for="tariff_cost"
@@ -84,7 +84,7 @@
                                 />
                             </div>
 
-                            <div class="community-settings__form-item">
+                            <div class="community-settings__form-item tariff_pay_period">
                                 <label
                                     class="form-label-red"
                                     for="tariff_pay_period"
@@ -118,7 +118,7 @@
                             </div>
                         </div>
 
-                        <div class="community-settings__input-wrapper your-value-wrap">
+                        <div class="community-settings__form-item your-value-wrap">
                             <label
                                 class="form-label-red"
                                 for="your_value"
@@ -134,7 +134,9 @@
                         </div>
                     </div>
                     
-                    <div class="community-settings__your-value-mobile">
+                  
+                </div>
+                <div class="community-settings__your-value-mobile">
                         <div class="community-settings__form-item your-value-wrap-mobile">
                             <label
                                 class="form-label-red"
@@ -170,7 +172,6 @@
                             >
                         </div>
                     </div>
-                </div>
 
                 <div class="toggle-switch community-settings__checkbox">        
                     <label class="toggle-switch__switcher">
