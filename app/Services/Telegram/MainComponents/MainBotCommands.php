@@ -511,30 +511,34 @@ class MainBotCommands
                 $menu = Menux::Create('links')->inline();
                 $connection = $this->connectionRepo->getConnectionById($connectionId);
 
-                $menu->row()->btn('Получить доступ к ресурсу', 'access-' . $connectionId)
-                    ->row()->btn('Продлить подписку', 'extend-' . $connectionId)
-                    ->row()->btn('Отписаться', 'unsubscribe-' . $connectionId);
-
                 $user = TelegramUser::where('telegram_id', $ctx->getUserID())->with('tariffVariant')->first();
-
                 $tariffVariant = $connection->community->tariff->variants()->whereHas('payFollowers', function ($q) use ($user) {
                     $q->where('id', $user->id);
                 })->first();
-                $status = ($tariffVariant->payFollowers()->where('id', $user->id)->first()->pivot->days > 0) ? 'Активный' : 'Неактивный';
-                $tariffTitle = ($tariffVariant) ? $tariffVariant->title : 'Пробный период';
-                $period = 0;
 
-                foreach ($user->tariffVariant->where('tariff_id', $connection->community->tariff->id) as $userTariff) {
-                    $period += $userTariff->pivot->days;
+                if ($tariffVariant) {
+                    $menu->row()->btn('Получить доступ к ресурсу', 'access-' . $connectionId)
+                        ->row()->btn('Продлить подписку', 'extend-' . $connectionId)
+                        ->row()->btn('Отписаться', 'unsubscribe-' . $connectionId);
+
+                    $status = ($tariffVariant->payFollowers()->where('id', $user->id)->first()->pivot->days > 0) ? 'Активный' : 'Неактивный';
+                    $tariffTitle = ($tariffVariant) ? $tariffVariant->title : 'Пробный период';
+                    $period = 0;
+
+                    foreach ($user->tariffVariant->where('tariff_id', $connection->community->tariff->id) as $userTariff) {
+                        $period += $userTariff->pivot->days;
+                    }
+                    $periodDays = ($period !== 0) ? "\nОсталось дней: " . $period : "\nСрок действия оплаченного тарифа закончился";
+                    $ctx->reply(
+                        "Канал: $connection->chat_title 
+                        \nСтатус: $status 
+                        \nТариф: $tariffTitle
+                        $periodDays",
+                        $menu
+                    ); 
+                } else {
+                    $ctx->reply("Подписка отсуствует.");
                 }
-                $periodDays = ($period !== 0) ? "\nОсталось дней: " . $period : "\nСрок действия оплаченного тарифа закончился";
-                $ctx->reply(
-                    "Канал: $connection->chat_title 
-                    \nСтатус: $status 
-                    \nТариф: $tariffTitle
-                    $periodDays",
-                    $menu
-                );
             });
             $this->access();
             $this->extend();
