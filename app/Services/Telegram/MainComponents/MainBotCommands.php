@@ -63,8 +63,7 @@ class MainBotCommands
         PaymentRepositoryContract            $paymentRepo,
         KnowledgeRepositoryContract          $knowledgeRepository,
         ManageQuestionService                $manageQuestionService
-    )
-    {
+    ) {
         $this->paymentRepo = $paymentRepo;
         $this->connectionRepo = $connectionRepo;
         $this->communityRepo = $communityRepo;
@@ -319,7 +318,10 @@ class MainBotCommands
                     $ty = TelegramUser::where('telegram_id', $ctx->getUserID())->first();
 
                     if (!$ty->communities()->find($community->id)) {
-                        $ty->communities()->attach($community);
+                        $ty->communities()->attach($community, [
+                            'role' => 'member',
+                            'accession_date' => time()
+                        ]);
                         $this->bot->getExtentionApi()->unKickUser($ctx->getUserID(), $community->connection->chat_id);
                     }
 
@@ -327,7 +329,7 @@ class MainBotCommands
 
                     if (!$ty->tariffVariant->find($variant->id)) {
                         foreach ($ty->tariffVariant->where('tariff_id', $community->tariff->id) as $userTariff) {
-                            if ($userTariff->id !== $variant->id) 
+                            if ($userTariff->id !== $variant->id)
                                 $ty->tariffVariant()->detach($userTariff->id);
                         }
                         $ty->tariffVariant()->attach($variant, ['days' => $variant->period, 'prompt_time' => date('H:i')]);
@@ -369,9 +371,7 @@ class MainBotCommands
 
                     $ctx->reply('Выберите сообщество, которому желаете оказать материальную помощ.', $menu);
                     $ctx->enter('donate');
-
                 } else $ctx->reply('Выбранное сообщество не принимает донаты.');
-
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -415,7 +415,6 @@ class MainBotCommands
                         $menu->row()->btn($community->title, 'subscription-' . $community->connection_id);
                     }
                     $ctx->reply('Выберите подписку', $menu);
-
                 } else $ctx->reply('У вас нет подписок');
             });
             $this->subscription();
@@ -478,7 +477,6 @@ class MainBotCommands
                         "</a>" . " \n";
                 }
                 $ctx->replyHTML($context);
-
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -586,8 +584,9 @@ class MainBotCommands
                     return;
                 }
                 $this->bot->logger()
-                    ->debug('saveForwardMessageInBotChatAsQA: запись вопрос ответ для сообщества',
-                        array_merge([ 'community_id' => $community->id],$data)
+                    ->debug(
+                        'saveForwardMessageInBotChatAsQA: запись вопрос ответ для сообщества',
+                        array_merge(['community_id' => $community->id], $data)
                     );
 
                 $this->manageQuestionService->setUserId($community->owner);
@@ -621,18 +620,23 @@ class MainBotCommands
                 $tariffVariant = $connection->community->tariff->variants()->whereHas('payFollowers', function ($q) use ($ty) {
                     $q->where('id', $ty->id);
                 })->first();
-
+                $community = $tariffVariant->tariff->community;
                 if ($ty->tariffVariant->find($tariffVariant->id)) {
                     $ty->tariffVariant()->updateExistingPivot($tariffVariant->id, [
                         'isAutoPay' => false
                     ]);
-                    if ($connection->telegram_user_id == $ctx->getUserID()) {
-                        $this->bot->getExtentionApi()->kickUser($ty->telegram_id, $connection->chat_id);
-                        $ty->communities()->detach($tariffVariant->tariff->community->id);
+                    if ($ty->communities()->find($community->id)->pivot->role !== 'administrator') {
+                        if ($connection->telegram_user_id == $ctx->getUserID()) {
+                            // $this->bot->getExtentionApi()->kickUser($ty->telegram_id, $connection->chat_id);
+                            $ty->communities()->updateExistingPivot($community->id, [
+                                'exit_date' => time()
+                            ]);
+                        }
+                        $ctx->reply('Вы успешно отменили автоплатеж.');
+                    } else {
+                        $ctx->reply('Вы успешно отменили автоплатеж.');
                     }
-                    $ctx->reply('Вы успешно отписались.');
                 }
-
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -726,17 +730,17 @@ class MainBotCommands
                         'telegram_id' => $ctx->getUserID()
                     ])->first();
 
-                    $payerName = $ty->publicName()??'';
-                    $tariffName = $variant->title??'';
-                    $tariffCost = ($payment->amount/100)??0;
-                    $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y')??'';
+                    $payerName = $ty->publicName() ?? '';
+                    $tariffName = $variant->title ?? '';
+                    $tariffCost = ($payment->amount / 100) ?? 0;
+                    $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y') ?? '';
                     $message = "Участник $payerName оплатил $tariffName в сообществе {$payment->community->title},
                                 стоимость $tariffCost рублей действует до $tariffEndDate г.";
-                    Log::info('send tariff pay message to own author chat bot',[
+                    Log::info('send tariff pay message to own author chat bot', [
                         'message' =>  $message
                     ]);
-                    $authorTeleUserId = $payment->community->connection->telegram_user_id??0;
-                    SendTeleMessageToChatFromBot::dispatch(config('telegram_bot.bot.botName'), $authorTeleUserId,$message);
+                    $authorTeleUserId = $payment->community->connection->telegram_user_id ?? 0;
+                    SendTeleMessageToChatFromBot::dispatch(config('telegram_bot.bot.botName'), $authorTeleUserId, $message);
                 }
             } else {
                 $communityId = str_replace('trial', '', $ctx->var('paymentId'));
@@ -795,7 +799,6 @@ class MainBotCommands
             $text = 'Доступные тарифы';
             if ($community->tariff->variants->first() == NULL) {
                 return ['Тарифы не установлены для сообщества', ''];
-
             }
             foreach ($community->tariff->variants as $variant) {
                 if ($variant->price !== 0 && $variant->isActive == true) {
@@ -856,7 +859,6 @@ class MainBotCommands
                     } else {
                         $menu->row()->uBtn($variant->price . $currencyLabel, $donate->community->getDonatePaymentLink($data));
                     }
-
                 } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
                     $dataNull = [
                         'amount' => 0,

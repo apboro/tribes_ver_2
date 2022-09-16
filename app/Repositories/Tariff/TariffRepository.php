@@ -198,23 +198,32 @@ class TariffRepository implements TariffRepositoryContract
     {
         foreach ($request->excluded as $userId => $excluded) {
             $ty = TelegramUser::find($userId);
-            if ($ty->telegram_id === config('telegram_bot.bot.botId') || $ty->user_id === $community->owner)
+            $role = $ty->communities()->find($community->id)->pivot->role;
+            if ($ty->telegram_id === config('telegram_bot.bot.botId') || $ty->user_id === $community->owner || $role === 'administrator')
                 continue;
+
+            $tariffVariant = $ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first();
 
             if ($excluded != $ty->communities()->where('community_id', $community->id)->first()->pivot->excluded) {
 
                 if ($excluded === true) {
+                    $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
                     $ty->communities()->updateExistingPivot($community->id, [
                         'excluded' => $excluded,
+                        'exit_date' => time()
                     ]);
-                    $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
+
+                    if ($tariffVariant)
+                        $ty->tariffVariant()->updateExistingPivot($tariffVariant->id, ['isAutoPay' => false, 'days' => 0]);
                 }
 
                 if ($excluded === false) {
+                    $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
                     $ty->communities()->updateExistingPivot($community->id, [
                         'excluded' => $excluded,
+                        'accession_date' => time()
                     ]);
-                    $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
+                   
                 }
             }
         }
