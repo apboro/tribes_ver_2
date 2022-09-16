@@ -76,6 +76,19 @@
                                         data-column-index="1" tabindex="4" placeholder="" aria-describedby="password" />
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div> Сортировать по </div>
+                                <a href="{{ request()->fullUrlWithQuery(
+                ['filter[sort][name]' => 'user_name', 'filter[sort][rule]' => request('filter.sort.rule') === 'asc' ? 'desc' : 'asc']
+            ) }}">Логину</a> |
+                                <a href="{{ request()->fullUrlWithQuery(
+                ['filter[sort][name]' => 'first_name', 'filter[sort][rule]' => request('filter.sort.rule') === 'asc' ? 'desc' : 'asc']
+                ) }}">Пользователю</a> |
+                                <a href="{{ request()->fullUrlWithQuery(
+                ['filter[sort][name]' => 'accession_date', 'filter[sort][rule]' => request('filter.sort.rule') === 'asc' ? 'desc' : 'asc']
+                ) }}">Дате вступления</a> |
+                                <a href="{{ request()->fullUrlWithQuery(['filter[sort][name]' => '', 'filter[sort][rule]' => '']) }}">очистить фильтр</a>
+                            </div>
                         </div>
                     </form>
 
