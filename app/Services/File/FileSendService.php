@@ -14,12 +14,18 @@ use \Illuminate\Http\Request;
 class FileSendService
 {
     /**
+     * @param Builder|\Illuminate\Database\Eloquent\Builder $builder $builder
+     * @param ?string $sourceClass
+     * @param array $columnNames
+     * @param string $type
+     * @param string $name
+     * @return StreamedResponse
      * @throws StatisticException
      */
     public function sendFile(
-        Builder $builder,
-        $sourceClass = null,
+        $builder,
         array $columnNames,
+        string $sourceClass = null,
         string $type = 'csv',
         string $name = 'noname'): StreamedResponse
     {
