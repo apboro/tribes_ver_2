@@ -13,5 +13,6 @@ interface TelegramMainBotServiceContract
     public function run(string $nameBot, string $data);
     public function sendLogMessage(string $text);
     public function sendMessageFromBot(string $botName, int $chatId, string $textMessage, bool $preview, array $keyboard);
+    public function sendMessageFromBotWithTariff(string $botName, int $chatId, string $textMessage, Community $community);
     public function sendTariffMessage(string $botName, Community $community);
 }

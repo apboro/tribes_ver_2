@@ -26,12 +26,11 @@ class TariffSeeder extends Seeder
             throw new Exception('Не создано сообщество для пользователя $userTest');
         }
 
-
         foreach (Community::all() as $community) {
             $tariff = env('USE_TRIAL_PERIOD', true) ?  $this->tariffCreate(20, $community)
                 : $this->tariffCreate(0, $community);
 
-            TariffVariant::factory()->active()->count(3)
+            TariffVariant::factory()->count(3)
                 ->sequence(fn ($sequence) => [
                     'price' => ($sequence->index + 1) * 100,
                     'title' => 'Вариант для тарифа №'.$sequence->index,
@@ -39,6 +38,15 @@ class TariffSeeder extends Seeder
                 ->create([
                     'tariff_id' => $tariff->id,
                 ]);
+        }
+
+        foreach (TariffVariant::all() as $tariffVariant) {
+            $tariffVariant->payFollowers()->attach(TelegramUser::first()->id, [
+                'days' => rand(0,7),
+                'isAutoPay' => false,
+                'prompt_time' => '12:15',
+//                'created_at' =>
+            ]);
         }
 
     }
