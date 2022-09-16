@@ -959,6 +959,44 @@ class MainBotCommands
         }
     }
 
+    /**Отправляет сообщение пользователю с тарифами
+     * @param string $botName
+     * @param int $chatId
+     * @param string $textMessage
+     * @param $community
+     * @param bool $preview
+     * @param array $keyboard
+     */
+    public function sendMessageFromBotWithTariff(int $chatId, string $textMessage, Community $community)
+    {
+        try {
+            $tariff = $community->tariff;
+            foreach ($tariff->variants as $variant) {
+                if ($variant->price !== 0 && $variant->isActive !== false) {
+                    $data = [
+                        'amount' => $variant->price,
+                        'currency' => 0,
+                        'type' => 'tariff',
+                        'telegram_user_id' => NULL
+                    ];
+
+                    $button[] = [[
+                        'text' => $variant->title . ' — ' . $variant->price . '₽' . '/' . $variant->period . ' ' . Declination::defineDeclination($variant->period),
+                        "url" => $community->getTariffPaymentLink($data)
+                    ]];
+                }
+            }
+
+            $text = $textMessage ?? '';
+
+            if (count($button)) {
+                $this->bot->getExtentionApi()->sendMess($chatId, $text, false, $button);
+            }
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
     private function getCommandsListAsString(): string
     {
         $text = '';

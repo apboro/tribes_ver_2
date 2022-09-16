@@ -47,6 +47,8 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
 
 Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(function() {
 
+    Route::post('/test-tariff', 'TestTariffController@test');
+
     Route::post('/file/upload','FileController@upload');
     Route::post('/file/get','FileController@get');
     Route::post('/file/delete','FileController@delete');

@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('check:trial')->everyMinute()->timezone('Europe/Moscow')
             : null;
         $schedule->command('tariff:decrement')->dailyAt('23:59')->timezone('Europe/Moscow');
+        $schedule->command('send:deactivated:tariff')->dailyAt('10:00')->timezone('Europe/Moscow');
 
         $schedule->command('get:messages')->everyFifteenMinutes()->timezone('Europe/Moscow');
         $schedule->command('get:reactions')->everyFifteenMinutes()->timezone('Europe/Moscow');
