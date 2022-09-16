@@ -74,8 +74,16 @@ class Telegram extends Messenger
 
 
                     if (!$ty->communities()->find($community->id)) {
-                        $ty->communities()->attach($community);
+                        $ty->communities()->attach($community, [
+                            'role' => 'member',
+                            'accession_date' => time()
+                        ]);
                         //                        $botService->unKickUser($telegram_id, $community->connection->chat_id);
+                    } else {
+                        $ty->communities()->updateExistingPivot($community, [
+                            'role' => 'member',
+                            'accession_date' => time()
+                        ]);
                     }
 
                     $variant = $community->tariff->variants()->find($payment->payable_id);
@@ -103,7 +111,10 @@ class Telegram extends Messenger
                 if ($community) {
                     $ty = self::registerTelegramUser($telegram_id, NULL, $userName, $firstName, $lastName);
                     if (!$ty->communities()->find($community->id)) {
-                        $ty->communities()->attach($community);
+                        $ty->communities()->attach($community, [
+                            'role' => 'member',
+                            'accession_date' => time()
+                        ]);
                     }
                     if ($ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first() == NULL) {
                         foreach ($community->tariff->variants as $variant) {
@@ -248,7 +259,10 @@ class Telegram extends Messenger
             ]);
         }
 
-        $ty->communities()->attach($community);
+        $ty->communities()->attach($community, [
+            'role' => 'administrator',
+            'accession_date' => time()
+        ]);
     }
 
     /**
@@ -260,7 +274,10 @@ class Telegram extends Messenger
     {
         $ty = TelegramUser::where('user_id', $community->owner)->first();
         if ($ty)
-            $ty->communities()->attach($community);
+            $ty->communities()->attach($community, [
+                'role' => 'creator',
+                'accession_date' => time()
+            ]);
     }
 
     public function invokeCommunityConnect($user, $type)
