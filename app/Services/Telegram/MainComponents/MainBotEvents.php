@@ -253,6 +253,19 @@ class MainBotEvents
         }
     }
 
+    /** Событие удаления пользователя из группы */
+    protected function deleteUser()
+    {
+        try {
+            if (isset($this->data->message->left_chat_member)) {
+                $telegram = new Telegram;
+                
+            }
+        } catch (Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
     /** Событие изменения названия группы или канала */
     protected function newChatTitle()
     {
