@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper\PseudoCrypt;
+use App\Jobs\SetNewTelegramUsers;
 use App\Models\Community;
 use App\Models\Course;
 use App\Models\Donate;
@@ -57,26 +58,23 @@ class TestBotController extends Controller
         // $reactionsGroup = $mtproto->getReactions(602000865, 108846);
         // $groupReaction = $mtproto->getMessagesViews(1504673809, 'channel', 3, '6334485774387705507');
         // $getDialogs = $mtproto->getDialogs(200);
-        // $usersInChannel = $mtproto->getUsersInChannel(1510955178,'8077972812704298091');
+        // $getUsers = $mtproto->getChatInfo(666997162);
+        // $getChannelUsers = $mtproto->getUsersInChannel(1504673809, 6334485774387705507, 20, 0);
+        // $usersInChannel = $mtproto->getUsersInChannel(1744042678,'3221707714789779690');
         // $usersInGroup = $mtproto->getChatInfo(784578767);
         // $webHook = $mtproto->setWebhook('http://tribes'); 
         // TestData::create([
         //     'data' => json_encode($auth)
         // ]);
         // $auth = $mtproto->auth();
-
+        // dd($getChannelUsers);
+        // dd($getUsers);
         // dd($reactionsGroup);
         // dd($messages[0]->messages->messages);
         // dd($getDialogs[0]->allDialogs->chats);
         // $telegramConnection = TelegramConnection::select('chat_id', 'access_hash', 'isGroup')->where('is_there_userbot', true)->get();
         // dd($telegramConnection);
-            dd(json_encode('😥'));
-            dd(json_decode('"\ud83d\udd25"'));
-        if (htmlentities('😥') == '\xF0\x9F\x98\xA5') {
-            dd(123);
-        } else {
-            dd('no');
-        }
-    }
 
+        //    dd($usersInGroup);
+    }
 }

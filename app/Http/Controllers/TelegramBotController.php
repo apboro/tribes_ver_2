@@ -23,6 +23,9 @@ class TelegramBotController extends Controller
     public function index(Request $request)
     {
         $data = $request->collect();
+        TestData::create([
+            'data' => $data
+        ]);
         $botName = config('telegram_bot.bot.botName');
 
         if (env('GRAB_TEST_DATA') === true) {

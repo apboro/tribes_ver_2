@@ -223,7 +223,8 @@ class TariffRepository implements TariffRepositoryContract
     public function getList(TariffFilter $filters, $community)
     {
         $followers = $community->followers();
-        return $followers->filter($filters)->orderBy('created_at', 'DESC')->paginate($this->perPage);
+        $followers = $filters->apply($followers);
+        return $followers->paginate($this->perPage);
     }
 
     public function updateOrCreate($community, $data, $variantId = NULL)
@@ -242,7 +243,7 @@ class TariffRepository implements TariffRepositoryContract
         $variant->period = $data['tariff_pay_period'];
         $variant->isActive = $data['tariff'];
         $variant->number_button = $data['number_button'];
-        $variant->arbitrary_term = $data['arbitrary_term'];
+        $variant->arbitrary_term = $data['arbitrary_term'] ?? false;
         $variant->save();
 
         $this->tariffWithUser($community, $variant);

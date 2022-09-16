@@ -111,7 +111,7 @@
         },
 
         methods: {
-            ...mapActions('community_analytics', ['LOAD_DATA_ITEM']),
+            ...mapActions('community_analytics', ['LOAD_DATA_ITEM', 'LOAD_SUBSCRIBERS']),
 
             filter() {
                 this.$emit('filter', { name: this.name, period: this.period });
@@ -141,9 +141,9 @@
             },
         },
 
-        mounted() {
+        async mounted() {
             this.LOAD_DATA_ITEM(this.name);
-
+            await this.LOAD_SUBSCRIBERS();
             this.filter();
         }
     }

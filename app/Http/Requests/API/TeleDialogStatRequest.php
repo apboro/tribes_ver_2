@@ -16,6 +16,7 @@ class TeleDialogStatRequest extends FormRequest
     {
         return [
             'community_id' => ['required','integer',new OwnCommunityRule()],
+            'export_type' => 'string|in:xlsx,csv',
         ];
     }
 }

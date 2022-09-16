@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Manager\Filters\UsersFilter;
 use App\Http\Requests\Auth\LoginAsRequest;
 use App\Services\Admin\UserService;
+use App\Services\File\FileSendService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,10 +18,15 @@ class UserController extends Controller
     use AuthenticatesUsers;
 
     private UserService $userService;
+    private FileSendService $fileSendService;
 
-    public function __construct(UserService $userService)
+    public function __construct(
+        UserService $userService,
+        FileSendService $fileSendService
+    )
     {
         $this->userService = $userService;
+        $this->fileSendService = $fileSendService;
     }
 
     public function list(Request $request, UsersFilter $filter)
@@ -60,5 +66,38 @@ class UserController extends Controller
                 ? "Пользователь №{$user->id} получил права администратора"
                 : "Пользователь №{$user->id} лишен прав администратора",
         ]);
+    }
+
+    public function export(Request $request, UsersFilter $filter)
+    {
+        $names = [
+            [
+                'title' => 'id',
+                'attribute' => 'id',
+            ],
+            [
+                'title' => 'Имя',
+                'attribute' => 'name',
+            ],
+            [
+                'title' => 'Телефон',
+                'attribute' => 'phone',
+            ],
+            [
+                'title' => 'E-mail',
+                'attribute' => 'email',
+            ],
+            [
+                'title' => 'Дата регистрации',
+                'attribute' => 'created_at',
+            ],
+        ];
+        return $this->fileSendService->sendFile(
+            User::filter($filter),
+            $names,
+            null,
+            $request->get('type','csv'),
+            'users'
+        );
     }
 }

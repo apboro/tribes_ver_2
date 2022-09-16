@@ -114,6 +114,12 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
 
         Route::post('messages', 'TeleMessageStatisticController@messages')->name('api.tele-statistic.messages');
         Route::post('message-charts', 'TeleMessageStatisticController@messageCharts')->name('api.tele-statistic.message-charts');
+
+        Route::post('export-members', 'TeleDialogStatisticController@exportMembers')->name('api.tele-statistic.export-members');
+        Route::post('export-messages', 'TeleMessageStatisticController@exportMessages')->name('api.tele-statistic.export-messages');
+        Route::post('export-payments', 'FinanceStatisticController@exportPayments')->name('api.tele-statistic.export-payments');
+
+
     });
 
 });
