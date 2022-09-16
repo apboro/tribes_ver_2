@@ -33,6 +33,7 @@ class UsersFilter extends QueryAPIFilter
             'id' => 'id',
             'name' => 'name',
             'email' => 'email',
+            'phone' => 'phone',
             'created_at' => 'created_at',
         ];
         return $list[$name] ?? $list['created_at'];
