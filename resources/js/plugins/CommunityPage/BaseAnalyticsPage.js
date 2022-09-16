@@ -2,7 +2,6 @@ import { timeFormatting } from "../../core/functions";
 import { BaseChart } from "../Helper/Chart/BaseChart";
 import { Pagination } from "../Helper/Pagination";
 import { Table } from "../Helper/Table";
-import { saveAs } from 'file-saver';
 
 export class BaseAnalyticsPage {
     constructor(parent) {
