@@ -33,6 +33,7 @@ class MainBotEvents
         'newChatPhoto',
         'deleteChat',
         'newChatTitle',
+        'deleteUser'
     ])
     {
         foreach ($config as $configItem) {
@@ -244,6 +245,19 @@ class MainBotEvents
                 ) {
                     Telegram::deleteCommunity($this->data->my_chat_member->chat->id);
                 }
+            }
+        } catch (Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    /** Событие удаления пользователя из группы */
+    protected function deleteUser()
+    {
+        try {
+            if (isset($this->data->message->left_chat_member)) {
+                $telegram = new Telegram;
+                $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
             }
         } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6d198a53-912c-4c61-9ee5-d02624ae8c65",
+		"_postman_id": "19bdf425-7fa7-4a51-992a-3ad5a6866301",
 		"name": "spodial-kw-api",
 		"description": "запросы для обращения к АПИ базы знаний",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
@@ -169,6 +169,107 @@
 					]
 				},
 				"url": "{{host}}/api/v2/user/appoint-admin",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "manager/users-export",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "xlsx",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "type",
+							"value": "csv",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/v2/users-export",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "manager/users",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "entries",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "filter[sort][name]",
+							"value": "created_at",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[sort][rule]",
+							"value": "desc",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/api/v2/users",
 				"description": "запросить список доступных вопросов"
 			},
 			"response": []
@@ -1291,6 +1392,213 @@
 						"message-charts"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "теле статистика export members",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "export_type",
+							"value": "csv",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "export_type",
+							"value": "xlsx",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/export-members"
+			},
+			"response": []
+		},
+		{
+			"name": "теле статистика export messages",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "export_type",
+							"value": "csv",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "export_type",
+							"value": "xlsx",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/export-messages"
+			},
+			"response": []
+		},
+		{
+			"name": "теле статистика export payments",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "community_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "export_type",
+							"value": "csv",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "export_type",
+							"value": "xlsx",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "day",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "week",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "filter[period]",
+							"value": "month",
+							"type": "text"
+						},
+						{
+							"key": "filter[period]",
+							"value": "year",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "{{host}}/api/tele-statistic/export-payments"
 			},
 			"response": []
 		}

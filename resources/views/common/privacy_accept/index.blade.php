@@ -134,7 +134,7 @@
                         </li>
                         <li>
                             Пользователь имеет право отозвать Согласие путем направления соответствующего запроса в службу поддержки&nbsp;
-                            <a href="https://t.me/spodialsupportbot" class="text-primary">@ {{ env('APP_URL') }}supportbot</a> в Мессенджере.
+                            <a href="privacy@trbs.co" class="text-primary">privacy@trbs.co</a>, <a href="support@trbs.co " class="text-primary">support@trbs.co</a> или в Мессенджере: <a href="@TribesSupport_bot">@TribesSupport_bot</a>.
                         </li>
                         <li>
                             Пользователь согласен с тем, что на основании его письменного обращения с требованием о прекращении обработки Персональных данных (Данных) Оператор прекратит их Обработку в течение 30 (тридцати) календарных дней.
