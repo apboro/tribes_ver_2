@@ -114,7 +114,6 @@
                                     </option>
                                     <option id="yourValue" value="set">Свое значение</option>
                                 </select>
-                                <!-- <div>Переменная для "флаг(признак) выбора произвольного срока"{{$tariff->arbitrary_term}}</div> -->
                             </div>
                         </div>
 
