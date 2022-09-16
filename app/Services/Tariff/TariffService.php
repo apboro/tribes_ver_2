@@ -73,15 +73,17 @@ class TariffService {
                 $textMessage = 'Ваш тариф скоро закончится! Выбирите новый тариф';
                 $this->telegramMainBotService->sendMessageFromBotWithTariff(config('telegram_bot.bot.botName'), $telegram_user['telegram_id'], $textMessage, $community);
 
-                if ($user->email)
+                if ($user->email){
                     new Mailer('Сервис TRIBES', $textMessage, 'Заканчивается тариф ', $user->email);
+                }
             } else {
                 //отправляем сообщение без тарифов
                 $textMessage = 'Обратитесь к владельцу сообщества';
                 $this->telegramMainBotService->sendMessageFromBot(config('telegram_bot.bot.botName'), $user['telegram_id'], $textMessage);
 
-                if ($user->email)
+                if ($user->email){
                     new Mailer('Сервис TRIBES', $textMessage, 'Заканчивается тариф ', $user->email);
+                }
             }
 
         }
