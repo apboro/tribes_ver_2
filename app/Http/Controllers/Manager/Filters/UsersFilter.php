@@ -4,10 +4,11 @@
 namespace App\Http\Controllers\Manager\Filters;
 
 
+use App\Filters\API\QueryAPIFilter;
 use App\Filters\QueryFilter;
 use Illuminate\Support\Facades\DB;
 
-class UsersFilter extends QueryFilter
+class UsersFilter extends QueryAPIFilter
 {
     public function search($string)
     {
@@ -24,5 +25,16 @@ class UsersFilter extends QueryFilter
     public function entries($string)
     {
         return $this->builder->limit($string);
+    }
+
+    protected function _sortingName($name): string
+    {
+        $list = [
+            'id' => 'id',
+            'name' => 'name',
+            'email' => 'email',
+            'created_at' => 'created_at',
+        ];
+        return $list[$name] ?? $list['created_at'];
     }
 }
