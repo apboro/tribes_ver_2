@@ -30,8 +30,8 @@
             class="community-settings"
         >
             <!-- Название тарифа -->
-            <div class="community-settings__change-tariff">
-                <div class="">
+            <div class="community-settings__change-tariff" data-plugin="TariffYourValue">
+                <div class="community-settings__form-item">
                     <label
                         class="form-label-red"
                         for="tariff_name"
@@ -53,56 +53,94 @@
                     @enderror
                 </div>
 
-                <div class="community-settings__input-group">
-                    <div class="community-settings__input-wrapper">
-                        <label
-                            class="form-label-red"
-                            for="tariff_cost"
-                        >
-                            {{ __('base.price') }}
-                        </label>
+                <div class="community-settings__wrap-input-group">
+                    <div class="community-settings__input-group">
+                        <div class="community-settings__form-item tariff-cost">
+                            <label
+                                class="form-label-red"
+                                for="tariff_cost"
+                            >
+                                {{ __('base.price') }}
+                            </label>
 
-                        <input
-                            type="number"
-                            class="form-control-red"
-                            id="tariff_cost"
-                            aria-describedby="tariff_cost"
-                            name="tariff_cost"
-                            placeholder="100"
-                        />
+                            <input
+                                type="number"
+                                class="form-control-red"
+                                id="tariff_cost"
+                                aria-describedby="tariff_cost"
+                                name="tariff_cost"
+                                placeholder="100"
+                            />
+                        </div>
+
+                        <div class="community-settings__form-item tariff_pay_period">
+                            <label
+                                class="form-label-red"
+                                for="tariff_pay_period"
+                            >
+                                {{ __('base.term_access_community') }}
+                            </label>
+
+                            <select
+                                class="form-control-red tariff_pay_period"
+                                id="tariff_pay_period"
+                                name="tariff_pay_period"
+                                onchange="TariffYourValue.changeYourValueAdd(this)"
+                            >
+                                @if(env('FOR_TESTER'))
+                                    <option value="0" checked>1 {{ __('base.minute_low') }}</option>
+                                    <option value="1" >1 {{ __('base.day_low') }}</option>
+                                @else
+                                    <option value="1" checked>1 {{ __('base.day_low') }}</option>
+                                @endif
+                                <option value="7">7 {{ __('base.days_low') }}</option>
+                                <option value="14">14 {{ __('base.days_low') }}</option>
+                                <option value="30">30 {{ __('base.days_low') }} </option>
+                                <option value="90">90 {{ __('base.days_low') }}</option>
+                                <option value="180">180 {{ __('base.days_low') }}</option>
+                                <option value="365">365 {{ __('base.days_low') }}</option>
+                                <option id="yourValueAdd" value="set">Свое значение</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="community-settings__input-wrapper">
-                        <label
-                            class="form-label-red"
-                            for="tariff_pay_period"
-                        >
-                            {{ __('base.term_access_community') }}
-                        </label>
 
-                        <select
-                            class="form-control-red "
-                            id="tariff_pay_period"
-                            name="tariff_pay_period"
-                        >
-                            @if(env('FOR_TESTER'))
-                                <option value="0" checked>1 {{ __('base.minute_low') }}</option>
-                                <option value="1" >1 {{ __('base.day_low') }}</option>
-                            @else
-                                <option value="1" checked>1 {{ __('base.day_low') }}</option>
-                            @endif
-                            <option value="7">7 {{ __('base.days_low') }}</option>
-                            <option value="14">14 {{ __('base.days_low') }}</option>
-                            <option value="30">30 {{ __('base.days_low') }} </option>
-                            <option value="90">90 {{ __('base.days_low') }}</option>
-                            <option value="180">180 {{ __('base.days_low') }}</option>
-                            <option value="365">365 {{ __('base.days_low') }}</option>
-                            <!-- <option value="set">Свое значение</option> -->
-                        </select>
+                    <div class="community-settings__form-item your-value-wrap">
+                            <label
+                                class="form-label-red"
+                                for="your_value"
+                            >
+                                {{ __('base.number_access_days') }}
+                            </label>
+                            <input 
+                                class="form-control-red your-value-input" 
+                                type="number" 
+                                id="your_value" 
+                                onchange="TariffYourValue.getChangesAdd(this.value)"
+                            >
                     </div>
+
+                </div>
+            </div>
+
+            <div class="community-settings__your-value-mobile">
+
+                <div class="community-settings__form-item your-value-wrap-mobile">
+                    <label
+                        class="form-label-red"
+                        for="your_value"
+                    >
+                        {{ __('base.number_access_days') }}
+                    </label>
+                    <input 
+                        class="form-control-red your-value-input" 
+                        type="number" 
+                        id="your_value" 
+                        onchange="TariffYourValue.getChanges(this.value)"
+                    >
                 </div>
 
-                <div class="">
+                <div class="community-settings__number-btn">
                     <label
                         class="form-label-red"
                         for="tariff_name"
@@ -122,7 +160,8 @@
                 </div>
             </div>
 
-            <div class="toggle-switch community-settings__form-item">        
+
+            <div class="toggle-switch community-settings__checkbox">        
                 <label class="toggle-switch__switcher">
                     <input type="hidden" name="tariff" value="0" />
                     

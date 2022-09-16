@@ -84,6 +84,6 @@ class FinanceStatisticController extends Controller
         $type = $request->get('export_type');
         $membersBuilder = $this->financeRepository->getPaymentsListForFile($request->get('community_id'),$filter);
 
-        return $this->fileSendService->sendFile($membersBuilder,FinanceResource::class,$columnNames,$type,'members');
+        return $this->fileSendService->sendFile($membersBuilder, $columnNames,FinanceResource::class,$type,'members');
     }
 }

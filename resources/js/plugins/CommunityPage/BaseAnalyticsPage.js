@@ -224,6 +224,7 @@ export class BaseAnalyticsPage {
             const res = await axios({
                 method: 'post',
                 url: '/api/tele-statistic/export-members',
+                responseType: "blob",
                 data: {
                     community_id: this.communityId,
                     export_type: exportType,
@@ -255,20 +256,49 @@ export class BaseAnalyticsPage {
         //     downloadLink.click();
         //     document.body.removeChild(downloadLink);
         //    }
+// ***********
+//             console.log(res.headers['content-type']);
 
-            console.log(res.headers['content-type']);
+        let blob = new Blob([res.data], {
+            type: res.headers['content-type'],
+        });
 
-        let blob = new Blob([res.data], {type: res.headers['content-type']});
 
-            let anchor = document.createElement('a');
-            anchor.download = 'StatisticExport(' + res.headers.date + ')';
-            anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-            anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
-            anchor.click();
+        let anchor = document.createElement('a');
+        anchor.download = 'StatisticExport(' + res.headers.date + ')';
+        anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+        anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
+        anchor.click();
+
+            // **************
+        //
+
+            // let blob = new Blob([s2ab(window.atob('123'))], {
+            //     type: ''
+            // });
+            //
+            // let href = URL.createObjectURL(blob);
+            //
+            // function s2ab(s) {
+            //     let buf = new ArrayBuffer(s.length);
+            //     let view = new Uint8Array(buf);
+            //     for (let i=0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+            //     return buf;
+            // }
+            //
+            // let anchor = document.createElement('a');
+            // anchor.download = 'StatisticExport(' + res.headers.date + ')';
+            // anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+            // anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
+            // anchor.click();
+
 
         } catch (error) {
             console.log(error);
         }
+
+
+
     }
 
     get chartDatasets() {}

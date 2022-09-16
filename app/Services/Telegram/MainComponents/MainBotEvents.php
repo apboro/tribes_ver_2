@@ -33,6 +33,7 @@ class MainBotEvents
         'newChatPhoto',
         'deleteChat',
         'newChatTitle',
+        'deleteUser'
     ])
     {
         foreach ($config as $configItem) {
@@ -259,7 +260,7 @@ class MainBotEvents
         try {
             if (isset($this->data->message->left_chat_member)) {
                 $telegram = new Telegram;
-                
+                $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
             }
         } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());

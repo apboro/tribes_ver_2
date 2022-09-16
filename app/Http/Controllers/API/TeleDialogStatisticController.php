@@ -87,6 +87,6 @@ class TeleDialogStatisticController extends Controller
         $type = $request->get('export_type');
         $membersBuilder = $this->statisticRepository->getMembersListForFile($request->get('community_id'),$filter);
 
-        return $this->fileSendService->sendFile($membersBuilder,MemberResource::class,$columnNames,$type,'members');
+        return $this->fileSendService->sendFile($membersBuilder,$columnNames,MemberResource::class,$type,'members');
     }
 }
