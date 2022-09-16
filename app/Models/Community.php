@@ -231,7 +231,8 @@ class Community extends Model
 
     function followers()
     {
-        return $this->belongsToMany(TelegramUser::class, 'telegram_users_community', 'community_id', 'telegram_user_id', 'id', 'telegram_id')->withPivot(['excluded']);
+        return $this->belongsToMany(TelegramUser::class, 'telegram_users_community', 'community_id', 'telegram_user_id', 'id', 'telegram_id')
+            ->withPivot(['excluded', 'role','accession_date','exit_date']);
     }
 
     public function getCountFollowersAttribute()

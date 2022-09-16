@@ -223,7 +223,8 @@ class TariffRepository implements TariffRepositoryContract
     public function getList(TariffFilter $filters, $community)
     {
         $followers = $community->followers();
-        return $followers->filter($filters)->orderBy('created_at', 'DESC')->paginate($this->perPage);
+        $followers = $filters->apply($followers);
+        return $followers->paginate($this->perPage);
     }
 
     public function updateOrCreate($community, $data, $variantId = NULL)

@@ -11,7 +11,7 @@
                                 <div class="input-group input-group-merge">
                                     <input type="text" class="form-control search-product" id="shop-search"
                                         placeholder="{{ __('base.search') }}" aria-label="Search..."
-                                        aria-describedby="shop-search" name="search" value="{{ request('search') }}" />
+                                        aria-describedby="shop-search" name="filter[search]" value="{{ request('search') }}" />
 
                                     <span class="input-group-text">
                                         <i data-feather="search" class="font-medium-1 text-muted"></i>
@@ -28,42 +28,52 @@
 
                         <!-- FILTERS -->
                         <div class="row mt-1">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label">
                                     {{ __('base.user') }}
                                 </label>
 
                                 <input type="text" class="form-control dt-input" data-column="3"
-                                    placeholder="{{ __('base.user_name') }}" data-column-index="2" name="from"
+                                    placeholder="{{ __('base.user_name') }}" data-column-index="2" name="filter[from]"
                                     value="{{ request('from') }}" />
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label">
                                     {{ __('base.tariff') }}
                                 </label>
-                                <select name="tariff" class="form-select pointer" id="basicSelect">
-                                    <option value="" @if (request('tariff') == null) selected @endif>
+                                <select name="filter[tariff]" class="form-select pointer" id="basicSelect">
+                                    <option value="" @if (request('filter.tariff') == null) selected @endif>
                                         {{ __('base.all') }}</option>
                                     @foreach ($community->tariff->variants as $variant)
                                         <option value="{{ $variant->id }}"
-                                            @if (request('tariff') == $variant->id) selected @endif>
+                                            @if (request('filter.tariff') == $variant->id) selected @endif>
                                             {{ $variant->title }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    {{ __('base.subscribers') }}
+                                </label>
+                                <select name="filter[member]" class="form-select pointer">
+                                    <option value="" @if (request('filter.member') == '') selected @endif>
+                                        {{ __('base.all') }}</option>
+                                    <option value="active" @if (request('filter.member') == 'active') selected @endif>
+                                        {{ __('base.active') }}</option>
+                                    <option value="not_active" @if (request('filter.member') == "not_active") selected @endif>
+                                        {{ __('base.inactive') }}</option>
 
-                            <div class="col-md-4">
+                                </select>
+                            </div>
+                            <div class="col-md-3">
                                 <label class="form-label">
                                     {{ __('base.payment_period') }}
                                 </label>
                                 <div class="input-group input-group-merge">
-                                    <input type="date" name="date" value="{{ request('date') }}"
+                                    <input type="date" name="filter[date]" value="{{ request('filter.date') }}"
                                         class="form-control form-control-merge dt-input" data-column="2"
                                         data-column-index="1" tabindex="4" placeholder="" aria-describedby="password" />
-                                    {{-- <span --}}
-                                    {{-- class="input-group-text cursor-pointer" --}}
-                                    {{-- ><i data-feather="calendar" class="font-medium-1"></i></span> --}}
                                 </div>
                             </div>
                         </div>
@@ -105,6 +115,12 @@
                                                 rowspan="1" colspan="1"
                                                 aria-label="Date: activate to sort column ascending">
                                                 {{ __('audience.days_left') }}
+                                            </th>
+
+                                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Role: activate to sort column ascending">
+                                                {{ __('audience.role') }}
                                             </th>
 
                                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
@@ -199,6 +215,12 @@
                                                                 value=""
                                                                 data-column-index="2"
                                                                 name="days[{{ $follower->id }}]" /> --}}
+                                                        </div>
+                                                    </td>
+
+                                                    <td valign="top" colspan="1" class="dataTables_empty">
+                                                        <div class="col-sm-12 col-lg-12">
+                                                            {{ isset($follower->pivot->role) ? "Участник":'—' }}
                                                         </div>
                                                     </td>
 
