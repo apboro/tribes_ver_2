@@ -255,9 +255,17 @@ export class BaseAnalyticsPage {
         //     downloadLink.click();
         //     document.body.removeChild(downloadLink);
         //    }
-        var blob = new Blob([res.data], {type: 'text/csv; charset=UTF-8'});
-        var objectUrl = URL.createObjectURL(blob);
-        window.open(objectUrl);
+
+            console.log(res.headers['content-type']);
+
+        let blob = new Blob([res.data], {type: res.headers['content-type']});
+
+            let anchor = document.createElement('a');
+            anchor.download = 'StatisticExport(' + res.headers.date + ')';
+            anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+            anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
+            anchor.click();
+
         } catch (error) {
             console.log(error);
         }
