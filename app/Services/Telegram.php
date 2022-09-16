@@ -138,7 +138,7 @@ class Telegram extends Messenger
     public function deleteUser($chat_id, $t_user_id)
     {
         try {
-            $community = TelegramConnection::where('chat_id', $chat_id)->first()->community()->first() ?? NULL;
+            $community = TelegramConnection::where('chat_id', $chat_id)->first()->community()->first() ?? null;
             $ty = TelegramUser::where('telegram_id', $t_user_id)->first() ?? null;
             if ($community && $ty) {
                 $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
