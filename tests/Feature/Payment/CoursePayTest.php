@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Payment;
 
+use App\Models\Accumulation;
 use App\Models\Course;
 use App\Models\Payment;
 use App\Services\SMTP\Mailer;
@@ -35,6 +36,11 @@ class CoursePayTest extends TestCase
             "author" => $data['community']['owner'],
             "add_balance" => 5000,
         ]);
+
+        $this->assertDatabaseHas(Accumulation::class, [
+            "user_id" => $data['community']['owner'],
+            "amount" => 5000,
+        ]);
     }
 
     protected function prepareDB()
@@ -61,8 +67,12 @@ class CoursePayTest extends TestCase
             'shipped_count' => 300
         ]);
 
+        $accumulation = Accumulation::factory()->user($data['community']['owner'])
+            ->amount(5000)->create();
+
         return array_merge($data, [
             'course' => $course,
+            'accumulation' => $accumulation,
         ]);
     }
 }
