@@ -129,6 +129,7 @@ html .content .content-wrapper .content-header-title {
 }
 
 .horizontal-layout.navbar-floating:not(.blank-page) .app-content {
+    flex: 1 0 auto;
     padding: calc(2rem + 4.45rem + 1.3rem + 2rem) 2rem 0 2rem;
 }
 
