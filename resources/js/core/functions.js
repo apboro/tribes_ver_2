@@ -26,7 +26,7 @@ export function timeFormatting(options) {
 
 export function numberFormatting(value, decimal = 2) {
     if (value === 0) {
-        return n.toFixed(decimal);
+        return value.toFixed(decimal);
     }
 
     const notations = ["", "K", "M", "B", "T", "P", "E", "Z", "Y"];

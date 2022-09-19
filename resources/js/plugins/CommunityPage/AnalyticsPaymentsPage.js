@@ -41,6 +41,8 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.isDonationsHidden = false;
         this.isTariffsHidden = false;
         this.isCoursesHidden = false;
+
+        this.fileUploadUrl = '/api/tele-statistic/export-payments';
     }
 
     async loadData() {
@@ -91,16 +93,16 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
     }
 
     fillLabels() {
-        this.countTotalAmountNode.textContent = numberFormatting(this.countTotalAmount);
-        this.countAllNode.textContent = numberFormatting(this.countAll);
+        this.countTotalAmountNode.textContent = this.countTotalAmount != 0 ? numberFormatting(this.countTotalAmount) : 0;
+        this.countAllNode.textContent = this.countAll != 0 ? numberFormatting(this.countAll) : 0;
 
-        this.countDonationsValueNode.textContent = numberFormatting(this.countDonations);
+        this.countDonationsValueNode.textContent = this.countDonations != 0 ? numberFormatting(this.countDonations) : 0;
         this.countDonationsNode.style.color = this.chartDatasets[0].borderColor;
 
-        this.countTariffsValueNode.textContent = numberFormatting(this.countTariffs);
+        this.countTariffsValueNode.textContent = this.countTariffs != 0 ? numberFormatting(this.countTariffs) : 0;
         this.countTariffsNode.style.color = this.chartDatasets[1].borderColor;
 
-        this.countCoursesValueNode.textContent = numberFormatting(this.countCourses);
+        this.countCoursesValueNode.textContent = this.countCourses != 0 ? numberFormatting(this.countCourses) : 0;
         this.countCoursesNode.style.color = this.chartDatasets[2].borderColor;
     }
 
@@ -114,6 +116,36 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         }
         this.сhart.changeData(this.marks, this.chartDatasets);
     }
+
+    // async loadFile(type) {
+    //     let exportType = type == 'csv' ? 'csv' : 'xlsx';
+    //     try {
+    //         const res = await axios({
+    //             method: 'post',
+    //             url: this.url,
+    //             responseType: "blob",
+    //             data: {
+    //                 community_id: this.communityId,
+    //                 export_type: exportType,
+    //                 filter: {
+    //                     period: this.filterPeriodValue,
+    //                 }
+    //             }
+    //         });
+
+    //         let blob = new Blob([res.data], {
+    //             type: res.headers['content-type'],
+    //         });
+
+    //         let anchor = document.createElement('a');
+    //         anchor.download = `StatisticExport(${ res.headers.date })`;
+    //         anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+    //         anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
+    //         anchor.click();
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
     get donations() {
         return this.data.items.donate_balance;

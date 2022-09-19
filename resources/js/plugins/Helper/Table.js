@@ -60,7 +60,7 @@ export class Table {
             class: 'table__body',
         }).init();
 
-        if (this.data.length || this.data) {
+        if (this.data.length && this.data) {
             this.data.forEach((dataItem) => {
                 const tableRowWrapper = new CreateNode({
                     parent: body,

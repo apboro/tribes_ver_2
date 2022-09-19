@@ -26,6 +26,8 @@ export class BaseAnalyticsPage {
         this.sortEvent = '';
         // Настройки фильтров
         this.filterPeriodValue = 'week';
+        // ссылки
+        this.fileUploadUrl = '';
         
         this.init();
     }
@@ -223,7 +225,7 @@ export class BaseAnalyticsPage {
         try {
             const res = await axios({
                 method: 'post',
-                url: '/api/tele-statistic/export-members',
+                url: this.fileUploadUrl,
                 responseType: "blob",
                 data: {
                     community_id: this.communityId,
@@ -233,75 +235,20 @@ export class BaseAnalyticsPage {
                     }
                 }
             });
-        
-            console.log(res);
-            // var encodedUri = encodeURI(data);
-            // var link = document.createElement("a");
-            // link.setAttribute("href", encodedUri);
-            // link.setAttribute("download", `my_data.${ type }`);
-            // document.body.appendChild(link); // Required for FF
-            // link.click();
-            //let filename = "TestReport.xlsx";
-        //     let filename = type == 'csv' ? 'TestReport.csv' : 'Test.xlsx';
-        //     var blob = data;
-        // if(window.navigator.msSaveOrOpenBlob) {
-        //     window.navigator.msSaveBlob(blob, filename);
-        // }
-        // else{
-        //     var downloadLink = window.document.createElement('a');
-        //     downloadLink.href = window.URL.createObjectURL(new Blob([blob], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
-        //     downloadLink.target = '_blank';
-        //     downloadLink.download = filename;
-        //     document.body.appendChild(downloadLink);
-        //     downloadLink.click();
-        //     document.body.removeChild(downloadLink);
-        //    }
-// ***********
-//             console.log(res.headers['content-type']);
 
-        let blob = new Blob([res.data], {
-            type: res.headers['content-type'],
-        });
+            let blob = new Blob([res.data], {
+                type: res.headers['content-type'],
+            });
 
-
-        let anchor = document.createElement('a');
-        anchor.download = 'StatisticExport(' + res.headers.date + ')';
-        anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-        anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
-        anchor.click();
-
-            // **************
-        //
-
-            // let blob = new Blob([s2ab(window.atob('123'))], {
-            //     type: ''
-            // });
-            //
-            // let href = URL.createObjectURL(blob);
-            //
-            // function s2ab(s) {
-            //     let buf = new ArrayBuffer(s.length);
-            //     let view = new Uint8Array(buf);
-            //     for (let i=0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-            //     return buf;
-            // }
-            //
-            // let anchor = document.createElement('a');
-            // anchor.download = 'StatisticExport(' + res.headers.date + ')';
-            // anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-            // anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
-            // anchor.click();
-
-
+            let anchor = document.createElement('a');
+            anchor.download = `StatisticExport(${ res.headers.date })`;
+            anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+            anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
+            anchor.click();
         } catch (error) {
             console.log(error);
         }
-
-
-
     }
 
     get chartDatasets() {}
 }
-
-
