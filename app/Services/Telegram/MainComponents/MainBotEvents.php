@@ -5,7 +5,6 @@ namespace App\Services\Telegram\MainComponents;
 use App\Exceptions\KnowledgeException;
 use App\Exceptions\TelegramException;
 use App\Helper\ArrayHelper;
-use App\Jobs\SetNewTelegramUsers;
 use App\Models\Community;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
@@ -171,10 +170,6 @@ class MainBotEvents
                         $this->data->my_chat_member->chat->title,
                         $this->getPhoto($chatId)
                     );
-                    if ($this->bot->getExtentionApi()->getChatCount($chatId) > 2) {
-                        dispatch(new SetNewTelegramUsers($chatId))->delay(10);
-                    }
-
                 }
             }
         } catch (Exception $e) {
@@ -198,9 +193,7 @@ class MainBotEvents
                         $this->data->my_chat_member->new_chat_member->status,
                         $chatId
                     );
-                    if ($this->bot->getExtentionApi()->getChatCount($chatId) > 2) {
-                        dispatch(new SetNewTelegramUsers($chatId))->delay(10);
-                    }
+                    
                 }
             }
         } catch (Exception $e) {

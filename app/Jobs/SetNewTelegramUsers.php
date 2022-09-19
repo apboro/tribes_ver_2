@@ -12,6 +12,7 @@ use App\Services\Telegram\MainComponents\Madeline;
 use App\Models\TelegramUser;
 use App\Models\Community;
 use App\Services\Telegram\TelegramMtproto\UserBot;
+use App\Services\TelegramLogService;
 
 class SetNewTelegramUsers implements ShouldQueue
 {
@@ -37,57 +38,64 @@ class SetNewTelegramUsers implements ShouldQueue
      */
     public function handle()
     {
-        $community = Community::whereHas('connection', function ($query) {
-            $query->where('chat_id', $this->chatId);
-        })->first();
+        try {
+            $community = Community::whereHas('connection', function ($query) {
+                $query->where('chat_id', '-' . $this->chatId)->orWhere('chat_id', '-100' . $this->chatId);
+            })->first();
 
-        $userBot = new UserBot;
-        $connection = $community->connection;
-        $limit = 100;
-        $offset = 0;
-        $chat_id = str_replace('-', '',(str_replace(-100, '', $connection->chat_id)));
-        if ($connection && $connection->is_there_userbot === true) {
-            if ($connection->access_hash !== null) {
-                
-                $participants = $userBot->getUsersInChannel($chat_id, $connection->access_hash, $limit, $offset);
-                $this->getChannelUsers($community, $participants);
-                $count = $participants[0]->users->count;
-                if ($count > $limit) {
-                    $offset = $limit;
-                    for ($i = 0; $i <= ceil($count / $limit); $i++) {
-                        $participants = $userBot->getUsersInChannel($chat_id, $connection->access_hash, $limit, $offset);
-                        $this->getChannelUsers($community, $participants);
-                        $offset += $limit;
+            $userBot = new UserBot;
+            $connection = $community->connection;
+            $limit = 100;
+            $offset = 0;
+            $chat_id = str_replace('-', '',(str_replace(-100, '', $connection->chat_id)));
+            if ($connection && $connection->is_there_userbot === true) {
+                if ($connection->access_hash !== null) {
+
+                    $participants = $userBot->getUsersInChannel($chat_id, $connection->access_hash, $limit, $offset);
+                    $this->getChannelUsers($community, $participants);
+                    $count = $participants[0]->users->count;
+                    if ($count > $limit) {
+                        $offset = $limit;
+                        for ($i = 0; $i <= ceil($count / $limit); $i++) {
+                            $participants = $userBot->getUsersInChannel($chat_id, $connection->access_hash, $limit, $offset);
+                            $this->getChannelUsers($community, $participants);
+                            $offset += $limit;
+                        }
                     }
+                } else {
+                    $participants = $userBot->getChatInfo($chat_id);
+                    $this->getUsersForGroup($community, $participants);
                 }
-            } else {
-                $participants = $userBot->getChatInfo($chat_id);
-                $this->getUsersForGroup($community, $participants);
             }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
-
     }
 
     protected function getChannelUsers($community, $participants)
     {
-        $newParticipants = $participants[0]->users->participants;
-        $users = $participants[0]->users->users;
-        foreach ($newParticipants as $participant) {
-            foreach ($users as $user) {
-                $role = $this->getChannelRole($participant);
-                if ($participant->user_id === $user->id)
-                    $this->saveUser($community, $user, $participant->date ?? null, $role);
+        try {
+            $newParticipants = $participants[0]->users->participants;
+            $users = $participants[0]->users->users;
+            foreach ($newParticipants as $participant) {
+                foreach ($users as $user) {
+                    $role = $this->getChannelRole($participant);
+                    if ($participant->user_id === $user->id)
+                        $this->saveUser($community, $user, $participant->date ?? null, $role);
+                }
             }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
-    protected function getChannelRole($participant) 
+    protected function getChannelRole($participant)
     {
         if ($participant->_ == 'channelParticipantAdmin')
             $role = 'administrator';
         elseif ($participant->_ == 'channelParticipantCreator')
             $role = 'creator';
-        else 
+        else
             $role = 'member';
 
         return $role;
@@ -95,25 +103,29 @@ class SetNewTelegramUsers implements ShouldQueue
 
     protected function getUsersForGroup($community, $participants)
     {
-        $newParticipants = $participants[0]->chatInfo->full_chat->participants->participants;
-        $users = $participants[0]->chatInfo->users;
+        try {
+            $newParticipants = $participants[0]->chatInfo->full_chat->participants->participants;
+            $users = $participants[0]->chatInfo->users;
 
-        foreach ($newParticipants as $participant) {
-            foreach ($users as $user) {
-                $role = $this->getGroupRole($participant);
-                if ($participant->user_id === $user->id)
-                    $this->saveUser($community, $user, $participant->date ?? null, $role);
+            foreach ($newParticipants as $participant) {
+                foreach ($users as $user) {
+                    $role = $this->getGroupRole($participant);
+                    if ($participant->user_id === $user->id)
+                        $this->saveUser($community, $user, $participant->date ?? null, $role);
+                }
             }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
-    protected function getGroupRole($participant) 
+    protected function getGroupRole($participant)
     {
         if ($participant->_ == 'chatParticipantAdmin')
             $role = 'administrator';
         elseif ($participant->_ == 'chatParticipantCreator')
             $role = 'creator';
-        else 
+        else
             $role = 'member';
 
         return $role;
