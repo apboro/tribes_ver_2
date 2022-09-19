@@ -37,6 +37,8 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
 
         this.isUsersHidden = false;
         this.isExitUsersHidden = false;
+        
+        this.fileUploadUrl = '/api/tele-statistic/export-members';
     }
 
     async loadData() {
@@ -88,12 +90,12 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
     }
 
     fillLabels() {
-        this.countAllUsersNode.textContent = numberFormatting(this.countAllUsers);
-
-        this.countExitUsersNode.textContent = `-${ numberFormatting(this.countExitUsers) }`;
+        this.countAllUsersNode.textContent = this.countAllUsers != 0 ? numberFormatting(this.countAllUsers) : 0;
+        
+        this.countExitUsersNode.textContent = this.countExitUsers != 0 ? `-${ numberFormatting(this.countExitUsers) }` : 0;
         this.countExitUsersNode.style.color = this.chartDatasets[1].borderColor;
-
-        this.countJoinUsersNode.textContent = `+${ numberFormatting(this.countJoinUsers) }`;
+       
+        this.countJoinUsersNode.textContent = this.countJoinUsers != 0 ? `+${ numberFormatting(this.countJoinUsers) }` : 0;
         this.countJoinUsersNode.style.color = this.chartDatasets[0].borderColor;
     }
 

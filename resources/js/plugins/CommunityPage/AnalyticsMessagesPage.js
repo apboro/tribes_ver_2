@@ -37,6 +37,8 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
 
         this.isMessageHidden = false;
         this.isUtilityHidden = false;
+
+        this.fileUploadUrl = '/api/tele-statistic/export-messages';
     }
 
     async loadData() {
@@ -88,12 +90,12 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
     }
 
     fillLabels() {
-        this.countAllMessageNode.textContent = numberFormatting(this.countAllMessage);
+        this.countAllMessageNode.textContent = this.countAllMessageNode != 0 ? numberFormatting(this.countAllMessage) : 0;
 
-        this.countNewMessageNode.textContent = `+${ numberFormatting(this.countNewMessage) }`;
+        this.countNewMessageNode.textContent = this.countNewMessage != 0 ? `+${ numberFormatting(this.countNewMessage) }` : 0;
         this.countNewMessageNode.style.color = this.chartDatasets[1].borderColor;
 
-        this.countNewUtilityNode.textContent = `+${ numberFormatting(this.countNewUtility) }`;
+        this.countNewUtilityNode.textContent = this.countNewUtility != 0 ? `+${ numberFormatting(this.countNewUtility) }` : 0;
         this.countNewUtilityNode.style.color = this.chartDatasets[0].borderColor;
     }
 
