@@ -29,8 +29,9 @@
             id="tariff_add_form"
             class="community-settings"
         >
+
             <!-- Название тарифа -->
-            <div class="community-settings__change-tariff" data-plugin="TariffYourValue">
+            <div class="community-settings__change-tariff" data-plugin="TariffYourValue" id="community-settings__change-tariff">
                 <div class="community-settings__form-item">
                     <label
                         class="form-label-red"
@@ -80,12 +81,13 @@
                             >
                                 {{ __('base.term_access_community') }}
                             </label>
+                            <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="false"/>
+                            <input type="hidden" name="tariff_pay_period" id="tariff_pay_period">
 
                             <select
                                 class="form-control-red tariff_pay_period"
-                                id="tariff_pay_period"
-                                name="tariff_pay_period"
-                                onchange="TariffYourValue.changeYourValueAdd(this)"
+
+                                onchange="TariffYourValue.test(this)"
                             >
                                 @if(env('FOR_TESTER'))
                                     <option value="0" checked>1 {{ __('base.minute_low') }}</option>
@@ -93,6 +95,8 @@
                                 @else
                                     <option value="1" checked>1 {{ __('base.day_low') }}</option>
                                 @endif
+
+                                <option value="3">3 {{ __('base.days_low') }}</option>
                                 <option value="7">7 {{ __('base.days_low') }}</option>
                                 <option value="14">14 {{ __('base.days_low') }}</option>
                                 <option value="30">30 {{ __('base.days_low') }} </option>
@@ -108,15 +112,16 @@
                     <div class="community-settings__form-item your-value-wrap">
                             <label
                                 class="form-label-red"
-                                for="your_value"
+                                for="quantity_of_days"
                             >
                                 {{ __('base.number_access_days') }}
                             </label>
                             <input 
                                 class="form-control-red your-value-input" 
                                 type="number" 
-                                id="your_value" 
-                                onchange="TariffYourValue.getChangesAdd(this.value)"
+                                id="quantity_of_days" 
+                                onchange="TariffYourValue.getChanges(this.value)"
+                                
                             >
                     </div>
 
@@ -128,14 +133,15 @@
                 <div class="community-settings__form-item your-value-wrap-mobile">
                     <label
                         class="form-label-red"
-                        for="your_value"
+                        for="quantity_of_days"
                     >
                         {{ __('base.number_access_days') }}
                     </label>
                     <input 
                         class="form-control-red your-value-input" 
                         type="number" 
-                        id="your_value" 
+                        id="quantity_of_days"
+                        name="quantity_of_days"
                         onchange="TariffYourValue.getChanges(this.value)"
                     >
                 </div>
