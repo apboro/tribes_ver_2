@@ -126,13 +126,13 @@
                             Непосредственное списание денежных средств осуществляет Банк-эмитент на основании заранее данного согласия Пользователя на подобное списание в сумме и в срок, указанные Автором. Запрос на перевод денежных средств с указанием суммы перевода в Банк-эмитент передается Банком и Процессинговым центром в рамках заключенных с Компанией соглашений.
                         </li>
                         <li>
-                            Пользователь вправе осуществить возврат уплаченной стоимости Подписки путем направления соответствующего запроса в службу поддержки&nbsp;<a href="https://t.me/zaikinalexander" class="text-primary">@zaikinalexander</a> в Мессенджере, если:
+                            Пользователь вправе осуществить возврат уплаченной стоимости Подписки путем направления соответствующего запроса в службу поддержки&nbsp;<a href="support@trbs.co " class="text-primary">support@trbs.co</a> или в Мессенджере: <a href="@TribesSupport_bot">@TribesSupport_bot</a>, <a href="https://t.me/zaikinalexander" class="text-primary">@zaikinalexander</a>, если:
                             <ol class="ol-deep mt-2" style="--n:&quot;1&quot;;">
                                 <li>
                                     доступ к Каналу/Чат-боту ему не был предоставлен в соответствии с п. 5.5 Соглашения;<br>или
                                 </li>
                                 <li>
-                                    Пользователь намерен отказаться от Подписки и вернуть ее стоимость при обращении с соответствующим запросом в службу поддержки&nbsp;<a href="https://t.me/zaikinalexander" class="text-primary">@zaikinalexander</a> в Мессенджере в течение не более 3 календарных дней с момента оплаты.
+                                    Пользователь намерен отказаться от Подписки и вернуть ее стоимость при обращении с соответствующим запросом в службу поддержки&nbsp;<a href="support@trbs.co " class="text-primary">support@trbs.co</a> или в Мессенджере: <a href="@TribesSupport_bot">@TribesSupport_bot</a>, <a href="https://t.me/zaikinalexander" class="text-primary">@zaikinalexander</a> в течение не более 3 календарных дней с момента оплаты.
                                 </li>
                             </ol>
                         </li>
@@ -260,7 +260,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col col-6"><b>Email:</b></div>
-                                    <div class="col col-6"><a href="mailto:zaikinalexandr@gmail.com" class="text-primary">zaikinalexandr@gmail.com</a></div>
+                                    <div class="col col-6"><a href="mailto:zaikinalexandr@gmail.com" class="text-primary">zaikinalexandr@gmail.com</a>, <a href="support@trbs.co " class="text-primary">support@trbs.co</a>, <a href="@TribesSupport_bot">@TribesSupport_bot</a></div>
                                 </div>
                             </div>
                         </div>

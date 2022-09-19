@@ -150,7 +150,7 @@
                     },
                 ],
 
-                visibleTab: 'list',
+                visibleTab: 'subscribers',
                 filterValue: 'week',
 
                 bigChartOptions: {

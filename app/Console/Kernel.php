@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('get:messages')->everyFifteenMinutes()->timezone('Europe/Moscow');
         $schedule->command('get:reactions')->everyFifteenMinutes()->timezone('Europe/Moscow');
         $schedule->command('get:views')->everyFifteenMinutes()->timezone('Europe/Moscow');
+        $schedule->command('check:admin')->dailyAt('23:59')->timezone('Europe/Moscow');
     }
 
     /**

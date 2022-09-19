@@ -102,6 +102,10 @@ $button-background-color-danger: $danger-2;
         pointer-events: none;
         opacity: .4;
     }
+    
+    &--hide {
+        display: none;
+    }
 
     &--only-icon {
         padding: 5px;
