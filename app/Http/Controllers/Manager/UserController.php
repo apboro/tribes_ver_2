@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Manager;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Manager\Filters\UsersFilter;
 use App\Http\Requests\Auth\LoginAsRequest;
+use App\Http\Requests\Manager\CommissionRequest;
+use App\Models\UserSettings;
 use App\Services\Admin\UserService;
 use App\Services\File\FileSendService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -65,6 +67,31 @@ class UserController extends Controller
             'message' => $rezult
                 ? "Пользователь №{$user->id} получил права администратора"
                 : "Пользователь №{$user->id} лишен прав администратора",
+        ]);
+    }
+
+    public function commission(CommissionRequest $request)
+    {
+        $userSettings = UserSettings::findByUserId($request->id);
+
+        if(empty($model = $userSettings->get('percent'))) {
+            $model = new UserSettings([
+                'user_id'=>$request->id,
+                'name'=> 'percent'
+            ]);
+        }
+        $model->value = $request->percent;
+        if($rez = $model->save()){
+            $status = 'ok';
+            $message = "Установлен процент комиссии для пользователя";
+        } else {
+            $status = 'error';
+            $message = "Не удалось сохранить значение";
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
         ]);
     }
 
