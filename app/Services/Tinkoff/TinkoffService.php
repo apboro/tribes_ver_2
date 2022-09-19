@@ -158,7 +158,6 @@ class TinkoffService
                 "Платёж " . $payment->id . " завершился неуспешно, Администрация в курсе" .
                 json_encode($e->getMessage())
             );
-            return response('OK', 200);
         }
     }
 }
