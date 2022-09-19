@@ -332,7 +332,8 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/user-bot-form', [UserBotFormController::class, 'index'])->name('user.bot.form');
 });
 
-Route::any('/webhook-user-bot', [TelegramUserBotController::class, 'index']);
+Route::any('/webhook-user-bot', [TelegramUserBotController::class, 'index'])->name('user.bot.webhook');
+Route::get('/set-webhook-for-user-bot', [TelegramUserBotController::class, 'setWebhook']);
 
 Route::any('/test', [TestBotController::class, 'index']);
 
