@@ -115,7 +115,10 @@ class MainBotEvents
                             $ty = Telegram::registerTelegramUser($member->id, NULL, $userName, $firstName, $lastName);
 
                             if (!$ty->communities()->find($community->id))
-                                $ty->communities()->attach($community);
+                                $ty->communities()->attach($community, [
+                                    'role' => 'member',
+                                    'accession_date' => time()
+                                ]);
 
                             $text = ($userName ?: $firstName)
                                 . ', ' . $description . $image;
