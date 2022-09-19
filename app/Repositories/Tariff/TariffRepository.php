@@ -240,12 +240,12 @@ class TariffRepository implements TariffRepositoryContract
         $variant->tariff_id = $this->tariffModel->id;
         $variant->title = $data['tariff_name'];
         $variant->price = $data['tariff_cost'];
-        $variant->period = $data['tariff_pay_period'];
+        $variant->period = $data['tariff_pay_period'] ?? $data['quantity_of_days'];
         $variant->isActive = $data['tariff'];
         $variant->number_button = $data['number_button'];
         $variant->arbitrary_term = $data['arbitrary_term'];
         $variant->save();
-
+       
         $this->tariffWithUser($community, $variant);
     }
 

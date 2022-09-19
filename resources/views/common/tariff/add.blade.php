@@ -29,8 +29,9 @@
             id="tariff_add_form"
             class="community-settings"
         >
+
             <!-- Название тарифа -->
-            <div class="community-settings__change-tariff" data-plugin="TariffYourValue">
+            <div class="community-settings__change-tariff" data-plugin="TariffYourValue" id="community-settings__change-tariff">
                 <div class="community-settings__form-item">
                     <label
                         class="form-label-red"
@@ -46,7 +47,6 @@
                         name="tariff_name"
                         aria-describedby="tariff_name"
                         placeholder="{{ __('base.standart') }}"
-
                     >
 
                     @error('tariff_name')
@@ -96,6 +96,7 @@
                                     <option value="1" checked>1 {{ __('base.day_low') }}</option>
                                 @endif
 
+                                <option value="3">3 {{ __('base.days_low') }}</option>
                                 <option value="7">7 {{ __('base.days_low') }}</option>
                                 <option value="14">14 {{ __('base.days_low') }}</option>
                                 <option value="30">30 {{ __('base.days_low') }} </option>
@@ -120,6 +121,7 @@
                                 type="number" 
                                 id="quantity_of_days" 
                                 onchange="TariffYourValue.getChanges(this.value)"
+                                
                             >
                     </div>
 

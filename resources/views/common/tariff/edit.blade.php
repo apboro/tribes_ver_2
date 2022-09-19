@@ -60,8 +60,7 @@
                         @enderror
                     </div>
 
-                    <!-- @dump($community) -->
-                    @dump($community->tariff)
+                    <!-- @dump($community->tariff) -->
                     <div class="community-settings__wrap-input-group">
                         <div class="community-settings__input-group">
                             <div class="community-settings__form-item tariff-cost">
@@ -90,7 +89,7 @@
                                 >
                                     {{ __('base.term_access_community') }}
                                 </label>
-                                <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="false"/>
+                                <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="{{ $tariff->arbitrary_term ?? false }}"/>
                                 <input type="hidden" name="tariff_pay_period" id="tariff_pay_period">
                                 <select
                                     class="form-control-red tariff_pay_period"
@@ -134,8 +133,6 @@
                             >
                         </div>
                     </div>
-                    
-                  
                 </div>
                 <div class="community-settings__your-value-mobile">
                     <div class="community-settings__form-item your-value-wrap-mobile">
@@ -151,6 +148,7 @@
                             id="quantity_of_days"
                             name="quantity_of_days"
                             onchange="TariffYourValue.getChanges(this.value)"
+                            value="{{ $tariff->arbitrary_term ? $tariff->period : '' }}"
                         >
                     </div>
                     

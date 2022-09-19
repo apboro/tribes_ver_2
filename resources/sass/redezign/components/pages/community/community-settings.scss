@@ -93,6 +93,7 @@
     &__change-tariff {
         display: flex;
         flex-wrap: wrap;
+        align-items: flex-start; 
 
         @media (min-width: $lg) {
             &.active {
