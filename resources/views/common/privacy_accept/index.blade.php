@@ -134,7 +134,7 @@
                         </li>
                         <li>
                             Пользователь имеет право отозвать Согласие путем направления соответствующего запроса в службу поддержки&nbsp;
-                            <a href="privacy@trbs.co" class="text-primary">privacy@trbs.co</a>, <a href="support@trbs.co " class="text-primary">support@trbs.co</a> или в Мессенджере: <a href="@TribesSupport_bot">@TribesSupport_bot</a>.
+                            <a class="text-primary">privacy@trbs.co</a>, <a class="text-primary">support@trbs.co</a> или в Мессенджере: <a href="https://t.me/TribesSupport_bot">@TribesSupport_bot</a>.
                         </li>
                         <li>
                             Пользователь согласен с тем, что на основании его письменного обращения с требованием о прекращении обработки Персональных данных (Данных) Оператор прекратит их Обработку в течение 30 (тридцати) календарных дней.
@@ -183,7 +183,7 @@
                                         <div class="row">
                                             <div class="col col-6"><b>Email:</b></div>
                                             <div class="col col-6">
-                                                <a href="mailto:hello@webstyle.top" class="text-primary">hello@webstyle.top</a>
+                                                <a class="text-primary">hello@webstyle.top</a>
                                             </div>
                                         </div>
                                     </div>
