@@ -28,11 +28,13 @@
                     <th>Имя</th>
                     <th>Телефон</th>
                     <th>Создан</th>
+                    <th>Комиссия</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in users.data" :key="user.id">
+                    <users-table-row v-for="user in users.data" :key="user.id" :user="user" />
+                    <!-- <tr v-for="user in users.data" :key="user.id">
                         <td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
                         <td><span class="text-muted">{{ user.id }}</span></td>
                         <td>
@@ -51,17 +53,33 @@
                         <td>
                             {{ formatDateTime(user.created_at) }}
                         </td>
+                        <td>
+                            <editable-value
+                                :isEditMode="isEditComissionMode"
+                                :value="user.commission"
+                            />
+                        </td>
                         <td class="text-end">
                             <button type="button" class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
                                 Действия
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <button @click.prevent="loginAs(user.id)" class="dropdown-item" type="button">Войти от этого пользователя</button>
+                                    <button @click.prevent="loginAs(user.id)" class="dropdown-item">Войти от этого пользователя</button>
+                                </li>
+
+                                <li>
+                                    <button
+                                        v-if="!isEditComissionMode"
+                                        class="dropdown-item"
+                                        @click="toggleEditComissionMode"
+                                    >
+                                        Изменить процент
+                                    </button>
                                 </li>
                             </ul>
                         </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>
@@ -85,11 +103,13 @@
 <script>
 import FilterDataUsers from '../../mixins/filterData';
 import FormatDateTime from '../../mixins/formatDateTime'
+import EditableValue from '../common/EditableValue.vue';
+import UsersTableRow from '../common/UsersTableRow.vue';
 
 export default {
     name: "Users",
+    components: { UsersTableRow, EditableValue },
     mixins: [FilterDataUsers, FormatDateTime],
-
 
     watch: {
         filter_data: {
@@ -128,6 +148,10 @@ export default {
         changePage(event) {
             this.filter_data.entries = event.target.value;
             this.filter_data.page = 1;
+        },
+
+        toggleEditComissionMode() {
+            this.isEditComissionMode = !this.isEditComissionMode;
         }
     }
 }
