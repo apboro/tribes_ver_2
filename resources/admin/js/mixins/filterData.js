@@ -1,10 +1,12 @@
 let initialState = () =>  {
     return {
-        filter_data:{
-            search : null,
-            entries : 5,
-            page : 1,
-            date: null,
+        filter_data: {
+            filter: {
+                search : null,
+                entries : 5,
+                page : 1,
+                date: null,
+            }
         },
         
         customer_data: {
@@ -21,7 +23,7 @@ export default {
     methods: {
         setPageByUrl(url){
             if(url){
-                this.filter_data.page = getParameterByName('page', url);
+                this.filter_data.filter.page = getParameterByName('page', url);
             }
         },
 

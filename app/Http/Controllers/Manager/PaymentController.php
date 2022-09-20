@@ -57,7 +57,7 @@ class PaymentController extends Controller
 
     public function list(PaymentsRequest $request, PaymentsFilter $filter)
     {
-        $payments = Payment::filter($filter)->paginate($request->get('entries'));
+        $payments = Payment::filter($filter)->paginate(request('filter.entries'));
         $payments->load('community');
 
         return PaymentResource::collection($payments);

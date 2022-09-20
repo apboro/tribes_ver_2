@@ -34,7 +34,7 @@ class UserController extends Controller
 
     public function list(Request $request, UsersFilter $filter)
     {
-        $users = User::filter($filter)->paginate($request->get('entries'));
+        $users = User::filter($filter)->paginate(request('filter.entries'));
         return new UsersResource($users);
     }
 
