@@ -90,7 +90,7 @@
                                     {{ __('base.term_access_community') }}
                                 </label>
                                 <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="{{ $tariff->arbitrary_term ?? false }}"/>
-                                <input type="hidden" name="tariff_pay_period" id="tariff_pay_period">
+                                <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="{{ $tariff->period ?? '' }}">
                                 <select
                                     class="form-control-red tariff_pay_period"
                                     
