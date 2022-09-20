@@ -108,26 +108,4 @@ class TestBotController extends Controller
 
         //    dd($usersInGroup);
     }
-
-    public function handle()
-    {
-        try {
-            $telegramConnections = TelegramConnection::select('chat_id', 'access_hash', 'comment_chat_id', 'comment_chat_hash')
-            ->where('isChannel', true)
-            ->where('is_there_userbot', true)->get();
-            foreach ($telegramConnections as $connect) {
-                $posts = $connect->posts()->select('post_id')->where('flag_observation', true)->get();
-                $postsId = [];
-                foreach ($posts as $post) {
-                    $postsId[] = $post->post_id;
-                }
-                $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
-                $views = $this->userBot->getMessagesViews($chat_id, 'channel', $postsId, $connect->access_hash);
-
-                $this->viewRepository->saveViews($connect, $postsId, $views);
-            }
-        } catch (\Exception $e) {
-            $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
-    }
 }

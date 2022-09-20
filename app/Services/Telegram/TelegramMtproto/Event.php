@@ -9,7 +9,6 @@ use App\Services\TelegramLogService;
 
 class Event
 {
-
     public function handler($update)
     {
         $this->newParticipants($update);
