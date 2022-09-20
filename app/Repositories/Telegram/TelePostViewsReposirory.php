@@ -13,9 +13,10 @@ class TelePostViewsReposirory implements TelePostViewsReposirotyContract
         if (isset($views[0]->views->views)) {
             $newViews = array_combine($postsId, $views[0]->views->views);
             foreach ($newViews as $key => $view) {
-                $viewsModel = new TelegramPostViews();
-                $viewsModel->channel_id = $connect->chat_id;
-                $viewsModel->post_id = $key;
+                $viewsModel = TelegramPostViews::firstOrCreate([
+                    'channel_id' => $connect->chat_id,
+                    'post_id' => $key
+                ]);
                 $viewsModel->views_count = $view->views ?? null;
                 $viewsModel->datetime_record = time();
                 $viewsModel->save();
