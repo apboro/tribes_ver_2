@@ -1,0 +1,24 @@
+.editable-value {
+    display: flex;
+
+    &__input {
+        width: 90px !important;
+    }
+
+    &__buttons {
+        display: flex;
+    }
+
+    &__btn {
+        border: none;
+        background-color: transparent;
+
+        &--success {
+            color: #30AAF0;
+        }
+
+        &--danger {
+            color: #E24041;
+        }
+    }
+}
