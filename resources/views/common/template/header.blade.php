@@ -44,7 +44,7 @@
                 </svg>
             </i>
 
-            @include('auth.headuser-red')
+            @include('auth.headuser-new')
         </div>
         <!-- <div class="main-header__auxiliary"> -->
             
