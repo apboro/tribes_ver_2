@@ -8,17 +8,29 @@
         </span>
 
         <template v-else>
-            
-                <input
-                    type="text"
-                    class="form-control form-control-sm"
-                    size="3"
-                    :value="this.value"
-                    @input="changeValue"
-                >
-            
-        </template>
+            <input
+                type="number"
+                class="form-control form-control-sm editable-value__input"
+                size="3"
+                v-model="newValue"
+            >
 
+            <div class="editable-value__buttons">
+                <button
+                    class="editable-value__btn editable-value__btn--success"
+                    @click="edit"    
+                >
+                    Ок
+                </button>
+
+                <button
+                    class="editable-value__btn editable-value__btn--danger"
+                    @click="cancel"    
+                >
+                    Отмена
+                </button>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -40,13 +52,18 @@
 
         data() {
             return {
-                // isEditMode: true,
+                newValue: this.value,
             }
         },
 
         methods: {
-            changeValue(event) {
-                console.log(event.target.value);
+            edit() {
+                this.$emit('edit', this.newValue);
+            },
+
+            cancel() {
+                this.newValue = this.value;
+                this.$emit('switchEditMode', false);
             }
         }
     }

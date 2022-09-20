@@ -16,13 +16,19 @@
             <svg  v-if="user.phone_confirmed" xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
         </td>
         <td>
-            {{ val }}
+            {{ date }}
         </td>
         <td>
             <editable-value
-                :isEditMode="isEditComissionMode"
+                :isEditMode="isEditCommissionMode"
                 :value="user.commission"
+                @switchEditMode="switchEditMode"
+                @edit="editCommission"
             />
+            
+            <span v-if="isCommissionError">
+                {{ commissionErrorText }}
+            </span>
         </td>
         <td class="text-end">
             <button type="button" class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
@@ -35,9 +41,9 @@
 
                 <li>
                     <button
-                        v-if="!isEditComissionMode"
+                        v-if="!isEditCommissionMode"
                         class="dropdown-item"
-                        @click="toggleEditComissionMode"
+                        @click="toggleEditCommissionMode"
                     >
                         Изменить процент
                     </button>
@@ -48,12 +54,13 @@
 </template>
 
 <script>
-    //import FormatDateTime from '../../mixins/formatDateTime'
+    import formatDateTime from '../../mixins/formatDateTime'
     import EditableValue from '../common/EditableValue.vue';
 
     export default {
         name: 'TableRow',
         components: { EditableValue },
+        mixins: [formatDateTime],
 
         props: {
             user: {
@@ -64,12 +71,14 @@
 
         data() {
             return {
-                isEditComissionMode: false,
+                isEditCommissionMode: false,
+                isCommissionError: false,
+                commissionErrorText: '',
             }
         },
 
         computed: {
-            val() {
+            date() {
                 return this.formatDateTime(this.user.created_at);
             }
         },
@@ -89,18 +98,33 @@
                 })
             },
 
-            changePage(event) {
-                this.filter_data.entries = event.target.value;
-                this.filter_data.page = 1;
+            toggleEditCommissionMode() {
+                this.isEditCommissionMode = !this.isEditCommissionMode;
             },
 
-            formatDateTime(str){
-                let date = new Date(str);
-                return `${date.toLocaleDateString('ru')} ${date.toLocaleTimeString('ru')}`;
+            switchEditMode(bool) {
+                this.isCommissionError = false;
+                this.isEditCommissionMode = bool;
             },
 
-            toggleEditComissionMode() {
-                this.isEditComissionMode = !this.isEditComissionMode;
+            async editCommission(value) {
+                try {
+                    await axios({
+                        method: 'POST',
+                        url: '/api/v2/user/commission',
+                        data: {
+                            id: this.user.id,
+                            percent: value
+                        }
+                    });
+                    
+                    this.isCommissionError = false;
+                    this.switchEditMode(false);
+                    this.user.commission = value;
+                } catch (error) {
+                    this.isCommissionError = true;
+                    this.commissionErrorText = error.response.data.errors.percent[0];
+                }
             }
         }
     }
