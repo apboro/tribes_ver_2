@@ -150,8 +150,8 @@ class TariffController extends Controller
 
     public function tariffEdit(Community $community, TariffRequest $request, $variantId, $activate = NULL)
     {
-        // dd($request);
-        if (isset($activate)) {
+        // dd($request);   
+        if (!$request->isMethod('post') && isset($activate)) {
             $this->tariffRepo->activate($variantId, $activate);
             return redirect()->route('community.tariff.list', $community);
         }
@@ -180,12 +180,16 @@ class TariffController extends Controller
         $isPersonal = $request->isPersonal ?? false;
         $isActive = $request->active ?? 'true';
         $isActive = $isActive == 'true';
-        $tariffs = $community->tariffVariants()
-            ->where('isActive', $isActive)
+        $builder =  $community->tariffVariants()
             ->where('price', '>', 0)
-            ->where('isPersonal', $isPersonal)
-            ->orderBy('number_button', 'ASC')
-            ->get();
+            ->orderBy('number_button', 'ASC');
+        if($isActive) {
+            $builder->where('isActive',"=", $isActive);
+            $builder->where('isPersonal',"=", $isPersonal);
+        } else {
+            $builder->where('isActive',"=", $isActive);
+        }
+        $tariffs = $builder->get();
         return view('common.tariff.list')->withCommunity($community)->withTariffs($tariffs);
     }
 

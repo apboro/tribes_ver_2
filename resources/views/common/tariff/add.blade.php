@@ -31,7 +31,7 @@
         >
 
             <!-- Название тарифа -->
-            <div class="community-settings__change-tariff" data-plugin="TariffYourValue" id="community-settings__change-tariff">
+            <div class="community-settings__change-tariff" id="community-settings__change-tariff">
                 <div class="community-settings__form-item">
                     <label
                         class="form-label-red"
@@ -82,12 +82,12 @@
                                 {{ __('base.term_access_community') }}
                             </label>
                             <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="false"/>
-                            <input type="hidden" name="tariff_pay_period" id="tariff_pay_period">
+                            <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="3">
 
                             <select
                                 class="form-control-red tariff_pay_period"
 
-                                onchange="TariffYourValue.test(this)"
+                                onchange="CommunityPage.tariffPageAdd.addRandomValue(this)"
                             >
                                 @if(env('FOR_TESTER'))
                                     <option value="0" checked>1 {{ __('base.minute_low') }}</option>
@@ -96,7 +96,7 @@
                                     <option value="1" checked>1 {{ __('base.day_low') }}</option>
                                 @endif
 
-                                <option value="3">3 {{ __('base.days_low') }}</option>
+                                <option value="3" selected>3 {{ __('base.days_low') }}</option>
                                 <option value="7">7 {{ __('base.days_low') }}</option>
                                 <option value="14">14 {{ __('base.days_low') }}</option>
                                 <option value="30">30 {{ __('base.days_low') }} </option>
@@ -120,7 +120,7 @@
                                 class="form-control-red your-value-input" 
                                 type="number" 
                                 id="quantity_of_days" 
-                                onchange="TariffYourValue.getChanges(this.value)"
+                                onchange="CommunityPage.tariffPageAdd.getChanges(this.value)"
                                 
                             >
                     </div>
@@ -142,7 +142,7 @@
                         type="number" 
                         id="quantity_of_days"
                         name="quantity_of_days"
-                        onchange="TariffYourValue.getChanges(this.value)"
+                        onchange="CommunityPage.tariffPageAdd.getChanges(this.value)"
                     >
                 </div>
 
@@ -166,27 +166,36 @@
                 </div>
             </div>
 
+            <div class="community-settings__active_personal">
+                <div class="toggle-switch community-settings__checkbox" id="disabled_checkbox">
+                    <label class="toggle-switch__switcher">
+                        <input type="hidden" name="tariff" value="0" />
+                        
+                        <input
+                            type="checkbox"
+                            id="tariff_active"
+                            class="toggle-switch__input"
+                            value="1"
+                            name="tariff"
+                        >
+                        <span class="toggle-switch__slider"></span>
+                    </label>
 
-            <div class="toggle-switch community-settings__checkbox">        
-                <label class="toggle-switch__switcher">
-                    <input type="hidden" name="tariff" value="0" />
-                    
-                    <input
-                        type="checkbox"
-                        id="tariff_active"
-                        class="toggle-switch__input"
-                        value="1"
-                        name="tariff"
+                    <label
+                        for="tariff_active"
+                        class="toggle-switch__label"
                     >
-                    <span class="toggle-switch__slider"></span>
-                </label>
+                        {{ __('tariff.activate_tariff') }}
+                    </label>
+                </div>
 
-                <label
-                    for="tariff_active"
-                    class="toggle-switch__label"
-                >
-                    {{ __('tariff.activate_tariff') }}
-                </label>
+                <div class="checkbox">
+                    <div class="checkbox__wrapper community-settings__personal_tariff">
+                        <input type="checkbox" id="isPersonal" class="checkbox__input" name="isPersonal" value="1" onchange="CommunityPage.tariffPageAdd.setActive(event)">
+                        <label for="isPersonal" class="checkbox__decor"></label>
+                    </div>
+                    <label class="community-settings__personal-label" for="isPersonal">Персональный тариф</label>
+                </div>
             </div>
                 
             <div class="community-settings__buttons">

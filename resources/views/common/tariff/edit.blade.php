@@ -36,7 +36,7 @@
                 <!-- <div class="community-settings__change-tariff">
                     <div class=""> -->
 
-                <div class="community-settings__change-tariff @if($tariff->arbitrary_term == true) active @endif" data-plugin="TariffYourValue" id="community-settings__change-tariff">
+                <div class="community-settings__change-tariff @if($tariff->arbitrary_term == true) active @endif" id="community-settings__change-tariff">
                     <div class="community-settings__form-item">
                         <label
                             class="form-label-red"
@@ -90,12 +90,12 @@
                                     {{ __('base.term_access_community') }}
                                 </label>
                                 <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="{{ $tariff->arbitrary_term ?? false }}"/>
-                                <input type="hidden" name="tariff_pay_period" id="tariff_pay_period">
+                                <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="{{ $tariff->period }}">
                                 <select
                                     class="form-control-red tariff_pay_period"
                                     
                                     
-                                    onchange="TariffYourValue.test(this)"
+                                    onchange="CommunityPage.tariffPageAdd.addRandomValue(this)"
                                 >
                                     @if(env('FOR_TESTER'))
                                         <option value="0" @if ($tariff->period === 0) selected @endif>1 {{ __('base.minute_low') }}</option>
@@ -127,7 +127,7 @@
                                 type="number" 
                                 id="quantity_of_days" 
                                 name="quantity_of_days"
-                                onchange="TariffYourValue.getChanges(this.value)"
+                                onchange="CommunityPage.tariffPageAdd.getChanges(this.value)"
                                 value="@if($tariff->arbitrary_term == true){{ $tariff->period ? $tariff->period : '' }}@endif"
                             >
                         </div>
@@ -146,7 +146,7 @@
                             type="number" 
                             id="quantity_of_days"
                             name="quantity_of_days"
-                            onchange="TariffYourValue.getChanges(this.value)"
+                            onchange="CommunityPage.tariffPageAdd.getChanges(this.value)"
                             value="{{ $tariff->arbitrary_term ? $tariff->period : '' }}"
                         >
                     </div>
@@ -169,11 +169,16 @@
                             value="{{ $tariff->number_button ? $tariff->number_button : '' }}"
                         >
                     </div>
+                    <!-- <div>
+                        <input type="checkbox" name="isPersonal" value="1">
+                        <label for="isPersonal">Персональный тариф</label>
+                    </div> -->
                 </div>
 
-                <div class="toggle-switch community-settings__checkbox">        
+                <div class="community-settings__active_personal">
+                <div class="toggle-switch community-settings__checkbox" id="disabled_checkbox">        
                     <label class="toggle-switch__switcher">
-                        <input type="hidden" name="tariff" value="0" />
+                        <!-- <input type="hidden" name="tariff" value="" /> -->
 
                         <input
                             type="checkbox"
@@ -192,6 +197,14 @@
                     >
                         {{ __('tariff.activate_tariff') }}
                     </label>
+                </div>
+                <div class="checkbox">
+                    <div class="checkbox__wrapper community-settings__personal_tariff">
+                        <input type="checkbox" id="isPersonal" class="checkbox__input" name="isPersonal" value="1" onchange="CommunityPage.tariffPageAdd.setActive(event)">
+                        <label for="isPersonal" class="checkbox__decor"></label>
+                    </div>
+                    <label class="community-settings__personal-label" for="isPersonal">Персональный тариф</label>
+                </div>
                 </div>
                 @endif
             @endforeach

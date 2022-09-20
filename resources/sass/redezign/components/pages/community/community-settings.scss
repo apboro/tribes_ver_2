@@ -107,7 +107,33 @@
     }
 
     &__checkbox {
+        width: 30%;
+
+        &.active {
+
+            .toggle-switch__input + .toggle-switch__slider,
+            .toggle-switch__input:focus + .toggle-switch__slider {
+                background-color: #7367f0;
+            }
+
+            .toggle-switch__input + .toggle-switch__slider:before {
+                transform: translateX(16px);
+            }
+        }
+    }
+
+    &__active_personal {
         margin: 20px 0 0;
+        display: flex;
+        align-items: center;
+    }
+
+    &__personal_tariff {
+        margin: 0 0 0 40px;
+    }
+
+    &__personal-label {
+        margin: 0 0 0 15px;
     }
 
     &__input-wrapper {
