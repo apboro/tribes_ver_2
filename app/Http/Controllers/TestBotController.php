@@ -21,9 +21,15 @@ use App\Models\Statistic;
 use App\Models\User;
 use App\Models\UserIp;
 use App\Models\Lesson;
+use App\Models\TelegramMessage;
 use App\Models\Template;
 use App\Models\Video;
 use App\Models\Text;
+use App\Repositories\Telegram\TeleMessageReactionRepositoryContract;
+use App\Repositories\Telegram\TeleMessageRepositoryContract;
+use App\Repositories\Telegram\TelePostReactionRepositoryContract;
+use App\Repositories\Telegram\TelePostRepositoryContract;
+use App\Repositories\Telegram\TelePostViewsReposirotyContract;
 use App\Repositories\Video\VideoRepository;
 use App\Services\SMS16;
 use App\Services\Telegram;
@@ -42,6 +48,31 @@ use DateTime;
 
 class TestBotController extends Controller
 {
+
+    protected $userBot;
+    protected $type = ['group', 'channel'];
+    protected $postReactionRepo;
+    protected $messageReactionRepo;
+    protected $telegramLogService;
+    protected $viewRepository;
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct(
+        TeleMessageReactionRepositoryContract $messageReactionRepo,
+        TelePostReactionRepositoryContract $postReactionRepo,
+        TelegramLogService $telegramLogService,
+        TelePostViewsReposirotyContract $viewRepository
+      )
+    {
+        $this->messageReactionRepo = $messageReactionRepo;
+        $this->postReactionRepo = $postReactionRepo;
+        $this->telegramLogService = $telegramLogService;
+        $this->userBot = new UserBot;
+        $this->viewRepository = $viewRepository;
+    }
 
     public function index(Request $request)
     {
@@ -76,5 +107,27 @@ class TestBotController extends Controller
         // dd($telegramConnection);
 
         //    dd($usersInGroup);
+    }
+
+    public function handle()
+    {
+        try {
+            $telegramConnections = TelegramConnection::select('chat_id', 'access_hash', 'comment_chat_id', 'comment_chat_hash')
+            ->where('isChannel', true)
+            ->where('is_there_userbot', true)->get();
+            foreach ($telegramConnections as $connect) {
+                $posts = $connect->posts()->select('post_id')->where('flag_observation', true)->get();
+                $postsId = [];
+                foreach ($posts as $post) {
+                    $postsId[] = $post->post_id;
+                }
+                $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
+                $views = $this->userBot->getMessagesViews($chat_id, 'channel', $postsId, $connect->access_hash);
+
+                $this->viewRepository->saveViews($connect, $postsId, $views);
+            }
+        } catch (\Exception $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
     }
 }

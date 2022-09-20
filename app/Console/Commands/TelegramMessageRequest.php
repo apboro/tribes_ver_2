@@ -63,7 +63,7 @@ class TelegramMessageRequest extends Command
                     $this->forChannel($connect, $type);
             }
         } catch (\Exception $e) {
-            $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
@@ -87,62 +87,82 @@ class TelegramMessageRequest extends Command
 
     protected function forGroup($connect, $type)
     {
-        $telegramMessages = $connect->messages()->get();
-        $access_hash = $connect->access_hash ?? null;
-        if (!$telegramMessages->first()) {
-            $messages = $this->userBot->getMessages($connect->chat_id, $type, $access_hash);
-            $this->saveMessage($messages);
-        } else {
-            $min_id = $connect->messages()->latest()->first()->message_id;
-            $messages = $this->userBot->getMessages($connect->comment_chat_id, $type, $access_hash, $min_id);
-            $this->saveMessage($messages);
+        try {
+            $telegramMessages = $connect->messages()->get();
+            $access_hash = $connect->access_hash ?? null;
+            if ($access_hash)
+                $type = 'channel';
+                
+            $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
+            if (!$telegramMessages->first()) {
+                $messages = $this->userBot->getMessages($chat_id, $type, $access_hash);
+                $this->saveMessage($messages);
+            } else {
+                $min_id = $connect->messages()->latest()->first()->message_id;
+                $messages = $this->userBot->getMessages($chat_id, $type, $access_hash, $min_id);
+                $this->saveMessage($messages);
+            }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
     protected function forChannel($connect, $type)
     {
-        $telegramPosts = $connect->posts()->get();
-
-        if (!$telegramPosts->first()) {
-            $messages = $this->userBot->getMessages($connect->chat_id, $type, $connect->access_hash);
-            $this->saveMessage($messages);
-        } else {
-            $min_id = $connect->posts()->latest()->first()->post_id;
-            $messages = $this->userBot->getMessages($connect->chat_id, $type, $connect->access_hash, $min_id);
-            $this->saveMessage($messages);
-            foreach ($telegramPosts as $post) {
-                $this->forComment($connect, $post);
+        try {
+            $telegramPosts = $connect->posts()->get();
+            $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
+            if (!$telegramPosts->first()) {
+                $messages = $this->userBot->getMessages($chat_id, $type, $connect->access_hash);
+                $this->saveMessage($messages);
+            } else {
+                $min_id = $connect->posts()->latest()->first()->post_id;
+                $messages = $this->userBot->getMessages($chat_id, $type, $connect->access_hash, $min_id);
+                $this->saveMessage($messages);
+                foreach ($telegramPosts as $post) {
+                    $this->forComment($connect, $post);
+                }
             }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
     protected function forComment($connect, $post)
     {
-        $telegramPostComments = $post->comment()->get();
-        $commentType = $this->getCommentType($connect);
-        $comment_access_hash = $connect->comment_chat_hash ?? null;
-    
-        if (!$telegramPostComments->first()) {
-            $messages = $this->userBot->getMessages($connect->comment_chat_id, $commentType, $comment_access_hash);
-            $this->saveMessage($messages, true);
-        } else {
-            $min_id = $post->comment()->latest()->first()->message_id;
-            $messages = $this->userBot->getMessages($connect->comment_chat_id, $commentType, $comment_access_hash, $min_id);
-            $this->saveMessage($messages, true);
+        try {
+            $telegramPostComments = $post->comment()->get();
+            $commentType = $this->getCommentType($connect);
+            $comment_access_hash = $connect->comment_chat_hash ?? null;
+            $comment_chat_id = str_replace('-', '', (str_replace(-100, '', $connect->comment_chat_id)));
+            if (!$telegramPostComments->first()) {
+                $messages = $this->userBot->getMessages($comment_chat_id, $commentType, $comment_access_hash);
+                $this->saveMessage($messages, true);
+            } else {
+                $min_id = $post->comment()->latest()->first()->message_id;
+                $messages = $this->userBot->getMessages($comment_chat_id, $commentType, $comment_access_hash, $min_id);
+                $this->saveMessage($messages, true);
+            }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
     protected function saveMessage($messages, $isComment = false)
     {
-        if (isset($messages[0]->messages->messages)) {
-            foreach ($messages[0]->messages->messages as $message) {
-                if ($message->post === true) {
-                    $this->postRepository->savePost($message);
-                } else {
-                    if (isset($message->message))
-                        $this->messageRepository->saveChatMessage($message, $isComment);
+        try {
+            if (isset($messages[0]->messages->messages)) {
+                foreach ($messages[0]->messages->messages as $message) {
+                    if ($message->post === true) {
+                        $this->postRepository->savePost($message);
+                    } else {
+                        if (isset($message->message))
+                            $this->messageRepository->saveChatMessage($message, $isComment);
+                    }
                 }
             }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 }
