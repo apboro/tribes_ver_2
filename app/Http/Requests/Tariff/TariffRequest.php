@@ -16,6 +16,11 @@ class TariffRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation()
+    {
+        $this->request->set('arbitrary_term', $this->arbitrary_term === true || $this->arbitrary_term === "true" );
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
