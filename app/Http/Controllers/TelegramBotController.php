@@ -35,7 +35,7 @@ class TelegramBotController extends Controller
             Storage::disk('telegram_data')->put("message_{$botName}_upd{$updId}_{$time}.json", $data);
         }
 
-        // $this->mainBotService->run($botName, $request->collect());
+        $this->mainBotService->run($botName, $request->collect());
     }
 
     //hook for second register bot
