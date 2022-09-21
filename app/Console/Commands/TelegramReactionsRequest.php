@@ -80,18 +80,19 @@ class TelegramReactionsRequest extends Command
     protected function forGroup($connect)
     {
         try {
-            $messages = $connect->messages()->select('message_id')->where('flag_observation', true)->get();
-
+            $messages = $connect->messages()->where('flag_observation', true)->get();
+            
             if ($messages->first()) {
+                $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
+                $this->messageReactionRepo->deleteMessageReactionForChat($chat_id);
                 foreach ($messages as $message) {
-                    
+                    $message->utility = '0';
+                    $message->save();
                     if ($connect->access_hash === null) {
                         $limit = 200;
-                        $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
                         $reactions = $this->userBot->getReactions($chat_id, $message->message_id, $limit);
                         $this->messageReactionRepo->saveReaction($reactions, $connect->chat_id, $message->message_id);
                     } else {
-                        $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
                         $reactions = $this->userBot->getChannelReactions($chat_id, [$message->message_id], $connect->access_hash);
                         $this->messageReactionRepo->saveChannelReaction($reactions, $connect->chat_id, $message->message_id);
                     }
