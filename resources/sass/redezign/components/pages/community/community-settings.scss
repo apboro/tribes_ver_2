@@ -14,7 +14,7 @@
         }
 
         &.your-value-wrap-mobile {
-            width: 35%;
+            width: 100%;
             margin: 0;
 
             @media (min-width: $lg) {
@@ -68,6 +68,14 @@
 
     }
 
+    &__wrap-left {
+        width: 100%;
+
+        @media (min-width: $md) {
+            width: 30%;
+        }
+    }
+
     &__wrap-input-group {
         width: 100%;
         position: relative;
@@ -107,7 +115,7 @@
     }
 
     &__checkbox {
-        width: 30%;
+        width: 100%;
 
         &.active {
 
@@ -123,13 +131,45 @@
     }
 
     &__active_personal {
-        margin: 20px 0 0;
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        align-items: baseline;
+
+        @media (min-width: $md) {
+            margin: 0 0 0 40px;
+        }
+
+        &.add {
+            justify-content: end;
+        }
+    }
+
+    &__inline-command {
+        margin: 0 0 20px;
+        padding: 30px 0 0;
+
+        @media (min-width: $md) {
+            margin: 0 0 30px;
+            padding: 20px 0 0;
+        }
+
+        &.list {
+            padding: 10px 0 0 20px;
+        }
+    }
+
+    &__inline-link {
+        display: block;
+        color: $green-1!important;
+
+        &:hover, &:focus {
+            color: $green-1!important;
+            opacity: .7;
+        }
     }
 
     &__personal_tariff {
-        margin: 0 0 0 40px;
+        margin: 0;
     }
 
     &__personal-label {
@@ -171,13 +211,8 @@
     }
 
     &__number-btn {
-        width: 75%;
-        margin: 0 0 0 20px;
-
-        @media (min-width: $lg) {
-            margin: 0;
-            width: 30%;
-        }
+        margin: 0 0 30px;
+        width: 100%;
     }
 
     &__input-group {
@@ -196,6 +231,7 @@
 
     &__your-value-mobile {
         display: flex;
+        flex-wrap: wrap;
 
         @media (min-width: $lg) {
             

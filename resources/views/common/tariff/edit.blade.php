@@ -90,7 +90,7 @@
                                     {{ __('base.term_access_community') }}
                                 </label>
                                 <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="{{ $tariff->arbitrary_term ?? false }}"/>
-                                <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="{{ $tariff->period }}">
+                                <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="{{ $tariff->period ?? '' }}">
                                 <select
                                     class="form-control-red tariff_pay_period"
                                     
@@ -134,77 +134,78 @@
                     </div>
                 </div>
                 <div class="community-settings__your-value-mobile">
-                    <div class="community-settings__form-item your-value-wrap-mobile">
-                        <label
-                            class="form-label-red"
-                            for="quantity_of_days"
-                        >
-                            {{ __('base.number_access_days') }}
-                        </label>
-                        <input 
-                            class="form-control-red your-value-input" 
-                            type="number" 
-                            id="quantity_of_days"
-                            name="quantity_of_days"
-                            onchange="CommunityPage.tariffPageAdd.getChanges(this.value)"
-                            value="{{ $tariff->arbitrary_term ? $tariff->period : '' }}"
-                        >
+                    <div class="community-settings__wrap-left">
+                        <div class="community-settings__form-item your-value-wrap-mobile">
+                            <label
+                                class="form-label-red"
+                                for="quantity_of_days"
+                            >
+                                {{ __('base.number_access_days') }}
+                            </label>
+                            <input 
+                                class="form-control-red your-value-input" 
+                                type="number" 
+                                id="quantity_of_days"
+                                name="quantity_of_days"
+                                onchange="CommunityPage.tariffPageAdd.getChanges(this.value)"
+                                value="{{ $tariff->arbitrary_term ? $tariff->period : '' }}"
+                            >
+                        </div>
+                        
+                        <div class="community-settings__number-btn">
+                            <label
+                                class="form-label-red"
+                                for="tariff_name"
+                            >
+                                {{ __('tariff.number_button') }}
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control-red"
+                                id="number_button"
+                                name="number_button"
+                                aria-describedby="number_button"
+                                placeholder="{{ __('base.number') }}"
+                                value="{{ $tariff->number_button ? $tariff->number_button : '' }}"
+                            >
+                        </div>
+                        <div class="toggle-switch community-settings__checkbox" id="disabled_checkbox">        
+                            <label class="toggle-switch__switcher">
+                                
+                                <input
+                                    type="checkbox"
+                                    id="tariff_active"
+                                    class="toggle-switch__input"
+                                    value="1"
+                                    name="tariff"
+                                    @if($tariff->isActive) checked @endif
+                                >
+                                <span class="toggle-switch__slider"></span>
+                            </label>
+
+                            <label
+                                for="tariff_active"
+                                class="toggle-switch__label"
+                            >
+                                {{ __('tariff.activate_tariff') }}
+                            </label>
+                        </div>
                     </div>
-                    
-                    <div class="community-settings__number-btn">
-                        <label
-                            class="form-label-red"
-                            for="tariff_name"
-                        >
-                            {{ __('tariff.number_button') }}
-                        </label>
-
-                        <input
-                            type="number"
-                            class="form-control-red"
-                            id="number_button"
-                            name="number_button"
-                            aria-describedby="number_button"
-                            placeholder="{{ __('base.number') }}"
-                            value="{{ $tariff->number_button ? $tariff->number_button : '' }}"
-                        >
+                
+                    <div class="community-settings__active_personal">
+                        <div class="community-settings__inline-command">
+                            <span class="form-label-red">Инлайн команда данного тарифа</span>
+                            <p class="community-settings__inline-link">{{$tariff->getInlineLink()}}</p>
+                        </div>
+                        <div class="checkbox">
+                            <div class="checkbox__wrapper community-settings__personal_tariff">
+                                <input type="checkbox" id="isPersonal" class="checkbox__input" name="isPersonal" value="1" onchange="CommunityPage.tariffPageAdd.setActive(event)">
+                                <label for="isPersonal" class="checkbox__decor"></label>
+                            </div>
+                            <label class="community-settings__personal-label" for="isPersonal">{{__('tariff.personal_tariff')}}</label>
+                        </div>
                     </div>
-                    <!-- <div>
-                        <input type="checkbox" name="isPersonal" value="1">
-                        <label for="isPersonal">Персональный тариф</label>
-                    </div> -->
-                </div>
-
-                <div class="community-settings__active_personal">
-                <div class="toggle-switch community-settings__checkbox" id="disabled_checkbox">        
-                    <label class="toggle-switch__switcher">
-                        <!-- <input type="hidden" name="tariff" value="" /> -->
-
-                        <input
-                            type="checkbox"
-                            id="tariff_active"
-                            class="toggle-switch__input"
-                            value="1"
-                            name="tariff"
-                            @if($tariff->isActive) checked @endif
-                        >
-                        <span class="toggle-switch__slider"></span>
-                    </label>
-
-                    <label
-                        for="tariff_active"
-                        class="toggle-switch__label"
-                    >
-                        {{ __('tariff.activate_tariff') }}
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <div class="checkbox__wrapper community-settings__personal_tariff">
-                        <input type="checkbox" id="isPersonal" class="checkbox__input" name="isPersonal" value="1" onchange="CommunityPage.tariffPageAdd.setActive(event)">
-                        <label for="isPersonal" class="checkbox__decor"></label>
-                    </div>
-                    <label class="community-settings__personal-label" for="isPersonal">Персональный тариф</label>
-                </div>
                 </div>
                 @endif
             @endforeach
