@@ -179,12 +179,19 @@ class TariffController extends Controller
         $isPersonal = $request->isPersonal ?? false;
         $isActive = $request->active ?? 'true';
         $isActive = $isActive == 'true';
-        $tariffs = $community->tariffVariants()
-            ->where('isActive', $isActive)
+        $builder =  $community->tariffVariants()
             ->where('price', '>', 0)
-            ->where('isPersonal', $isPersonal)
-            ->orderBy('number_button', 'ASC')
-            ->get();
+            ->orderBy('number_button', 'ASC');
+        if($isPersonal){
+            $builder->where('isActive',"=", true);
+            $builder->where('isPersonal',"=", true);
+        } elseif($isActive) {
+            $builder->where('isActive',"=", true);
+            $builder->where('isPersonal',"=", false);
+        } else {
+            $builder->where('isActive',"=", false);
+        }
+        $tariffs = $builder->get();
         return view('common.tariff.list')->withCommunity($community)->withTariffs($tariffs);
     }
 

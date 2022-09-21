@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Tariff;
 
+use App\Helper\PseudoCrypt;
 use App\Models\TariffVariant;
 use App\Models\Statistic;
 use App\Models\UserIp;
@@ -13,6 +14,7 @@ use App\Models\Payment;
 use App\Models\TelegramUser;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 
@@ -256,12 +258,21 @@ class TariffRepository implements TariffRepositoryContract
         $variant->title = $data['tariff_name'];
         $variant->price = $data['tariff_cost'];
         $variant->period = $data['tariff_pay_period'] ?? $data['quantity_of_days'];
-        $variant->isActive = $data['tariff'];
+        $variant->isActive = $data['tariff'] ?? false;
         $variant->number_button = $data['number_button'];
         $variant->arbitrary_term = $data['arbitrary_term'] ?? false;
+        $variant->isPersonal = $data['isPersonal'] ?? false;
+        if(empty( $variant->inline_link)) {
+            $this->generateLink($variant);
+        }
         $variant->save();
        
         $this->tariffWithUser($community, $variant);
+    }
+
+    public function generateLink(TariffVariant $variant)
+    {
+        $variant->inline_link = PseudoCrypt::hash(Carbon::now()->timestamp.rand(1,99999999999), 8);
     }
 
     private function tariffWithUser($community, $variant)
@@ -278,7 +289,7 @@ class TariffRepository implements TariffRepositoryContract
     public function activate($variantId, $activate)
     {
         $variant = TariffVariant::find($variantId);
-        $variant->isActive = $activate;
+        $variant->isActive = $activate??false;
         $variant->save();
     }
 
