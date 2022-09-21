@@ -229,7 +229,8 @@
         left: 0;
         z-index: 10;
         display: none;
-        background-color: $primary-2;
+        // background-color: $primary-2;
+        background-color: rgba(0, 0, 0, 0.5);
     }   
 }
 

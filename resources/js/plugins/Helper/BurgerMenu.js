@@ -16,7 +16,7 @@ export default class BurgerMenu {
     }
 
     show() {
-        document.body.classList.add('locked')
+        document.body.classList.add('locked');
         // меню отображаем
         this.menu.classList.add('active');
         // создаем темный фон
@@ -25,6 +25,7 @@ export default class BurgerMenu {
     }
 
     hide() {
+        document.body.classList.remove('locked');
         // меню скрываем
         this.menu.classList.remove('active');
         // темный фон удаляем
