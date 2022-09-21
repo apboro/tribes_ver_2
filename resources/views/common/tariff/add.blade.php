@@ -82,7 +82,7 @@
                                 {{ __('base.term_access_community') }}
                             </label>
                             <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="false"/>
-                            <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="1">
+                            <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="3">
 
                             <select
                                 class="form-control-red tariff_pay_period"
@@ -154,6 +154,11 @@
                         >
                             {{ __('tariff.number_button') }}
                         </label>
+
+            <div class="community-settings__active_personal">
+                <div class="toggle-switch community-settings__checkbox" id="disabled_checkbox">
+                    <label class="toggle-switch__switcher">
+                        <input type="hidden" name="tariff" value="0" />
 
                         <input
                             type="number"

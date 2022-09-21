@@ -150,7 +150,8 @@ class TariffController extends Controller
 
     public function tariffEdit(Community $community, TariffRequest $request, $variantId, $activate = NULL)
     {
-        if (isset($activate)) {
+        // dd($request);   
+        if (!$request->isMethod('post') && isset($activate)) {
             $this->tariffRepo->activate($variantId, $activate);
             return redirect()->route('community.tariff.list', $community);
         }
