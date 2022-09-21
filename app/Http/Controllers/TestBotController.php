@@ -22,6 +22,7 @@ use App\Models\User;
 use App\Models\UserIp;
 use App\Models\Lesson;
 use App\Models\TelegramMessage;
+use App\Models\TelegramMessageReaction;
 use App\Models\Template;
 use App\Models\Video;
 use App\Models\Text;
