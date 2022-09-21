@@ -31,8 +31,13 @@
     }
 
     &__arrow {
-        margin-left: 10px;
-        pointer-events: none;
+        display: none;
+        
+        @media (min-width: $lg) {
+            display: block;
+            margin-left: 10px;
+            pointer-events: none;
+        }
     }
 
     &__body {
