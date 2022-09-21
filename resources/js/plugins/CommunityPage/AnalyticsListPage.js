@@ -1,4 +1,4 @@
-import { numberFormatting } from "../../core/functions";
+import { convertToRub, numberFormatting } from "../../core/functions";
 import { BaseChart } from "../Helper/Chart/BaseChart";
 
 export class AnalyticsListPage {
@@ -107,12 +107,12 @@ export class AnalyticsListPage {
     }
 
     fillLabels() {
-        this.subdcribersLeftLabel.textContent = `-${ numberFormatting(this.subscribersLeft) }`;
-        this.subdcribersRightLabel.textContent = `+${ numberFormatting(this.subscribersRight) }`;
-        this.messagesLeftLabel.textContent = `+${ numberFormatting(this.messagesLeft) }`;
-        this.messagesRightLabel.textContent = `+${ this.messagesRight ? numberFormatting(this.messagesRight) : '0' }`;
-        this.paymentsLeftLabel.textContent = `+${ numberFormatting(this.paymentsLeft) }`;
-        this.paymentsRightLabel.textContent = `+${ numberFormatting(this.paymentsRight) }`;
+        this.subdcribersLeftLabel.textContent = this.subscribersLeft != 0 ? `-${ numberFormatting(this.subscribersLeft) }` : 0;
+        this.subdcribersRightLabel.textContent = this.subscribersRight != 0 ? `+${ numberFormatting(this.subscribersRight) }` : 0;
+        this.messagesLeftLabel.textContent = this.messagesLeft != 0 ? `+${ numberFormatting(this.messagesLeft) }` : 0;
+        this.messagesRightLabel.textContent = this.messagesRight != 0 ? `+${ numberFormatting(this.messagesRight) }` : 0;
+        this.paymentsLeftLabel.textContent = this.paymentsLeft != 0 ? `+${ numberFormatting(this.paymentsLeft) }` : 0;
+        this.paymentsRightLabel.textContent = this.paymentsRight != 0 ? `+${ numberFormatting(this.paymentsRight) }` : 0;
     }
 
     initCharts() {

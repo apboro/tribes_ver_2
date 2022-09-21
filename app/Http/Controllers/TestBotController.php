@@ -21,9 +21,16 @@ use App\Models\Statistic;
 use App\Models\User;
 use App\Models\UserIp;
 use App\Models\Lesson;
+use App\Models\TelegramMessage;
+use App\Models\TelegramMessageReaction;
 use App\Models\Template;
 use App\Models\Video;
 use App\Models\Text;
+use App\Repositories\Telegram\TeleMessageReactionRepositoryContract;
+use App\Repositories\Telegram\TeleMessageRepositoryContract;
+use App\Repositories\Telegram\TelePostReactionRepositoryContract;
+use App\Repositories\Telegram\TelePostRepositoryContract;
+use App\Repositories\Telegram\TelePostViewsReposirotyContract;
 use App\Repositories\Video\VideoRepository;
 use App\Services\SMS16;
 use App\Services\Telegram;
@@ -42,6 +49,31 @@ use DateTime;
 
 class TestBotController extends Controller
 {
+
+    protected $userBot;
+    protected $type = ['group', 'channel'];
+    protected $postReactionRepo;
+    protected $messageReactionRepo;
+    protected $telegramLogService;
+    protected $viewRepository;
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct(
+        TeleMessageReactionRepositoryContract $messageReactionRepo,
+        TelePostReactionRepositoryContract $postReactionRepo,
+        TelegramLogService $telegramLogService,
+        TelePostViewsReposirotyContract $viewRepository
+      )
+    {
+        $this->messageReactionRepo = $messageReactionRepo;
+        $this->postReactionRepo = $postReactionRepo;
+        $this->telegramLogService = $telegramLogService;
+        $this->userBot = new UserBot;
+        $this->viewRepository = $viewRepository;
+    }
 
     public function index(Request $request)
     {

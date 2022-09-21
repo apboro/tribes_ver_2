@@ -170,7 +170,7 @@
                 <div class="toggle-switch community-settings__checkbox" id="disabled_checkbox">
                     <label class="toggle-switch__switcher">
                         <input type="hidden" name="tariff" value="0" />
-                        
+
                         <input
                             type="checkbox"
                             id="tariff_active"

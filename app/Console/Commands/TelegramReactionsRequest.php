@@ -79,49 +79,65 @@ class TelegramReactionsRequest extends Command
 
     protected function forGroup($connect)
     {
-        $messages = $connect->messages()->select('message_id')->where('flag_observation', true)->get();
-
-        if ($messages->first()) {
-            foreach ($messages as $message) {
-                if ($connect->access_hash === null) {
-                    $limit = 200;
-                    $reactions = $this->userBot->getReactions($connect->chat_id, $message->message_id, $limit);
-                    $this->messageReactionRepo->saveReaction($reactions, $connect->chat_id, $message->message_id);
-                } else {
-                    $reactions = $this->userBot->getChannelReactions($connect->chat_id, [$message->message_id], $connect->access_hash);
-                    $this->messageReactionRepo->saveReaction($reactions, $connect->chat_id, $message->message_id);
+        try {
+            $messages = $connect->messages()->where('flag_observation', true)->get();
+            
+            if ($messages->first()) {
+                $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
+                $this->messageReactionRepo->deleteMessageReactionForChat($chat_id);
+                foreach ($messages as $message) {
+                    $message->utility = '0';
+                    $message->save();
+                    if ($connect->access_hash === null) {
+                        $limit = 200;
+                        $reactions = $this->userBot->getReactions($chat_id, $message->message_id, $limit);
+                        $this->messageReactionRepo->saveReaction($reactions, $connect->chat_id, $message->message_id);
+                    } else {
+                        $reactions = $this->userBot->getChannelReactions($chat_id, [$message->message_id], $connect->access_hash);
+                        $this->messageReactionRepo->saveChannelReaction($reactions, $connect->chat_id, $message->message_id);
+                    }
                 }
             }
+        } catch (\Exception $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
     protected function forChannel($connect)
     {
-        $posts = $connect->posts()->select('post_id')->where('flag_observation', true)->get();
-        if ($posts->first()) {
-            $postsId = [];
-            foreach ($posts as $post) {
-                $postsId[] = $post->post_id;
+        try {
+            $posts = $connect->posts()->select('post_id')->where('flag_observation', true)->get();
+            if ($posts->first()) {
+                $postsId = [];
+                foreach ($posts as $post) {
+                    $postsId[] = $post->post_id;
+                }
+                $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
+                $reactions = $this->userBot->getChannelReactions($chat_id, $postsId, $connect->access_hash);
+                $this->postReactionRepo->saveReaction($reactions);
             }
-
-            $reactions = $this->userBot->getChannelReactions($connect->chat_id, $postsId, $connect->access_hash);
-            $this->postReactionRepo->saveReaction($reactions);
+        } catch (\Exception $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
     protected function forComment($connect, $post)
     {
-        $messages = $post->comment()->where('flag_observation', true)->get();
-        if ($messages->first()) {
-            $messagesId = [];
-            foreach ($messages as $message) {
-                $messagesId[] = $message->message_id;
+        try {
+            $messages = $post->comment()->where('flag_observation', true)->get();
+            if ($messages->first()) {
+                $messagesId = [];
+                foreach ($messages as $message) {
+                    $messagesId[] = $message->message_id;
+                }
+
+                $access_hash = $connect->comment_chat_hash ?? null;
+                $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->comment_chat_id)));
+                $reactions = $this->userBot->getChannelReactions($chat_id, $messagesId, $access_hash);
+                $this->postReactionRepo->saveReaction($reactions);
             }
-
-            $access_hash = $connect->comment_chat_hash ?? null;
-
-            $reactions = $this->userBot->getChannelReactions($connect->comment_chat_id, $messagesId, $access_hash);
-            $this->postReactionRepo->saveReaction($reactions);
+        } catch (\Exception $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 }
