@@ -138,6 +138,10 @@
         @media (min-width: $md) {
             margin: 0 0 0 40px;
         }
+
+        &.add {
+            justify-content: end;
+        }
     }
 
     &__inline-command {
@@ -148,10 +152,20 @@
             margin: 0 0 30px;
             padding: 20px 0 0;
         }
+
+        &.list {
+            padding: 10px 0 0 20px;
+        }
     }
 
     &__inline-link {
-        color: $green-1;
+        display: block;
+        color: $green-1!important;
+
+        &:hover, &:focus {
+            color: $green-1!important;
+            opacity: .7;
+        }
     }
 
     &__personal_tariff {

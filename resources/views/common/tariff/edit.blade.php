@@ -196,14 +196,14 @@
                     <div class="community-settings__active_personal">
                         <div class="community-settings__inline-command">
                             <span class="form-label-red">Инлайн команда данного тарифа</span>
-                            <p class="community-settings__inline-link">@lms_9388Bot vtx0sFdz</p>
+                            <p class="community-settings__inline-link">{{$tariff->getInlineLink()}}</p>
                         </div>
                         <div class="checkbox">
                             <div class="checkbox__wrapper community-settings__personal_tariff">
                                 <input type="checkbox" id="isPersonal" class="checkbox__input" name="isPersonal" value="1" onchange="CommunityPage.tariffPageAdd.setActive(event)">
                                 <label for="isPersonal" class="checkbox__decor"></label>
                             </div>
-                            <label class="community-settings__personal-label" for="isPersonal">Персональный тариф</label>
+                            <label class="community-settings__personal-label" for="isPersonal">{{__('tariff.personal_tariff')}}</label>
                         </div>
                     </div>
                 </div>
