@@ -253,10 +253,12 @@ class MainBotCommands
             $article = new Article(1);
             $message = new InputTextMessageContent();
             $message->parseMode('HTML');
-            $menu = Menux::Create('a')->inline();
+
             if($tariff instanceof TariffVariant) {
                 //todo для одиночного тарифа
+                $menu = Menux::Create('links')->inline();
                 $variant = $tariff;
+                $message->text($variant->title);
                 $price = ($variant->price) ? $variant->price . '₽' : '';
                 $title = ($variant->title) ? $variant->title . ' — ' : '';
                 $period = ($variant->period) ? '/Дней:' . $variant->period : '';
