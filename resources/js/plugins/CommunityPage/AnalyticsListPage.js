@@ -1,4 +1,4 @@
-import { numberFormatting } from "../../core/functions";
+import { convertToRub, numberFormatting } from "../../core/functions";
 import { BaseChart } from "../Helper/Chart/BaseChart";
 
 export class AnalyticsListPage {
