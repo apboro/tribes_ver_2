@@ -11,6 +11,8 @@ use App\Models\Community;
 use App\Models\Donate;
 use App\Models\Knowledge\Question;
 use App\Models\Payment;
+use App\Models\Tariff;
+use App\Models\TariffVariant;
 use App\Models\TelegramUser;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Payment\PaymentRepositoryContract;
@@ -85,6 +87,7 @@ class MainBotCommands
         'tariffOnUser',
         'tariffOnChat',
         'inlineCommand',
+        "inlineTariffCommand",
         'donateOnChat',
         'donateOnUser',
         'materialAid',
@@ -227,18 +230,63 @@ class MainBotCommands
         try {
             $communities = $this->communityRepo->getAllCommunity();
             foreach ($communities as $community) {
+                $this->inlineTariffQuery($community->tariff()->first(), $community);
                 foreach ($community->tariffVariants as $tv) {
                     if (!$tv)
                         return false;
                     if (!$tv->inline_link)
                         return false;
                     // todo реализовать логику отображения подсказок для инлайн команд тарифов
-                    //$this->inlineQuery($tv);
+                    $this->inlineTariffQuery($tv, $community);
                 }
             }
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
+    }
+
+    private function inlineTariffQuery($tariff, $community)
+    {
+        $this->bot->onInlineQuery($tariff->inline_link, function (Context $ctx) use ($tariff, $community) {
+
+            $result = new Result();
+            $article = new Article(1);
+            $message = new InputTextMessageContent();
+            $message->parseMode('HTML');
+            $menu = Menux::Create('a')->inline();
+            if($tariff instanceof TariffVariant) {
+                //todo для одиночного тарифа
+                $variant = $tariff;
+                $price = ($variant->price) ? $variant->price . '₽' : '';
+                $title = ($variant->title) ? $variant->title . ' — ' : '';
+                $period = ($variant->period) ? '/Дней:' . $variant->period : '';
+                $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
+                    'amount' => $variant->price,
+                    'currency' => 0,
+                    'type' => 'tariff',
+                    'telegram_user_id' => null
+                ]));
+
+            }elseif($tariff instanceof Tariff) {
+                //todo для всех активных не персональных тарифов сообщества
+                $image = $tariff->getMainImage() ? $tariff->getMainImage()->url : '';
+                $description = $tariff->description ? $tariff->description : 'Описания нет!';
+                $article->description(mb_strimwidth($description, 0, 55, "..."));
+                $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
+                $article->thumbUrl('' . route('main') . $image);
+                [$text, $menu] = $this->tariffButton($community);
+
+            }
+            $article->title($community->title);
+            $article->inputMessageContent($message);
+
+            $article->keyboard($menu->getAsObject());
+            $result->add($article);
+            $ctx->Api()->answerInlineQuery([
+                'inline_query_id' => $ctx->getInlineQueryID(),
+                'results' => (string)$result,
+            ]);
+        });
     }
 
     protected function donateOnChat()
@@ -828,21 +876,23 @@ class MainBotCommands
         try {
             $menu = Menux::Create('links')->inline();
             $text = 'Доступные тарифы';
-            if ($community->tariff->variants->first() == NULL) {
+            $variants = $community->tariff->variants()
+                ->where('isActive',true)
+                ->where('isPersonal',false)
+                ->get();
+            if ($variants->count() == 0) {
                 return ['Тарифы не установлены для сообщества', ''];
             }
-            foreach ($community->tariff->variants as $variant) {
-                if ($variant->price !== 0 && $variant->isActive == true) {
-                    $price = ($variant->price) ? $variant->price . '₽' : '';
-                    $title = ($variant->title) ? $variant->title . ' — ' : '';
-                    $period = ($variant->period) ? '/Дней:' . $variant->period : '';
-                    $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
-                        'amount' => $variant->price,
-                        'currency' => 0,
-                        'type' => 'tariff',
-                        'telegram_user_id' => $userId
-                    ]));
-                }
+            foreach ($variants as $variant) {
+                $price = ($variant->price) ? $variant->price . '₽' : '';
+                $title = ($variant->title) ? $variant->title . ' — ' : '';
+                $period = ($variant->period) ? '/Дней:' . $variant->period : '';
+                $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
+                    'amount' => $variant->price,
+                    'currency' => 0,
+                    'type' => 'tariff',
+                    'telegram_user_id' => $userId
+                ]));
             }
             return [$text, $menu];
         } catch (\Exception $e) {

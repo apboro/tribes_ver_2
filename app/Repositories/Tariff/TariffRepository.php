@@ -3,6 +3,7 @@
 namespace App\Repositories\Tariff;
 
 use App\Helper\PseudoCrypt;
+use App\Models\Tariff;
 use App\Models\TariffVariant;
 use App\Models\Statistic;
 use App\Models\UserIp;
@@ -270,7 +271,11 @@ class TariffRepository implements TariffRepositoryContract
         $this->tariffWithUser($community, $variant);
     }
 
-    public function generateLink(TariffVariant $variant)
+    /**
+     * @param TariffVariant|Tariff $variant
+     * @return void
+     */
+    public function generateLink($variant)
     {
         $variant->inline_link = PseudoCrypt::hash(Carbon::now()->timestamp.rand(1,99999999999), 8);
     }
