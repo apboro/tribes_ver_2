@@ -72,7 +72,9 @@
                 </option>
             </select>
         </div>
-        
+        <div>
+            <p>{{$community->tariff()->first()->getInlineLink()??''}}</p>
+        </div>
         <!-- TARIFF LIST -->
         @if(isset($tariffs[0]))
         <ul class="community-tariff__list">
