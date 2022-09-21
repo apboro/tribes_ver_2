@@ -262,6 +262,7 @@ class MainBotCommands
                 $price = ($variant->price) ? $variant->price . '₽' : '';
                 $title = ($variant->title) ? $variant->title . ' — ' : '';
                 $period = ($variant->period) ? '/Дней:' . $variant->period : '';
+                $article->description(mb_strimwidth($title, 0, 55, "..."));
                 $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
                     'amount' => $variant->price,
                     'currency' => 0,
