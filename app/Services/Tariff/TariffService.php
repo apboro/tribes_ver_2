@@ -34,7 +34,7 @@ class TariffService {
                 DB::raw("tu.user_id as user_id"),
                 DB::raw("tu.telegram_id as telegram_user_id"),
                 DB::raw("c.id as community_id"),
-                DB::raw("coalesce(array_agg(tvc.id) FILTER ( WHERE tvc.\"isActive\"=true),'{}') as tvc_ids"),
+                DB::raw("coalesce(array_agg(tvc.id) FILTER ( WHERE tvc.\"isActive\"=true AND tvc.\"isPersonal\"=false),'{}') as tvc_ids"),
             ])
             ->where([
                 ['tv.isActive', "=", false],
