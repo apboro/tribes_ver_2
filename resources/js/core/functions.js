@@ -78,3 +78,7 @@ export function bodyUnLock() {
     document.body.classList.remove('locked');
     document.querySelector('.main-header').style.paddingRight = 0;
 }
+
+export function convertToRub(value) {
+    return Math.floor(Number(value) / 100);
+}

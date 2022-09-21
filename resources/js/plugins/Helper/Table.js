@@ -1,4 +1,4 @@
-import { timeFormatting } from "../../core/functions";
+import { convertToRub, timeFormatting } from "../../core/functions";
 import { CreateNode } from "./CreateNode";
 
 export class Table {
@@ -103,6 +103,12 @@ export class Table {
                         class: 'table__item table__item--changable',
                         text: data[itemFormat.key]
                     }).init();
+                } else if (itemFormat.type === 'rub') { 
+                    new CreateNode({
+                        parent: rowItemWrapper,
+                        class: 'table__item table__item--changable',
+                        text: convertToRub(data[itemFormat.key])
+                    }).init();
                 } else if (itemFormat.type === 'date') {
                     new CreateNode({
                         parent: rowItemWrapper,
@@ -134,7 +140,7 @@ export class Table {
                                 tag: 'li',
                                 class: 'table__reaction-item',
                             }).init();
-                            listItem.innerHTML = JSON.parse(`"${ reaction.reaction_code }"`);
+                            listItem.innerHTML = JSON.parse(`${ reaction.reaction_code }`);
     
                             new CreateNode({
                                 parent: listItem,
