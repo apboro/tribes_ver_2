@@ -1,4 +1,4 @@
-import { numberFormatting } from "../../core/functions";
+import { convertToRub, numberFormatting } from "../../core/functions";
 import { BaseChart } from "../Helper/Chart/BaseChart";
 
 export class AnalyticsListPage {
@@ -111,8 +111,8 @@ export class AnalyticsListPage {
         this.subdcribersRightLabel.textContent = `+${ numberFormatting(this.subscribersRight) }`;
         this.messagesLeftLabel.textContent = `+${ numberFormatting(this.messagesLeft) }`;
         this.messagesRightLabel.textContent = `+${ this.messagesRight ? numberFormatting(this.messagesRight) : '0' }`;
-        this.paymentsLeftLabel.textContent = `+${ numberFormatting(this.paymentsLeft) }`;
-        this.paymentsRightLabel.textContent = `+${ numberFormatting(this.paymentsRight) }`;
+        this.paymentsLeftLabel.textContent = `+${ numberFormatting(convertToRub(this.paymentsLeft)) }`;
+        this.paymentsRightLabel.textContent = `+${ numberFormatting(convertToRub(this.paymentsRight)) }`;
     }
 
     initCharts() {

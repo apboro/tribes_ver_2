@@ -1,4 +1,4 @@
-import { numberFormatting } from "../../core/functions";
+import { convertToRub, numberFormatting } from "../../core/functions";
 import { BaseAnalyticsPage } from "./BaseAnalyticsPage";
 
 export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
@@ -20,7 +20,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
             { type: 'text', key: 'status' },
             { type: 'object', key: 'type', value: 'name' },
             { type: 'date', key: 'buy_date' },
-            { type: 'text', key: 'amount' },
+            { type: 'rub', key: 'amount' },
         ];
         // Настройки пагинации
         this.paginationEvent = 'pagination: payments';
@@ -59,6 +59,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
             });
 
             this.data = data;
+            
             return true;
         } catch (error) {
             console.log(error);
@@ -93,16 +94,16 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
     }
 
     fillLabels() {
-        this.countTotalAmountNode.textContent = this.countTotalAmount != 0 ? numberFormatting(this.countTotalAmount) : 0;
-        this.countAllNode.textContent = this.countAll != 0 ? numberFormatting(this.countAll) : 0;
+        this.countTotalAmountNode.textContent = this.countTotalAmount != 0 ? numberFormatting(convertToRub(this.countTotalAmount)) : 0;
+        this.countAllNode.textContent = this.countAll != 0 ? numberFormatting(convertToRub(this.countAll)) : 0;
 
-        this.countDonationsValueNode.textContent = this.countDonations != 0 ? numberFormatting(this.countDonations) : 0;
+        this.countDonationsValueNode.textContent = this.countDonations != 0 ? numberFormatting(convertToRub(this.countDonations)) : 0;
         this.countDonationsNode.style.color = this.chartDatasets[0].borderColor;
 
-        this.countTariffsValueNode.textContent = this.countTariffs != 0 ? numberFormatting(this.countTariffs) : 0;
+        this.countTariffsValueNode.textContent = this.countTariffs != 0 ? numberFormatting(convertToRub(this.countTariffs)) : 0;
         this.countTariffsNode.style.color = this.chartDatasets[1].borderColor;
 
-        this.countCoursesValueNode.textContent = this.countCourses != 0 ? numberFormatting(this.countCourses) : 0;
+        this.countCoursesValueNode.textContent = this.countCourses != 0 ? numberFormatting(convertToRub(this.countCourses)) : 0;
         this.countCoursesNode.style.color = this.chartDatasets[2].borderColor;
     }
 
@@ -148,15 +149,15 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
     // }
 
     get donations() {
-        return this.data.items.donate_balance;
+        return this.data.items.donate_balance.map((item) => convertToRub(item));
     }
 
     get tariffs() {
-        return this.data.items.tariff_balance;
+        return this.data.items.tariff_balance.map((item) => convertToRub(item));
     }
 
     get courses() {
-        return this.data.items.course_balance;
+        return this.data.items.course_balance.map((item) => convertToRub(item));
     }
 
     get chartDatasets() {
