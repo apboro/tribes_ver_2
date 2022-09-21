@@ -135,7 +135,8 @@
                     <label for="is_tariff-list" class="toggle-switch__label">
                         @if(request('active') == null) Активный @else Неактивный @endif
                     </label>
-                </a>        
+                </a>
+                <p><a href="{{$tariff->getInlineLink()}}">{{$tariff->getInlineLink()}}</a></p>
             </li>
             @empty
             

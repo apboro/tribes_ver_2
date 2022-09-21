@@ -217,6 +217,30 @@ class MainBotCommands
         }
     }
 
+    /**
+     * todo реализовать регистрацию всех hash тарифов для инициации inline-команд
+     *      !!!Лимит 50 шт на бота, рефакторинг у каждого бота свои сообщества
+     * @return false|void
+     */
+    protected function inlineTariffCommand()
+    {
+        try {
+            $communities = $this->communityRepo->getAllCommunity();
+            foreach ($communities as $community) {
+                foreach ($community->tariffVariants as $tv) {
+                    if (!$tv)
+                        return false;
+                    if (!$tv->inline_link)
+                        return false;
+                    // todo реализовать логику отображения подсказок для инлайн команд тарифов
+                    //$this->inlineQuery($tv);
+                }
+            }
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
     protected function donateOnChat()
     {
         try {
@@ -829,6 +853,7 @@ class MainBotCommands
     private function inlineQuery($donate)
     {
         $this->bot->onInlineQuery($donate->inline_link, function (Context $ctx) use ($donate) {
+
             $result = new Result();
             $article = new Article(1);
             $message = new InputTextMessageContent();
