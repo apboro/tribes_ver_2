@@ -11,6 +11,7 @@ use App\Services\File\FileUploadService;
 use App\Filters\TariffFilter;
 use App\Models\Payment;
 use App\Models\TelegramUser;
+use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use DateTime;
 use Illuminate\Http\Request;
@@ -196,27 +197,40 @@ class TariffRepository implements TariffRepositoryContract
      */
     private function excludedUser($request, $community)
     {
-        foreach ($request->excluded as $userId => $excluded) {
-            $ty = TelegramUser::find($userId);
-            if ($ty->telegram_id === config('telegram_bot.bot.botId') || $ty->user_id === $community->owner)
-                continue;
+        try {
+            foreach ($request->excluded as $userId => $excluded) {
+                $ty = TelegramUser::find($userId);
+                $role = $ty->communities()->find($community->id)->pivot->role;
+                if ($ty->telegram_id === config('telegram_bot.bot.botId') || $ty->user_id === $community->owner || $role === 'administrator')
+                    continue;
 
-            if ($excluded != $ty->communities()->where('community_id', $community->id)->first()->pivot->excluded) {
+                $tariffVariant = $ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first();
 
-                if ($excluded === true) {
-                    $ty->communities()->updateExistingPivot($community->id, [
-                        'excluded' => $excluded,
-                    ]);
-                    $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
-                }
+                if ($excluded != $ty->communities()->where('community_id', $community->id)->first()->pivot->excluded) {
 
-                if ($excluded === false) {
-                    $ty->communities()->updateExistingPivot($community->id, [
-                        'excluded' => $excluded,
-                    ]);
-                    $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
+                    if ($excluded === true) {
+                        $this->mainServiceBot->kickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
+                        $ty->communities()->updateExistingPivot($community->id, [
+                            'excluded' => $excluded,
+                            'exit_date' => time()
+                        ]);
+
+                        if ($tariffVariant)
+                            $ty->tariffVariant()->updateExistingPivot($tariffVariant->id, ['isAutoPay' => false, 'days' => 0]);
+                    }
+
+                    if ($excluded === false) {
+                        $this->mainServiceBot->unKickUser(config('telegram_bot.bot.botName'), $ty->telegram_id, $community->connection->chat_id);
+                        $ty->communities()->updateExistingPivot($community->id, [
+                            'excluded' => $excluded,
+                            'accession_date' => time()
+                        ]);
+                    
+                    }
                 }
             }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
@@ -229,6 +243,7 @@ class TariffRepository implements TariffRepositoryContract
 
     public function updateOrCreate($community, $data, $variantId = NULL)
     {
+        // dd($data->all());
         $this->initTariffModel($community);
 
         if ($variantId !== NULL) {
@@ -240,12 +255,12 @@ class TariffRepository implements TariffRepositoryContract
         $variant->tariff_id = $this->tariffModel->id;
         $variant->title = $data['tariff_name'];
         $variant->price = $data['tariff_cost'];
-        $variant->period = $data['tariff_pay_period'];
+        $variant->period = $data['tariff_pay_period'] ?? $data['quantity_of_days'];
         $variant->isActive = $data['tariff'];
         $variant->number_button = $data['number_button'];
         $variant->arbitrary_term = $data['arbitrary_term'] ?? false;
         $variant->save();
-
+       
         $this->tariffWithUser($community, $variant);
     }
 

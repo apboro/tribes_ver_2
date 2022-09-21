@@ -1,4 +1,60 @@
 .footer {
+    flex: 0 0 auto;
+    padding: 20px 0 10px;
+    background-color: rgba($primary-1, .05);
+
+    &__wrapper {
+
+        @media (min-width: $md ) {
+            justify-content: center;
+        }
+    }
+
+    &__left {
+        width: 100%;
+        // display: flex;
+        // justify-content: center;
+        // flex-direction: column;
+        // align-items: baseline;
+
+        @media (min-width: $lg) {
+            width: 30%;
+        }
+
+        @media (min-width: $md) {
+            width: 50%;
+        }
+    }
+
+    &__right {
+        list-style-type: none;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+
+        @media (min-width: $lg) {
+            width: 70%;
+        }
+
+        @media (min-width: $md) {
+            width: 50%;
+        }
+    }
+
+    &__telegram-link-wrap,
+    &__phone-wrap {
+        text-align: center;
+
+        @media (min-width: $md) {
+            text-align: left;
+        }
+
+        > a {
+            display: inline-block;
+        }
+    }
+
     &__telegram-link {
         margin: 0 0 10px;
         display: flex;
@@ -17,6 +73,7 @@
     }
 
     &__phone {
+        margin: 0 0 10px;
         display: flex;
         align-items: center;
         @include font($grey-8, 14px, 20px, 600);
@@ -28,6 +85,15 @@
 
     &__item {
         margin: 0 0 10px;
-        width: 50%;
+        width: 100%;
+        text-align: center;
+
+        @media (min-width: $lg) {
+            width: 50%;
+        }
+
+        @media (min-width: $md) {
+            text-align: left;
+        }
     }
 }

@@ -269,6 +269,7 @@
                                             <th rowspan="1" colspan="1">{{ __('base.tariff') }}</th>
                                             <th rowspan="1" colspan="1">{{ __('payment.payment_date') }}</th>
                                             <th rowspan="1" colspan="1">{{ __('audience.days_left') }}</th>
+                                            <th rowspan="1" colspan="1">{{ __('audience.role') }}</th>
                                             <th rowspan="1" colspan="1">{{ __('payment.exclude') }}</th>
                                         </tr>
                                     </tfoot>

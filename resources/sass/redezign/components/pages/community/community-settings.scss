@@ -45,6 +45,7 @@
 
             @media (min-width: $lg) {
                 opacity: 0;
+                visibility: hidden;
                 display: flex;
                 flex-wrap: wrap;
                 transition: all 0.3s;
@@ -92,6 +93,17 @@
     &__change-tariff {
         display: flex;
         flex-wrap: wrap;
+        align-items: flex-start; 
+
+        @media (min-width: $lg) {
+            &.active {
+    
+                .community-settings__form-item.your-value-wrap {
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }   
+        }
     }
 
     &__checkbox {

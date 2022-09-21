@@ -16,8 +16,8 @@ export default class TariffYourValue extends Page {
     }
 
     getChanges(value){
-        let option = document.getElementById('yourValue');
-        option.textContent = value;
+        let option = document.getElementById('tariff_pay_period');
+        // option.textContent = value;
         option.value = value;
 
         // let selectCustom = document.getElementById('tariff_pay_period');
@@ -39,7 +39,20 @@ export default class TariffYourValue extends Page {
 
     getChangesAdd(value){
         let option = document.getElementById('yourValueAdd');
-        option.textContent = value;
+        // option.textContent = value;
         option.value = value;
+    }
+
+    test(item) {
+        let tariff_pay_period = document.getElementById('tariff_pay_period');
+        if(item.value == 'set') {
+            document.getElementById('community-settings__change-tariff').classList.add('active');
+            tariff_pay_period.value = document.getElementById('quantity_of_days').value;
+            document.getElementById('arbitrary_term').value = true;
+        } else {
+            document.getElementById('community-settings__change-tariff').classList.remove('active');
+            tariff_pay_period.value = item.value;
+            document.getElementById('arbitrary_term').value = false;
+        }
     }
 }

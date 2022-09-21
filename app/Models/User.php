@@ -193,6 +193,11 @@ class User extends Authenticatable
         return $rubbles ? $amount / 100 : $amount;
     }
 
+    function getTribesCommission()
+    {
+        return (int) (UserSettings::findByUserId($this->id)->get('percent')->value ?? env('TRIBES_COMMISSION',4));
+    }
+
     public function sendPasswordResetNotification($token)
     {
         $v = view('mail.reset')->with(

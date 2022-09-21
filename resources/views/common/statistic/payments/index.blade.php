@@ -136,7 +136,7 @@
                     
                     <button
                         class="button-empty button-empty--primary"
-                        onclick="CommunityPage.analyticsPaymentsPage.loadFile('excel')"
+                        onclick="CommunityPage.analyticsPaymentsPage.loadFile('csv')"
                     >
                         CSV
                     </button>

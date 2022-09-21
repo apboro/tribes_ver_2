@@ -21,7 +21,7 @@
                 {{ __('tariff.change_tariff') }}
             </h2>
         </div>
-
+        
         <form
             action="{{ route('community.tariff.edit', [$community->id, $variantId]) }}"
             method="post"
@@ -30,17 +30,14 @@
             class="community-settings"
         >
 
-            <input type="hidden" name="arbitrary_term" value="false"/>
-
             @foreach ($community->tariff->variants as $tariff)
                 @if ($tariff->id == $variantId)
                 <!-- Название тарифа -->
                 <!-- <div class="community-settings__change-tariff">
                     <div class=""> -->
 
-                <div class="community-settings__change-tariff" data-plugin="TariffYourValue">
+                <div class="community-settings__change-tariff @if($tariff->arbitrary_term == true) active @endif" data-plugin="TariffYourValue" id="community-settings__change-tariff">
                     <div class="community-settings__form-item">
-
                         <label
                             class="form-label-red"
                             for="tariff_name"
@@ -63,6 +60,7 @@
                         @enderror
                     </div>
 
+                    <!-- @dump($community->tariff) -->
                     <div class="community-settings__wrap-input-group">
                         <div class="community-settings__input-group">
                             <div class="community-settings__form-item tariff-cost">
@@ -91,12 +89,13 @@
                                 >
                                     {{ __('base.term_access_community') }}
                                 </label>
-
+                                <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="{{ $tariff->arbitrary_term ?? false }}"/>
+                                <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="{{ $tariff->period ?? '' }}">
                                 <select
                                     class="form-control-red tariff_pay_period"
-                                    id="tariff_pay_period"
-                                    name="tariff_pay_period"
-                                    onchange="TariffYourValue.changeYourValue(this)"
+                                    
+                                    
+                                    onchange="TariffYourValue.test(this)"
                                 >
                                     @if(env('FOR_TESTER'))
                                         <option value="0" @if ($tariff->period === 0) selected @endif>1 {{ __('base.minute_low') }}</option>
@@ -108,11 +107,9 @@
                                     <option value="14" @if ($tariff->period == 14) selected @endif>14 {{ __('base.days_low') }}</option>
                                     <option value="30" @if ($tariff->period == 30) selected @endif>30 {{ __('base.days_low') }}</option>
                                     <option value="90" @if ($tariff->period == 90) selected @endif>90 {{ __('base.days_low') }}</option>
-                                    <option value="180" @if ($tariff->period == 180) selected @endif>180 {{ __('base.days_low') }}
-                                    </option>
-                                    <option value="365" @if ($tariff->period == 365) selected @endif>365 {{ __('base.days_low') }}
-                                    </option>
-                                    <option id="yourValue" value="set">Свое значение</option>
+                                    <option value="180" @if ($tariff->period == 180) selected @endif>180 {{ __('base.days_low') }}</option>
+                                    <option value="365" @if ($tariff->period == 365) selected @endif>365 {{ __('base.days_low') }}</option>
+                                    <option id="yourValue" value="set" @if ($tariff->arbitrary_term == true) selected @endif>Свое значение</option>
                                 </select>
                             </div>
                         </div>
@@ -120,57 +117,59 @@
                         <div class="community-settings__form-item your-value-wrap">
                             <label
                                 class="form-label-red"
-                                for="your_value"
+                                for="quantity_of_days"
                             >
                                 {{ __('base.number_access_days') }}
                             </label>
+                            
                             <input 
                                 class="form-control-red your-value-input" 
                                 type="number" 
-                                id="your_value" 
+                                id="quantity_of_days" 
+                                name="quantity_of_days"
                                 onchange="TariffYourValue.getChanges(this.value)"
+                                value="@if($tariff->arbitrary_term == true){{ $tariff->period ? $tariff->period : '' }}@endif"
                             >
                         </div>
                     </div>
-                    
-                  
                 </div>
                 <div class="community-settings__your-value-mobile">
-                        <div class="community-settings__form-item your-value-wrap-mobile">
-                            <label
-                                class="form-label-red"
-                                for="your_value"
-                            >
-                                {{ __('base.number_access_days') }}
-                            </label>
-                            <input 
-                                class="form-control-red your-value-input" 
-                                type="number" 
-                                id="your_value" 
-                                onchange="TariffYourValue.getChanges(this.value)"
-                            >
-                        </div>
-                    
-                        <div class="community-settings__number-btn">
-                            <label
-                                class="form-label-red"
-                                for="tariff_name"
-                            >
-                                {{ __('tariff.number_button') }}
-                            </label>
-
-                            <input
-                                type="number"
-                                class="form-control-red"
-                                id="number_button"
-                                name="number_button"
-                                aria-describedby="number_button"
-                                value=""
-                                placeholder="{{ __('base.number') }}"
-                                value="{{ $tariff->number_button ? $tariff->number_button : '' }}"
-                            >
-                        </div>
+                    <div class="community-settings__form-item your-value-wrap-mobile">
+                        <label
+                            class="form-label-red"
+                            for="quantity_of_days"
+                        >
+                            {{ __('base.number_access_days') }}
+                        </label>
+                        <input 
+                            class="form-control-red your-value-input" 
+                            type="number" 
+                            id="quantity_of_days"
+                            name="quantity_of_days"
+                            onchange="TariffYourValue.getChanges(this.value)"
+                            value="{{ $tariff->arbitrary_term ? $tariff->period : '' }}"
+                        >
                     </div>
+                    
+                    <div class="community-settings__number-btn">
+                        <label
+                            class="form-label-red"
+                            for="tariff_name"
+                        >
+                            {{ __('tariff.number_button') }}
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control-red"
+                            id="number_button"
+                            name="number_button"
+                            aria-describedby="number_button"
+                            placeholder="{{ __('base.number') }}"
+                            value="{{ $tariff->number_button ? $tariff->number_button : '' }}"
+                        >
+                    </div>
+                </div>
 
                 <div class="toggle-switch community-settings__checkbox">        
                     <label class="toggle-switch__switcher">

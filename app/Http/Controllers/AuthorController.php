@@ -113,17 +113,33 @@ class AuthorController extends Controller
     public function audienceBan(Request $request)
     {
         $community = Community::find($request->community);
-        $this->botService->kickUser(config('telegram_bot.bot.botName'), $request->follower, $community->connection->chat_id);
-        return redirect()->back();
+        $follower = TelegramUser::find($request->follower);
+        $role = $follower->communities()->find($community->id)->pivot->role;
+        if ($role !== 'administrator' && $role !== 'creator') {
+            $this->botService->kickUser(config('telegram_bot.bot.botName'), $request->follower, $community->connection->chat_id);
+            $follower->communities()->updateExistingPivot($community->id, [
+                'exit_date' => time()
+            ]);
+            return redirect()->back();
+        } else {
+            redirect()->back()->withMessage('Не удалось исключить, так как пользователь ' . $follower->user_name . ' является администратором сообщества.');
+        }
+       
     }
 
     public function audienceDelete(Request $request)
     {
-        $follower = TelegramUser::find($request->follower);
         $community = Community::find($request->community);
-
-        $this->botService->kickUser(config('telegram_bot.bot.botName'), $follower->id, $community->connection->chat_id);
-        $follower->communities()->detach($community->id);
-        return redirect()->back();
+        $follower = TelegramUser::find($request->follower);
+        $role = $follower->communities()->find($community->id)->pivot->role;
+        if ($role !== 'administrator' && $role !== 'creator') {
+            $this->botService->kickUser(config('telegram_bot.bot.botName'), $request->follower, $community->connection->chat_id);
+            $follower->communities()->updateExistingPivot($community->id, [
+                'exit_date' => time()
+            ]);
+            return redirect()->back();
+        } else {
+            redirect()->back()->withMessage('Не удалось исключить, так как пользователь ' . $follower->user_name . ' является администратором сообщества.');
+        }
     }
 }
