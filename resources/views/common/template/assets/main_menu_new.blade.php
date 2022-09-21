@@ -1,7 +1,6 @@
 <div class="main-nav-new main-header-red__main-nav">
     <button
         class="main-nav-new__burger-btn"
-        
         onclick="Burger.toggle()"
     >
         <span class="main-nav-new__burger-lines"></span>

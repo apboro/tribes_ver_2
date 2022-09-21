@@ -15,8 +15,8 @@
         
         &.active,
         &:hover {
-            .dropdown-lk__name {
-                color: $main-hover-color;
+            .dropdown-menu-item__name {
+                color: $primary-1;
             }
         }
     }
@@ -118,7 +118,7 @@
 
         &:hover,
         &:focus {
-            background-color: $secondary-hover-color;
+            //background-color: $secondary-hover-color;
 
             span {
                 color: $primary-color;

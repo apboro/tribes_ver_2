@@ -1,0 +1,85 @@
+.dropdown-project-list {
+    position: relative;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        cursor: pointer;
+
+        &.active .dropdown-project-list__arrow {
+            transform: rotate(180deg);
+        }
+    }
+
+    &__title {
+        @include font($text-color-1, 18px, 24px, 700);
+        pointer-events: none;
+    }
+
+    &__arrow {
+        margin-left: 10px;
+        pointer-events: none;
+    }
+
+    &__body {
+        position: absolute;
+        top: 50px;
+        bottom: auto;
+        z-index: 15;
+        min-width: 260px;
+        display: none;
+        padding: 0;
+        border: 1px solid $grey-4;
+        border-radius: 10px;
+        box-shadow: $shadow-1;
+        overflow: hidden;
+        animation-duration: .3s;
+        animation-name: dropdown-slidein;
+        
+        &.active {
+            display: block;
+
+            & + .dropdown-project-list__overlay {
+                display: block;
+
+                @media (min-width: $lg) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    
+
+    &__overlay {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 10;
+        display: none;
+        background-color: $primary-2;
+    }
+}
+
+@keyframes dropdown-slidein {
+    from {
+        margin-top: 10%;
+    }
+  
+    to {
+        margin-top: 0;
+    }
+}
+
+@keyframes dropdown-slidein-mobile {
+    from {
+        margin-right: -10%;
+    }
+  
+    to {
+        margin-right: 0;
+    }
+}

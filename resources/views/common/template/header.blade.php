@@ -33,6 +33,7 @@
             @endif
         </a>
         
+        @include('common.template.assets.project_list')
 
         @include('common.template.assets.main_menu_new')
 
