@@ -1,3 +1,9 @@
+## Полезная литература и статьи
+[Limits](https://skybots.ru/telegram-limity/?ysclid=l8bghcslr9780385652)
+[Что может бот](https://habr.com/ru/post/543676/?ysclid=l8bjydo8hs17956581)
+[еще лимиты](https://skybots.ru/telegram-limity/?ysclid=l8bghcslr9780385652)https://limits.tginfo.me/ru-RU
+
+
 ## Описание команд для работы с ботом телеграмма
 ```php
 

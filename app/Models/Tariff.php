@@ -69,5 +69,9 @@ class Tariff extends Model
         ];
     }
 
-
+    public function getInlineLink($bot = null)
+    {
+        $bot = $bot ?? env('TELEGRAM_BOT_NAME', '');
+        return "@$bot {$this->inline_link}";
+    }
 }
