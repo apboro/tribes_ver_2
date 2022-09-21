@@ -95,7 +95,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
 
     fillLabels() {
         this.countTotalAmountNode.textContent = this.countTotalAmount != 0 ? numberFormatting(convertToRub(this.countTotalAmount)) : 0;
-        this.countAllNode.textContent = this.countAll != 0 ? numberFormatting(this.countAll) : 0;
+        this.countAllNode.textContent = this.countAll != 0 ? numberFormatting(convertToRub(this.countAll)) : 0;
 
         this.countDonationsValueNode.textContent = this.countDonations != 0 ? numberFormatting(convertToRub(this.countDonations)) : 0;
         this.countDonationsNode.style.color = this.chartDatasets[0].borderColor;
