@@ -23,7 +23,7 @@
                     
                     <h2 class="text-center mb-2">1. Термины и определения</h2>
                     
-                    <ol class="ol-deep mb-4" data-ol-num="1">
+                    <ol class="ol-deep" data-ol-num="1">
                         <li>
                             <b>Сервис «Рекуррентные списания» —&nbsp;</b>сервис по осуществлению регулярных автоматических списаний денежных средств с Банковской карты Держателя карты за оплату Подписки на основании заранее данного акцепта Держателя карты в порядке, предусмотренном Правилами.
                         </li>
@@ -127,7 +127,7 @@
                         </li>
                         <li>
                             Пользователь вправе осуществить возврат уплаченной стоимости Подписки путем направления соответствующего запроса в службу поддержки&nbsp;<a class="text-primary">support@trbs.co</a> или в Мессенджере: <a href="https://t.me/TribesSupport_bot">@TribesSupport_bot</a>, <a href="https://t.me/zaikinalexander" class="text-primary">@zaikinalexander</a>, если:
-                            <ol class="ol-deep mt-2" style="--n:&quot;1&quot;;">
+                            <ol class="ol-deep" style="--n:&quot;1&quot;;">
                                 <li>
                                     доступ к Каналу/Чат-боту ему не был предоставлен в соответствии с п. 5.5 Соглашения;<br>или
                                 </li>
