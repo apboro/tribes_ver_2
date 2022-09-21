@@ -112,7 +112,7 @@ export class AnalyticsListPage {
         this.messagesLeftLabel.textContent = this.messagesLeft != 0 ? `+${ numberFormatting(this.messagesLeft) }` : 0;
         this.messagesRightLabel.textContent = this.messagesRight != 0 ? `+${ numberFormatting(this.messagesRight) }` : 0;
         this.paymentsLeftLabel.textContent = this.paymentsLeft != 0 ? `+${ numberFormatting(this.paymentsLeft) }` : 0;
-        this.paymentsRightLabel.textContent = this.paymentsRight ? `+${ numberFormatting(this.paymentsRight) }` : 0;
+        this.paymentsRightLabel.textContent = this.paymentsRight != 0 ? `+${ numberFormatting(this.paymentsRight) }` : 0;
     }
 
     initCharts() {
