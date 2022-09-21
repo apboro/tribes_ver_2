@@ -114,7 +114,7 @@ class Event
             $connect = TelegramConnection::where('chat_id', '-100' . $chat_id)->first();
             if ($connect && $connect->comment_chat_id == null) {
                 $commentHash = $this->getChatHash($update, $comment_chat);
-                $connect->comment_chat_id = $comment_chat;
+                $connect->comment_chat_id = '-100' . $comment_chat;
                 $connect->comment_chat_hash = $commentHash;
                 $connect->save();
 
