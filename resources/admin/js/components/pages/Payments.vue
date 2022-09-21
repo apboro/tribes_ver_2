@@ -5,13 +5,13 @@
                 <div class="text-muted">
                     показать
                     <div class="mx-2 d-inline-block">
-                        <input type="text" class="form-control" :value="this.filter_data.entries" @input="changePage" size="3">
+                        <input type="text" class="form-control" :value="this.filter_data.filter.entries" @input="changePage" size="3">
                     </div>
                     на странице
                 </div>
                 
                 <div class="d-flex">
-                    <input type="date" class="form-control" id="datepicker-default"  v-model="filter_data.date"/>
+                    <input type="date" class="form-control" id="datepicker-default"  v-model="filter_data.filter.date"/>
                 </div>
 
                 <div class="">
@@ -35,7 +35,7 @@
                 <div class="text-muted">
                     Поиск:
                     <div class="ms-2 d-inline-block">
-                        <input type="text" class="form-control" v-model="filter_data.search" aria-label="поиск"/>
+                        <input type="text" class="form-control" v-model="filter_data.filter.search" aria-label="поиск"/>
                     </div>
                 </div>
                 <button class="btn" @click="reset">Сбросить фильтр</button>
@@ -131,8 +131,8 @@ export default {
     methods: {
 
         changePage(event) {
-            this.filter_data.entries = event.target.value;
-            this.filter_data.page = 1;
+            this.filter_data.filter.entries = event.target.value;
+            this.filter_data.filter.page = 1;
         },
     }
 }

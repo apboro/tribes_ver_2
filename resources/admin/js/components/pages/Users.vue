@@ -5,14 +5,14 @@
                 <div class="text-muted">
                     показать
                     <div class="mx-2 d-inline-block">
-                        <input type="text" class="form-control form-control-sm" :value="this.filter_data.entries" @input="changePage" size="3">
+                        <input type="text" class="form-control form-control-sm" :value="filter_data.filter.entries" @input="changePage" size="3">
                     </div>
                     на странице
                 </div>
                 <div class="ms-auto text-muted">
                     Поиск:
                     <div class="ms-2 d-inline-block">
-                        <input type="text" class="form-control form-control-sm" v-model="filter_data.search" aria-label="поиск">
+                        <input type="text" class="form-control form-control-sm" v-model="filter_data.filter.search" aria-label="поиск">
                     </div>
                 </div>
             </div>
@@ -28,40 +28,12 @@
                     <th>Имя</th>
                     <th>Телефон</th>
                     <th>Создан</th>
+                    <th>Комиссия</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in users.data" :key="user.id">
-                        <td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
-                        <td><span class="text-muted">{{ user.id }}</span></td>
-                        <td>
-                            <transition>
-                                <router-link 
-                                    :to="{name:'Profile', params: {id: user.id}}"
-                                >
-                                    {{ user.name }}
-                                </router-link>
-                            </transition>
-                        </td>
-                        <td :title="user.phone_confirmed ? 'Подтвержден' : 'Не подтвержден'">
-                            {{ user.phone }}
-                            <svg  v-if="user.phone_confirmed" xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
-                        </td>
-                        <td>
-                            {{ formatDateTime(user.created_at) }}
-                        </td>
-                        <td class="text-end">
-                            <button type="button" class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
-                                Действия
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <button @click.prevent="loginAs(user.id)" class="dropdown-item" type="button">Войти от этого пользователя</button>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
+                    <users-table-row v-for="user in users.data" :key="user.id" :user="user" />
                 </tbody>
             </table>
         </div>
@@ -84,12 +56,12 @@
 
 <script>
 import FilterDataUsers from '../../mixins/filterData';
-import FormatDateTime from '../../mixins/formatDateTime'
+import UsersTableRow from '../common/UsersTableRow.vue';
 
 export default {
     name: "Users",
-    mixins: [FilterDataUsers, FormatDateTime],
-
+    components: { UsersTableRow },
+    mixins: [FilterDataUsers],
 
     watch: {
         filter_data: {
@@ -111,28 +83,10 @@ export default {
         }
     },
     methods: {
-        loginAs(userId){
-            return new Promise((resolve, reject) => {
-                axios({url: '/api/login-as', data: {'id' : userId}, method: 'POST' })
-                    .then(resp => {
-                        window.location.href = '/';
-                        resolve(resp);
-                    })
-                    .catch(err => {
-                        console.log('Err');
-                        reject(err);
-                    })
-            })
-        },
-
         changePage(event) {
-            this.filter_data.entries = event.target.value;
-            this.filter_data.page = 1;
-        }
+            this.filter_data.filter.entries = event.target.value;
+            this.filter_data.filter.page = 1;
+        },
     }
 }
 </script>
-
-<style scoped>
-
-</style>

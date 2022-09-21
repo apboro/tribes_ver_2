@@ -195,7 +195,7 @@ class User extends Authenticatable
 
     function getTribesCommission()
     {
-        return UserSettings::findByUserId($this->user_id)->get('percent')->value ?? env('TRIBES_COMMISSION',4);
+        return (int) (UserSettings::findByUserId($this->id)->get('percent')->value ?? env('TRIBES_COMMISSION',4));
     }
 
     public function sendPasswordResetNotification($token)

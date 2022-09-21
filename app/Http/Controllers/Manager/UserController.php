@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Manager\Filters\UsersFilter;
 use App\Http\Requests\Auth\LoginAsRequest;
 use App\Http\Requests\Manager\CommissionRequest;
+use App\Http\Resources\Manager\UsersResource;
 use App\Models\UserSettings;
 use App\Services\Admin\UserService;
 use App\Services\File\FileSendService;
@@ -33,9 +34,8 @@ class UserController extends Controller
 
     public function list(Request $request, UsersFilter $filter)
     {
-        $users = User::filter($filter)->paginate($request->get('entries'));
-
-        return response($users);
+        $users = User::filter($filter)->paginate(request('filter.entries'));
+        return new UsersResource($users);
     }
 
     public function get(Request $request)
