@@ -24,7 +24,7 @@
                         />
                         
                         @error('email')
-                        <span class="error">{{ $message }}</span>
+                            <span class="error">{{ $message }}</span>
                         @enderror
                     </div>
 
