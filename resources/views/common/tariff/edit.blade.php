@@ -33,8 +33,7 @@
             @foreach ($community->tariff->variants as $tariff)
                 @if ($tariff->id == $variantId)
                 <!-- Название тарифа -->
-                <!-- <div class="community-settings__change-tariff">
-                    <div class=""> -->
+
 
                 <div class="community-settings__change-tariff @if($tariff->arbitrary_term == true) active @endif" id="community-settings__change-tariff">
                     <div class="community-settings__form-item">
@@ -60,7 +59,6 @@
                         @enderror
                     </div>
 
-                    <!-- @dump($community->tariff) -->
                     <div class="community-settings__wrap-input-group">
                         <div class="community-settings__input-group">
                             <div class="community-settings__form-item tariff-cost">
@@ -90,7 +88,7 @@
                                     {{ __('base.term_access_community') }}
                                 </label>
                                 <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="{{ $tariff->arbitrary_term ?? false }}"/>
-                                <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="{{ $tariff->period ?? '' }}">
+                                <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="{{ $tariff->period }}">
                                 <select
                                     class="form-control-red tariff_pay_period"
                                     

@@ -155,11 +155,6 @@
                             {{ __('tariff.number_button') }}
                         </label>
 
-            <div class="community-settings__active_personal">
-                <div class="toggle-switch community-settings__checkbox" id="disabled_checkbox">
-                    <label class="toggle-switch__switcher">
-                        <input type="hidden" name="tariff" value="0" />
-
                         <input
                             type="number"
                             class="form-control-red"
