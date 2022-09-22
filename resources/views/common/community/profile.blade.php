@@ -21,11 +21,11 @@
             <div class="community__profile-btn-wrapper">
                 <button
                     id="btn_profile"
-                    class="community__profile-btn"
+                    class="community__profile-btn @if(data::get('is_visible_sidebar') == 'false') active @endif"
                     onclick="CommunityPage.toggleProfileVisibility(event)"
                     data-switch-visibility-btn
                 >
-                    Скрыть профиль
+                    @if(data::get('is_visible_sidebar') == 'false') Открыть @else Скрыть @endif профиль
                 </button>
             </div>
             

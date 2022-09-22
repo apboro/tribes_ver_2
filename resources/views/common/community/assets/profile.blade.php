@@ -1,4 +1,4 @@
-<div class="profile-community community__profile" data-tab="profileBlock">
+<div class="profile-community community__profile" @if(data::get('is_visible_sidebar') == 'false')  style="max-height:  0" @endif data-tab="profileBlock">
     <div class="profile-community__common-data">
         <div class="profile-community__avatar">
             <img
