@@ -38,6 +38,7 @@ class TariffService {
             ])
             ->where([
                 ['tv.isActive', "=", false],
+                ['tvc.isPersonal', "=", false],
                 ['tutv.days', "=", 1]
             ])
             ->groupBy("tu.telegram_id","tu.user_id","c.id")
