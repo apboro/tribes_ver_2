@@ -299,6 +299,11 @@ Route::get('/confirm_subscription', function () {
     return view('common.tariff.confirm-subscription');
 })->name('agency_contract.index');
 
+// TEST 
+Route::get('/analyticst', function () {
+    return view('common.analytics.index');
+})->name('analytics.index');
+
 
 Route::get('setlocale/{lang}', function ($lang) {
 
