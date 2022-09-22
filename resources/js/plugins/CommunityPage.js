@@ -84,8 +84,8 @@ export default class CommunityPage extends Page {
         return this.container.querySelector(selector) ? true : false;
     }
 
-    toggleProfileVisibility(event) {
-        this.profileBlock.toggleVisibility();
+    async toggleProfileVisibility(event) {
+        await this.profileBlock.toggleVisibility();
         let active = document.getElementById("btn_profile");
 
         if (this.profileBlock.isVisible) {
@@ -94,10 +94,9 @@ export default class CommunityPage extends Page {
 
         } else {
             event.target.textContent = 'Открыть профиль';
-            active.className += " active";
+            active.classList.add("active");
         }
     }
-
 
     /*  let content;
         if (direction === 'next') {
