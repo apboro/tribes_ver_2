@@ -141,17 +141,28 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
      */
     protected function queryMembers(int $communityId, MembersFilter $filter)
     {
+        $com = "communities";
+        $tc = "telegram_connections";
         $tu = 'telegram_users';
         $tuc = 'telegram_users_community';
         $tm = 'telegram_messages';
         $pmr = 'telegram_message_reactions as pmr';
         $gmr = 'telegram_message_reactions as gmr';
         $builder = DB::table($tu)
-            ->join($tuc, "$tu.telegram_id", "=", "$tuc.telegram_user_id")
-            ->leftJoin($tm, "$tm.telegram_user_id", "=", "$tu.telegram_id")
-            ->leftJoin($gmr, "gmr.message_id", "=", "$tm.message_id")
-            ->leftJoin($pmr, "pmr.telegram_user_id", "=", "$tuc.telegram_user_id")
+            ->leftJoin($tuc, "$tu.telegram_id", "=", "$tuc.telegram_user_id")
+            ->leftJoin($com, "$tuc.community_id", "$com.id")
+            ->leftJoin($tc, "$com.connection_id", "$tc.id")
+            ->leftJoin($tm, function (JoinClause $join) use ($tm, $tu, $tc) {
+                $join->on("$tm.telegram_user_id", '=', "$tu.telegram_id")->on("$tm.group_chat_id", '=', "$tc.chat_id");
+            })
+            ->leftJoin($gmr, function (JoinClause $join) use ($tm, $tc) {
+                $join->on("gmr.message_id", '=', "$tm.message_id")->on("gmr.group_chat_id", '=', "$tc.chat_id");
+            })
+            ->leftJoin($pmr, function (JoinClause $join) use ($tuc, $tc) {
+                $join->on("pmr.telegram_user_id", '=', "$tuc.telegram_user_id")->on("pmr.group_chat_id", '=', "$tc.chat_id");
+            })
             ->select([
+                "chat_id",
                 "$tu.telegram_id as tele_id",
                 DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
                 "$tu.user_name as nick_name",
@@ -160,11 +171,11 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 DB::raw("COUNT(distinct($tm.message_id)) as c_messages"),
                 DB::raw("COUNT(distinct(gmr.id)) as c_put_reactions"),
                 DB::raw("COUNT(distinct(pmr.id)) as c_got_reactions"),
-                DB::raw("SUM(coalesce($tm.utility,0)) as utility")
+                DB::raw("SUM(utility) as utility")
             ]);
-        $builder->groupBy("$tu.telegram_id", "$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tuc.exit_date");
+        $builder->groupBy("$tu.telegram_id", "$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tuc.exit_date", 'chat_id');
         $builder->where(["$tuc.community_id" => $communityId]);
-
+        dd($builder->get());
         $builder = $filter->apply($builder);
         return $builder;
     }
