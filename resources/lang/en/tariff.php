@@ -26,5 +26,6 @@ return [
     'number_button' => 'Landing page button number',
     'success_activate_tariff' => 'Thank you for the payment, the tariff has been successfully activated! To connect to the community, click the "Telegram" button, start a dialogue with Tribesbot and follow the "Subscribe" invitation link.',
     'personal_tariff' => 'Personal tariff',
-    'inline_command' => 'Inline command of this tariff'
+    'inline_command' => 'Inline command of this tariff',
+    'inline_command_all_tariffs' => 'Inline command of all tariff plans:'
 ];

@@ -162,6 +162,10 @@
         display: block;
         color: $green-1!important;
 
+        &.all-tariffs {
+            display: inline-block;
+        }
+
         &:hover, &:focus {
             color: $green-1!important;
             opacity: .7;
