@@ -444,7 +444,7 @@ class TariffRepository implements TariffRepositoryContract
     private function initTariffModel($community)
     {
         $this->tariffModel = $community->tariff()->firstOrNew();
-        if(!empty($this->tariffModel->inline_link)) {
+        if(empty($this->tariffModel->inline_link)) {
             $this->generateLink($this->tariffModel);
         }
     }
