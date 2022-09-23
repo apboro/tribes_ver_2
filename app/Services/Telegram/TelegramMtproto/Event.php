@@ -11,9 +11,10 @@ class Event
 {
     public function handler($update)
     {
-        $this->newParticipants($update);
-        $this->updateChannel($update);
-        $this->deleteUserBotInGroup($update);
+    // {
+    //     $this->newParticipants($update);
+    //     $this->updateChannel($update);
+    //     $this->deleteUserBotInGroup($update);
     }
 
     protected function newParticipants($update)

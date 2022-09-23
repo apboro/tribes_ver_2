@@ -48,7 +48,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
             $sub->where(["$p.type" => $type]);
         }
 
-        $sub->where(["$p.status" => "COMPLETED"]);
+        $sub->where(["$p.status" => "CONFIRMED"]);
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
 
