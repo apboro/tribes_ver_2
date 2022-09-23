@@ -102,7 +102,7 @@ class CommunityController extends Controller
     {
         /* @var  $service Telegram */
 
-        $service = new Messenger::$platform[$request['platform']]();
+        $service = app()->make(Messenger::$platform[$request['platform']]);
 
         $hash = $request['hash'];
 
