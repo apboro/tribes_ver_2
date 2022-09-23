@@ -13,4 +13,5 @@ interface TariffRepositoryContract
     public function getList(TariffFilter $filters, $community);
     public function statisticView(Request $request, $community);
     public function perm(Request $request, $community);
+    public function generateLink($variant);
 }
