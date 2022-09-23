@@ -231,7 +231,7 @@ class Telegram extends Messenger
             $tariff = new Tariff();
             $this->tariffRepository->generateLink($tariff);
             $baseAttributes = Tariff::baseData();
-            $baseAttributes[] = $tariff->inline_link;
+            $baseAttributes['inline_link'] = $tariff->inline_link;
             $community->tariff()->create($baseAttributes);
             $community->statistic()->create([
                 'community_id' => $community->id
