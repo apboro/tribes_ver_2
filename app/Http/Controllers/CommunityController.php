@@ -86,7 +86,7 @@ class CommunityController extends Controller
 
         $type = $request['type'];
 
-        $service = new Messenger::$platform[$request['platform']]();
+        $service = app()->make(Messenger::$platform[$request['platform']]);
 
         if (method_exists($service, 'invokeCommunityConnect')) {
 
