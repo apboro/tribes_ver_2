@@ -43,7 +43,9 @@ class TariffService {
             ])
             ->groupBy("tu.telegram_id","tu.user_id","c.id")
             ->get();
-        
+
+        dd($collectionRecords);
+
         $user_id = $collectionRecords->pluck('user_id')->all();
         $telegram_user_id = $collectionRecords->pluck('telegram_user_id')->all();
         $community_id = $collectionRecords->pluck('community_id')->all();
@@ -61,8 +63,14 @@ class TariffService {
         $tarVars = ArrayHelper::index(TariffVariant::whereIn('id', $tvc_ids_arr)->get(), 'id') ;
 
 
-        foreach ($collectionRecords as $record) {
 
+        $this->sendMessagesEmailBot($collectionRecords, $users, $telegram_users, $communities);
+    }
+
+    private function sendMessagesEmailBot($collectionRecords, $users, $telegram_users, $communities)
+    {
+        foreach ($collectionRecords as $record) {
+dd($telegram_users[$record->telegram_user_id]);
             $user = $users[$record->user_id];
             $telegram_user = $telegram_users[$record->telegram_user_id];
             $community = $communities[$record->community_id];
@@ -88,7 +96,6 @@ class TariffService {
             }
 
         }
-
     }
 
 }
