@@ -164,6 +164,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
             ->select([
                 "chat_id",
                 "$tu.telegram_id as tele_id",
+                "$tuc.utility as utility",
                 DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
                 "$tu.user_name as nick_name",
                 DB::raw("to_timestamp($tuc.accession_date) as accession_date"),
@@ -171,11 +172,9 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 DB::raw("COUNT(distinct($tm.message_id)) as c_messages"),
                 DB::raw("COUNT(distinct(gmr.id)) as c_put_reactions"),
                 DB::raw("COUNT(distinct(pmr.id)) as c_got_reactions"),
-                DB::raw("SUM(utility) as utility")
             ]);
-        $builder->groupBy("$tu.telegram_id", "$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tuc.exit_date", 'chat_id');
+        $builder->groupBy("$tu.telegram_id", "$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tuc.exit_date", 'chat_id', "$tuc.utility");
         $builder->where(["$tuc.community_id" => $communityId]);
-        dd($builder->get());
         $builder = $filter->apply($builder);
         return $builder;
     }
