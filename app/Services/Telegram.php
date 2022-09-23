@@ -11,6 +11,7 @@ use App\Models\TelegramUser;
 use App\Models\TestData;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Tariff\TariffRepository;
+use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Abs\Messenger;
 use GuzzleHttp\Psr7\Request;
 use App\Models\User;
@@ -34,7 +35,7 @@ class Telegram extends Messenger
     //todo убрать статичность переделать на нормальные методы принадлежащие объекту
     private TariffRepository $tariffRepository;
 
-    public function __construct(TariffRepository $tariffRepository)
+    public function __construct(TariffRepositoryContract $tariffRepository)
     {
         $this->tariffRepository = $tariffRepository;
     }
