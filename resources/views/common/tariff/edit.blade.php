@@ -78,6 +78,10 @@
                                     placeholder="100"
                                     value="{{ $tariff->price ? $tariff->price : '' }}"
                                 />
+
+                                @error('tariff_cost')
+                                    <span class="form-message form-message--danger">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <div class="community-settings__form-item tariff_pay_period">
