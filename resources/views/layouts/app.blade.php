@@ -12,7 +12,7 @@
     @if(session()->has('admin_id')) data-admin="true" @endif
 >
     <!-- Header-->
-    @include('common.template.header2')
+    @include('common.template.header')
 
     <!-- Main Menu-->
     @include('common.template.main_menu')

@@ -10,13 +10,15 @@
     @if(session()->has('admin_id')) data-admin="true" @endif
 >
     <!-- Header-->
-    @include('common.template.header2')
+    @include('common.template.header')
 
     <!-- Content -->
-    <main class="">
-        @include('common.profile.index')
+    <main class="main">
+        <div class="container">
+            @include('common.profile.index')
 
-        @yield('content')
+            @yield('content')
+        </div>
     </main>
 
     <!-- Footer-->

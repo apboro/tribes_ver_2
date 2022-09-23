@@ -1,4 +1,5 @@
 .main-header-red {
+    position: relative;
     position: fixed;
     top: 0;
     right: 0;
@@ -25,12 +26,41 @@
     }
 
     &__logo {
+        display: none;
         width: 134px;
         min-width: 134px;
 
         svg {
             vertical-align: super;
             width: 100%;
+        }
+
+        @media (min-width: $lg) {
+            display: flex;
+        }
+    }
+
+    &__auxiliary {
+        display: flex;
+        align-items: center;
+    }
+
+    &__search {
+        display: none;
+
+        .icon-stroke {
+            stroke: $grey-5;
+        }
+
+        @media (min-width: $lg) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            margin-right: 20px;
+            border: 1px solid $grey-5;
+            border-radius: 50%;
         }
     }
 

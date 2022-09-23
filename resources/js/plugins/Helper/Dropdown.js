@@ -34,7 +34,6 @@ export class Dropdown {
     }
 
     toActiveContent() {
-        console.log(this.btn);
         this.btn.classList.add('active');
         this.btn.nextElementSibling.classList.add('active');
     }

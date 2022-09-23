@@ -1,5 +1,5 @@
 <footer class="footer">
-    <div class="footer__wrapper container-xxl w-100 d-flex flex-wrap">
+    <div class="footer__wrapper container">
     
         <!-- <div class="row flex-column flex-xl-row justify-content-between align-items-center"> -->
             <!-- <div class="col-12 col-sm-6 col-md-12 col-xl-3 order-2 order-sm-2 order-md-2 order-xl-1 order-xxl-1"> -->
