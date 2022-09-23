@@ -4,10 +4,6 @@
     <div class="auth-inner my-2">
         <div class="card mb-0">
             <div class="card-body" data-plugin="ResetPage">
-                @foreach($errors->all() as $error)
-                    {{ $error }}
-                @endforeach
-
                 <h4 class="card-title mb-1">Восстановление доступа</h4>
                 <p class="card-text mb-2">Заполните форму для продолжения</p>
 

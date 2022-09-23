@@ -233,7 +233,13 @@
 
                                                     <td valign="top" colspan="1" class="dataTables_empty">
                                                         <div class="col-sm-12 col-lg-12">
-                                                            {{ isset($follower->pivot->role) ? "Участник":'—' }}
+                                                            @if($follower->pivot->role == 'member')
+                                                                Участник
+                                                            @elseif($follower->pivot->role == 'creator')
+                                                                Создатель
+                                                            @elseif($follower->pivot->role == 'administrator')
+                                                                Администратор
+                                                            @endif
                                                         </div>
                                                     </td>
 

@@ -66,8 +66,7 @@ class TestBotController extends Controller
         TelePostReactionRepositoryContract $postReactionRepo,
         TelegramLogService $telegramLogService,
         TelePostViewsReposirotyContract $viewRepository
-      )
-    {
+    ) {
         $this->messageReactionRepo = $messageReactionRepo;
         $this->postReactionRepo = $postReactionRepo;
         $this->telegramLogService = $telegramLogService;
@@ -77,6 +76,14 @@ class TestBotController extends Controller
 
     public function index(Request $request)
     {
+        // dd($userUtility);
+        // if (isset($userUtility['community_id'])) {
+        //     $tu->communities()->updateExistingPivot($userUtility['community_id'], [
+        //         'utility' => array_sum($userUtility['utility'])
+        //     ]);
+        // }
+        // unset($userUtility);
+
         // Канал для теста комментариев Chat  id = 1541725271  access_hash = 14492483521633917353
         // another id = 1510955178 or 666997162
         // another id = 1510955178, hash = 8077972812704298091
