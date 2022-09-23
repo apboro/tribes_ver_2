@@ -43,7 +43,7 @@ class TeleMessageRepository implements TeleMessageRepositoryContract
 
             $messageModel->save();
 
-            if ($message->reply_to->answer_to_msg_id) {
+            if (isset($message->reply_to->answer_to_msg_id)) {
                 $newMessageModel = TelegramMessage::where('message_id', $message->reply_to->answer_to_msg_id)
                     ->where('group_chat_id', $group_chat_id)->first();
                 if ($newMessageModel) {
