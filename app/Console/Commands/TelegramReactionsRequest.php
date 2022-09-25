@@ -84,7 +84,7 @@ class TelegramReactionsRequest extends Command
             
             if ($messages->first()) {
                 $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
-                $this->messageReactionRepo->deleteMessageReactionForChat($chat_id);
+                // $this->messageReactionRepo->deleteMessageReactionForChat($chat_id);
                 foreach ($messages as $message) {
                     $message->utility = '0';
                     $message->save();
