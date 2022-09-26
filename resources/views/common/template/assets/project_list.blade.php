@@ -1,7 +1,7 @@
 <div class="dropdown-project-list">
     <button class="dropdown-project-list__header" data-dropdown-btn onclick="Dropdown.toggle(this)">
         <span class="dropdown-project-list__title">
-            Family trees
+            {{ $project->name ?? 'Без имени' }}
         </span>
 
         <!-- <i class="dropdown-project-list__arrow">
@@ -18,14 +18,15 @@
             </h6>
 
             <ul class="dropdown-project-list__project-list">
+                @foreach($project->other as $pr)
                 <li class="dropdown-project-list__project-item">
                     <a href="" class="dropdown-project-list__project-link">
-                        <p class="dropdown-project-list__project-link-title">project 11213123213121 45 4 45 4 54 54 54 5 </p>
-                        
+                        <p class="dropdown-project-list__project-link-title">{{ $pr->name }}</p>
+
                         <p class="dropdown-project-list__project-link-subtitle">Сообществ: 10</p>
                     </a>
                 </li>
-
+                @endforeach
                 <li class="dropdown-project-list__project-item">
                     <div class="dropdown-project-list__project-link active">
                         <div class="dropdown-project-list__project-link-active-wrapper">

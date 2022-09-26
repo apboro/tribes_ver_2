@@ -39,7 +39,7 @@
             <!-- Аналитика -->
             <li class="main-nav-new__item">
                 <a
-                    href="{{ route('analytics.index') }}"
+                    href="{{ route('project.analytic') }}"
                     class="main-nav-new__link {{ request()->is('*community*') ? 'active' : ''  }}"
                 >
                     <span>Аналитика</span>
@@ -63,7 +63,7 @@
     
                     <ul class="dropdown-menu-item__list" data-dropdown-content>
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="">
+                            <a class="dropdown-menu-item__link" href="{{ route('project.donate') }}">
                                 <span>Донаты</span>
                             </a>
                         </li>
@@ -71,7 +71,7 @@
                         <div class="dropdown-menu-item__divider"></div>
     
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="#">
+                            <a class="dropdown-menu-item__link" href="{{ route('project.tariff') }}">
                                 <span>Тарифы</span>
                             </a>
                         </li>
@@ -79,7 +79,7 @@
                         <div class="dropdown-menu-item__divider"></div>
     
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="">
+                            <a class="dropdown-menu-item__link" href="{{ route('course.list') }}">
                                 <span>Медиатовары</span>
                             </a>
                         </li>
@@ -93,7 +93,7 @@
                     href="{{ route('payment.list') }}"
                     class="main-nav-new__link {{ request()->is('*payments*') ? 'active' : ''  }}"
                 >
-                    <span>База знаний</span>
+                    <span>Финансы</span>
                 </a>
             </li>
             <!-- FAQ будущая Помощь -->

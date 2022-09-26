@@ -29,9 +29,9 @@ export default class Profile extends Page {
             
             let comminity_id =item.id.split('_')[1];
 
-            item.addEventListener('click', (e) => {
-                console.log("axios обращение к community " + comminity_id);
-            })
+            // item.addEventListener('click', (e) => {
+            //     console.log("axios обращение к community " + comminity_id);
+            // })
         })
 
         const data = { a: 1, b: 2 }
