@@ -304,6 +304,10 @@ Route::get('/analyticst', function () {
     return view('common.analytics.index');
 })->name('analytics.index');
 
+Route::get('/verstka', function () {
+    return view('common.temp.verstka');
+})->name('analytics.index');
+
 
 Route::get('setlocale/{lang}', function ($lang) {
 
