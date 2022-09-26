@@ -37,7 +37,8 @@ class TinkoffService
         try {
 
             if(isset($data->SpAccumulationId)){
-                $accumulation = Accumulation::where('SpAccumulationId', $data->SpAccumulationId)->where('status', 'active')->first();
+                TelegramLogService::staticSendLogMessage("Запрос на пополнение копилки " . $data->SpAccumulationId . " на сумму" . $payment->amount / 100 . "рублей" );
+                $accumulation = Accumulation::where('SpAccumulationId', (int)$data->SpAccumulationId)->where('status', 'active')->first();
                 if(!$accumulation){
                     $accumulation = Accumulation::create([
                         'user_id' => $payment->author,
@@ -103,7 +104,13 @@ class TinkoffService
 
                     }
 
-                    if(isset($accumulation)) $accumulation->addition($payment->amount / 100 * 96);
+                    if(isset($accumulation)){
+                        $add = ($accumulation->getTribesCommission() != 100)
+                            ? $payment->amount / 100 * (100-$accumulation->getTribesCommission())
+                            : 0
+                        ;
+                        $accumulation->addition($add);
+                    }
                     if($community){
                         $community->addition($payment->add_balance);
                     }
@@ -114,7 +121,13 @@ class TinkoffService
                     if($community) {
                         $community->subtraction($payment->add_balance);
                     }
-                    if(isset($accumulation)) $accumulation->subtraction($payment->amount / 100 * 96);
+                    if(isset($accumulation)){
+                        $add = ($accumulation->getTribesCommission() != 100)
+                            ? $payment->amount / 100 * (100-$accumulation->getTribesCommission())
+                            : 0
+                        ;
+                        $accumulation->subtraction($add);
+                    }
 
                     /** Возврат */
 //                            foreach ($payment->telegramUser->tariffVariant->where('tariff_id', $community->tariff->id) as $userTariff) {
@@ -146,7 +159,6 @@ class TinkoffService
                 "Платёж " . $payment->id . " завершился неуспешно, Администрация в курсе" .
                 json_encode($e->getMessage())
             );
-            return response('OK', 200);
         }
     }
 }

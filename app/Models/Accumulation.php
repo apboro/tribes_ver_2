@@ -3,10 +3,14 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Factories\AccumulationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ *  @method AccumulationFactory factory()
+ */
 class Accumulation extends Model
 {
     use HasFactory;
@@ -22,6 +26,11 @@ class Accumulation extends Model
     {
         $this->update(['amount' => $this->amount + $summ]);
         return true;
+    }
+
+    function getTribesCommission()
+    {
+        return UserSettings::findByUserId($this->user_id)->get('percent')->value ?? env('TRIBES_COMMISSION',4);
     }
 
     public function subtraction($summ)

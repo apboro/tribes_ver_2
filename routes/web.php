@@ -1,9 +1,14 @@
 <?php
 
+use App\Http\Controllers\API\TeleDialogStatisticController;
+use App\Http\Controllers\API\TeleMessageStatisticController;
 use App\Http\Controllers\DonateController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestBotController;
 use App\Http\Controllers\TelegramBotController;
+use App\Http\Controllers\TelegramUserBotController;
+use App\Http\Controllers\UserBotFormController;
+use App\Models\TelegramUser;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -119,6 +124,9 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                 Route::get('{community}', 'CommunityController@statistic')->where(['community' => '[0-9]+'])->name('community.view');
                 // Statistic
                 Route::get('/{community}/statistic', 'CommunityController@statistic')->name('community.statistic');
+                Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
+                Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
+                Route::get('/{community}/statistic/payments', 'CommunityController@statisticPayments')->name('community.statistic.payment');
 
                 // Donate
                 Route::get('/{community}/donate/list', 'DonateController@list')->name('community.donate.list');
@@ -287,6 +295,10 @@ Route::get('/agency_contract', function () {
     return view('common.agency_contract.index');
 })->name('agency_contract.index');
 
+Route::get('/confirm_subscription', function () {
+    return view('common.tariff.confirm-subscription');
+})->name('сonfirm_subscription');
+
 
 Route::get('setlocale/{lang}', function ($lang) {
 
@@ -311,11 +323,17 @@ Route::get('setlocale/{lang}', function ($lang) {
     return $url;
 })->name('setlocale');
 
-
 Route::group(['prefix' => 'bot'], function () {
     Route::match(['get', 'post'], 'webhook', [TelegramBotController::class, 'index']);
     Route::match(['get', 'post'], 'webhook-bot2', [TelegramBotController::class, 'index-bot2']);
 });
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('/user-bot-form', [UserBotFormController::class, 'index'])->name('user.bot.form');
+});
+
+Route::any('/webhook-user-bot', [TelegramUserBotController::class, 'index'])->name('user.bot.webhook');
+Route::get('/set-webhook-for-user-bot', [TelegramUserBotController::class, 'setWebhook']);
 
 Route::any('/test', [TestBotController::class, 'index']);
 

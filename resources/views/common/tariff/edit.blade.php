@@ -21,7 +21,7 @@
                 {{ __('tariff.change_tariff') }}
             </h2>
         </div>
-
+        
         <form
             action="{{ route('community.tariff.edit', [$community->id, $variantId]) }}"
             method="post"
@@ -29,10 +29,13 @@
             id="tariff_edit_form"
             class="community-settings"
         >
+
             @foreach ($community->tariff->variants as $tariff)
                 @if ($tariff->id == $variantId)
                 <!-- Название тарифа -->
-                <div class="community-settings__change-tariff">
+
+
+                <div class="community-settings__change-tariff @if($tariff->arbitrary_term == true) active @endif" id="community-settings__change-tariff">
                     <div class="community-settings__form-item">
                         <label
                             class="form-label-red"
@@ -56,99 +59,155 @@
                         @enderror
                     </div>
 
-                    <div class="community-settings__form-item community-settings__input-group">
-                        <div class="community-settings__input-wrapper">
+                    <div class="community-settings__wrap-input-group">
+                        <div class="community-settings__input-group">
+                            <div class="community-settings__form-item tariff-cost">
+                                <label
+                                    class="form-label-red"
+                                    for="tariff_cost"
+                                >
+                                    {{ __('base.price') }}
+                                </label>
+
+                                <input
+                                    type="number"
+                                    class="form-control-red"
+                                    id="tariff_cost"
+                                    aria-describedby="tariff_cost"
+                                    name="tariff_cost"
+                                    placeholder="100"
+                                    value="{{ $tariff->price ? $tariff->price : '' }}"
+                                />
+
+                                @error('tariff_cost')
+                                    <span class="form-message form-message--danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="community-settings__form-item tariff_pay_period">
+                                <label
+                                    class="form-label-red"
+                                    for="tariff_pay_period"
+                                >
+                                    {{ __('base.term_access_community') }}
+                                </label>
+                                <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="{{ $tariff->arbitrary_term ?? false }}"/>
+                                <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="{{ $tariff->period }}">
+                                <select
+                                    class="form-control-red tariff_pay_period"
+                                    
+                                    
+                                    onchange="CommunityPage.tariffPageAdd.addRandomValue(this)"
+                                >
+                                    @if(env('FOR_TESTER'))
+                                        <option value="0" @if ($tariff->period === 0) selected @endif>1 {{ __('base.minute_low') }}</option>
+                                    @endif
+                                    <option style="display: none" value="{{ $tariff->period }}" selected="selected" >{{ $tariff->period }} {{App\Traits\Declination::defineDeclination($tariff->period)}}</option>
+                                    <option value="1" @if ($tariff->period == 1) selected @endif>1 {{ __('base.day_low') }}</option>
+                                    <option value="3" @if ($tariff->period == 3) selected @endif>3 {{ __('base.days_rus_low') }}</option>
+                                    <option value="7" @if ($tariff->period == 7) selected @endif>7 {{ __('base.days_low') }}</option>
+                                    <option value="14" @if ($tariff->period == 14) selected @endif>14 {{ __('base.days_low') }}</option>
+                                    <option value="30" @if ($tariff->period == 30) selected @endif>30 {{ __('base.days_low') }}</option>
+                                    <option value="90" @if ($tariff->period == 90) selected @endif>90 {{ __('base.days_low') }}</option>
+                                    <option value="180" @if ($tariff->period == 180) selected @endif>180 {{ __('base.days_low') }}</option>
+                                    <option value="365" @if ($tariff->period == 365) selected @endif>365 {{ __('base.days_low') }}</option>
+                                    <option id="yourValue" value="set" @if ($tariff->arbitrary_term == true) selected @endif>Свое значение</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="community-settings__form-item your-value-wrap">
                             <label
                                 class="form-label-red"
-                                for="tariff_cost"
+                                for="quantity_of_days"
                             >
-                                {{ __('base.price') }}
+                                {{ __('base.number_access_days') }}
+                            </label>
+                            
+                            <input 
+                                class="form-control-red your-value-input" 
+                                type="number" 
+                                id="quantity_of_days" 
+                                name="quantity_of_days"
+                                onchange="CommunityPage.tariffPageAdd.getChanges(this.value)"
+                                value="@if($tariff->arbitrary_term == true){{ $tariff->period ? $tariff->period : '' }}@endif"
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="community-settings__your-value-mobile">
+                    <div class="community-settings__wrap-left">
+                        <div class="community-settings__form-item your-value-wrap-mobile">
+                            <label
+                                class="form-label-red"
+                                for="quantity_of_days"
+                            >
+                                {{ __('base.number_access_days') }}
+                            </label>
+                            <input 
+                                class="form-control-red your-value-input" 
+                                type="number" 
+                                id="quantity_of_days"
+                                name="quantity_of_days"
+                                onchange="CommunityPage.tariffPageAdd.getChanges(this.value)"
+                                value="{{ $tariff->arbitrary_term ? $tariff->period : '' }}"
+                            >
+                        </div>
+                        
+                        <div class="community-settings__number-btn">
+                            <label
+                                class="form-label-red"
+                                for="tariff_name"
+                            >
+                                {{ __('tariff.number_button') }}
                             </label>
 
                             <input
                                 type="number"
                                 class="form-control-red"
-                                id="tariff_cost"
-                                aria-describedby="tariff_cost"
-                                name="tariff_cost"
-                                placeholder="100"
-                                value="{{ $tariff->price ? $tariff->price : '' }}"
-                            />
-                        </div>
-
-                        <div class="community-settings__input-wrapper">
-                            <label
-                                class="form-label-red"
-                                for="tariff_pay_period"
+                                id="number_button"
+                                name="number_button"
+                                aria-describedby="number_button"
+                                placeholder="{{ __('base.number') }}"
+                                value="{{ $tariff->number_button ? $tariff->number_button : '' }}"
                             >
-                                {{ __('base.term_access_community') }}
+                        </div>
+                        <div class="toggle-switch community-settings__checkbox" id="disabled_checkbox">        
+                            <label class="toggle-switch__switcher">
+                                
+                                <input
+                                    type="checkbox"
+                                    id="tariff_active"
+                                    class="toggle-switch__input"
+                                    value="1"
+                                    name="tariff"
+                                    @if($tariff->isActive) checked @endif
+                                >
+                                <span class="toggle-switch__slider"></span>
                             </label>
 
-                            <select
-                                class="form-control-red "
-                                id="tariff_pay_period"
-                                name="tariff_pay_period"
+                            <label
+                                for="tariff_active"
+                                class="toggle-switch__label"
                             >
-                                @if(env('FOR_TESTER'))
-                                    <option value="0" @if ($tariff->period === 0) selected @endif>1 {{ __('base.minute_low') }}</option>
-                                @endif
-                                <option value="1" @if ($tariff->period == 1) selected @endif>1 {{ __('base.day_low') }}</option>
-                                <option value="3" @if ($tariff->period == 3) selected @endif>3 {{ __('base.days_rus_low') }}</option>
-                                <option value="7" @if ($tariff->period == 7) selected @endif>7 {{ __('base.days_low') }}</option>
-                                <option value="14" @if ($tariff->period == 14) selected @endif>14 {{ __('base.days_low') }}</option>
-                                <option value="30" @if ($tariff->period == 30) selected @endif>30 {{ __('base.days_low') }}</option>
-                                <option value="90" @if ($tariff->period == 90) selected @endif>90 {{ __('base.days_low') }}</option>
-                                <option value="180" @if ($tariff->period == 180) selected @endif>180 {{ __('base.days_low') }}
-                                </option>
-                                <option value="365" @if ($tariff->period == 365) selected @endif>365 {{ __('base.days_low') }}
-                                </option>
-                                <!-- <option value="set">Свое значение</option> -->
-                            </select>
+                                {{ __('tariff.activate_tariff') }}
+                            </label>
                         </div>
                     </div>
-
-                    <div class="">
-                        <label
-                            class="form-label-red"
-                            for="tariff_name"
-                        >
-                            {{ __('tariff.number_button') }}
-                        </label>
-
-                        <input
-                            type="number"
-                            class="form-control-red"
-                            id="number_button"
-                            name="number_button"
-                            aria-describedby="number_button"
-                            value=""
-                            placeholder="{{ __('base.number') }}"
-                            value="{{ $tariff->number_button ? $tariff->number_button : '' }}"
-                        >
+                
+                    <div class="community-settings__active_personal">
+                        <div class="community-settings__inline-command">
+                            <span class="form-label-red">Инлайн команда данного тарифа</span>
+                            <p class="community-settings__inline-link">{{$tariff->getInlineLink()}}</p>
+                        </div>
+                        <div class="checkbox">
+                            <div class="checkbox__wrapper community-settings__personal_tariff">
+                                <input type="checkbox" id="isPersonal" class="checkbox__input" name="isPersonal" value="1" onchange="CommunityPage.tariffPageAdd.setActive(event)">
+                                <label for="isPersonal" class="checkbox__decor"></label>
+                            </div>
+                            <label class="community-settings__personal-label" for="isPersonal">{{__('tariff.personal_tariff')}}</label>
+                        </div>
                     </div>
-                </div>
-
-                <div class="toggle-switch community-settings__item">        
-                    <label class="toggle-switch__switcher">
-                        <input type="hidden" name="tariff" value="0" />
-
-                        <input
-                            type="checkbox"
-                            id="tariff_active"
-                            class="toggle-switch__input"
-                            value="1"
-                            name="tariff"
-                            @if($tariff->isActive) checked @endif
-                        >
-                        <span class="toggle-switch__slider"></span>
-                    </label>
-
-                    <label
-                        for="tariff_active"
-                        class="toggle-switch__label"
-                    >
-                        {{ __('tariff.activate_tariff') }}
-                    </label>
                 </div>
                 @endif
             @endforeach

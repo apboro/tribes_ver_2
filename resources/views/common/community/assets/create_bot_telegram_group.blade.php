@@ -29,6 +29,8 @@
                     </h5>
                 </div>
 
+                @include('common.community.assets.add_user_bot')
+
                 <div class="col-12 mt-1">
                     <p class="">
                         {{ __('community.our_telegram_bot_instructions') }}

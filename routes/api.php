@@ -102,4 +102,22 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
         Route::post('products-list', 'MediaStatisticController@productsList')->name('api.media-statistic.products-list');
         Route::post('views-list', 'MediaStatisticController@viewsList')->name('api.media-statistic.views-list');
     });
+
+    Route::group(['prefix' => 'tele-statistic'], function () {
+        Route::post('members', 'TeleDialogStatisticController@members')->name('api.tele-statistic.members');
+        Route::post('member-charts', 'TeleDialogStatisticController@memberCharts')->name('api.tele-statistic.member-charts');
+
+        Route::post('payments-list', 'FinanceStatisticController@paymentsList')->name('api.tele-statistic.payments-list');
+        Route::post('payments-charts', 'FinanceStatisticController@paymentsCharts')->name('api.tele-statistic.payments-charts');
+
+        Route::post('messages', 'TeleMessageStatisticController@messages')->name('api.tele-statistic.messages');
+        Route::post('message-charts', 'TeleMessageStatisticController@messageCharts')->name('api.tele-statistic.message-charts');
+
+        Route::post('export-members', 'TeleDialogStatisticController@exportMembers')->name('api.tele-statistic.export-members');
+        Route::post('export-messages', 'TeleMessageStatisticController@exportMessages')->name('api.tele-statistic.export-messages');
+        Route::post('export-payments', 'FinanceStatisticController@exportPayments')->name('api.tele-statistic.export-payments');
+
+
+    });
+
 });

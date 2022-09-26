@@ -91,6 +91,13 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         }
     }
 
+    public function sendMessageFromBotWithTariff(string $botName, int $chatId, string $textMessage, Community $community)
+    {
+        if($this->botCollect->hasBotByName($botName)) {
+            $this->getCommandsForBot($botName)->sendMessageFromBotWithTariff($chatId, $textMessage, $community);
+        }
+    }
+
     public function sendDonateMessage(string $botName, int $chatId, int $donateId)
     {
         $this->getCommandsForBot($botName)->sendDonateMessage($chatId, $donateId);
@@ -116,6 +123,11 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         return $this->getApiCommandsForBot($botName)->getChatCount($chatId);
     }
 
+    public function getChatAdministratorsList(string $botName, int $chatId)
+    {
+        return $this->getApiCommandsForBot($botName)->getChatAdministratorsList($chatId);
+    }
+
     public function hasBotByName($botName): bool
     {
         return $this->botCollect->hasBotByName($botName);
@@ -131,6 +143,18 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         );
 
         return $service->getChatMemberCount($botName, $chatId);
+    }
+
+    public static function staticGetChatAdministratorsList(string $botName, int $chatId)
+    {
+        $service = new self(
+            app(MainBotCollection::class),
+            app(MainBotCommands::class),
+            app(TelegramMidlwares::class),
+            app(TelegramLogService::class)
+        );
+
+        return $service->getChatAdministratorsList($botName, $chatId);
     }
 }
 

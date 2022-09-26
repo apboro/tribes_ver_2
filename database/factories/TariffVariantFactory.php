@@ -21,7 +21,7 @@ class TariffVariantFactory extends Factory
             'title' => $this->faker->text(255),
             'price' => rand(100,5000),
             'period' => rand(1,31),
-            'isActive' => null,
+            'isActive' => rand(true,false),
         ];
     }
 

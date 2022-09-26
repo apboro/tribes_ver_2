@@ -2,9 +2,9 @@
 
 namespace App\Repositories\Telegram;
 
-use App\Repositories\Telegram\DTO\MessageDTO;
-
 interface TeleMessageRepositoryContract
 {
-      public function saveMessageForChat(MessageDTO $messageDTO): bool;
+      public function saveChatMessage($message, $isComment = false);
+      public function saveShortChatMessage($message, $isComment = false);
+      public function resetUtility($chat_id, $message_id);
 }

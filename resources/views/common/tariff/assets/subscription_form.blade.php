@@ -11,7 +11,7 @@
                                 <div class="input-group input-group-merge">
                                     <input type="text" class="form-control search-product" id="shop-search"
                                         placeholder="{{ __('base.search') }}" aria-label="Search..."
-                                        aria-describedby="shop-search" name="search" value="{{ request('search') }}" />
+                                        aria-describedby="shop-search" name="filter[search]" value="{{ request('search') }}" />
 
                                     <span class="input-group-text">
                                         <i data-feather="search" class="font-medium-1 text-muted"></i>
@@ -28,43 +28,66 @@
 
                         <!-- FILTERS -->
                         <div class="row mt-1">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label">
                                     {{ __('base.user') }}
                                 </label>
 
                                 <input type="text" class="form-control dt-input" data-column="3"
-                                    placeholder="{{ __('base.user_name') }}" data-column-index="2" name="from"
+                                    placeholder="{{ __('base.user_name') }}" data-column-index="2" name="filter[from]"
                                     value="{{ request('from') }}" />
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label">
                                     {{ __('base.tariff') }}
                                 </label>
-                                <select name="tariff" class="form-select pointer" id="basicSelect">
-                                    <option value="" @if (request('tariff') == null) selected @endif>
+                                <select name="filter[tariff]" class="form-select pointer" id="basicSelect">
+                                    <option value="" @if (request('filter.tariff') == null) selected @endif>
                                         {{ __('base.all') }}</option>
                                     @foreach ($community->tariff->variants as $variant)
                                         <option value="{{ $variant->id }}"
-                                            @if (request('tariff') == $variant->id) selected @endif>
+                                            @if (request('filter.tariff') == $variant->id) selected @endif>
                                             {{ $variant->title }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    {{ __('base.subscribers') }}
+                                </label>
+                                <select name="filter[member]" class="form-select pointer">
+                                    <option value="" @if (request('filter.member') == '') selected @endif>
+                                        {{ __('base.all') }}</option>
+                                    <option value="active" @if (request('filter.member') == 'active') selected @endif>
+                                        {{ __('base.active') }}</option>
+                                    <option value="not_active" @if (request('filter.member') == "not_active") selected @endif>
+                                        {{ __('base.inactive') }}</option>
 
-                            <div class="col-md-4">
+                                </select>
+                            </div>
+                            <div class="col-md-3">
                                 <label class="form-label">
                                     {{ __('base.payment_period') }}
                                 </label>
                                 <div class="input-group input-group-merge">
-                                    <input type="date" name="date" value="{{ request('date') }}"
+                                    <input type="date" name="filter[date]" value="{{ request('filter.date') }}"
                                         class="form-control form-control-merge dt-input" data-column="2"
                                         data-column-index="1" tabindex="4" placeholder="" aria-describedby="password" />
-                                    {{-- <span --}}
-                                    {{-- class="input-group-text cursor-pointer" --}}
-                                    {{-- ><i data-feather="calendar" class="font-medium-1"></i></span> --}}
                                 </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div> Сортировать по </div>
+                                <a href="{{ request()->fullUrlWithQuery(
+                ['filter[sort][name]' => 'user_name', 'filter[sort][rule]' => request('filter.sort.rule') === 'asc' ? 'desc' : 'asc']
+            ) }}">Логину</a> |
+                                <a href="{{ request()->fullUrlWithQuery(
+                ['filter[sort][name]' => 'first_name', 'filter[sort][rule]' => request('filter.sort.rule') === 'asc' ? 'desc' : 'asc']
+                ) }}">Пользователю</a> |
+                                <a href="{{ request()->fullUrlWithQuery(
+                ['filter[sort][name]' => 'accession_date', 'filter[sort][rule]' => request('filter.sort.rule') === 'asc' ? 'desc' : 'asc']
+                ) }}">Дате вступления</a> |
+                                <a href="{{ request()->fullUrlWithQuery(['filter[sort][name]' => '', 'filter[sort][rule]' => '']) }}">очистить фильтр</a>
                             </div>
                         </div>
                     </form>
@@ -105,6 +128,12 @@
                                                 rowspan="1" colspan="1"
                                                 aria-label="Date: activate to sort column ascending">
                                                 {{ __('audience.days_left') }}
+                                            </th>
+
+                                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Role: activate to sort column ascending">
+                                                {{ __('audience.role') }}
                                             </th>
 
                                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
@@ -203,6 +232,18 @@
                                                     </td>
 
                                                     <td valign="top" colspan="1" class="dataTables_empty">
+                                                        <div class="col-sm-12 col-lg-12">
+                                                            @if($follower->pivot->role == 'member')
+                                                                Участник
+                                                            @elseif($follower->pivot->role == 'creator')
+                                                                Создатель
+                                                            @elseif($follower->pivot->role == 'administrator')
+                                                                Администратор
+                                                            @endif
+                                                        </div>
+                                                    </td>
+
+                                                    <td valign="top" colspan="1" class="dataTables_empty">
                                                         <div class="inactive-form-items">
                                                             <div class="row d-flex align-items-center">
                                                                 <div class="col-md-12 col-12">
@@ -234,6 +275,7 @@
                                             <th rowspan="1" colspan="1">{{ __('base.tariff') }}</th>
                                             <th rowspan="1" colspan="1">{{ __('payment.payment_date') }}</th>
                                             <th rowspan="1" colspan="1">{{ __('audience.days_left') }}</th>
+                                            <th rowspan="1" colspan="1">{{ __('audience.role') }}</th>
                                             <th rowspan="1" colspan="1">{{ __('payment.exclude') }}</th>
                                         </tr>
                                     </tfoot>

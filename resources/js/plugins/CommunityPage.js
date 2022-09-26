@@ -9,19 +9,41 @@ import { TariffPage } from "./CommunityPage/TariffPage";
 import { TariffPageSettings } from "./CommunityPage/TariffPageSettings";
 import { TariffPagePublications } from "./CommunityPage/TariffPagePublications";
 import { TariffPageAdd } from "./CommunityPage/TariffPageSettings/TariffPageAdd";
+import { AnalyticsListPage } from "./CommunityPage/AnalyticsListPage";
+import { AnalyticsSubscribersPage } from "./CommunityPage/AnalyticsSubscribersPage";
+import { AnalyticsMessagesPage } from "./CommunityPage/AnalyticsMessagesPage";
+import { AnalyticsPaymentsPage } from "./CommunityPage/AnalyticsPaymentsPage";
 
 export default class CommunityPage extends Page {
     constructor(container) {
         super(container);
     }
-
+    
     init() {
+        this.communityId = window.location.pathname.split('/')[2];
+        
         if (this.isBlock('[data-tab="profileBlock"]')) {
             this.profileBlock = new ProfileBlock(this);
         }
 
         if (this.isBlock('[data-tab="statisticPage"]')) {
             this.statisticPage = new StatisticPage(this);
+        }
+
+        if (this.isBlock('[data-tab="analyticsListPage"]')) {
+            this.analyticsListPage = new AnalyticsListPage(this);
+        }
+
+        if (this.isBlock('[data-tab="analyticsSubscribersPage"]')) {
+            this.analyticsSubscribersPage = new AnalyticsSubscribersPage(this);
+        }
+
+        if (this.isBlock('[data-tab="analyticsMessagesPage"]')) {
+            this.analyticsMessagesPage = new AnalyticsMessagesPage(this);
+        }
+
+        if (this.isBlock('[data-tab="analyticsPaymentsPage"]')) {
+            this.analyticsPaymentsPage = new AnalyticsPaymentsPage(this);
         }
 
         if (this.isBlock('[data-tab="donatePage"]')) {
@@ -62,8 +84,8 @@ export default class CommunityPage extends Page {
         return this.container.querySelector(selector) ? true : false;
     }
 
-    toggleProfileVisibility(event) {
-        this.profileBlock.toggleVisibility();
+    async toggleProfileVisibility(event) {
+        await this.profileBlock.toggleVisibility();
         let active = document.getElementById("btn_profile");
 
         if (this.profileBlock.isVisible) {
@@ -72,10 +94,9 @@ export default class CommunityPage extends Page {
 
         } else {
             event.target.textContent = 'Открыть профиль';
-            active.className += " active";
+            active.classList.add("active");
         }
     }
-
 
     /*  let content;
         if (direction === 'next') {

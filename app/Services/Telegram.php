@@ -10,6 +10,8 @@ use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
 use App\Models\TestData;
 use App\Repositories\Community\CommunityRepositoryContract;
+use App\Repositories\Tariff\TariffRepository;
+use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Abs\Messenger;
 use GuzzleHttp\Psr7\Request;
 use App\Models\User;
@@ -31,6 +33,12 @@ class Telegram extends Messenger
     protected $name = "Telegram";
 
     //todo убрать статичность переделать на нормальные методы принадлежащие объекту
+    private TariffRepository $tariffRepository;
+
+    public function __construct(TariffRepositoryContract $tariffRepository)
+    {
+        $this->tariffRepository = $tariffRepository;
+    }
 
     public static function authorize(User $user)
     {
@@ -74,8 +82,16 @@ class Telegram extends Messenger
 
 
                     if (!$ty->communities()->find($community->id)) {
-                        $ty->communities()->attach($community);
-//                        $botService->unKickUser($telegram_id, $community->connection->chat_id);
+                        $ty->communities()->attach($community, [
+                            'role' => 'member',
+                            'accession_date' => time()
+                        ]);
+                        //                        $botService->unKickUser($telegram_id, $community->connection->chat_id);
+                    } else {
+                        $ty->communities()->updateExistingPivot($community, [
+                            'role' => 'member',
+                            'accession_date' => time()
+                        ]);
                     }
 
                     $variant = $community->tariff->variants()->find($payment->payable_id);
@@ -103,7 +119,10 @@ class Telegram extends Messenger
                 if ($community) {
                     $ty = self::registerTelegramUser($telegram_id, NULL, $userName, $firstName, $lastName);
                     if (!$ty->communities()->find($community->id)) {
-                        $ty->communities()->attach($community);
+                        $ty->communities()->attach($community, [
+                            'role' => 'member',
+                            'accession_date' => time()
+                        ]);
                     }
                     if ($ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first() == NULL) {
                         foreach ($community->tariff->variants as $variant) {
@@ -130,6 +149,24 @@ class Telegram extends Messenger
             }
 
             return true;
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    public function deleteUser($chat_id, $t_user_id)
+    {
+        try {
+            $community = TelegramConnection::where('chat_id', $chat_id)->first()->community()->first() ?? null;
+            $ty = TelegramUser::where('telegram_id', $t_user_id)->first() ?? null;
+            if ($community && $ty) {
+                $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
+                if ($variantForThisCommunity)
+                    $ty->tariffVariant()->detach($variantForThisCommunity->id);
+
+                if ($ty->communities()->find($community->id)) 
+                    $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time()]);
+            }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
@@ -190,8 +227,12 @@ class Telegram extends Messenger
                 'connection_id' => $tc->id,
                 'image' => self::saveCommunityPhoto($tc->photo_url, $tc->chat_id)
             ]);
-
-            $community->tariff()->create(Tariff::baseData());
+            //todo refactoring создание тарифа должно происходить через репозиторий TariffRepository
+            $tariff = new Tariff();
+            $this->tariffRepository->generateLink($tariff);
+            $baseAttributes = Tariff::baseData();
+            $baseAttributes['inline_link'] = $tariff->inline_link;
+            $community->tariff()->create($baseAttributes);
             $community->statistic()->create([
                 'community_id' => $community->id
             ]);
@@ -230,7 +271,10 @@ class Telegram extends Messenger
             ]);
         }
 
-        $ty->communities()->attach($community);
+        $ty->communities()->attach($community, [
+            'role' => 'administrator',
+            'accession_date' => time()
+        ]);
     }
 
     /**
@@ -242,7 +286,10 @@ class Telegram extends Messenger
     {
         $ty = TelegramUser::where('user_id', $community->owner)->first();
         if ($ty)
-            $ty->communities()->attach($community);
+            $ty->communities()->attach($community, [
+                'role' => 'creator',
+                'accession_date' => time()
+            ]);
     }
 
     public function invokeCommunityConnect($user, $type)
@@ -290,7 +337,7 @@ class Telegram extends Messenger
             $hash = self::hash($userId, $chatType);
 
             $tc = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
-            Log::debug('поиск группы $hash init',compact('chatId','hash'));
+            Log::debug('поиск группы $hash init', compact('chatId', 'hash'));
             if ($tc) {
                 $tc->chat_id = $chatId;
                 $tc->chat_title = $chatTitle;
@@ -302,7 +349,7 @@ class Telegram extends Messenger
 
                 $tc->photo_url = $photo_url ?? null;
                 $tc->save();
-                Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType',compact('chatId','chatTitle','chatType'));
+                Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chatId', 'chatTitle', 'chatType'));
             }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());

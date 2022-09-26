@@ -26,7 +26,7 @@ export function timeFormatting(options) {
 
 export function numberFormatting(value, decimal = 2) {
     if (value === 0) {
-        return n.toFixed(decimal);
+        return value.toFixed(decimal);
     }
 
     const notations = ["", "K", "M", "B", "T", "P", "E", "Z", "Y"];
@@ -77,4 +77,8 @@ export function bodyUnLock() {
     document.body.style.paddingRight = 0;
     document.body.classList.remove('locked');
     document.querySelector('.main-header').style.paddingRight = 0;
+}
+
+export function convertToRub(value) {
+    return Math.floor(Number(value) / 100);
 }

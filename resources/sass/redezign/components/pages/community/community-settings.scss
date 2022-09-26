@@ -1,38 +1,226 @@
 .community-settings {
 
-
     &__item {
         margin-top: 30px;
     }
 
+    &__form-item {
+        margin: 0 0 20px;
+        width: 100%;
+
+        @media (min-width: $lg) {
+            margin: 0 0 30px;
+            width: 30%;
+        }
+
+        &.your-value-wrap-mobile {
+            width: 100%;
+            margin: 0;
+
+            @media (min-width: $lg) {
+                display: none;
+            }
+        }
+
+        &.tariff-cost {
+            width: 45%;
+
+            @media (min-width: $lg) {
+                margin: 0;
+                width: 180px;
+            }
+        }
+
+        &.tariff_pay_period {
+            width: 55%;
+
+            @media (min-width: $lg) {
+                margin: 0;
+                width: 220px;
+            }
+        }
+
+        &.your-value-wrap {
+            display: none;
+
+            @media (min-width: $lg) {
+                opacity: 0;
+                visibility: hidden;
+                display: flex;
+                flex-wrap: wrap;
+                transition: all 0.3s;
+                position: absolute;
+                left: 440px;
+                top: 55%;
+                transform: translateY(-50%);
+            }
+
+            &::before {
+                content: '';
+                position: absolute;
+                right: 100%;
+                bottom: 21px;
+                width: 40px;
+                height: 1px;
+                background-color: $grey-4;
+            }
+        }
+
+    }
+
+    &__wrap-left {
+        width: 100%;
+
+        @media (min-width: $md) {
+            width: 30%;
+        }
+    }
+
+    &__wrap-input-group {
+        width: 100%;
+        position: relative;
+
+        @media (min-width: $lg) {
+            margin: 0 0 30px 40px;
+            width: 575px;
+            position: relative;
+        }
+    }
+
     &__buttons {
         display: flex;
-        column-gap: $indent-3;
+        flex-wrap: wrap;
+        gap: $indent-3;
         margin-top: 30px;
+
+        @media (min-width: $sm) {
+            margin-top: 60px;
+        }
     }
 
     &__change-tariff {
-        display: grid;
-        grid-template-columns: 300px 400px;
-        align-items: flex-end;
-        gap: 20px 40px;
-        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start; 
+
+        @media (min-width: $lg) {
+            &.active {
+    
+                .community-settings__form-item.your-value-wrap {
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }   
+        }
+    }
+
+    &__checkbox {
+        width: 100%;
+
+        &.active {
+
+            .toggle-switch__input + .toggle-switch__slider,
+            .toggle-switch__input:focus + .toggle-switch__slider {
+                background-color: #7367f0;
+            }
+
+            .toggle-switch__input + .toggle-switch__slider:before {
+                transform: translateX(16px);
+            }
+        }
+    }
+
+    &__active_personal {
+        display: flex;
+        flex-direction: column;
+        align-items: baseline;
+
+        @media (min-width: $md) {
+            margin: 0 0 0 40px;
+        }
+
+        &.add {
+            justify-content: end;
+        }
+    }
+
+    &__inline-command {
+        margin: 0 0 20px;
+        padding: 30px 0 0;
+
+        @media (min-width: $md) {
+            margin: 0 0 30px;
+            padding: 20px 0 0;
+        }
+
+        &.list {
+            padding: 10px 0 0 20px;
+        }
+    }
+
+    &__inline-link {
+        display: block;
+        color: $green-1!important;
+
+        &.all-tariffs {
+            display: inline-block;
+        }
+
+        &:hover, &:focus {
+            color: $green-1!important;
+            opacity: .7;
+        }
+    }
+
+    &__personal_tariff {
+        margin: 0;
+    }
+
+    &__personal-label {
+        margin: 0 0 0 15px;
     }
 
     &__input-wrapper {
         display: flex;
         flex-direction: column;
 
-        &:last-child {
-            label {
-                align-self: flex-end;
+        .tariff_pay_period {
+            border-radius: 0 5px 5px 0;
+        }
+
+        &.your-value-wrap {
+
+            display: none;
+
+            @media (min-width: $lg) {
+                display: flex;
+                opacity: 0;
+                transition: all .3s;
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            &::before {
+                content: '';
+                position: absolute;
+                right: 100%;
+                bottom: 21px;
+                width: 40px;
+                height: 1px;
+                background-color: $grey-4;
             }
         }
     }
 
+    &__number-btn {
+        margin: 0 0 30px;
+        width: 100%;
+    }
+
     &__input-group {
-        display: grid;
-        grid-template-columns: 180px 1fr;
+        display: flex;
 
         div:first-child input {
             border-right: none;
@@ -44,9 +232,22 @@
         }
     }
 
-    &__tariff-public-settings {
-        display: grid;
-        grid-template-columns: minmax(470px, 1fr) 1fr;
-        column-gap: 30px;
+
+    &__your-value-mobile {
+        display: flex;
+        flex-wrap: wrap;
+
+        @media (min-width: $lg) {
+            
+        }
+    }
+
+    @media (min-width: $lg) {
+        &.active {
+
+            .community-settings__form-item.your-value-wrap {
+                opacity: 1;
+            }
+        }   
     }
 }

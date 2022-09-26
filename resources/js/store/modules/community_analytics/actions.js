@@ -1,3 +1,5 @@
+import { loadSubscribers } from "../../../api/community_analytics";
+
 export default ({
     LOAD_DATA_LIST({ commit }) {
         const data = {
@@ -307,7 +309,34 @@ export default ({
 
     },
 
-    FILTER({ commit }, filterAttrs) {
+    async LOAD_SUBSCRIBERS({ commit, state }) {
+        try {
+            // commit('SET_LOADING_STATUS', true);
+            // const res = await loadSubscribers({
+            //     community_id: state._communityId,
+                
+            // });
+            
+            console.log(1);
+            
+            // commit('SET_LOADING_STATUS', false);
+        } catch (error) {
+            // commit('SET_LOADING_STATUS', false);
+            console.log(error);
+        }
+    },
+
+    async FILTER({ commit, state }, filterAttrs) {
         console.log(filterAttrs);
+        try {
+            switch (filterAttrs.name) {
+                case 'subscribers':
+                    console.log('i am the danger', state._communityId);
+                    break;
+            }
+            
+        } catch (error) {
+            
+        }
     }
 });

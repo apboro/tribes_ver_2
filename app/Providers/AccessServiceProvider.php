@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Repositories\File\FileRepositoryContract;
 use App\Repositories\Statistic\MediaProductStatisticRepository;
 use App\Repositories\Statistic\MediaProductStatisticRepositoryContract;
+use App\Services\Telegram;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 //use Elasticsearch\ClientBuilder;
@@ -20,6 +21,15 @@ class AccessServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
+        $this->app->bind(
+            \App\Repositories\Statistic\TeleDialogStatisticRepositoryContract::class,
+            \App\Repositories\Statistic\TeleDialogStatisticRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Statistic\FinanceStatisticRepositoryContract::class,
+            \App\Repositories\Statistic\FinanceStatisticRepository::class
+        );
         $this->app->bind(
             \App\Repositories\Author\AuthorRepositoryContract::class,
             \App\Repositories\Author\AuthorRepository::class
@@ -84,6 +94,44 @@ class AccessServiceProvider extends ServiceProvider
         $this->app->bind(
             MediaProductStatisticRepositoryContract::class,
             MediaProductStatisticRepository::class
+        );
+        $this->app->bind(
+            Telegram::class,
+            Telegram::class
+        );
+        $this->app->bind(
+            \App\Repositories\Telegram\TeleMessageRepositoryContract::class,
+            \App\Repositories\Telegram\TeleMessageRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Telegram\TelePostRepositoryContract::class,
+            \App\Repositories\Telegram\TelePostRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Telegram\TelePostViewsReposirotyContract::class,
+            \App\Repositories\Telegram\TelePostViewsReposirory::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Telegram\TeleMessageReactionRepositoryContract::class,
+            \App\Repositories\Telegram\TeleMessageReactionRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Telegram\TelePostReactionRepositoryContract::class,
+            \App\Repositories\Telegram\TelePostReactionRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Telegram\TeleDictReactionRepositoryContract::class,
+            \App\Repositories\Telegram\TeleDictReactionRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Statistic\TeleMessageStatisticRepositoryContract::class,
+            \App\Repositories\Statistic\TeleMessageStatisticRepository::class
         );
 
         $this->bindSearchClient();

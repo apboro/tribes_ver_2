@@ -27,10 +27,10 @@
             <div class="card-body d-flex flex-column align-items-center">
                 <p class="card-text mb-2" style="word-break: break-all;">
                     @if ($payment->type == 'donate')
-                        {{ $payment->payable()->first()->donate()->first()->success_description ? $payment->payable()->first()->donate()->first()->success_description : __('donate.thanks_for_donation') }}
+                        {{ $payment->payable()->first()->donate()->first()->success_description }}
                     @endif
                     @if ($payment->type == 'tariff')
-                        {{ $payment->payable()->first()->tariff()->first()->thanks_description ? $payment->payable()->first()->tariff()->first()->thanks_description : __('tariff.success_activate_tariff')}}
+                        {{ $payment->payable()->first()->tariff()->first()->thanks_description }}
                     @endif
                 </p>
 

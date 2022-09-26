@@ -7,7 +7,7 @@ export class ChartsController {
         this.container = parent.container;
         this._data = {};
 
-        this.tariffAmountCountSelects = this.container.querySelectorAll('[data-tariff-amount-select]');
+        //this.tariffAmountCountSelects = this.container.querySelectorAll('[data-tariff-amount-select]');
 
         // Событие изменения данных суммы тарифов
         this.tariffAmountsUpdateEvent = parent.tariffAmountsUpdateEvent;
@@ -48,6 +48,7 @@ export class ChartsController {
 
     // инициализация диаграмм
     initCharts() {
+        console.log(1);
         this.tariffAmountsChart = new LineChart({
             parent: this.container,
             data: this.tariffAmounts,
@@ -56,31 +57,7 @@ export class ChartsController {
             
         });
 
-        this.uniqueVisitorsChart = new LineChart({
-            parent: this.container,
-            data: this.uniqueVisitors,
-            chartWrapperId: '#unique-visitors-chart',
-            mini: true,
-            fill: true,
-            lineColors: [this.chartColors[2]]
-        });
-
-        this.paidTariffsCountChart = new BarChart({
-            parent: this.container,
-            data: this.paidTariffsCount,
-            chartWrapperId: '#paid-tariffs-count-chart',
-            mini: true,
-            lineColors: [this.chartColors[5]],
-        });
-
-        this.paidDonationsCountChart = new LineChart({
-            parent: this.container,
-            data: this.paidDonationsCount,
-            chartWrapperId: '#paid-donations-count-chart',
-            mini: true,
-            fill: true,
-            lineColors: [this.chartColors[4]]
-        });
+        
     }
 
     // подписки на события

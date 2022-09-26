@@ -44,7 +44,25 @@ class CommunityController extends Controller
 
     public function statistic(Community $community)
     {
-        return view('common.statistic.index')
+        return view('common.statistic.list')
+            ->withCommunity($community);
+    }
+
+    public function statisticSubscribers(Community $community)
+    {
+        return view('common.statistic.subscribers.index')
+            ->withCommunity($community);
+    }
+
+    public function statisticMessages(Community $community)
+    {
+        return view('common.statistic.messages.index')
+            ->withCommunity($community);
+    }
+
+    public function statisticPayments(Community $community)
+    {
+        return view('common.statistic.payments.index')
             ->withCommunity($community);
     }
 
@@ -68,7 +86,7 @@ class CommunityController extends Controller
 
         $type = $request['type'];
 
-        $service = new Messenger::$platform[$request['platform']]();
+        $service = app()->make(Messenger::$platform[$request['platform']]);
 
         if (method_exists($service, 'invokeCommunityConnect')) {
 
@@ -84,7 +102,7 @@ class CommunityController extends Controller
     {
         /* @var  $service Telegram */
 
-        $service = new Messenger::$platform[$request['platform']]();
+        $service = app()->make(Messenger::$platform[$request['platform']]);
 
         $hash = $request['hash'];
 

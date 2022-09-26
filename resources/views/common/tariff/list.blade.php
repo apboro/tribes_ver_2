@@ -3,11 +3,11 @@
 @section('tab')
     <section class="community-tab" data-tab="tariffPage">
         <div class="community-tab__main-header">
-            <h2 class="">
+            <h2 class="community-tab__main-title">
                 {{ __('base.tariffs') }}
             </h2>
 
-            <div class="dropdown-red main-header__dropdown">
+            <div class="dropdown-red dropdown-red--left main-header__dropdown">
                 <button class="button-text button-text--primary button-text--only-icon dropdown-red__head" data-dropdown-btn onclick="Dropdown.toggle(this)">
                     <span
                         class="dropdown-red__name"
@@ -64,127 +64,127 @@
                 >
                     Неактивный
                 </option>
+                <option
+                    value="{{ route('community.tariff.list', $community) . '?isPersonal=true' }}"
+                    @if(request('active') == null && request('isPersonal') == true) selected @endif
+                >
+                    Персональный
+                </option>
             </select>
         </div>
-
-       
-            
-                
-                <!-- <div class="mt-1 mt-sm-0">
-                    <a
-                            href="{{ route('community.tariff.add', $community) }}"
-                            class="btn btn-success"
-                    >
-                        <i data-feather='plus' class="font-medium-1"></i>
-                        <span class="d-none d-lg-inline-block">
-                            {{ __('tariff.add_tariff') }}
-                        </span>
-                    </a>
-
-                    <a
-                            href="{{ route('community.tariff.publication', $community) }}"{{--сюда роут для публикации--}}
-                            class="btn btn-success ms-0 ms-sm-1 "
-                    >
-                        <i data-feather='plus' class="font-medium-1"></i>
-                        <span class="d-none d-lg-inline-block">
-                            {{ __('tariff.tariffs_publication') }}
-                        </span>
-                    </a>
-
-                    <a
-                        href="{{ route('community.tariff.settings', $community) }}"
-                        class="btn btn-outline-success ms-0 ms-sm-1"
-                    >
-                        <i data-feather='settings' class="font-medium-1"></i>
-                        <span class="d-none d-lg-inline-block">
-                            {{ __('tariff.setting_messages') }}
-                        </span>
-                    </a>
-                </div> -->
-            
-        
+        @if((request('active') == null || request('active') == 'true') && isset($tariffs[0]))
+        <div>
+            <span>{{__('tariff.inline_command_all_tariffs')}}</span>
+            <a 
+                class="community-settings__inline-link all-tariffs"
+                onclick="copyText('{{$community->tariff ? $community->tariff()->first()->getInlineLink() : 'Создастся при сохранении'}}')"
+            >
+                {{$community->tariff()->first()->getInlineLink()??''}}
+            </a>
+        </div>
+        @endif
         <!-- TARIFF LIST -->
+        @if(isset($tariffs[0]))
         <ul class="community-tariff__list">
             @forelse ($tariffs ?? [] as $tariff)
-            <li class="community-tariff-card community-tariff__item">
-                <div class="community-tariff-card__header">
-                    <h4
-                        class="community-tariff-card__title"
-                        title="{{ $tariff->title }}"
-                    >
-                        {{ $tariff->title }}
-                    </h4>
-                    
-                    <a
-                        href="{{ route('community.tariff.edit', [$community, $tariff->id]) }}"
-                        class="button-text button-text--primary button-text--only-icon community-tariff-card__edit"
-                    >
-                        <!-- <i data-feather='edit' class="font-medium-1"></i> -->
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path class="icon__stroke" fill-rule="evenodd" clip-rule="evenodd" d="M15.5858 4.41421C16.3668 3.63317 17.6332 3.63317 18.4142 4.41421L19.5858 5.58579C20.3668 6.36684 20.3668 7.63316 19.5858 8.41421L8.58579 19.4142C8.21071 19.7893 7.70201 20 7.17157 20L4 20L4 16.8284C4 16.298 4.21071 15.7893 4.58579 15.4142L15.5858 4.41421Z" stroke="#B5B4B8"/>
-                            <path class="icon__stroke" d="M14 6L18 10" stroke="#B5B4B8"/>
-                        </svg>
-                    </a>
-                </div>
+            <li>
+                <div class="community-tariff-card community-tariff__item">
+                    <div class="community-tariff-card__header">
+                        <h4
+                            class="community-tariff-card__title"
+                            title="{{ $tariff->title }}"
+                        >
+                            {{ $tariff->title }}
+                        </h4>
+                        
+                        <a
+                            href="{{ route('community.tariff.edit', [$community, $tariff->id]) }}"
+                            class="button-text button-text--primary button-text--only-icon community-tariff-card__edit"
+                        >
+                            <!-- <i data-feather='edit' class="font-medium-1"></i> -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path class="icon__stroke" fill-rule="evenodd" clip-rule="evenodd" d="M15.5858 4.41421C16.3668 3.63317 17.6332 3.63317 18.4142 4.41421L19.5858 5.58579C20.3668 6.36684 20.3668 7.63316 19.5858 8.41421L8.58579 19.4142C8.21071 19.7893 7.70201 20 7.17157 20L4 20L4 16.8284C4 16.298 4.21071 15.7893 4.58579 15.4142L15.5858 4.41421Z" stroke="#B5B4B8"/>
+                                <path class="icon__stroke" d="M14 6L18 10" stroke="#B5B4B8"/>
+                            </svg>
+                        </a>
+                    </div>
 
-                <p class="community-tariff-card__text">
-                    <span class="community-tariff-card__price">{{ $tariff->price }}&#8381;</span>/
-                    <span class="community-tariff-card__period">
-                        {{ $tariff->period }} {{App\Traits\Declination::defineDeclination($tariff->period)}}
-                    </span>
-                </p>
+                    <p class="community-tariff-card__text">
+                        <span class="community-tariff-card__price">{{ $tariff->price }}&#8381;</span>/
+                        <span class="community-tariff-card__period">
+                            {{ $tariff->period }} {{App\Traits\Declination::defineDeclination($tariff->period)}}
+                        </span>
+                    </p>
 
-                <p class="community-tariff-card__text">
-                    {{ __('base.community') }}
-                </p>
+                    <p class="community-tariff-card__text">
+                        {{ __('base.community') }}
+                    </p>
 
-                <p class="community-tariff-card__community">
-                    {{ $community->title }}
-                </p>
-
-                <a
-                    type="submit"
-                    @if(request('active') == null)
-                    href="{{ route('community.tariff.edit', [$community, $tariff->id, $activate = 0]) }}"
-                    @else
-                    href="{{ route('community.tariff.edit', [$community, $tariff->id, $activate = 1]) }}"
-                    @endif class="toggle-switch community-tariff-card__switcher"
-                >
-                    <label class="toggle-switch__switcher">
-                        <input
-                            type="checkbox"
-                            id="is_tariff-list"
-                            class="toggle-switch__input"
-                            value=""
-                            @if($tariff->isActive) checked @endif
-                        > 
-                        <span class="toggle-switch__slider"></span>
-                    </label> 
-
-                    <label for="is_tariff-list" class="toggle-switch__label">
-                        @if(request('active') == null) Активный @else Неактивный @endif
-                    </label>
-                </a>        
-            </li>
-            @empty
-                <!-- Empty tariffs -->
-                <div class="community-tariff__empty-wrapper">
-                    <p class="community-tariff__empty-text">
-                        @if(request()->has('active') && request()->get('active') == "false")
-                            {{ __('tariff.create_tariff_instruction_inactive') }}
-                        @else
-                            {{ __('tariff.create_tariff_instruction_active') }}
-                        @endif
+                    <p class="community-tariff-card__community">
+                        {{ $community->title }}
                     </p>
 
                     <a
-                        href="{{ route('community.tariff.add', $community) }}"
-                        class="button-filled button-filled--primary community-tariff__empty-btn"
+                        type="submit"
+                        @if(request('active') == null)
+                        href="{{ route('community.tariff.edit', [$community, $tariff->id, $activate = 0]) }}"
+                        @else
+                        href="{{ route('community.tariff.edit', [$community, $tariff->id, $activate = 1]) }}"
+                        @endif class="toggle-switch community-tariff-card__switcher"
                     >
-                        {{ __('tariff.add_tariff') }}
+                        <label class="toggle-switch__switcher">
+                            <input
+                                type="checkbox"
+                                id="is_tariff-list"
+                                class="toggle-switch__input"
+                                value=""
+                                @if($tariff->isActive) checked @endif
+                            > 
+                            <span class="toggle-switch__slider"></span>
+                        </label> 
+
+                        <label for="is_tariff-list" class="toggle-switch__label">
+                            @if(request('active') == null) Активный @else Неактивный @endif
+                        </label>
                     </a>
                 </div>
+                <div class="community-settings__inline-command list">
+                    <span class="form-label-red">{{__('tariff.inline_command')}}</span>
+                    <a 
+                        class="community-settings__inline-link" 
+                        onclick="copyText('{{$tariff ? $tariff->getInlineLink() : 'Создастся при сохранении'}}')"
+                    >
+                        {{$tariff->getInlineLink()}}
+                    </a>
+                </div>
+            </li>
+            @empty
+            
             @endforelse
         </ul>
+        @else
+        <!-- Empty tariffs -->
+        <div class="community-tariff__empty-wrapper">
+            @if(request()->has('active') && request()->get('active') == "false")
+                <p class="community-tariff__empty-text">
+                    Отсутствуют неактивные тарифы. 
+                </p>
+            @else
+                <p class="community-tariff__empty-text">
+                    Отсутствуют активные тарифы. 
+                </p>
+                <p class="community-tariff__empty-text">
+                    Добавьте активный тариф или измените статус неактивного тарифа
+                </p>
+            @endif
+
+            <a
+                href="{{ route('community.tariff.add', $community) }}"
+                class="button-filled button-filled--primary community-tariff__empty-btn"
+            >
+                {{ __('tariff.add_tariff') }}
+            </a>
+        </div>
+        @endif
     </section>
 @endsection

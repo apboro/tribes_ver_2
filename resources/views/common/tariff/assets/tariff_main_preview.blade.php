@@ -49,7 +49,7 @@
     </div>
 </div> -->
 
-<div class="">
+<div class="community-settings__tariff-preview">
     <label class="form-label-red">
             {{ __('base.preview') }}
     </label>
@@ -66,11 +66,10 @@
                     data-default-image
                 > -->
                 <img
-                    src="@if ($community->tariff->getMainImage()){{ $community->tariff->getMainImage()->url }} @else /images//no-tariff-img-telegram.jpg @endif"
+                    src="@if ($community->tariff->getMainImage()){{ $community->tariff->getMainImage()->url }} @else /images/no-tariff-img-telegram.jpg @endif"
                     alt=""
                     @if ($community->tariff->getMainImage()) data-no-image="true" @endif
                 >
-
                 <canvas class="hide" style="width: 100%; height: 100%;"></canvas>
             </div>
 

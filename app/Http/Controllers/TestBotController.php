@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper\PseudoCrypt;
+use App\Jobs\SetNewTelegramUsers;
 use App\Models\Community;
 use App\Models\Course;
 use App\Models\Donate;
@@ -20,9 +21,16 @@ use App\Models\Statistic;
 use App\Models\User;
 use App\Models\UserIp;
 use App\Models\Lesson;
+use App\Models\TelegramMessage;
+use App\Models\TelegramMessageReaction;
 use App\Models\Template;
 use App\Models\Video;
 use App\Models\Text;
+use App\Repositories\Telegram\TeleMessageReactionRepositoryContract;
+use App\Repositories\Telegram\TeleMessageRepositoryContract;
+use App\Repositories\Telegram\TelePostReactionRepositoryContract;
+use App\Repositories\Telegram\TelePostRepositoryContract;
+use App\Repositories\Telegram\TelePostViewsReposirotyContract;
 use App\Repositories\Video\VideoRepository;
 use App\Services\SMS16;
 use App\Services\Telegram;
@@ -33,20 +41,19 @@ use App\Services\Tinkoff\Payment as Pay;
 use App\Services\WebcasterPro;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Telegram\MainComponents\Madeline;
-
-
+use App\Services\Telegram\TelegramMtproto\UserBot;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 use DateTime;
-
 
 class TestBotController extends Controller
 {
 
     public function index(Request $request)
     {
-        $pwr_chat = Madeline::settings()->getPwrChat(-743948980);
-        dd($pwr_chat);
+        $string = '1234';
+        dd(gettype($string));
     }
 
 }

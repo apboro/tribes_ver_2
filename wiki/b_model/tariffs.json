@@ -1,0 +1,2083 @@
+{
+    "blocks": [
+        {
+            "x": 2470,
+            "y": 880,
+            "text": "",
+            "width": 40,
+            "height": 20,
+            "type": "Текст / комментарий",
+            "isMenuBlock": false,
+            "fontSize": 14,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "left",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2550,
+            "y": 1770,
+            "text": "5\nбывший\nучасник",
+            "width": 110,
+            "height": 110,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2550,
+            "y": 1580,
+            "text": "4\nучасник",
+            "width": 110,
+            "height": 110,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2550,
+            "y": 400,
+            "text": "учасники",
+            "width": 340,
+            "height": 130,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2080,
+            "y": 970,
+            "text": "подписка отсутсвует",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2080,
+            "y": 1390,
+            "text": "подписка заморожена",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2090,
+            "y": 1770,
+            "text": "подписка удалена",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2090,
+            "y": 1580,
+            "text": "подписка действующая",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1540,
+            "y": 1390,
+            "text": "платеж",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1540,
+            "y": 1770,
+            "text": "платеж",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1540,
+            "y": 970,
+            "text": "платеж отсутствует",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1540,
+            "y": 1190,
+            "text": "платеж отсутствует",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2550,
+            "y": 970,
+            "text": "1\nавтор",
+            "width": 110,
+            "height": 110,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2550,
+            "y": 1200,
+            "text": "2\nбот",
+            "width": 110,
+            "height": 110,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2550,
+            "y": 1390,
+            "text": "3\nадминистратор",
+            "width": 110,
+            "height": 110,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1800,
+            "y": 1580,
+            "text": "косв. связь",
+            "width": 110,
+            "height": 110,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1800,
+            "y": 1770,
+            "text": "косв. связь",
+            "width": 110,
+            "height": 110,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1800,
+            "y": 1390,
+            "text": "косв. связь",
+            "width": 110,
+            "height": 110,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 24,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 4210,
+            "y": 1140,
+            "text": "текстовая напись",
+            "width": 240,
+            "height": 40,
+            "type": "Текст / комментарий",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 24,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "left",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1850,
+            "y": 880,
+            "text": "нет бизнес сущности \"РЕЗОН\"",
+            "width": 400,
+            "height": 20,
+            "type": "Текст / комментарий",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "left",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2080,
+            "y": 1200,
+            "text": "подписка отсутсвует",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1370,
+            "y": 400,
+            "text": "открытое\n\nни одного активного тарифа",
+            "width": 340,
+            "height": 130,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1830,
+            "y": 400,
+            "text": "закрытое\n\nодин и более \n\nактивный тариф",
+            "width": 340,
+            "height": 130,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 670,
+            "y": 840,
+            "text": "тариф вариант 2",
+            "width": 340,
+            "height": 130,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 670,
+            "y": 400,
+            "text": "тариф (?актив)",
+            "width": 340,
+            "height": 130,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 670,
+            "y": 610,
+            "text": "тариф вариант 1\n\n (?актив)",
+            "width": 340,
+            "height": 130,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 290,
+            "y": 420,
+            "text": "tariffs",
+            "width": 260,
+            "height": 140,
+            "type": "Блок",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 300,
+            "y": 630,
+            "text": "tarif_variant",
+            "width": 260,
+            "height": 140,
+            "type": "Блок",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2100,
+            "y": 1960,
+            "text": "telegram_users_tarif_variants",
+            "width": 260,
+            "height": 140,
+            "type": "Блок",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1540,
+            "y": 1960,
+            "text": "payments",
+            "width": 260,
+            "height": 140,
+            "type": "Блок",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1805,
+            "y": 1920,
+            "text": "tarif_variant_id,\ntele_user_id,\ncommunity_id",
+            "width": 190,
+            "height": 80,
+            "type": "Текст / комментарий",
+            "isMenuBlock": false,
+            "fontSize": 23,
+            "textHeight": 23,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "left",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3440,
+            "y": -400,
+            "text": "форма оплаты",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3800,
+            "y": -400,
+            "text": "платеж",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1540,
+            "y": 1580,
+            "text": "платеж",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3440,
+            "y": -750,
+            "text": "ссылка на тариф\n\nв сообществе",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3440,
+            "y": -120,
+            "text": "телеграм \n\nпользователь",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3800,
+            "y": 70,
+            "text": "ЛЧ чат\n\nбота",
+            "width": 110,
+            "height": 110,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3800,
+            "y": -120,
+            "text": "ссылка на \n\nчат с ботом",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3180,
+            "y": -560,
+            "text": "чат\n\nанонима\n\n???",
+            "width": 150,
+            "height": 150,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3050,
+            "y": -750,
+            "text": "веб браузер\n\n(страница)",
+            "width": 170,
+            "height": 170,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2840,
+            "y": -400,
+            "text": "аноним",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1020,
+            "y": 400,
+            "text": "community",
+            "width": 260,
+            "height": 140,
+            "type": "Блок",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 1020,
+            "y": 180,
+            "text": "сообщество",
+            "width": 340,
+            "height": 130,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 4210,
+            "y": 1040,
+            "text": "1",
+            "width": 110,
+            "height": 110,
+            "type": "Ссылка",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 24,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 4210,
+            "y": 1450,
+            "text": "табличная \nсущность",
+            "width": 260,
+            "height": 140,
+            "type": "Блок",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 24,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3440,
+            "y": -910,
+            "text": "телеграм команда \n\nсписок ссылок тарифов\n\nсообщества",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3300,
+            "y": 280,
+            "text": "регистрационная \n\n(пригласительная)\n\nссылка в сообщество",
+            "width": 320,
+            "height": 110,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3320,
+            "y": 1160,
+            "text": "юзербот",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3320,
+            "y": 1000,
+            "text": "АПИ получение списка \n\nучасников чата\n\ntele_members",
+            "width": 220,
+            "height": 100,
+            "type": "Подпрограмма",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 4210,
+            "y": 900,
+            "text": "действие",
+            "width": 160,
+            "height": 80,
+            "type": "Подпрограмма",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 24,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2830,
+            "y": 750,
+            "text": "telegram_users_community",
+            "width": 260,
+            "height": 140,
+            "type": "Блок",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 4210,
+            "y": 1260,
+            "text": "бизнес сущность",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 24,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 3320,
+            "y": 750,
+            "text": "сравнение \n\nотсутствующих\n\n записей и запись \n\nновых ",
+            "width": 280,
+            "height": 160,
+            "type": "Подпрограмма",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        },
+        {
+            "x": 2970,
+            "y": 460,
+            "text": "ручное \n\nзаполнение \n\nподписок",
+            "width": 260,
+            "height": 90,
+            "type": "Начало / конец",
+            "isMenuBlock": false,
+            "fontSize": 24,
+            "textHeight": 14,
+            "isBold": false,
+            "isItalic": false,
+            "textAlign": "center",
+            "labelsPosition": 1
+        }
+    ],
+    "arrows": [
+        {
+            "startIndex": 42,
+            "endIndex": 21,
+            "startConnectorIndex": 1,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 1190,
+                    "y": 180
+                },
+                {
+                    "x": 1370,
+                    "y": 180
+                },
+                {
+                    "x": 1370,
+                    "y": 320
+                },
+                {
+                    "x": 1370,
+                    "y": 335
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 42,
+            "endIndex": 22,
+            "startConnectorIndex": 1,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 1190,
+                    "y": 180
+                },
+                {
+                    "x": 1830,
+                    "y": 180
+                },
+                {
+                    "x": 1830,
+                    "y": 320
+                },
+                {
+                    "x": 1830,
+                    "y": 335
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 42,
+            "endIndex": 3,
+            "startConnectorIndex": 1,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 1190,
+                    "y": 180
+                },
+                {
+                    "x": 2550,
+                    "y": 180
+                },
+                {
+                    "x": 2550,
+                    "y": 320
+                },
+                {
+                    "x": 2550,
+                    "y": 335
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 42,
+            "endIndex": 24,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 850,
+                    "y": 180
+                },
+                {
+                    "x": 670,
+                    "y": 180
+                },
+                {
+                    "x": 670,
+                    "y": 320
+                },
+                {
+                    "x": 670,
+                    "y": 335
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 24,
+            "endIndex": 25,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 670,
+                    "y": 465
+                },
+                {
+                    "x": 670,
+                    "y": 530
+                },
+                {
+                    "x": 670,
+                    "y": 545
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 3,
+            "endIndex": 12,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 2550,
+                    "y": 465
+                },
+                {
+                    "x": 2550,
+                    "y": 900
+                },
+                {
+                    "x": 2550,
+                    "y": 915
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 14,
+            "endIndex": 5,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 2495,
+                    "y": 1390
+                },
+                {
+                    "x": 2230,
+                    "y": 1390
+                },
+                {
+                    "x": 2210,
+                    "y": 1390
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 13,
+            "endIndex": 20,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 2495,
+                    "y": 1200
+                },
+                {
+                    "x": 2230,
+                    "y": 1200
+                },
+                {
+                    "x": 2210,
+                    "y": 1200
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 12,
+            "endIndex": 4,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 2495,
+                    "y": 970
+                },
+                {
+                    "x": 2230,
+                    "y": 970
+                },
+                {
+                    "x": 2210,
+                    "y": 970
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 12,
+            "endIndex": 13,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 2550,
+                    "y": 1025
+                },
+                {
+                    "x": 2550,
+                    "y": 1130
+                },
+                {
+                    "x": 2550,
+                    "y": 1145
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 13,
+            "endIndex": 14,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 2550,
+                    "y": 1255
+                },
+                {
+                    "x": 2550,
+                    "y": 1320
+                },
+                {
+                    "x": 2550,
+                    "y": 1335
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 14,
+            "endIndex": 2,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 2550,
+                    "y": 1445
+                },
+                {
+                    "x": 2550,
+                    "y": 1510
+                },
+                {
+                    "x": 2550,
+                    "y": 1525
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 2,
+            "endIndex": 1,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 2550,
+                    "y": 1635
+                },
+                {
+                    "x": 2550,
+                    "y": 1700
+                },
+                {
+                    "x": 2550,
+                    "y": 1715
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 7,
+            "endIndex": 2,
+            "startConnectorIndex": 1,
+            "endConnectorIndex": 3,
+            "nodes": [
+                {
+                    "x": 2220,
+                    "y": 1580
+                },
+                {
+                    "x": 2480,
+                    "y": 1580
+                },
+                {
+                    "x": 2495,
+                    "y": 1580
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 1,
+            "endIndex": 6,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 2495,
+                    "y": 1770
+                },
+                {
+                    "x": 2240,
+                    "y": 1770
+                },
+                {
+                    "x": 2220,
+                    "y": 1770
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 5,
+            "endIndex": 17,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 1950,
+                    "y": 1390
+                },
+                {
+                    "x": 1880,
+                    "y": 1390
+                },
+                {
+                    "x": 1855,
+                    "y": 1390
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 7,
+            "endIndex": 15,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 1960,
+                    "y": 1580
+                },
+                {
+                    "x": 1880,
+                    "y": 1580
+                },
+                {
+                    "x": 1855,
+                    "y": 1580
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 6,
+            "endIndex": 16,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 1960,
+                    "y": 1770
+                },
+                {
+                    "x": 1880,
+                    "y": 1770
+                },
+                {
+                    "x": 1855,
+                    "y": 1770
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 17,
+            "endIndex": 8,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 1745,
+                    "y": 1390
+                },
+                {
+                    "x": 1690,
+                    "y": 1390
+                },
+                {
+                    "x": 1670,
+                    "y": 1390
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 15,
+            "endIndex": 33,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 1745,
+                    "y": 1580
+                },
+                {
+                    "x": 1690,
+                    "y": 1580
+                },
+                {
+                    "x": 1670,
+                    "y": 1580
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 16,
+            "endIndex": 9,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 1745,
+                    "y": 1770
+                },
+                {
+                    "x": 1690,
+                    "y": 1770
+                },
+                {
+                    "x": 1670,
+                    "y": 1770
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 25,
+            "endIndex": 23,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 670,
+                    "y": 675
+                },
+                {
+                    "x": 670,
+                    "y": 760
+                },
+                {
+                    "x": 670,
+                    "y": 775
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 25,
+            "endIndex": 10,
+            "startConnectorIndex": 1,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 840,
+                    "y": 610
+                },
+                {
+                    "x": 1540,
+                    "y": 610
+                },
+                {
+                    "x": 1540,
+                    "y": 910
+                },
+                {
+                    "x": 1540,
+                    "y": 925
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 25,
+            "endIndex": 4,
+            "startConnectorIndex": 1,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 840,
+                    "y": 610
+                },
+                {
+                    "x": 2080,
+                    "y": 610
+                },
+                {
+                    "x": 2080,
+                    "y": 910
+                },
+                {
+                    "x": 2080,
+                    "y": 925
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 42,
+            "endIndex": 41,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 1020,
+                    "y": 245
+                },
+                {
+                    "x": 1020,
+                    "y": 310
+                },
+                {
+                    "x": 1020,
+                    "y": 330
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 34,
+            "endIndex": 38,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 3440,
+                    "y": -705
+                },
+                {
+                    "x": 3440,
+                    "y": -560
+                },
+                {
+                    "x": 3280,
+                    "y": -560
+                },
+                {
+                    "x": 3255,
+                    "y": -560
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 40,
+            "endIndex": 38,
+            "startConnectorIndex": 0,
+            "endConnectorIndex": 3,
+            "nodes": [
+                {
+                    "x": 2840,
+                    "y": -445
+                },
+                {
+                    "x": 2840,
+                    "y": -560
+                },
+                {
+                    "x": 3090,
+                    "y": -560
+                },
+                {
+                    "x": 3105,
+                    "y": -560
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 38,
+            "endIndex": 31,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 3,
+            "nodes": [
+                {
+                    "x": 3180,
+                    "y": -485
+                },
+                {
+                    "x": 3180,
+                    "y": -400
+                },
+                {
+                    "x": 3290,
+                    "y": -400
+                },
+                {
+                    "x": 3310,
+                    "y": -400
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 40,
+            "endIndex": 31,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 2,
+            "nodes": [
+                {
+                    "x": 2840,
+                    "y": -355
+                },
+                {
+                    "x": 2840,
+                    "y": -330
+                },
+                {
+                    "x": 3440,
+                    "y": -330
+                },
+                {
+                    "x": 3440,
+                    "y": -355
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 31,
+            "endIndex": 32,
+            "startConnectorIndex": 1,
+            "endConnectorIndex": 3,
+            "nodes": [
+                {
+                    "x": 3570,
+                    "y": -400
+                },
+                {
+                    "x": 3650,
+                    "y": -400
+                },
+                {
+                    "x": 3670,
+                    "y": -400
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 32,
+            "endIndex": 37,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 3800,
+                    "y": -355
+                },
+                {
+                    "x": 3800,
+                    "y": -180
+                },
+                {
+                    "x": 3800,
+                    "y": -165
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 35,
+            "endIndex": 37,
+            "startConnectorIndex": 1,
+            "endConnectorIndex": 3,
+            "nodes": [
+                {
+                    "x": 3570,
+                    "y": -120
+                },
+                {
+                    "x": 3650,
+                    "y": -120
+                },
+                {
+                    "x": 3670,
+                    "y": -120
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 37,
+            "endIndex": 36,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 3800,
+                    "y": -75
+                },
+                {
+                    "x": 3800,
+                    "y": 0
+                },
+                {
+                    "x": 3800,
+                    "y": 15
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 35,
+            "endIndex": 36,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 3,
+            "nodes": [
+                {
+                    "x": 3440,
+                    "y": -75
+                },
+                {
+                    "x": 3440,
+                    "y": 70
+                },
+                {
+                    "x": 3730,
+                    "y": 70
+                },
+                {
+                    "x": 3745,
+                    "y": 70
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 34,
+            "endIndex": 39,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 3310,
+                    "y": -750
+                },
+                {
+                    "x": 3160,
+                    "y": -750
+                },
+                {
+                    "x": 3135,
+                    "y": -750
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 39,
+            "endIndex": 40,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 2965,
+                    "y": -750
+                },
+                {
+                    "x": 2840,
+                    "y": -750
+                },
+                {
+                    "x": 2840,
+                    "y": -460
+                },
+                {
+                    "x": 2840,
+                    "y": -445
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 39,
+            "endIndex": 31,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 3,
+            "nodes": [
+                {
+                    "x": 3050,
+                    "y": -665
+                },
+                {
+                    "x": 3050,
+                    "y": -400
+                },
+                {
+                    "x": 3290,
+                    "y": -400
+                },
+                {
+                    "x": 3310,
+                    "y": -400
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 45,
+            "endIndex": 34,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 0,
+            "nodes": [
+                {
+                    "x": 3440,
+                    "y": -865
+                },
+                {
+                    "x": 3440,
+                    "y": -810
+                },
+                {
+                    "x": 3440,
+                    "y": -795
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 46,
+            "endIndex": 3,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 3140,
+                    "y": 280
+                },
+                {
+                    "x": 2740,
+                    "y": 280
+                },
+                {
+                    "x": 2740,
+                    "y": 400
+                },
+                {
+                    "x": 2720,
+                    "y": 400
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 36,
+            "endIndex": 46,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 3800,
+                    "y": 125
+                },
+                {
+                    "x": 3800,
+                    "y": 280
+                },
+                {
+                    "x": 3480,
+                    "y": 280
+                },
+                {
+                    "x": 3460,
+                    "y": 280
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 18,
+            "endIndex": 43,
+            "startConnectorIndex": 0,
+            "endConnectorIndex": 2,
+            "nodes": [
+                {
+                    "x": 4210,
+                    "y": 1120
+                },
+                {
+                    "x": 4210,
+                    "y": 1120
+                },
+                {
+                    "x": 4210,
+                    "y": 1095
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 53,
+            "endIndex": 3,
+            "startConnectorIndex": 3,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 2840,
+                    "y": 460
+                },
+                {
+                    "x": 2740,
+                    "y": 460
+                },
+                {
+                    "x": 2740,
+                    "y": 400
+                },
+                {
+                    "x": 2720,
+                    "y": 400
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 47,
+            "endIndex": 48,
+            "startConnectorIndex": 0,
+            "endConnectorIndex": 2,
+            "nodes": [
+                {
+                    "x": 3320,
+                    "y": 1115
+                },
+                {
+                    "x": 3320,
+                    "y": 1070
+                },
+                {
+                    "x": 3320,
+                    "y": 1050
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 50,
+            "endIndex": 52,
+            "startConnectorIndex": 1,
+            "endConnectorIndex": 3,
+            "nodes": [
+                {
+                    "x": 2960,
+                    "y": 750
+                },
+                {
+                    "x": 3160,
+                    "y": 750
+                },
+                {
+                    "x": 3180,
+                    "y": 750
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 52,
+            "endIndex": 53,
+            "startConnectorIndex": 0,
+            "endConnectorIndex": 1,
+            "nodes": [
+                {
+                    "x": 3320,
+                    "y": 670
+                },
+                {
+                    "x": 3320,
+                    "y": 460
+                },
+                {
+                    "x": 3120,
+                    "y": 460
+                },
+                {
+                    "x": 3100,
+                    "y": 460
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 48,
+            "endIndex": 52,
+            "startConnectorIndex": 0,
+            "endConnectorIndex": 2,
+            "nodes": [
+                {
+                    "x": 3320,
+                    "y": 950
+                },
+                {
+                    "x": 3320,
+                    "y": 850
+                },
+                {
+                    "x": 3320,
+                    "y": 830
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "startIndex": 3,
+            "endIndex": 50,
+            "startConnectorIndex": 2,
+            "endConnectorIndex": 3,
+            "nodes": [
+                {
+                    "x": 2550,
+                    "y": 465
+                },
+                {
+                    "x": 2550,
+                    "y": 750
+                },
+                {
+                    "x": 2680,
+                    "y": 750
+                },
+                {
+                    "x": 2700,
+                    "y": 750
+                }
+            ],
+            "counts": [
+                1,
+                1,
+                1,
+                1
+            ]
+        }
+    ],
+    "x0": -835,
+    "y0": 288
+}
