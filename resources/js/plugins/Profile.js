@@ -1,6 +1,7 @@
 import { forEach } from "lodash";
 import Page from "./Abstract/Page";
 import { CreateNode } from "./Helper/CreateNode";
+import { ProfileBlock } from "./CommunityPage/ProfileBlock";
 
 export default class Profile extends Page {
     constructor(container) {
@@ -41,82 +42,94 @@ export default class Profile extends Page {
 
         // this.loadData()
 
-        // this.createProfile();
+        if (this.isBlock('[data-tab="profileBlock"]')) {
+            this.profileBlock = new ProfileBlock(this);
+        }
     }
+
+    isBlock(selector) {
+        return this.container.querySelector(selector) ? true : false;
+    }
+
+    
 
     // loadData(){
     //     //запрос на массив объектов
     // }
 
-    createProfile(){
-        console.log(this.loadData);
-        this.loadData.forEach((item) => {
-            // const itemWrap = new CreateNode({
-            //     parent: this.right,
-            // }).init();
+    
+    toggleProfileCommunityVisibility(event) {
+        this.profileBlock.toggleVisibility();
+        let active = document.getElementById("btn_profile");
 
-            const itemWrap = new CreateNode({
-                parent: this.list,
-                class: 'profile__item-wrap',
-            }).init();
+        if (this.profileBlock.isVisible) {
+            event.target.textContent = 'Скрыть';
+            active.classList.remove("active");
 
-            const itemList = new CreateNode({
-                parent: itemWrap,
-                tag: 'a',
-                class: 'profile__item',
-            }).init();
-
-            const itemImage = new CreateNode({
-                parent: itemList,
-                class: 'profile__item-image',
-            }).init()
-
-            const img = new CreateNode({
-                parent: itemImage,
-                tag: 'img',
-                class: 'profile__image',
-                src: item.url,
-            }).init()
-
-            const itemText = new CreateNode({
-                parent: itemList,
-                class: 'profile__item-text',
-            }).init()
-
-            const channel = new CreateNode({
-                parent: itemText,
-                tag: 'p',
-                class: 'profile__channel',
-                text: item.channel,
-            }).init();
-
-            const messenger = new CreateNode({
-                parent: itemText,
-                tag: 'div',
-                class: 'profile__messenger',
-            }).init();
-
-            const icon = new CreateNode({
-                parent: messenger,
-                tag: 'img',
-                src: item.icon,
-            }).init();
-
-            const text = new CreateNode({
-                parent: messenger,
-                tag: 'p',
-                class: 'profile__text',
-                text: item.default,
-            }).init();
-        })
-        // const profile = new CreateNode({
-        //     parent: this.container,
-        //     class: 'profile__wrapper',
-        // }).init();
-        // const div = new CreateNode({
-        //     parent: profile,
-        //     class
-        // })
+        } else {
+            event.target.textContent = 'Раскрыть';
+            active.className += " active";
+        }
     }
+
+    // createProfile(){
+    //     console.log(this.loadData);
+    //     this.loadData.forEach((item) => {
+
+    //         const itemWrap = new CreateNode({
+    //             parent: this.list,
+    //             class: 'profile__item-wrap',
+    //         }).init();
+
+    //         const itemList = new CreateNode({
+    //             parent: itemWrap,
+    //             tag: 'a',
+    //             class: 'profile__item',
+    //         }).init();
+
+    //         const itemImage = new CreateNode({
+    //             parent: itemList,
+    //             class: 'profile__item-image',
+    //         }).init()
+
+    //         const img = new CreateNode({
+    //             parent: itemImage,
+    //             tag: 'img',
+    //             class: 'profile__image',
+    //             src: item.url,
+    //         }).init()
+
+    //         const itemText = new CreateNode({
+    //             parent: itemList,
+    //             class: 'profile__item-text',
+    //         }).init()
+
+    //         const channel = new CreateNode({
+    //             parent: itemText,
+    //             tag: 'p',
+    //             class: 'profile__channel',
+    //             text: item.channel,
+    //         }).init();
+
+    //         const messenger = new CreateNode({
+    //             parent: itemText,
+    //             tag: 'div',
+    //             class: 'profile__messenger',
+    //         }).init();
+
+    //         const icon = new CreateNode({
+    //             parent: messenger,
+    //             tag: 'img',
+    //             src: item.icon,
+    //         }).init();
+
+    //         const text = new CreateNode({
+    //             parent: messenger,
+    //             tag: 'p',
+    //             class: 'profile__text',
+    //             text: item.default,
+    //         }).init();
+    //     })
+    // }
 }
 

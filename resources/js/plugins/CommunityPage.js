@@ -89,11 +89,11 @@ export default class CommunityPage extends Page {
         let active = document.getElementById("btn_profile");
 
         if (this.profileBlock.isVisible) {
-            event.target.textContent = 'Скрыть профиль';
+            event.target.textContent = 'Скрыть';
             active.classList.remove("active");
 
         } else {
-            event.target.textContent = 'Открыть профиль';
+            event.target.textContent = 'Раскрыть';
             active.className += " active";
         }
     }

@@ -3,5 +3,5 @@
 @section('content')
     <section data-plugin="Analytics">
         I am analytics
-    </div>
+    </section>
 @endsection
