@@ -34,7 +34,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $sub = DB::table($p)
             ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
             ->leftJoin($p, function (JoinClause $join) use($p, $scale) {
-                $join->on( DB::raw("extract('epoch' from $p.created_at)"), '>=', 'd.dt')->on(DB::raw("extract('epoch' from $p.created_at)"), '<', DB::raw("d.dt + $scale"));
+                $join->on( DB::raw("extract('epoch' from $p.created_at - INTERVAL '3 hours')"), '>=', 'd.dt')->on(DB::raw("extract('epoch' from $p.created_at - INTERVAL '3 hours')"), '<', DB::raw("d.dt + $scale"));
             })
             ->select([
                 DB::raw("d.dt"),
