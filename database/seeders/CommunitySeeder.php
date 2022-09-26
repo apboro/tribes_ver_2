@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Helper\PseudoCrypt;
 use App\Models\Community;
+use App\Models\Project;
 use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
 use App\Models\User;
@@ -32,9 +33,12 @@ class CommunitySeeder extends Seeder
                 'user_id' => $userTest->id,
                 'telegram_user_id' => $teleuser->telegram_id,
             ]);
+        $projects = Project::factory()->for($userTest,'user')->count(3)->create();
 
         foreach($connections as $eachConnection){
-            $community = Community::factory()->for($eachConnection,'connection')->create([
+            $project = $projects->get(rand(1,3));
+            $community = Community::factory()->for($project,'project')
+                ->for($eachConnection,'connection')->create([
                 'owner' => $userTest->id,
                 'title' => $eachConnection->chat_title,
             ]);

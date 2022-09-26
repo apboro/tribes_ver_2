@@ -156,6 +156,11 @@ class User extends Authenticatable
         return $this->hasMany(Community::class, 'owner', 'id');
     }
 
+    function projects()
+    {
+        return $this->hasMany(Project::class, 'user_id', 'id');
+    }
+
     function accumulation()
     {
         return $this->hasMany(Accumulation::class, 'user_id', 'id');
