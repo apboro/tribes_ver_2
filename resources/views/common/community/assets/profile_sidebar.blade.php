@@ -9,7 +9,7 @@
                 <div class="d-flex align-items-center flex-column">
                     <!-- Аватар -->
                     <img class="img-fluid rounded mb-1"
-                        src="@if ($community->image !== null) {{ $community->image }} @else/images/no-image.svg@endif"
+                        src="@if ($community->image !== null) {{ $community->image }} @else/images/no-image.svg @endif"
                         height="auto" width="100%" alt="User avatar"
                     />
 

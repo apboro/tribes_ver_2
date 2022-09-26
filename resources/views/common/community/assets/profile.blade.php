@@ -2,7 +2,7 @@
     <div class="profile-community__common-data">
         <div class="profile-community__avatar">
             <img
-                src="@if ($community->image !== null) {{ $community->image }} @else/images/no-image.svg@endif"
+                src="@if ($community->image !== null) {{ $community->image }} @else/images/no-image.svg @endif"
                 alt="User avatar"
             >
         </div>
