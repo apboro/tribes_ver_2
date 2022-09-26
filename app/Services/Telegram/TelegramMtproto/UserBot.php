@@ -17,7 +17,8 @@ class UserBot
     public function setWebhook($url, $user_id = 1)
     {
         $params = [
-            'ident' => 'Laravel' . $user_id,
+            'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'url' => $url
         ];
         return $this->request('/start-listen', $params)->object();
@@ -33,7 +34,8 @@ class UserBot
     public function auth($code = null, $user_id = 1)
     {
         $params = [
-            'ident' => 'Laravel' . $user_id,
+            'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'code' => $code
         ];
         return $this->request('/auth', $params)->object();
@@ -48,7 +50,7 @@ class UserBot
     public function logOut($user_id = 1)
     {
         $params = [
-            'ident' => 'Laravel' . $user_id,
+            'ident' => env('IDENT_USER_BOT') . $user_id,
         ];
         return $this->request('/logout', $params)->object();
     }
@@ -68,7 +70,8 @@ class UserBot
     public function getMessages($chat_id, $type, $access_hash = null, $min_id = null, $limit = null, $offset_id = null, $user_id = 1)
     {
         $params = [
-            'ident' => 'Laravel' . $user_id,
+            'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'type' => $type,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
@@ -92,7 +95,8 @@ class UserBot
     public function getMessagesViews($chat_id, $type, $messages_id, $access_hash = null, $user_id = 1)
     {
         $params = [
-            'ident' => 'Laravel' . $user_id,
+            'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'message_id' => $messages_id,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
@@ -114,7 +118,8 @@ class UserBot
     public function getChannelReactions($chat_id, $messages_id, $access_hash = null, $type = 'channel', $user_id = 1) 
     {
         $params = [
-            'ident' => 'Laravel' . $user_id,
+            'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'message_id' => $messages_id,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
@@ -136,7 +141,8 @@ class UserBot
     public function getReactions($chat_id, $message_id, $limit = null, $offset = null, $user_id = 1)
     {
         $params = [
-            'ident' => 'Laravel' . $user_id,
+            'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'message_id' => $message_id,
             'chat_id' => $chat_id,
             'limit' => $limit,
@@ -155,7 +161,8 @@ class UserBot
     public function getChatInfo($chat_id, $user_id = 1)
     {
         $params = [
-            'ident' => 'Laravel' . $user_id,
+            'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'chat_id' => $chat_id
         ];
         return $this->request('/chat-info', $params)->object();
@@ -172,7 +179,8 @@ class UserBot
     public function getDialogs($limit = null, $offset_id = null, $user_id = 1)
     {
         $params = [
-            'ident' => 'Laravel' . $user_id,
+            'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'limit' => $limit,
             'offset_id' => $offset_id
         ];
@@ -191,7 +199,8 @@ class UserBot
     public function getUsersInChannel($channel_id, $access_hash, $limit = null, $offset = null, $user_id = 1)
     {
         $params = [
-            'ident' => 'Laravel' . $user_id,
+            'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'channel_id' => $channel_id,
             'access_hash' => $access_hash,
             'limit' => $limit,

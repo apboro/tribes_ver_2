@@ -25,13 +25,18 @@ class Tariff extends Model
         return $this->hasMany(TariffVariant::class, 'tariff_id', 'id');
     }
 
-    public function getTariffVariants()
+    public function getTariffVariants($inlineLink = null)
     {
-        $tariffVariants = TariffVariant::where('tariff_id', $this->id)
-            ->where('isActive', true,)
+        $builder = TariffVariant::where('tariff_id', $this->id)
+            ->where('isActive', true)
             ->where('price', '>', 0)
-            ->orderBy('number_button', 'ASC')
-            ->get();
+            ->orderBy('number_button', 'ASC');
+        if($inlineLink) {
+            $builder->where('inline_link', '=', $inlineLink);
+        } else {
+            $builder->where('isPersonal', false);
+        }
+        $tariffVariants = $builder->get();
 
         return $tariffVariants;
     }

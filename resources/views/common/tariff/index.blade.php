@@ -40,8 +40,8 @@
             </h3>
 
             <ul class="tariff-public__list">
-                @foreach ($community->tariff->getTariffVariants() as $tariff)
-                    @if ($tariff->isActive === true && $tariff->price !== 0 && $tariff->isPersonal === false)
+                @foreach ($community->tariff->getTariffVariants($inline_link) as $tariff)
+                    @if ($tariff->isActive === true && $tariff->price !== 0)
                     <li class="tariff-public__item">
                         <button
                             class="tariff-public__variant"

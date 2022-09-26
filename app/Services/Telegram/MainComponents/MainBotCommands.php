@@ -267,7 +267,8 @@ class MainBotCommands
                     'amount' => $variant->price,
                     'currency' => 0,
                     'type' => 'tariff',
-                    'telegram_user_id' => null
+                    'telegram_user_id' => null,
+                    'inline_link'=> $variant->inline_link,
                 ]));
 
             }elseif($tariff instanceof Tariff) {
