@@ -136,7 +136,7 @@ class TariffController extends Controller
         }
         $this->tariffRepo->statisticView($request, $community);
 
-        return view('common.tariff.index')->withCommunity($community,$inline_link);
+        return view('common.tariff.index')->with('community', 'inline_link');
     }
 
     public function tariff(Community $community)
