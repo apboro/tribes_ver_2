@@ -18,6 +18,7 @@ class UserBot
     {
         $params = [
             'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'url' => $url
         ];
         return $this->request('/start-listen', $params)->object();
@@ -34,6 +35,7 @@ class UserBot
     {
         $params = [
             'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'code' => $code
         ];
         return $this->request('/auth', $params)->object();
@@ -69,6 +71,7 @@ class UserBot
     {
         $params = [
             'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'type' => $type,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
@@ -93,6 +96,7 @@ class UserBot
     {
         $params = [
             'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'message_id' => $messages_id,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
@@ -115,6 +119,7 @@ class UserBot
     {
         $params = [
             'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'message_id' => $messages_id,
             'chat_id' => $chat_id,
             'access_hash' => $access_hash,
@@ -137,6 +142,7 @@ class UserBot
     {
         $params = [
             'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'message_id' => $message_id,
             'chat_id' => $chat_id,
             'limit' => $limit,
@@ -156,6 +162,7 @@ class UserBot
     {
         $params = [
             'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'chat_id' => $chat_id
         ];
         return $this->request('/chat-info', $params)->object();
@@ -173,6 +180,7 @@ class UserBot
     {
         $params = [
             'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'limit' => $limit,
             'offset_id' => $offset_id
         ];
@@ -192,6 +200,7 @@ class UserBot
     {
         $params = [
             'ident' => env('IDENT_USER_BOT') . $user_id,
+            'phone' => env('PHONE_USER_BOT'),
             'channel_id' => $channel_id,
             'access_hash' => $access_hash,
             'limit' => $limit,
