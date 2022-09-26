@@ -12,7 +12,7 @@ class ProjectAttachRequest extends FormRequest
     {
         return [
             'id' => ['required','integer',new OwnProjectRule()],
-            'communities' => 'required|array',
+            'communities' => 'array',
             'communities.*' => ['integer',new OwnCommunityRule()],
         ];
     }

@@ -83,8 +83,13 @@ class ProjectRepository implements ProjectRepositoryContract
         if (Project::where(['id' => $projectId])->doesntExist()) {
             throw new ApiException('Попытка привязать сообщества к несуществующему проекту');
         }
-        $detachCommunities = Community::where('project_id','=',$projectId)->whereNotIn('id',$communityIds)->update(['project_id' => null]);
-        $attachCommunities = Community::whereIn('id', $communityIds)->update(['project_id' => $projectId]);
+        if(empty($communityIds)) {
+            Community::where('project_id','=',$projectId)->update(['project_id' => null]);
+        } else {
+            Community::where('project_id','=',$projectId)->whereNotIn('id',$communityIds)->update(['project_id' => null]);
+            Community::whereIn('id', $communityIds)->update(['project_id' => $projectId]);
+        }
+
         return true;
     }
 }

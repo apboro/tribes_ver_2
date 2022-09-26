@@ -99,7 +99,7 @@ class ProjectController extends Controller
     {
         $result = $this->projectRepository->reAttachCommunities(
             $request->get('id'),
-            $request->get('communities')
+            $request->get('communities',[])
         );
         return response()->json([
             'status' => $result ? 'ok' : 'error',
