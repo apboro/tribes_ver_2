@@ -57,9 +57,9 @@ class ProjectController extends Controller
         ]);
 
         $project->communities = collect([
-            (object)['id' => 1, 'name' => 'Первое сообщество'],
-            (object)['id' => 2, 'name' => 'Второе сообщество'],
-            (object)['id' => 3, 'name' => 'Третье сообщество'],
+            (object)['id' => 1, 'name' => 'Первое сообщество', 'image' => '/images/avatars/1.png', 'description' => 'Описание сообщества', 'link' => route('project.analytic', 1, 1)],
+            (object)['id' => 2, 'name' => 'Второе сообщество', 'image' => '/images/avatars/2.png', 'description' => 'Описание сообщества', 'link' => route('project.analytic', 1, 2)],
+            (object)['id' => 3, 'name' => 'Третье сообщество', 'image' => '/images/avatars/3.png', 'description' => 'Описание сообщества', 'link' => route('project.analytic', 1, 3)],
         ]);
 
         return $project;

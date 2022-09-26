@@ -2,6 +2,6 @@
 
 @section('content')
     <section data-plugin="Analytics">
-        I am analytics
+        сюда аналитика
     </section>
 @endsection

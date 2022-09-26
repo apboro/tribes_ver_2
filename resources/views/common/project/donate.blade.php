@@ -3,6 +3,6 @@
 @section('content')
 
     <section data-plugin="Analytics">
-        I am analytics
+        Сюда донаты
     </section>
 @endsection

@@ -93,7 +93,7 @@
                     href="{{ route('payment.list') }}"
                     class="main-nav-new__link {{ request()->is('*payments*') ? 'active' : ''  }}"
                 >
-                    <span>База знаний</span>
+                    <span>Финансы</span>
                 </a>
             </li>
             <!-- FAQ будущая Помощь -->

@@ -85,45 +85,28 @@
                 <!-- END профиль выбранного сообщества -->
             </div>
 
-            @php
-                $demoCommunities = [
-                        ['messenger' => "Что то", 'text' => "Что то", 'image' => "/images/avatars/1.png"],
-                        ['messenger' => "Что то1", 'text' => "Что то1", 'image' => "/images/avatars/2.png"],
-                        ['messenger' => "Что то2", 'text' => "Что то2", 'image' => "/images/avatars/3.png"],
-                        ['messenger' => "Что то3", 'text' => "Что то3", 'image' => "/images/avatars/4.png"],
-                        ['messenger' => "Что то3", 'text' => "Что то3", 'image' => "/images/avatars/5.png"],
-                        ['messenger' => "Что то3", 'text' => "Что то3", 'image' => "/images/avatars/6.png"],
-                        ['messenger' => "Что то3", 'text' => "Что то3", 'image' => "/images/avatars/7.png"],
-                        ['messenger' => "Что то3", 'text' => "Что то3", 'image' => "/images/avatars/8.png"],
-                    ];
-            @endphp
-
-
-
-            {{ $communtiy->id ?? null }}
-
             <div class="profile__list-channel">
                 <h4 class="profile__list-title">Сообщества Проекта</h4>
 
                 <!-- START список сообществ проекта -->
                 <div id="profile-list" class="profile__list" data-massive="{{ 5+5 }}">
-                    @for($x = 0; $x < count($demoCommunities); $x++)
-                    <div class="profile__item-wrap" id="community_{{ $x }}" >
-                        <input type="radio" id="community-item_{{ $x }}" name="community-item" class="profile__input">
-                        <label for="community-item_{{ $x }}" class="profile__item">
+                    @foreach($project->communities as $community)
+                    <a class="profile__item-wrap" id="community_{{ $community->id }}" href="{{ $community->link }}" >
+                        <input type="radio" id="community-item_{{ $community->id }}" name="community-item" class="profile__input">
+                        <label for="community-item_{{ $community->id }}" class="profile__item">
                             <div class="profile__item-image">
-                                <img class="profile__image" src="{{ $demoCommunities[$x]['image'] }}">
+                                <img class="profile__image" src="{{ $community->image }}">
                             </div>
                             <div class="profile__item-text">
-                                <p class="profile__channel">{{ $demoCommunities[$x]['text'] }}</p>
+                                <p class="profile__channel">{{ $community->description }}</p>
                                 <div class="profile__messenger">
                                     <img src="/images/icons/social/telegram.png">
-                                    <p class="profile__text">{{ $demoCommunities[$x]['messenger'] }}</p>
+                                    <p class="profile__text">мессенджер</p>
                                 </div>
                             </div>
                         </label>
-                    </div>
-                    @endfor
+                    </a>
+                    @endforeach
                 </div>
                 <!-- END список сообществ проекта -->
 
