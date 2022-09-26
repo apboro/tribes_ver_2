@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ApiException;
 use App\Filters\API\ProjectFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\ProjectAttachRequest;
 use App\Http\Requests\API\ProjectCreateRequest;
 use App\Http\Requests\API\ProjectEditRequest;
 use App\Http\Requests\API\ProjectRequest;
@@ -71,7 +72,7 @@ class ProjectController extends Controller
                 ['title' => $request->get('title')],
                 ['user_id' => Auth::user()->id]
             );
-            if($project) {
+            if ($project) {
                 return new ProjectResource($project);
             }
         }
@@ -80,8 +81,8 @@ class ProjectController extends Controller
 
     public function delete(ProjectRequest $request)
     {
-        $project = Project::where('id','=',$request->get('id'))
-        ->where('user_id', '=', Auth::user()->id)->get()->first();
+        $project = Project::where('id', '=', $request->get('id'))
+            ->where('user_id', '=', Auth::user()->id)->get()->first();
         if (empty ($project)) {
             throw ValidationException::withMessages([
                 'id' => ["Такой проект №{$request->id} отсутствует в системе "],
@@ -91,6 +92,21 @@ class ProjectController extends Controller
         return response()->json([
             'status' => 'ok',
             'message' => "проект №{$request->id} удален",
+        ], 200);
+    }
+
+    public function attachCommunities(ProjectAttachRequest $request)
+    {
+        $result = $this->projectRepository->reAttachCommunities(
+            $request->get('id'),
+            $request->get('communities')
+        );
+        return response()->json([
+            'status' => $result ? 'ok' : 'error',
+            'message' =>  $result
+                ? "Сообщества были успешно прикреплены к проекту №{$request->id}"
+                : "Ошибка при попытке привязать сообщества к проекту"
+            ,
         ], 200);
     }
 }

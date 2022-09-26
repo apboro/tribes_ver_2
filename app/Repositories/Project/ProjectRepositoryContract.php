@@ -19,4 +19,6 @@ interface ProjectRepositoryContract
 
     public function delete(int $projectId): bool;
 
+    public function reAttachCommunities(int $projectId, array $communityIds): bool;
+
 }

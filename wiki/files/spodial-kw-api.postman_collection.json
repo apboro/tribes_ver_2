@@ -1895,6 +1895,60 @@
 				"description": "запросить список доступных вопросов"
 			},
 			"response": []
+		},
+		{
+			"name": "проэкт привязать сообщества",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "6",
+							"type": "text"
+						},
+						{
+							"key": "communities[]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "communities[]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "communities[]",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "communities[]",
+							"value": "4",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/projects/attach-communities",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
 		}
 	]
 }

@@ -103,7 +103,7 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
         Route::post('add', 'ProjectController@add')->name('api.project.add');
         Route::post('store', 'ProjectController@store')->name('api.project.store');
         Route::post('delete', 'ProjectController@delete')->name('api.project.delete');
-
+        Route::post('attach-communities', 'ProjectController@attachCommunities')->name('api.project.attach-communities');
     });
 
     Route::group(['prefix' => 'media-statistic'], function () {

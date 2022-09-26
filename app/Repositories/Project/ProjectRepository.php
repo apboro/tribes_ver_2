@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Project;
 
+use App\Exceptions\ApiException;
 use App\Filters\API\ProjectFilter;
 use App\Helper\ArrayHelper;
 use App\Models\Community;
@@ -47,12 +48,12 @@ class ProjectRepository implements ProjectRepositoryContract
     public function update(int $projectId, array $attributes, array $filter = []): ?Project
     {
         $project = Project::find($projectId);
-        if(empty($project)) {
+        if (empty($project)) {
             return null;
         }
         if (!empty($filter)) {
             foreach ($filter as $key => $value) {
-                if($project->{$key} !== $value) {
+                if ($project->{$key} !== $value) {
                     return null;
                 }
             }
@@ -66,8 +67,8 @@ class ProjectRepository implements ProjectRepositoryContract
 
     public function delete(int $projectId): bool
     {
-        if($project = Project::find($projectId)) {
-            DB::transaction(function() use ($project) {
+        if ($project = Project::find($projectId)) {
+            DB::transaction(function () use ($project) {
                 Community::where('project_id', '=', $project->id)
                     ->update(['project_id' => null]);
                 $project->delete();
@@ -75,5 +76,15 @@ class ProjectRepository implements ProjectRepositoryContract
             return true;
         }
         return false;
+    }
+
+    public function reAttachCommunities(int $projectId, array $communityIds): bool
+    {
+        if (Project::where(['id' => $projectId])->doesntExist()) {
+            throw new ApiException('Попытка привязать сообщества к несуществующему проекту');
+        }
+        $detachCommunities = Community::where('project_id','=',$projectId)->whereNotIn('id',$communityIds)->update(['project_id' => null]);
+        $attachCommunities = Community::whereIn('id', $communityIds)->update(['project_id' => $projectId]);
+        return true;
     }
 }
