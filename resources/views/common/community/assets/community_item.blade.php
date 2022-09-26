@@ -3,7 +3,7 @@
         <a href="{{ route('community.statistic', ['community' => $community->id]) }}">
             <img
                 class="card-img-top"
-                src="@if($community->image !== null) {{$community->image}} @else /images/no-image.svg @endif"
+                src="@if($community->image !== null) {{$community->image}} @else/images/no-image.svg@endif"
                 alt="Card image cap"
             />
 
