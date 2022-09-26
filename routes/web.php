@@ -65,6 +65,14 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
     // Авторизованные роуты
     Route::middleware('auth')->namespace('App\Http\Controllers')->group(function () {
+
+        //New Design Routes
+        Route::get('/analytics/{project?}/{community?}', 'ProjectController@analytics')->name('project.analytic');
+        Route::get('/donate/{project?}/{community?}', 'ProjectController@donate')->name('project.donate');
+        Route::get('/tariff/{project?}/{community?}', 'ProjectController@tariff')->name('project.tariff');
+        // Всё остальное должно остать по старым роутам, это только те, в которых есть селектор сообществ и групп
+
+
         Route::group(['prefix' => 'profile'], function () {
 
             Route::get('/', 'AuthorController@profile')->name('author.profile');
@@ -298,6 +306,11 @@ Route::get('/agency_contract', function () {
 Route::get('/confirm_subscription', function () {
     return view('common.tariff.confirm-subscription');
 })->name('agency_contract.index');
+
+
+
+
+
 
 // TEST 
 Route::get('/analyticst', function () {

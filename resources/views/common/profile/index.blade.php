@@ -6,11 +6,7 @@
     </div>
     <div class="profile__hide-show" data-tab="profileBlock">
 
-    @php
-        $projects = [];
-    @endphp
-
-        @if( count($projects) )
+        @if( empty($project) )
         <!--START нет проектов и сообществ -->
         <div class="profile__start-work">
             <div class="profile__community_not_selected">
