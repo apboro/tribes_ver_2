@@ -36,7 +36,10 @@ return [
     'telegram_group' => 'Группу / чат',
     'telegram_group_connection' => 'Подключение Telegram группы (чат)',
     'add_telegram_bot_group_admin' => 'Добавьте бота в администраторы группы и выдайте ему права на приглашение подписчиков',
-    
+
+    // Telegram userBot
+    'add_telegram_userbot_admin' => 'Для отображения детальной статистики по Вашему сообществу необходимо добавить следующего бота и выдать ему права администратора:',
+    'user_bot' => 'Юзербот',
     
     // Discord
     'choose_discord_community' => 'Выберите необходимый тип для Discord сообщества',
