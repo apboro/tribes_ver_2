@@ -55,7 +55,7 @@ class TariffService {
         $tvc_ids_arr = array_filter ($tvc_ids_arr);
 
         $users = ArrayHelper::index(User::whereIn('id', $user_id)->get(), 'id');
-        $telegram_users = ArrayHelper::index(TelegramUser::whereIn('telegram_id', $telegram_user_id)->get(), 'id') ;
+        $telegram_users = ArrayHelper::index(TelegramUser::whereIn('telegram_id', $telegram_user_id)->get(), 'user_id') ;
         $communities = ArrayHelper::index(Community::whereIn('id', $community_id)->get(), 'id') ;
         $tarVars = ArrayHelper::index(TariffVariant::whereIn('id', $tvc_ids_arr)->get(), 'id') ;
 
