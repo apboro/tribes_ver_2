@@ -88,7 +88,7 @@ export class BaseAnalyticsPage {
                 hoverRadius: 0,
                 borderWidth: 2,
                 pointBorderColor: 'transparent',
-                //tension: 0.1,
+                // tension: 1,
                 
                 animation: {
                     duration: 1000,
@@ -116,7 +116,7 @@ export class BaseAnalyticsPage {
                     y: {
                         ticks: {    
                             color: '#000000',
-
+                            stepSize: 1,
                             font: {
                                 size: 14,
                                 weight: 600,
@@ -129,7 +129,7 @@ export class BaseAnalyticsPage {
                             color: 'transparent',
                             tickColor: '#7367F0'
                         },
-                    }
+                    },
                 },
 
                 plugins: {
@@ -192,7 +192,8 @@ export class BaseAnalyticsPage {
         this.activePage = 1;
     }
 
-    toggleChartVisibility() {}
+    toggleChartVisibility() {
+    }
 
     get marks() {
         if (this.filterPeriodValue === 'week') {
@@ -209,7 +210,7 @@ export class BaseAnalyticsPage {
         } else if (this.filterPeriodValue === 'month') {
             return this.data.meta.marks.map((mark) => timeFormatting({
                 date: mark,
-                month: 'long',
+                month: 'numeric',
                 day: 'numeric'
             }));
         } else if (this.filterPeriodValue === 'year') {
