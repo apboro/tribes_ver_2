@@ -67,10 +67,11 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     Route::middleware('auth')->namespace('App\Http\Controllers')->group(function () {
 
         //New Design Routes
-        Route::get('/analytics/{project?}/{community?}', 'ProjectController@analytics')->name('project.analytic');
-        Route::get('/donate/{project?}/{community?}', 'ProjectController@donate')->name('project.donate');
-        Route::get('/tariff/{project?}/{community?}', 'ProjectController@tariff')->name('project.tariff');
-        // Всё остальное должно остать по старым роутам, это только те, в которых есть селектор сообществ и групп
+        Route::get('/analytics/{project?}/{community?}', 'ProjectController@analytics')->name('project.analytics');
+        Route::get('/donates/{project?}/{community?}', 'ProjectController@donates')->name('project.donates');
+        Route::get('/tariffs/{project?}/{community?}', 'ProjectController@tariffs')->name('project.tariffs');
+        Route::get('/members/{project?}/{community?}', 'ProjectController@members')->name('project.members');
+
 
 
         Route::group(['prefix' => 'profile'], function () {

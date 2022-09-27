@@ -27,7 +27,7 @@ class Project extends Model
 
     public function communities()
     {
-        return $this->belongsTo(Community::class, 'project_id', 'id');
+        return $this->belongsTo(Community::class,  'id','project_id');
     }
 
     public function user()
