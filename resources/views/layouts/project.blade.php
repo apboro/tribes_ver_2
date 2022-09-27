@@ -5,22 +5,20 @@
 </head>
 
 <body
-    class="horizontal-layout horizontal-menu navbar-floating footer-static position-relative d-flex flex-column"
-    data-open="hover"
-    data-menu="horizontal-menu"
+    class=""
     data-col=""
     @if(session()->has('admin_id')) data-admin="true" @endif
 >
     <!-- Header-->
     @include('common.template.header')
 
-    <!-- Main Menu-->
-{{--    @include('common.template.main_menu')--}}
-
     <!-- Content -->
-    <main class="app-content content">
-        <div class="content-overlay"></div>
-        @yield('content')
+    <main class="main">
+        <div class="container">
+            @include('common.profile.index')
+
+            @yield('content')
+        </div>
     </main>
 
     <!-- Footer-->
@@ -29,8 +27,7 @@
     <!-- Service container -->
     @include('common.template.service_container')
     
-    <!-- Scripts
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script> -->
+    <!-- Scripts-->
     <script src="{{ mix('js/app.js') }}" defer></script>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript" >

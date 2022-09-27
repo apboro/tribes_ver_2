@@ -4,6 +4,8 @@
     background-color: rgba($primary-1, .05);
 
     &__wrapper {
+        display: flex;
+        flex-wrap: wrap;
 
         @media (min-width: $md ) {
             justify-content: center;
@@ -12,17 +14,13 @@
 
     &__left {
         width: 100%;
-        // display: flex;
-        // justify-content: center;
-        // flex-direction: column;
-        // align-items: baseline;
 
         @media (min-width: $lg) {
             width: 30%;
         }
 
         @media (min-width: $md) {
-            width: 50%;
+            width: 30%;
         }
     }
 
@@ -38,7 +36,7 @@
         }
 
         @media (min-width: $md) {
-            width: 50%;
+            width: 70%;
         }
     }
 

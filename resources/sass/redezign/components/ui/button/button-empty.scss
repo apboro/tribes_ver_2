@@ -13,6 +13,12 @@ $button-text-color-danger-1: $danger-1;
 $button-border-color-danger: $danger-1;
 $button-background-color-danger: $danger-2;
 
+$button-text-color-telegram: $telegram-1;
+$button-border-color-telegram: $telegram-1;
+$button-background-color-telegram: $telegram-2;
+
+
+
 .button-empty {
     display: inline-block;
     padding: 5px 20px;
@@ -60,5 +66,16 @@ $button-background-color-danger: $danger-2;
 
     &--active-tab {
         background-color: rgba($button-background-color-primary-1, .15);
+    }
+
+    &--telegram {
+        color: $button-text-color-telegram;
+        border: 1px solid $button-border-color-telegram;
+
+        &:hover,
+        &:focus {
+            color: $button-text-color-telegram;
+            background-color: $button-background-color-telegram;
+        }
     }
 }

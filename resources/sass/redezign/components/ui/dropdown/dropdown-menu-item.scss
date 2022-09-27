@@ -1,9 +1,9 @@
-.dropdown-lk {
+.dropdown-menu-item {
     //height: 100%;
     
     &--top {}
 
-    @media (min-width: $md) {
+    @media (min-width: $lg) {
         position: relative;
     }
 
@@ -15,20 +15,20 @@
         
         &.active,
         &:hover {
-            .dropdown-lk__name {
-                color: $main-hover-color;
+            .dropdown-menu-item__name {
+                color: $primary-1;
             }
         }
     }
     
     &__name {
         display: none;
+        pointer-events: none;
 
-        @media (min-width: $sm) {
+        @media (min-width: $lg) {
             display: inline-block;
             @include font($text-color-1, 16px, 21px, 500);
             @include truncate(200px);
-            pointer-events: none;
             text-transform: uppercase;
             transition: $transition;
     
@@ -84,39 +84,41 @@
     }
 
     &__list {
-        position: absolute;
-        top: 50px;
-        right: 0;
-        z-index: 15;
         display: none;
         min-width: 100%;
         padding-top: 8px;
         padding-bottom: 8px;
         list-style: none;
         background-clip: padding-box;
-        background-color: $panel-bg;
-        border: 1px solid rgba(34,41,47,.05);
-        border-radius: 0.357rem;
-        box-shadow: 0 5px 25px rgb(34 41 47 / 10%);
         animation-duration: .3s;
         animation-name: dropdown-slidein;
-
+        
         &.active {
             display: block;
         }
+        
+        @media (min-width: $lg) {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            z-index: 15;
+            background-color: $panel-bg;
+            border: 1px solid rgba(34,41,47,.05);
+            border-radius: 0.357rem;
+            box-shadow: 0 5px 25px rgb(34 41 47 / 10%);
+        }
     }
 
-    &__item {}
+    // &__item {}
 
     &__link {
         display: flex;
-        padding: 10px 20px;
         clear: both;
         transition: .3s;
 
         &:hover,
         &:focus {
-            background-color: $secondary-hover-color;
+            //background-color: $secondary-hover-color;
 
             span {
                 color: $primary-color;
@@ -130,21 +132,36 @@
         span {
             margin-left: 7px;
             text-align: inherit;
-            @include font($text-color, 12px, 13px, 400);
+            @include font($text-color, 16px, 21px, 500);
             white-space: nowrap;
         }
 
         svg {
             stroke: $text-color;
         }
+
+        @media (min-width: $lg) {
+            padding: 10px 20px;
+
+            span {
+                margin-left: 7px;
+                text-align: inherit;
+                @include font($text-color, 12px, 13px, 400);
+                white-space: nowrap;
+            }
+        }
     }
 
     &__divider {
-        border-top: 1px solid rgba(34,41,47,.08);
-        height: 0;
-        margin-top: 7px;
-        margin-bottom: 7px;
-        overflow: hidden;
+        // display: none;
+        
+        @media (min-width: $lg) {
+            border-top: 1px solid rgba(34,41,47,.08);
+            height: 0;
+            margin-top: 7px;
+            margin-bottom: 7px;
+            overflow: hidden;
+        }
     }
 }
 
