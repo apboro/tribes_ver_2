@@ -72,9 +72,17 @@
                 </option>
             </select>
         </div>
+        @if((request('active') == null || request('active') == 'true') && isset($tariffs[0]))
         <div>
-            <p>{{$community->tariff()->first()->getInlineLink()??''}}</p>
+            <span>{{__('tariff.inline_command_all_tariffs')}}</span>
+            <a 
+                class="community-settings__inline-link all-tariffs"
+                onclick="copyText('{{$community->tariff ? $community->tariff()->first()->getInlineLink() : 'Создастся при сохранении'}}')"
+            >
+                {{$community->tariff()->first()->getInlineLink()??''}}
+            </a>
         </div>
+        @endif
         <!-- TARIFF LIST -->
         @if(isset($tariffs[0]))
         <ul class="community-tariff__list">

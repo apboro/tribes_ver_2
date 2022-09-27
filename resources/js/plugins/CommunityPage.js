@@ -84,8 +84,8 @@ export default class CommunityPage extends Page {
         return this.container.querySelector(selector) ? true : false;
     }
 
-    toggleProfileVisibility(event) {
-        this.profileBlock.toggleVisibility();
+    async toggleProfileVisibility(event) {
+        await this.profileBlock.toggleVisibility();
         let active = document.getElementById("btn_profile");
 
         if (this.profileBlock.isVisible) {
@@ -97,7 +97,6 @@ export default class CommunityPage extends Page {
             active.className += " active";
         }
     }
-
 
     /*  let content;
         if (direction === 'next') {

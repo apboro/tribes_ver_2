@@ -37,7 +37,8 @@ class TinkoffService
         try {
 
             if(isset($data->SpAccumulationId)){
-                $accumulation = Accumulation::where('SpAccumulationId', $data->SpAccumulationId)->where('status', 'active')->first();
+                TelegramLogService::staticSendLogMessage("Запрос на пополнение копилки " . $data->SpAccumulationId . " на сумму" . $payment->amount / 100 . "рублей" );
+                $accumulation = Accumulation::where('SpAccumulationId', (int)$data->SpAccumulationId)->where('status', 'active')->first();
                 if(!$accumulation){
                     $accumulation = Accumulation::create([
                         'user_id' => $payment->author,

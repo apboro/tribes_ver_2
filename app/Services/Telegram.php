@@ -10,6 +10,8 @@ use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
 use App\Models\TestData;
 use App\Repositories\Community\CommunityRepositoryContract;
+use App\Repositories\Tariff\TariffRepository;
+use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Abs\Messenger;
 use GuzzleHttp\Psr7\Request;
 use App\Models\User;
@@ -31,6 +33,12 @@ class Telegram extends Messenger
     protected $name = "Telegram";
 
     //todo убрать статичность переделать на нормальные методы принадлежащие объекту
+    private TariffRepository $tariffRepository;
+
+    public function __construct(TariffRepositoryContract $tariffRepository)
+    {
+        $this->tariffRepository = $tariffRepository;
+    }
 
     public static function authorize(User $user)
     {
@@ -219,8 +227,12 @@ class Telegram extends Messenger
                 'connection_id' => $tc->id,
                 'image' => self::saveCommunityPhoto($tc->photo_url, $tc->chat_id)
             ]);
-
-            $community->tariff()->create(Tariff::baseData());
+            //todo refactoring создание тарифа должно происходить через репозиторий TariffRepository
+            $tariff = new Tariff();
+            $this->tariffRepository->generateLink($tariff);
+            $baseAttributes = Tariff::baseData();
+            $baseAttributes['inline_link'] = $tariff->inline_link;
+            $community->tariff()->create($baseAttributes);
             $community->statistic()->create([
                 'community_id' => $community->id
             ]);

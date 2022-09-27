@@ -15,9 +15,9 @@ class TeleMessageReactionRepository implements TeleMessageReactionRepositoryCont
         $this->dictReactionRepo = $dictReactionRepo;
     }
 
-    public function deleteMessageReactionForChat($chat_id)
+    public function deleteMessageReactionForChat($chat_id, $message_id)
     {
-        TelegramMessageReaction::where('group_chat_id', $chat_id)->delete();
+        TelegramMessageReaction::where('group_chat_id', $chat_id)->where('message_id', $message_id)->delete();
     }
 
     public function saveReaction($reactions, $chat_id, $message_id)
@@ -38,7 +38,7 @@ class TeleMessageReactionRepository implements TeleMessageReactionRepositoryCont
         }
     }
 
-    protected function saveOrUpdate($reaction, $chat_id, $message_id)
+    public function saveOrUpdate($reaction, $chat_id, $message_id)
     {
         $dictReaction = $this->dictReactionRepo->getReactionByCode(json_encode($reaction->reaction));
         if ($dictReaction) {

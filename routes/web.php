@@ -305,7 +305,7 @@ Route::get('/agency_contract', function () {
 
 Route::get('/confirm_subscription', function () {
     return view('common.tariff.confirm-subscription');
-})->name('agency_contract.index');
+})->name('сonfirm_subscription');
 
 
 

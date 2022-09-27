@@ -130,8 +130,13 @@ class TariffController extends Controller
         if(empty($community)) {
             abort(404);
         }
+        $inline_link = null;
+        if($request->get('inline_link')){
+            $inline_link = $request->get('inline_link');
+        }
         $this->tariffRepo->statisticView($request, $community);
-        return view('common.tariff.index')->withCommunity($community);
+
+        return view('common.tariff.index',['inline_link'=>$inline_link])->withCommunity($community);
     }
 
     public function tariff(Community $community)

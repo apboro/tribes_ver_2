@@ -34,7 +34,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $sub = DB::table($p)
             ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
             ->leftJoin($p, function (JoinClause $join) use($p, $scale) {
-                $join->on( DB::raw("extract('epoch' from $p.created_at)"), '>=', 'd.dt')->on(DB::raw("extract('epoch' from $p.created_at)"), '<', DB::raw("d.dt + $scale"));
+                $join->on( DB::raw("extract('epoch' from $p.created_at - INTERVAL '3 hours')"), '>=', 'd.dt')->on(DB::raw("extract('epoch' from $p.created_at - INTERVAL '3 hours')"), '<', DB::raw("d.dt + $scale"));
             })
             ->select([
                 DB::raw("d.dt"),
@@ -48,7 +48,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
             $sub->where(["$p.type" => $type]);
         }
 
-        $sub->where(["$p.status" => "COMPLETED"]);
+        $sub->where(["$p.status" => "CONFIRMED"]);
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
 
@@ -62,6 +62,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
             ->orderBy('scale');
 
         $result = $builder->get()->slice(0, -1);
+
         $chart = new ChartData();
         $chart->initChart($result);
 
@@ -88,10 +89,10 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
             'filter' => $filterData,
         ]);
         $perPage = $filterData['per-page'] ?? 15;
-        $page = $filterData['page'] ?? 0;
+        $page = $filterData['page'] ?? 1;
 
         return new LengthAwarePaginator(
-            $builder->offset($page)->limit($perPage)->get(),
+            $builder->offset(($page-1)*$perPage)->limit($perPage)->get(),
             $builder->getCountForPagination(),
             $perPage,
             $filterData['page'] ?? null
@@ -115,7 +116,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $tu = 'telegram_users';
 
         $builder = DB::table($p)
-            ->join($tu,function (JoinClause $join) use ($p,$tu) {
+            ->leftJoin($tu,function (JoinClause $join) use ($p,$tu) {
                 $join->on("$tu.telegram_id", '=', "$p.telegram_user_id")
                     ->on("$tu.user_id", '=',"$p.user_id",'OR');
             })
@@ -127,7 +128,6 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
                 "$tu.user_name as tele_login",
                 "$tu.first_name",
             ]);
-
         $builder->where(["$p.community_id" => $communityId]);
         $builder = $filter->apply($builder);
         return $builder;
