@@ -34,17 +34,17 @@ class TariffService {
                 DB::raw("tu.user_id as user_id"),
                 DB::raw("tu.telegram_id as telegram_user_id"),
                 DB::raw("c.id as community_id"),
-                DB::raw("coalesce(array_agg(tvc.id) FILTER ( WHERE tvc.\"isActive\"=true),'{}') as tvc_ids"),
+                DB::raw("coalesce(array_agg(tvc.id) FILTER ( WHERE tvc.\"isActive\"=true AND tvc.\"isPersonal\"=false),'{}') as tvc_ids"),
+
             ])
-            ->where([
-                ['tv.isActive', "=", false],
-                ['tutv.days', "=", 1]
-            ])
+            ->orWhereRaw("tv.\"isActive\" = false AND tv.period < 4 AND tutv.days = 1")
+            ->orWhereRaw("tv.\"isActive\" = false AND tv.period > 3 AND tv.period < 8 AND tutv.days in(3,2,1)")
+            ->orWhereRaw("tv.\"isActive\" = false AND tv.period > 7 AND tutv.days in(7,3,2,1)")
             ->groupBy("tu.telegram_id","tu.user_id","c.id")
             ->get();
-        
+
         $user_id = $collectionRecords->pluck('user_id')->all();
-        $telegram_user_id = $collectionRecords->pluck('telegram_user_id')->all();
+        $telegram_user_id = $collectionRecords->pluck('user_id')->all();
         $community_id = $collectionRecords->pluck('community_id')->all();
         $tvc_ids = $collectionRecords->pluck('tvc_ids')->all();
         $tvc_ids_arr = array_map(function ($item) {
@@ -60,10 +60,15 @@ class TariffService {
         $tarVars = ArrayHelper::index(TariffVariant::whereIn('id', $tvc_ids_arr)->get(), 'id') ;
 
 
-        foreach ($collectionRecords as $record) {
 
+        $this->sendMessagesEmailBot($collectionRecords, $users, $telegram_users, $communities);
+    }
+
+    private function sendMessagesEmailBot($collectionRecords, $users, $telegram_users, $communities)
+    {
+        foreach ($collectionRecords as $record) {
             $user = $users[$record->user_id];
-            $telegram_user = $telegram_users[$record->telegram_user_id];
+            $telegram_user = $telegram_users[$record->user_id];
             $community = $communities[$record->community_id];
             $rec_tvc_ids = explode(',',trim($record->tvc_ids, '{}'));
 
@@ -87,7 +92,6 @@ class TariffService {
             }
 
         }
-
     }
 
 }
