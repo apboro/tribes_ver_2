@@ -224,10 +224,7 @@
     }
 
     &__channel {
-        font-size: 14px;
-        line-height: 20px;
-        font-weight: 600;
-        color: $text-color-2;
+        @include font($text-color-2, 14px, 20px, 600);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

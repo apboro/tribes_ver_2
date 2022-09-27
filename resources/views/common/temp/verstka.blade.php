@@ -24,21 +24,76 @@
                 <h2 class="community-tab__title">Добавление сообщества</h2>
             </div>
 
+
+            <!-- START добавление сообщества -->
             <div class="community-messenger">
-                <div class="community-messenger__item">
-                    <div class="community-messenger__item-image">
-                        <img src="/images/icons/social/telegram2.png" alt="Telegram">
-                    </div>
-                    <div class="community-messenger__item-description">
-                        <h3 class="community-messenger__title">Telegram</h3>
-                        <p class="community-messenger__text">Что добавляем?</p>
-                        <div class="community-messenger__buttons">
-                            <a class="button-empty button-empty--telegram" href="">Канал</a>
-                            <a class="button-empty button-empty--telegram" href="">Группа (чат)</a>
+                <div class="community-messenger__item-wrap">
+                    <div class="community-messenger__item">
+                        <div class="community-messenger__item-image">
+                            <img src="/images/icons/social/telegram2.png" alt="Telegram">
+                            <h3 class="community-messenger__title">Telegram</h3>
+                        </div>
+                        <div class="community-messenger__item-description">
+                            <p class="community-messenger__text">Что добавляем?</p>
+                            <div class="community-messenger__buttons">
+                                <a href="#" class="button-empty button-empty--telegram" href="">Канал</a>
+                                <a href="#" class="button-empty button-empty--telegram" href="">Группа (чат)</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- END добавление сообщества -->
+
+
+
+            <!-- START подключение Телеграмм-канала, бота -->
+            <div class="channel-connection">
+                <div class="channel-connection__instructions-adding-bot">
+                    <div class="channel-connection__add-bot">
+                        <p>Добавьте бота в администраторы канала и выдайте ему права на приглашение подписчиков</p>
+                        <div class="channel-connection__copy">
+                            {{ __('community.our_bot') }}
+                            <span class="channel-connection__copy--titleBot">{{ '@' . env('TELEGRAM_BOT_NAME') }}</span>  — 
+                            <span
+                                class="channel-connection__copy--text"
+                                onclick="copyText('{{ '@' . env('TELEGRAM_BOT_NAME') }}')"
+                            >
+                                {{ __('base.copy') }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <p class="channel-connection__interpretation">В результатах поиска  могут отображаться и другие боты похожие на наш. Обратите внимание на аватар. </p>
+
+                    <div class="channel-connection__img-bot">
+                        <p>У нашего бота он такой:</p>
+                        <img src="/images/robot.png" alt="Robot-bot">
+                    </div>
+                </div>
+
+                <div class="channel-connection__add-channel">
+
+                    <div class="channel-connection__add-channel-wrap">
+                        <div class="channel-connection__connected-community">
+                            <div class="channel-connection__image">
+                                <img src="/images/avatars/1.png">
+                            </div>
+                            <div class="channel-connection__description">
+                                <p class="channel-connection__channel">Канал Димы Коваля</p>
+                                <div class="channel-connection__messenger">
+                                    <img src="/images/icons/social/telegram.png">
+                                    <p class="profile__text">мессенджер</p>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="channel-connection__connected">Подключено</span>
+                    </div>
+                    <a href="#" class="button-empty button-empty--primary">Перейти к списку подключённых сообществ</a>
+                </div>
+            </div>
+            <!-- END подключение Телеграмм-канала, бота -->
+
 
         </div>
     </main>
