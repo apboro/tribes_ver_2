@@ -23,7 +23,7 @@ export default {
     methods: {
         setPageByUrl(url){
             if(url){
-                this.filter_data.filter.page = getParameterByName('page', url);
+                this.filter_data.filter.page = parseInt(getParameterByName('filter.page', url));
             }
         },
 
