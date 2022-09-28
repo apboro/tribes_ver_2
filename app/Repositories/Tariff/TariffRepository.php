@@ -300,7 +300,7 @@ class TariffRepository implements TariffRepositoryContract
 
     public function settingsUpdate($community, $data)
     {
-
+//        dd($data->all());
         $this->initTariffModel($community);
 
         if (!$this->tariffModel->exists) {
@@ -325,6 +325,9 @@ class TariffRepository implements TariffRepositoryContract
 
         if ($data['editor_data']) {
             $this->tariffModel->main_description = trim($data['editor_data'], '"');
+        }
+        if ($data['welcome_editor_data']) {
+            $this->tariffModel->welcome_description = trim($data['welcome_editor_data'], '"');
         }
 
         $this->storeImages($data);
@@ -416,7 +419,8 @@ class TariffRepository implements TariffRepositoryContract
     private function updateDescriptions($data)
     {
         if (isset($data['welcome_description'])) {
-            $this->tariffModel->welcome_description = $data['welcome_description'];
+//            $this->tariffModel->welcome_description = $data['welcome_description'];
+            $this->tariffModel->welcome_description = trim($data['editor_data'], '"');
         }
         if (isset($data['reminder_description'])) {
             $this->tariffModel->reminder_description = $data['reminder_description'];
