@@ -95,8 +95,8 @@
 
                 <div class="profile__list-channel">
                     <h4 class="profile__list-title">Сообщества Проекта</h4>
-                    @if($activeProject || $projects->get()->first())
-                        @php($currentProj = $activeProject ?? $projects->get()->first())
+                    @if($activeProject || $projects->isNotEmpty())
+                        @php($currentProj = $activeProject ?? $projects->first())
                         @if($currentProj->communities()->get()->isNotEmpty())
                             <!-- START список сообществ проекта -->
                             <div id="profile-list" class="profile__list" data-massive="{{ 5+5 }}">

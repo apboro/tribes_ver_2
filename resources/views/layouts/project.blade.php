@@ -2,8 +2,10 @@
 <html class="loading" lang="{{ app()->getLocale() }}" data-textdirection="ltr">
 <head>
     @include('common.template.head')
+    <script>
+        window.community_ids = "{{ $ids ?? 'all' }}";
+    </script>
 </head>
-
 <body
     class=""
     data-col=""
@@ -14,7 +16,7 @@
 
     <!-- Content -->
     <main class="main">
-        <div class="container">
+        <div class="container" data-plugin="CommunityPage">
             @include('common.profile.index')
 
             @yield('content')

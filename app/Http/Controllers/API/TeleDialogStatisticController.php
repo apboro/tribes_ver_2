@@ -5,20 +5,23 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\StatisticException;
 use App\Filters\API\MembersChartFilter;
 use App\Filters\API\MembersFilter;
+use App\Helper\ArrayHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\TeleDialogStatRequest;
 use App\Http\Resources\Statistic\MemberChartsResource;
 use App\Http\Resources\Statistic\MemberResource;
 use App\Http\Resources\Statistic\MembersResource;
+use App\Models\Community;
 use App\Repositories\Statistic\TeleDialogStatisticRepositoryContract;
 
 use App\Services\File\FileSendService;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 use Carbon\Carbon;
 
-class TeleDialogStatisticController extends Controller
+class TeleDialogStatisticController extends StatController
 {
     private TeleDialogStatisticRepositoryContract $statisticRepository;
     private FileSendService $fileSendService;
@@ -34,15 +37,15 @@ class TeleDialogStatisticController extends Controller
 
     public function members(TeleDialogStatRequest $request, MembersFilter $filter)
     {
-        $members = $this->statisticRepository->getMembersList($request->get('community_id'),$filter);
+        $members = $this->statisticRepository->getMembersList($this->getCommunityIds($request),$filter);
 
         return (new MembersResource($members))->forApi();
     }
 
     public function memberCharts(TeleDialogStatRequest $request, MembersChartFilter $filter)
     {
-        $chartJoiningData = $this->statisticRepository->getJoiningMembersChart($request->get('community_id'),$filter);
-        $chartExitingData = $this->statisticRepository->getExitingMembersChart($request->get('community_id'),$filter);
+        $chartJoiningData = $this->statisticRepository->getJoiningMembersChart($this->getCommunityIds($request),$filter);
+        $chartExitingData = $this->statisticRepository->getExitingMembersChart($this->getCommunityIds($request),$filter);
         $chartJoiningData->includeChart($chartExitingData,['users' => 'exit_users']);
         return (new MemberChartsResource($chartJoiningData));
     }
@@ -88,5 +91,24 @@ class TeleDialogStatisticController extends Controller
         $membersBuilder = $this->statisticRepository->getMembersListForFile($request->get('community_id'),$filter);
 
         return $this->fileSendService->sendFile($membersBuilder,$columnNames,MemberResource::class,$type,'members');
+    }
+
+    /**
+     * @param TeleDialogStatRequest $request
+     * @return array
+     */
+    protected function getCommunityIds(TeleDialogStatRequest $request): array
+    {
+        $community_ids = $request->get('community_ids');
+        if ($community_ids == 'all') {
+            $communityIds = ArrayHelper::getColumn(Community::where('owner', Auth::user()->id)->get(),'id');
+        } else {
+            $communityIds = explode('-', $community_ids);
+            $communityIds = array_filter($communityIds);
+            if (empty($communityIds)) {
+                abort(403);
+            }
+        }
+        return $communityIds;
     }
 }

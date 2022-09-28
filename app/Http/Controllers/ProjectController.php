@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filters\API\ProjectFilter;
+use App\Helper\ArrayHelper;
 use App\Http\Requests\Project\ProjectRequest;
 use App\Models\Community;
 use App\Models\Project;
@@ -22,32 +23,68 @@ class ProjectController extends Controller
         $this->projectRepository = $projectRepository;
     }
 
-    public function analytics(ProjectRequest $request)
+    public function analytics($project = null, $community = null, ProjectRequest $request)
     {
-        list($projects, $communities, $activeProject, $activeCommunity) = $this->getAuthorProjects($request);
 
-        return view('common.project.analytics')->with(compact('projects', 'communities', 'activeProject', 'activeCommunity'));
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.analytics')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
     }
 
-    public function donates(ProjectRequest $request)
+    public function subscribers($project = null, $community = null, ProjectRequest $request)
     {
-        list($projects, $communities, $activeProject, $activeCommunity) = $this->getAuthorProjects($request);
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
-        return view('common.project.donate')->with(compact('projects', 'communities', 'activeProject', 'activeCommunity'));
+        return view('common.project.subscribers')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
     }
 
-    public function tariffs(ProjectRequest $request)
+    public function messages($project = null, $community = null,ProjectRequest $request)
     {
-        list($projects, $communities, $activeProject, $activeCommunity) = $this->getAuthorProjects($request);
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
-        return view('common.project.tariff')->with(compact('projects', 'communities', 'activeProject', 'activeCommunity'));
+        return view('common.project.messages')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
     }
 
-    public function members(ProjectRequest $request)
+    public function payments($project = null, $community = null,ProjectRequest $request)
     {
-        $project = $this->getAuthorProjects($request);
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
-        return view('common.project.members')->with(compact('project'));
+        return view('common.project.payments')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
+    }
+
+    public function donates($project = null, $community = null,ProjectRequest $request)
+    {
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.analytics')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
+    }
+
+    public function tariffs($project = null, $community = null,ProjectRequest $request)
+    {
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.tariff')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
+    }
+
+    public function members($project = null, $community = null,ProjectRequest $request)
+    {
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.members')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
     }
 
 
@@ -60,6 +97,8 @@ class ProjectController extends Controller
         if ($reqProject && $reqProject != 'c' && Project::where('id', $reqProject)->where('user_id', Auth::user()->id)->doesntExist()) {
             abort(403, 'Доступ запрещен');
         }
+
+
         $filter = app(ProjectFilter::class);
         $projects = $this->projectRepository->getUserProjectsList(Auth::user()->id, $filter)->keyBy('id');
         $communitiesWP = $this->projectRepository->getUserCommunitiesWithoutProjectList(Auth::user()->id)->keyBy('id');
@@ -69,6 +108,16 @@ class ProjectController extends Controller
         } else {
             $activeCommunity = $communitiesWP->get(request('community'));
         }
-        return [$projects, $communitiesWP, $activeProject, $activeCommunity];
+
+        $ids = ($activeProject && empty($activeCommunity))
+            ? ArrayHelper::getColumn($activeProject->communities()->get(), 'id')
+            : (!empty($activeCommunity) ? [$activeCommunity->id] : ['all']);
+        $ids = implode('-', $ids);
+        if (request('community') && $activeProject && empty($activeCommunity)) {
+            abort(404, 'Страница не существует');
+        }
+
+
+        return [$projects, $communitiesWP, $activeProject, $activeCommunity, $ids];
     }
 }
