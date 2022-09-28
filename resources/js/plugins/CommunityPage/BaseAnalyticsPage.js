@@ -210,7 +210,7 @@ export class BaseAnalyticsPage {
         } else if (this.filterPeriodValue === 'month') {
             return this.data.meta.marks.map((mark) => timeFormatting({
                 date: mark,
-                month: 'long',
+                month: 'numeric',
                 day: 'numeric'
             }));
         } else if (this.filterPeriodValue === 'year') {
