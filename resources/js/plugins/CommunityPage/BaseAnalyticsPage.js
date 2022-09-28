@@ -94,7 +94,7 @@ export class BaseAnalyticsPage {
                     duration: 1000,
                     easing: 'easeInOutCubic'
                 },
-                
+
                 scales: {
                     x: {
                         ticks: {    
@@ -116,7 +116,8 @@ export class BaseAnalyticsPage {
                     y: {
                         ticks: {    
                             color: '#000000',
-
+                            callback: function (value) { if (Number.isInteger(value)) { return value; } },
+                            stepSize: 1,
                             font: {
                                 size: 14,
                                 weight: 600,
