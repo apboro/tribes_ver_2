@@ -68,7 +68,7 @@ class Scenes
                         $menu->row()->btn('Отмена', 'concellation');
 
                     $img = ($donate->getMainImage()) ? '<a href="' . route('main') . $donate->getMainImage()->url . '">&#160</a>' : '';
-                    $description = ($donate->description) ? $donate->description : 'Описания нет';
+                    $description = ($donate->description) ? $donate->description : '';
                     $text = $description . $img;
 
                     $ctx->replyHTML($text, $menu);
