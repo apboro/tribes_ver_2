@@ -39,7 +39,7 @@
             <!-- Аналитика -->
             <li class="main-nav-new__item">
                 <a
-                    href="{{ route('project.analytic') }}"
+                    href="{{ route('project.analytics') }}"
                     class="main-nav-new__link {{ request()->is('*community*') ? 'active' : ''  }}"
                 >
                     <span>Аналитика</span>
@@ -63,7 +63,7 @@
     
                     <ul class="dropdown-menu-item__list" data-dropdown-content>
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="{{ route('project.donate') }}">
+                            <a class="dropdown-menu-item__link" href="{{ route('project.donates') }}">
                                 <span>Донаты</span>
                             </a>
                         </li>
@@ -71,8 +71,16 @@
                         <div class="dropdown-menu-item__divider"></div>
     
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="{{ route('project.tariff') }}">
+                            <a class="dropdown-menu-item__link" href="{{ route('project.tariffs') }}">
                                 <span>Тарифы</span>
+                            </a>
+                        </li>
+
+                        <div class="dropdown-menu-item__divider"></div>
+
+                        <li class="dropdown-menu-item__item">
+                            <a class="dropdown-menu-item__link" href="{{ route('project.members') }}">
+                                <span>Учасники</span>
                             </a>
                         </li>
     

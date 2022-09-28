@@ -10,11 +10,11 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface TeleMessageStatisticRepositoryContract
 {
-    public function getMessagesList(int $communityId, TeleMessagesFilter $filter): LengthAwarePaginator;
+    public function getMessagesList(array $communityIds, TeleMessagesFilter $filter): LengthAwarePaginator;
 
-    public function getMessagesListForFile(int $communityId, TeleMessagesFilter $filter): Builder;
+    public function getMessagesListForFile(array $communityIds, TeleMessagesFilter $filter): Builder;
 
-    public function getMessageChart(int $communityId, TeleMessagesChartFilter $filter): ChartData;
+    public function getMessageChart(array $communityIds, TeleMessagesChartFilter $filter): ChartData;
 
-    public function getUtilityMessageChart(int $communityId, TeleMessagesChartFilter $filter): ChartData;
+    public function getUtilityMessageChart(array $communityIds, TeleMessagesChartFilter $filter): ChartData;
 }

@@ -2,66 +2,122 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\API\ProjectFilter;
+use App\Helper\ArrayHelper;
+use App\Http\Requests\Project\ProjectRequest;
 use App\Models\Community;
-use App\Models\User;
+use App\Models\Project;
+use App\Repositories\Project\ProjectRepositoryContract;
+use App\Rules\Knowledge\OwnCommunityRule;
 use Illuminate\Http\Request;
-use My\Service\Auth;
-use SebastianBergmann\CodeCoverage\Report\Xml\Project;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProjectController extends Controller
 {
-    public function analytics(Request $request)
+
+    private ProjectRepositoryContract $projectRepository;
+
+    public function __construct(ProjectRepositoryContract $projectRepository)
     {
-        /* Псевдокод
-
-        $project = (int)$request->project ? Project::find((int)$request->project) : null;
-
-        $community = (int)$request->community ? Community::find((int)$request->community) : null;
-
-        Обязательно нужна проверка принадлежности сообщества к проекту, и на пренадлежность к авторизованому юзеру
-
-        return view('common.project.analytic')->with(compact('project', 'всё что нужно для аналитики или тарифов...'));
-
-        КонецПсевдокод */
-
-        $project = $this->findProject(0);
-
-        return view('common.project.analytic')->with(compact('project'));
+        $this->projectRepository = $projectRepository;
     }
 
-    public function donate(Request $request)
+    public function analytics($project = null, $community = null, ProjectRequest $request)
     {
-        $project = $this->findProject(0);
 
-        return view('common.project.donate')->with(compact('project'));
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.analytics')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
     }
 
-    public function tariff(Request $request)
+    public function subscribers($project = null, $community = null, ProjectRequest $request)
     {
-        $project = $this->findProject(0);
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
-        return view('common.project.tariff')->with(compact('project'));
+        return view('common.project.subscribers')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
+    }
+
+    public function messages($project = null, $community = null,ProjectRequest $request)
+    {
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.messages')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
+    }
+
+    public function payments($project = null, $community = null,ProjectRequest $request)
+    {
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.payments')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
+    }
+
+    public function donates($project = null, $community = null,ProjectRequest $request)
+    {
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.analytics')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
+    }
+
+    public function tariffs($project = null, $community = null,ProjectRequest $request)
+    {
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.tariff')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
+    }
+
+    public function members($project = null, $community = null,ProjectRequest $request)
+    {
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.members')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
     }
 
 
-    private function findProject($id)
+    private function getAuthorProjects(ProjectRequest $request)
     {
-        $project = new \stdClass();
-        $project->id = 1;
-        $project->name = 'Проект №1';
+        if (request('community') && Community::where('id', request('community'))->where('owner', Auth::user()->id)->doesntExist()) {
+            abort(403, 'Доступ запрещен');
+        }
+        $reqProject = request('project');
+        if ($reqProject && $reqProject != 'c' && Project::where('id', $reqProject)->where('user_id', Auth::user()->id)->doesntExist()) {
+            abort(403, 'Доступ запрещен');
+        }
 
-        $project->other = collect([
-            (object)['id' => 1, 'name' => 'Другой проект 1', 'link' => route('project.analytic', 1)],
-            (object)['id' => 2, 'name' => 'Другой проект 2', 'link' => route('project.analytic', 2)],
-            (object)['id' => 3, 'name' => 'Другой проект 3', 'link' => route('project.analytic', 3)],
-        ]);
 
-        $project->communities = collect([
-            (object)['id' => 1, 'name' => 'Первое сообщество', 'image' => '/images/avatars/1.png', 'description' => 'Описание сообщества', 'link' => route('project.analytic', 1, 1)],
-            (object)['id' => 2, 'name' => 'Второе сообщество', 'image' => '/images/avatars/2.png', 'description' => 'Описание сообщества', 'link' => route('project.analytic', 1, 2)],
-            (object)['id' => 3, 'name' => 'Третье сообщество', 'image' => '/images/avatars/3.png', 'description' => 'Описание сообщества', 'link' => route('project.analytic', 1, 3)],
-        ]);
+        $filter = app(ProjectFilter::class);
+        $projects = $this->projectRepository->getUserProjectsList(Auth::user()->id, $filter)->keyBy('id');
+        $communitiesWP = $this->projectRepository->getUserCommunitiesWithoutProjectList(Auth::user()->id)->keyBy('id');
+        $activeProject = $projects->get($reqProject);
+        if ($activeProject) {
+            $activeCommunity = $activeProject->communities()->get()->keyBy('id')->get(request('community'));
+        } else {
+            $activeCommunity = $communitiesWP->get(request('community'));
+        }
 
-        return $project;
+        $ids = ($activeProject && empty($activeCommunity))
+            ? ArrayHelper::getColumn($activeProject->communities()->get(), 'id')
+            : (!empty($activeCommunity) ? [$activeCommunity->id] : ['all']);
+        $ids = implode('-', $ids);
+        if (request('community') && $activeProject && empty($activeCommunity)) {
+            abort(404, 'Страница не существует');
+        }
+
+
+        return [$projects, $communitiesWP, $activeProject, $activeCommunity, $ids];
     }
 }

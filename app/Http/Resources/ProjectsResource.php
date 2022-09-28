@@ -19,4 +19,5 @@ class ProjectsResource extends ApiResourceCollection
     {
         return parent::toArray($request);
     }
+
 }

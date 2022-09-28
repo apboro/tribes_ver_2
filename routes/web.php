@@ -67,10 +67,15 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     Route::middleware('auth')->namespace('App\Http\Controllers')->group(function () {
 
         //New Design Routes
-        Route::get('/analytics/{project?}/{community?}', 'ProjectController@analytics')->name('project.analytic');
-        Route::get('/donate/{project?}/{community?}', 'ProjectController@donate')->name('project.donate');
-        Route::get('/tariff/{project?}/{community?}', 'ProjectController@tariff')->name('project.tariff');
-        // Всё остальное должно остать по старым роутам, это только те, в которых есть селектор сообществ и групп
+        Route::get('/analytics/subscribers/{project?}/{community?}', 'ProjectController@subscribers')->name('project.analytics.subscribers');
+        Route::get('/analytics/messages/{project?}/{community?}', 'ProjectController@messages')->name('project.analytics.messages');
+        Route::get('/analytics/payments/{project?}/{community?}', 'ProjectController@payments')->name('project.analytics.payments');
+        Route::get('/analytics/{project?}/{community?}', 'ProjectController@analytics')->name('project.analytics');
+
+        Route::get('/donates/{project?}/{community?}', 'ProjectController@donates')->name('project.donates');
+        Route::get('/tariffs/{project?}/{community?}', 'ProjectController@tariffs')->name('project.tariffs');
+        Route::get('/members/{project?}/{community?}', 'ProjectController@members')->name('project.members');
+
 
 
         Route::group(['prefix' => 'profile'], function () {
@@ -127,14 +132,18 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
             Route::get('/', 'CommunityController@index')->name('community.list');
 
-            Route::middleware('sms_confirmed', 'owned_community')->group(function () {
-
-                Route::get('{community}', 'CommunityController@statistic')->where(['community' => '[0-9]+'])->name('community.view');
+            Route::middleware('sms_confirmed', 'owned_group_community')->group(function () {
                 // Statistic
                 Route::get('/{community}/statistic', 'CommunityController@statistic')->name('community.statistic');
                 Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
                 Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
                 Route::get('/{community}/statistic/payments', 'CommunityController@statisticPayments')->name('community.statistic.payment');
+
+            });
+
+            Route::middleware('sms_confirmed', 'owned_community')->group(function () {
+
+                Route::get('{community}', 'CommunityController@statistic')->where(['community' => '[0-9]+'])->name('community.view');
 
                 // Donate
                 Route::get('/{community}/donate/list', 'DonateController@list')->name('community.donate.list');
@@ -306,21 +315,6 @@ Route::get('/agency_contract', function () {
 Route::get('/confirm_subscription', function () {
     return view('common.tariff.confirm-subscription');
 })->name('сonfirm_subscription');
-
-
-
-
-
-
-// TEST 
-Route::get('/analyticst', function () {
-    return view('common.analytics.index');
-})->name('analytics.index');
-
-Route::get('/verstka', function () {
-    return view('common.temp.verstka');
-})->name('analytics.index');
-
 
 Route::get('setlocale/{lang}', function ($lang) {
 

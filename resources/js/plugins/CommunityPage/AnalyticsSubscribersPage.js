@@ -47,7 +47,7 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
                 method: 'post',
                 url: '/api/tele-statistic/member-charts',
                 data: {
-                    community_id: this.communityId,
+                    community_ids: window.community_ids,
                     filter: {
                         period: this.filterPeriodValue
                     }
@@ -67,7 +67,7 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
                 method: 'post',
                 url: '/api/tele-statistic/members',
                 data: {
-                    community_id: this.communityId,
+                    community_ids: window.community_ids,
                     filter: {
                         period: this.filterPeriodValue,
                         sort: {

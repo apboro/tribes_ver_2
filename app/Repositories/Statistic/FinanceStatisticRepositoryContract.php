@@ -11,9 +11,9 @@ use Illuminate\Database\Query\Builder;
 
 interface FinanceStatisticRepositoryContract
 {
-    public function getPaymentsList(int $communityId, FinanceFilter $filters): LengthAwarePaginator;
+    public function getPaymentsList(array $communityIds, FinanceFilter $filters): LengthAwarePaginator;
 
-    public function getPaymentsListForFile(int $communityId, FinanceFilter $filter): Builder;
+    public function getPaymentsListForFile(array $communityIds, FinanceFilter $filter): Builder;
 
-    public function getPaymentsCharts(int $communityId, FinanceChartFilter $filters,string $type): ChartData;
+    public function getPaymentsCharts(array $communityIds, FinanceChartFilter $filters,string $type): ChartData;
 }

@@ -14,14 +14,14 @@ use Illuminate\Support\Facades\DB;
 class ProjectRepository implements ProjectRepositoryContract
 {
 
-    public function getUserProjectsList(int $userId, ProjectFilter $filter): LengthAwarePaginator
+    public function getUserProjectsList(int $userId, ProjectFilter $filter): Collection
     {
         $filter->replace(['user_id' => $userId]);
-        return Project::filter($filter)
-            ->paginate(ArrayHelper::getValue($filter->filters(), 'per_page', 15),
+        return Project::filter($filter)->with('communities')->get();
+           /* ->paginate(ArrayHelper::getValue($filter->filters(), 'per_page', 50),
                 ['*'],
                 'page',
-                ArrayHelper::getValue($filter->filters(), 'page', 1));
+                ArrayHelper::getValue($filter->filters(), 'page', 1));*/
     }
 
     public function getProject(int $projectId, array $filter = []): ?Project
@@ -91,5 +91,10 @@ class ProjectRepository implements ProjectRepositoryContract
         }
 
         return true;
+    }
+
+    public function getUserCommunitiesWithoutProjectList(int $userId): Collection
+    {
+        return Community::where('owner','=',$userId)->whereNull('project_id')->get();
     }
 }

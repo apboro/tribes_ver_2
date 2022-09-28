@@ -1,38 +1,38 @@
 @extends('layouts.project')
 
-@section('tab')
+@section('content')
     <div
-        class="analytics-community community__tab"
-        data-tab="analyticsMessagesPage"
+            class="analytics-community community__tab"
+            data-tab="analyticsSubscribersPage"
     >
         <div class="analytics-community__analytics-wrap">
             <div class="analytics-community__title-wrap">
                 <a
-                    href="{{ route('community.statistic', $community) }}"
-                    class="button-back"
+                        href="{{ route('project.analytics', request()->only('project','community')) }}"
+                        class="button-back"
                 >
                     <svg width="27" height="16" viewBox="0 0 27 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26 9C26.5523 9 27 8.55228 27 8C27 7.44772 26.5523 7 26 7L26 9ZM0.292893 7.2929C-0.0976311 7.68342 -0.097631 8.31658 0.292893 8.70711L6.65685 15.0711C7.04738 15.4616 7.68054 15.4616 8.07107 15.0711C8.46159 14.6805 8.46159 14.0474 8.07107 13.6569L2.41421 8L8.07107 2.34315C8.46159 1.95262 8.46159 1.31946 8.07107 0.928934C7.68054 0.538409 7.04738 0.53841 6.65685 0.928934L0.292893 7.2929ZM26 7L1 7L1 9L26 9L26 7Z" fill="#7367F0"></path></svg>
                 </a>
-                
+
                 <h2 class="analytics-community__title">
                     Аналитика
                 </h2>
             </div>
-            
+
             <div>
                 <select
-                    class="select-rounded analytics-community__filter"
-                    onchange="CommunityPage.analyticsMessagesPage.switchTab(event)"
+                        class="select-rounded analytics-community__filter"
+                        onchange="CommunityPage.analyticsSubscribersPage.switchTab(event)"
                 >
-                    <option value="{{ route('community.statistic.subscribers', $community) }}">Подписчики</option>
-                    <option value="{{ route('community.statistic.messages', $community) }}" selected>Сообщения</option>
-                    <option value="{{ route('community.statistic.payment', $community) }}">Финансы</option>
+                    <option value="{{ route('project.analytics.subscribers',array_filter([ 'project' => $project??'c', 'community'=> $community])) }}" selected>Подписчики</option>
+                    <option value="{{ route('project.analytics.messages', array_filter([ 'project' => $project??'c', 'community'=> $community])) }}">Сообщения</option>
+                    <option value="{{ route('project.analytics.payments', array_filter([ 'project' => $project??'c', 'community'=> $community])) }}">Финансы</option>
                 </select>
-                
+
                 <div class="filter-analytics-community analytics-community__filter">
                     <select
-                        class="select-rounded"
-                        onchange="CommunityPage.analyticsMessagesPage.switchFilter(event)"
+                            class="select-rounded"
+                            onchange="CommunityPage.analyticsSubscribersPage.switchFilter(event)"
                     >
                         <option value="day">День</option>
                         <option value="week" selected>Неделя</option>
@@ -42,94 +42,92 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="analytics-community__tab">
             <div class="chart-analytics-community">
                 <div class="chart-analytics-community__header">
                     <div class="chart-analytics-community__label chart-analytics-community__label--right">
                         <span class="chart-analytics-community__text">
-                            Всего сообщений
+                            Всего подписчиков
                         </span>
-                        
-                        <span
-                            id="count_all_message"
-                            class="chart-analytics-community__value"
-                        >
+
+                        <span id="count_all_users" class="chart-analytics-community__value">
                             0
                         </span>
                     </div>
-                    
+
                     <button
-                        class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
-                        onclick="CommunityPage.analyticsMessagesPage.toggleChartVisibility('messages')"
+                            class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                            onclick="CommunityPage.analyticsSubscribersPage.toggleChartVisibility('exit_users')"
                     >
                         <span class="chart-analytics-community__text">
-                            За период
+                            Покинули
                         </span>
+
                         <span
-                            id="count_new_message"
-                            class="chart-analytics-community__value"
+                                id="count_exit_users"
+                                class="chart-analytics-community__value"
                         >
                             0
                         </span>
                     </button>
-                    
+
                     <button
-                        class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
-                        onclick="CommunityPage.analyticsMessagesPage.toggleChartVisibility('utility')"
+                            class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
+                            onclick="CommunityPage.analyticsSubscribersPage.toggleChartVisibility('users')"
                     >
                         <span class="chart-analytics-community__text">
-                            Полезных
+                            Вступили
                         </span>
-                        
+
                         <span
-                            id="count_new_utility"
-                            class="chart-analytics-community__value"
+                                id="count_join_users"
+                                class="chart-analytics-community__value"
                         >
                             0
                         </span>
                     </button>
                 </div>
-                
+
                 <!-- График -->
                 <div class="chart-analytics-community__chart">
                     <canvas id="chart" height="400"></canvas>
                 </div>
             </div>
-            
+
             <!-- Таблица -->
             <div class="analytics-community__table">
                 <div
-                    id="table"
-                    class="table-2 analytics-community-messages-table"
+                        id="table"
+                        class="table-2 analytics-community-subscribers-table"
                 ></div>
             </div>
 
             <div class="analytics-community__footer">
                 <div class="export-data">
                     <h3 class="export-data__title">
-                        Экспорт: 
+                        Экспорт:
                     </h3>
-                    
+
                     <button
-                        class="button-empty button-empty--primary"
-                        onclick="CommunityPage.analyticsMessagesPage.loadFile('excel')"
+                            class="button-empty button-empty--primary"
+                            onclick="CommunityPage.analyticsSubscribersPage.loadFile('excel')"
                     >
                         Excel
                     </button>
-                    
+
                     <button
-                        class="button-empty button-empty--primary"
-                        onclick="CommunityPage.analyticsMessagesPage.loadFile('csv')"
+                            class="button-empty button-empty--primary"
+                            onclick="CommunityPage.analyticsSubscribersPage.loadFile('csv')"
                     >
                         CSV
                     </button>
                 </div>
-                
+
                 <!-- Pagination -->
                 <div
-                    id="pagination"
-                    class="pagination analytics-community__pagination"
+                        id="pagination"
+                        class="pagination analytics-community__pagination"
                 ></div>
             </div>
         </div>

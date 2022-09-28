@@ -1,22 +1,27 @@
 <?php
 
-namespace App\Http\Requests\API;
+namespace App\Http\Requests\Project;
 
 use App\Rules\Knowledge\OwnCommunityRule;
-use App\Rules\OwnCommunityGroupRule;
+use App\Rules\OwnProjectRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FinanceStatRequest extends FormRequest
+class ProjectRequest extends FormRequest
 {
     public function authorize()
     {
         return true;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
     public function rules()
     {
         return [
-            'community_ids' => ['required','string',new OwnCommunityGroupRule()],
+
         ];
     }
 }

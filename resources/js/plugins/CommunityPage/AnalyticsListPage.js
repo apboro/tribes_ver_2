@@ -46,12 +46,13 @@ export class AnalyticsListPage {
     }
 
     async loadSubscribers() {
+
         try {
             const { data } = await axios({
                 method: 'post',
                 url: '/api/tele-statistic/member-charts',
                 data: {
-                    community_id: this.communityId,
+                    community_ids: window.community_ids,
                     filter: {
                         period: this.filterPeriodValue
                     }
@@ -71,7 +72,7 @@ export class AnalyticsListPage {
                 method: 'post',
                 url: '/api/tele-statistic/message-charts',
                 data: {
-                    community_id: this.communityId,
+                    community_ids: window.community_ids,
                     filter: {
                         period: this.filterPeriodValue
                     }
@@ -91,7 +92,7 @@ export class AnalyticsListPage {
                 method: 'post',
                 url: '/api/tele-statistic/payments-charts',
                 data: {
-                    community_id: this.communityId,
+                    community_ids: window.community_ids,
                     filter: {
                         period: this.filterPeriodValue
                     }

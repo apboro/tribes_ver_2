@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface ProjectRepositoryContract
 {
-    public function getUserProjectsList(int $userId, ProjectFilter $filter): LengthAwarePaginator;
+    public function getUserProjectsList(int $userId, ProjectFilter $filter): Collection;
+
+    public function getUserCommunitiesWithoutProjectList(int $userId): Collection;
 
     public function getProject(int $projectId, array $filter = []):?Project;
 
