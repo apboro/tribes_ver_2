@@ -19,6 +19,6 @@
     window.botLogin = '{{ env('TELEGRAM_BOT_NAME') }}';
 </script>
 
-@if(!ENV('APP_DEBUG') == true)
+@if(ENV('APP_DEBUG') !== true)
     <script src="//code.jivo.ru/widget/Fp7nrxvh0u" async></script>
 @endif
