@@ -52,8 +52,6 @@ class TestBotController extends Controller
 
     public function index(Request $request)
     {
-        $string = '1234';
-        dd(gettype($string));
+        
     }
-
 }

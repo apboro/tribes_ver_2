@@ -6,6 +6,7 @@ use App\Exceptions\KnowledgeException;
 use App\Exceptions\TelegramException;
 use App\Helper\ArrayHelper;
 use App\Models\Community;
+use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
 use Exception;
@@ -18,7 +19,7 @@ class MainBotEvents
     public function __construct(MainBot $bot, ?object $data)
     {
         $this->bot = $bot;
-        if($data === null)
+        if ($data === null)
             throw new TelegramException('Пустой запрос');
         else $this->data = $data;
     }
@@ -36,16 +37,16 @@ class MainBotEvents
     ])
     {
         foreach ($config as $configItem) {
-            if(is_string($configItem)){
+            if (is_string($configItem)) {
                 if (method_exists($this, $configItem)) {
                     $this->{$configItem}();
                 }
-            }else if(is_array($configItem)) {
-                foreach($configItem as $method => $callback){
-                    if(is_array($callback) && count($callback) == 3){
+            } else if (is_array($configItem)) {
+                foreach ($configItem as $method => $callback) {
+                    if (is_array($callback) && count($callback) == 3) {
                         $params = array_pop($callback);
-                        if(!is_array($params)){
-                            $exception = new KnowledgeException('Колбек для события с параметрами. Параметры должны быть массивом',[
+                        if (!is_array($params)) {
+                            $exception = new KnowledgeException('Колбек для события с параметрами. Параметры должны быть массивом', [
                                 $method,
                                 $callback,
                                 $params
@@ -54,13 +55,11 @@ class MainBotEvents
                             continue;
                         }
                         $this->{$method}($callback, $params);
-                    }else if (method_exists($this, $method)) {
+                    } else if (method_exists($this, $method)) {
                         $this->{$method}($callback);
                     }
                 }
-
             }
-
         }
     }
 
@@ -71,9 +70,9 @@ class MainBotEvents
         try {
             if (isset($this->data->message->new_chat_member->id)) {
                 $chatId = $this->data->message->chat->id;
-                $this->bot->logger()->debug('новый пользователь в группе',ArrayHelper::toArray($this->data->message->new_chat_member));
+                $this->bot->logger()->debug('новый пользователь в группе', ArrayHelper::toArray($this->data->message->new_chat_member));
                 if ($this->data->message->new_chat_member->id == $this->bot->botId) {
-                    $this->bot->logger()->debug('Добавление бота в уже существующую ГРУППУ',ArrayHelper::toArray($this->data->message->chat));
+                    $this->bot->logger()->debug('Добавление бота в уже существующую ГРУППУ', ArrayHelper::toArray($this->data->message->chat));
                     Telegram::botEnterGroupEvent(
                         $this->data->message->from->id,
                         $chatId,
@@ -101,7 +100,7 @@ class MainBotEvents
 
                     if ($community) {
 
-                        $description = $community->tariff->welcome_description ?? 'добро пожаловать';
+
                         $image = !empty($community->tariff->getWelcomeImage()->url) ? '<a href="' . route('main') . $community->tariff->getWelcomeImage()->url . '">&#160</a>' : '';
 
                         $member = $this->data->message->new_chat_member;
@@ -113,15 +112,19 @@ class MainBotEvents
 
                             $ty = Telegram::registerTelegramUser($member->id, NULL, $userName, $firstName, $lastName);
 
-                            if (!$ty->communities()->find($community->id))
+                            if (!$ty->communities()->find($community->id)) {
                                 $ty->communities()->attach($community, [
                                     'role' => 'member',
                                     'accession_date' => time()
                                 ]);
+                            }
 
-                            $text = ($userName ?: $firstName)
-                                . ', ' . $description . $image;
-                            $this->bot->getExtentionApi()->sendMess($chatId, $text);
+                            $description = $community->tariff->welcome_description;
+                            if ($description && $description != '') {
+                                $text = ($userName ?: $firstName)
+                                    . ', ' . $description . $image;
+                                $this->bot->getExtentionApi()->sendMess($chatId, $text);
+                            }
                         }
                     }
                 }
@@ -161,7 +164,7 @@ class MainBotEvents
                     $this->data->my_chat_member->chat->type == 'channel' and
                     $this->data->my_chat_member->new_chat_member->status !== 'left'
                 ) {
-                    $this->bot->logger()->debug('Добавление бота в новый канал',ArrayHelper::toArray($this->data));
+                    $this->bot->logger()->debug('Добавление бота в новый канал', ArrayHelper::toArray($this->data));
                     $chatId = $this->data->my_chat_member->chat->id;
                     Telegram::botEnterGroupEvent(
                         $this->data->my_chat_member->from->id,
@@ -186,14 +189,13 @@ class MainBotEvents
                     $this->data->my_chat_member->new_chat_member->user->id == $this->bot->botId and
                     $this->data->my_chat_member->new_chat_member->status == 'administrator'
                 ) {
-                    $this->bot->logger()->debug('Бот в группе стал администратором',ArrayHelper::toArray($this->data));
+                    $this->bot->logger()->debug('Бот в группе стал администратором', ArrayHelper::toArray($this->data));
                     $chatId = $this->data->my_chat_member->chat->id;
                     Telegram::botGetPermissionsEvent(
                         $this->data->my_chat_member->from->id,
                         $this->data->my_chat_member->new_chat_member->status,
                         $chatId
                     );
-                    
                 }
             }
         } catch (Exception $e) {
@@ -214,8 +216,8 @@ class MainBotEvents
                 $chatId = $chat->chat->id;
                 $idPhoto = $chat->new_chat_photo[2]->file_id;
                 $urnPhoto = $this->bot->Api()->getFile([
-                        'file_id' => $idPhoto
-                    ])->filePath() ?? NULL;
+                    'file_id' => $idPhoto
+                ])->filePath() ?? NULL;
                 if (!$urnPhoto)
                     return false;
 
@@ -252,7 +254,7 @@ class MainBotEvents
     {
         try {
             if (isset($this->data->message->left_chat_member)) {
-                $telegram = new Telegram;
+                $telegram = new Telegram(app(TariffRepositoryContract::class));
                 $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
             }
         } catch (Exception $e) {
@@ -295,8 +297,8 @@ class MainBotEvents
                 return '/images/no-image.svg';
 
             $photoPath = $this->bot->Api()->getFile([
-                    'file_id' => $photoId
-                ])->filePath() ?? NULL;
+                'file_id' => $photoId
+            ])->filePath() ?? NULL;
             if (!$photoPath)
                 return '/images/no-image.svg';
 
@@ -308,7 +310,7 @@ class MainBotEvents
     }
 
     /* Слушатель сообщений, возвращает текст, chatId, userId */
-    protected function hearsAndWriting($callable,$params = [])
+    protected function hearsAndWriting($callable, $params = [])
     {
         if (isset($this->data->message->text)) {
             $callable([
@@ -324,12 +326,12 @@ class MainBotEvents
      * @return void
      * @throws Exception
      */
-    protected function isNewReplay($callable,$params = [])
+    protected function isNewReplay($callable, $params = [])
     {
 
         $data  = ArrayHelper::toArray($this->data);
-        if(ArrayHelper::getValue($data,'message.reply_to_message')) {
-            call_user_func($callable,$data);
+        if (ArrayHelper::getValue($data, 'message.reply_to_message')) {
+            call_user_func($callable, $data);
         }
     }
 
@@ -338,25 +340,26 @@ class MainBotEvents
      * @return void
      * @throws Exception
      */
-    protected function isNewTextMessage($callable,$params = [])
+    protected function isNewTextMessage($callable, $params = [])
     {
         $data  = ArrayHelper::toArray($this->data);
-        if( ArrayHelper::getValue($data,'message.message_id') &&
-            ArrayHelper::getValue($data,'message.from.is_bot') !== true &&
-            ArrayHelper::getValue($data,'message.text') &&
-            empty(ArrayHelper::getValue($data,'message.reply_to_message'))
+        if (
+            ArrayHelper::getValue($data, 'message.message_id') &&
+            ArrayHelper::getValue($data, 'message.from.is_bot') !== true &&
+            ArrayHelper::getValue($data, 'message.text') &&
+            empty(ArrayHelper::getValue($data, 'message.reply_to_message'))
         ) {
-            call_user_func($callable,$data);
+            call_user_func($callable, $data);
         }
     }
 
-    protected function isNewForwardMessageInBotChat($callable,$params = [])
+    protected function isNewForwardMessageInBotChat($callable, $params = [])
     {
         $data  = ArrayHelper::toArray($this->data);
-        $mFromId = ArrayHelper::getValue($data,'message.from.id');
-        $mChatId = ArrayHelper::getValue($data,'message.chat.id');
-        $mForwardFromId = ArrayHelper::getValue($data,'message.forward_from.id');
-        if(
+        $mFromId = ArrayHelper::getValue($data, 'message.from.id');
+        $mChatId = ArrayHelper::getValue($data, 'message.chat.id');
+        $mForwardFromId = ArrayHelper::getValue($data, 'message.forward_from.id');
+        if (
             !empty($mFromId) &&
             !empty($mChatId) &&
             !empty($mForwardFromId) &&
@@ -366,19 +369,19 @@ class MainBotEvents
         }
     }
 
-    protected function isNewMessageInBotChat($callable,$params = [])
+    protected function isNewMessageInBotChat($callable, $params = [])
     {
         $data  = ArrayHelper::toArray($this->data);
-        $mFromId = ArrayHelper::getValue($data,'message.from.id');
-        $mChatId = ArrayHelper::getValue($data,'message.chat.id');
-        $mForwardFromId = ArrayHelper::getValue($data,'message.forward_from.id');
-        if(
+        $mFromId = ArrayHelper::getValue($data, 'message.from.id');
+        $mChatId = ArrayHelper::getValue($data, 'message.chat.id');
+        $mForwardFromId = ArrayHelper::getValue($data, 'message.forward_from.id');
+        if (
             !empty($mFromId) &&
             !empty($mChatId) &&
             empty($mForwardFromId) &&
             $mFromId === $mChatId
         ) {
-            call_user_func($callable,$data);
+            call_user_func($callable, $data);
         }
     }
 }
