@@ -87,9 +87,9 @@ class PaymentController extends Controller
     public function notify(Request $request)
     {
         $data = $request->all();
-        if (empty($data)) {
-            return response('OK', 200);
-        }
+//        if (empty($data)) {
+//            return response('OK', 200);
+//        }
         if (env('GRAB_TEST_DATA') === true) {
             Storage::disk('tinkoff_data')->put("notify_payment_{$data['OrderId']}_{$data['Status']}.json", json_encode($data, JSON_PRETTY_PRINT));
         }
@@ -117,7 +117,7 @@ class PaymentController extends Controller
             (new PaymentException("Банк обратился c уведомлением, но не прошел проверку " . json_encode($data)))->report();
 
         }
-        return response('OK', 200);
+//        return response('OK', 200);
     }
 
     private function accessor($request)
