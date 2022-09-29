@@ -14,6 +14,7 @@ export class tariffPageSettingsMessages {
 
     init() {   
         this.initCroppImageController();
+        this.initListeners();
         this.initEditor();
     }
 
@@ -47,6 +48,7 @@ export class tariffPageSettingsMessages {
     initListeners() {
         // Подписываемся на событие изменения
         Emitter.subscribe(this.tariffWelcomeEditorEvent, (data) => {
+            console.log(data.html);
             this.setEditorData = data.html;
         });
     }
