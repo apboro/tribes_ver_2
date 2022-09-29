@@ -38,6 +38,16 @@ case "$command" in
     ln "$conf_source/$conf_file" "$conf_target/$conf_file"
     nginx -g "daemon off;"
   ;;
+  "queue" )
+    php artisan queue:work redis --verbose --tries=3 --timeout=90
+  ;;
+  "schedule" )
+    while [ true ]
+    do
+      php artisan schedule:run --verbose --no-interaction &
+      sleep 60
+    done
+  ;;
   * )
     php $@
   ;;

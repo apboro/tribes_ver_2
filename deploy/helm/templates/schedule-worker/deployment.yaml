@@ -3,11 +3,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "..names.name" . }}-queue-worker
+  name: {{ include "..names.name" . }}-schedule-worker
   labels:
     {{- include "..labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.queueWorker.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "..labels.matchLabels" . | nindent 6 }}
@@ -18,12 +18,12 @@ spec:
         {{- include "..labels.standard" . | nindent 8 }}
         app: {{ include "..names.name" . }}
       annotations:
-        checksum/container-registry: {{ include (print $.Template.BasePath "/queue-worker/docker-secret.yaml") . | sha256sum }}
+        checksum/container-registry: {{ include (print $.Template.BasePath "/schedule-worker/docker-secret.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
-        - name: {{ include "..names.name" . }}-queue-worker-pull-secret
-      {{- if .Values.queueWorker.tolerations }}
-      tolerations: {{- include "..tplvalues.render" (dict "value" .Values.queueWorker.tolerations "context" .) | nindent 8 }}
+        - name: {{ include "..names.name" . }}-schedule-worker-pull-secret
+      {{- if .Values.scheduleWorker.tolerations }}
+      tolerations: {{- include "..tplvalues.render" (dict "value" .Values.scheduleWorker.tolerations "context" .) | nindent 8 }}
       {{- end }}
       volumes:
       - name: fpm-socket
@@ -32,11 +32,11 @@ spec:
         configMap: 
           name: {{ include "..names.name" . }}-fpm
       containers:
-        - name: queue-worker
-          image: {{ include "..imageName" .Values.queueWorker.image}}
-          imagePullPolicy: {{ .Values.queueWorker.image.pullPolicy }}
+        - name: schedule-worker
+          image: {{ include "..imageName" .Values.scheduleWorker.image}}
+          imagePullPolicy: {{ .Values.scheduleWorker.image.pullPolicy }}
           args:
-          - queue
+          - schedule
           env: 
             - name: APP_NAME
               value: {{ quote .Values.config.app.name }}

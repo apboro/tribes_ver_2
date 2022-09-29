@@ -57,6 +57,18 @@ queueWorker:
   replicaCount: 1
   tolerations: []
 
+scheduleWorker:
+  image:
+    registry: registry.fabit.ru
+    repository: tribes/tribes
+    tag: latest
+    pullPolicy: IfNotPresent
+    credentials:
+      username: username
+      password: password
+
+  tolerations: []
+
 static:
   image:
     registry: registry.fabit.ru
