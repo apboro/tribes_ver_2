@@ -91,31 +91,17 @@
                                             </p>
 
                                             @if(count($recTarVars) > 0)
-                                                <p style="font-family: 'Arial', sans-serif; mso-line-height-rule: exactly; margin: 0; margin-bottom: 24px;">
-                                                    Для подключения к сообществу выберите для себя другой активный тариф из этого списка:
+                                                <p style="font-family: 'Arial', sans-serif; margin: 0; margin-bottom: 24px;">
+                                                    Для выбора другого активного тарифа перейдите по ссылке
                                                 </p>
-                                                @foreach($recTarVars as $tarVar)
-                                                    <div style="padding-bottom: 24px; margin-bottom: 22px; border-bottom: 1px solid #7367f026; overflow: auto;">
-                                                        <div style="float: left">
-                                                            <p style="font-family: 'Arial', sans-serif; font-size: 16px; line-height: 22px; font-weight: 400; color: #3F3F3F; margin-bottom: 9px;">{{ $tarVar->title }}</p>
-                                                            <div>
-                                                                <span style="font-family: 'Arial', sans-serif; font-size: 18px; line-height: 26px; font-weight: 400; color: #3F3F3F;">{{ $tarVar->period }} дней / </span>
-                                                                <span style="font-family: 'Arial', sans-serif; font-size: 24px; line-height: 34px; font-weight: 400; color: #7367F0; letter-spacing: 0.02em;">{{ $tarVar->price }} ₽</span>
-                                                            </div>
-                                                        </div>
-                                                        <div style="float: right">
-                                                            <span style="display: block">Выбрать</span>
-                                                        </div>
-                                                    </div>
-
-                                                @endforeach
+                                                <a href="{{$link}}" style="font-family: 'Montserrat', sans-serif; color: #FFFFFF; margin: auto; letter-spacing: 0.02em; text-transform: uppercase; padding: 10px 40px; font-weight: 600; font-size: 14px; line-height: 20px; text-decoration: none; background: #7367F0; border-radius: 5px; display: inline-block; text-align: center;">
+                                                    Перейти
+                                                </a>
                                             @else
                                                 <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; margin-bottom: 24px;">
                                                     Обратитесь к владельцу сообщества, чтобы уточнить информацию об условиях доступа.
                                                 </p>
                                             @endif
-                                            {{--<div style="margin-top: 50px;">adwad</div>
-                                            {{dd($recTarVars)}}--}}
                                         </td>
                                     </tr>
                                 </table>

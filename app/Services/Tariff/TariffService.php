@@ -2,6 +2,7 @@
 
 namespace App\Services\Tariff;
 
+use App\Helper\PseudoCrypt;
 use App\Models\Community;
 use App\Models\TariffVariant;
 use App\Models\TelegramUser;
@@ -89,12 +90,14 @@ class TariffService {
             $community_name = $community->title;
             $days_left = $record->days_left;
 
-            $textMessageView = view('mail.telegram_end_of_tariff', compact('user_name', 'tariff_variant_name', 'tariff_variant_period', 'community_name', 'days_left', 'recTarVars'))->render();
+            $link = route('community.tariff.payment', ['hash' => PseudoCrypt::hash($community->id, 8)]);
+
+            $textMessageView = view('mail.telegram_end_of_tariff', compact('user_name', 'tariff_variant_name', 'tariff_variant_period', 'community_name', 'days_left', 'recTarVars', 'link'))->render();
 
             if(!empty($rec_tvc_ids)) {
                 $textMessage = 'Приветствуем ' . $user_name . '!' .
                     'Срок действия тарифа ' . $tariff_variant_name . '(' . $tariff_variant_period . ' дней) для сообщества ' . $community_name . ' закончится через ' .
-                    $days_left . ' дней. Для подключения к сообществу выберите для себя другой активный тариф из этого списка:';
+                    $days_left . ' дней. Для подключения к сообществу выберите другой активный тариф из этого списка:';
 
                 $this->telegramMainBotService->sendMessageFromBotWithTariff(config('telegram_bot.bot.botName'), $telegram_user['telegram_id'], $textMessage, $community);
 
