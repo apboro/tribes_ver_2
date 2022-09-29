@@ -21,12 +21,14 @@ use App\Helper\PseudoCrypt;
 use App\Filters\TariffFilter;
 
 
+use Carbon\Carbon;
 use Discord\Http\Exceptions\NotFoundException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use function React\Promise\reduce;
 
@@ -256,5 +258,18 @@ class TariffController extends Controller
     {
         $this->tariffRepo->perm($request, $community);
         return redirect()->back()->withCommunity($community);
+    }
+
+    public function testData()
+    {
+        $files = Storage::disk('tinkoff_data')->allFiles();
+        $logs = [];
+        foreach ($files as $file){
+            $data = [];
+            $data['data'] = json_decode(Storage::disk('tinkoff_data')->get($file));
+            $data['time'] = Carbon::parse(Storage::disk('tinkoff_data')->lastModified($file));
+            $logs[] = $data;
+        }
+        return view('tinkoffDebug', ['logs' => $logs]);
     }
 }
