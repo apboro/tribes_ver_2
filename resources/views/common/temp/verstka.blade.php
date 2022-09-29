@@ -95,6 +95,193 @@
             <!-- END подключение Телеграмм-канала, бота -->
 
 
+            <!-- START страница папок с проектами, создать проект -->
+            <div class="page-projects">
+                <div class="page-projects__folder-wrap">
+                    <div class="page-projects__folder-top">
+                        <div class="parallelogram"></div>
+                        <div class="parallelogram pink"></div>
+                    </div>
+                    <div class="page-projects__folder">
+                        <div class="page-projects__folder--top">
+                            <p class="page-projects__folder-project">Проект</p>
+                            <h5 class="page-projects__folder-project-name">Секретный канал It`s Time</h5>
+                        </div>
+                        <div class="page-projects__folder--bottom">
+                            <div class="page-projects__folder-images">
+                                <div class="page-projects__folder-image">
+                                    <img src="/images/avatars/1.png" alt="Avatar">
+                                </div>
+                            </div>
+                            <p class="page-projects__folder-communities-qty">Сообществ: 4</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END страница папок с проектами, создать проект -->
+
+
+            <!-- START создание проекта -->
+            <div class="project-creation">
+                <div class="project-creation__communities">
+                    <div class="project-creation__communities-main">
+                        <p class="project-creation__communities-another">Другие сообщества</p>
+                        <div class="project-creation__communities-list-another">
+                        
+
+                            <!-- START список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
+                            <div id="profile-list" class="profile__list">
+                                <a href="#" class="profile__item-wrap" id="community_1" style="width: 100%">
+                                    <label for="community-item_1" class="profile__item">
+                                        <div class="profile__item-image">
+                                            <img class="profile__image" src="/images/avatars/1.png">
+                                        </div>
+                                        <div class="profile__item-text">
+                                            <p class="profile__channel">Tech in UK</p>
+                                            <div class="profile__messenger">
+                                                <img src="/images/icons/social/telegram.png">
+                                                <p class="profile__text">мессенджер</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </a>
+                                <a href="#" class="profile__item-wrap" id="community_1" style="width: 100%">
+                                    <label for="community-item_1" class="profile__item">
+                                        <div class="profile__item-image">
+                                            <img class="profile__image" src="/images/avatars/2.png">
+                                        </div>
+                                        <div class="profile__item-text">
+                                            <p class="profile__channel">Tech in UK</p>
+                                            <div class="profile__messenger">
+                                                <img src="/images/icons/social/telegram.png">
+                                                <p class="profile__text">мессенджер</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </a>
+                                <a href="#" class="profile__item-wrap" id="community_1" style="width: 100%">
+                                    <label for="community-item_1" class="profile__item">
+                                        <div class="profile__item-image">
+                                            <img class="profile__image" src="/images/avatars/3.png">
+                                        </div>
+                                        <div class="profile__item-text">
+                                            <p class="profile__channel">Tech in UK</p>
+                                            <div class="profile__messenger">
+                                                <img src="/images/icons/social/telegram.png">
+                                                <p class="profile__text">мессенджер</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </a>
+                            </div>
+                            <!-- END список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
+
+                        </div>
+                    </div>
+                    <div class="project-creation__communities-footer">
+                        <p class="project-creation__project-communities">Выбрано: <span class="qty">1</span></p>
+                        <button class="button-empty button-empty--primary">Добавить</button>
+                    </div>
+                </div>
+                <div class="project-creation__project">
+                    <div class="project-creation__project--top">
+                        <div class="project-creation__project-name">
+                            <label for="projects-name">Название проекта</label>
+                            <select name="" id="projects-name">
+                                <option value="">Tech in UK</option>
+                                <option value="">Tech in UK 2</option>
+                                <option value="">Tech in UK 3</option>
+                            </select>
+                        </div>
+                        <button class="button-filled button-filled--primary project-creation__save">Сохранить</button>
+                    </div>
+                    <div class="project-creation__project--bottom">
+                        <div class="project-creation__project-header">
+                            <p class="project-creation__project-communities">Сообщества проекта: <span class="qty">0</span></p>
+                            <label><input type="checkbox" name="community" class="chk-all">Выбрать все</label>
+                        </div>
+                        <div class="project-creation__project-main">
+                            <p class="project-creation__project-main--empty">Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.</p>
+                            <div class="project-creation__list-communities">
+
+
+
+
+                            <!-- START список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
+                            <div id="profile-list" class="profile__list">
+                                <a href="#" class="profile__item-wrap" id="community_1" style="width: 33.3%">
+                                    <label for="community-item_1" class="profile__item">
+                                        <div class="profile__item-image">
+                                            <img class="profile__image" src="/images/avatars/1.png">
+                                        </div>
+                                        <div class="profile__item-text">
+                                            <p class="profile__channel">Tech in UK</p>
+                                            <div class="profile__messenger">
+                                                <img src="/images/icons/social/telegram.png">
+                                                <p class="profile__text">мессенджер</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </a>
+                                <a href="#" class="profile__item-wrap" id="community_1" style="width: 33.3%">
+                                    <label for="community-item_1" class="profile__item">
+                                        <div class="profile__item-image">
+                                            <img class="profile__image" src="/images/avatars/2.png">
+                                        </div>
+                                        <div class="profile__item-text">
+                                            <p class="profile__channel">Tech in UK</p>
+                                            <div class="profile__messenger">
+                                                <img src="/images/icons/social/telegram.png">
+                                                <p class="profile__text">мессенджер</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </a>
+                                <a href="#" class="profile__item-wrap" id="community_1" style="width: 33.3%">
+                                    <label for="community-item_1" class="profile__item">
+                                        <div class="profile__item-image">
+                                            <img class="profile__image" src="/images/avatars/3.png">
+                                        </div>
+                                        <div class="profile__item-text">
+                                            <p class="profile__channel">Tech in UK</p>
+                                            <div class="profile__messenger">
+                                                <img src="/images/icons/social/telegram.png">
+                                                <p class="profile__text">мессенджер</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </a>
+                                <a href="#" class="profile__item-wrap" id="community_1" style="width: 33.3%">
+                                    <label for="community-item_1" class="profile__item">
+                                        <div class="profile__item-image">
+                                            <img class="profile__image" src="/images/avatars/3.png">
+                                        </div>
+                                        <div class="profile__item-text">
+                                            <p class="profile__channel">Tech in UK</p>
+                                            <div class="profile__messenger">
+                                                <img src="/images/icons/social/telegram.png">
+                                                <p class="profile__text">мессенджер</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </a>
+                            </div>
+                            <!-- END список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
+
+
+
+                            </div>
+                        </div>
+                        <div class="project-creation__project-footer">
+                            <p class="project-creation__project-communities">Выбрано сообществ: <span class="qty">0</span></p>
+                            <button class="button-empty button-empty--primary">Убрать из проекта</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END создание проекта -->
+
         </div>
     </main>
 

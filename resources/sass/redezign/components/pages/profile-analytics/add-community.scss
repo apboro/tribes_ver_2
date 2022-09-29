@@ -68,9 +68,9 @@
     flex-wrap: wrap;
 
     &__add-bot {
+        @include font($text-color-2, 16px, 22px, 500);
         margin: 0 0 15px;
         padding: 20px;
-        @include font($text-color-2, 16px, 22px, 500);
         border: 1px solid $primary-1;
         border-radius: 10px;
         position: relative;
@@ -119,8 +119,8 @@
     }
 
     &__interpretation {
-        margin: 0 0 15px;
         @include font($text-color-2, 14px, 20px, 400);
+        margin: 0 0 15px;
     }
 
     &__add-channel {
@@ -154,9 +154,9 @@
     }
 
     &__connected {
+        @include font($green-5, 16px, 22px, 500);
         margin: 0 0 10px;
         padding: 0 20px 0 0;
-        @include font($green-5, 16px, 22px, 500);
         position: relative;
         color: $green-5;
 
@@ -199,6 +199,186 @@
 
         > img {
             margin: 0 10px 0 0;
+        }
+    }
+}
+
+.page-projects {
+    margin: 0 -15px;
+    display: flex;
+
+    &__folder-wrap {
+        padding: 0 15px;
+        width: 25%;
+    }
+
+    &__folder-top {
+        border-radius: 8px 0 0 0;
+        position: relative;
+        overflow: hidden;
+
+        .parallelogram {
+            width: 130px;
+            height: 25px;
+            transform: skew(20deg);
+            background: $primary-1;
+            position: relative;
+            left: -5px;
+            border-radius: 0 8px 0 0;
+
+            &.pink {
+                background: rgba($primary-1, .15);
+                position: absolute;
+                bottom: -6px;
+                left: 16%;
+                z-index: -1;
+            }
+        }
+    }
+
+    &__folder {
+        padding: 5px 15px 20px 20px;
+        min-height: 165px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: $primary-1;
+        box-shadow: 0px 9px 12px rgba($black, .08);
+        color: $white;
+        border-radius: 0 8px 8px 8px;
+    }
+
+    &__folder-project {
+        @include font($white, 14px, 20px, 500);
+        margin: 0 0 3px;
+    }
+
+    &__folder-project-name {
+        @include font($white, 16px, 22px, 600);
+        @include truncate(215px);
+        margin: 0;
+    }
+
+    &__folder-images {
+        margin: 0 0 5px;
+        display: flex;
+    }
+
+    &__folder-image {
+        width: 20%;
+
+        > img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid $white;
+        }
+    }
+
+    &__folder-communities-qty {
+        @include font($white, 14px, 20px, 500);
+    }
+}
+
+.project-creation {
+    min-height: 500px; //EXAMPLE
+
+    margin: 0 -10px;
+    display: flex;
+    flex-wrap: wrap;
+
+    &__communities {
+        padding: 0 10px;
+        width: 25%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    &__communities-another {
+        @include font($text-color-2, 16px, 22px, 500);
+        margin: 0 0 20px;
+    }
+
+    &__project {
+        padding: 0 10px;
+        width: 75%;
+    }
+
+    &__communities-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__project {
+        display: flex;
+        flex-direction: column;
+
+        &--top {
+            margin: 0 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        &--bottom {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    }
+
+    &__project-name {
+        label {
+            @include font($text-color-2, 12px, 16px, 400);
+            display: block;
+        }
+
+        select {
+            @include font($text-color-1, 14px, 20px, 400);
+            padding: 10px 20px;
+            border: 1px solid $grey-4;
+            border-radius: 5px;
+        }
+    }
+
+    &__project-header,
+    &__project-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__project-header {
+        label {
+            @include font($text-color-1, 14px, 20px, 400);
+            display: flex;
+            align-items: center;
+        }
+        
+        input.chk-all {
+            margin: 0 10px 0 0;
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    &__project-communities {
+        @include font($text-color-2, 16px, 22px, 500);
+
+        .qty {
+            color: $primary-1;
+        }
+    }
+
+    &__project-main {
+        &--empty {
+            @include font($grey-6, 14px, 20px, 500);
+            max-width: 390px;
+            margin: 0 auto;
+            text-align: center;
         }
     }
 }
