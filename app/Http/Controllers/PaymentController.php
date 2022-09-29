@@ -90,6 +90,11 @@ class PaymentController extends Controller
 //        if (empty($data)) {
 //            return response('OK', 200);
 //        }
+        
+        if ($data['Status'] == 'AUTHORIZED') {
+            return response('OK', 200);
+        }
+
         if (env('GRAB_TEST_DATA') === true) {
             Storage::disk('tinkoff_data')->put("notify_payment_{$data['OrderId']}_{$data['Status']}.json", json_encode($data, JSON_PRETTY_PRINT));
         }
