@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Filters\API\ProjectFilter;
+use App\Filters\TariffFilter;
 use App\Helper\ArrayHelper;
 use App\Http\Requests\Project\ProjectRequest;
 use App\Models\Community;
 use App\Models\Project;
+use App\Repositories\Donate\DonateRepositoryContract;
 use App\Repositories\Project\ProjectRepositoryContract;
+use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Rules\Knowledge\OwnCommunityRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,10 +20,18 @@ class ProjectController extends Controller
 {
 
     private ProjectRepositoryContract $projectRepository;
+    private DonateRepositoryContract $donateRepository;
+    private TariffRepositoryContract $tariffRepository;
 
-    public function __construct(ProjectRepositoryContract $projectRepository)
+    public function __construct(
+        ProjectRepositoryContract $projectRepository,
+        DonateRepositoryContract  $donateRepository,
+        TariffRepositoryContract  $tariffRepository
+    )
     {
         $this->projectRepository = $projectRepository;
+        $this->donateRepository = $donateRepository;
+        $this->tariffRepository = $tariffRepository;
     }
 
     public function analytics($project = null, $community = null, ProjectRequest $request)
@@ -42,7 +53,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function messages($project = null, $community = null,ProjectRequest $request)
+    public function messages($project = null, $community = null, ProjectRequest $request)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
@@ -51,7 +62,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function payments($project = null, $community = null,ProjectRequest $request)
+    public function payments($project = null, $community = null, ProjectRequest $request)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
@@ -60,30 +71,44 @@ class ProjectController extends Controller
         );
     }
 
-    public function donates($project = null, $community = null,ProjectRequest $request)
+    public function donates($project = null, $community = null, ProjectRequest $request)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
-
-        return view('common.project.analytics')->with(
-            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        $donates = $this->donateRepository->getDonatesByCommunities(explode('-', $ids));
+        return view('common.project.donate')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community', 'donates')
         );
     }
 
-    public function tariffs($project = null, $community = null,ProjectRequest $request)
+    public function tariffs($project = null, $community = null, ProjectRequest $request)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        if ($request->get('isPersonal')) {
+            $isPersonal = true;
+            $isActive = true;
+        } elseif ($request->get('active', "true") == "true") {
+            $isPersonal = false;
+            $isActive = true;
+        } else {
+            $isActive = false;
+            $isPersonal = null;
+        }
+        $tariffs = $this->tariffRepository->getTariffVariantsByCommunities(explode('-', $ids), $isActive, $isPersonal);
 
         return view('common.project.tariff')->with(
-            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+            compact('projects', 'communities', 'activeProject', 'activeCommunity',
+                'ids', 'project', 'community', 'tariffs', 'isPersonal', 'isActive')
         );
     }
 
-    public function members($project = null, $community = null,ProjectRequest $request)
+    public function members($project = null, $community = null, ProjectRequest $request, TariffFilter $filters)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
-
+        $followers = $this->tariffRepository->getList($filters, $activeCommunity);
+        //dd($activeCommunity);
         return view('common.project.members')->with(
-            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community', 'followers')
         );
     }
 
@@ -94,7 +119,7 @@ class ProjectController extends Controller
             abort(403, 'Доступ запрещен');
         }
         $reqProject = request('project');
-        if ($reqProject && $reqProject != 'c' && Project::where('id', $reqProject)->where('user_id', Auth::user()->id)->doesntExist()) {
+        if ($reqProject && ctype_digit($reqProject) && Project::where('id', $reqProject)->where('user_id', Auth::user()->id)->doesntExist()) {
             abort(403, 'Доступ запрещен');
         }
 
