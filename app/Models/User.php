@@ -178,7 +178,7 @@ class User extends Authenticatable
             ->where('ended_at', '>', Carbon::now()->toDateTimeString())
             ->where('started_at', '<', Carbon::now()->toDateTimeString())
             ->where('status', 'active')
-            ->latest();
+            ->first();
 
         return $accumulation;
     }
