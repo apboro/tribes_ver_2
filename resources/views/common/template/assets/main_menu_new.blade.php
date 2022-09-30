@@ -5,7 +5,6 @@
     >
         <span class="main-nav-new__burger-lines"></span>
     </button>
-
     <nav class="main-nav-new__nav" data-burger>
         <ul class="main-nav-new__list">
             @if (request()->is('*follower*'))
@@ -63,7 +62,7 @@
     
                     <ul class="dropdown-menu-item__list" data-dropdown-content>
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="{{ route('project.donates') }}">
+                            <a class="dropdown-menu-item__link" href="{{ route('project.donates', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}">
                                 <span>Донаты</span>
                             </a>
                         </li>
@@ -71,7 +70,7 @@
                         <div class="dropdown-menu-item__divider"></div>
     
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="{{ route('project.tariffs') }}">
+                            <a class="dropdown-menu-item__link" href="{{ route('project.tariffs', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}">
                                 <span>Тарифы</span>
                             </a>
                         </li>
@@ -79,11 +78,11 @@
                         <div class="dropdown-menu-item__divider"></div>
 
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="{{ route('project.members') }}">
+                            <a class="dropdown-menu-item__link" href="{{ route('project.members', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}">
                                 <span>Учасники</span>
                             </a>
                         </li>
-    
+
                         <div class="dropdown-menu-item__divider"></div>
     
                         <li class="dropdown-menu-item__item">

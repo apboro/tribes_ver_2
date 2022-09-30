@@ -145,6 +145,8 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
                 Route::get('{community}', 'CommunityController@statistic')->where(['community' => '[0-9]+'])->name('community.view');
 
+
+
                 // Donate
                 Route::get('/{community}/donate/list', 'DonateController@list')->name('community.donate.list');
                 Route::get('/{community}/donate/add/{id?}', 'DonateController@add')->name('community.donate.add');
@@ -161,6 +163,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
                 Route::get('/{community}/subscribers', 'TariffController@subscriptions')->name('community.tariff.subscriptions');
                 Route::post('/{community}/subscribers/change', 'TariffController@subscriptionsChange')->name('community.tariff.subscriptionsChange');
+
                 Route::get('/{community}/tariff', 'TariffController@list')->name('community.tariff.list');
 
                 Route::get('/{community}/tariff/settings/{tab?}', 'TariffController@settings')->name('community.tariff.settings');
@@ -174,18 +177,10 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                     return view('common.knowledge.index');
                 })->name('knowledge.index');
 
-                #TODO
-
                 Route::get('/{community}/knowledge/list', function () {
                     return view('common.knowledge.list2');
                 })->name('common.knowledge.list');
 
-                //Route::get('/{community}/knowledge/list', 'KnowledgeController@list')->name('knowledge.list2');
-
-                // Route::get('/{community}/knowledge/add', 'KnowledgeController@add')->name('knowledge.add');
-                // Route::get('/{community}/knowledge/{question}/edit', 'KnowledgeController@edit')->name('knowledge.edit');
-                // Route::get('/{community}/knowledge/settings', 'KnowledgeController@settings')->name('knowledge.settings');
-                // Route::post('/{community}/knowledge/store', 'KnowledgeController@store')->name('knowledge.store');
             });
 
         });
