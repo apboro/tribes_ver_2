@@ -34,6 +34,7 @@ class TariffSeeder extends Seeder
                 ->sequence(fn ($sequence) => [
                     'price' => ($sequence->index + 1) * 100,
                     'title' => 'Вариант для тарифа №'.$sequence->index,
+                    'inline_link' =>Str::uuid(),
                 ])
                 ->create([
                     'tariff_id' => $tariff->id,

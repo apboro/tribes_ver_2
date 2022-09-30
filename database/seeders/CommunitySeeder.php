@@ -33,11 +33,11 @@ class CommunitySeeder extends Seeder
                 'user_id' => $userTest->id,
                 'telegram_user_id' => $teleuser->telegram_id,
             ]);
-        $projects = Project::factory()->for($userTest,'user')->count(3)->create();
+        //$projects = Project::factory()->for($userTest,'user')->count(3)->create();
 
         foreach($connections as $eachConnection){
-            $project = $projects->get(rand(1,3));
-            $community = Community::factory()->for($project,'project')
+           // $project = $projects->get(rand(1,3));
+            $community = Community::factory()//->for($project,'project')
                 ->for($eachConnection,'connection')->create([
                 'owner' => $userTest->id,
                 'title' => $eachConnection->chat_title,
