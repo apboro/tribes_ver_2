@@ -24,7 +24,7 @@ class PaymentController extends Controller
 
     public function payout(PayOutRequest $request)
     {
-        $accumulation = Accumulation::where('SpAccumulationId', (int)$request['accumulationId'])->first() ?? Auth::user()->getActiveAccumulation();
+        $accumulation = Accumulation::where('SpAccumulationId', (int)$request['accumulationId'])->first(); //?? Auth::user()->getActiveAccumulation()
         if(!$accumulation){
             return response()->json([
                 'status' => 'error',
