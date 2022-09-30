@@ -6,6 +6,7 @@ use App\Exceptions\KnowledgeException;
 use App\Exceptions\TelegramException;
 use App\Helper\ArrayHelper;
 use App\Models\Community;
+use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
 use Exception;
@@ -252,7 +253,7 @@ class MainBotEvents
     {
         try {
             if (isset($this->data->message->left_chat_member)) {
-                $telegram = new Telegram;
+                $telegram = new Telegram(app(TariffRepositoryContract::class));
                 $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
             }
         } catch (Exception $e) {

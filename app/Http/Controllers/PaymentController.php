@@ -90,7 +90,7 @@ class PaymentController extends Controller
 //        if (empty($data)) {
 //            return response('OK', 200);
 //        }
-        
+
         if ($data['Status'] == 'AUTHORIZED') {
             return response('OK', 200);
         }
