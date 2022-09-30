@@ -175,10 +175,10 @@ class User extends Authenticatable
     function getActiveAccumulation()
     {
         $accumulation = $this->accumulation()
-            ->where('ended_at', '>', Carbon::now()->toDateTimeString())
-            ->where('started_at', '<', Carbon::now()->toDateTimeString())
+//            ->where('ended_at', '>', Carbon::now()->toDateTimeString())
+//            ->where('started_at', '<', Carbon::now()->toDateTimeString())
             ->where('status', 'active')
-            ->first();
+            ->latest();
 
         return $accumulation;
     }
