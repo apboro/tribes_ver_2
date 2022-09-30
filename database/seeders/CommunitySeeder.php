@@ -36,7 +36,8 @@ class CommunitySeeder extends Seeder
         $projects = Project::factory()->for($userTest,'user')->count(3)->create();
 
         foreach($connections as $eachConnection){
-            $project = $projects->get(rand(1,3));
+            $project = $projects->get(rand(0,2));
+
             $community = Community::factory()->for($project,'project')
                 ->for($eachConnection,'connection')->create([
                 'owner' => $userTest->id,

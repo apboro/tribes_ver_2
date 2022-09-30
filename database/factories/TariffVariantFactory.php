@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\TariffVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @method TariffVariant getItemByAttrs(array $attributes)
@@ -22,6 +23,7 @@ class TariffVariantFactory extends Factory
             'price' => rand(100,5000),
             'period' => rand(1,31),
             'isActive' => rand(true,false),
+            'inline_link' => Str::random(8),
         ];
     }
 
