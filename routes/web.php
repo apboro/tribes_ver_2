@@ -75,7 +75,9 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::get('/donates/{project?}/{community?}', 'ProjectController@donates')->name('project.donates');
         Route::get('/tariffs/{project?}/{community?}', 'ProjectController@tariffs')->name('project.tariffs');
         Route::get('/members/{project?}/{community?}', 'ProjectController@members')->name('project.members');
-        Route::get('/projects', 'ProjectController@list')->name('project.list');
+        Route::get('profile/projects', 'ProjectController@listProjects')->name('profile.project.list');
+        Route::get('profile/communities', 'ProjectController@listCommunities')->name('profile.communities.list');
+        Route::any('profile/projects/add', 'ProjectController@add')->name('profile.project.add');
 
 
         Route::group(['prefix' => 'profile'], function () {
