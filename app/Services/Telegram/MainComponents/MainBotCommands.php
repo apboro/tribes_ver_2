@@ -1060,7 +1060,7 @@ class MainBotCommands
         try {
             $tariff = $community->tariff;
             foreach ($tariff->variants as $variant) {
-                if ($variant->price !== 0 && $variant->isActive !== false) {
+                if ($variant->price !== 0 && $variant->isActive !== false && $variant->isPersonal !== false) {
                     $data = [
                         'amount' => $variant->price,
                         'currency' => 0,
