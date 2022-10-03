@@ -61,14 +61,17 @@ export default class Profile extends Page {
     toggleProfileCommunityVisibility(event) {
         this.profileBlock.toggleVisibility();
         let active = document.getElementById("btn_profile");
+        let hideShow = document.getElementById("hideShow");
 
         if (this.profileBlock.isVisible) {
             event.target.textContent = 'Скрыть';
             active.classList.remove("active");
+            hideShow.classList.remove("active");
 
         } else {
             event.target.textContent = 'Раскрыть';
             active.className += " active";
+            hideShow.className += " active";
         }
     }
 

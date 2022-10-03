@@ -31,6 +31,8 @@ export class Dropdown {
             this.toInactiveContent();
             this.removeBtn();
         }
+
+        // btn.classList.toggle("active");
     }
 
     toActiveContent() {
@@ -56,6 +58,7 @@ export class Dropdown {
             if (content.classList.contains('active') && this.btn) {
                 content.classList.remove('active');
                 this.btn.classList.remove('active');
+                
             }
         });
     }

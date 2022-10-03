@@ -1,7 +1,7 @@
 @extends('common.community.profile')
 
 @section('tab')
-<div class="mt-2" data-plugin="CommunitiesPage">            
+<div class="community__communities-page" data-plugin="CommunitiesPage">            
     @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors])
     <div class="row">
         <div class="col-12">
