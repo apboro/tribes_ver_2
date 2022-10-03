@@ -2,15 +2,15 @@
 
 @section('content')
 
-{{route('project.add')}}
+
 <form
-        action="{{ route('project.add') }}"
+        action="{{ route('profile.project.add') }}"
         method="post"
         enctype="multipart/form-data"
         id="tariff_add_form"
         class="community-settings"
 >
-
+   @csrf
     <!-- Название тарифа -->
     <div class="community-settings__change-tariff" id="community-settings__change-tariff">
         <div class="community-settings__form-item">

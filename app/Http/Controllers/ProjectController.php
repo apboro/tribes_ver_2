@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Filters\API\ProjectFilter;
 use App\Filters\TariffFilter;
 use App\Helper\ArrayHelper;
+use App\Http\Requests\API\ProjectEditRequest;
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectRequest;
 use App\Models\Community;
@@ -58,9 +59,20 @@ class ProjectController extends Controller
         $project = new Project();
         if ($request->isMethod('post')) {
             $project = $this->projectRepository->create(['user_id' => Auth::user()->id, 'title'=>$request->get('title')]);
-            return redirect()->route('project.list');
+            return redirect()->route('profile.project.list');
         }
         return view('common.project.add')->with(
+            compact('project')
+        );
+    }
+
+    public function edit(Project $project, ProjectEditRequest $request)
+    {
+        if ($request->isMethod('post')) {
+            $project = $this->projectRepository->create(['user_id' => Auth::user()->id, 'title'=>$request->get('title')]);
+            return redirect()->route('profile.project.list');
+        }
+        return view('common.project.edit')->with(
             compact('project')
         );
     }

@@ -78,7 +78,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::get('profile/projects', 'ProjectController@listProjects')->name('profile.project.list');
         Route::get('profile/communities', 'ProjectController@listCommunities')->name('profile.communities.list');
         Route::any('profile/projects/add', 'ProjectController@add')->name('profile.project.add');
-
+        Route::any('profile/projects/edit/{project}', 'ProjectController@edit')->name('profile.project.edit');
 
         Route::group(['prefix' => 'profile'], function () {
 
