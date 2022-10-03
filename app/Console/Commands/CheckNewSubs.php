@@ -6,6 +6,7 @@ use App\Jobs\SetNewTelegramUsers;
 use App\Models\Community;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
+use Exception;
 use Illuminate\Console\Command;
 
 class CheckNewSubs extends Command
@@ -42,13 +43,18 @@ class CheckNewSubs extends Command
     public function handle()
     {
             $communities = Community::whereHas('connection', function ($q) {
-                $q->where('chat_type', 'channel');
+                $q->where('chat_type', 'channel')->where('is_there_userbot', true);
             })->get();
             foreach ($communities as $community) {
                 $time = time();
                 while (true) {
                     if (time() > $time) {
-                        $membersOrigin = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $community->connection->chat_id);
+                        try {
+                            $membersOrigin = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $community->connection->chat_id);
+                        } catch (Exception $e) {
+                            $membersOrigin = null;
+                        }
+                        
                         $membersIdent = $community->followers->count();
                         if ($membersOrigin != $membersIdent) {
                             dispatch(new SetNewTelegramUsers($community->connection->chat_id));

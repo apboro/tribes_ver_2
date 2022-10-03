@@ -44,14 +44,30 @@ use App\Services\Telegram\MainComponents\Madeline;
 use App\Services\Telegram\TelegramMtproto\UserBot;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Services\SMS16 as SmsService;
 
 use DateTime;
+use Exception;
 
 class TestBotController extends Controller
 {
 
     public function index(Request $request)
     {
-        
+        $sms = new SmsService;
+        $balance = $sms->getBalance();
+        dd($balance['money']);
+        // $params = [
+        //     'api_key' => 'efd6bf962dbedbb09e247232b4b56924',
+        //     "events" => [
+        //         "user_id" => "john_doe@gmail.com",
+        //         "event_type" => "watch_tutorial",
+        //         "country" => "United States",
+        //         "ip" => "127.0.0.1"
+        //     ]
+        // ];
+        // $req = Http::post('https://api2.amplitude.com/2/httpapi', $params);
+        // dd($req);
+
     }
 }
