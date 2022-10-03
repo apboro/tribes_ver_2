@@ -23,16 +23,16 @@ export default class Profile extends Page {
 
         // console.log(this.list.children);
 
-        console.log(this.list.dataset.massive);
+        // console.log(this.list.dataset.massive);
 
-        forEach(this.list.children, (item) => {
+        // forEach(this.list.children, (item) => {
             
-            let comminity_id =item.id.split('_')[1];
+        //     let comminity_id =item.id.split('_')[1];
 
-            // item.addEventListener('click', (e) => {
-            //     console.log("axios обращение к community " + comminity_id);
-            // })
-        })
+        //     // item.addEventListener('click', (e) => {
+        //     //     console.log("axios обращение к community " + comminity_id);
+        //     // })
+        // })
 
         const data = { a: 1, b: 2 }
 
