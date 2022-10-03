@@ -58,6 +58,7 @@ export class Dropdown {
             if (content.classList.contains('active') && this.btn) {
                 content.classList.remove('active');
                 this.btn.classList.remove('active');
+                
             }
         });
     }
