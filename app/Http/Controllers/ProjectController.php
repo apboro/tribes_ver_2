@@ -34,6 +34,16 @@ class ProjectController extends Controller
         $this->tariffRepository = $tariffRepository;
     }
 
+    public function list( ProjectRequest $request)
+    {
+
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.list')->with(
+            compact('projects', 'communities')
+        );
+    }
+
     public function analytics($project = null, $community = null, ProjectRequest $request)
     {
 
