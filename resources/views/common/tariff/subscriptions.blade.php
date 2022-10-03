@@ -1,4 +1,4 @@
-@extends('common.community.profile')
+@extends('layouts.project')
 
 @section('tab')
     <section data-tab="subscriptionPage">
