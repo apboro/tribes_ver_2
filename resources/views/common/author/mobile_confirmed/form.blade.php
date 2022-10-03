@@ -44,7 +44,7 @@
                 </div>
 
                 <form
-                    action="{{ route('author.mobile.confirmed') }}"
+                    action="{{ route('author.mobile.code') }}"
                     method="post"
                     id="mobile_confirmed"
                     onsubmit="event.preventDefault();"
