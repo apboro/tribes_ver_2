@@ -139,11 +139,8 @@
 
                             <a
                                     type="submit"
-                                    @if(request('active') == null)
-                                        href="{{ route('community.tariff.edit', [$tariff->tariff->community_id, $tariff->id, $activate = 0]) }}"
-                                    @else
-                                        href="{{ route('community.tariff.edit', [$tariff->tariff->community_id, $tariff->id, $activate = 1]) }}"
-                                    @endif class="toggle-switch community-tariff-card__switcher"
+                                    href="{{ route('community.tariff.edit', [$tariff->tariff->community_id, $tariff->id, $activate = (int) !$tariff->isActive]) }}"
+                                    class="toggle-switch community-tariff-card__switcher"
                             >
                                 <label class="toggle-switch__switcher">
                                     <input
