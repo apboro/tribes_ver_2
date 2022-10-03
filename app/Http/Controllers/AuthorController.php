@@ -62,7 +62,6 @@ class AuthorController extends Controller
     public function mobileConfirmed()
     {
         $user = User::find(Auth::user()->id);
-        
         return view('common.author.mobile_confirmed.form')->withUser($user);
     }
 

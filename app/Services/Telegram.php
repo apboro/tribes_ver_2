@@ -143,9 +143,8 @@ class Telegram extends Messenger
         try {
             $connection = TelegramConnection::where('chat_id', $chat_id)->first();
             if ($connection) {
-                $connection->delete();
-                $community = TelegramConnection::where('chat_id', $chat_id)->first()->community() ?? NULL;
-                if ($community) $community->delete();
+                $connection->botStatus = 'kicked';
+                $connection->save();
             }
 
             return true;
