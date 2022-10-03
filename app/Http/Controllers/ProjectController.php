@@ -40,7 +40,7 @@ class ProjectController extends Controller
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
         return view('common.project.list')->with(
-            compact('projects', 'communities')
+            compact('projects', 'communities', 'activeProject', 'activeCommunity')
         );
     }
 
