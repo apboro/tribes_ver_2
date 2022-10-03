@@ -4,7 +4,7 @@
         <h5 class="selected-project">Show</h5>
         <h5 class="selected-community">Hide</h5>
     </div>
-    <div class="profile__hide-show" data-tab="profileBlock">
+    <div id="hideShow" class="profile__hide-show" data-tab="profileBlock">
 
         @if( $projects->isEmpty())
             <!--START нет проектов и сообществ -->
@@ -43,7 +43,7 @@
                         <div class="profile__community_selected">
                             <div class="profile__selected-wrap">
                                 <div class="profile__community-img">
-                                    <img src="{{$activeCommunity->image}}" alt="Avatar">
+                                    <img src="{{$activeCommunity->image ?? '/images/no-image.png'}}" alt="Avatar">
                                 </div>
                                 <div class="profile__community-description">
                                     <h4 class="profile__community-description--title">{{$activeCommunity->title}}</h4>
@@ -98,18 +98,19 @@
                     @if($activeProject || $projects->isNotEmpty())
                         @php($currentProj = $activeProject ?? $projects->first())
                         @if($currentProj->communities()->get()->isNotEmpty())
-                            <!-- START список сообществ проекта -->
-                            <div id="profile-list" class="profile__list" data-massive="{{ 5+5 }}">
-                                @foreach($currentProj->communities()->get() as $community)
 
+                            <!-- START список сообществ проекта -->
+                            <div id="profile-list" class="profile__list">
+                                @foreach($currentProj->communities()->get() as $community)
+                                
                                     <a class="profile__item-wrap" id="community_{{ $community->id }}"
                                        href="{{route(request()->route()->getName(),['project'=>$community->project_id,'community' => $community->id])}}">
-                                        <input type="radio" id="community-item_{{ $community->id }}"
+                                        <!-- <input type="radio" id="community-item_{{ $community->id }}"
                                                name="community-item"
-                                               class="profile__input">
-                                        <label for="community-item_{{ $community->id }}" class="profile__item">
+                                               class="profile__input"> -->
+                                        <div id="community-item_{{ $community->id }}" class="profile__item">
                                             <div class="profile__item-image">
-                                                <img class="profile__image" src="{{ $community->image }}">
+                                                <img class="profile__image" src="{{ $community->image ?? '/images/no-image.png' }}">
                                             </div>
                                             <div class="profile__item-text">
                                                 <p class="profile__channel">{{ $community->description }}</p>
@@ -118,7 +119,7 @@
                                                     <p class="profile__text">{{ $community->title }}</p>
                                                 </div>
                                             </div>
-                                        </label>
+                                        </div>
                                     </a>
                                 @endforeach
                             </div>

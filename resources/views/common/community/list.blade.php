@@ -30,7 +30,7 @@
             @endif
         </div>
 
-        <div class="mt-2" data-plugin="CommunitiesPage">            
+        <div class="community__communities-page" data-plugin="CommunitiesPage">            
             
             <div id="projects-list" class="row">
                 @if(count($communities))

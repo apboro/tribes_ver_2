@@ -2,6 +2,13 @@
     padding-top: 20px;
     padding-bottom: 50px;
 
+    &__communities-page {
+        padding: 40px 0 0;
+        background: $white;
+        position: relative;
+        z-index: 10;
+    }
+
     &__header {
         display: flex;
         align-items: center;
@@ -53,14 +60,15 @@
         }
 
         &.project-community {
+            background: $white;
             margin: 0;
     
             .community__profile-btn {
-                margin: 60px 0 0;
+                // margin: 60px 0 0;
     
-                &.active {
-                    margin: 0;
-                }
+                // &.active {
+                //     margin: 0;
+                // }
             }
         }
     }

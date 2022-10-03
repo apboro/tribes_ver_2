@@ -11,8 +11,20 @@
     }
 
     &__hide-show {
-        overflow: hidden;
+        max-height: auto!important;
+        overflow: visible;
+        opacity: 1;
         transition: all .3s;
+        transition-delay: .5s, .5s, .9s;
+        transition-property: max-height, overflow, opacity;
+
+        &.active {
+            overflow: hidden;
+            opacity: 0;
+            transition-delay: .5s, .5s, .9s!important;
+            transition-property: max-height, overflow, opacity!important;
+            transition: all .3s;
+        }
     }
 
     &__wrapper {
@@ -88,7 +100,7 @@
     &__community-description {
 
         &--link {
-            margin: 0 0 10px;
+            margin: 0 0 20px;
             display: flex;
             align-items: center;
             @include font($blue-1, 14px, 20px, 600);
@@ -138,6 +150,29 @@
         margin: 0 -5px 30px;
         display: flex;
         flex-wrap: wrap;
+        max-height: 305px;
+        overflow-y: scroll;
+
+        &::-webkit-scrollbar {
+            width: 5px;
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            background-color: $grey-6 !important;
+            border: .5px solid $text-color !important;
+        }
+
+        &::-webkit-scrollbar-track {
+            border-radius: 5px;
+            background-color: transparent;
+        }
+
+        & {
+            scrollbar-color: $grey-6 transparent; /*Цвет скролла, цвет ползунка*/
+            scrollbar-width: thin; /*Толщина скролла thin, auto*/
+        }
     }
 
     &__item-wrap {
@@ -239,6 +274,12 @@
 
         > img {
             margin: 0 10px 0 0;
+        }
+
+        p {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }

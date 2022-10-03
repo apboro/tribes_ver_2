@@ -31,6 +31,8 @@ export class Dropdown {
             this.toInactiveContent();
             this.removeBtn();
         }
+
+        // btn.classList.toggle("active");
     }
 
     toActiveContent() {
