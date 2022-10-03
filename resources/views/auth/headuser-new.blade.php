@@ -28,7 +28,7 @@
             <div class="dropdown-personal__links-block">
                 <ul class="dropdown-personal__link-list">
                     <li class="dropdown-personal__link-item">
-                        <a href="#" class="dropdown-personal__link">
+                        <a href="{{route('project.list')}}" class="dropdown-personal__link">
                             Мои проекты
                         </a>
                     </li>

@@ -23,7 +23,7 @@
                 @foreach($projects as $pr)
 
                 <li class="dropdown-project-list__project-item">
-                    <a href="{{route(request()->route()->getName(),['project' => $pr->id])}}" class="dropdown-project-list__project-link @if($activeProject->id == $pr->id) active @endif" >
+                    <a href="{{route(request()->route()->getName(),['project' => $pr->id])}}" class="dropdown-project-list__project-link @if(!empty($activeProject->id) && $activeProject->id == $pr->id) active @endif" >
                         <p class="dropdown-project-list__project-link-title">{{ $pr->title }}</p>
 
                         <p class="dropdown-project-list__project-link-subtitle">Сообществ: {{$pr->communities()->get()->count()}}</p>
