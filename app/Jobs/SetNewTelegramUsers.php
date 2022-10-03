@@ -44,7 +44,7 @@ class SetNewTelegramUsers implements ShouldQueue
             })->first();
 
             $userBot = new UserBot;
-            $connection = $community->connection;
+            $connection = $community->connection ?? null;
             $limit = 100;
             $offset = 0;
             $chat_id = str_replace('-', '',(str_replace(-100, '', $connection->chat_id)));
