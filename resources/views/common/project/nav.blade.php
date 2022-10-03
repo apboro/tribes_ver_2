@@ -4,7 +4,7 @@
             <li class="nav-item">
                 <a
                     class="nav-link"
-                    href=""
+                    href="{{route('profile.project.list')}}"
                     aria-controls="mobile"
                 >
                     Проекты
@@ -14,7 +14,7 @@
             <li class="nav-item">
                 <a
                     class="nav-link"
-                    href=""
+                    href="{{route('profile.communities.list')}}"
                     aria-controls="messengers"
                 >
                     Сообщества

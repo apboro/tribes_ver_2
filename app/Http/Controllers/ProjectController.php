@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Filters\API\ProjectFilter;
 use App\Filters\TariffFilter;
 use App\Helper\ArrayHelper;
+use App\Http\Requests\API\ProjectEditRequest;
+use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectRequest;
 use App\Models\Community;
 use App\Models\Project;
@@ -34,13 +36,44 @@ class ProjectController extends Controller
         $this->tariffRepository = $tariffRepository;
     }
 
-    public function list( ProjectRequest $request)
+    public function listProjects( ProjectRequest $request)
     {
-
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
         return view('common.project.list')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity')
+        );
+    }
+
+    public function listCommunities( ProjectRequest $request)
+    {
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        return view('common.project.communities')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity')
+        );
+    }
+
+    public function add(ProjectCreateRequest $request)
+    {
+        $project = new Project();
+        if ($request->isMethod('post')) {
+            $project = $this->projectRepository->create(['user_id' => Auth::user()->id, 'title'=>$request->get('title')]);
+            return redirect()->route('profile.project.list');
+        }
+        return view('common.project.add')->with(
+            compact('project')
+        );
+    }
+
+    public function edit(Project $project, ProjectEditRequest $request)
+    {
+        if ($request->isMethod('post')) {
+            $project = $this->projectRepository->create(['user_id' => Auth::user()->id, 'title'=>$request->get('title')]);
+            return redirect()->route('profile.project.list');
+        }
+        return view('common.project.edit')->with(
+            compact('project')
         );
     }
 
