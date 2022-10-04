@@ -133,7 +133,7 @@ class Payment extends Model
 
     public function getUserNickFromEmail()
     {
-        $email = $this->payer()->first()->email;
+        $email = $this->payer()->first()->email ?? 'Почты нет';
 
         return explode('@', $email)[0];
     }
