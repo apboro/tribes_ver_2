@@ -40,7 +40,7 @@
 
 
     {{$communities}}
-    {{$project->communities->get()}}
+    {{$project->communities}}
     <div class="community-settings__buttons">
         <button
                 type="submit"

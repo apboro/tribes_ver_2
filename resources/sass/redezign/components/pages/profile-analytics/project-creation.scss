@@ -1,9 +1,14 @@
 .project-creation {
     min-height: 500px; //EXAMPLE
-
     margin: 0 -10px;
     display: flex;
     flex-wrap: wrap;
+
+    &.form {
+        min-height: auto;
+        margin: 0;
+        display: block;
+    }
 
     &__communities {
         padding: 0 10px;
@@ -53,13 +58,13 @@
             @include font($text-color-2, 12px, 16px, 400);
             display: block;
         }
+    }
 
-        select {
-            @include font($text-color-1, 14px, 20px, 400);
-            padding: 10px 20px;
-            border: 1px solid $grey-4;
-            border-radius: 5px;
-        }
+    &__create-name {
+        @include font($text-color-1, 14px, 20px, 400);
+        padding: 10px 20px;
+        border: 1px solid $grey-4;
+        border-radius: 5px;
     }
 
     &__project-header,
