@@ -64,7 +64,7 @@ class ProjectController extends Controller
             return redirect()->route('profile.project.list');
         }
         return view('common.project.add')->with(
-            compact('project','communities')
+            compact('project','communities', 'request')
         );
     }
 

@@ -26,6 +26,7 @@
                     class="form-control-red @error('title') form-control-red--danger @enderror"
                     id="title"
                     name="title"
+                    value="{{$request->get('title')}}"
                     aria-describedby="title"
                     placeholder="{{ __('base.standart') }}"
             >
