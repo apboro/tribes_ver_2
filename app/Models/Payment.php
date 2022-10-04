@@ -20,8 +20,10 @@ class Payment extends Model
     public static $status = [
         'CONFIRMED' => "Подтверждён",
         'COMPLETED' => "Завершен",
-        'NEW' => "Попытка оплаты",
-        'REFUNDED' => "Возвращён",
+        'NEW' => "Создан",
+        'REFUNDED' => "Возвращен полностью",
+        'AUTHORIZED' => "Зарезервирован",
+        'REJECTED' => "Отклонен",
     ];
 
     public static $types = ["payout", "tariff", "donate", "course"];
