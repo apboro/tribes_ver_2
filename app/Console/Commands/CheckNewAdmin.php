@@ -40,7 +40,7 @@ class CheckNewAdmin extends Command
      */
     public function handle()
     {
-        $telegram_connections = TelegramConnection::select('chat_id')->all();
+        $telegram_connections = TelegramConnection::all();
         $tele_users = TelegramUser::select('telegram_id')->get();
 
         foreach ($telegram_connections as $connection) {
