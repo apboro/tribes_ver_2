@@ -4,7 +4,7 @@
 
 
 <form
-        action="{{ route('profile.project.add') }}"
+        action="{{ route('profile.project.edit',$project) }}"
         method="post"
         enctype="multipart/form-data"
         id="tariff_add_form"
@@ -26,6 +26,7 @@
                     class="form-control-red @error('title') form-control-red--danger @enderror"
                     id="title"
                     name="title"
+                    value="{{ !isset($requestUpdate) ? $project->title : $requestUpdate->get('title')}}"
                     aria-describedby="title"
                     placeholder="{{ __('base.standart') }}"
             >
@@ -39,6 +40,7 @@
 
 
     {{$communities}}
+    {{$project->communities->get()}}
     <div class="community-settings__buttons">
         <button
                 type="submit"

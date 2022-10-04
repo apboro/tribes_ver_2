@@ -9,7 +9,6 @@ class ProjectEditRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|int',
             'title' => 'required|string'
         ];
     }

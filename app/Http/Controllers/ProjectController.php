@@ -59,6 +59,7 @@ class ProjectController extends Controller
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
         $project = new Project();
         if ($request->isMethod('post')) {
+
             $project = $this->projectRepository->create(['user_id' => Auth::user()->id, 'title'=>$request->get('title')]);
             return redirect()->route('profile.project.list');
         }
@@ -67,11 +68,20 @@ class ProjectController extends Controller
         );
     }
 
-    public function edit(Project $project, ProjectEditRequest $request)
+    public function edit(Project $project, ProjectRequest $request)
     {
-        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+        if($project->user_id !== Auth::user()->id) {
+            abort('403', 'Доступ запрещен');
+        }
+        $communities = $this->projectRepository->getUserCommunitiesWithoutProjectList(Auth::user()->id)->keyBy('id');
         if ($request->isMethod('post')) {
-            $project = $this->projectRepository->create(['user_id' => Auth::user()->id, 'title'=>$request->get('title')]);
+            $requestUpdate = app()->make(ProjectEditRequest::class);
+            $project = $this->projectRepository->update($project->id , ['title'=>$requestUpdate->get('title')]);
+            if(empty($project)) {
+                return view('common.project.edit')->with(
+                    compact('project','communities', 'requestUpdate')
+                );
+            }
             return redirect()->route('profile.project.list');
         }
         return view('common.project.edit')->with(
