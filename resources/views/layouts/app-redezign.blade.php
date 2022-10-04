@@ -28,10 +28,11 @@
     
     <!-- Service container -->
     @include('common.template.service_container')
-    @if(!env('APP_DEBUG'))
+
     <!-- Scripts
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script> -->
     <script src="{{ mix('js/app.js') }}" defer></script>
+    @if(!env('APP_DEBUG'))
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript" >
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};

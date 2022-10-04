@@ -42,8 +42,9 @@
     </div>
     
     @include('common.template.service_container')
-    @if(!env('APP_DEBUG'))
+
     <script src="{{ mix('js/app.js') }}" defer></script>
+    @if(!env('APP_DEBUG'))
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript" >
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
