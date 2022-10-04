@@ -54,9 +54,6 @@ class TestBotController extends Controller
 
     public function index(Request $request)
     {
-        $sms = new SmsService;
-        $balance = $sms->getBalance();
-        dd($balance['money']);
         // $params = [
         //     'api_key' => 'efd6bf962dbedbb09e247232b4b56924',
         //     "events" => [
@@ -68,6 +65,5 @@ class TestBotController extends Controller
         // ];
         // $req = Http::post('https://api2.amplitude.com/2/httpapi', $params);
         // dd($req);
-
     }
 }

@@ -58,13 +58,13 @@
                         },
                         {
                             type: 'sorting',
-                            text: 'Реакции (получил)',
+                            text: 'Реакции (оставил)',
                             sortName: 'reaction_out',
                             sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
                         },
                         {
                             type: 'sorting',
-                            text: 'Реакции (оставил)',
+                            text: 'Реакции (получил)',
                             sortName: 'reaction_in',
                             sort: (sortName, sortRule) => this.toSort(sortName, sortRule)
                         },
