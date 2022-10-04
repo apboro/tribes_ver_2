@@ -19,7 +19,7 @@
         </div>
 
         <!-- Nav block -->
-        @include('common.project.nav')
+        @include('common.project.assets.nav')
 
         <div class="tab-content">
             @yield('tab')
