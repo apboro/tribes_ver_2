@@ -1,8 +1,10 @@
 .page-projects {
     margin: 0 -15px;
     display: flex;
+    flex-wrap: wrap;
 
     &__folder-wrap {
+        margin: 0 0 40px;
         padding: 0 15px;
         width: 25%;
     }
@@ -72,5 +74,9 @@
 
     &__folder-communities-qty {
         @include font($white, 14px, 20px, 500);
+    }
+
+    &__create-project {
+        text-align: center;
     }
 }

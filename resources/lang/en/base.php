@@ -25,6 +25,7 @@ return [
     'change' => 'Change',
     'comment' => 'Comment',
     'common' => 'Common',
+    'communities_v' => 'Communities',
     'communities' => 'Communities',
     'community' => 'Community',
     'community_name' => 'Community name',
@@ -33,6 +34,7 @@ return [
     'content' => 'Content',
     'copy' => 'copy',
     'courses' => 'Courses',
+    'create_project' => 'Create project',
     'created' => 'Created',
     'currency' => 'Currency',
     // D
@@ -79,6 +81,7 @@ return [
     'months_3_low' => 'months',
     'minute_low' => 'minute',
     'minutes_low' => 'minutes',
+    'my_projects' => 'My projects',
     // N
     'name' => 'Name',
     'next' => 'Next',
@@ -95,6 +98,8 @@ return [
     'popular_name' => 'John Smith',
     'preview' => 'Preview',
     'price' => 'Price',
+    'project' => 'Project',
+    'projects' => 'Projects',
     'profile' => 'Profile',
     'profile_low' => 'profile',
     // R

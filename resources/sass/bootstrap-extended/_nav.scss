@@ -137,6 +137,21 @@
   // Basic nav item
   .nav-item {
     position: relative;
+
+    &.vertical_line:first-child {
+      position: relative;
+
+      .nav-link:before {
+        content: '';
+        position: absolute;
+        height: 19px;
+        width: 1px;
+        background-color: $grey-12;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
   }
   .nav-link {
     color: $body-color;
@@ -160,6 +175,7 @@
       transition: transform 0.3s;
       transform: translate3d(0, 150%, 0);
     }
+
     &.active {
       position: relative;
       color: $primary;
@@ -167,6 +183,11 @@
       &:after {
         transform: translate3d(0, 0, 0);
       }
+    }
+
+
+    &.active_projects_communities {
+      color: $primary;
     }
 
     &.dropdown-toggle {
