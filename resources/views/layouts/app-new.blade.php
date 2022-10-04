@@ -22,7 +22,7 @@
     
     <!-- Service container -->
     @include('common.template.service_container')
-    
+    @if(!env('APP_DEBUG'))
     <!-- Scripts
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script> -->
     <script src="{{ mix('js/app.js') }}" defer></script>
@@ -40,5 +40,6 @@
     </script> -->
     <noscript><div><img src="https://mc.yandex.ru/watch/88949577" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+    @endif
 </body>
 </html>
