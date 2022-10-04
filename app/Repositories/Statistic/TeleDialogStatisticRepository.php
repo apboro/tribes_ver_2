@@ -170,8 +170,8 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 DB::raw("to_timestamp($tuc.accession_date) as accession_date"),
                 DB::raw("to_timestamp($tuc.exit_date) as exit_date"),
                 DB::raw("COUNT(distinct($tm.message_id)) as c_messages"),
-                DB::raw("COUNT(distinct(gmr.id)) as c_put_reactions"),
-                DB::raw("COUNT(distinct(pmr.id)) as c_got_reactions"),
+                DB::raw("COUNT(distinct(gmr.id)) as c_got_reactions"),
+                DB::raw("COUNT(distinct(pmr.id)) as c_put_reactions"),
             ]);
         $builder->groupBy("$tu.telegram_id", "$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tuc.exit_date", 'chat_id', "$tuc.user_utility");
         $builder->where(["$tuc.community_id" => $communityId]);
