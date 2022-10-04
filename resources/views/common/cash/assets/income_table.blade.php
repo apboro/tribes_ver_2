@@ -97,7 +97,11 @@
                     @if($payment->telegram_user_id != null)
                         {{$payment->telegram_user_id}}
                     @else
-                        {{$payment->getUserNickFromEmail()}}
+                        @if($payment->payer()->first())
+                            {{$payment->getUserNickFromEmail()}}
+                        @else
+                            Анонимный пользователь
+                        @endif
                     @endif
                 </td>
 
