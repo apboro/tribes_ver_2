@@ -52,15 +52,15 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
             'filter' => $filterData,
         ]);
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period']??'day')->format('U');
-        $end = $filter->getEndDate()->format('U');
+        $start = $filter->getStartDate($filterData['period']??'day')->toDateTimeString();
+        $end = $filter->getEndDate()->toDateTimeString();
 
         $tuc = 'telegram_users_community';
 
-        $sub = DB::table($tuc)
-            ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
+        $sub = DB::table(DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d(dt)"))
             ->leftJoin($tuc, function (JoinClause $join) use($tuc, $scale) {
-                $join->on("$tuc.accession_date", '>=', 'd.dt')->on("$tuc.accession_date", '<', DB::raw("d.dt + $scale"));
+                $join->on(DB::raw(" to_timestamp($tuc.accession_date)"), '>=', 'd.dt')
+                    ->on(DB::raw(" to_timestamp($tuc.accession_date)"), '<', DB::raw("(d.dt + '$scale'::interval)"));
             })
             ->select([
                 DB::raw("d.dt"),
@@ -70,16 +70,17 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
 
-        $builder = DB::table( DB::raw("generate_series($start, $end, $scale) as d1(dt)") )
+        $builder = DB::table( DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d1(dt)") )
             ->leftJoin(DB::raw("({$sub->toSql()}) as sub"),'sub.dt','=','d1.dt')
             ->select([
-                DB::raw("to_timestamp(d1.dt::int) as scale"),
+                DB::raw("d1.dt as scale"),
                 DB::raw("coalesce(sub.users,0) as users"),
             ])
             ->mergeBindings($sub)
             ->orderBy('scale');
 
-        $result = $builder->get()->slice(0, -1);
+        $result = $builder->get();
+
         $chart = new ChartData();
         $chart->initChart($result);
         $chart->addAdditionParam('count_join_users', array_sum(ArrayHelper::getColumn($result, 'users')));
@@ -99,15 +100,15 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
             'filter' => $filterData,
         ]);
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period']??'day')->format('U');
-        $end = $filter->getEndDate()->format('U');
+        $start = $filter->getStartDate($filterData['period']??'day')->toDateTimeString();
+        $end = $filter->getEndDate()->toDateTimeString();
 
         $tuc = 'telegram_users_community';
 
-        $sub = DB::table($tuc)
-            ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
+        $sub = DB::table(DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d(dt)"))
             ->leftJoin($tuc, function (JoinClause $join) use($tuc, $scale) {
-                $join->on("$tuc.exit_date", '>=', 'd.dt')->on("$tuc.exit_date", '<', DB::raw("d.dt + $scale"));
+                $join->on(DB::raw("to_timestamp($tuc.exit_date)"), '>=', 'd.dt')
+                    ->on(DB::raw("to_timestamp($tuc.exit_date)"), '<', DB::raw("d.dt + '$scale'::interval"));
             })
             ->select([
                 DB::raw("d.dt"),
@@ -117,16 +118,17 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
 
-        $builder = DB::table( DB::raw("generate_series($start, $end, $scale) as d1(dt)") )
+        $builder = DB::table( DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d1(dt)") )
             ->leftJoin(DB::raw("({$sub->toSql()}) as sub"),'sub.dt','=','d1.dt')
             ->select([
-                DB::raw("to_timestamp(d1.dt::int) as scale"),
+                DB::raw("d1.dt as scale"),
                 DB::raw("coalesce(sub.users,0) as users"),
             ])
             ->mergeBindings($sub)
             ->orderBy('scale');
 
-        $result = $builder->get()->slice(0, -1);
+        $result = $builder->get();
+
         $chart = new ChartData();
         $chart->initChart($result);
         $chart->addAdditionParam('count_exit_users', array_sum(ArrayHelper::getColumn($result, 'users')));
