@@ -35,10 +35,10 @@ class TelegramLogService implements TelegramLogServiceContract
 
     public static function staticSendLogMessage(string $text)
     {
-        // if(!env('APP_DEBUG')){
+        if(!env('APP_DEBUG')){
             $service = new self(app(MainBotCollection::class));
             $service->sendLogMessage($text);
-        // }
+        }
     }
 }
 

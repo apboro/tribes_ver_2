@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Helper\PseudoCrypt;
 use App\Models\Community;
 use App\Models\Tariff;
 use App\Models\TariffVariant;
 use App\Models\TelegramUser;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Seeder;
 
@@ -34,6 +36,7 @@ class TariffSeeder extends Seeder
                 ->sequence(fn ($sequence) => [
                     'price' => ($sequence->index + 1) * 100,
                     'title' => 'Вариант для тарифа №'.$sequence->index,
+                    'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp.rand(1,99999999999), 8)
                 ])
                 ->create([
                     'tariff_id' => $tariff->id,

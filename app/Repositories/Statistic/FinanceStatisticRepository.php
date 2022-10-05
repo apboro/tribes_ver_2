@@ -26,16 +26,17 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         ]);
 
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period']??'day')->format('U');
-        $end = $filter->getEndDate()->format('U');
+        $start = $filter->getStartDate($filterData['period']??'day')->toDateTimeString();
+        $end = $filter->getEndDate()->toDateTimeString();
 
         $p = 'payments';
 
-        $sub = DB::table($p)
-            ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
+        $sub = DB::table(DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d(dt)"))
             ->leftJoin($p, function (JoinClause $join) use($p, $scale) {
-                $join->on( DB::raw("extract('epoch' from $p.created_at - INTERVAL '3 hours')"), '>=', 'd.dt')->on(DB::raw("extract('epoch' from $p.created_at - INTERVAL '3 hours')"), '<', DB::raw("d.dt + $scale"));
+                $join->on( DB::raw("$p.created_at"), '>=', 'd.dt')
+                    ->on(DB::raw("$p.created_at"), '<', DB::raw("(d.dt + '$scale'::interval)"));
             })
+            //$join->on( DB::raw("extract('epoch' from $p.created_at - INTERVAL '3 hours')"), '>=', 'd.dt')
             ->select([
                 DB::raw("d.dt"),
                 DB::raw("SUM($p.amount) as balance"),
@@ -52,17 +53,17 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
 
-        $builder = DB::table( DB::raw("generate_series($start, $end, $scale) as d1(dt)") )
+        $builder = DB::table( DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d1(dt)") )
             ->leftJoin(DB::raw("({$sub->toSql()}) as sub"),'sub.dt','=','d1.dt')
             ->select([
-                DB::raw("to_timestamp(d1.dt::int) as scale"),
+                DB::raw("d1.dt as scale"),
                 DB::raw("coalesce(sub.balance,0) as balance"),
             ])
             ->mergeBindings($sub)
             ->orderBy('scale');
 
-        $result = $builder->get()->slice(0, -1);
-
+        $result = $builder->get();
+        //dd($result);
         $chart = new ChartData();
         $chart->initChart($result);
 

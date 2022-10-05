@@ -40,7 +40,7 @@ class SetNewTelegramUsers implements ShouldQueue
     {
         try {
             $community = Community::whereHas('connection', function ($query) {
-                $query->where('chat_id', '-' . $this->chatId)->orWhere('chat_id', '-100' . $this->chatId);
+                $query->where('chat_id', '-' . $this->chatId)->orWhere('chat_id', '-100' . $this->chatId)->orWhere('chat_id', $this->chatId);
             })->first();
 
             $userBot = new UserBot;
