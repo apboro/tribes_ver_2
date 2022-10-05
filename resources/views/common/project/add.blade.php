@@ -51,7 +51,7 @@
             </div>
             <div class="project-creation__communities-footer">
                 <p class="project-creation__project-communities">{{__('base.selected')}}: <span class="qty">2</span></p>
-                <button type="submit" class="button-empty button-empty--primary" onclick="Project.setCheck(this)">{{__('base.add')}}</button>
+                <button type="submit" class="button-empty button-empty--primary" onclick="Project.moveSelectedCommunities(this)">{{__('base.add')}}</button>
             </div>
         </div>
         <form 

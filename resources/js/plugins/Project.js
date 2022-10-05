@@ -8,18 +8,22 @@ export default class Project extends Page {
     
     init() {}
 
-    setCheck(event){
+    moveSelectedCommunities(event){
         let checkboxesChecked = [];
         let checkboxes = document.querySelectorAll('.profile__item-wrap')
-        console.log(checkboxes);
         checkboxes.forEach((el) => {
             let child = el.querySelector('input[type="checkbox"]:checked');
+            let insertChecked = document.querySelector('.profile__list');
+            console.log(insertChecked);
             if(child) {
                 checkboxesChecked.push(child.id)
             }
             if (child !== null) {
-                child.parentNode.remove();
+                insertChecked.insertBefore(child, insertChecked)
+                console.log(child);
+                // child.parentNode.remove();
             }
+            console.log('CHILD', child)
         })
         return checkboxesChecked
 
