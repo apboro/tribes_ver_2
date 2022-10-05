@@ -246,7 +246,6 @@ class TariffRepository implements TariffRepositoryContract
 
     public function updateOrCreate($community, $data, $variantId = NULL)
     {
-        // dd($data->all());
         $this->initTariffModel($community);
 
         if ($variantId !== NULL) {
