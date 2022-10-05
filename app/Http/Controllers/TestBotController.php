@@ -51,7 +51,6 @@ use Exception;
 
 class TestBotController extends Controller
 {
-
     public function index(Request $request)
     {
         // $params = [

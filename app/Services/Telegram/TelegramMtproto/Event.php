@@ -2,6 +2,7 @@
 
 namespace App\Services\Telegram\TelegramMtproto;
 
+use App\Jobs\GetTelegramMessageHistory;
 use App\Jobs\SetNewTelegramUsers;
 use App\Models\TelegramConnection;
 use App\Models\TestData;
@@ -63,7 +64,8 @@ class Event
                             $connect->is_there_userbot = true;
                             $connect->save();
                         }
-                        dispatch(new SetNewTelegramUsers($participants->chat_id))->delay(10);
+                        dispatch(new SetNewTelegramUsers($participants->chat_id));
+                        dispatch(new GetTelegramMessageHistory($participants->chat_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
                     }
                 }
             }
@@ -82,8 +84,8 @@ class Event
 
                         $this->addUserBot($newUpdate, $update->chats[0]->access_hash);
                     } elseif ($newUpdate->_ === 'updateChannel' && $update->chats[0]->_ === 'channel' && $admin_rights) {
-
-                        dispatch(new SetNewTelegramUsers($newUpdate->channel_id))->delay(10);
+                        dispatch(new SetNewTelegramUsers($newUpdate->channel_id));
+                        dispatch(new GetTelegramMessageHistory($newUpdate->channel_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
                     } elseif ($newUpdate->_ === 'updateChannel' && $update->chats[0]->_ === 'channelForbidden') {
 
                         $this->deleteUserBot($newUpdate);
@@ -92,20 +94,21 @@ class Event
                         && isset($newUpdate->message->replies->comments)
                         && $newUpdate->message->replies->comments === true
                     ) {
-
+                        
                         $chat_id = isset($newUpdate->message->peer_id->channel_id) ? $newUpdate->message->peer_id->channel_id : null;
                         $comment_chat = isset($newUpdate->message->replies->channel_id) ? $newUpdate->message->replies->channel_id : null;
                         $this->saveCommentChat($chat_id, $comment_chat, $update);
-
+                        dispatch(new GetTelegramMessageHistory($chat_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
                         if ($newUpdate->message->post == true)
                             $this->postRepository->savePost($newUpdate->message);
+
                     } elseif (
                         $newUpdate->_ === 'updateNewMessage'
                         && isset($newUpdate->message->action)
                         && $newUpdate->message->action->_ === 'messageActionChatDeleteUser'
                     ) {
 
-                        $chat_id = $update->message->peer_id->chat_id ?? null;
+                        $chat_id = $newUpdate->message->peer_id->chat_id ?? null;
                         $this->deleteUserBotInGroup($chat_id);
 
                     } elseif ($newUpdate->_ === 'updateNewChannelMessage' && $newUpdate->message->post == false) {

@@ -40,6 +40,7 @@ class TeleMessageReactionRepository implements TeleMessageReactionRepositoryCont
 
     public function saveOrUpdate($reaction, $chat_id, $message_id)
     {
+        
         $dictReaction = $this->dictReactionRepo->getReactionByCode(json_encode($reaction->reaction));
         if ($dictReaction) {
 
@@ -65,15 +66,6 @@ class TeleMessageReactionRepository implements TeleMessageReactionRepositoryCont
             } else {
                 return false;
             }
-        }
-    }
-
-    protected function zeroingUtility($chat_id, $message_id)
-    {
-        $tm = TelegramMessage::where('group_chat_id', $chat_id)->where('message_id', $message_id)->first();
-        if ($tm) {
-            $tm->utility = 0;
-            $tm->save();
         }
     }
 }
