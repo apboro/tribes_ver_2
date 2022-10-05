@@ -1,8 +1,16 @@
 .project-creation {
-    min-height: 500px; //EXAMPLE
+    min-height: 570px; //EXAMPLE
     margin: 0 -10px;
     display: flex;
     flex-wrap: wrap;
+
+    &__form-wrap {
+        width: 75%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
     &.form {
         min-height: auto;
@@ -23,9 +31,10 @@
         margin: 0 0 20px;
     }
 
-    &__project {
-        padding: 0 10px;
-        width: 75%;
+    &__communities-list-another {
+        .profile__item-wrap {
+            width: 100%;
+        }
     }
 
     &__communities-footer {
@@ -79,6 +88,7 @@
             @include font($text-color-1, 14px, 20px, 400);
             display: flex;
             align-items: center;
+            cursor: pointer;
         }
         
         input.chk-all {
@@ -102,6 +112,12 @@
             max-width: 390px;
             margin: 0 auto;
             text-align: center;
+        }
+    }
+
+    &__list-communities {
+        .profile__item-wrap {
+            width: 33.3%;
         }
     }
 }

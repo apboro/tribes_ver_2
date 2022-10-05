@@ -19,16 +19,16 @@
    @csrf
 
     <!-- START создание проекта -->
-    <div class="project-creation" data-plugin="Project">
+    <div class="project-creation" data-plugin="Project" >
         <div class="project-creation__communities">
             <div class="project-creation__communities-main">
                 <p class="project-creation__communities-another">Другие сообщества</p>
                 <div class="project-creation__communities-list-another">
                 
                     <!-- START список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
-                    <div id="profile-list" class="profile__list">
+                    <div id="profile_list_another" class="profile__list" onchange="Project.qtyOfCheckedCommunities(this)">
                         @foreach($communities as $community)
-                        <label for="{{$community->id}}" class="profile__item-wrap" style="width: 100%">
+                        <label for="{{$community->id}}" class="profile__item-wrap">
                             <input type="checkbox" value="{{$community->id}}" class="profile__input" id="{{$community->id}}" name="community[]" multiple>
                             <div class="profile__item">
                                 <div class="profile__item-image">
@@ -50,118 +50,92 @@
                 </div>
             </div>
             <div class="project-creation__communities-footer">
-                <p class="project-creation__project-communities">{{__('base.selected')}}: <span class="qty">2</span></p>
+                <p class="project-creation__project-communities">{{__('base.selected')}}: <span id="qty_another_projects" class="qty">0</span></p>
                 <button type="submit" class="button-empty button-empty--primary" onclick="Project.moveSelectedCommunities(this)">{{__('base.add')}}</button>
             </div>
         </div>
-        <form 
-            class="project-creation__project"
-            action="{{ route('profile.project.add') }}"
-            method="post"
-            enctype="multipart/form-data"
-            id="project_creation_total"
-        >
-            <div class="project-creation__project--top">
-                <div class="project-creation__project-name">
-                    <label for="projects-name">{{ __('base.project_name') }}</label>
-                    <input
-                        type="text"
-                        class="project-creation__create-name form-control-red @error('title') form-control-red--danger @enderror"
-                        id="projects-name"
-                        name="projects-name"
-                        value="{{$request->get('projects-name')}}"
-                        aria-describedby="projects-name"
-                        placeholder="{{ __('base.enter_name') }}"
-                    >
-                    @error('projects-name')
-                    <span class="form-message form-message--danger">{{ $message }}</span>
-                    @enderror
-                </div>
-                <button class="button-filled button-filled--primary project-creation__save" type="submit">{{ __('base.save') }}</button>
-            </div>
-            <div class="project-creation__project--bottom">
-                <div class="project-creation__project-header">
-                    <p class="project-creation__project-communities">{{__('base.communities_project')}}: <span class="qty">1</span></p>
-                    <label><input type="checkbox" name="community" class="chk-all">{{__('base.select_all')}}</label>
-                </div>
-                <div class="project-creation__project-main">
-                    <p class="project-creation__project-main--empty">Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.</p>
-                    <div class="project-creation__list-communities">
-
-
-
-
-                    <!-- START список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
-                    <div id="profile-list" class="profile__list">
-                        <a href="#" class="profile__item-wrap" id="community_1" style="width: 33.3%">
-                            <label for="community-item_1" class="profile__item">
-                                <div class="profile__item-image">
-                                    <img class="profile__image" src="/images/avatars/1.png">
-                                </div>
-                                <div class="profile__item-text">
-                                    <p class="profile__channel">Tech in UK</p>
-                                    <div class="profile__messenger">
-                                        <img src="/images/icons/social/telegram.png">
-                                        <p class="profile__text">мессенджер</p>
-                                    </div>
-                                </div>
-                            </label>
-                        </a>
-                        <a href="#" class="profile__item-wrap" id="community_1" style="width: 33.3%">
-                            <label for="community-item_1" class="profile__item">
-                                <div class="profile__item-image">
-                                    <img class="profile__image" src="/images/avatars/2.png">
-                                </div>
-                                <div class="profile__item-text">
-                                    <p class="profile__channel">Tech in UK</p>
-                                    <div class="profile__messenger">
-                                        <img src="/images/icons/social/telegram.png">
-                                        <p class="profile__text">мессенджер</p>
-                                    </div>
-                                </div>
-                            </label>
-                        </a>
-                        <a href="#" class="profile__item-wrap" id="community_1" style="width: 33.3%">
-                            <label for="community-item_1" class="profile__item">
-                                <div class="profile__item-image">
-                                    <img class="profile__image" src="/images/avatars/3.png">
-                                </div>
-                                <div class="profile__item-text">
-                                    <p class="profile__channel">Tech in UK</p>
-                                    <div class="profile__messenger">
-                                        <img src="/images/icons/social/telegram.png">
-                                        <p class="profile__text">мессенджер</p>
-                                    </div>
-                                </div>
-                            </label>
-                        </a>
-                        <a href="#" class="profile__item-wrap" id="community_1" style="width: 33.3%">
-                            <label for="community-item_1" class="profile__item">
-                                <div class="profile__item-image">
-                                    <img class="profile__image" src="/images/avatars/3.png">
-                                </div>
-                                <div class="profile__item-text">
-                                    <p class="profile__channel">Tech in UK</p>
-                                    <div class="profile__messenger">
-                                        <img src="/images/icons/social/telegram.png">
-                                        <p class="profile__text">мессенджер</p>
-                                    </div>
-                                </div>
-                            </label>
-                        </a>
+        <div class="project-creation__form-wrap">
+            <form 
+                class="project-creation__project"
+                action="{{ route('profile.project.add') }}"
+                method="post"
+                enctype="multipart/form-data"
+                id="project_creation_total"
+            >
+                <div class="project-creation__project--top">
+                    <div class="project-creation__project-name">
+                        <label for="projects-name">{{ __('base.project_name') }}</label>
+                        <input
+                            type="text"
+                            class="project-creation__create-name form-control-red @error('title') form-control-red--danger @enderror"
+                            id="projects-name"
+                            name="projects-name"
+                            value="{{$request->get('projects-name')}}"
+                            aria-describedby="projects-name"
+                            placeholder="{{ __('base.enter_name') }}"
+                        >
+                        @error('projects-name')
+                        <span class="form-message form-message--danger">{{ $message }}</span>
+                        @enderror
                     </div>
-                    <!-- END список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
+                    <button class="button-filled button-filled--primary project-creation__save" type="submit">{{ __('base.save') }}</button>
+                </div>
+                <div class="project-creation__project--bottom">
+                    <div class="project-creation__project-header">
+                        <p class="project-creation__project-communities">{{__('base.communities_project')}}: <span id="qty_of_communities_in_project" class="qty">0</span></p>
+                        <label><input onclick="Project.toggleAll(this)" type="checkbox" name="community" id="chk_all" class="chk-all">{{__('base.select_all')}}</label>
+                    </div>
+                    <div class="project-creation__project-main">
+                        <p class="project-creation__project-main--empty">Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.</p>
+                        <div class="project-creation__list-communities" onchange="Project.qtyOfCheckedCommunitiesInProject(this)">
 
 
 
+
+                        <!-- START список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
+                        <div id="profile_list" class="profile__list">
+                            <!-- <label for="6" class="profile__item-wrap">
+                                <input type="checkbox" value="6" class="profile__input" id="6" name="community[]" multiple>
+                                <div class="profile__item">
+                                    <div class="profile__item-image">
+                                        <img class="profile__image" src="/images/no-image.png" alt="Image Profile">
+                                    </div>
+                                    <div class="profile__item-text">
+                                        <p class="profile__channel">Tech in UK</p>
+                                        <div class="profile__messenger">
+                                            <img src="/images/icons/social/telegram.png">
+                                            <p class="profile__text">мессенджер</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label for="5" class="profile__item-wrap">
+                                <input type="checkbox" value="5" class="profile__input" id="5" name="community[]" multiple>
+                                <div class="profile__item">
+                                    <div class="profile__item-image">
+                                        <img class="profile__image" src="/images/avatars/2.png" alt="Image Profile">
+                                    </div>
+                                    <div class="profile__item-text">
+                                        <p class="profile__channel">Сообщество</p>
+                                        <div class="profile__messenger">
+                                            <img src="/images/icons/social/telegram.png">
+                                            <p class="profile__text">канал</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label> -->
+                        </div>
+                        <!-- END список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
+
+                        </div>
                     </div>
                 </div>
-                <div class="project-creation__project-footer">
-                    <p class="project-creation__project-communities">{{__('base.selected_communities')}}: <span class="qty">0</span></p>
-                    <button class="button-empty button-empty--primary">{{__('base.remove_from_project')}}</button>
-                </div>
+            </form>
+            <div class="project-creation__project-footer">
+                <p class="project-creation__project-communities">{{__('base.selected_communities')}}: <span id="qty_checked_communities_in_project" class="qty">0</span></p>
+                <button class="button-empty button-empty--primary" onclick="Project.deleteSelectedCommunitiesFromProject(this)">{{__('base.remove_from_project')}}</button>
             </div>
-        </form>
+        </div>
     </div>
     <!-- END создание проекта -->
 @endsection
