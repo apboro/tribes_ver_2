@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Filters\API\ProjectFilter;
 use App\Filters\TariffFilter;
 use App\Helper\ArrayHelper;
-use App\Http\Requests\API\ProjectEditRequest;
+use App\Http\Requests\Project\ProjectEditRequest;
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectRequest;
 use App\Models\Community;
