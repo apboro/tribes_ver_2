@@ -41,7 +41,7 @@ class MembersFilter extends QueryAPIFilter
             'c_messages' => 'c_messages',
             'c_put_reactions' => 'c_put_reactions',
             'c_got_reactions' => 'c_got_reactions',
-            'utility' => 'utility',
+            'utility' => 'user_utility',
 
         ];
         return $list[$name] ?? $list['accession_date'];
@@ -65,13 +65,13 @@ class MembersFilter extends QueryAPIFilter
         if (in_array($value, $this->allowedPeriods())) {
             switch ($value) {
                 case self::DAY:
-                    return $this->getEndDate()->subDay();
+                    return $this->getEndDate()->sub('23 hours')->startOfHour();
                 case self::WEEK:
-                    return $this->getEndDate()->subWeek();
+                    return $this->getEndDate()->sub('6 days')->startOfDay();
                 case self::MONTH:
-                    return $this->getEndDate()->subMonth();
+                    return $this->getEndDate()->sub('30 days')->startOfDay();
                 case self::YEAR:
-                    return $this->getEndDate()->subYear();
+                    return $this->getEndDate()->sub('11 months')->startOfMonth();
                     break;
             }
         }

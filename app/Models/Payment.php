@@ -131,4 +131,13 @@ class Payment extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function getUserNickFromEmail()
+    {
+        $email = $this->payer()->first()->email ?? 'Почты нет';
+
+        return explode('@', $email)[0];
+    }
+
+
+
 }

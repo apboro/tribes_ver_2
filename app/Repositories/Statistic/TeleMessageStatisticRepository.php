@@ -47,17 +47,17 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
             'filter' => $filterData,
         ]);
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period'] ?? 'day')->format('U');
-        $end = $filter->getEndDate()->format('U');
+        $start = $filter->getStartDate($filterData['period'] ?? 'day')->toDateTimeString();
+        $end = $filter->getEndDate()->toDateTimeString();
 
         $tm = 'telegram_messages';
         $tc = 'telegram_connections';
         $com = 'communities';
 
-        $sub = DB::table($tm)
-            ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
+        $sub = DB::table(DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d(dt)"))
             ->leftJoin($tm, function (JoinClause $join) use ($tm, $scale) {
-                $join->on("$tm.message_date", '>=', 'd.dt')->on("$tm.message_date", '<', DB::raw("d.dt + $scale"));
+                $join->on(DB::raw(" to_timestamp($tm.message_date)"), '>=', 'd.dt')
+                    ->on(DB::raw(" to_timestamp($tm.message_date)"), '<', DB::raw("(d.dt + '$scale'::interval)"));
             })
             ->select([
                 DB::raw("d.dt"),
@@ -74,16 +74,16 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
 
         $sub = $filter->apply($sub);
 
-        $builder = DB::table(DB::raw("generate_series($start, $end, $scale) as d1(dt)"))
+        $builder = DB::table( DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d1(dt)") )
             ->leftJoin(DB::raw("({$sub->toSql()}) as sub"), 'sub.dt', '=', 'd1.dt')
             ->select([
-                DB::raw("to_timestamp(d1.dt::int) as scale"),
+                DB::raw("d1.dt as scale"),
                 DB::raw("coalesce(sub.messages,0) as messages"),
             ])
             ->mergeBindings($sub)
             ->orderBy('scale');
 
-        $result = $builder->get()->slice(0, -1);
+        $result = $builder->get();
 
         $chart = new ChartData();
         $chart->initChart($result);
@@ -109,17 +109,18 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
             'filter' => $filterData,
         ]);
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period'] ?? 'week')->format('U');
-        $end = $filter->getEndDate()->format('U');
+        $start = $filter->getStartDate($filterData['period'] ?? 'week')->toDateTimeString();
+        $end = $filter->getEndDate()->toDateTimeString();
 
         $tm = 'telegram_messages';
         $tc = 'telegram_connections';
         $com = 'communities';
 
-        $sub = DB::table($tm)
-            ->fromRaw("generate_series($start, $end, $scale) as d(dt)")
+        $sub = DB::table(DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d(dt)"))
             ->leftJoin($tm, function (JoinClause $join) use ($tm, $scale) {
-                $join->on("$tm.message_date", '>=', 'd.dt')->on("$tm.message_date", '<', DB::raw("d.dt + $scale"))->where("$tm.utility", ">", 0);
+                $join->on(DB::raw(" to_timestamp($tm.message_date)"), '>=', 'd.dt')
+                    ->on(DB::raw(" to_timestamp($tm.message_date)"), '<', DB::raw("(d.dt + '$scale'::interval)"))
+                    ->where("$tm.utility", ">", 0);
             })
             ->select([
                 DB::raw("d.dt"),
@@ -135,16 +136,16 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
         
-        $builder = DB::table(DB::raw("generate_series($start, $end, $scale) as d1(dt)"))
+        $builder = DB::table( DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d1(dt)") )
             ->leftJoin(DB::raw("({$sub->toSql()}) as sub"), 'sub.dt', '=', 'd1.dt')
             ->select([
-                DB::raw("to_timestamp(d1.dt::int) as scale"),
+                DB::raw("d1.dt as scale"),
                 DB::raw("coalesce(sub.utility,0) as utility"),
             ])
             ->mergeBindings($sub)
             ->orderBy('scale');
 
-        $result = $builder->get()->slice(0, -1);
+        $result = $builder->get();
         $chart = new ChartData();
         $chart->initChart($result);
         $chart->addAdditionParam('count_new_utility', array_sum(ArrayHelper::getColumn($result, 'utility')));

@@ -274,7 +274,7 @@ class MainBotCommands
             }elseif($tariff instanceof Tariff) {
                 //todo для всех активных не персональных тарифов сообщества
                 $image = $tariff->getMainImage() ? $tariff->getMainImage()->url : '';
-                $description = $tariff->description ? $tariff->description : 'Описания нет!';
+                $description = $tariff->main_description ? $tariff->main_description : '&#160';
                 $article->description(mb_strimwidth($description, 0, 55, "..."));
                 $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
                 $article->thumbUrl('' . route('main') . $image);
@@ -1019,7 +1019,7 @@ class MainBotCommands
         try {
             $tariff = $community->tariff;
             foreach ($tariff->variants as $variant) {
-                if ($variant->price !== 0 && $variant->isActive !== false) {
+                if ($variant->price !== 0 && $variant->isActive !== false && $variant->isPersonal !== false) {
                     $data = [
                         'amount' => $variant->price,
                         'currency' => 0,
@@ -1060,7 +1060,7 @@ class MainBotCommands
         try {
             $tariff = $community->tariff;
             foreach ($tariff->variants as $variant) {
-                if ($variant->price !== 0 && $variant->isActive !== false) {
+                if ($variant->price !== 0 && $variant->isActive !== false && $variant->isPersonal !== false) {
                     $data = [
                         'amount' => $variant->price,
                         'currency' => 0,
