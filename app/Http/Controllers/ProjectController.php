@@ -65,7 +65,7 @@ class ProjectController extends Controller
                 'title'=> $request->get('title'),
                 'communities' => $request->get('communities'),
             ]);
-            return redirect()->route('profile.project.list');
+            return redirect()->route('profile.project.list')->withMessage('Сохранено');
         }
         return view('common.project.add')->with(
             compact('project','communities', 'request')
@@ -93,7 +93,7 @@ class ProjectController extends Controller
                     compact('project','communities', 'requestUpdate')
                 );
             }
-            return redirect()->route('profile.project.list');
+            return redirect()->route('profile.project.list')->withMessage('Сохранено');
         }
         return view('common.project.edit')->with(
             compact('project','communities')
