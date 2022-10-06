@@ -107,15 +107,21 @@
     }
 
     &__project-main {
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+
         &--empty {
             @include font($grey-6, 14px, 20px, 500);
+            margin: auto;
             max-width: 390px;
-            margin: 0 auto;
             text-align: center;
         }
     }
 
     &__list-communities {
+        width: 100%;
+
         .profile__item-wrap {
             width: 33.3%;
         }

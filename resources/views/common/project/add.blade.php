@@ -62,6 +62,7 @@
                 enctype="multipart/form-data"
                 id="project_creation_total"
             >
+                @csrf
                 <div class="project-creation__project--top">
                     <div class="project-creation__project-name">
                         <label for="projects-name">{{ __('base.project_name') }}</label>
@@ -93,7 +94,7 @@
 
 
                         <!-- START список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
-                        <div id="profile_list" class="profile__list">
+                        <div id="profile_list" class="profile__list communities">
                             <!-- <label for="6" class="profile__item-wrap">
                                 <input type="checkbox" value="6" class="profile__input" id="6" name="community[]" multiple>
                                 <div class="profile__item">

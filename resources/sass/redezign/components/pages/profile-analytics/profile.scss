@@ -153,6 +153,10 @@
         max-height: 462px;
         overflow-y: scroll;
 
+        &.communities {
+            padding: 20px 0 0;
+        }
+
         &::-webkit-scrollbar {
             width: 5px;
             background-color: transparent;
