@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Project;
 
+use App\Rules\Knowledge\OwnCommunityRule;
 use App\Rules\OwnProjectRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -20,8 +21,9 @@ class ProjectEditRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required','integer',new OwnProjectRule()],
             'title' => 'required|string',
+            'communities' => 'array',
+            "communities.*"  => ["int", new OwnCommunityRule()],
         ];
     }
 }

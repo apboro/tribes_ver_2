@@ -17,7 +17,7 @@ class ProjectRepository implements ProjectRepositoryContract
     public function getUserProjectsList(int $userId, ProjectFilter $filter): Collection
     {
         $filter->replace(['user_id' => $userId]);
-        return Project::filter($filter)->with('communities')->get();
+        return Project::filter($filter)->with('communities')->orderBy('created_at','desc')->get();
            /* ->paginate(ArrayHelper::getValue($filter->filters(), 'per_page', 50),
                 ['*'],
                 'page',
