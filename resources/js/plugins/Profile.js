@@ -75,6 +75,12 @@ export default class Profile extends Page {
         }
     }
 
+    setCheck(){
+        console.log('123')
+    }
+
+
+
     // createProfile(){
     //     console.log(this.loadData);
     //     this.loadData.forEach((item) => {
