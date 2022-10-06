@@ -60,7 +60,11 @@ class ProjectController extends Controller
         $project = new Project();
         if ($request->isMethod('post')) {
 
-            $project = $this->projectRepository->create(['user_id' => Auth::user()->id, 'title'=>$request->get('title')]);
+            $project = $this->projectRepository->create([
+                'user_id' => Auth::user()->id,
+                'title'=> $request->get('title'),
+                'communities' => $request->get('communities'),
+            ]);
             return redirect()->route('profile.project.list');
         }
         return view('common.project.add')->with(
@@ -76,7 +80,14 @@ class ProjectController extends Controller
         $communities = $this->projectRepository->getUserCommunitiesWithoutProjectList(Auth::user()->id)->keyBy('id');
         if ($request->isMethod('post')) {
             $requestUpdate = app()->make(ProjectEditRequest::class);
-            $project = $this->projectRepository->update($project->id , ['title'=>$requestUpdate->get('title')]);
+            $project = $this->projectRepository->update(
+                $project->id ,
+                [
+                    'title'=>$requestUpdate->get('title'),
+                    'communities' => $request->get('communities'),
+                ],
+                ['user_id' => Auth::user()->id]
+            );
             if(empty($project)) {
                 return view('common.project.edit')->with(
                     compact('project','communities', 'requestUpdate')
