@@ -77,7 +77,7 @@ class TeleMessageStatisticController extends StatController
             ],
         ];
         $type = $request->get('export_type');
-        $builder = $this->statisticRepository->getMessagesListForFile($request->get('community_id'),$filter);
+        $builder = $this->statisticRepository->getMessagesListForFile($this->getCommunityIds($request),$filter);
 
         return $this->fileSendService->sendFile($builder,$columnNames,TelegramMessageResource::class,$type,'messages');
     }
