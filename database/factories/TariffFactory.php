@@ -6,6 +6,7 @@ use App\Helper\PseudoCrypt;
 use App\Models\Tariff;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @method Tariff getItemByAttrs(array $attributes)
@@ -30,7 +31,11 @@ class TariffFactory extends Factory
             'tariff_notification' => array_rand([0,1]),
             'publication_description' => $this->faker->text(600),
             'publication_image_id' => rand(125,5000),
+
             'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp.rand(1,99999999999), 8)
+
+            //'inline_link' => Str::random(8),
+
         ];
     }
 

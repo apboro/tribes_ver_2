@@ -25,6 +25,7 @@ return [
     'change' => 'Заменить',
     'comment' => 'Комментарий',
     'common' => 'Общие',
+    'communities_v' => 'Сообществ',
     'communities' => 'Сообщества',
     'community' => 'Сообщество',
     'community_name' => 'Название сообщества',
@@ -33,6 +34,7 @@ return [
     'content' => 'Контент',
     'copy' => 'скопировать',
     'courses' => 'Курсы',
+    'create_project' => 'Создать проект',
     'created' => 'Создан',
     'currency' => 'Валюта',
     // D
@@ -83,6 +85,7 @@ return [
     'months_3_low' => 'месяца',
     'minute_low' => 'минута',
     'minutes_low' => 'минут',
+    'my_projects' => 'Мои проекты',
     // N
     'name' => 'Имя',
     'next' => 'Далее',
@@ -99,6 +102,8 @@ return [
     'popular_name' => 'Иван Иванов',
     'preview' => 'Превью',
     'price' => 'Стоимость',
+    'project' => 'Проект',
+    'projects' => 'Проекты',
     'profile' => 'Профиль',
     'profile_low' => 'профиль',
     // R

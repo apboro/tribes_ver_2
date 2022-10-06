@@ -2,7 +2,7 @@ import { CreateNode } from "./CreateNode";
 
 export default class BurgerMenu {
     constructor() {
-        this.menu = document.querySelector('.main-nav');
+        this.menu = document.querySelector('[data-burger]');
         this.overlay = null;
         this.isActive = false;
     }
@@ -16,18 +16,20 @@ export default class BurgerMenu {
     }
 
     show() {
+        document.body.classList.add('locked');
         // меню отображаем
         this.menu.classList.add('active');
         // создаем темный фон
-        this.initOverlay();
+        //this.initOverlay();
         this.isActive = true;
     }
 
     hide() {
+        document.body.classList.remove('locked');
         // меню скрываем
         this.menu.classList.remove('active');
         // темный фон удаляем
-        this.destroyOverlay();
+        //this.destroyOverlay();
         this.isActive = false;
     }
 

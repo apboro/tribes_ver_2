@@ -12,8 +12,10 @@ use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use Askoldex\Teletant\Exception\TeletantException;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DonateRepository implements DonateRepositoryContract
 {
@@ -28,9 +30,9 @@ class DonateRepository implements DonateRepositoryContract
     public function __construct(
         FileRepositoryContract $fileRepo,
         TelegramMainBotService $mainBotService,
-        TelegramLogService $telegramLogService,
-        FileUploadService $fileUploadService,
-        FileEntity $fileEntity
+        TelegramLogService     $telegramLogService,
+        FileUploadService      $fileUploadService,
+        FileEntity             $fileEntity
     )
     {
         $this->fileRepo = $fileRepo;
@@ -90,10 +92,10 @@ class DonateRepository implements DonateRepositoryContract
                 $dv->isStatic = $isStatic;
                 $dv->description = $donate['description'];
                 $dv->isActive = isset($donate['status']);
-               
+
                 if (isset($donate['cost']) && $donate['cost'] > 0) {
                     $dv->price = $donate['cost'];
-                } 
+                }
 
                 $dv->min_price = isset($donate['min_price']) ? $donate['min_price'] : null;
                 $dv->max_price = isset($donate['max_price']) ? $donate['max_price'] : null;
@@ -128,7 +130,7 @@ class DonateRepository implements DonateRepositoryContract
                             $this->donateModel->prompt_image_id = $f->id;
                             break;
                         case 'success':
-                            $this->donateModel->success_image_id  = $f->id;
+                            $this->donateModel->success_image_id = $f->id;
                             break;
                     }
                 }
@@ -141,7 +143,7 @@ class DonateRepository implements DonateRepositoryContract
                             $this->donateModel->prompt_image_id = 0;
                             break;
                         case 'success':
-                            $this->donateModel->success_image_id  = 0;
+                            $this->donateModel->success_image_id = 0;
                             break;
                     }
                 }
@@ -168,7 +170,7 @@ class DonateRepository implements DonateRepositoryContract
     {
         $this->donateModel->main_image_id = 0;
         $this->donateModel->prompt_image_id = 0;
-        $this->donateModel->success_image_id  = 0;
+        $this->donateModel->success_image_id = 0;
     }
 
     private function initDonateModel($id)
@@ -214,5 +216,17 @@ class DonateRepository implements DonateRepositoryContract
     public function getDonateById($id)
     {
         return Donate::find($id);
+    }
+
+
+    public function getDonatesByCommunities(array $communityIds): Collection
+    {
+        if ($communityIds[0] == 'all') {
+            return Donate::whereHas('community', function ($query) {
+                $query->where('owner', Auth::user()->id);
+            })->get();
+        } else {
+            return Donate::whereIn('community_id', $communityIds)->get();
+        }
     }
 }
