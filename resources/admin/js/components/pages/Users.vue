@@ -27,7 +27,21 @@
                     </th>
                     <th>Имя</th>
                     <th>Телефон</th>
-                    <th>Создан</th>
+                    <th>
+                        Создан
+                        <button
+                            class="btn col-1"
+                            @click="sortByDate"
+                        >
+                            <template v-if="sortRuleOnDate == 'off' || sortRuleOnDate == 'desc'">
+                                <svg style="margin: 0;" xmlns="http://www.w3.org/2000/svg" class="icon icon-sm text-dark icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 15 12 9 18 15"></polyline></svg>
+                            </template>
+                            
+                            <template v-if="sortRuleOnDate == 'asc'">
+                                <svg style="margin: 0;" xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </template>
+                        </button>    
+                    </th>
                     <th>Комиссия</th>
                     <th></th>
                 </tr>
@@ -63,6 +77,12 @@ export default {
     components: { UsersTableRow },
     mixins: [FilterDataUsers],
 
+    data() {
+        return {
+            sortRuleOnDate: 'off'
+        }
+    },
+
     watch: {
         filter_data: {
             deep: true,
@@ -73,8 +93,7 @@ export default {
     },
     
     async mounted(){
-        await this.$store.dispatch('get_users', this.filter_data).then(() => {
-        });
+        await this.loadUsersData();
     },
 
     computed: {
@@ -82,11 +101,27 @@ export default {
             return this.$store.getters.users;
         }
     },
+
     methods: {
+        async loadUsersData() {
+            await this.$store.dispatch('get_users', this.filter_data);
+        },
+
         changePage(event) {
             this.filter_data.filter.entries = event.target.value;
             this.filter_data.filter.page = 1;
         },
+
+        sortByDate() {
+            switch (this.sortRuleOnDate) {
+                case 'off': this.sortRuleOnDate = 'asc'; break;
+                case 'asc': this.sortRuleOnDate = 'desc'; break;
+                case 'desc': this.sortRuleOnDate = 'off'; break;
+            }
+
+            this.filter_data.filter.sort.name = 'date';
+            this.filter_data.filter.sort.rule = this.sortRuleOnDate;
+        }
     }
 }
 </script>
