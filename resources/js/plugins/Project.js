@@ -30,6 +30,7 @@ export default class Project extends Page {
         if(emptyBlock !== null && totalQty > 0) {
             emptyBlock.remove();
         }
+        //изменение количества всех сообществ (checked && !checked)
         let qtyCommunitiesInProject = document.getElementById('qty_of_communities_in_project')
         qtyCommunitiesInProject.textContent = `${totalQty}`
     }
