@@ -88,27 +88,9 @@ class TeleDialogStatisticController extends StatController
             ],
         ];
         $type = $request->get('export_type');
-        $membersBuilder = $this->statisticRepository->getMembersListForFile($request->get('community_id'),$filter);
+        $membersBuilder = $this->statisticRepository->getMembersListForFile($this->getCommunityIds($request),$filter);
 
         return $this->fileSendService->sendFile($membersBuilder,$columnNames,MemberResource::class,$type,'members');
     }
 
-    /**
-     * @param TeleDialogStatRequest $request
-     * @return array
-     */
-    protected function getCommunityIds(TeleDialogStatRequest $request): array
-    {
-        $community_ids = $request->get('community_ids');
-        if ($community_ids == 'all') {
-            $communityIds = ArrayHelper::getColumn(Community::where('owner', Auth::user()->id)->get(),'id');
-        } else {
-            $communityIds = explode('-', $community_ids);
-            $communityIds = array_filter($communityIds);
-            if (empty($communityIds)) {
-                abort(403);
-            }
-        }
-        return $communityIds;
-    }
 }
