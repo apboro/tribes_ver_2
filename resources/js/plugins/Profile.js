@@ -9,6 +9,8 @@ export default class Profile extends Page {
     }
     
     init() {
+        window.community_id = this.container.dataset.communityId;
+
         this.loadData = [
             {icon: '/images/icons/social/telegram.png', url: '/images/avatars/1.png', channel: 'Tech in UK', default: 'Чат'},
             {icon: '/images/icons/social/telegram.png', url: '/images/avatars/2.png', channel: 'Канал Димы Коваля', default: 'Канал'},
