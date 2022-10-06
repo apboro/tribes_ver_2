@@ -19,7 +19,7 @@ abstract class QueryAPIFilter extends QueryFilter
         $list = [
             self::SORT_DESC => 'desc',
             self::SORT_ASC => 'asc',
-            self::SORT_DEFAULT => 'asc',
+            self::SORT_DEFAULT => 'desc',
         ];
         return $list[$rule] ?? $list[self::SORT_DEFAULT];
     }
