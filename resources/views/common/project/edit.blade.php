@@ -97,10 +97,10 @@
 
                         <!-- START список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
                         <div id="profile_list" class="profile__list communities">
-                            @dump($project->communities)
                            @foreach($project->communities as $oldCommunity)
                            <label for="{{$oldCommunity->id}}" class="profile__item-wrap">
-                                <input type="checkbox" value="{{$oldCommunity->id}}" class="profile__input" id="{{$oldCommunity->id}}" name="community[]" multiple>
+                                <input type="hidden" value="{{$oldCommunity->id}}" name="communities[]" multiple>
+                                <input type="checkbox" value="{{$oldCommunity->id}}" class="profile__input" id="{{$oldCommunity->id}}" name="communitiesCheckbox" multiple>
                                 <div class="profile__item">
                                     <div class="profile__item-image">
                                         <img class="profile__image" src="{{$oldCommunity->image ?? '/images/no-image.png'}}" alt="Image Profile">
@@ -113,6 +113,20 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- <input type="checkbox" value="{{$oldCommunity->id}}" class="profile__input" id="{{$oldCommunity->id}}" name="community[]" multiple>
+                                <div class="profile__item">
+                                    <div class="profile__item-image">
+                                        <img class="profile__image" src="{{$oldCommunity->image ?? '/images/no-image.png'}}" alt="Image Profile">
+                                    </div>
+                                    <div class="profile__item-text">
+                                        <p class="profile__channel">{{$oldCommunity->title}}</p>
+                                        <div class="profile__messenger">
+                                            <img src="/images/icons/social/telegram.png">
+                                            <p class="profile__text">{{$oldCommunity->connection->chat_type == "channel" ? 'Канал': 'Чат'}}</p>
+                                        </div>
+                                    </div>
+                                </div> -->
                             </label>
                            @endforeach
                         </div>
