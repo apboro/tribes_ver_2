@@ -12,11 +12,13 @@ export default class Project extends Page {
     }
 
     moveSelectedCommunities(){
+        let arr = []
         let checkboxes = document.querySelectorAll('.project-creation__communities-list-another .profile__list .profile__item-wrap');
         let insertChecked = document.getElementById('profile_list');
         Array.from(checkboxes).forEach(function(el) {
             let child = el.querySelector('input[type="checkbox"]:checked');
             if (child !== null) {
+                arr.push(child);
                 child.checked = false;
                 insertChecked.append(el)
             } 
@@ -30,6 +32,7 @@ export default class Project extends Page {
         }
         let qtyCommunitiesInProject = document.getElementById('qty_of_communities_in_project')
         qtyCommunitiesInProject.textContent = `${totalQty}`
+        return arr;
     }
 
     deleteSelectedCommunitiesFromProject(){
