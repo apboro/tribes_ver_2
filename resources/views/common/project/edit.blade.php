@@ -20,7 +20,7 @@
         @if (Session::has('errors'))
             <div class="alert alert-info">{{ Session::get('errors') }}</div>
         @endif
-    <div class="project-creation__communities">
+        <div class="project-creation__communities">
             <div class="project-creation__communities-main">
                 <p class="project-creation__communities-another">Другие сообщества</p>
                 <div class="project-creation__communities-list-another">
