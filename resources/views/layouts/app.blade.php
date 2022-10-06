@@ -46,8 +46,9 @@
             webvisor:true
         });
     </script>
-    @endif
+
     <noscript><div><img src="https://mc.yandex.ru/watch/88949577" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+    @endif
 </body>
 </html>
