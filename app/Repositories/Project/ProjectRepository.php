@@ -37,16 +37,32 @@ class ProjectRepository implements ProjectRepositoryContract
 
     public function create(array $attributes): ?Project
     {
+        $communities = (isset($attributes['communities']))? $attributes['communities']: null;
+        if(isset($communities['communities'])) {
+            unset($attributes['communities']);
+        }
         $project = new Project();
         $project->fill($attributes);
         if (!$project->save()) {
             return null;
+        }
+        foreach(Community::where('project_id',$project->id)->get() as $eachOldCommunity){
+            $eachOldCommunity->update(['project_id' => null]);
+        }
+        if(!empty($communities)) {
+            foreach(Community::whereIn('id',$communities)->get() as $eachNewCommunity){
+                $eachNewCommunity->update(['project_id' => $project->id]);
+            }
         }
         return $project;
     }
 
     public function update(int $projectId, array $attributes, array $filter = []): ?Project
     {
+        $communities = (isset($attributes['communities']))? $attributes['communities']: null;
+        if(isset($communities['communities'])) {
+            unset($attributes['communities']);
+        }
         $project = Project::find($projectId);
         if (empty($project)) {
             return null;
@@ -62,6 +78,15 @@ class ProjectRepository implements ProjectRepositoryContract
         if (!$project->save()) {
             return null;
         }
+        foreach(Community::where('project_id',$project->id)->get() as $eachOldCommunity){
+            $eachOldCommunity->update(['project_id' => null]);
+        }
+        if(!empty($communities)) {
+            foreach(Community::whereIn('id',$communities)->get() as $eachNewCommunity){
+                $eachNewCommunity->update(['project_id' => $project->id]);
+            }
+        }
+
         return $project;
     }
 
