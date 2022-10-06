@@ -28,6 +28,12 @@ class TariffFormPayRequest extends FormRequest
             'communityTariffID' => ['required', 'exists:tarif_variants,id']
         ];
     }
+
+    public function prepareForValidation()
+    {
+        $this->request->set('email', strtolower($this->request->get('email')));
+    }
+
     public function messages()
     {
         return [
