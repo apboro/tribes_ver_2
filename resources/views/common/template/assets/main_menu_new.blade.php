@@ -39,7 +39,7 @@
             <li class="main-nav-new__item">
                 <a
                     href="{{ route('project.analytics') }}"
-                    class="main-nav-new__link {{ request()->is('*community*') ? 'active' : ''  }}"
+                    class="main-nav-new__link {{ request()->is('*analytics*') ? 'active' : ''  }}"
                 >
                     <span>Аналитика</span>
                 </a>
@@ -48,8 +48,12 @@
             <!-- Монетизация -->
             <li class="main-nav-red__item">
                 <div class="dropdown-menu-item main-nav-new__dropdown">
-                    <button class="dropdown-menu-item__head main-nav-new__link" data-dropdown-btn onclick="Dropdown.toggle(this)">
-                        <span class="dropdown-menu-item__name main-nav-new__link">
+                    <button
+                        class="dropdown-menu-item__head main-nav-new__link"
+                        data-dropdown-btn
+                        onclick="Dropdown.toggle(this)"
+                    >
+                        <span class="dropdown-menu-item__name main-nav-new__link {{ request()->is('*donates*', '*tariffs*', '*members*', '*courses*') ? 'active' : ''  }}">
                             Монетизация
                         </span>
                         
@@ -62,7 +66,10 @@
     
                     <ul class="dropdown-menu-item__list" data-dropdown-content>
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="{{ route('project.donates', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}">
+                            <a
+                                class="dropdown-menu-item__link {{ request()->is('*donates*') ? 'active' : ''  }}"
+                                href="{{ route('project.donates', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}"
+                            >
                                 <span>Донаты</span>
                             </a>
                         </li>
@@ -70,7 +77,10 @@
                         <div class="dropdown-menu-item__divider"></div>
     
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="{{ route('project.tariffs', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}">
+                            <a
+                                class="dropdown-menu-item__link {{ request()->is('*tariffs*') ? 'active' : ''  }}"
+                                href="{{ route('project.tariffs', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}"
+                            >
                                 <span>Тарифы</span>
                             </a>
                         </li>
@@ -78,7 +88,10 @@
                         <div class="dropdown-menu-item__divider"></div>
 
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="{{ route('project.members', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}">
+                            <a
+                                class="dropdown-menu-item__link {{ request()->is('*members*') ? 'active' : ''  }}"
+                                href="{{ route('project.members', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}"
+                            >
                                 <span>Учасники</span>
                             </a>
                         </li>
@@ -86,7 +99,10 @@
                         <div class="dropdown-menu-item__divider"></div>
     
                         <li class="dropdown-menu-item__item">
-                            <a class="dropdown-menu-item__link" href="{{ route('course.list') }}">
+                            <a
+                                class="dropdown-menu-item__link {{ request()->is('*courses*') ? 'active' : ''  }}"
+                                href="{{ route('course.list') }}"
+                            >
                                 <span>Медиатовары</span>
                             </a>
                         </li>

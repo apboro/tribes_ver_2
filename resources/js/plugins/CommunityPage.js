@@ -20,7 +20,6 @@ export default class CommunityPage extends Page {
     }
     
     init() {
-
         this.communityId = window.community_id;
         
         if (this.isBlock('[data-tab="profileBlock"]')) {
