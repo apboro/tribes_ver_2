@@ -29,7 +29,7 @@
                     <div id="profile_list_another" class="profile__list" onchange="Project.qtyOfCheckedCommunities(this)">
                         @foreach($communities as $community)
                         <label for="{{$community->id}}" class="profile__item-wrap">
-                            <input type="checkbox" value="{{$community->id}}" class="profile__input" id="{{$community->id}}" name="community[]" multiple>
+                            <input type="checkbox" value="{{$community->id}}" class="profile__input" id="{{$community->id}}" name="communities[]" multiple>
                             <div class="profile__item">
                                 <div class="profile__item-image">
                                     <img class="profile__image" src="{{$community->image ?? '/images/no-image.png'}}" alt="Image Profile">
@@ -70,8 +70,8 @@
                             type="text"
                             class="project-creation__create-name form-control-red @error('title') form-control-red--danger @enderror"
                             id="projects-name"
-                            name="projects-name"
-                            value="{{$request->get('projects-name')}}"
+                            name="title"
+                            value="{{$request->get('title')}}"
                             aria-describedby="projects-name"
                             placeholder="{{ __('base.enter_name') }}"
                         >
@@ -95,36 +95,7 @@
 
                         <!-- START список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
                         <div id="profile_list" class="profile__list communities">
-                            <!-- <label for="6" class="profile__item-wrap">
-                                <input type="checkbox" value="6" class="profile__input" id="6" name="community[]" multiple>
-                                <div class="profile__item">
-                                    <div class="profile__item-image">
-                                        <img class="profile__image" src="/images/no-image.png" alt="Image Profile">
-                                    </div>
-                                    <div class="profile__item-text">
-                                        <p class="profile__channel">Tech in UK</p>
-                                        <div class="profile__messenger">
-                                            <img src="/images/icons/social/telegram.png">
-                                            <p class="profile__text">мессенджер</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-                            <label for="5" class="profile__item-wrap">
-                                <input type="checkbox" value="5" class="profile__input" id="5" name="community[]" multiple>
-                                <div class="profile__item">
-                                    <div class="profile__item-image">
-                                        <img class="profile__image" src="/images/avatars/2.png" alt="Image Profile">
-                                    </div>
-                                    <div class="profile__item-text">
-                                        <p class="profile__channel">Сообщество</p>
-                                        <div class="profile__messenger">
-                                            <img src="/images/icons/social/telegram.png">
-                                            <p class="profile__text">канал</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label> -->
+
                         </div>
                         <!-- END список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
 

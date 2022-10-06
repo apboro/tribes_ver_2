@@ -17,7 +17,15 @@ interface ProjectRepositoryContract
 
     public function create(array $attributes): ?Project;
 
-    public function update(int $projectId, array $attributes): ?Project;
+    /**
+     * @param int $projectId
+     * @param array $attributes
+     * @param array $filter дополнительная проверка того что в модели,
+     *                      есть какие-то поля заполненные определенным образом
+     *                      например ['user_id' => $owner_user_id]
+     * @return Project|null
+     */
+    public function update(int $projectId, array $attributes, array $filter = []): ?Project;
 
     public function delete(int $projectId): bool;
 
