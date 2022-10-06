@@ -56,7 +56,7 @@
         <div class="project-creation__form-wrap">
             <form 
                 class="project-creation__project"
-                action="{{ route('profile.project.edit',$project) }}"
+                action="{{ route('profile.project.edit',$project->id) }}"
                 method="post"
                 enctype="multipart/form-data"
                 id="project_edit"
@@ -68,13 +68,13 @@
                         <input
                             type="text"
                             class="project-creation__create-name form-control-red @error('title') form-control-red--danger @enderror"
-                            id="projects-name"
-                            name="projects-name"
-                            value="{{$request->get('projects-name')}}"
-                            aria-describedby="projects-name"
+                            id="title"
+                            name="title"
+                            value="{{ !isset($requestUpdate) ? $project->title : $requestUpdate->get('title')}}"
+                            aria-describedby="title"
                             placeholder="{{ __('base.enter_name') }}"
                         >
-                        @error('projects-name')
+                        @error('title')
                         <span class="form-message form-message--danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -82,11 +82,11 @@
                 </div>
                 <div class="project-creation__project--bottom">
                     <div class="project-creation__project-header">
-                        <p class="project-creation__project-communities">{{__('base.communities_project')}}: <span id="qty_of_communities_in_project" class="qty">0</span></p>
+                        <p class="project-creation__project-communities">{{__('base.communities_project')}}: <span id="qty_of_communities_in_project" class="qty">{{$project->communities->count()}}</span></p>
                         <label><input onclick="Project.toggleAll(this)" type="checkbox" name="community" id="chk_all" class="chk-all">{{__('base.select_all')}}</label>
                     </div>
                     <div class="project-creation__project-main">
-                        <p class="project-creation__project-main--empty">Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.</p>
+                        <!-- <p class="project-creation__project-main--empty">Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.</p> -->
                         <div class="project-creation__list-communities" onchange="Project.qtyOfCheckedCommunitiesInProject(this)">
 
 
@@ -94,36 +94,24 @@
 
                         <!-- START список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
                         <div id="profile_list" class="profile__list communities">
-                            <!-- <label for="6" class="profile__item-wrap">
-                                <input type="checkbox" value="6" class="profile__input" id="6" name="community[]" multiple>
+                            @dump($project->communities)
+                           @foreach($project->communities as $oldCommunity)
+                           <label for="{{$oldCommunity->id}}" class="profile__item-wrap">
+                                <input type="checkbox" value="{{$oldCommunity->id}}" class="profile__input" id="{{$oldCommunity->id}}" name="community[]" multiple>
                                 <div class="profile__item">
                                     <div class="profile__item-image">
-                                        <img class="profile__image" src="/images/no-image.png" alt="Image Profile">
+                                        <img class="profile__image" src="{{$oldCommunity->image ?? '/images/no-image.png'}}" alt="Image Profile">
                                     </div>
                                     <div class="profile__item-text">
-                                        <p class="profile__channel">Tech in UK</p>
+                                        <p class="profile__channel">{{$oldCommunity->title}}</p>
                                         <div class="profile__messenger">
                                             <img src="/images/icons/social/telegram.png">
-                                            <p class="profile__text">мессенджер</p>
+                                            <p class="profile__text">{{$oldCommunity->connection->chat_type == "channel" ? 'Канал': 'Чат'}}</p>
                                         </div>
                                     </div>
                                 </div>
                             </label>
-                            <label for="5" class="profile__item-wrap">
-                                <input type="checkbox" value="5" class="profile__input" id="5" name="community[]" multiple>
-                                <div class="profile__item">
-                                    <div class="profile__item-image">
-                                        <img class="profile__image" src="/images/avatars/2.png" alt="Image Profile">
-                                    </div>
-                                    <div class="profile__item-text">
-                                        <p class="profile__channel">Сообщество</p>
-                                        <div class="profile__messenger">
-                                            <img src="/images/icons/social/telegram.png">
-                                            <p class="profile__text">канал</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label> -->
+                           @endforeach
                         </div>
                         <!-- END список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
 
@@ -141,7 +129,7 @@
 
 
 
-        <form
+        <!-- <form
             action="{{ route('profile.project.edit',$project) }}"
             method="post"
             enctype="multipart/form-data"
@@ -149,7 +137,7 @@
             class="community-settings"
         >
         @csrf
-            <!-- Название тарифа -->
+            
             <div class="community-settings__change-tariff" id="community-settings__change-tariff">
                 <div class="community-settings__form-item">
                     <label
@@ -187,7 +175,7 @@
                 </button>
 
             </div>
-        </form>
+        </form> -->
 
         
     </div>
