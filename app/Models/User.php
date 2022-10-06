@@ -178,6 +178,7 @@ class User extends Authenticatable
             ->where('ended_at', '>', Carbon::now()->toDateTimeString())
             ->where('started_at', '<', Carbon::now()->toDateTimeString())
             ->where('status', 'active')
+            ->latest('created_at')
             ->first();
 
         return $accumulation;
@@ -264,3 +265,4 @@ class User extends Authenticatable
         return $this->hasMany(Payment::class,'user_id');
     }
 }
+

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Filters\QueryFilter;
+use App\Services\TelegramLogService;
 use Carbon\Carbon;
 use Database\Factories\PaymentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -94,17 +95,20 @@ class Payment extends Model
 
     public function checkAccumulation($id, $owner)
     {
-        $accumulation = Accumulation::where('SpAccumulationId', $id)->first();
+        $accumulation = Accumulation::where('SpAccumulationId', (int)$id)->first();
         if($accumulation){
             return $accumulation;
         } else {
-            return Accumulation::create([
+
+            $acc = Accumulation::create([
                 'user_id' => $owner->id,
                 'SpAccumulationId' => $id,
                 'started_at' => Carbon::now(),
                 'ended_at' => Carbon::now()->endOfDay()->modify('last day of this month'),
                 'status' => 'active',
             ]);
+            TelegramLogService::staticSendLogMessage("Новая копилка " . $id . " создана для юзера с id " . $owner->id);
+            return $acc;
         }
     }
 

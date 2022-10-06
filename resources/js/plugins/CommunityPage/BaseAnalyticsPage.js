@@ -94,7 +94,7 @@ export class BaseAnalyticsPage {
                     duration: 1000,
                     easing: 'easeInOutCubic'
                 },
-                
+
                 scales: {
                     x: {
                         ticks: {    

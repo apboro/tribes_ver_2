@@ -329,7 +329,7 @@ class MainBotCommands
                             }
                         }
                         $image = ($donate->getMainImage()) ? '<a href="' . route('main') . $donate->getMainImage()->url . '">&#160</a>' : '';
-                        $description = ($donate->description !== NULL) ? $donate->description : 'Описания нет!';
+                        $description = ($donate->description !== NULL) ? $donate->description : '';
                         $text = $description . $image;
                         $ctx->replyHTML($text, $menu);
                     } else $ctx->reply('В сообществе не определен донат с указанным индексом');
@@ -913,7 +913,7 @@ class MainBotCommands
             $message = new InputTextMessageContent();
 
             $image = $donate->getMainImage() ? $donate->getMainImage()->url : '';
-            $description = $donate->description ? $donate->description : 'Описания нет!';
+            $description = $donate->description ? $donate->description : '';
             $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
 
             $message->parseMode('HTML');

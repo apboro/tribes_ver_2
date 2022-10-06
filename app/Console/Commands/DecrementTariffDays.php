@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\TelegramUser;
 use App\Models\User;
+use App\Services\TelegramLogService;
 use Illuminate\Console\Command;
 
 class DecrementTariffDays extends Command
@@ -21,15 +22,16 @@ class DecrementTariffDays extends Command
      * @var string
      */
     protected $description = 'Command description';
-
+    private TelegramLogService $telegramLogService;
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(TelegramLogService $telegramLogService)
     {
         parent::__construct();
+        $this->telegramLogService = $telegramLogService;
     }
 
     /**
@@ -47,14 +49,18 @@ class DecrementTariffDays extends Command
 
     private function decrement($user)
     {
-        if ($user->tariffVariant->first() !== NULL) {
-            foreach ($user->tariffVariant as $variant) {
-                if($variant->pivot->days and $variant->pivot->days !== 0){
-                    $user->tariffVariant()->updateExistingPivot($variant->id, [
-                        'days' => $variant->pivot->days - 1
-                    ]);
+        try {
+            if ($user->tariffVariant->first() !== NULL) {
+                foreach ($user->tariffVariant as $variant) {
+                    if ($variant->pivot->days and $variant->pivot->days !== 0) {
+                        $user->tariffVariant()->updateExistingPivot($variant->id, [
+                            'days' => $variant->pivot->days - 1
+                        ]);
+                    }
                 }
             }
+        } catch (\Exception $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 }

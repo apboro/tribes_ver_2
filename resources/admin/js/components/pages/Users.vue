@@ -51,13 +51,12 @@
                 </tbody>
             </table>
         </div>
-
-        <div v-if="users.per_page < users.total" class="card-footer d-flex align-items-center">
-            <p class="m-0 text-muted">Показано <span>{{ users.per_page }}</span> из <span>{{ users.total }}</span> записей</p>
+        <div v-if="users.meta && users.meta.per_page < users.meta.total" class="card-footer d-flex align-items-center">
+            <p class="m-0 text-muted">Показано <span>{{ users.meta.per_page }}</span> из <span>{{ users.meta.total }}</span> записей</p>
             <ul class="pagination m-0 ms-auto">
-                <li 
-                    v-for="(link, idx) in users.links"
-                    class="page-item" 
+                <li
+                    v-for="(link, idx) in users.meta.links"
+                    class="page-item"
                     :class="{'active' : link.active}"
                     :key="idx"
                 >

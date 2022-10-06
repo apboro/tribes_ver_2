@@ -44,7 +44,7 @@ class SetNewTelegramUsers implements ShouldQueue
             })->first();
 
             $userBot = new UserBot;
-            $connection = $community->connection;
+            $connection = $community->connection ?? null;
             $limit = 100;
             $offset = 0;
             if ($connection && $connection->is_there_userbot === true) {

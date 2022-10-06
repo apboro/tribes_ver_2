@@ -101,7 +101,6 @@ class TinkoffService
                                 ' на сумму ' . $payment->amount / 100 . 'рублей'
                             );
                         }
-
                     }
 
                     if(isset($accumulation)){

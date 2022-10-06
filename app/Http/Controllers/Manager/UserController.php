@@ -13,6 +13,7 @@ use App\Services\File\FileSendService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -34,7 +35,7 @@ class UserController extends Controller
 
     public function list(Request $request, UsersFilter $filter)
     {
-        $users = User::filter($filter)->paginate(request('filter.entries'));
+        $users = User::filter($filter)->paginate(request('filter.entries'), ['*'], 'filter.page');
         return new UsersResource($users);
     }
 

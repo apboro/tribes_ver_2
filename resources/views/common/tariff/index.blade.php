@@ -21,9 +21,6 @@
                     alt=""
                     @if ($community->tariff->getMainImage()) data-no-image="true" @endif
                 >
-
-                <!-- <span class="decor-1"></span>
-                <span class="decor-2"></span> -->
             </div>
 
             <div class="tariff-public__description">

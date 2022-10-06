@@ -104,7 +104,7 @@
                                     @endif
                                     <option style="display: none" value="{{ $tariff->period }}" selected="selected" >{{ $tariff->period }} {{App\Traits\Declination::defineDeclination($tariff->period)}}</option>
                                     <option value="1" @if ($tariff->period == 1) selected @endif>1 {{ __('base.day_low') }}</option>
-                                    <option value="3" @if ($tariff->period == 3) selected @endif>3 {{ __('base.days_rus_low') }}</option>
+                                    <option value="3" @if ($tariff->period == 3) selected @endif>3 дня</option>
                                     <option value="7" @if ($tariff->period == 7) selected @endif>7 {{ __('base.days_low') }}</option>
                                     <option value="14" @if ($tariff->period == 14) selected @endif>14 {{ __('base.days_low') }}</option>
                                     <option value="30" @if ($tariff->period == 30) selected @endif>30 {{ __('base.days_low') }}</option>

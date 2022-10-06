@@ -343,3 +343,5 @@ Route::any('/manager{any}', function () {
 
 Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name('telegram.interface');
 
+Route::get('/tinkofftestdata', 'App\Http\Controllers\TariffController@testData');
+
