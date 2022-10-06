@@ -63,7 +63,7 @@ class TeleMessageRepository implements TeleMessageRepositoryContract
     public function saveShortChatMessage($message, $isComment = false)
     {
         try {
-            $connection = TelegramConnection::where('chat_id', $message->chat_id)->first();
+            $connection = TelegramConnection::where('chat_id', '-' . $message->chat_id)->first();
             if ($connection) {
                 $replyTo = isset($message->reply_to->reply_to_msg_id) ? $message->reply_to->reply_to_msg_id : null;
 
