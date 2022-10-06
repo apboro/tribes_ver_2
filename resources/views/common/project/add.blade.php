@@ -86,14 +86,11 @@
                 <div class="project-creation__project--bottom">
                     <div class="project-creation__project-header">
                         <p class="project-creation__project-communities">{{__('base.communities_project')}}: <span id="qty_of_communities_in_project" class="qty">0</span></p>
-                        <label><input onclick="Project.toggleAll(this)" type="checkbox" name="community" id="chk_all" class="chk-all">{{__('base.select_all')}}</label>
+                        <label><input onclick="Project.toggleAll(this)" type="checkbox"  id="chk_all" class="chk-all">{{__('base.select_all')}}</label>
                     </div>
                     <div class="project-creation__project-main">
                         <p class="project-creation__project-main--empty">Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.</p>
                         <div class="project-creation__list-communities" onchange="Project.qtyOfCheckedCommunitiesInProject(this)">
-
-
-
 
                         <!-- START список сообществ проекта НЕ ДИНАМИЧЕСКИЙ ПОКА -->
                         <div id="profile_list" class="profile__list communities">
