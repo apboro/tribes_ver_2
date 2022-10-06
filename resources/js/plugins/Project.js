@@ -25,7 +25,7 @@ export default class Project extends Page {
         qty.textContent = `0`;
         let totalQty = document.querySelectorAll('.project-creation__list-communities .profile__list .profile__item-wrap').length;
         let emptyBlock = document.querySelector('.project-creation__project-main--empty');
-        if(totalQty > 0) {
+        if(emptyBlock !== null && totalQty > 0) {
             emptyBlock.remove();
         }
         let qtyCommunitiesInProject = document.getElementById('qty_of_communities_in_project')
