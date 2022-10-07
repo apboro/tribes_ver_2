@@ -31,7 +31,6 @@ class QuestionsRequest extends FormRequest
     {
         return [
             'community_id' => ['required','integer',new OwnCommunityRule()],
-
         ];
     }
 

@@ -10,7 +10,7 @@ export class Pagination {
     }
 
     init() {
-        if (this.data) {
+        if (this.data && this.data.total > 0) {
             const wrapper = new CreateNode({
                 parent: this.container,
                 class: 'pagination__item'

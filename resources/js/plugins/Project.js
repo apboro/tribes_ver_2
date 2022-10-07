@@ -11,6 +11,7 @@ export default class Project extends Page {
         
     }
 
+    //перенести элемент из 'другие сообщества' в сообщества проекта; 
     moveSelectedCommunities(){
         let checkboxes = document.querySelectorAll('.project-creation__communities-list-another .profile__list .profile__item-wrap');
         let insertChecked = document.getElementById('profile_list');
@@ -24,10 +25,14 @@ export default class Project extends Page {
         let qty = document.getElementById('qty_another_projects');
         qty.textContent = `0`;
         let totalQty = document.querySelectorAll('.project-creation__list-communities .profile__list .profile__item-wrap').length;
+
+        //удаления дефолтного блока с текстом, если в сообществах проекта есть элементы
         let emptyBlock = document.querySelector('.project-creation__project-main--empty');
-        if(totalQty > 0) {
+        if(emptyBlock !== null && totalQty > 0) {
             emptyBlock.remove();
         }
+
+        //изменение количества всех сообществ (checked && !checked)
         let qtyCommunitiesInProject = document.getElementById('qty_of_communities_in_project')
         qtyCommunitiesInProject.textContent = `${totalQty}`
     }

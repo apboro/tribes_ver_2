@@ -140,6 +140,7 @@
     &__link-item {}
 
     &__link {
+        display: block;
         @include font($text-color-1, 14px, 20px, 500);
 
         &.active {

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Filters\API\ProjectFilter;
 use App\Filters\TariffFilter;
 use App\Helper\ArrayHelper;
-use App\Http\Requests\API\ProjectEditRequest;
+use App\Http\Requests\Project\ProjectEditRequest;
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectRequest;
 use App\Models\Community;
@@ -60,8 +60,12 @@ class ProjectController extends Controller
         $project = new Project();
         if ($request->isMethod('post')) {
 
-            $project = $this->projectRepository->create(['user_id' => Auth::user()->id, 'title'=>$request->get('title')]);
-            return redirect()->route('profile.project.list');
+            $project = $this->projectRepository->create([
+                'user_id' => Auth::user()->id,
+                'title'=> $request->get('title'),
+                'communities' => $request->get('communities'),
+            ]);
+            return redirect()->route('profile.project.list')->withMessage('Сохранено');
         }
         return view('common.project.add')->with(
             compact('project','communities', 'request')
@@ -76,13 +80,20 @@ class ProjectController extends Controller
         $communities = $this->projectRepository->getUserCommunitiesWithoutProjectList(Auth::user()->id)->keyBy('id');
         if ($request->isMethod('post')) {
             $requestUpdate = app()->make(ProjectEditRequest::class);
-            $project = $this->projectRepository->update($project->id , ['title'=>$requestUpdate->get('title')]);
+            $project = $this->projectRepository->update(
+                $project->id ,
+                [
+                    'title'=>$requestUpdate->get('title'),
+                    'communities' => $request->get('communities'),
+                ],
+                ['user_id' => Auth::user()->id]
+            );
             if(empty($project)) {
                 return view('common.project.edit')->with(
                     compact('project','communities', 'requestUpdate')
                 );
             }
-            return redirect()->route('profile.project.list');
+            return redirect()->route('profile.project.list')->withMessage('Сохранено');
         }
         return view('common.project.edit')->with(
             compact('project','communities')

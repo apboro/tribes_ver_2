@@ -1,6 +1,13 @@
 @auth
-    <div class="dropdown-personal main-header__dropdown" data-plugin="Headuser">
-        <button class="dropdown-personal__header" data-dropdown-btn onclick="Dropdown.toggle(this)">
+    <div
+        class="dropdown-personal main-header__dropdown"
+        data-plugin="Headuser"
+    >
+        <button
+            class="dropdown-personal__header"
+            data-dropdown-btn
+            onclick="Dropdown.toggle(this)"
+        >
             <span class="dropdown-personal__avatar">
                 <img src="/images/no-user-avatar.svg" alt="">
             </span>
@@ -28,19 +35,28 @@
             <div class="dropdown-personal__links-block">
                 <ul class="dropdown-personal__link-list">
                     <li class="dropdown-personal__link-item">
-                        <a href="{{route('profile.project.list')}}" class="dropdown-personal__link">
+                        <a
+                            href="{{route('profile.project.list')}}"
+                            class="dropdown-personal__link {{ request()->is('*projects*') ? 'active' : ''  }}"
+                        >
                             Мои проекты
                         </a>
                     </li>
 
                     <li class="dropdown-personal__link-item">
-                        <a href="{{ route('author.messenger.list') }}" class="dropdown-personal__link {{ request()->is('*profile/messengers*') ? 'active' : ''  }}">
+                        <a
+                            href="{{ route('author.messenger.list') }}"
+                            class="dropdown-personal__link {{ request()->is('*profile/messengers*') ? 'active' : ''  }}"
+                        >
                             Мессенджеры
                         </a>
                     </li>
 
                     <li class="dropdown-personal__link-item">
-                        <a href="{{ route('payment.list') }}" class="dropdown-personal__link {{ request()->is('*payments*') ? 'active' : ''  }}">
+                        <a
+                            href="{{ route('payment.list') }}"
+                            class="dropdown-personal__link {{ request()->is('*payments*') ? 'active' : ''  }}"
+                        >
                             Финансы
                         </a>
                     </li>

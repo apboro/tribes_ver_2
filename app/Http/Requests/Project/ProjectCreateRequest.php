@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Project;
 
 use App\Rules\Knowledge\OwnCommunityRule;
-use App\Rules\OwnProjectRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProjectCreateRequest extends FormRequest
@@ -21,7 +20,9 @@ class ProjectCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'string'
+            'title' => 'string',
+            'communities' => 'array',
+            "communities.*"  => ["int", new OwnCommunityRule()],
         ];
     }
 }
