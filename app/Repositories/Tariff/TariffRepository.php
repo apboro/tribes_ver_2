@@ -150,7 +150,7 @@ class TariffRepository implements TariffRepositoryContract
             if ($variantId === null) {
                 if ($variantForThisCommunity)
                     $ty->tariffVariant()->detach($variantForThisCommunity->id);
-                $payments = Payment::where('telegram_user_id', $ty->telegram_id)->where('type', 'tariff')->get();
+                $payments = Payment::where('telegram_user_id', $ty->telegram_id)->where('OrderId', '1')->where('type', 'tariff')->get();
                 foreach ($payments as $payment) {
                     $payment->delete();
                 }
