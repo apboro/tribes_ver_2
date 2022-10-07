@@ -11,19 +11,13 @@
     }
 
     &__hide-show {
-        max-height: auto!important;
-        overflow: visible;
-        opacity: 1;
-        transition: all .3s;
-        transition-delay: .5s, .5s, .9s;
-        transition-property: max-height, overflow, opacity;
+        max-height: auto !important;
+        margin-bottom: 30px;
+        overflow: hidden;
+        transition: $transition;
 
         &.active {
-            overflow: hidden;
-            opacity: 0;
-            transition-delay: .5s, .5s, .9s!important;
-            transition-property: max-height, overflow, opacity!important;
-            transition: all .3s;
+            margin-bottom: 0;
         }
     }
 
@@ -285,5 +279,37 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+    }
+
+    &__hide-info {
+        display: flex;
+        justify-content: center;
+        @include font($primary-1, 16px, 20px, 500);
+        opacity: 0;
+        visibility: hidden;
+        transition: $transition;
+        
+        &.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        @media (min-width: $lg) {
+            justify-content: space-between;
+            
+        }
+    }
+
+    .hide-info-project {
+        display: none;
+
+        @media (min-width: $lg) {
+            display: inline-block;
+        }
+    }
+
+    .hide-info-community,
+    .hide-info-project {
+        @include truncate(300px);
     }
 }
