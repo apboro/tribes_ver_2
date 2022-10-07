@@ -13,11 +13,11 @@
     &__hide-show {
         max-height: auto !important;
         margin-bottom: 30px;
-        overflow: hidden;
         transition: $transition;
-
+        
         &.active {
             margin-bottom: 0;
+            overflow: hidden;
         }
     }
 
