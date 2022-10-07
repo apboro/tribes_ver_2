@@ -8,7 +8,7 @@
             <a href="{{route('profile.project.list')}}" class="button-back">
                 <svg width="27" height="16" viewBox="0 0 27 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26 9C26.5523 9 27 8.55228 27 8C27 7.44772 26.5523 7 26 7L26 9ZM0.292893 7.2929C-0.0976311 7.68342 -0.097631 8.31658 0.292893 8.70711L6.65685 15.0711C7.04738 15.4616 7.68054 15.4616 8.07107 15.0711C8.46159 14.6805 8.46159 14.0474 8.07107 13.6569L2.41421 8L8.07107 2.34315C8.46159 1.95262 8.46159 1.31946 8.07107 0.928934C7.68054 0.538409 7.04738 0.53841 6.65685 0.928934L0.292893 7.2929ZM26 7L1 7L1 9L26 9L26 7Z" fill="#7367F0"></path></svg>
             </a>
-            <h2 class="content-header-title float-start mb-0 border-0">
+            <h2 class="analytics-community__title-link">
                 {{__('base.my_projects')}}
             </h2>
         </div>
@@ -17,9 +17,9 @@
         </div>
     </div>
     <div class="project-creation" data-plugin="Project" >
-        @if (Session::has('errors'))
+        <!-- @if (Session::has('errors'))
             <div class="alert alert-info">{{ Session::get('errors') }}</div>
-        @endif
+        @endif -->
         <div class="project-creation__communities">
             <div class="project-creation__communities-main">
                 <p class="project-creation__communities-another">Другие сообщества</p>
@@ -76,9 +76,9 @@
                             aria-describedby="title"
                             placeholder="{{ __('base.enter_name') }}"
                         >
-                        @error('title')
+                        <!-- @error('title')
                         <span class="form-message form-message--danger">{{ $message }}</span>
-                        @enderror
+                        @enderror -->
                     </div>
                     <button class="button-filled button-filled--primary project-creation__save" type="submit">{{ __('base.save') }}</button>
                 </div>

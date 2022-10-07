@@ -22,9 +22,9 @@
     <div class="tab-content">
         @yield('tab')
     </div>
-    @if (Session::has('message'))
+    <!-- @if (Session::has('message'))
         <div class="alert alert-info">{{ Session::get('message') }}</div>
-    @endif
+    @endif -->
     <div class="page-projects">
         @foreach($projects as $eachProject)
         <div class="page-projects__folder-wrap">

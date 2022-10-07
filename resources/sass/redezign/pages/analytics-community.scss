@@ -31,6 +31,11 @@
         margin: 0;
     }
 
+    &__title-link {
+        @include font($text-color-2, 20px, 26px, 500);
+        margin: 0;
+    }
+
     &__card-list {
         display: grid;
         grid-template-rows: 1fr;

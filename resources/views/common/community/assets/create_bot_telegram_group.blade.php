@@ -1,9 +1,9 @@
-<div class="hidden" data-tab="telegram_group">
-    <div class="card-header">
+<div class="hidden" data-tab="telegram_group" data-pagename='Подключение Telegram группы (чат)'>
+    <!-- <div class="card-header">
         <h4 class="card-title">
             {{ __('community.telegram_group_connection') }}
         </h4>
-    </div>
+    </div> -->
 
     <div class="card-body">
         <div class="col-12 d-flex flex-column flex-md-row">
