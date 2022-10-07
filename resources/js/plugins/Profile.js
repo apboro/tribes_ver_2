@@ -1,6 +1,4 @@
-import { forEach } from "lodash";
 import Page from "./Abstract/Page";
-import { CreateNode } from "./Helper/CreateNode";
 import { ProfileBlock } from "./CommunityPage/ProfileBlock";
 
 export default class Profile extends Page {
@@ -21,19 +19,6 @@ export default class Profile extends Page {
         ];
         this.list = this.container.querySelector("#profile-list");
 
-        // console.log(this.list.children);
-
-        // console.log(this.list.dataset.massive);
-
-        // forEach(this.list.children, (item) => {
-            
-        //     let comminity_id =item.id.split('_')[1];
-
-        //     // item.addEventListener('click', (e) => {
-        //     //     console.log("axios обращение к community " + comminity_id);
-        //     // })
-        // })
-
         const data = { a: 1, b: 2 }
 
         Emitter.emit('loadCommunityData', {
@@ -41,6 +26,8 @@ export default class Profile extends Page {
         });
 
         // this.loadData()
+
+        this.hideInfoBlock = this.container.querySelector('#hide_info');
 
         if (this.isBlock('[data-tab="profileBlock"]')) {
             this.profileBlock = new ProfileBlock(this);
@@ -58,8 +45,8 @@ export default class Profile extends Page {
     // }
 
     
-    toggleProfileCommunityVisibility(event) {
-        this.profileBlock.toggleVisibility();
+    async toggleProfileCommunityVisibility(event) {
+        await this.profileBlock.toggleVisibility();
         let active = document.getElementById("btn_profile");
         let hideShow = document.getElementById("hideShow");
 
@@ -67,11 +54,13 @@ export default class Profile extends Page {
             event.target.textContent = 'Скрыть';
             active.classList.remove("active");
             hideShow.classList.remove("active");
-
+            this.hideInfoBlock.classList.remove('active');
         } else {
             event.target.textContent = 'Раскрыть';
             active.className += " active";
             hideShow.className += " active";
+            this.hideInfoBlock.classList.add('active');
+
         }
     }
 
