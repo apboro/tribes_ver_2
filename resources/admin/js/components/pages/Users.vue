@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div class="card-body border-bottom py-3">
-            <div class="d-flex">
+            <div class="d-flex align-items-center justify-content-between">
                 <div class="text-muted">
                     показать
                     <div class="mx-2 d-inline-block">
@@ -9,10 +9,20 @@
                     </div>
                     на странице
                 </div>
-                <div class="ms-auto text-muted">
-                    Поиск:
-                    <div class="ms-2 d-inline-block">
-                        <input type="text" class="form-control form-control-sm" v-model="filter_data.filter.search" aria-label="поиск">
+
+                <div class="d-flex align-items-center">
+                    <button
+                        class="btn mx-3"
+                        @click="excelLoad"
+                    >
+                        Выгрузить в Excel
+                    </button>
+
+                    <div class="ms-auto text-muted">
+                        Поиск:
+                        <div class="ms-2 d-inline-block">
+                            <input type="text" class="form-control form-control-sm" v-model="filter_data.filter.search" aria-label="поиск">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -33,7 +43,7 @@
                         <i
                             class="col-1"
                             style="cursor: pointer;"
-                            @click="sortByDate"
+                            @click="sortBy('date')"
                         >
                             <template v-if="sortRuleOnDate == 'off'">
                                 <svg style="margin: 0;" width="16" height="32" viewBox="0 0 16 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon text-dark icon-thick">
@@ -93,7 +103,11 @@ export default {
 
     data() {
         return {
-            sortRuleOnDate: 'off'
+            sortName: 'date',
+            sortRules: {
+                sortRuleOnDate: 'off'
+
+            },
         }
     },
 
@@ -113,6 +127,15 @@ export default {
     computed: {
         users() {
             return this.$store.getters.users;
+        },
+
+        sortRuleOnDate: {
+            get() {
+                return this.sortRules.sortRuleOnDate;
+            },
+            set(value) {
+                this.sortRules.sortRuleOnDate = value;
+            }
         }
     },
 
@@ -126,15 +149,52 @@ export default {
             this.filter_data.filter.page = 1;
         },
 
-        sortByDate() {
-            switch (this.sortRuleOnDate) {
-                case 'off': this.sortRuleOnDate = 'asc'; break;
-                case 'asc': this.sortRuleOnDate = 'desc'; break;
-                case 'desc': this.sortRuleOnDate = 'off'; break;
+        sortBy(name) {
+            this.sortName = name;
+            Object.keys(this.sortRules).forEach((rule) => rule == 'off');
+            
+            // костыляка на случай если будет не одна сортировка
+            if (this.sortName == 'date') {
+                switch (this.sortRuleOnDate) {
+                    case 'off': this.sortRuleOnDate = 'asc'; break;
+                    case 'asc': this.sortRuleOnDate = 'desc'; break;
+                    case 'desc': this.sortRuleOnDate = 'off'; break;
+                }
+                this.filter_data.filter.sort.rule = this.sortRuleOnDate;
             }
 
-            this.filter_data.filter.sort.name = 'date';
-            this.filter_data.filter.sort.rule = this.sortRuleOnDate;
+            this.filter_data.filter.sort.name = this.sortName;
+        },
+
+        async excelLoad() {
+            try {
+                const res = await axios({
+                    method: 'post',
+                    url: '/api/v2/users-export',
+                    responseType: "blob",
+                    data: {
+                        type: 'xlsx',
+                        filter: {
+                            sort: {
+                                name: this.sortName,
+                                rule: this.sortRuleOnDate
+                            }
+                        }
+                    }
+                });
+
+                let blob = new Blob([res.data], {
+                    type: res.headers['content-type'],
+                });
+
+                let anchor = document.createElement('a');
+                anchor.download = `StatisticExport(${ res.headers.date })`;
+                anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+                anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
+                anchor.click();
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 }
