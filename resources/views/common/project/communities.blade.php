@@ -26,8 +26,19 @@
         </div>
 
         <div class="all-communities">
+
             <!-- START список сообществ проекта -->
             <div id="profile_list" class="profile__list communities">
+                @if($communities->isEmpty())
+                <div class="profile__community_not_selected create-community">
+                    <p>
+                        У Вас не добавлено ни одного сообщества.
+                        <br>
+                        Для работы с аналитикой, разделами монетизации и для получения доступа к созданию проектов, 
+                        добавьте одно или несколько сообществ.
+                    </p>
+                </div>
+                @else
                 @foreach($communities as $community)
                 <label for="{{$community->id}}" class="profile__item-wrap">
                     <input type="hidden" value="{{$community->id}}" name="communities[]" multiple>
@@ -46,8 +57,10 @@
                     </div>
                 </label>
                 @endforeach
+                @endif
             </div>
             <!-- END список сообществ проекта -->
+
             <div class="all-communities__create-project">
             
             @if(true)

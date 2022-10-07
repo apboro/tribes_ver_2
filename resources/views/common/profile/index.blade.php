@@ -54,7 +54,7 @@
                                     </a>
                                     <p class="profile__community-description--subscribers">
                                     <h6 class="profile__community-description--subscribers-text">Подписчиков:</h6>
-                                    <p class="profile__community-description--subscribers-quantity">300K</p>
+                                    <p class="profile__community-description--subscribers-quantity">{{$activeCommunity->getCountFollowersAttribute()}}</p>
                                     </p>
                                 </div>
                             </div>
@@ -65,7 +65,7 @@
 
                                 <div class="profile-community__pay-link-wrapper">
                                     <a
-                                            href="#"
+                                    href="{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($activeCommunity->id, 8)]) }}"
                                             target="_blank"
                                             class="link profile-community__pay-link"
                                     >
@@ -74,13 +74,13 @@
 
                                     <button
                                             class="link profile-community__pay-link profile-community__pay-link--divider"
-                                            onclick=""
+                                            onclick="copyText('{{ route('community.tariff.payment', ['hash' => App\Helper\PseudoCrypt::hash($activeCommunity->id, 8)]) }}')"
                                     >
                                         Скопировать
                                     </button>
                                     <a
-                                            href="#"
-                                            class="link profile-community__pay-link profile-community__pay-link--divider"
+                                        href="{{ route('community.tariff.publication', ['community' => $activeCommunity, 'tab' => 'pay']) }}"
+                                        class="link profile-community__pay-link profile-community__pay-link--divider"
                                     >
                                         Редактировать
                                     </a>
@@ -94,46 +94,7 @@
                 </div>
 
                 <div class="profile__list-channel">
-                    <h4 class="profile__list-title">Сообщества Проекта</h4>
-                    @if($activeProject || $projects->isNotEmpty())
-                        @php($currentProj = $activeProject ?? $projects->first())
-                        @if($currentProj->communities()->get()->isNotEmpty())
-
-                            <!-- START список сообществ проекта -->
-                            <div id="profile-list" class="profile__list">
-                                @foreach($currentProj->communities()->get() as $community)
-                                
-                                    <a class="profile__item-wrap" id="community_{{ $community->id }}"
-                                       href="{{route(request()->route()->getName(),['project'=>$community->project_id,'community' => $community->id])}}">
-                                        <!-- <input type="radio" id="community-item_{{ $community->id }}"
-                                               name="community-item"
-                                               class="profile__input"> -->
-                                        <div id="community-item_{{ $community->id }}" class="profile__item">
-                                            <div class="profile__item-image">
-                                                <img class="profile__image" src="{{ $community->image ?? '/images/no-image.png' }}">
-                                            </div>
-                                            <div class="profile__item-text">
-                                                <p class="profile__channel">{{ $community->description }}</p>
-                                                <div class="profile__messenger">
-                                                    <img src="/images/icons/social/telegram.png">
-                                                    <p class="profile__text">{{ $community->title }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="profile__community_not_selected full-width">
-                                <p>Вы можете объединять сообщества в одном проекте. Проекты позволят вам лучше
-                                    оргазивать свое
-                                    рабочие пространство в Tribes, а также смотреть по проектам статистику, донаты и
-                                    тарифы в
-                                    общем контексте.</p>
-                            </div>
-                        @endif
-                        <!-- END список сообществ проекта -->
-                    @else
+                    @if($activeCommunity  && $activeCommunity->project_id === null)
                         <div class="profile__community_not_selected full-width">
                             <p>Вы можете объединять сообщества в одном проекте. Проекты позволят вам лучше организовать свое
                                 рабочие пространство в Tribes, а также смотреть по проектам статистику, донаты и тарифы в
@@ -141,7 +102,51 @@
                                 <br></br>
                                 Чтобы создать проект, откройте меню «Профиль» 🠖 «Мои проректы».</p>
                         </div>
+                    @else
+                        <h4 class="profile__list-title">Сообщества Проекта</h4>
+                        @if($activeProject || $projects->isNotEmpty())
+                            @php($currentProj = $activeProject ?? $projects->first())
+                            @if($currentProj->communities()->get()->isNotEmpty())
+
+                                <!-- START список сообществ проекта -->
+                                <div id="profile-list" class="profile__list">
+                                    @foreach($currentProj->communities()->get() as $community)
+                                    
+                                        <a class="profile__item-wrap" id="community_{{ $community->id }}"
+                                        href="{{route(request()->route()->getName(),['project'=>$community->project_id,'community' => $community->id])}}">
+                                            <!-- <input type="radio" id="community-item_{{ $community->id }}"
+                                                name="community-item"
+                                                class="profile__input"> -->
+                                            <div id="community-item_{{ $community->id }}" class="profile__item">
+                                                <div class="profile__item-image">
+                                                    <img class="profile__image" src="{{ $community->image ?? '/images/no-image.png' }}">
+                                                </div>
+                                                <div class="profile__item-text">
+                                                    <p class="profile__channel">{{ $community->description }}</p>
+                                                    <div class="profile__messenger">
+                                                        <img src="/images/icons/social/telegram.png">
+                                                        <p class="profile__text">{{ $community->title }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="profile__community_not_selected full-width">
+                                    <p>Вы можете объединять сообщества в одном проекте. Проекты позволят вам лучше
+                                        оргазивать свое
+                                        рабочие пространство в Tribes, а также смотреть по проектам статистику, донаты и
+                                        тарифы в
+                                        общем контексте.</p>
+                                </div>
+                            @endif
+                            <!-- END список сообществ проекта -->
+                        
+                        @endif
+                    
                     @endif
+                    
 
                 </div>
                 <div id="load_container"></div>

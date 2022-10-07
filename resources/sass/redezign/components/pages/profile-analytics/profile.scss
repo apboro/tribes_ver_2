@@ -77,6 +77,17 @@
         &.full-width > p {
             max-width: 100%;
         }
+
+        &.create-community {
+            min-height: 160px;
+            width: 100%;
+
+            > p {
+                margin: auto auto 0;
+                text-align: center;
+                max-width: 770px;
+            }
+        }
     }
 
     &__selected-wrap {
