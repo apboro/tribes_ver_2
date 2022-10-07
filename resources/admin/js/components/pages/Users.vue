@@ -104,7 +104,10 @@ export default {
     data() {
         return {
             sortName: 'date',
-            sortRuleOnDate: 'off'
+            sortRules: {
+                sortRuleOnDate: 'off'
+
+            },
         }
     },
 
@@ -124,6 +127,15 @@ export default {
     computed: {
         users() {
             return this.$store.getters.users;
+        },
+
+        sortRuleOnDate: {
+            get() {
+                return this.sortRules.sortRuleOnDate;
+            },
+            set(value) {
+                this.sortRules.sortRuleOnDate = value;
+            }
         }
     },
 
@@ -139,14 +151,19 @@ export default {
 
         sortBy(name) {
             this.sortName = name;
-            switch (this.sortRuleOnDate) {
-                case 'off': this.sortRuleOnDate = 'asc'; break;
-                case 'asc': this.sortRuleOnDate = 'desc'; break;
-                case 'desc': this.sortRuleOnDate = 'off'; break;
+            Object.keys(this.sortRules).forEach((rule) => rule == 'off');
+            
+            // костыляка на случай если будет не одна сортировка
+            if (this.sortName == 'date') {
+                switch (this.sortRuleOnDate) {
+                    case 'off': this.sortRuleOnDate = 'asc'; break;
+                    case 'asc': this.sortRuleOnDate = 'desc'; break;
+                    case 'desc': this.sortRuleOnDate = 'off'; break;
+                }
+                this.filter_data.filter.sort.rule = this.sortRuleOnDate;
             }
 
             this.filter_data.filter.sort.name = this.sortName;
-            this.filter_data.filter.sort.rule = this.sortRuleOnDate;
         },
 
         async excelLoad() {
