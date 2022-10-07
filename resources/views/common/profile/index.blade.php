@@ -1,5 +1,4 @@
-<section class="profile" data-plugin="Profile">
-
+<section class="profile" data-plugin="Profile" data-community-id="{{ $ids }}">
     <div class="profile__selected-project-community d-none">
         <h5 class="selected-project">Show</h5>
         <h5 class="selected-community">Hide</h5>

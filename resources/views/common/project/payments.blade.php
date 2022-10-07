@@ -2,9 +2,11 @@
 
 @section('content')
     <div
-            class="analytics-community community__tab"
-            data-tab="analyticsPaymentsPage"
+        class="analytics-community community__tab"
+        data-tab="analyticsPaymentsPage"
     >
+
+    
         <div class="analytics-community__analytics-wrap">
             <div class="analytics-community__title-wrap">
                 <a
