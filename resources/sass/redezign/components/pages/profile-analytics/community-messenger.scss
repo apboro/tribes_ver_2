@@ -1,9 +1,11 @@
 .community-messenger {
+    margin: 0 -15px;
     display: flex;
     flex-wrap: wrap;
-    margin: 0 -15px;
+    justify-content: center;
 
     &__item-wrap {
+        margin: 0 0 30px;
         padding: 0 15px;
         width: 100%;
 

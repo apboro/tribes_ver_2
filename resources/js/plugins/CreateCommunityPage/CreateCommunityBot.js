@@ -5,18 +5,31 @@ export class CreateCommunityBot {
         this.container = parent.container;
         this.tabContainers = this.container.querySelectorAll('[data-tab]');
 
+        this.backButton = document.getElementById("backButton");
+        this.title = document.getElementById('addCommunityTitle');
+
+        this.backButton.addEventListener('click', function(e){
+            // let a = e.target;
+            console.log(123123);
+        });
+
         this.loadingBlock2 = this.container.querySelectorAll('[data-community-answer-loading]');
         console.log(this.loadingBlock2);
         
         this.hash = null;
         this.interval = null;
         this.isFirstMsg = true;
+        let title = document.querySelectorAll('[data-pagename]')[0].dataset.pagename;
+        console.log(title);
+        this.title.innerText = title;
     }
 
     onClickTab(tab) {
         this.backBtn = tab;
         this.tabContainers.forEach((tabContainer) => {
             if (tab.dataset.tabBtn === tabContainer.dataset.tab) {
+                let title = tabContainer.dataset.pagename;
+                this.title.innerText = title;
                 tabContainer.classList.remove('hidden');
             } else {
                 tabContainer.classList.add('hidden');
