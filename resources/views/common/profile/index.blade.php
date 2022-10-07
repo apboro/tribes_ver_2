@@ -174,11 +174,11 @@
         id="hide_info"
         class="profile__hide-info @if(data::get('is_visible_sidebar') == 'false') active @endif"
     >
-        <span>
+        <span class="hide-info-project">
             {{ $activeProject->title ?? $activeCommunity->title ?? 'Без имени' }}
         </span>
         @if(!empty($activeCommunity->title))
-            <span>
+            <span  class="hide-info-community">
                 {{ $activeCommunity->title }}
             </span>
         @endif

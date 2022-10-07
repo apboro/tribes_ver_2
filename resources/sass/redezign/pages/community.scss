@@ -74,8 +74,8 @@
     }
 
     &__profile-btn {
-        padding: 4px 38px 4px 14px;
-        @include font($primary-1, 14px, 20px, 600);
+        padding: 4px 28px 4px 14px;
+        @include font($primary-1, 0px, 20px, 600);
         text-transform: uppercase;
         background-color: $white;
         border-radius: 2px;
@@ -99,6 +99,11 @@
         &.active::before {
             top: 32%;
             transform: rotate(-45deg);
+        }
+
+        @media (min-width: $lg) {
+            padding: 4px 38px 4px 14px;
+            font-size: 14px;
         }
     }
 

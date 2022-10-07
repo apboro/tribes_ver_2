@@ -283,15 +283,33 @@
 
     &__hide-info {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         @include font($primary-1, 16px, 20px, 500);
         opacity: 0;
         visibility: hidden;
         transition: $transition;
-
+        
         &.active {
             opacity: 1;
             visibility: visible;
         }
+        
+        @media (min-width: $lg) {
+            justify-content: space-between;
+            
+        }
+    }
+
+    .hide-info-project {
+        display: none;
+
+        @media (min-width: $lg) {
+            display: inline-block;
+        }
+    }
+
+    .hide-info-community,
+    .hide-info-project {
+        @include truncate(300px);
     }
 }
