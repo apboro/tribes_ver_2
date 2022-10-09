@@ -151,8 +151,7 @@ class TinkoffService
 
             }
             DB::commit();
-            TelegramLogService::staticSendLogMessage("Tinkoff получил ответ ОК");
-            return response('OK', 200);
+            return true;
         } catch (\Exception $e) {
             DB::rollback();
             //переделать на репор от
@@ -160,6 +159,7 @@ class TinkoffService
                 "Платёж " . $payment->id . " завершился неуспешно, Администрация в курсе" .
                 json_encode($e->getMessage())
             );
+            return false;
         }
     }
 }

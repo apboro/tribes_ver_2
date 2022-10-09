@@ -120,7 +120,10 @@ class PaymentController extends Controller
             $payment->RebillId = $request->RebillId ?? null;
             $payment->save();
 
-            TinkoffService::checkStatus($request, $payment, $previous_status);
+            if(TinkoffService::checkStatus($request, $payment, $previous_status)){
+                TelegramLogService::staticSendLogMessage("Tinkoff получил ответ ОК");
+                return response('OK', 200);
+            }
 
         } else {
             //todo сделать через Исключение
