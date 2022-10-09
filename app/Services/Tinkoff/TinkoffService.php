@@ -151,6 +151,7 @@ class TinkoffService
 
             }
             DB::commit();
+            TelegramLogService::staticSendLogMessage("Tinkoff получил ответ ОК");
             return response('OK', 200);
         } catch (\Exception $e) {
             DB::rollback();
