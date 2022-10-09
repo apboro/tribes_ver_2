@@ -53,7 +53,7 @@ class TinkoffService
             $new_status = $data->Status;
             $previous_status = trim($previous_status); // todo в базе почему то тип char, надо убрать, ставит кучу пробелов
 
-            if ($previous_status !== $new_status) {
+            if ($previous_status != $new_status) {
                 $community = $payment->community ?? null;
                 if (($previous_status == 'FORM_SHOWED' || $previous_status == 'NEW' || $previous_status == 'AUTHORIZED') && $new_status == 'CONFIRMED') {
                     $decoder = [
