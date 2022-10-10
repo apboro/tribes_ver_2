@@ -1,34 +1,37 @@
-<section class="profile" data-plugin="Profile">
-
+<section class="profile" data-plugin="Profile" data-community-id="{{ $ids }}">
     <div class="profile__selected-project-community d-none">
         <h5 class="selected-project">Show</h5>
         <h5 class="selected-community">Hide</h5>
     </div>
-    <div id="hideShow" class="profile__hide-show" data-tab="profileBlock">
-
+    
+    <div
+        id="hideShow"
+        class="profile__hide-show @if(data::get('is_visible_sidebar') == 'false') active @endif"
+        @if(data::get('is_visible_sidebar') == 'false')  style="max-height:  0" @endif
+        data-tab="profileBlock"
+    >
         @if( $projects->isEmpty())
             <!--START нет проектов и сообществ -->
             <div class="profile__start-work">
                 <div class="profile__community_not_selected">
-                    <p>У вас нет проектов. Начните работу с Tribes, создав новый проект и добавив в него свои
-                        сообщетсва.</p>
+                    <p>
+                        У вас нет проектов. Начните работу с Tribes, создав новый проект и добавив в него свои сообщетсва.
+                    </p>
                 </div>
 
                 <button
-                        class="button-filled button-filled--primary"
-                        type="submit"
-                        data-repeater-create
+                    class="button-filled button-filled--primary"
+                    type="submit"
+                    data-repeater-create
                 >
                     Начать работу
                 </button>
             </div>
             <!--END нет проектов и сообществ -->
-
         @else
             <div class="profile__wrapper">
                 <div class="profile__channel-owner">
                     @include('common.template.assets.project_list')
-
 
                     @if(empty($activeCommunity))
                         <!-- START если сообщество не выбрано -->
@@ -50,10 +53,18 @@
                                     <img src="{{$activeCommunity->image ?? '/images/no-image.png'}}" alt="Avatar">
                                 </div>
                                 <div class="profile__community-description">
-                                    <h4 class="profile__community-description--title">{{$activeCommunity->title}}</h4>
-                                    <a class="profile__community-description--link"
-                                       href="https://t.me/TribesSupport_bot">
-                                        <img src="/images/icons/social/telegram.png" alt="Telegram">
+                                    <h4 class="profile__community-description--title">
+                                        {{ $activeCommunity->title }}
+                                    </h4>
+                                    
+                                    <a
+                                        class="profile__community-description--link"
+                                        href="https://t.me/TribesSupport_bot"
+                                    >
+                                        <img
+                                            src="/images/icons/social/telegram.png"
+                                            alt="Telegram"
+                                        >
                                         https://t.me/{{$activeCommunity->image}}
                                     </a>
                                     <p class="profile__community-description--subscribers">
@@ -93,8 +104,6 @@
                         </div>
                         <!-- END профиль выбранного сообщества -->
                     @endif
-
-
                 </div>
 
                 <div class="profile__list-channel">
@@ -172,14 +181,28 @@
         @endif
     </div>
 
-    <div class="community__profile-btn-wrapper project-community">
+    <div
+        id="hide_info"
+        class="profile__hide-info @if(data::get('is_visible_sidebar') == 'false') active @endif"
+    >
+        <span class="hide-info-project">
+            {{ $activeProject->title ?? $activeCommunity->title ?? 'Без имени' }}
+        </span>
+        @if(!empty($activeCommunity->title))
+            <span  class="hide-info-community">
+                {{ $activeCommunity->title }}
+            </span>
+        @endif
+    </div>
+
+    <div class="community__profile-btn-wrapper">
         <button
-                id="btn_profile"
-                class="community__profile-btn"
-                onclick="Profile.toggleProfileCommunityVisibility(event)"
-                data-switch-visibility-btn
+            id="btn_profile"
+            class="community__profile-btn @if(data::get('is_visible_sidebar') == 'false') active @endif"
+            onclick="Profile.toggleProfileCommunityVisibility(event)"
+            data-switch-visibility-btn
         >
-            Скрыть
+            @if(data::get('is_visible_sidebar') == 'false') Раскрыть @else Скрыть @endif
         </button>
     </div>
 </section>

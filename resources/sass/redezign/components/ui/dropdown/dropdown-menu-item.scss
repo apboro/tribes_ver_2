@@ -116,6 +116,7 @@
         clear: both;
         transition: .3s;
 
+        &.active,
         &:hover,
         &:focus {
             //background-color: $secondary-hover-color;

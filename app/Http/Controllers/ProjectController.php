@@ -140,7 +140,9 @@ class ProjectController extends Controller
     public function donates($project = null, $community = null, ProjectRequest $request)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
-        $donates = $this->donateRepository->getDonatesByCommunities(explode('-', $ids));
+        
+        $donates = empty($ids)? null : $this->donateRepository->getDonatesByCommunities(explode('-', $ids));
+       
         return view('common.project.donate')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community', 'donates')
         );
@@ -160,7 +162,7 @@ class ProjectController extends Controller
             $isActive = false;
             $isPersonal = null;
         }
-        $tariffs = $this->tariffRepository->getTariffVariantsByCommunities(explode('-', $ids), $isActive, $isPersonal);
+        $tariffs =  empty($ids)? null :$this->tariffRepository->getTariffVariantsByCommunities(explode('-', $ids), $isActive, $isPersonal);
 
         return view('common.project.tariff')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity',
