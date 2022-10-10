@@ -85,7 +85,7 @@ class MainBotCommands
         'tariffOnUser',
         'tariffOnChat',
         'inlineCommand',
-        // "inlineTariffCommand",
+        "inlineTariffCommand",
         // 'donateOnChat',
         // 'donateOnUser',
         // 'materialAid',
