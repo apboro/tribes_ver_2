@@ -54,10 +54,10 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     public function run(string $nameBot, string $data)
     {
         try {
-            // $object = json_decode($data, false) ?: null;
-            // if (!isset($object->channel_post)) {
-            //     $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
-            // }
+            $object = json_decode($data, false) ?: null;
+            if (!isset($object->channel_post)) {
+                $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
+            }
             // $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
             // $events->initEventsMainBot();
             // $events->initEventsMainBot([[
@@ -72,7 +72,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             // $events->initEventsMainBot([[
             //     'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
             // ]]);
-            // $this->getCommandsForBot($nameBot)->initCommand();
+            $this->getCommandsForBot($nameBot)->initCommand();
             // $this->botCollect->getBotByName($nameBot)->polling();
             $this->botCollect->getBotByName($nameBot)->listen($data);
         } catch (Exception | TelegramException $e) {
