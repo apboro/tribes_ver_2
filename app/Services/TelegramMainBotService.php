@@ -55,9 +55,6 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     {
         try {
             $object = json_decode($data, false) ?: null;
-            // if ($object === null) {
-            //     throw new TelegramException('Пустой запрос');
-            // }
             if (!isset($object->channel_post)) {
                 $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
             }
