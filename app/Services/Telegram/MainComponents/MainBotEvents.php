@@ -3,7 +3,6 @@
 namespace App\Services\Telegram\MainComponents;
 
 use App\Exceptions\KnowledgeException;
-use App\Exceptions\TelegramException;
 use App\Helper\ArrayHelper;
 use App\Models\Community;
 use App\Repositories\Tariff\TariffRepositoryContract;
