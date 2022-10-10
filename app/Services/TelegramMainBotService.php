@@ -54,20 +54,20 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             if (!isset($object->channel_post)) {
                 $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
             }
-            $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
-            $events->initEventsMainBot();
-            $events->initEventsMainBot([[
-                'isNewReplay'=>[app('knowledgeObserver'), 'handleAuthorReply'],
-                'isNewTextMessage' => [app('knowledgeObserver'),'detectUserQuestion'],
-                'isNewForwardMessageInBotChat' => [
-                    app('knowledgeObserver'),
-                    'detectForwardMessageBotQuestion',
-                    ['botName' => $nameBot]
-                ],
-            ]]);
-            $events->initEventsMainBot([[
-                'isNewTextMessage' => [app('messageObserver'),'handleUserMessage'],
-            ]]);
+            // $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
+            // $events->initEventsMainBot();
+            // $events->initEventsMainBot([[
+            //     'isNewReplay'=>[app('knowledgeObserver'), 'handleAuthorReply'],
+            //     'isNewTextMessage' => [app('knowledgeObserver'),'detectUserQuestion'],
+            //     'isNewForwardMessageInBotChat' => [
+            //         app('knowledgeObserver'),
+            //         'detectForwardMessageBotQuestion',
+            //         ['botName' => $nameBot]
+            //     ],
+            // ]]);
+            // $events->initEventsMainBot([[
+            //     'isNewTextMessage' => [app('messageObserver'),'handleUserMessage'],
+            // ]]);
             $this->getCommandsForBot($nameBot)->initCommand();
             $this->botCollect->getBotByName($nameBot)->listen($data);
         } catch (TeletantException| TelegramException $e) {
