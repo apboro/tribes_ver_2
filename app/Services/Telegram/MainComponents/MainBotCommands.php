@@ -78,24 +78,24 @@ class MainBotCommands
 
     public function initCommand(array $methods = [
         'startBot',
-        'startOnGroup',
-        'getTelegramUserId',
-        'getChatId',
-        'getChatType',
-        'tariffOnUser',
-        'tariffOnChat',
-        'inlineCommand',
-        "inlineTariffCommand",
-        'donateOnChat',
-        'donateOnUser',
-        'materialAid',
-        'personalArea',
-        'faq',
-        'mySubscriptions',
-        'subscriptionSearch',
-        'setTariffForUserByPayId',
-        'knowledgeSearch',
-        'saveForwardMessageInBotChatAsQA',
+        // 'startOnGroup',
+        // 'getTelegramUserId',
+        // 'getChatId',
+        // 'getChatType',
+        // 'tariffOnUser',
+        // 'tariffOnChat',
+        // 'inlineCommand',
+        // "inlineTariffCommand",
+        // 'donateOnChat',
+        // 'donateOnUser',
+        // 'materialAid',
+        // 'personalArea',
+        // 'faq',
+        // 'mySubscriptions',
+        // 'subscriptionSearch',
+        // 'setTariffForUserByPayId',
+        // 'knowledgeSearch',
+        // 'saveForwardMessageInBotChatAsQA',
     ])
     {
         foreach ($methods as $method) {
@@ -110,7 +110,6 @@ class MainBotCommands
         try {
             $this->createMenu();
             $this->bot->onText('/start {paymentId?}', function (Context $ctx) {
-                $ctx->reply('Здравствуйте, вас приветствует TestBot');
                 $users = TelegramUser::where('user_id', '!=', NULL)->where('telegram_id', $ctx->getUserID())->get();
 
                 if ($users->first()) {
@@ -896,6 +895,7 @@ class MainBotCommands
                 ->row()->btn('🚀Личный кабинет')
                 ->row()->btn('📂Мои подписки');
         } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
