@@ -123,7 +123,7 @@ class Community extends Model
         if($data && is_array($data)){
             $params = '?' . http_build_query($data);
         }
-//        $this->generateHash();
+       $this->generateHash();
         return route('community.tariff.payment', ['hash' => $this->hash]) . $params;
     }
 

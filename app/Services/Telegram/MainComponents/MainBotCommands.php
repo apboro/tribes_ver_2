@@ -250,9 +250,9 @@ class MainBotCommands
                 $this->inlineTariffQuery($community->tariff()->first(), $community);
                 foreach ($community->tariffVariants as $tv) {
                     if (!$tv)
-                        return false;
+                        continue;
                     if (!$tv->inline_link)
-                        return false;
+                        continue;
                     // todo реализовать логику отображения подсказок для инлайн команд тарифов
                     $this->inlineTariffQuery($tv, $community);
                 }
@@ -299,6 +299,71 @@ class MainBotCommands
                 }
                 $article->title($community->title);
                 $article->inputMessageContent($message);
+
+                $article->keyboard($menu->getAsObject());
+                $result->add($article);
+                $ctx->Api()->answerInlineQuery([
+                    'inline_query_id' => $ctx->getInlineQueryID(),
+                    'results' => (string)$result,
+                ]);
+            });
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    private function inlineQuery($donate)
+    {
+        try {
+            $this->bot->onInlineQuery($donate->inline_link, function (Context $ctx) use ($donate) {
+
+                $result = new Result();
+                $article = new Article(1);
+                $message = new InputTextMessageContent();
+
+                $image = $donate->getMainImage() ? $donate->getMainImage()->url : '';
+                $description = $donate->description ? $donate->description : '';
+                $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
+
+                $message->parseMode('HTML');
+                $article->title($donate->community->title);
+
+                if ($donate->description)
+                    $article->description(mb_strimwidth($donate->description, 0, 55, "..."));
+
+                $article->inputMessageContent($message);
+                $article->thumbUrl('' . route('main') . $image);
+
+                $menu = Menux::Create('a')->inline();
+                foreach ($donate->variants as $variant) {
+                    if ($variant->price && $variant->isActive !== false) {
+                        $key = array_search($variant->currency, Donate::$currency);
+
+                        $currencyLabel = Donate::$currency_labels[$key];
+                        $data = [
+                            'amount' => $variant->price,
+                            'currency' => $variant->currency,
+                            'donateId' => $donate->id
+                        ];
+
+                        if ($variant->description) {
+                            $menu->row()->uBtn(
+                                $variant->price . $currencyLabel . ' — ' . $variant->description,
+                                $donate->community->getDonatePaymentLink($data)
+                            );
+                        } else {
+                            $menu->row()->uBtn($variant->price . $currencyLabel, $donate->community->getDonatePaymentLink($data));
+                        }
+                    } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
+                        $dataNull = [
+                            'amount' => 0,
+                            'currency' => 0,
+                            'donateId' => $donate->id
+                        ];
+                        $variantDesc = $variant->description ? $variant->description : 'Произвольная сумма';
+                        $menu->row()->uBtn($variantDesc, $donate->community->getDonatePaymentLink($dataNull));
+                    }
+                }
 
                 $article->keyboard($menu->getAsObject());
                 $result->add($article);
@@ -923,71 +988,6 @@ class MainBotCommands
                 ]));
             }
             return [$text, $menu];
-        } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
-    }
-
-    private function inlineQuery($donate)
-    {
-        try {
-            $this->bot->onInlineQuery($donate->inline_link, function (Context $ctx) use ($donate) {
-
-                $result = new Result();
-                $article = new Article(1);
-                $message = new InputTextMessageContent();
-
-                $image = $donate->getMainImage() ? $donate->getMainImage()->url : '';
-                $description = $donate->description ? $donate->description : '';
-                $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
-
-                $message->parseMode('HTML');
-                $article->title($donate->community->title);
-
-                if ($donate->description)
-                    $article->description(mb_strimwidth($donate->description, 0, 55, "..."));
-
-                $article->inputMessageContent($message);
-                $article->thumbUrl('' . route('main') . $image);
-
-                $menu = Menux::Create('a')->inline();
-                foreach ($donate->variants as $variant) {
-                    if ($variant->price && $variant->isActive !== false) {
-                        $key = array_search($variant->currency, Donate::$currency);
-
-                        $currencyLabel = Donate::$currency_labels[$key];
-                        $data = [
-                            'amount' => $variant->price,
-                            'currency' => $variant->currency,
-                            'donateId' => $donate->id
-                        ];
-
-                        if ($variant->description) {
-                            $menu->row()->uBtn(
-                                $variant->price . $currencyLabel . ' — ' . $variant->description,
-                                $donate->community->getDonatePaymentLink($data)
-                            );
-                        } else {
-                            $menu->row()->uBtn($variant->price . $currencyLabel, $donate->community->getDonatePaymentLink($data));
-                        }
-                    } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
-                        $dataNull = [
-                            'amount' => 0,
-                            'currency' => 0,
-                            'donateId' => $donate->id
-                        ];
-                        $variantDesc = $variant->description ? $variant->description : 'Произвольная сумма';
-                        $menu->row()->uBtn($variantDesc, $donate->community->getDonatePaymentLink($dataNull));
-                    }
-                }
-
-                $article->keyboard($menu->getAsObject());
-                $result->add($article);
-                $ctx->Api()->answerInlineQuery([
-                    'inline_query_id' => $ctx->getInlineQueryID(),
-                    'results' => (string)$result,
-                ]);
-            });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
