@@ -11,6 +11,7 @@ use App\Services\Telegram\MainComponents\MainBotEvents;
 use App\Services\Telegram\MainComponents\MessageObserver;
 use App\Services\Telegram\MainComponents\TelegramMidlwares;
 use Askoldex\Teletant\Exception\TeletantException;
+use Exception;
 
 class TelegramMainBotService implements TelegramMainBotServiceContract
 {
@@ -37,7 +38,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         try {
             $this->mainBotCommands->initBot($this->botCollect->getBotByName($nameBot));
             return $this->mainBotCommands;
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -46,7 +47,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     {
         try {
             return $this->botCollect->getBotByName($nameBot)->getExtentionApi();
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -75,7 +76,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         //     $this->getCommandsForBot($nameBot)->initCommand();
         //     // $this->botCollect->getBotByName($nameBot)->polling();
             $this->botCollect->getBotByName($nameBot)->listen($data);
-        } catch (TeletantException | TelegramException $e) {
+        } catch (Exception $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -88,7 +89,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
                 'text'           => $text,
                 'parse_mode'     => 'HTML'
             ]);
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -99,7 +100,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             if ($this->botCollect->hasBotByName($botName)) {
                 $this->getApiCommandsForBot($botName)->sendMess($chatId, $textMessage, $preview, $keyboard);
             }
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -110,7 +111,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             if ($this->botCollect->hasBotByName($botName)) {
                 $this->getCommandsForBot($botName)->sendMessageFromBotWithTariff($chatId, $textMessage, $community);
             }
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -119,7 +120,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     {
         try {
             $this->getCommandsForBot($botName)->sendDonateMessage($chatId, $donateId);
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -128,7 +129,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     {
         try {
             $this->getCommandsForBot($botName)->sendTariffMessage($community);
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -137,7 +138,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     {
         try {
             $this->getApiCommandsForBot($botName)->kickUser($userId, $chatId);
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -146,7 +147,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     {
         try {
             $this->getApiCommandsForBot($botName)->unKickUser($userId, $chatId);
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -155,7 +156,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     {
         try {
             return $this->getApiCommandsForBot($botName)->getChatCount($chatId);
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -164,7 +165,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     {
         try {
             return $this->getApiCommandsForBot($botName)->getChatAdministratorsList($chatId);
-        } catch (TeletantException | TelegramException $e) {
+        } catch (TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
