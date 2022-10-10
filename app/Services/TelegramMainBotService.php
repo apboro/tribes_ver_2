@@ -55,9 +55,9 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     {
         try {
             $object = json_decode($data, false) ?: null;
-            if ($object === null) {
-                throw new TelegramException('Пустой запрос');
-            }
+            // if ($object === null) {
+            //     throw new TelegramException('Пустой запрос');
+            // }
             if (!isset($object->channel_post)) {
                 $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
             }
@@ -75,7 +75,8 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             $events->initEventsMainBot([[
                 'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
             ]]);
-            // $this->getCommandsForBot($nameBot)->initCommand();
+            $this->getCommandsForBot($nameBot)->initCommand();
+            // $this->botCollect->getBotByName($nameBot)->polling();
             $this->botCollect->getBotByName($nameBot)->listen($data);
         } catch (TeletantException | TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());

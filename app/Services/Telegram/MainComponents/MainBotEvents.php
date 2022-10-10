@@ -19,9 +19,10 @@ class MainBotEvents
     public function __construct(MainBot $bot, ?object $data)
     {
         $this->bot = $bot;
-        if ($data === null)
-            throw new TelegramException('Пустой запрос');
-        else $this->data = $data;
+        // if ($data === null)
+            // throw new TelegramException('Пустой запрос');
+        // else $this->data = $data;
+        $this->data = $data;
     }
 
     public function initEventsMainBot(array $config = [
