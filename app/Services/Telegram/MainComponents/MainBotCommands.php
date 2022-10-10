@@ -109,9 +109,10 @@ class MainBotCommands
 
     protected function startBot()
     {
-        $this->createMenu();
-        $this->bot->onText('/start {paymentId?}', function (Context $ctx) {
-            try {
+        try {
+            $this->createMenu();
+            $this->bot->onText('/start {paymentId?}', function (Context $ctx) {
+
                 $users = TelegramUser::where('user_id', '!=', NULL)->where('telegram_id', $ctx->getUserID())->get();
 
                 if ($users->first()) {
@@ -129,29 +130,36 @@ class MainBotCommands
                 if (!empty($ctx->var('paymentId'))) {
                     $this->connectionTariff($ctx);
                 }
-            } catch (TeletantException $e) {
-                return $ctx->reply('Что-то пошло не так, пожалуйста обратитесь в службу поддержки.' . 'Ошибка:'
-                    . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-            }
-        });
+            });
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
     }
 
     protected function startOnGroup()
     {
-        $this->bot->onCommand('start' . $this->bot->botFullName, function (Context $ctx) {
-            $ctx->reply('Здравствуйте, ' . $ctx->getFirstName() . "! \n"
-                . 'Список доступных для вас команд:' . "\n"
-                . $this->getCommandsListAsString());
-        });
+        try {
+            $this->bot->onCommand('start' . $this->bot->botFullName, function (Context $ctx) {
+                $ctx->reply('Здравствуйте, ' . $ctx->getFirstName() . "! \n"
+                    . 'Список доступных для вас команд:' . "\n"
+                    . $this->getCommandsListAsString());
+            });
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
     }
 
     protected function getTelegramUserId()
     {
-        $this->bot->onCommand('myid', function (Context $ctx) {
-            if ($ctx->getChatType() != 'channel') {
-                $ctx->reply($ctx->getUserID());
-            }
-        });
+        try {
+            $this->bot->onCommand('myid', function (Context $ctx) {
+                if ($ctx->getChatType() != 'channel') {
+                    $ctx->reply($ctx->getUserID());
+                }
+            });
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
     }
 
     protected function getChatId()
@@ -170,36 +178,48 @@ class MainBotCommands
 
     protected function setCommand()
     {
-        $this->bot->onCommand('setCommand', function (Context $ctx) {
-            $commands = [];
-            foreach ($this->availableBotCommands as $command => $description) {
-                $commands['command'] = '/' . $command;
-                $commands['description'] = $description;
-            }
+        try {
+            $this->bot->onCommand('setCommand', function (Context $ctx) {
+                $commands = [];
+                foreach ($this->availableBotCommands as $command => $description) {
+                    $commands['command'] = '/' . $command;
+                    $commands['description'] = $description;
+                }
 
-            $this->bot->getExtentionApi()->setMyCommands(['commands' => $commands]);
-            $ctx->reply('Команды зарегистрированы.');
-        });
+                $this->bot->getExtentionApi()->setMyCommands(['commands' => $commands]);
+                $ctx->reply('Команды зарегистрированы.');
+            });
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
     }
 
     protected function tariffOnUser()
     {
-        $this->bot->onCommand('tariff', function (Context $ctx) {
-            if (str_split($ctx->getChatID(), 1)[0] !== '-') {
-                $ctx->reply('Доступные тарифы находятся в разделе "Мои подписки".');
-            }
-        });
+        try {
+            $this->bot->onCommand('tariff', function (Context $ctx) {
+                if (str_split($ctx->getChatID(), 1)[0] !== '-') {
+                    $ctx->reply('Доступные тарифы находятся в разделе "Мои подписки".');
+                }
+            });
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
     }
 
     protected function tariffOnChat()
     {
-        $this->bot->onCommand('tariff' . $this->bot->botFullName, function (Context $ctx) {
-            $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
-            if ($community) {
-                [$text, $menu] = $this->tariffButton($community);
-                $ctx->replyHTML($text, $menu);
-            } else $ctx->replyHTML('Тарифов нет.');
-        });
+        try {
+            $this->bot->onCommand('tariff' . $this->bot->botFullName, function (Context $ctx) {
+                $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
+                if ($community) {
+                    [$text, $menu] = $this->tariffButton($community);
+                    $ctx->replyHTML($text, $menu);
+                } else $ctx->replyHTML('Тарифов нет.');
+            });
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
     }
 
     protected function inlineCommand()
@@ -254,7 +274,7 @@ class MainBotCommands
             $message = new InputTextMessageContent();
             $message->parseMode('HTML');
 
-            if($tariff instanceof TariffVariant) {
+            if ($tariff instanceof TariffVariant) {
                 //todo для одиночного тарифа
                 $menu = Menux::Create('links')->inline();
                 $variant = $tariff;
@@ -268,10 +288,9 @@ class MainBotCommands
                     'currency' => 0,
                     'type' => 'tariff',
                     'telegram_user_id' => null,
-                    'inline_link'=> $variant->inline_link,
+                    'inline_link' => $variant->inline_link,
                 ]));
-
-            }elseif($tariff instanceof Tariff) {
+            } elseif ($tariff instanceof Tariff) {
                 //todo для всех активных не персональных тарифов сообщества
                 $image = $tariff->getMainImage() ? $tariff->getMainImage()->url : '';
                 $description = $tariff->publication_description ?? '&#160';
@@ -279,7 +298,6 @@ class MainBotCommands
                 $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
                 $article->thumbUrl('' . route('main') . $image);
                 [$text, $menu] = $this->tariffButton($community);
-
             }
             $article->title($community->title);
             $article->inputMessageContent($message);
@@ -611,7 +629,7 @@ class MainBotCommands
                         \nТариф: $tariffTitle
                         $periodDays",
                         $menu
-                    ); 
+                    );
                 } else {
                     $ctx->reply("Подписка отсуствует.");
                 }
@@ -729,7 +747,7 @@ class MainBotCommands
             $this->bot->onAction('access-{id:string}', function (Context $ctx) {
                 $connectionId = $ctx->var('id');
                 $connection = $this->connectionRepo->getConnectionById($connectionId);
-                
+
                 $invite = $this->createAndSaveInviteLink($connection);
                 $ctx->replyHTML('Ссылка: <a href="' . $invite . '">' . $connection->chat_title . '</a>');
             });
@@ -881,8 +899,8 @@ class MainBotCommands
             $menu = Menux::Create('links')->inline();
             $text = 'Доступные тарифы';
             $variants = $community->tariff->variants()
-                ->where('isActive',true)
-                ->where('isPersonal',false)
+                ->where('isActive', true)
+                ->where('isPersonal', false)
                 ->get();
             if ($variants->count() == 0) {
                 return ['Тарифы не установлены для сообщества', ''];
