@@ -309,5 +309,9 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+        &.folder {
+            color: $primary-1;
+        }
     }
 }

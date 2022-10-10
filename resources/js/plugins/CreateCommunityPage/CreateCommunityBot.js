@@ -69,6 +69,7 @@ export class CreateCommunityBot {
             });
 
             this.hash = resp.data.original.hash;
+            
             this.interval = this.waitForAnswer((data) => {
                 if (data.original && data.original.status === "completed") {
                     this.botConnectedEvent(data.original, messenger, type);
@@ -126,7 +127,7 @@ export class CreateCommunityBot {
         this.successMessageBlock = this.communityAnswerContainer.querySelector('[data-community-answer-success-message]');
         
         this.loadingBlock.classList.add('hide');
-        this.successMessageBlock.innerHTML = this.createSuccessMessage(data);
+        this.successMessageBlock.innerHTML = this.createSuccessMessage(data, type);
         this.createRedirectBlock(data);
         
     }
@@ -160,13 +161,15 @@ export class CreateCommunityBot {
         }, 1000);
     }
 
-    createSuccessMessage(data) {
+    createSuccessMessage(data, type) {
+        console.log(data)
         return `
             <div class="d-flex flex-column justify-content-center align-items-center">
                 <i class="telegram-icon telegram-icon-50"></i>
                 <span class="mt-1">
                     ${ data.community.title } — <span style="color: #28c76f;">${ Dict.write('base', 'connected_low') }</span>
-                </span>
+                </span> 
+                <span>${ type == 'channel' ? 'Канал' : 'Группа' }</span>
                 <a href="/community/${ data.community.id }/statistic" class="btn btn-success mt-2">${ Dict.write('base', 'go_management') }</a>
             </div>
 
