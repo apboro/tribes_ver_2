@@ -60,18 +60,18 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             }
             $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
             $events->initEventsMainBot();
-            // $events->initEventsMainBot([[
-            //     'isNewReplay' => [app('knowledgeObserver'), 'handleAuthorReply'],
-            //     'isNewTextMessage' => [app('knowledgeObserver'), 'detectUserQuestion'],
-            //     'isNewForwardMessageInBotChat' => [
-            //         app('knowledgeObserver'),
-            //         'detectForwardMessageBotQuestion',
-            //         ['botName' => $nameBot]
-            //     ],
-            // ]]);
-            // $events->initEventsMainBot([[
-            //     'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
-            // ]]);
+            $events->initEventsMainBot([[
+                'isNewReplay' => [app('knowledgeObserver'), 'handleAuthorReply'],
+                'isNewTextMessage' => [app('knowledgeObserver'), 'detectUserQuestion'],
+                'isNewForwardMessageInBotChat' => [
+                    app('knowledgeObserver'),
+                    'detectForwardMessageBotQuestion',
+                    ['botName' => $nameBot]
+                ],
+            ]]);
+            $events->initEventsMainBot([[
+                'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
+            ]]);
             // $this->getCommandsForBot($nameBot)->initCommand();
             // $this->botCollect->getBotByName($nameBot)->polling();
             $this->botCollect->getBotByName($nameBot)->listen($data);
