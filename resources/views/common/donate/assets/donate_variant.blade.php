@@ -33,6 +33,8 @@
                     placeholder="{{ __('donate.donate_variant_description') }}"
                     value="{{ $donate && $donate->getVariantByIndex($index)->description ? $donate->getVariantByIndex($index)->description : old('donate.' . $index . '.description') }}"
                 />
+
+                <input type="hidden" name="donate[{{ $index }}][variant_id]" value="{{$donate && $donate->getVariantByIndex($index)->id ? $donate->getVariantByIndex($index)->id : ""}}">
                 <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">
                     <i data-feather='save' class="font-medium-1" ></i>
                 </span>

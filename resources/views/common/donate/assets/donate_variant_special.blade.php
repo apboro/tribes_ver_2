@@ -15,6 +15,7 @@
                     onchange="CommunityPage.donatePage.donateSwitcher.onChangeDonateItemCheck(this)"
                     {{ ($donate && $donate->getVariantByIndex($index)->isActive) || old('donate.' . $index . '.status') ? 'checked' : null }}
                 />
+                <input type="hidden" name="donate[{{ $index }}][variant_id]" value="{{$donate && $donate->getVariantByIndex($index)->id ? $donate->getVariantByIndex($index)->id : ""}}">
             </div>
         </div>
 
