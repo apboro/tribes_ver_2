@@ -82,7 +82,7 @@ class MainBotCommands
         'getTelegramUserId',
         'getChatId',
         'getChatType',
-        // 'tariffOnUser',
+        'tariffOnUser',
         // 'tariffOnChat',
         // 'inlineCommand',
         // "inlineTariffCommand",
