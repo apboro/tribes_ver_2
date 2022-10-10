@@ -55,26 +55,26 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     public function run(string $nameBot, string $data)
     {
         try {
-        //     $object = json_decode($data, false) ?: null;
-        //     if (!isset($object->channel_post)) {
-        //         $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
-        //     }
-        //     $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
-        //     $events->initEventsMainBot();
-        //     $events->initEventsMainBot([[
-        //         'isNewReplay' => [app('knowledgeObserver'), 'handleAuthorReply'],
-        //         'isNewTextMessage' => [app('knowledgeObserver'), 'detectUserQuestion'],
-        //         'isNewForwardMessageInBotChat' => [
-        //             app('knowledgeObserver'),
-        //             'detectForwardMessageBotQuestion',
-        //             ['botName' => $nameBot]
-        //         ],
-        //     ]]);
-        //     $events->initEventsMainBot([[
-        //         'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
-        //     ]]);
-        //     $this->getCommandsForBot($nameBot)->initCommand();
-        //     // $this->botCollect->getBotByName($nameBot)->polling();
+            $object = json_decode($data, false) ?: null;
+            if (!isset($object->channel_post)) {
+                $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
+            }
+            $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
+            $events->initEventsMainBot();
+            $events->initEventsMainBot([[
+                'isNewReplay' => [app('knowledgeObserver'), 'handleAuthorReply'],
+                'isNewTextMessage' => [app('knowledgeObserver'), 'detectUserQuestion'],
+                'isNewForwardMessageInBotChat' => [
+                    app('knowledgeObserver'),
+                    'detectForwardMessageBotQuestion',
+                    ['botName' => $nameBot]
+                ],
+            ]]);
+            $events->initEventsMainBot([[
+                'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
+            ]]);
+            $this->getCommandsForBot($nameBot)->initCommand();
+            // $this->botCollect->getBotByName($nameBot)->polling();
             $this->botCollect->getBotByName($nameBot)->listen($data);
         } catch (Exception $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
