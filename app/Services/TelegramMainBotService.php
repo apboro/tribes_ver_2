@@ -53,7 +53,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
 
     public function run(string $nameBot, string $data)
     {
-        // try {
+        try {
         //     $object = json_decode($data, false) ?: null;
         //     if (!isset($object->channel_post)) {
         //         $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
@@ -74,10 +74,10 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         //     ]]);
         //     $this->getCommandsForBot($nameBot)->initCommand();
         //     // $this->botCollect->getBotByName($nameBot)->polling();
-        //     $this->botCollect->getBotByName($nameBot)->listen($data);
-        // } catch (TeletantException | TelegramException $e) {
-        //     $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
-        // }
+            $this->botCollect->getBotByName($nameBot)->listen($data);
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+        }
     }
 
     public function sendLogMessage(string $text)
