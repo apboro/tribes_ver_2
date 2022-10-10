@@ -250,9 +250,9 @@ class MainBotCommands
                 $this->inlineTariffQuery($community->tariff()->first(), $community);
                 foreach ($community->tariffVariants as $tv) {
                     if (!$tv)
-                        continue;
+                        return false;
                     if (!$tv->inline_link)
-                        continue;
+                        return false;
                     // todo реализовать логику отображения подсказок для инлайн команд тарифов
                     $this->inlineTariffQuery($tv, $community);
                 }
@@ -281,7 +281,7 @@ class MainBotCommands
                     $title = ($variant->title) ? $variant->title . ' — ' : '';
                     $period = ($variant->period) ? '/Дней:' . $variant->period : '';
                     $article->description(mb_strimwidth($title, 0, 55, "..."));
-                    $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
+                    $menu->row()->uBtn($title . $price . $period, $community->getTariffPayLink([
                         'amount' => $variant->price,
                         'currency' => 0,
                         'type' => 'tariff',
@@ -980,7 +980,7 @@ class MainBotCommands
                 $price = ($variant->price) ? $variant->price . '₽' : '';
                 $title = ($variant->title) ? $variant->title . ' — ' : '';
                 $period = ($variant->period) ? '/Дней:' . $variant->period : '';
-                $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
+                $menu->row()->uBtn($title . $price . $period, $community->getTariffPayLink([
                     'amount' => $variant->price,
                     'currency' => 0,
                     'type' => 'tariff',
