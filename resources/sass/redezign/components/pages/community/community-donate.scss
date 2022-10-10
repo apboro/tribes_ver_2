@@ -1,0 +1,14 @@
+.community-donate {
+
+
+    &__list {
+        display: grid;
+        gap: 30px;
+        margin-top: 30px;
+        list-style: none;
+        
+        @media (min-width: $sm) {
+            grid-template-columns: repeat(auto-fill, 350px);
+        }
+    }
+}
