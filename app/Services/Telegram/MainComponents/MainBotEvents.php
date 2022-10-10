@@ -306,18 +306,6 @@ class MainBotEvents
         return '';
     }
 
-    /* Слушатель сообщений, возвращает текст, chatId, userId */
-    protected function hearsAndWriting($callable, $params = [])
-    {
-        if (isset($this->data->message->text)) {
-            $callable([
-                'text' => $this->data->message->text,
-                'chat_id' => $this->data->message->chat->id,
-                'user_id' => $this->data->message->from->id
-            ]);
-        }
-    }
-
     /**
      * @param string|array $callable
      * @return void
