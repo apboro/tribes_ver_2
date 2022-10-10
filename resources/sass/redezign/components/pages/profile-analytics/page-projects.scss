@@ -64,11 +64,18 @@
     &__folder-image {
         width: 20%;
 
-        > img {
+        > img,
+        &.communities-left {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             border: 1px solid $white;
+        }
+
+        &.communities-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     }
 
