@@ -83,7 +83,7 @@ class MainBotCommands
         'getChatId',
         'getChatType',
         'tariffOnUser',
-        // 'tariffOnChat',
+        'tariffOnChat',
         // 'inlineCommand',
         // "inlineTariffCommand",
         // 'donateOnChat',
