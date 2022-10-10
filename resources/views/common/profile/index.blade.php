@@ -33,8 +33,12 @@
                     @if(empty($activeCommunity))
                         <!-- START если сообщество не выбрано -->
                         <div class="profile__community_not_selected">
-                            <p>Данные выводятся по всем сообществам проекта, если хотите посмотреть тарифы конкретного
-                                сообщества, выберите его из списка.</p>
+
+
+                            <!-- <p>Данные выводятся по всем сообществам проекта, если хотите посмотреть тарифы конкретного
+                                сообщества, выберите его из списка.</p> -->
+
+
                         </div>
                         <!-- END если сообщество не выбрано -->
                     @else
@@ -133,13 +137,27 @@
                                     @endforeach
                                 </div>
                             @else
-                                <div class="profile__community_not_selected full-width">
+                                <!-- <div class="profile__community_not_selected full-width">
                                     <p>Вы можете объединять сообщества в одном проекте. Проекты позволят вам лучше
                                         оргазивать свое
                                         рабочие пространство в Tribes, а также смотреть по проектам статистику, донаты и
                                         тарифы в
                                         общем контексте.</p>
+                                </div> -->
+
+
+
+
+                                <div class="profile__community_not_selected full-width project-without-communities">
+                                    <p>В вашем проекте нет ни одного сообщества</p>
+                                    <a href="{{ route('profile.project.edit', $currentProj ) }}" class="button-filled button-filled--primary" data-repeater-create>
+                                        Добавить сообщество
+                                    </a>
                                 </div>
+
+
+
+
                             @endif
                             <!-- END список сообществ проекта -->
                         
