@@ -78,10 +78,10 @@ class MainBotCommands
 
     public function initCommand(array $methods = [
         'startBot',
-        // 'startOnGroup',
-        // 'getTelegramUserId',
-        // 'getChatId',
-        // 'getChatType',
+        'startOnGroup',
+        'getTelegramUserId',
+        'getChatId',
+        'getChatType',
         // 'tariffOnUser',
         // 'tariffOnChat',
         // 'inlineCommand',
