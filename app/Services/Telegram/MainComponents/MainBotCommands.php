@@ -5,7 +5,6 @@ namespace App\Services\Telegram\MainComponents;
 use App\Filters\API\QuestionsFilter;
 use App\Helper\ArrayHelper;
 use App\Helper\PseudoCrypt;
-use App\Jobs\CheckDaysForUsers;
 use App\Jobs\SendTeleMessageToChatFromBot;
 use App\Models\Community;
 use App\Models\Donate;
@@ -26,7 +25,6 @@ use Askoldex\Teletant\Addons\Menux;
 use Askoldex\Teletant\Entities\Inline\Article;
 use Askoldex\Teletant\Entities\Inline\Result;
 use Askoldex\Teletant\Entities\Inline\InputTextMessageContent;
-use Askoldex\Teletant\Exception\MenuxException;
 use Askoldex\Teletant\Exception\TeletantException;
 use App\Repositories\Knowledge\KnowledgeRepositoryContract;
 use Carbon\Carbon;
@@ -889,7 +887,7 @@ class MainBotCommands
             Menux::Create('menuCustom', 'custom')
                 ->row()->btn('🚀Личный кабинет')
                 ->row()->btn('📂Мои подписки');
-        } catch (MenuxException $e) {
+        } catch (\Exception $e) {
         }
     }
 

@@ -72,9 +72,9 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             // $events->initEventsMainBot([[
             //     'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
             // ]]);
-            $this->getCommandsForBot($nameBot)->initCommand();
-            // $this->botCollect->getBotByName($nameBot)->polling();
-            $this->botCollect->getBotByName($nameBot)->listen($data);
+            // $this->getCommandsForBot($nameBot)->initCommand();
+            $this->botCollect->getBotByName($nameBot)->polling();
+            // $this->botCollect->getBotByName($nameBot)->listen($data);
         } catch (Exception | TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
