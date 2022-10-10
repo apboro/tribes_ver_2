@@ -113,23 +113,23 @@ class MainBotCommands
             $this->createMenu();
             $this->bot->onText('/start {paymentId?}', function (Context $ctx) {
                 $ctx->reply('Здравствуйте, вас приветствует TestBot');
-                // $users = TelegramUser::where('user_id', '!=', NULL)->where('telegram_id', $ctx->getUserID())->get();
+                $users = TelegramUser::where('user_id', '!=', NULL)->where('telegram_id', $ctx->getUserID())->get();
 
-                // if ($users->first()) {
-                //     if (str_split($ctx->getChatID(), 1)[0] !== '-') {
-                //         $ctx->replyHTML('Добро пожаловать в главное меню, ' . $ctx->getUsername() . '! Я бот сервиса по монетизации Telegram-каналов и чатов.' . "\n\n"
-                //             . 'Ссылка на сайт ' . route('main') . "\n"
-                //             . 'Создание и настройка проектов происходит в веб кабинете.', Menux::Get('main'));
-                //     } else $ctx->reply('Здравствуйте, вас приветствует TestBot');
-                // } else {
-                //     if (str_split($ctx->getChatID(), 1)[0] !== '-') {
-                //         $userName = ', ' . $ctx->getUsername() . '!' ?? '';
-                //         $ctx->replyHTML('Здравствуйте' . $userName, Menux::Get('custom'));
-                //     }
-                // }
-                // if (!empty($ctx->var('paymentId'))) {
-                //     $this->connectionTariff($ctx);
-                // }
+                if ($users->first()) {
+                    if (str_split($ctx->getChatID(), 1)[0] !== '-') {
+                        $ctx->replyHTML('Добро пожаловать в главное меню, ' . $ctx->getUsername() . '! Я бот сервиса по монетизации Telegram-каналов и чатов.' . "\n\n"
+                            . 'Ссылка на сайт ' . route('main') . "\n"
+                            . 'Создание и настройка проектов происходит в веб кабинете.', Menux::Get('main'));
+                    } else $ctx->reply('Здравствуйте, вас приветствует TestBot');
+                } else {
+                    if (str_split($ctx->getChatID(), 1)[0] !== '-') {
+                        $userName = ', ' . $ctx->getUsername() . '!' ?? '';
+                        $ctx->replyHTML('Здравствуйте' . $userName, Menux::Get('custom'));
+                    }
+                }
+                if (!empty($ctx->var('paymentId'))) {
+                    $this->connectionTariff($ctx);
+                }
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
