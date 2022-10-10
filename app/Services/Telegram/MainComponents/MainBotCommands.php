@@ -84,7 +84,7 @@ class MainBotCommands
         'getChatType',
         'tariffOnUser',
         'tariffOnChat',
-        // 'inlineCommand',
+        'inlineCommand',
         // "inlineTariffCommand",
         // 'donateOnChat',
         // 'donateOnUser',
