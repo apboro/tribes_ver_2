@@ -25,8 +25,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         MainBotCommands $mainBotCommands,
         TelegramMidlwares $middleware,
         TelegramLogService $telegramLogService
-    )
-    {
+    ) {
         $this->botCollect = $botCollection;
         $this->mainBotCommands = $mainBotCommands;
         $this->middleware = $middleware;
@@ -35,20 +34,28 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
 
     protected function getCommandsForBot(string $nameBot): MainBotCommands
     {
-        $this->mainBotCommands->initBot($this->botCollect->getBotByName($nameBot));
-        return $this->mainBotCommands;
+        try {
+            $this->mainBotCommands->initBot($this->botCollect->getBotByName($nameBot));
+            return $this->mainBotCommands;
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+        }
     }
 
     public function getApiCommandsForBot(string $nameBot)
     {
-        return $this->botCollect->getBotByName($nameBot)->getExtentionApi();
+        try {
+            return $this->botCollect->getBotByName($nameBot)->getExtentionApi();
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+        }
     }
 
     public function run(string $nameBot, string $data)
     {
         try {
             $object = json_decode($data, false) ?: null;
-            if($object===null) {
+            if ($object === null) {
                 throw new TelegramException('Пустой запрос');
             }
             if (!isset($object->channel_post)) {
@@ -57,8 +64,8 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
             $events->initEventsMainBot();
             $events->initEventsMainBot([[
-                'isNewReplay'=>[app('knowledgeObserver'), 'handleAuthorReply'],
-                'isNewTextMessage' => [app('knowledgeObserver'),'detectUserQuestion'],
+                'isNewReplay' => [app('knowledgeObserver'), 'handleAuthorReply'],
+                'isNewTextMessage' => [app('knowledgeObserver'), 'detectUserQuestion'],
                 'isNewForwardMessageInBotChat' => [
                     app('knowledgeObserver'),
                     'detectForwardMessageBotQuestion',
@@ -66,66 +73,102 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
                 ],
             ]]);
             $events->initEventsMainBot([[
-                'isNewTextMessage' => [app('messageObserver'),'handleUserMessage'],
+                'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
             ]]);
-            // $this->getCommandsForBot($nameBot)->initCommand();
+            $this->getCommandsForBot($nameBot)->initCommand();
             $this->botCollect->getBotByName($nameBot)->listen($data);
-        } catch (TeletantException| TelegramException $e) {
+        } catch (TeletantException | TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
 
     public function sendLogMessage(string $text)
     {
-        $this->getApiCommandsForBot(config('telegram_bot.bot.botName'))->sendMessage([
-            'chat_id'        => env('TELEGRAM_LOG_CHAT'),
-            'text'           => $text,
-            'parse_mode'     => 'HTML'
-        ]);
+        try {
+            $this->getApiCommandsForBot(config('telegram_bot.bot.botName'))->sendMessage([
+                'chat_id'        => env('TELEGRAM_LOG_CHAT'),
+                'text'           => $text,
+                'parse_mode'     => 'HTML'
+            ]);
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+        }
     }
 
     public function sendMessageFromBot(string $botName, int $chatId, string $textMessage, bool $preview = false, array $keyboard = [])
     {
-        if($this->botCollect->hasBotByName($botName)) {
-            $this->getApiCommandsForBot($botName)->sendMess($chatId, $textMessage, $preview, $keyboard);
+        try {
+            if ($this->botCollect->hasBotByName($botName)) {
+                $this->getApiCommandsForBot($botName)->sendMess($chatId, $textMessage, $preview, $keyboard);
+            }
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
 
     public function sendMessageFromBotWithTariff(string $botName, int $chatId, string $textMessage, Community $community)
     {
-        if($this->botCollect->hasBotByName($botName)) {
-            $this->getCommandsForBot($botName)->sendMessageFromBotWithTariff($chatId, $textMessage, $community);
+        try {
+            if ($this->botCollect->hasBotByName($botName)) {
+                $this->getCommandsForBot($botName)->sendMessageFromBotWithTariff($chatId, $textMessage, $community);
+            }
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
 
     public function sendDonateMessage(string $botName, int $chatId, int $donateId)
     {
-        $this->getCommandsForBot($botName)->sendDonateMessage($chatId, $donateId);
+        try {
+            $this->getCommandsForBot($botName)->sendDonateMessage($chatId, $donateId);
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+        }
     }
 
     public function sendTariffMessage(string $botName, Community $community)
     {
-        $this->getCommandsForBot($botName)->sendTariffMessage($community);
+        try {
+            $this->getCommandsForBot($botName)->sendTariffMessage($community);
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+        }
     }
 
     public function kickUser(string $botName, int $userId, int $chatId)
     {
-        $this->getApiCommandsForBot($botName)->kickUser($userId, $chatId);
+        try {
+            $this->getApiCommandsForBot($botName)->kickUser($userId, $chatId);
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+        }
     }
 
     public function unKickUser(string $botName, int $userId, int $chatId)
     {
-        $this->getApiCommandsForBot($botName)->unKickUser($userId, $chatId);
+        try {
+            $this->getApiCommandsForBot($botName)->unKickUser($userId, $chatId);
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+        }
     }
 
     public function getChatMemberCount(string $botName, int $chatId)
     {
-        return $this->getApiCommandsForBot($botName)->getChatCount($chatId);
+        try {
+            return $this->getApiCommandsForBot($botName)->getChatCount($chatId);
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+        }
     }
 
     public function getChatAdministratorsList(string $botName, int $chatId)
     {
-        return $this->getApiCommandsForBot($botName)->getChatAdministratorsList($chatId);
+        try {
+            return $this->getApiCommandsForBot($botName)->getChatAdministratorsList($chatId);
+        } catch (TeletantException | TelegramException $e) {
+            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+        }
     }
 
     public function hasBotByName($botName): bool
@@ -157,5 +200,3 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         return $service->getChatAdministratorsList($botName, $chatId);
     }
 }
-
-    
