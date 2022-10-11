@@ -67,6 +67,7 @@
                     </div>
                 </label>
                 @endforeach
+                @endif
             </div>
             <!-- END список сообществ проекта -->
 
