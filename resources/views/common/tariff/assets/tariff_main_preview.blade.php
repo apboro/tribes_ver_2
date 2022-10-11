@@ -70,10 +70,6 @@
                     alt=""
                     @if ($community->tariff->getMainImage()) data-no-image="true" @endif
                 >
-
-                <!-- <span class="decor-1"></span>
-                <span class="decor-2"></span> -->
-
                 <canvas class="hide" style="width: 100%; height: 100%;"></canvas>
             </div>
 

@@ -9,7 +9,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.headerItems = [
             { text: 'Имя подписчика', sortName: 'first_name' },
             { text: 'Никнейм', sortName: 'tele_login' },
-            { text: 'Название транзакций', sortName: false },
+            { text: 'Статус транзакции', sortName: false },
             { text: 'Тип транзакции', sortName: false },
             { text: 'Дата', sortName: 'buy_date' },
             { text: 'Сумма', sortName: 'amount' }

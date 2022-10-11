@@ -83,12 +83,16 @@ class DonateRepository implements DonateRepositoryContract
     {
 
         if ($data['donate']) {
-            $this->donateModel->variants()->delete();
             foreach ($data['donate'] as $donate) {
 
                 $isStatic = array_key_exists('cost', $donate);
-                $dv = new DonateVariant();
-                $dv->donate_id = $this->donateModel->id;
+                $old  = !empty($donate['variant_id'])?$donate['variant_id']:null;
+                $dv = $old ?
+                    DonateVariant::find($old) :
+                    new DonateVariant();
+                if(empty($old)) {
+                    $dv->donate_id = $this->donateModel->id;
+                }
                 $dv->isStatic = $isStatic;
                 $dv->description = $donate['description'];
                 $dv->isActive = isset($donate['status']);

@@ -42,26 +42,26 @@ class CheckNewSubs extends Command
      */
     public function handle()
     {
-            $communities = Community::whereHas('connection', function ($q) {
-                $q->where('chat_type', 'channel')->where('is_there_userbot', true);
-            })->get();
-            foreach ($communities as $community) {
-                $time = time();
-                while (true) {
-                    if (time() > $time) {
-                        try {
-                            $membersOrigin = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $community->connection->chat_id);
-                        } catch (Exception $e) {
-                            $membersOrigin = null;
-                        }
-                        
-                        $membersIdent = $community->followers->count();
-                        if ($membersOrigin != $membersIdent) {
-                            dispatch(new SetNewTelegramUsers($community->connection->chat_id));
-                        }
-                        break;
+        $communities = Community::whereHas('connection', function ($q) {
+            $q->where('chat_type', 'channel')->where('is_there_userbot', true);
+        })->get();
+        foreach ($communities as $community) {
+            $time = time();
+            while (true) {
+                if (time() > $time) {
+                    try {
+                        $membersOrigin = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $community->connection->chat_id);
+                    } catch (Exception $e) {
+                        $membersOrigin = null;
                     }
+
+                    $membersIdent = $community->followers->count();
+                    if ($membersOrigin != $membersIdent) {
+                        dispatch(new SetNewTelegramUsers($community->connection->chat_id));
+                    }
+                    break;
                 }
             }
+        }
     }
 }

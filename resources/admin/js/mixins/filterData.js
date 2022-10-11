@@ -6,7 +6,10 @@ let initialState = () =>  {
                 entries : 5,
                 page : 1,
                 date: null,
-            }
+                sort: {
+                    name: '', rule: ''
+                }
+            },
         },
         
         customer_data: {
@@ -23,7 +26,7 @@ export default {
     methods: {
         setPageByUrl(url){
             if(url){
-                this.filter_data.filter.page = getParameterByName('page', url);
+                this.filter_data.filter.page = parseInt(getParameterByName('filter.page', url));
             }
         },
 

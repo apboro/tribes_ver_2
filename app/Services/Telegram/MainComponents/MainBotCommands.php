@@ -274,8 +274,8 @@ class MainBotCommands
             }elseif($tariff instanceof Tariff) {
                 //todo для всех активных не персональных тарифов сообщества
                 $image = $tariff->getMainImage() ? $tariff->getMainImage()->url : '';
-                $description = $tariff->main_description ? $tariff->main_description : '&#160';
-                $article->description(mb_strimwidth($description, 0, 55, "..."));
+                $description = $tariff->publication_description ?? '&#160';
+                $article->description($description);
                 $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
                 $article->thumbUrl('' . route('main') . $image);
                 [$text, $menu] = $this->tariffButton($community);
@@ -329,7 +329,7 @@ class MainBotCommands
                             }
                         }
                         $image = ($donate->getMainImage()) ? '<a href="' . route('main') . $donate->getMainImage()->url . '">&#160</a>' : '';
-                        $description = ($donate->description !== NULL) ? $donate->description : 'Описания нет!';
+                        $description = ($donate->description !== NULL) ? $donate->description : '';
                         $text = $description . $image;
                         $ctx->replyHTML($text, $menu);
                     } else $ctx->reply('В сообществе не определен донат с указанным индексом');
@@ -913,7 +913,7 @@ class MainBotCommands
             $message = new InputTextMessageContent();
 
             $image = $donate->getMainImage() ? $donate->getMainImage()->url : '';
-            $description = $donate->description ? $donate->description : 'Описания нет!';
+            $description = $donate->description ? $donate->description : '';
             $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
 
             $message->parseMode('HTML');
@@ -1019,7 +1019,7 @@ class MainBotCommands
         try {
             $tariff = $community->tariff;
             foreach ($tariff->variants as $variant) {
-                if ($variant->price !== 0 && $variant->isActive !== false && $variant->isPersonal !== false) {
+                if ($variant->price !== 0 && $variant->isActive !== false && $variant->isPersonal == false) {
                     $data = [
                         'amount' => $variant->price,
                         'currency' => 0,
@@ -1060,7 +1060,7 @@ class MainBotCommands
         try {
             $tariff = $community->tariff;
             foreach ($tariff->variants as $variant) {
-                if ($variant->price !== 0 && $variant->isActive !== false && $variant->isPersonal !== false) {
+                if ($variant->price !== 0 && $variant->isActive !== false && $variant->isPersonal == false) {
                     $data = [
                         'amount' => $variant->price,
                         'currency' => 0,
