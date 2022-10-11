@@ -105,6 +105,9 @@ class ProjectController extends Controller
 
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
+        if($project === null && $projects->isNotEmpty()) {
+            return redirect()->route('project.analytics',['project'=>$projects->first()]);
+        }
         return view('common.project.analytics')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
         );
@@ -140,9 +143,12 @@ class ProjectController extends Controller
     public function donates($project = null, $community = null, ProjectRequest $request)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
-        
+
+        if($project === null && $projects->isNotEmpty()) {
+            return redirect()->route('project.donates',['project'=>$projects->first()]);
+        }
         $donates = empty($ids)? null : $this->donateRepository->getDonatesByCommunities(explode('-', $ids));
-       
+
         return view('common.project.donate')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community', 'donates')
         );
@@ -151,7 +157,9 @@ class ProjectController extends Controller
     public function tariffs($project = null, $community = null, ProjectRequest $request)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
-
+        if($project === null && $projects->isNotEmpty()) {
+            return redirect()->route('project.tariffs',['project'=>$projects->first()]);
+        }
         if ($request->get('isPersonal')) {
             $isPersonal = true;
             $isActive = true;
