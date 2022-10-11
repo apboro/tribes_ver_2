@@ -26,6 +26,16 @@
         <div class="alert alert-info">{{ Session::get('message') }}</div>
     @endif -->
     <div class="page-projects">
+        @if($projects->isEmpty())
+            <div class="profile__community_not_selected create-community">
+                <p>
+                    Вы можете объединять сообщества в одном проекте.
+                    </br>
+                    Проекты позволят вам лучше огранивать свое рабочие пространство в Tribes, 
+                    а также смотреть по проектам статистику, донаты и тарифы в общем контексте.
+                </p>
+            </div>
+        @else
         @foreach($projects as $eachProject)
         <div class="page-projects__folder-wrap">
             <a href="{{ route('profile.project.edit', $eachProject ) }}">
@@ -65,6 +75,7 @@
             </a>
         </div>
         @endforeach
+        @endif
     </div>
     <div class="page-projects__create-project">
         <a href="{{ route('profile.project.add') }}" class="button-filled button-filled--primary">

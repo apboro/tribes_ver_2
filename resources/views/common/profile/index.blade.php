@@ -19,13 +19,13 @@
                     </p>
                 </div>
 
-                <button
+                <a
                     class="button-filled button-filled--primary"
-                    type="submit"
+                    href="{{route('profile.communities.list')}}"
                     data-repeater-create
                 >
                     Начать работу
-                </button>
+                </a>
             </div>
             <!--END нет проектов и сообществ -->
         @else
