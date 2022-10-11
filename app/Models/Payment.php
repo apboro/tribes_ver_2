@@ -39,6 +39,11 @@ class Payment extends Model
         })->orWhere('author', Auth::user()->id);
     }
 
+    public function getOrderIdAttribute()
+    {
+        return trim($this->getAttributes()['OrderId']);
+    }
+
     public function community()
     {
         return $this->belongsTo(Community::class, 'community_id');
