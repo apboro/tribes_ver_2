@@ -9,6 +9,7 @@ use App\Mail\ExceptionMail;
 use App\Mail\RegisterMail;
 use App\Models\Community;
 use App\Models\Payment;
+use App\Models\Tariff;
 use App\Services\SMTP\Mailer;
 use App\Services\TelegramLogService;
 use \App\Services\Tinkoff\Payment as Pay;
@@ -139,6 +140,22 @@ class TariffController extends Controller
         $this->tariffRepo->statisticView($request, $community);
 
         return view('common.tariff.index',['inline_link'=>$inline_link])->withCommunity($community);
+    }
+
+    public function confirmSubscription($hash){
+        $tariff = TariffVariant::find(PseudoCrypt::unhash($hash));
+        $community = $tariff->community();
+//        dd($community);
+
+        return view('common.tariff.confirm-subscription', compact('tariff', 'community'));
+
+        /*[
+            'hash'=>1,
+            'communityName'=>$community->title,
+            'communityTariff'=>$tariff->title,
+            'communityTariffID'=>$tariff->id,
+            'communityAmount'=>$tariff->price,
+            'url'=>$community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community)]*/
     }
 
     public function tariff(Community $community)
