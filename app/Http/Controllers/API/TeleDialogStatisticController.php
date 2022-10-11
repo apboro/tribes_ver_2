@@ -13,10 +13,8 @@ use App\Http\Resources\Statistic\MembersResource;
 use App\Repositories\Statistic\TeleDialogStatisticRepositoryContract;
 
 use App\Services\File\FileSendService;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
-use Carbon\Carbon;
 
 class TeleDialogStatisticController extends Controller
 {
@@ -32,14 +30,14 @@ class TeleDialogStatisticController extends Controller
         $this->fileSendService = $fileSendService;
     }
 
-    public function members(TeleDialogStatRequest $request, MembersFilter $filter)
+    public function members(TeleDialogStatRequest $request, MembersFilter $filter): MembersResource
     {
         $members = $this->statisticRepository->getMembersList($request->get('community_id'),$filter);
 
         return (new MembersResource($members))->forApi();
     }
 
-    public function memberCharts(TeleDialogStatRequest $request, MembersChartFilter $filter)
+    public function memberCharts(TeleDialogStatRequest $request, MembersChartFilter $filter): MemberChartsResource
     {
         $chartJoiningData = $this->statisticRepository->getJoiningMembersChart($request->get('community_id'),$filter);
         $chartExitingData = $this->statisticRepository->getExitingMembersChart($request->get('community_id'),$filter);
@@ -50,7 +48,7 @@ class TeleDialogStatisticController extends Controller
     /**
      * @throws StatisticException
      */
-    public function exportMembers(TeleDialogStatRequest $request, MembersFilter $filter)
+    public function exportMembers(TeleDialogStatRequest $request, MembersFilter $filter): StreamedResponse
     {
         $columnNames = [
             [
