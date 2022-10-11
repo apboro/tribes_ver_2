@@ -79,6 +79,11 @@ class Community extends Model
         return $this->hasOne(Statistic::class, 'community_id', 'id');
     }
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class, 'project_id', 'id');
+    }
+
     public function payments()
     {
         return $this->hasMany(Payment::class, 'community_id', 'id');

@@ -9,7 +9,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.headerItems = [
             { text: 'Имя подписчика', sortName: 'first_name' },
             { text: 'Никнейм', sortName: 'tele_login' },
-            { text: 'Название транзакций', sortName: false },
+            { text: 'Статус транзакции', sortName: false },
             { text: 'Тип транзакции', sortName: false },
             { text: 'Дата', sortName: 'buy_date' },
             { text: 'Сумма', sortName: 'amount' }
@@ -51,7 +51,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
                 method: 'post',
                 url: '/api/tele-statistic/payments-charts',
                 data: {
-                    community_id: this.communityId,
+                    community_ids: window.community_ids,
                     filter: {
                         period: this.filterPeriodValue
                     }
@@ -73,7 +73,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
                 method: 'post',
                 url: '/api/tele-statistic/payments-list',
                 data: {
-                    community_id: this.communityId,
+                    community_ids: window.community_ids,
                     filter: {
                         period: this.filterPeriodValue,
                         sort: {

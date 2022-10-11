@@ -1,0 +1,14 @@
+.all-communities {
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .profile__item-wrap {
+        width: 25%;
+    }
+
+    &__create-project {
+        text-align: center;
+    }
+}

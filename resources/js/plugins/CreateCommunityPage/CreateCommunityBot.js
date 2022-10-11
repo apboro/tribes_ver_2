@@ -5,18 +5,43 @@ export class CreateCommunityBot {
         this.container = parent.container;
         this.tabContainers = this.container.querySelectorAll('[data-tab]');
 
+        this.backButton = document.getElementById("backButton");
+        // this.backButtonSibling = backButton.nextElementSibling;
+        // this.title = document.getElementById('addCommunityTitle');
+
+        // this.backButton.addEventListener('click', function(e){
+        //     let a = e.target;
+        //     console.log(a)
+        //     console.log(123123);
+        //     // onClickTab();
+        //     // stopSetInterval();
+
+        // });
+
         this.loadingBlock2 = this.container.querySelectorAll('[data-community-answer-loading]');
-        console.log(this.loadingBlock2);
         
         this.hash = null;
         this.interval = null;
         this.isFirstMsg = true;
+        // let title = document.querySelectorAll('[data-pagename]')[0].dataset.pagename;
+        // console.log(title);
+        // this.title.innerText = title;
+
+        
+        // let backButtonSibling = document.querySelectorAll('[data-btnbackname]')[0].dataset.btnbackname;
+        // this.backButtonSibling.innerText = backButtonSibling
+
     }
 
     onClickTab(tab) {
         this.backBtn = tab;
         this.tabContainers.forEach((tabContainer) => {
             if (tab.dataset.tabBtn === tabContainer.dataset.tab) {
+                // let title = tabContainer.dataset.pagename;
+                // this.title.innerText = title;
+                
+                // let backButtonSibling = tabContainer.dataset.btnbackname;
+                // this.backButtonSibling.innerText = backButtonSibling;
                 tabContainer.classList.remove('hidden');
             } else {
                 tabContainer.classList.add('hidden');
@@ -56,6 +81,7 @@ export class CreateCommunityBot {
             });
 
             this.hash = resp.data.original.hash;
+            
             this.interval = this.waitForAnswer((data) => {
                 if (data.original && data.original.status === "completed") {
                     this.botConnectedEvent(data.original, messenger, type);
@@ -113,7 +139,7 @@ export class CreateCommunityBot {
         this.successMessageBlock = this.communityAnswerContainer.querySelector('[data-community-answer-success-message]');
         
         this.loadingBlock.classList.add('hide');
-        this.successMessageBlock.innerHTML = this.createSuccessMessage(data);
+        this.successMessageBlock.innerHTML = this.createSuccessMessage(data, type);
         this.createRedirectBlock(data);
         
     }
@@ -147,17 +173,39 @@ export class CreateCommunityBot {
         }, 1000);
     }
 
-    createSuccessMessage(data) {
-        return `
-            <div class="d-flex flex-column justify-content-center align-items-center">
-                <i class="telegram-icon telegram-icon-50"></i>
-                <span class="mt-1">
-                    ${ data.community.title } — <span style="color: #28c76f;">${ Dict.write('base', 'connected_low') }</span>
-                </span>
-                <a href="/community/${ data.community.id }/statistic" class="btn btn-success mt-2">${ Dict.write('base', 'go_management') }</a>
-            </div>
+    createSuccessMessage(data, type) {
+        console.log(data)
+        // return `
+        //     <div class="d-flex flex-column justify-content-center align-items-center">
+        //         <i class="telegram-icon telegram-icon-50"></i>
+        //         <span class="mt-1">
+        //             ${ data.community.title } — <span style="color: #28c76f;">${ Dict.write('base', 'connected_low') }</span>
+        //         </span> 
+        //         <span>${ type == 'channel' ? 'Канал' : 'Группа' }</span>
+        //         <a href="/community/${ data.community.id }/statistic" class="btn btn-success mt-2">${ Dict.write('base', 'go_management') }</a>
+        //     </div>
 
-            <div></div>
+        //     <div></div>
+        // `;
+        return `
+        <div  data-community-answer-success-message>
+        <div class="channel-connection__add-channel-wrap">
+            <div class="channel-connection__connected-community">
+                <div class="channel-connection__image">
+                    <img src="/images/avatars/1.png">
+                </div>
+                <div class="channel-connection__description">
+                    <p class="channel-connection__channel">${ data.community.title }</p>
+                    <div class="channel-connection__messenger">
+                        <img src="/images/icons/social/telegram.png">
+                        <p class="profile__text">${ type == 'channel' ? 'Канал' : 'Группа' }</p>
+                    </div>
+                </div>
+            </div>
+            <span class="channel-connection__connected">Подключено</span>
+        </div>
+        <a href="/profile/communities" class="button-empty button-empty--primary">Перейти к списку подключённых сообществ</a>
+    </div>
         `;
     }
 

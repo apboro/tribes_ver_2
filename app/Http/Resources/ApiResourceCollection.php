@@ -12,6 +12,7 @@ abstract class ApiResourceCollection extends ResourceCollection
 
     public function toResponse($request): JsonResponse
     {
+        //todo обработчик когда $this->resource пагинатор и когда $this->resource Collection
         if($this->api) {
             $data = array_merge([
                 'items' => $this->collection->toArray(),

@@ -1,5 +1,5 @@
 <footer class="footer">
-    <div class="footer__wrapper container-xxl w-100 d-flex flex-wrap">
+    <div class="footer__wrapper container">
     
         <div class="footer__left">
             <p class="footer__telegram-link-wrap">

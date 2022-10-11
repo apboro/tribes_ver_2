@@ -1,0 +1,129 @@
+.project-creation {
+    min-height: 570px; //EXAMPLE
+    margin: 0 -10px;
+    display: flex;
+    flex-wrap: wrap;
+
+    &__form-wrap {
+        width: 75%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    &.form {
+        min-height: auto;
+        margin: 0;
+        display: block;
+    }
+
+    &__communities {
+        padding: 0 10px;
+        width: 25%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    &__communities-another {
+        @include font($text-color-2, 16px, 22px, 500);
+        margin: 0 0 20px;
+    }
+
+    &__communities-list-another {
+        .profile__item-wrap {
+            width: 100%;
+        }
+    }
+
+    &__communities-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__project {
+        display: flex;
+        flex-direction: column;
+
+        &--top {
+            margin: 0 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        &--bottom {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    }
+
+    &__project-name {
+        label {
+            @include font($text-color-2, 12px, 16px, 400);
+            display: block;
+        }
+    }
+
+    &__create-name {
+        @include font($text-color-1, 14px, 20px, 400);
+        padding: 10px 20px;
+        border: 1px solid $grey-4;
+        border-radius: 5px;
+    }
+
+    &__project-header,
+    &__project-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__project-header {
+        label {
+            @include font($text-color-1, 14px, 20px, 400);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        input.chk-all {
+            margin: 0 10px 0 0;
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    &__project-communities {
+        @include font($text-color-2, 16px, 22px, 500);
+
+        .qty {
+            color: $primary-1;
+        }
+    }
+
+    &__project-main {
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+
+        &--empty {
+            @include font($grey-6, 14px, 20px, 500);
+            margin: auto;
+            max-width: 390px;
+            text-align: center;
+        }
+    }
+
+    &__list-communities {
+        width: 100%;
+
+        .profile__item-wrap {
+            width: 33.3%;
+        }
+    }
+}

@@ -109,7 +109,7 @@ class TariffService {
 
                 $textMessage = 'Приветствуем ' . $user_name . '!' .
                 'Срок действия тарифа ' . $tariff_variant_name . '(' . $tariff_variant_period . ' ' . Declination::defineDeclination($tariff_variant_period) . ') для сообщества ' . $community_name . ' закончится через ' .
-                    $days_left . ' дней. Обратитесь к владельцу сообщества, чтобы уточнить информацию об условиях доступа.';
+                    $days_left . ' ' . Declination::defineDeclination($tariff_variant_period) . '. Обратитесь к владельцу сообщества, чтобы уточнить информацию об условиях доступа.';
 
                 $this->telegramMainBotService->sendMessageFromBot(config('telegram_bot.bot.botName'), $user['telegram_id'], $textMessage);
 

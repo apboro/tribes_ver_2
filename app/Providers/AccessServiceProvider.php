@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Repositories\File\FileRepositoryContract;
+use App\Repositories\Project\ProjectRepository;
+use App\Repositories\Project\ProjectRepositoryContract;
 use App\Repositories\Statistic\MediaProductStatisticRepository;
 use App\Repositories\Statistic\MediaProductStatisticRepositoryContract;
 use App\Services\Telegram;
@@ -98,6 +100,10 @@ class AccessServiceProvider extends ServiceProvider
         $this->app->bind(
             Telegram::class,
             Telegram::class
+        );
+        $this->app->bind(
+            ProjectRepositoryContract::class,
+            ProjectRepository::class
         );
         $this->app->bind(
             \App\Repositories\Telegram\TeleMessageRepositoryContract::class,
