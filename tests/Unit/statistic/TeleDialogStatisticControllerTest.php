@@ -12,10 +12,13 @@ use App\Repositories\Statistic\DTO\ChartData;
 use App\Repositories\Statistic\TeleDialogStatisticRepository;
 use App\Repositories\Statistic\TeleDialogStatisticRepositoryContract;
 use App\Rules\Knowledge\OwnCommunityRule;
+use App\Services\File\FileSendService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tests\TestCase;
 
 
@@ -99,6 +102,19 @@ class TeleDialogStatisticControllerTest extends TestCase
 
     public function testExportMembers()
     {
-        $this->assertTrue(true);
+        $builder = DB::table('users');
+        $this->mock(TeleDialogStatisticRepository::class)->shouldReceive('getMembersListForFile')
+            ->andReturn($builder);
+        $this->mock(OwnCommunityRule::class)->shouldReceive('passes')
+            ->andReturn(true);
+        $this->mock(FileSendService::class)->shouldReceive('sendFile')
+            ->andReturn(new StreamedResponse(function(){ return false;}, 200, []));
+        $filter = app(MembersFilter::class);
+        $controller = app()->make(TeleDialogStatisticController::class, [
+            'statisticRepository' => app(TeleDialogStatisticRepository::class),
+            'fileSendService' => app(FileSendService::class),
+        ]);
+        $result = $controller->exportMembers(new TeleDialogStatRequest([], ['community_ids' => '1-3', 'export_type' => 'csv']), $filter);
+        $this->assertInstanceOf(StreamedResponse::class, $result);
     }
 }
