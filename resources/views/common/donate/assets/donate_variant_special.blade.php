@@ -78,7 +78,7 @@
         @enderror
     </div>
 
-    <div>
+    <div class="donate-add__curency">
         <label class="form-label-red">
             {{ __('base.currency') }}
         </label>
