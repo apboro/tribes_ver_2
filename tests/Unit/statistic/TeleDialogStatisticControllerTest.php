@@ -55,7 +55,7 @@ class TeleDialogStatisticControllerTest extends TestCase
 
         $filter = app(MembersFilter::class);
         $this->controller = app()->make(TeleDialogStatisticController::class,['statisticRepository' => app(TeleDialogStatisticRepository::class)]);
-        $result = $this->controller->members(new TeleDialogStatRequest([],['community_id' => 1]), $filter);
+        $result = $this->controller->members(new TeleDialogStatRequest([],['community_ids' => 1]), $filter);
 
         $this->assertInstanceOf(MembersResource::class, $result);
         $this->assertCount(1, $result);
