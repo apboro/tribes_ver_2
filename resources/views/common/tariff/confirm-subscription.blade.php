@@ -1,7 +1,7 @@
 @extends('layouts.auth')
 
 @section('content')
-<div class="confirmation_subscription">
+<div class="confirmation_subscription" data-plugin="TariffConfirmation">
     <h2 class="confirmation_subscription__title">Подтверждение подписки</h2>
     <div class="confirmation_subscription__header">
         <div class="confirmation_subscription__header-col1">
@@ -28,34 +28,63 @@
 
     </div>
     <div class="confirmation_subscription__body">
-        <div class="confirmation_subscription__confirm-check">
-            <input class="confirmation_subscription__confirm-check-input" id="all_rights_check" data-checked="false" type="checkbox">
-            <label class="confirmation_subscription__confirm-check-label" for="all_rights_check">Подтверждаю ознакомление и согласие с <span class="text-primary">правилами</span></label>
+        <div class="checkbox confirmation_subscription__confirm-check">
+            <div class="checkbox__wrapper community-settings__personal_tariff">
+                <input type="checkbox" id="all_rights_check" class="checkbox__input" data-checked="false">
+                <label for="all_rights_check" class="checkbox__decor"></label>
+            </div>
+            <label class="checkbox__label" for="all_rights_check">
+                Подтверждаю ознакомление и согласие с <span class="text-primary">правилами</span>
+            </label>
         </div>
+
         <div class="confirmation_subscription__confirm-check-rights" id="confirm-check-rights">
-            <div class="confirmation_subscription__confirm-check">
-                <input class="confirmation_subscription__confirm-check-input" data-checked="false" type="checkbox">
-                <a class="confirmation_subscription__btn-link" target="_blank">Правила пользования</a>
+            <div class="checkbox confirmation_subscription__confirm-check">
+                <div class="checkbox__wrapper community-settings__personal_tariff">
+                    <input type="checkbox" id="terms" class="checkbox__input" data-checked="false">
+                    <label for="terms" class="checkbox__decor"></label>
+                </div>
+                <a class="checkbox__label confirmation_subscription__btn-link" href="{{ route('terms.index') }}" target="_blank">Правила пользования</a>
             </div>
-            <div class="confirmation_subscription__confirm-check">
-                <input class="confirmation_subscription__confirm-check-input" data-checked="false" type="checkbox">
-                <a class="confirmation_subscription__btn-link" target="_blank">Политика обработки персональных данных</a>
+
+            <div class="checkbox confirmation_subscription__confirm-check">
+                <div class="checkbox__wrapper community-settings__personal_tariff">
+                    <input type="checkbox" id="privacy" class="checkbox__input" data-checked="false">
+                    <label for="privacy" class="checkbox__decor"></label>
+                </div>
+                <a class="checkbox__label confirmation_subscription__btn-link" href="{{ route('privacy.index') }}" target="_blank">Политика обработки персональных данных</a>
             </div>
-            <div class="confirmation_subscription__confirm-check">
-                <input class="confirmation_subscription__confirm-check-input" data-checked="false" type="checkbox">
-                <a class="confirmation_subscription__btn-link" target="_blank">Согласие на обработку персональных данных</a>
+
+            <div class="checkbox confirmation_subscription__confirm-check">
+                <div class="checkbox__wrapper community-settings__personal_tariff">
+                    <input type="checkbox" id="privacy_accept" class="checkbox__input" data-checked="false">
+                    <label for="privacy_accept" class="checkbox__decor"></label>
+                </div>
+                <a class="checkbox__label confirmation_subscription__btn-link" href="{{ route('privacy_accept.index') }}" target="_blank">Согласие на обработку персональных данных</a>
             </div>
-            <div class="confirmation_subscription__confirm-check">
-                <input class="confirmation_subscription__confirm-check-input" data-checked="false" type="checkbox">
-                <a class="confirmation_subscription__btn-link" target="_blank">Согласие на получение информационной рассылки</a>
+
+            <div class="checkbox confirmation_subscription__confirm-check">
+                <div class="checkbox__wrapper community-settings__personal_tariff">
+                    <input type="checkbox" id="ad_accept" class="checkbox__input" data-checked="false">
+                    <label for="ad_accept" class="checkbox__decor"></label>
+                </div>
+                <a class="checkbox__label confirmation_subscription__btn-link" href="{{ route('ad_accept.index') }}" target="_blank">Согласие на получение информационной рассылки</a>
             </div>
-            <div class="confirmation_subscription__confirm-check">
-                <input class="confirmation_subscription__confirm-check-input" data-checked="false" type="checkbox">
-                <a class="confirmation_subscription__btn-link" target="_blank">Согласие на подписку</a>
+
+            <div class="checkbox confirmation_subscription__confirm-check">
+                <div class="checkbox__wrapper community-settings__personal_tariff">
+                    <input type="checkbox" id="sub_terms" class="checkbox__input" data-checked="false">
+                    <label for="sub_terms" class="checkbox__decor"></label>
+                </div>
+                <a class="checkbox__label confirmation_subscription__btn-link" href="{{ route('sub_terms.index') }}" target="_blank">Согласие на подписку</a>
             </div>
-            <div class="confirmation_subscription__confirm-check">
-                <input class="confirmation_subscription__confirm-check-input" data-checked="false" type="checkbox">
-                <a class="confirmation_subscription__btn-link" target="_blank">Агентский договор (публичная оферта)</a>
+            
+            <div class="checkbox confirmation_subscription__confirm-check">
+                <div class="checkbox__wrapper community-settings__personal_tariff">
+                    <input type="checkbox" id="agency_contract" class="checkbox__input" data-checked="false">
+                    <label for="agency_contract" class="checkbox__decor"></label>
+                </div>
+                <a class="checkbox__label confirmation_subscription__btn-link" href="{{ route('agency_contract.index') }}" target="_blank">Агентский договор (публичная оферта)</a>
             </div>
         </div>
     </div>
