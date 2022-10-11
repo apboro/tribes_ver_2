@@ -48,7 +48,7 @@
             class="community-settings__inline-link" 
             onclick="copyText('{{ '@' . env('TELEGRAM_BOT_NAME') }} {{ $donate ? $donate->inline_link : 'Создастся при сохранении' }}')"
         >
-            ???
+            {{ '@' . env('TELEGRAM_BOT_NAME') }} {{ $donate->inline_link }}
         </a>
     </div>
 </li>

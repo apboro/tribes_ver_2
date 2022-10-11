@@ -93,9 +93,9 @@
         gap: $indent-3;
         margin-top: 30px;
 
-        @media (min-width: $sm) {
-            margin-top: 60px;
-        }
+        // @media (min-width: $sm) {
+        //     margin-top: 60px;
+        // }
     }
 
     &__change-tariff {

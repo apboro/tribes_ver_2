@@ -1,7 +1,7 @@
 @extends('common.community.profile')
 
 @section('tab')
-<section class="community__tab">
+<section class="community__tab" data-plugin="CommunitiesPage">
     @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors])
     
     <div class="community-tab__main-header">
@@ -34,31 +34,10 @@
                         <span>Добавить донат</span>
                     </a>
                 </li>
-
-                <li class="dropdown-red__item">
-                    <!-- ??? -->
-                    {{--<a class="dropdown-red__link" href="{{ route('community.donate.settings', ['community' => $community->id, 'id' => $donate ? $donate->id : NULL]) }}">
-                        <span>Общие настройки донатов в сообществе</span>
-                    </a>--}}
-                </li>
             </ul>
         </div>
     </div>
     
-    {{-- @if((request('active') == null || request('active') == 'true') && isset($tariffs[0])) --}}
-    <div class="community-tab__inline-all">
-        <span>
-            Инлайн команда всех донатов
-        </span>
-        <a 
-            class="community-settings__inline-link all-tariffs"
-            onclick="copyText('{{$community->tariff ? $community->tariff()->first()->getInlineLink() : 'Создастся при сохранении'}}')"
-        >
-            ??? {{-- $community->tariff()->first()->getInlineLink()??'' --}}
-        </a>
-    </div>
-    {{-- @endif --}}
-
     @if(count($donates))
         <!-- Cards -->
         <ul class="community-donate__list">
