@@ -40,11 +40,24 @@
                     </div>
                     <div class="page-projects__folder--bottom">
                         <div class="page-projects__folder-images">
-                        @foreach($eachProject->communities as $eachCommunity)
-                            <div class="page-projects__folder-image">
-                                <img src="{{$eachCommunity->image ?? '/images/no-image.png'}}" alt="Avatar">
-                            </div>
-                        @endforeach
+                            
+                            @if($eachProject->communities->count() > 5 )
+                                @foreach($eachProject->communities->take(4) as $eachCommunity)
+                                    <div class="page-projects__folder-image">
+                                        <img src="{{$eachCommunity->image ?? '/images/no-image.png'}}" alt="Avatar">
+                                    </div>
+                                @endforeach
+                                <div class="page-projects__folder-image communities-left">
+                                    +{{$eachProject->communities->count() - 4}}
+                                </div>
+                            @else
+                                @foreach($eachProject->communities as $eachCommunity)
+                                    <div class="page-projects__folder-image">
+                                        <img src="{{$eachCommunity->image ?? '/images/no-image.png'}}" alt="Avatar">
+                                    </div>
+                                @endforeach
+                            @endif
+                        
                         </div>
                         <p class="page-projects__folder-communities-qty">{{__('base.communities_v')}}: {{$eachProject->communities->count()}}</p>
                     </div>

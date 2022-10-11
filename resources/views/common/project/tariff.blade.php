@@ -2,6 +2,15 @@
 
 @section('content')
 
+@if(empty($ids))
+
+<div class="profile__list communities">
+    <div class="profile__community_not_selected">
+        <p>Для работы с участниками выберите конкретное сообщество в проекте.</p>
+    </div>
+</div>
+
+@else
     <section class="community-tab" data-tab="tariffPage">
         <div class="community-tab__main-header">
             <h2 class="community-tab__main-title">
@@ -203,4 +212,5 @@
             </div>
         @endif
     </section>
+@endif
 @endsection

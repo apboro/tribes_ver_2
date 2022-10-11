@@ -57,10 +57,14 @@ export default class Project extends Page {
         let totalQty = document.querySelectorAll('.project-creation__list-communities .profile__list .profile__item-wrap').length;
         let qtyCommunitiesInProject = document.getElementById('qty_of_communities_in_project');
         qtyCommunitiesInProject.textContent = `${totalQty}`;
-        if(totalQty == 0){
+
+        let emptyBlock = document.querySelector('.project-creation__project-main--empty');
+        if ( emptyBlock !== null && totalQty === 0) {
+            return
+        } else if(totalQty === 0){
             let wrap = document.querySelector('.project-creation__list-communities');
             wrap.insertAdjacentHTML("beforeBegin" , "<p class='project-creation__project-main--empty'>Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.</p>");
-        }
+        } 
     }
 
     toggleAll(source){

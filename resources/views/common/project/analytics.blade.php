@@ -1,7 +1,7 @@
 @extends('layouts.project')
 
 @section('content')
-
+    @if(!empty($ids))
     <section
             class="analytics-community community__tab"
             data-plugin="Analytics"
@@ -184,4 +184,7 @@
             </ul>
         </div>
     </section>
+    @else
+    <p>Для работы с участниками выберите конкретное сообщество в проекте.</p>
+    @endif
 @endsection

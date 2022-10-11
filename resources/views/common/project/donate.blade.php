@@ -1,7 +1,7 @@
 @extends('layouts.project')
 
 @section('content')
-
+@if(!empty($ids))
     <div class="community__communities-page" data-plugin="CommunitiesPage">
         @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors])
         <div class="row">
@@ -71,4 +71,11 @@
             </div>
         </div>
     </div>
+    @else
+    <div class="profile__list communities">
+        <div class="profile__community_not_selected">
+            <p>Для работы с участниками выберите конкретное сообщество в проекте.</p>
+        </div>
+    </div>
+    @endif
 @endsection
