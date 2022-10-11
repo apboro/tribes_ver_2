@@ -274,8 +274,8 @@ class MainBotCommands
             }elseif($tariff instanceof Tariff) {
                 //todo для всех активных не персональных тарифов сообщества
                 $image = $tariff->getMainImage() ? $tariff->getMainImage()->url : '';
-                $description = $tariff->main_description ? $tariff->main_description : '<p>&#160</p>';
-                $article->description(mb_strimwidth($description, 0, 55, "..."));
+                $description = $tariff->publication_description ?? '&#160';
+                $article->description($description);
                 $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
                 $article->thumbUrl('' . route('main') . $image);
                 [$text, $menu] = $this->tariffButton($community);

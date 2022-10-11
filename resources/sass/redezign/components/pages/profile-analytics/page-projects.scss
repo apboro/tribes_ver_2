@@ -1,0 +1,93 @@
+.page-projects {
+    margin: 0 -15px;
+    display: flex;
+    flex-wrap: wrap;
+
+    &__create-project {
+        margin: 30px 0 0;
+    }
+
+    &__folder-wrap {
+        margin: 0 0 40px;
+        padding: 0 15px;
+        width: 25%;
+    }
+
+    &__folder-top {
+        border-radius: 8px 0 0 0;
+        position: relative;
+        overflow: hidden;
+
+        .parallelogram {
+            width: 130px;
+            height: 25px;
+            transform: skew(20deg);
+            background: $primary-1;
+            position: relative;
+            left: -5px;
+            border-radius: 0 8px 0 0;
+
+            &.pink {
+                background: rgba($primary-1, .15);
+                position: absolute;
+                bottom: -6px;
+                left: 16%;
+                z-index: -1;
+            }
+        }
+    }
+
+    &__folder {
+        padding: 5px 15px 20px 20px;
+        min-height: 165px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: $primary-1;
+        box-shadow: 0px 9px 12px rgba($black, .08);
+        color: $white;
+        border-radius: 0 8px 8px 8px;
+    }
+
+    &__folder-project {
+        @include font($white, 14px, 20px, 500);
+        margin: 0 0 3px;
+    }
+
+    &__folder-project-name {
+        @include font($white, 16px, 22px, 600);
+        @include truncate(215px);
+        margin: 0;
+    }
+
+    &__folder-images {
+        margin: 0 0 5px;
+        display: flex;
+    }
+
+    &__folder-image {
+        width: 20%;
+
+        > img,
+        &.communities-left {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid $white;
+        }
+
+        &.communities-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    &__folder-communities-qty {
+        @include font($white, 14px, 20px, 500);
+    }
+
+    &__create-project {
+        text-align: center;
+    }
+}

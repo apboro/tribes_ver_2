@@ -41,7 +41,7 @@ class MembersFilter extends QueryAPIFilter
             'c_messages' => 'c_messages',
             'c_put_reactions' => 'c_put_reactions',
             'c_got_reactions' => 'c_got_reactions',
-            'utility' => 'utility',
+            'utility' => 'user_utility',
 
         ];
         return $list[$name] ?? $list['accession_date'];

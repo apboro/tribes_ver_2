@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="content-wrapper container-xxl p-0">
+    <div class="content-wrapper container">
         <!-- Breadcrumbs block -->
         <div class="content-header row align-items-center" id="bredacrumbs">
             <div class="col-8 col-sm-6 col-md-8 col-lg-8">
@@ -39,7 +39,7 @@
             ['sort' => 'cost', 'dir' => request()->get('dir') === 'asc' ? 'desc' : 'asc']
             ) }}">стоимости</a> |
         <a href="{{ request()->fullUrlWithQuery(['sort' => '', 'dir' => '']) }}">очистить фильтр</a>
-        <div class="mt-2" data-plugin="CommunitiesPage">
+        <div class="community__communities-page" data-plugin="CommunitiesPage">
             
             <div class="row">
                

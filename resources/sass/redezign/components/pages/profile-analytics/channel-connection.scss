@@ -1,0 +1,140 @@
+.channel-connection {
+    margin: 30px -35px 0;
+    display: flex;
+    flex-wrap: wrap;
+
+    &__add-bot {
+        @include font($text-color-2, 16px, 22px, 500);
+        margin: 0 0 15px;
+        padding: 20px;
+        border: 1px solid $primary-1;
+        border-radius: 10px;
+        position: relative;
+
+        &:before {
+            content: 'Одно простое действие';
+            position: absolute;
+            top: -12px;
+            left: 14px;
+            color: $primary-1;
+            background-color: $white;
+            padding: 0 8px;
+        }
+    }
+
+    &__copy {
+        margin: 10px 0 0;
+
+        &--titleBot {
+            color: $primary-1;
+        }
+
+        &--text {
+            color: $blue-1;
+            cursor: pointer;
+        }
+    }
+
+    &__instructions-adding-bot {
+        padding: 0 35px;
+        width: 100%;
+
+        @media (min-width: $lg) {
+            width: 50%;
+        }
+    }
+
+    &__img-bot {
+        margin: 0 0 10px;
+        display: flex;
+        align-items: center;
+
+        > img {
+            margin: 0 0 0 15px;
+        }
+    }
+
+    &__interpretation {
+        @include font($text-color-2, 14px, 20px, 400);
+        margin: 0 0 15px;
+    }
+
+    &__add-channel {
+        padding: 0 35px;
+        width: 100%;
+
+        @media (min-width: $lg) {
+            width: 50%;
+        }
+
+        .button-empty {
+            margin: 40px 0 0;
+            font-weight: 500;
+        }
+    }
+
+    &__add-channel-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        flex-direction: column-reverse;
+
+        @media (min-width: $lg) {
+            flex-direction: row;
+        }
+    }
+
+    &__connected-community {
+        width: 50%;
+        display: flex;
+    }
+
+    &__connected {
+        @include font($green-5, 16px, 22px, 500);
+        margin: 0 0 10px;
+        padding: 0 20px 0 0;
+        position: relative;
+        color: $green-5;
+
+        &:before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            font-weight: 600;
+            color: $green-5;
+        }
+    }
+
+    &__image {
+        margin: 0 10px 0 0;
+
+        > img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid $primary-1;
+            transition: all 0.3s;
+        }
+    }
+
+    &__channel {
+        @include font($text-color-2, 14px, 20px, 600);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__messenger {
+        display: flex;
+        align-items: center;
+        color: $blue-1;
+        font-weight: 500;
+
+        > img {
+            margin: 0 10px 0 0;
+        }
+    }
+}

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Log;
 class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
 {
 
-    public function getPaymentsCharts(int $communityId, FinanceChartFilter $filter, string $type): ChartData
+    public function getPaymentsCharts(array $communityIds, FinanceChartFilter $filter, string $type): ChartData
     {
         $filterData = $filter->filters();
         Log::debug("FinanceStatisticRepository::getBuilderForFinance", [
@@ -42,7 +42,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
                 DB::raw("SUM($p.amount) as balance"),
             ])
             ->orderBy('d.dt');
-        $sub->where(["$p.community_id" => $communityId]);
+        $sub->whereIn("$p.community_id" , $communityIds);
         if ($type == 'all') {
             $sub->where("$p.type", '!=', 'payout');
         } else {
@@ -71,7 +71,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
 
         $totalAmount = DB::table($p)
             ->select(DB::raw("SUM(amount) as s"))
-            ->where('community_id',"=",$communityId)
+            ->whereIn('community_id',$communityIds)
             ->where('status',"=",'CONFIRMED')
             ->where('type','!=','payout')
             ->value('s');
@@ -80,9 +80,9 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         return $chart;
     }
 
-    public function getPaymentsList(int $communityId, FinanceFilter $filter): LengthAwarePaginator
+    public function getPaymentsList(array $communityIds, FinanceFilter $filter): LengthAwarePaginator
     {
-        $builder = $this->queryPayments($communityId, $filter);
+        $builder = $this->queryPayments($communityIds, $filter);
 
         $filterData = $filter->filters();
 
@@ -100,9 +100,9 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         );
     }
 
-    public function getPaymentsListForFile(int $communityId, FinanceFilter $filter): Builder
+    public function getPaymentsListForFile(array $communityIds, FinanceFilter $filter): Builder
     {
-        return $this->queryPayments($communityId, $filter);
+        return $this->queryPayments($communityIds, $filter);
     }
 
     /**
@@ -111,7 +111,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
      * @return \Illuminate\Database\Eloquent\Builder|Builder
      * @throws Exception
      */
-    protected function queryPayments(int $communityId, FinanceFilter $filter)
+    protected function queryPayments(array $communityIds, FinanceFilter $filter)
     {
         $p = 'payments';
         $tu = 'telegram_users';
@@ -129,7 +129,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
                 "$tu.user_name as tele_login",
                 "$tu.first_name",
             ]);
-        $builder->where(["$p.community_id" => $communityId]);
+        $builder->where("$p.community_id", $communityIds);
         $builder = $filter->apply($builder);
         return $builder;
     }

@@ -14,7 +14,7 @@ use App\Repositories\Statistic\MediaProductStatisticRepositoryContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class MediaStatisticController extends Controller
+class MediaStatisticController extends StatController
 {
     private MediaProductStatisticRepositoryContract $statisticRepository;
 

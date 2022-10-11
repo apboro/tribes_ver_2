@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Tariff;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Filters\TariffFilter;
 
@@ -11,6 +12,7 @@ interface TariffRepositoryContract
     public function activate($variantId, $activate);
     public function settingsUpdate($community, $data);
     public function getList(TariffFilter $filters, $community);
+    public function getTariffVariantsByCommunities(array $communityIds,$isActive = true,$isPersonal = null): Collection;
     public function statisticView(Request $request, $community);
     public function perm(Request $request, $community);
     public function generateLink($variant);

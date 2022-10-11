@@ -25,13 +25,13 @@
             
             <div class="card-footer d-flex justify-content-center p-1">
                 <a
-                    href="{{ route('community.donate.add', ['community' => $community, 'id' => $donate->id]) }}"
+                    href="{{ route('community.donate.add', ['community' => $donate->community_id, 'id' => $donate->id]) }}"
                     class="btn btn-flat-dark waves-effect text-nowrap">
                     {{ __('base.edit') }}
                 </a>
             <a
                 type="submit"
-                href="{{ route('community.donate.remove', ['community' => $community, 'id' => $donate->id]) }}"
+                href="{{ route('community.donate.remove', ['community' => $donate->community_id, 'id' => $donate->id]) }}"
                 class="btn btn-flat-danger waves-effect text-nowrap">
                 {{ __('base.remove') }}
             </a>
