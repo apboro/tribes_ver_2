@@ -272,6 +272,7 @@ Route::get('media/{hash}/success', 'App\Http\Controllers\CourseController@succes
 
 Route::any('community/{community}/tariff/form', 'App\Http\Controllers\TariffController@tariffFormPay')->name('community.tariff.form');
 Route::any('community/{hash}', 'App\Http\Controllers\TariffController@tariffPayment')->name('community.tariff.payment');
+Route::any('community/tariff/{hash}', 'App\Http\Controllers\TariffController@confirmSubscription')->name('community.tariff.confirmSubscription');
 
 // Footer Routes
 Route::get('/privacy', function () {
