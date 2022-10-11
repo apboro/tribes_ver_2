@@ -2,13 +2,17 @@
 
 namespace Tests\Unit\statistic;
 
+use App\Filters\API\MembersChartFilter;
 use App\Filters\API\MembersFilter;
 use App\Http\Controllers\API\TeleDialogStatisticController;
 use App\Http\Requests\API\TeleDialogStatRequest;
+use App\Http\Resources\Statistic\MemberChartsResource;
 use App\Http\Resources\Statistic\MembersResource;
+use App\Repositories\Statistic\DTO\ChartData;
 use App\Repositories\Statistic\TeleDialogStatisticRepository;
 use App\Repositories\Statistic\TeleDialogStatisticRepositoryContract;
 use App\Rules\Knowledge\OwnCommunityRule;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -23,7 +27,7 @@ class TeleDialogStatisticControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = app()->make(TeleDialogStatisticController::class,['statisticRepository' => $this->mock(TeleDialogStatisticRepository::class)]);
+        $this->controller = app()->make(TeleDialogStatisticController::class, ['statisticRepository' => $this->mock(TeleDialogStatisticRepository::class)]);
     }
 
 
@@ -54,18 +58,43 @@ class TeleDialogStatisticControllerTest extends TestCase
             ->andReturn(true);
 
         $filter = app(MembersFilter::class);
-        $this->controller = app()->make(TeleDialogStatisticController::class,['statisticRepository' => app(TeleDialogStatisticRepository::class)]);
-        $result = $this->controller->members(new TeleDialogStatRequest([],['community_ids' => 1]), $filter);
+        $this->controller = app()->make(TeleDialogStatisticController::class, ['statisticRepository' => app(TeleDialogStatisticRepository::class)]);
+        $result = $this->controller->members(new TeleDialogStatRequest([], ['community_ids' => 1]), $filter);
 
         $this->assertInstanceOf(MembersResource::class, $result);
         $this->assertCount(1, $result);
-        $this->assertArrayHasKey("chat_id",$result->first());
-        $this->assertEquals($result->first()["chat_id"],"1");
+        $this->assertArrayHasKey("chat_id", $result->first());
+        $this->assertEquals($result->first()["chat_id"], "1");
     }
 
     public function testMemberCharts()
     {
-        $this->assertTrue(true);
+        $chart = new ChartData();
+        $chart->initChart(new Collection([
+            (object)['scale' => (new Carbon())->sub('5 days')->timestamp, 'users' => 10],
+            (object)['scale' => (new Carbon())->sub('4 days')->timestamp, 'users' => 11],
+            (object)['scale' => (new Carbon())->sub('3 days')->timestamp, 'users' => 12],
+            (object)['scale' => (new Carbon())->sub('2 days')->timestamp, 'users' => 13],
+            (object)['scale' => (new Carbon())->sub('1 day')->timestamp, 'users' => 14],
+            (object)['scale' => (new Carbon())->timestamp, 'users' => 15],
+        ]));
+        $chart->addAdditionParam('count_exit_users', 10);
+        $this->mock(TeleDialogStatisticRepository::class,function($mock) use ($chart){
+            $mock->shouldReceive('getJoiningMembersChart')->andReturn(clone $chart);
+            $mock->shouldReceive('getExitingMembersChart')->andReturn(clone $chart);
+        });
+        $this->mock(OwnCommunityRule::class)->shouldReceive('passes')
+            ->andReturn(true);
+
+        $filter = app(MembersChartFilter::class);
+        $this->controller = app()->make(TeleDialogStatisticController::class, ['statisticRepository' => app(TeleDialogStatisticRepository::class)]);
+        $result = $this->controller->memberCharts(new TeleDialogStatRequest([], ['community_ids' => '1-3']), $filter);
+
+        $this->assertInstanceOf(MemberChartsResource::class, $result);
+
+        $this->assertArrayHasKey('users',$result->toArray(new Request()));
+        $this->assertArrayHasKey('exit_users',$result->toArray(new Request()));
+        $this->assertCount(6, $result->toArray(new Request())['users']);
     }
 
     public function testExportMembers()
