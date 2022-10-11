@@ -13,6 +13,8 @@ interface ProjectRepositoryContract
 
     public function getUserCommunitiesWithoutProjectList(int $userId): Collection;
 
+    public function getUserCommunitiesList(int $userId): Collection;
+
     public function getProject(int $projectId, array $filter = []):?Project;
 
     public function create(array $attributes): ?Project;

@@ -122,4 +122,9 @@ class ProjectRepository implements ProjectRepositoryContract
     {
         return Community::where('owner','=',$userId)->whereNull('project_id')->get();
     }
+
+    public function getUserCommunitiesList(int $userId): Collection
+    {
+        return Community::where('owner','=',$userId)->get();
+    }
 }

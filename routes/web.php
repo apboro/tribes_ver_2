@@ -30,13 +30,6 @@ Auth::routes();
 
 Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], function () {
 
-
-    // Route::middleware('guest')->namespace('App\Http\Controllers\Auth')->group(function() {
-    //     Route::get('/sms/confirmation', 'RegisterController@confirmSmsForm')->name('sms.confirmation.form');
-    //     Route::post('/sms/confirmation', 'RegisterController@confirmSms')->name('sms.confirmation.confirm');
-    //     Route::post('/sms/repeat', 'RegisterController@repeatSms')->name('sms.confirmation.repeat');
-    // });
-
     Route::namespace('App\Http\Controllers')->group(function () {
         //Payments
         Route::post('/payment/donate/range', 'DonateController@takeRangeDonatePayment')->name('payment.donate.range');

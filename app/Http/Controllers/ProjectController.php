@@ -47,8 +47,8 @@ class ProjectController extends Controller
 
     public function listCommunities( ProjectRequest $request)
     {
-        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
-
+        list($projects, $communitiesWP, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+        $communities = $this->projectRepository->getUserCommunitiesList(Auth::user()->id)->keyBy('id');
         return view('common.project.communities')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity')
         );
