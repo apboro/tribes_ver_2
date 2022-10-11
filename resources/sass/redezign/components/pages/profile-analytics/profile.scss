@@ -170,6 +170,7 @@
         flex-wrap: wrap;
         max-height: 462px;
         overflow-y: scroll;
+        position: relative;
 
         &.communities {
             padding: 20px 0 0;
