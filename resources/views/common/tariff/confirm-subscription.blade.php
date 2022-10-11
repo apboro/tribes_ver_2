@@ -30,7 +30,13 @@
     <div class="confirmation_subscription__body">
         <div class="checkbox confirmation_subscription__confirm-check">
             <div class="checkbox__wrapper community-settings__personal_tariff">
-                <input type="checkbox" id="all_rights_check" class="checkbox__input" data-checked="false">
+                <input
+                    type="checkbox"
+                    id="all_rights_check"
+                    class="checkbox__input"
+                    data-checked="false"
+                    onchange="TariffConfirmation.checkAllRights()"
+                >
                 <label for="all_rights_check" class="checkbox__decor"></label>
             </div>
             <label class="checkbox__label" for="all_rights_check">
@@ -93,7 +99,13 @@
             <label class="confirmation_subscription__email-label" for="email">Email*</label>
             <input class="confirmation_subscription__email-input" id="email" placeholder="ivan@moyapochta.ru" name="email" required="true">
         </div>
-        <a class="button-filled button-filled--primary" href="{{$community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community)}}">Оплатить</a>
+        <!-- <a class="button-filled button-filled--primary" href="{{$community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community)}}">Оплатить</a> -->
+        <button
+            id="submit_btn"
+            class="button-filled button-filled--primary button-filled--disabled"
+        >
+            Оплатить
+        </button>
     </div>
 </div>
 @endsection
