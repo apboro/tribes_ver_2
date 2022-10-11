@@ -1,0 +1,18 @@
+.donate-variant {
+    display: inline-grid;
+    grid-template-columns: 42px 483px 350px 48px;
+    align-items: start;
+    column-gap: 30px;
+
+    &--special {
+        grid-template-columns: 42px 483px 160px 160px 48px;
+    }
+
+    &__switcher {
+        margin-top: 30px;
+    }
+
+    &__currency {
+        @include font($text-color-2, 14px, 20px, 500);
+    }
+}

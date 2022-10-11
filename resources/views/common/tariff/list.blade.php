@@ -73,7 +73,7 @@
             </select>
         </div>
         @if((request('active') == null || request('active') == 'true') && isset($tariffs[0]))
-        <div>
+        <div class="community-tab__inline-all">
             <span>{{__('tariff.inline_command_all_tariffs')}}</span>
             <a 
                 class="community-settings__inline-link all-tariffs"

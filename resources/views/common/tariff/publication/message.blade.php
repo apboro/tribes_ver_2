@@ -76,7 +76,7 @@
         @include('common.tariff.assets.tariff_publication')
 
         <!-- Отправить в сообщество -->
-        <div class="toggle-switch community-settings__item">        
+        <div class="toggle-switch community-settings__item">
             <label class="toggle-switch__switcher">
                 <input
                     type="checkbox"
