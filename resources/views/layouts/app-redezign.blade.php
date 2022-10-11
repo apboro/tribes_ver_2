@@ -19,8 +19,10 @@
 
     <!-- Content -->
     <main class="main">
+    <!-- <div class="container" data-plugin="CommunityPage"> -->
         <div class="content-overlay"></div>
         @yield('content')
+    <!-- </div> -->
     </main>
 
     <!-- Footer-->
