@@ -1,143 +1,125 @@
 @extends('common.community.profile')
 
 @section('tab')
-    @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors])
-    
-    <section class="form-control-repeater" data-tab="donatePage">
-        <div class="row">
-            <!-- Invoice repeater -->
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="col-9">
-                            <h4 class="card-title">
-                                {{ __('donate.title') }}
-                            </h4>
-                        </div>
+    {{-- @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors]) --}}
+    <section
+        class="community-tab"
+        data-tab="donatePage"
+    >
+        <div class="community-tab__header">
+            <a
+                href="{{ route('community.donate.list', $community) }}"
+                class="button-back community-tab__prev-page-btn"
+            >
+                <svg width="27" height="16" viewBox="0 0 27 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26 9C26.5523 9 27 8.55228 27 8C27 7.44772 26.5523 7 26 7L26 9ZM0.292893 7.2929C-0.0976311 7.68342 -0.097631 8.31658 0.292893 8.70711L6.65685 15.0711C7.04738 15.4616 7.68054 15.4616 8.07107 15.0711C8.46159 14.6805 8.46159 14.0474 8.07107 13.6569L2.41421 8L8.07107 2.34315C8.46159 1.95262 8.46159 1.31946 8.07107 0.928934C7.68054 0.538409 7.04738 0.53841 6.65685 0.928934L0.292893 7.2929ZM26 7L1 7L1 9L26 9L26 7Z" fill="#7367F0"></path></svg>
+            </a>
 
-                        <a
-                            href="{{ route('community.donate.settings', ['community' => $community->id, 'id' => $donate ? $donate->id : NULL]) }}"
-                            class="btn btn-outline-success"
-                        >
-                            <i data-feather='settings' class="font-medium-1"></i>
-                            <span class="d-none d-md-inline-block">
-                                {{ __('base.settings') }}
-                            </span>
-                        </a>
-                    </div>
+            <p class="community-tab__prev-page-title">Донаты</p>
 
-                    <div class="card-body">
-                        <!-- Form -->
-                        <form
-                            action="{{ route('community.donate.update', ['community' => $community->id, 'id' => $donate ? $donate->id : NULL]) }}"
-                            method="post"
-                            class=""
-                            id="donate_form_{{ $community->id }}"
-                            enctype="multipart/form-data"
-                            data-switcher-cotainer
-                        >
-                            @csrf
-                            <div data-repeater-list="invoice">
-                                <div class="col-md-10 col-xl-5 col-10">
-                                    <div class="mb-1 mb-xl-1">
-                                        <label class="form-label">
-                                            Наименование доната *
-                                        </label>
-                                        <input
-                                            type="text"
-                                            class="form-control @error('description') error @enderror"
-                                            id="title"
-                                            name="title"
-                                            placeholder="Наименование доната"
-                                            value="{{ $donate && $donate->title ? $donate->title : old('title') }}"
-                                        />
-                        
-                                        <span class="badge bg-warning hide" title="{{ __('base.unsaved_data') }}">
-                                            <i data-feather='save' class="font-medium-1" ></i>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Описание доната DESCRIPTION -->
-                                @include('common.donate.assets.donate_description')
-
-                                <!-- 1st donate -->
-                                @include('common.donate.assets.donate_variant',['index' => 0])
-
-                                <!-- 2nd donate -->
-                                @include('common.donate.assets.donate_variant',['index' => 1])
-
-                                <!-- 3rd donate -->
-                                @include('common.donate.assets.donate_variant',['index' => 2])
-
-                                <!-- 4th CUSTOM donate -->
-                                @include('common.donate.assets.donate_variant_special',['index' => 3])
-
-                                <!-- Отправить в сообщество -->
-                                <div data-donate-item-id="6">                                   
-                                    <div class="row align-items-center">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center">
-                                                <div class="form-check form-check-primary form-switch">
-                                                    <input
-                                                        type="checkbox"
-                                                        class="form-check-input pointer"
-                                                        id="donate_item_check_6"
-                                                        value="true"
-                                                        name="send_to_community"
-                                                    />
-                                                </div>
-
-                                                <label class="ms-1 pointer" for="donate_item_check_6">
-                                                    {{ __('form.send_to_community') }} 
-                                                </label>
-                                            </div>
-                                        </div>      
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        <div class="card-footer">
-                            <div class="row align-items-center">
-                                <!-- Submit -->
-                                <div class="col-sm-5 col-lg-4 col-xl-3">
-                                    <button
-                                        class="btn w-100 btn-icon btn-success d-flex align-items-center justify-content-center"
-                                        type="submit"
-                                        data-repeater-create
-                                    >
-                                        <i data-feather="save" class="font-medium-1"></i>
-                                        <span class="ms-1">
-                                            {{ __('base.save') }}
-                                        </span>
-                                    </button>
-                                </div>
-                                
-                                <!-- Inline command -->
-                                <span class="col-xl-9">
-                                    <div role="alert" aria-live="polite" aria-atomic="true" class="alert alert-success mb-0 mt-1 mt-xl-0">
-                                        <div class="alert-body">
-                                            <i data-feather="alert-circle" class="font-medium-1"></i>
-                                            {{ __('donate.inline_command') }} 
-                                            <strong>
-                                                {{ '@' . env('TELEGRAM_BOT_NAME') }} {{ $donate ? $donate->inline_link : __('donate.created_on_save') }}
-                                            </strong> — 
-                                            <span
-                                                class="text-primary pointer"
-                                                onclick="copyText('{{ '@' . env('TELEGRAM_BOT_NAME') }} {{ $donate ? $donate->inline_link : 'Создастся при сохранении' }}')"
-                                            >
-                                                {{ __('base.copy') }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </span> 
-                            </div>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!-- /Invoice repeater -->
+            <h2 class="community-tab__title">Создание доната</h2>
         </div>
+
+        <form
+            action="{{ route('community.donate.update', ['community' => $community->id, 'id' => $donate ? $donate->id : NULL]) }}"
+            method="post"
+            class="donate-add"
+            id="donate_form_{{ $community->id }}"
+            enctype="multipart/form-data"
+            data-switcher-cotainer
+        >
+            @csrf
+            <div class="donate-add__head">
+                <div>
+                    <label class="form-label-red" for="title">
+                        Наименование доната *
+                    </label>
+                    
+                    <input
+                        type="text"
+                        id="title"
+                        class="form-control-red @error('title') form-control-red--danger @enderror"
+                        name="title"
+                        aria-describedby="title"
+                        placeholder="Наименование доната"
+                        value="{{ $donate && $donate->title ? $donate->title : old('title') }}"
+                    >
+                    
+                    @error('title')
+                        <span class="form-message form-message--danger">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="community-settings__inline-command list">
+                    <span class="form-label-red">
+                        Инлайн команда данных донатов
+                    </span>
+                    <a
+                        class="community-settings__inline-link" 
+                        onclick="copyText('{{ '@' . env('TELEGRAM_BOT_NAME') }} {{ $donate ? $donate->inline_link : 'Создастся при сохранении' }}')"
+                    >
+                        {{ '@' . env('TELEGRAM_BOT_NAME') }} {{ $donate ? $donate->inline_link : __('donate.created_on_save') }}
+                    </a>
+                </div>
+
+                <a
+                    href="{{ route('community.donate.settings', ['community' => $community->id, 'id' => $donate ? $donate->id : NULL]) }}"
+                    class="button-filled button-filled--primary donate-add__settings-btn"
+                >
+                    Общие настройки
+                </a>
+            </div>
+
+            <!-- Описание доната DESCRIPTION -->
+            @include('common.donate.assets.donate_description')
+
+            <!-- 1st donate -->
+            @include('common.donate.assets.donate_variant',['index' => 0])
+
+            <!-- 2nd donate -->
+            @include('common.donate.assets.donate_variant',['index' => 1])
+
+            <!-- 3rd donate -->
+            @include('common.donate.assets.donate_variant',['index' => 2])
+
+            <!-- 4th CUSTOM donate -->
+            @include('common.donate.assets.donate_variant_special',['index' => 3])
+            
+            <div class="toggle-switch community-settings__item">        
+                <label class="toggle-switch__switcher">
+                    <input
+                        type="checkbox"
+                        id="tariff_item_check_6"
+                        class="toggle-switch__input"
+                        value="true"
+                        name="send_to_community"
+                    >
+                    <span class="toggle-switch__slider"></span>
+                </label>
+
+                <label
+                    for="tariff_item_check_6"
+                    class="toggle-switch__label"
+                >
+                    {{ __('form.send_to_community') }}
+                </label>
+            </div>
+
+            <div class="community-settings__buttons">
+                <button
+                    class="button-filled button-filled--primary"
+                    type="submit"
+                    data-repeater-create
+                >
+                    Сохранить
+                </button>
+
+                <a
+                    href="{{ route('community.donate.list', $community) }}"
+                    class="button-filled button-filled--primary-15"
+                >
+                    Отменить
+                </a>
+            </div>
+        </form>
     </section>
 @endsection

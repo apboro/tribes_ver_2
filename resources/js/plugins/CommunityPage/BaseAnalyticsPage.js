@@ -195,6 +195,36 @@ export class BaseAnalyticsPage {
     toggleChartVisibility() {
     }
 
+    async loadFile(type) {
+        let exportType = type == 'csv' ? 'csv' : 'xlsx';
+        try {
+            const res = await axios({
+                method: 'post',
+                url: this.fileUploadUrl,
+                responseType: "blob",
+                data: {
+                    community_ids: this.communityId,
+                    export_type: exportType,
+                    filter: {
+                        period: this.filterPeriodValue,
+                    }
+                }
+            });
+
+            let blob = new Blob([res.data], {
+                type: res.headers['content-type'],
+            });
+
+            let anchor = document.createElement('a');
+            anchor.download = `StatisticExport(${ res.headers.date })`;
+            anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+            anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
+            anchor.click();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     get marks() {
         if (this.filterPeriodValue === 'week') {
             return this.data.meta.marks.map((mark) => timeFormatting({
@@ -218,36 +248,6 @@ export class BaseAnalyticsPage {
                 date: mark,
                 month: 'long',
             }));
-        }
-    }
-
-    async loadFile(type) {
-        let exportType = type == 'csv' ? 'csv' : 'xlsx';
-        try {
-            const res = await axios({
-                method: 'post',
-                url: this.fileUploadUrl,
-                responseType: "blob",
-                data: {
-                    community_id: this.communityId,
-                    export_type: exportType,
-                    filter: {
-                        period: this.filterPeriodValue,
-                    }
-                }
-            });
-
-            let blob = new Blob([res.data], {
-                type: res.headers['content-type'],
-            });
-
-            let anchor = document.createElement('a');
-            anchor.download = `StatisticExport(${ res.headers.date })`;
-            anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-            anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
-            anchor.click();
-        } catch (error) {
-            console.log(error);
         }
     }
 

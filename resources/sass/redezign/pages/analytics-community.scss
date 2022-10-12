@@ -4,6 +4,13 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        &.projects_creation {
+            margin: 0 0 30px;
+            justify-content: flex-start;
+            align-items: baseline;
+            flex-direction: column;
+        }
     }
 
     &__title-wrap {
@@ -21,6 +28,11 @@
 
     &__title {
         @include font($text-color-1, 30px, 36px, 600);
+        margin: 0;
+    }
+
+    &__title-link {
+        @include font($text-color-2, 20px, 26px, 500);
         margin: 0;
     }
 

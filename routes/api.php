@@ -98,6 +98,15 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
         Route::post('delete', 'CommunityController@delete')->name('api.community.delete');*/
     });
 
+    Route::group(['prefix' => 'projects'], function () {
+        Route::post('list', 'ProjectController@list')->name('api.project.list');
+        Route::post('get', 'ProjectController@get')->name('api.project.get');
+        Route::post('add', 'ProjectController@add')->name('api.project.add');
+        Route::post('store', 'ProjectController@store')->name('api.project.store');
+        Route::post('delete', 'ProjectController@delete')->name('api.project.delete');
+        Route::post('attach-communities', 'ProjectController@attachCommunities')->name('api.project.attach-communities');
+    });
+
     Route::group(['prefix' => 'media-statistic'], function () {
         Route::post('sales-list', 'MediaStatisticController@salesList')->name('api.media-statistic.sales-list');
         Route::post('products-list', 'MediaStatisticController@productsList')->name('api.media-statistic.products-list');

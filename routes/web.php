@@ -30,13 +30,6 @@ Auth::routes();
 
 Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], function () {
 
-
-    // Route::middleware('guest')->namespace('App\Http\Controllers\Auth')->group(function() {
-    //     Route::get('/sms/confirmation', 'RegisterController@confirmSmsForm')->name('sms.confirmation.form');
-    //     Route::post('/sms/confirmation', 'RegisterController@confirmSms')->name('sms.confirmation.confirm');
-    //     Route::post('/sms/repeat', 'RegisterController@repeatSms')->name('sms.confirmation.repeat');
-    // });
-
     Route::namespace('App\Http\Controllers')->group(function () {
         //Payments
         Route::post('/payment/donate/range', 'DonateController@takeRangeDonatePayment')->name('payment.donate.range');
@@ -65,6 +58,21 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
     // Авторизованные роуты
     Route::middleware('auth')->namespace('App\Http\Controllers')->group(function () {
+
+        //New Design Routes
+        Route::get('/analytics/subscribers/{project?}/{community?}', 'ProjectController@subscribers')->name('project.analytics.subscribers');
+        Route::get('/analytics/messages/{project?}/{community?}', 'ProjectController@messages')->name('project.analytics.messages');
+        Route::get('/analytics/payments/{project?}/{community?}', 'ProjectController@payments')->name('project.analytics.payments');
+        Route::get('/analytics/{project?}/{community?}', 'ProjectController@analytics')->name('project.analytics');
+
+        Route::get('/donates/{project?}/{community?}', 'ProjectController@donates')->name('project.donates');
+        Route::get('/tariffs/{project?}/{community?}', 'ProjectController@tariffs')->name('project.tariffs');
+        Route::get('/members/{project?}/{community?}', 'ProjectController@members')->name('project.members');
+        Route::get('profile/projects', 'ProjectController@listProjects')->name('profile.project.list');
+        Route::get('profile/communities', 'ProjectController@listCommunities')->name('profile.communities.list');
+        Route::any('profile/projects/add', 'ProjectController@add')->name('profile.project.add');
+        Route::any('profile/projects/edit/{project}', 'ProjectController@edit')->name('profile.project.edit');
+
         Route::group(['prefix' => 'profile'], function () {
 
             Route::get('/', 'AuthorController@profile')->name('author.profile');
@@ -119,14 +127,20 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
             Route::get('/', 'CommunityController@index')->name('community.list');
 
-            Route::middleware('sms_confirmed', 'owned_community')->group(function () {
-
-                Route::get('{community}', 'CommunityController@statistic')->where(['community' => '[0-9]+'])->name('community.view');
+            Route::middleware('sms_confirmed', 'owned_group_community')->group(function () {
                 // Statistic
                 Route::get('/{community}/statistic', 'CommunityController@statistic')->name('community.statistic');
                 Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
                 Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
                 Route::get('/{community}/statistic/payments', 'CommunityController@statisticPayments')->name('community.statistic.payment');
+
+            });
+
+            Route::middleware('sms_confirmed', 'owned_community')->group(function () {
+
+                Route::get('{community}', 'CommunityController@statistic')->where(['community' => '[0-9]+'])->name('community.view');
+
+
 
                 // Donate
                 Route::get('/{community}/donate/list', 'DonateController@list')->name('community.donate.list');
@@ -144,6 +158,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
                 Route::get('/{community}/subscribers', 'TariffController@subscriptions')->name('community.tariff.subscriptions');
                 Route::post('/{community}/subscribers/change', 'TariffController@subscriptionsChange')->name('community.tariff.subscriptionsChange');
+
                 Route::get('/{community}/tariff', 'TariffController@list')->name('community.tariff.list');
 
                 Route::get('/{community}/tariff/settings/{tab?}', 'TariffController@settings')->name('community.tariff.settings');
@@ -157,18 +172,10 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                     return view('common.knowledge.index');
                 })->name('knowledge.index');
 
-                #TODO
-
                 Route::get('/{community}/knowledge/list', function () {
                     return view('common.knowledge.list2');
                 })->name('common.knowledge.list');
 
-                //Route::get('/{community}/knowledge/list', 'KnowledgeController@list')->name('knowledge.list2');
-
-                // Route::get('/{community}/knowledge/add', 'KnowledgeController@add')->name('knowledge.add');
-                // Route::get('/{community}/knowledge/{question}/edit', 'KnowledgeController@edit')->name('knowledge.edit');
-                // Route::get('/{community}/knowledge/settings', 'KnowledgeController@settings')->name('knowledge.settings');
-                // Route::post('/{community}/knowledge/store', 'KnowledgeController@store')->name('knowledge.store');
             });
 
         });
@@ -298,7 +305,6 @@ Route::get('/agency_contract', function () {
 Route::get('/confirm_subscription', function () {
     return view('common.tariff.confirm-subscription');
 })->name('сonfirm_subscription');
-
 
 Route::get('setlocale/{lang}', function ($lang) {
 

@@ -12,13 +12,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 interface TeleDialogStatisticRepositoryContract
 {
 
-    public function getMembersList(int $communityId, MembersFilter $filter): LengthAwarePaginator;
+    public function getMembersList(array $communityIds, MembersFilter $filter): LengthAwarePaginator;
 
-    public function getMembersListForFile(int $communityId, MembersFilter $filter): Builder;
+    public function getMembersListForFile(array $communityIds, MembersFilter $filter): Builder;
 
-    public function getJoiningMembersChart(int $communityId, MembersChartFilter $filter): ChartData;
+    public function getJoiningMembersChart(array $communityIds, MembersChartFilter $filter): ChartData;
 
-    public function getExitingMembersChart(int $communityId, MembersChartFilter $filter): ChartData;
+    public function getExitingMembersChart(array $communityIds, MembersChartFilter $filter): ChartData;
 
 
 }

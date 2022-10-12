@@ -14,7 +14,7 @@ use App\Repositories\Statistic\TeleMessageStatisticRepositoryContract;
 use App\Services\File\FileSendService;
 use Illuminate\Http\Request;
 
-class TeleMessageStatisticController extends Controller
+class TeleMessageStatisticController extends StatController
 {
     private TeleMessageStatisticRepositoryContract $statisticRepository;
     private FileSendService $fileSendService;
@@ -28,16 +28,16 @@ class TeleMessageStatisticController extends Controller
         $this->fileSendService = $fileSendService;
     }
 
-    public function messages(TeleMessageStatRequest $request, TeleMessagesFilter $filter)
+    public function messages(TeleDialogStatRequest $request, TeleMessagesFilter $filter)
     {
-        $messages = $this->statisticRepository->getMessagesList($request->get('community_id'), $filter);
+        $messages = $this->statisticRepository->getMessagesList($this->getCommunityIds($request), $filter);
         return (new TelegramMessages($messages))->forApi();
     }
 
-    public function messageCharts(TeleMessageStatRequest $request, TeleMessagesChartFilter $filter)
+    public function messageCharts(TeleDialogStatRequest $request, TeleMessagesChartFilter $filter)
     {
-        $chartMessagesData = $this->statisticRepository->getMessageChart($request->get('community_id'),$filter);
-        $chartUtilityMessageData = $this->statisticRepository->getUtilityMessageChart($request->get('community_id'),$filter);
+        $chartMessagesData = $this->statisticRepository->getMessageChart($this->getCommunityIds($request),$filter);
+        $chartUtilityMessageData = $this->statisticRepository->getUtilityMessageChart($this->getCommunityIds($request),$filter);
         $chartMessagesData->includeChart($chartUtilityMessageData,['messages' => 'utility_messages']);
         
         return (new MemberChartsResource($chartMessagesData));
@@ -77,7 +77,7 @@ class TeleMessageStatisticController extends Controller
             ],
         ];
         $type = $request->get('export_type');
-        $builder = $this->statisticRepository->getMessagesListForFile($request->get('community_id'),$filter);
+        $builder = $this->statisticRepository->getMessagesListForFile($this->getCommunityIds($request),$filter);
 
         return $this->fileSendService->sendFile($builder,$columnNames,TelegramMessageResource::class,$type,'messages');
     }
