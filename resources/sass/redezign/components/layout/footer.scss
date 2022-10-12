@@ -15,11 +15,11 @@
     &__left {
         width: 100%;
 
-        @media (min-width: $lg) {
-            width: 30%;
+        @media (min-width: $md) {
+            width: 25%;
         }
 
-        @media (min-width: $md) {
+        @media (min-width: $lg) {
             width: 30%;
         }
     }
@@ -29,13 +29,24 @@
         margin: 0;
         display: flex;
         flex-wrap: wrap;
+        flex-direction: column-reverse;
         width: 100%;
 
-        @media (min-width: $lg) {
-            width: 70%;
+        ul {
+            margin-bottom: 0;
+            width: 100%;
         }
 
         @media (min-width: $md) {
+            width: 75%;
+            flex-direction: row;
+
+            ul {
+                width: 50%;
+            }
+        }
+
+        @media (min-width: $lg) {
             width: 70%;
         }
     }
@@ -70,6 +81,10 @@
         margin: 0 10px 0 0;
     }
 
+    &__payment-img {
+        padding: 0 12px;
+    }
+
     &__phone {
         margin: 0 0 10px;
         display: flex;
@@ -81,17 +96,37 @@
         }
     }
 
+    // &__item {
+    //     list-style: none;
+    //     margin: 0 0 10px;
+    //     width: 100%;
+    //     text-align: center;
+
+    //     @media (min-width: $lg) {
+    //         width: 50%;
+    //     }
+
+    //     @media (min-width: $md) {
+    //         text-align: left;
+    //     }
+    // }
+
     &__item {
+        list-style: none;
         margin: 0 0 10px;
         width: 100%;
         text-align: center;
 
-        @media (min-width: $lg) {
-            width: 50%;
-        }
-
         @media (min-width: $md) {
             text-align: left;
+        }
+
+        &.img-payments {
+            margin: 20px 0 0;
+
+            > div {
+                margin: 0 -12px;
+            }
         }
     }
 }

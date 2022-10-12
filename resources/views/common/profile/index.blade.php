@@ -65,7 +65,7 @@
                                             src="/images/icons/social/telegram.png"
                                             alt="Telegram"
                                         >
-                                        https://t.me/{{$activeCommunity->image}}
+                                        https://t.me/
                                     </a>
                                     <p class="profile__community-description--subscribers">
                                     <h6 class="profile__community-description--subscribers-text">Подписчиков:</h6>
