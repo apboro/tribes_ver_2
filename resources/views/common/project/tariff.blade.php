@@ -18,6 +18,7 @@
             </h2>
 
             <div class="dropdown-red dropdown-red--left main-header__dropdown">
+                @if($activeCommunity)
                 <button class="button-text button-text--primary button-text--only-icon dropdown-red__head"
                         data-dropdown-btn onclick="Dropdown.toggle(this)">
                     <span
@@ -63,6 +64,7 @@
                         </li>
                     @endif
                 </ul>
+                @endif
             </div>
 
             <!-- Nav -->

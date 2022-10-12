@@ -35,8 +35,8 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.countDonationsValueNode = this.countDonationsNode.querySelector('#count_donations_value');
         this.countTariffsNode = this.container.querySelector('#count_tariffs');
         this.countTariffsValueNode = this.countTariffsNode.querySelector('#count_tariffs_value');
-        this.countCoursesNode = this.container.querySelector('#count_courses');
-        this.countCoursesValueNode = this.countCoursesNode.querySelector('#count_courses_value');
+        // this.countCoursesNode = this.container.querySelector('#count_courses');
+        // this.countCoursesValueNode = this.countCoursesNode.querySelector('#count_courses_value');
 
         this.isDonationsHidden = false;
         this.isTariffsHidden = false;
@@ -103,8 +103,8 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.countTariffsValueNode.textContent = this.countTariffs != 0 ? numberFormatting(convertToRub(this.countTariffs)) : 0;
         this.countTariffsNode.style.color = this.chartDatasets[1].borderColor;
 
-        this.countCoursesValueNode.textContent = this.countCourses != 0 ? numberFormatting(convertToRub(this.countCourses)) : 0;
-        this.countCoursesNode.style.color = this.chartDatasets[2].borderColor;
+        // this.countCoursesValueNode.textContent = this.countCourses != 0 ? numberFormatting(convertToRub(this.countCourses)) : 0;
+        // this.countCoursesNode.style.color = this.chartDatasets[2].borderColor;
     }
 
     toggleChartVisibility(name) {
@@ -172,11 +172,11 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
                 borderColor: "#E24041",
                 hidden: this.isTariffsHidden,
             },
-            {
-                data: this.courses,
-                borderColor: "#FF9F43",
-                hidden: this.isCoursesHidden,
-            }
+            // {
+            //     data: this.courses,
+            //     borderColor: "#FF9F43",
+            //     hidden: this.isCoursesHidden,
+            // }
         ]
     }
 

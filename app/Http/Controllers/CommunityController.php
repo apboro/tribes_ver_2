@@ -42,6 +42,14 @@ class CommunityController extends Controller
             ->withCommunities($communities);
     }
 
+    public function add()
+    {
+        if(!Auth::user()->hasTelegramAccount()){
+            return redirect()->route('author.messenger.list');
+        }
+        return view('common.community.form');
+    }
+
     public function statistic(Request $request)
     {
         return view('common.statistic.list')
