@@ -90,6 +90,8 @@ export class CreateCommunityBot {
                 }
             }, messenger);    
         } catch(error) {
+            console.log('invoke', error);
+
             new Toasts({
                 type: 'error',
                 message: createServerErrorMessage(error)
@@ -111,6 +113,7 @@ export class CreateCommunityBot {
     
                 callback(resp.data);    
             } catch (error) {
+                console.log('answer', error);
                 new Toasts({
                     type: 'error',
                     message: createServerErrorMessage(error)
@@ -188,24 +191,24 @@ export class CreateCommunityBot {
         //     <div></div>
         // `;
         return `
-        <div  data-community-answer-success-message>
-        <div class="channel-connection__add-channel-wrap">
-            <div class="channel-connection__connected-community">
-                <div class="channel-connection__image">
-                    <img src="/images/avatars/1.png">
-                </div>
-                <div class="channel-connection__description">
-                    <p class="channel-connection__channel">${ data.community.title }</p>
-                    <div class="channel-connection__messenger">
-                        <img src="/images/icons/social/telegram.png">
-                        <p class="profile__text">${ type == 'channel' ? 'Канал' : 'Группа' }</p>
+            <div data-community-answer-success-message>
+                <div class="channel-connection__add-channel-wrap">
+                    <div class="channel-connection__connected-community">
+                        <div class="channel-connection__image">
+                            <img src="/images/avatars/1.png">
+                        </div>
+                        <div class="channel-connection__description">
+                            <p class="channel-connection__channel">${ data.community.title }</p>
+                            <div class="channel-connection__messenger">
+                                <img src="/images/icons/social/telegram.png">
+                                <p class="profile__text">${ type == 'channel' ? 'Канал' : 'Группа' }</p>
+                            </div>
+                        </div>
                     </div>
+                    <span class="channel-connection__connected">Подключено</span>
                 </div>
+                <a href="/profile/communities" class="button-empty button-empty--primary">Перейти к списку подключённых сообществ</a>
             </div>
-            <span class="channel-connection__connected">Подключено</span>
-        </div>
-        <a href="/profile/communities" class="button-empty button-empty--primary">Перейти к списку подключённых сообществ</a>
-    </div>
         `;
     }
 
