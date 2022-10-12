@@ -7,6 +7,7 @@
                 {{ __('base.tariffs') }}
             </h2>
 
+            @if($activeCommunity)
             <div class="dropdown-red dropdown-red--left main-header__dropdown">
                 <button class="button-text button-text--primary button-text--only-icon dropdown-red__head" data-dropdown-btn onclick="Dropdown.toggle(this)">
                     <span
@@ -46,6 +47,7 @@
                     </li>
                 </ul>
             </div>
+            @endif
             
             <!-- Nav -->
             <select
