@@ -144,7 +144,6 @@ export class CreateCommunityBot {
         this.loadingBlock.classList.add('hide');
         this.successMessageBlock.innerHTML = this.createSuccessMessage(data, type);
         // this.createRedirectBlock(data);
-        
     }
 
     createRedirectBlock(data) {
