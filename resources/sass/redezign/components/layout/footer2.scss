@@ -1,0 +1,65 @@
+.footer2 {
+    
+    background-color: rgba($primary-1, .05);
+
+    
+    .container {
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 10px 70px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        @media (min-width: $lg) {
+            grid-template-columns: minmax(190px, 1fr) minmax(320px, 1fr) 337px;
+        }
+    }
+
+    &__contacts {
+        display: flex;
+        flex-direction: column;
+        gap: $indent-1;
+        order: 1;
+        text-align: center;
+
+        @media (min-width: $lg) {
+            text-align: left;
+        }
+    }
+
+    &__bank {
+        display: flex;
+        flex-direction: column;
+        gap: $indent-3;
+        order: 3;
+        text-align: center;
+
+        @media (min-width: $lg) {
+            order: 2;
+            text-align: left;
+        }
+    }
+
+    &__rights-list {
+        display: flex;
+        flex-direction: column;
+        gap: $indent-1;
+        list-style: none;
+        order: 2;
+        margin: 0;
+        text-align: center;
+
+        @media (min-width: $lg) {
+            order: 3;
+            text-align: left;
+        }
+    }
+
+    &__telegram-link {
+        @include font($blue-1, 14px, 20px, 600);
+
+        svg {
+            margin-right: $indent-1;
+        }
+    }
+}

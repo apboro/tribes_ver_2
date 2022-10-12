@@ -26,7 +26,7 @@
     </main>
 
     <!-- Footer-->
-    @include('common.template.footer')
+    @include('common.template.footer2')
     
     <!-- Service container -->
     @include('common.template.service_container')
