@@ -73,7 +73,9 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
                 'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
             ]]);
             $this->getCommandsForBot($nameBot)->initCommand();
-            // $this->botCollect->getBotByName($nameBot)->polling();
+            // Для локальной разработки - метод polling раскоментить, метод listen закоментить. Запустить php artisan teelgram:bot:run. 
+            // Если локально используется бот к которому прокинут хук, его необходимо отключить.
+            // $this->botCollect->getBotByName($nameBot)->polling();   
             $this->botCollect->getBotByName($nameBot)->listen($data);
         } catch (Exception | TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());

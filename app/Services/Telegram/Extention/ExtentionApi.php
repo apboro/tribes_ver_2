@@ -41,6 +41,22 @@ class ExtentionApi extends Api implements ExtentionApiInterface
     }
 
     /**
+     * Пригласительная ссылка с лимитом 
+     * @param int $chatId
+     * @param int $member_limit
+     *
+     */
+    public function createAdditionalLink(int $chatId, int $member_limit = 1)
+    {
+        $params = [
+            'chat_id'        => $chatId,
+            'member_limit'   => $member_limit
+        ];
+        $query = Http::post(env('TELEGRAM_BASE_URL') . '/bot' . $this->token . '/createChatInviteLink', $params);
+        return $query;
+    }
+
+    /**
      * метод для пересылки сообщений любого типа
      *
      * @param integer $chatId
