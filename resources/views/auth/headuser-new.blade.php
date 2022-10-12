@@ -67,6 +67,25 @@
                 </span>
 
                 <ul class="dropdown-personal__link-list">
+                    @if(Auth::user()->isAdmin())
+                        <li class="dropdown-personal__link-item">
+                            <a class="dropdown-personal__link" href="/manager/users">
+                                <span>{{ __('auth.manager_panel') }}</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    @if(session()->has('admin_id'))
+                        <li class="dropdown-personal__link-item">
+                            <a
+                                class="dropdown-personal__link"
+                                onclick="Headuser.loginAsAdmin()"
+                            >
+                                <span>{{ __('auth.back_as_admin') }}</span>
+                            </a>
+                        </li>
+                    @endif
+
                     <li class="dropdown-personal__link-item">
                         <a href="" class="dropdown-personal__link">
                             Помощь
