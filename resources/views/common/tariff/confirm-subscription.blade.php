@@ -1,11 +1,22 @@
 @extends('layouts.auth')
 
 @section('content')
-<div class="confirmation_subscription" data-plugin="TariffConfirmation">
-    <h2 class="confirmation_subscription__title">Подтверждение подписки</h2>
+<div
+    class="confirmation_subscription"
+    data-plugin="TariffConfirmation"
+>
+    <h2 class="confirmation_subscription__title">
+        Подтверждение подписки
+    </h2>
+    
     <div class="confirmation_subscription__header">
         <div class="confirmation_subscription__header-col1">
-            <img class="confirmation_subscription__avatar" src="/images/photo.png" alt="photo of subscriber">
+            <img
+                class="confirmation_subscription__avatar"
+                src="/images/no-user-avatar.svg"
+                alt="photo of subscriber"
+            >
+            
             <div class="confirmation_subscription__header-col1--right">
                 <h4 class="confirmation_subscription__header-col1-title">{{$community->title}}</h4>
                 <p class="confirmation_subscription__name-value subscribers">
@@ -100,12 +111,25 @@
             <input class="confirmation_subscription__email-input" id="email" placeholder="ivan@moyapochta.ru" name="email" required="true">
         </div>
         <!-- <a class="button-filled button-filled--primary" href="{{$community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community)}}">Оплатить</a> -->
+        
+        
         <button
-            id="submit_btn"
-            class="button-filled button-filled--primary button-filled--disabled"
+        id="submit_btn"
+        class="button-filled button-filled--primary button-filled--disabled"
+        onclick="TariffConfirmation.openRightsModal({ 
+            communityName: '{{ $community->title }}',
+            communityTariff: '{{ $tariff->title }}',
+            communityTariffID: '{{ $tariff->id }}',
+            communityAmount: '{{ $tariff->price }}',
+            url: `{{ $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
+        })"
         >
-            Оплатить
-        </button>
-    </div>
+        Оплатить
+    </button>
+</div>
+    <span
+        id="email_message"
+        class="form-message form-message--danger hide"
+    ></span>
 </div>
 @endsection
