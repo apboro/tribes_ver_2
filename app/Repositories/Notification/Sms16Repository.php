@@ -35,14 +35,35 @@ class Sms16Repository implements NotificationRepositoryContract
 
     public static function sendConfirmationTo($user, $phone)
     {
+//        dd($user, $phone);
         $code = rand(1000, 9999);
         $message = new SmsService();
         $sms = $message->sendMessage($phone, 'Код подтверждения ' . env('APP_NAME') . ':' . $code);
+//        dd($sms);
+//       array:1 [
+//          0 => array:1 [
+//             77980376779 => array:1 [
+//                "error" => "phone_code_user"
+//             ]
+//          ]
+//        ]
+///////////////////////////////////
+//        array:1 [
+//            0 => array:1 [
+//                79803767792 => array:4 [
+//                    "error" => "0"
+//                    "id_sms" => "6655788201743653280001"
+//                    "cost" => "2.8"
+//                    "count_sms" => 1
+//                ]
+//            ]
+//        ]
+        if ($sms[0][$phone]['error'] == 'phone_code_user') {
+            TelegramLogService::staticSendLogMessage('Предположительно на sms16.ru закончились деньги.');
+//            dd('ошибочка');
+            return 'Не верно указан номер';
+        }
         if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] == 0) {
-            
-            if ($sms[0][$phone]['error'] == 'phone_code_user') {
-                TelegramLogService::staticSendLogMessage('Предположительно на sms16.ru закончились деньги.');
-            }
 
             $sms_confirmation = SmsConfirmation::firstOrNew(['user_id' => $user->id]);
 
@@ -62,7 +83,7 @@ class Sms16Repository implements NotificationRepositoryContract
 
             $sms_confirmation->save();
         }
-
+dd(1);
         $balance = $message->getBalance();
         if (isset($balance['money']) && $balance['money'] < '20') {
             TelegramLogService::staticSendLogMessage('На sms16.ru осталось менее 20 рублей, пожалуйста пополните счёт.');

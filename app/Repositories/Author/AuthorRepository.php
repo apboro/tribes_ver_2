@@ -55,6 +55,7 @@ class AuthorRepository implements AuthorRepositoryContract
         $phone = str_replace($chars, '', $request['code'] . $request['phone']);
 
         $sms = $this->notyRepo->sendConfirmationTo($user, $phone);
+//        dd($sms);
         if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] == 0) {
             return true;
         } else return false;
