@@ -6,6 +6,7 @@ use App\Helper\PseudoCrypt;
 use App\Models\Tariff;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @method Tariff getItemByAttrs(array $attributes)

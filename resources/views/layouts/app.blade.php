@@ -12,10 +12,10 @@
     @if(session()->has('admin_id')) data-admin="true" @endif
 >
     <!-- Header-->
-    @include('common.template.header2')
+    @include('common.template.header')
 
     <!-- Main Menu-->
-    @include('common.template.main_menu')
+{{--    @include('common.template.main_menu')--}}
 
     <!-- Content -->
     <main class="app-content content">
@@ -46,8 +46,9 @@
             webvisor:true
         });
     </script>
-    @endif
+
     <noscript><div><img src="https://mc.yandex.ru/watch/88949577" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+    @endif
 </body>
 </html>

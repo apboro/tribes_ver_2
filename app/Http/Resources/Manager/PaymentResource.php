@@ -21,6 +21,7 @@ class PaymentResource extends JsonResource
             'from' => $this->resource->from,
             'status' => $this->resource->status,
             'created_at' => $this->resource->created_at,
+            'user_id' => $this->resource->user_id,
             'type' => $this->resource->type,
         ];
     }

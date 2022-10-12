@@ -1,0 +1,86 @@
+@extends('layouts.app-redezign')
+
+@section('content')
+
+<div class="content-wrapper container">
+    <!-- Breadcrumbs block -->
+    <div class="content-header row">
+        <div class="content-header-left col-md-9 col-12 mb-2">
+            <div class="row breadcrumbs-top">
+                <div class="col-12">
+                    <h2 class="analytics-community__title">
+                        {{ __('base.my_projects') }}
+                    </h2>    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nav block -->
+    @include('common.project.assets.nav')
+
+    <div class="tab-content">
+        @yield('tab')
+    </div>
+    <!-- @if (Session::has('message'))
+        <div class="alert alert-info">{{ Session::get('message') }}</div>
+    @endif -->
+    <div class="page-projects">
+        @if($projects->isEmpty())
+            <div class="profile__community_not_selected create-community">
+                <p>
+                    Вы можете объединять сообщества в одном проекте.
+                    </br>
+                    Проекты позволят вам лучше огранивать свое рабочие пространство в Tribes, 
+                    а также смотреть по проектам статистику, донаты и тарифы в общем контексте.
+                </p>
+            </div>
+        @else
+        @foreach($projects as $eachProject)
+        <div class="page-projects__folder-wrap">
+            <a href="{{ route('profile.project.edit', $eachProject ) }}">
+                <div class="page-projects__folder-top">
+                    <div class="parallelogram"></div>
+                    <div class="parallelogram pink"></div>
+                </div>
+                <div class="page-projects__folder">
+                    <div class="page-projects__folder--top">
+                        <p class="page-projects__folder-project">{{__('base.project')}}</p>
+                        <h5 class="page-projects__folder-project-name">{{$eachProject->title}}</h5>
+                    </div>
+                    <div class="page-projects__folder--bottom">
+                        <div class="page-projects__folder-images">
+                            
+                            @if($eachProject->communities->count() > 5 )
+                                @foreach($eachProject->communities->take(4) as $eachCommunity)
+                                    <div class="page-projects__folder-image">
+                                        <img src="{{$eachCommunity->image ?? '/images/no-image.png'}}" alt="Avatar">
+                                    </div>
+                                @endforeach
+                                <div class="page-projects__folder-image communities-left">
+                                    +{{$eachProject->communities->count() - 4}}
+                                </div>
+                            @else
+                                @foreach($eachProject->communities as $eachCommunity)
+                                    <div class="page-projects__folder-image">
+                                        <img src="{{$eachCommunity->image ?? '/images/no-image.png'}}" alt="Avatar">
+                                    </div>
+                                @endforeach
+                            @endif
+                        
+                        </div>
+                        <p class="page-projects__folder-communities-qty">{{__('base.communities_v')}}: {{$eachProject->communities->count()}}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        @endforeach
+        @endif
+    </div>
+    <div class="page-projects__create-project">
+        <a href="{{ route('profile.project.add') }}" class="button-filled button-filled--primary">
+            {{__('base.create_project')}}
+        </a>
+    </div>
+</div>
+@endsection
