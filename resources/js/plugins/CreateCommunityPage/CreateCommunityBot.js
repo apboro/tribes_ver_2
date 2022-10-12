@@ -191,7 +191,7 @@ export class CreateCommunityBot {
         //     <div></div>
         // `;
         return `
-            <div data-community-answer-success-message>
+            
                 <div class="channel-connection__add-channel-wrap">
                     <div class="channel-connection__connected-community">
                         <div class="channel-connection__image">
@@ -208,15 +208,17 @@ export class CreateCommunityBot {
                     <span class="channel-connection__connected">Подключено</span>
                 </div>
                 <a href="/profile/communities" class="button-empty button-empty--primary">Перейти к списку подключённых сообществ</a>
-            </div>
+            
         `;
     }
 
     redirectToNewCommunity(data) {
-        if (Dict.language === 'en') {
-            window.location.href = `/en/community/${ data.community.id }/statistic`;
-        } else {
-            window.location.href = `/community/${ data.community.id }/statistic`;
-        }
+        window.location.href = `/profile/communities`;
+        
+        // if (Dict.language === 'en') {
+        //     window.location.href = `/en/community/${ data.community.id }/statistic`;
+        // } else {
+        //     window.location.href = `/community/${ data.community.id }/statistic`;
+        // }
     }
 }
