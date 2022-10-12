@@ -125,7 +125,7 @@ export class CreateCommunityBot {
     botConnectedEvent(data, messenger, type) {
         new Toasts({
             type: 'success',
-            message: Dict.write('service_message', 'success_add_community')
+            message: 'Перейти к списку подключённых сообществ'
         });
 
         this.drawToHTML(data, messenger, type);
