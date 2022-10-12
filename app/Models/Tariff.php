@@ -67,7 +67,7 @@ class Tariff extends Model
     {
         return [
             'test_period' => 0,
-            'welcome_description' => __('tariff.welcome_default_description'),
+            'welcome_description' => null, //__('tariff.welcome_default_description'),
             'reminder_description' =>  __('tariff.reminder_default_description'),
             'thanks_description' =>  __('tariff.success_default_description'),
             'publication_description' => __('tariff.available_rates')

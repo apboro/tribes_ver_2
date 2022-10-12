@@ -118,8 +118,7 @@ class MainBotEvents
 
                             $description = $community->tariff->welcome_description;
                             if ($description && $description != '') {
-                                $text = ($userName ?: $firstName)
-                                    . ', ' . $description . $image;
+                                $text = $description . $image;
                                 $this->bot->getExtentionApi()->sendMess($chatId, $text);
                             }
                         }

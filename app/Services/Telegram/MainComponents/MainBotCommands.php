@@ -137,9 +137,7 @@ class MainBotCommands
     {
         try {
             $this->bot->onCommand('start' . $this->bot->botFullName, function (Context $ctx) {
-                $ctx->reply('Здравствуйте, ' . $ctx->getFirstName() . "! \n"
-                    . 'Список доступных для вас команд:' . "\n"
-                    . $this->getCommandsListAsString());
+                $ctx->reply('Здравствуйте, ' . $ctx->getFirstName() . "!");
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
