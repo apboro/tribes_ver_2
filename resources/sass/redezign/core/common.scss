@@ -24,10 +24,10 @@ body {
 
 .main {
     padding-top: 90px;
+    flex: 1 0 auto;
 
     @media (min-width: $md) {
         padding-top: 150px;
         width: 100%;
-        flex: 1 0 auto;
     }
 }
