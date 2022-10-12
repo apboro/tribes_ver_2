@@ -74,18 +74,18 @@
                         </span>
                     </button>
 
-                    <button
-                            class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"
-                            onclick="CommunityPage.analyticsPaymentsPage.toggleChartVisibility('courses')"
-                    >
-                        <span class="chart-analytics-community__text">
-                            Медиатовары
-                        </span>
+{{--                    <button--}}
+{{--                            class="chart-analytics-community__label chart-analytics-community__label--pointer chart-analytics-community__label--right"--}}
+{{--                            onclick="CommunityPage.analyticsPaymentsPage.toggleChartVisibility('courses')"--}}
+{{--                    >--}}
+{{--                        <span class="chart-analytics-community__text">--}}
+{{--                            Медиатовары--}}
+{{--                        </span>--}}
 
-                        <span class="chart-analytics-community__value" id="count_courses">
-                            <span class="chart-analytics-community__currency">₽</span><span id="count_courses_value">0</span>
-                        </span>
-                    </button>
+{{--                        <span class="chart-analytics-community__value" id="count_courses">--}}
+{{--                            <span class="chart-analytics-community__currency">₽</span><span id="count_courses_value">0</span>--}}
+{{--                        </span>--}}
+{{--                    </button>--}}
                 </div>
 
                 <div class="chart-analytics-community__chart">
