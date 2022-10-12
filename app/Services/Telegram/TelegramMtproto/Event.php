@@ -117,6 +117,9 @@ class Event
                     } elseif ($newUpdate->_ === 'updateEditMessage' && isset($newUpdate->message->reactions)) {
 
                         $this->saveMessageReaction($newUpdate);
+                    } elseif ($newUpdate->_ === 'updateEditMessage') {
+
+                        $this->messageRepository->editMessage($newUpdate->message);
                     } elseif ($newUpdate->_ === 'updateMessageReactions' && isset($newUpdate->reactions->recent_reactions)) {
 
                         $this->saveCommentMessageReaction($newUpdate);
