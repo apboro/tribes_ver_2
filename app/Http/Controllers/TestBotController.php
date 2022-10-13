@@ -54,49 +54,7 @@ class TestBotController extends Controller
 {
     public function index(Request $request)
     {
-        $p = 'payments';
-        $tu = 'telegram_users';
-
-
-        $builder = Payment::where('community_id', 17)
-        ->where('status', 'CONFIRMED')
-        ->leftJoin($tu,function ($join) use ($p,$tu) {
-            $join->on("$tu.telegram_id", '=', "$p.telegram_user_id")
-                ->on("$tu.user_id", '=',"$p.user_id",'OR');
-        })
-        ->select(
-            'amount', 
-            'type', 
-            "payments.created_at as buy_date", 
-            'status', 
-            "payable_id",
-            "payable_type",
-            "$tu.user_name as tele_login", 
-            "$tu.first_name"
-        )->get();
         
-        // $payments = Payment::find(7);
-        // dd($payments->payable->title);
-
-        foreach ($builder as $pay) {
-            echo isset($pay->payable->title) ? $pay->payable->title : '-';
-        }
-        // dd($builder);
-        // $builder = DB::table($p)
-        //     ->leftJoin($tu,function ($join) use ($p,$tu) {
-        //         $join->on("$tu.telegram_id", '=', "$p.telegram_user_id")
-        //             ->on("$tu.user_id", '=',"$p.user_id",'OR');
-        //     })
-        //     ->select([
-        //         "$p.amount",
-        //         "$p.type",
-        //         DB::raw("$p.created_at as buy_date"),
-        //         "$p.status",
-        //         "$tu.user_name as tele_login",
-        //         "$tu.first_name",
-        //     ]);
-        // $builder->where("$p.community_id", 17);
-        // dd($builder->get());
     }
 
 
