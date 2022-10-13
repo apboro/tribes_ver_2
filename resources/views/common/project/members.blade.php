@@ -226,8 +226,8 @@
                                                                 </td>
 
                                                                 <td valign="top" colspan="1" class="dataTables_empty">
-                                                                    @if ($follower->payment->last())
-                                                                        {{$follower->payment->last()->created_at->format('d.m.Y G:i:s')}}
+                                                                    @if ($follower->paymentForCommunity($activeCommunity->id)->last())
+                                                                        {{$follower->paymentForCommunity($activeCommunity->id)->last()->created_at->format('d.m.Y G:i:s')}}
                                                                     @else
                                                                         <input
                                                                                 type="date"
