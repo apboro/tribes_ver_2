@@ -230,4 +230,6 @@ spec:
               value: {{ quote .Values.config.forTester }}
             - name: DEBUG_TINKOFF
               value: {{ quote .Values.config.debugTinkoff }}
+            - name: MTPROTO_HOST
+              value: {{ quote .Values.config.mtprotoHost }}
 {{- end }}

@@ -5,6 +5,13 @@ mode:
   app: true
   migrations: false
 
+persistence:
+  enabled: true
+  storageClassName: ""
+  size: 10Gi
+  accessModes:
+    - ReadWriteOnce
+
 backend:
   image:
     registry: registry.fabit.ru
@@ -208,3 +215,4 @@ config:
   useTrialPeriod: "true"
   forTester: "false"
   debugTinkoff: "false"
+  mqprotoHost: ""
