@@ -26,7 +26,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         ]);
 
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period']??'day')->toDateTimeString();
+        $start = $filter->getStartDate($filterData['period'] ?? 'week')->toDateTimeString();
         $end = $filter->getEndDate()->toDateTimeString();
 
         $p = 'payments';

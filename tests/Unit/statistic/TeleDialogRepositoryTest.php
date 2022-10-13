@@ -46,9 +46,9 @@ class TeleDialogRepositoryTest extends TestCase
         ]);
         $this->assertArrayHasKey('users',$complexChartData->getValues());
         $this->assertArrayHasKey('exit_users',$complexChartData->getValues());
-        $this->assertCount(24,$complexChartData->getValues()['users']);
-        $this->assertCount(24,$complexChartData->getValues()['exit_users']);
-        $this->assertCount(24,$complexChartData->getMarks());
+        $this->assertCount(7,$complexChartData->getValues()['users']);
+        $this->assertCount(7,$complexChartData->getValues()['exit_users']);
+        $this->assertCount(7,$complexChartData->getMarks());
         $this->assertArrayHasKey('count_join_users',$complexChartData->getAdditions());
         $this->assertArrayHasKey('all_users',$complexChartData->getAdditions());
         $this->assertArrayHasKey('count_exit_users',$complexChartData->getAdditions());
