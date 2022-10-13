@@ -115,7 +115,7 @@
                     </button>
 
                     <a
-                        href="{{ route('community.donate.list', $community) }}"
+                        href="{{ route('project.donates', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}"
                         class="button-filled button-filled--primary-15"
                     >
                         Отменить

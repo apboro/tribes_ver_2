@@ -32,10 +32,10 @@
             <span>{{ count($donate->getSumDonateByIndex()) }}</span>
         </div>
         
-        <div class="community-tariff-card__donate-text">
+        {{-- <div class="community-tariff-card__donate-text">
             <span>Индекс:</span>
             <span>{{ $donate->index }}</span>
-        </div>
+        </div> --}}
         
         <div class="community-tariff-card__donate-text">
             <span>Сообщество:</span>
