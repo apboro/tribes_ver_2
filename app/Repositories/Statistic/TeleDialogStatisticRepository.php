@@ -52,7 +52,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
             'filter' => $filterData,
         ]);
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period']??'day')->toDateTimeString();
+        $start = $filter->getStartDate($filterData['period']??'week')->toDateTimeString();
         $end = $filter->getEndDate()->toDateTimeString();
 
         $tuc = 'telegram_users_community';
@@ -100,7 +100,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
             'filter' => $filterData,
         ]);
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period']??'day')->toDateTimeString();
+        $start = $filter->getStartDate($filterData['period'] ?? 'week')->toDateTimeString();
         $end = $filter->getEndDate()->toDateTimeString();
 
         $tuc = 'telegram_users_community';
