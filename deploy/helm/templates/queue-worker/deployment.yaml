@@ -40,7 +40,7 @@ spec:
           imagePullPolicy: {{ .Values.queueWorker.image.pullPolicy }}
           args:
           - queue
-          volumes:
+          volumeMounts:
           - name: storage
             persistentVolumeClaim:
               claimName: {{ include "..names.name" . }}-storage
