@@ -129,7 +129,7 @@ class Community extends Model
             $params = '?' . http_build_query($data);
         }
 //        $this->generateHash();
-        return route('community.tariff.payment', ['hash' => $this->hash]) . $params;
+        return route('community.tariff.confirmSubscription', ['hash' => $this->hash]) . $params;
     }
 
     public function isTelegram()
