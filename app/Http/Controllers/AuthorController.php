@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Filters\AudienceFilter;
 use App\Models\Community;
 use App\Models\TelegramUser;
+use Exception;
 
 class AuthorController extends Controller
 {
@@ -72,8 +73,8 @@ class AuthorController extends Controller
             $result = $this->authorRepo->numberForCall($request);
         }
 
-        if ($result == true) { 
-            $mes = 'Сообщение поступит на указанный номер в течение 5 минут.';
+        if ($result == true) {
+            $mes = 'Сообщение поступит на указанный номер в течение 3 минут.';
         } else $mes = 'Что-то пошло не так, пожалуйста обратитесь в службу поддержки.';
 
         return response()->json([
@@ -84,7 +85,7 @@ class AuthorController extends Controller
 
     public function confirmedCode(Request $request)
     {
-        
+
         if ($request['sms_code'] !== NULL) {
             $this->authorRepo->confirmedMobile($request);
         }
@@ -102,46 +103,51 @@ class AuthorController extends Controller
     }
 
     public function audience(AudienceFilter $filters, Request $request)
-    {   
+    {
         $allCommunityes = Community::where('owner', Auth::user()->id)->get();
         if ($request->community) {
             $communityes = Community::where('id', $request->community)->get();
         } else $communityes = $allCommunityes;
-        
+
         $followers = $this->authorRepo->getAudience($filters);
         return view('common.audience.list', ['followers' => $followers, 'communityes' => $communityes, 'allCommunityes' => $allCommunityes]);
     }
 
     public function audienceBan(Request $request)
     {
-        $community = Community::find($request->community);
-        $follower = TelegramUser::find($request->follower);
-        $role = $follower->communities()->find($community->id)->pivot->role;
-        if ($role !== 'administrator' && $role !== 'creator') {
-            $this->botService->kickUser(config('telegram_bot.bot.botName'), $request->follower, $community->connection->chat_id);
-            $follower->communities()->updateExistingPivot($community->id, [
-                'exit_date' => time()
-            ]);
-            return redirect()->back();
-        } else {
-            redirect()->back()->withMessage('Не удалось исключить, так как пользователь ' . $follower->user_name . ' является администратором сообщества.');
+        try {
+            $community = Community::find($request->community);
+            $follower = TelegramUser::find($request->follower);
+            $role = $follower->communities()->find($community->id)->pivot->role;
+            if ($role !== 'administrator' && $role !== 'creator') {
+                $this->botService->kickUser(config('telegram_bot.bot.botName'), $request->follower, $community->connection->chat_id);
+                $follower->communities()->updateExistingPivot($community->id, [
+                    'exit_date' => time()
+                ]);
+                return redirect()->back();
+            } else {
+                redirect()->back()->withMessage('Не удалось исключить, так как пользователь ' . $follower->user_name . ' является администратором сообщества.');
+            }
+        } catch (Exception $e) {
         }
-       
     }
 
     public function audienceDelete(Request $request)
     {
-        $community = Community::find($request->community);
-        $follower = TelegramUser::find($request->follower);
-        $role = $follower->communities()->find($community->id)->pivot->role;
-        if ($role !== 'administrator' && $role !== 'creator') {
-            $this->botService->kickUser(config('telegram_bot.bot.botName'), $request->follower, $community->connection->chat_id);
-            $follower->communities()->updateExistingPivot($community->id, [
-                'exit_date' => time()
-            ]);
-            return redirect()->back();
-        } else {
-            redirect()->back()->withMessage('Не удалось исключить, так как пользователь ' . $follower->user_name . ' является администратором сообщества.');
+        try {
+            $community = Community::find($request->community);
+            $follower = TelegramUser::find($request->follower);
+            $role = $follower->communities()->find($community->id)->pivot->role;
+            if ($role !== 'administrator' && $role !== 'creator') {
+                $this->botService->kickUser(config('telegram_bot.bot.botName'), $request->follower, $community->connection->chat_id);
+                $follower->communities()->updateExistingPivot($community->id, [
+                    'exit_date' => time()
+                ]);
+                return redirect()->back();
+            } else {
+                redirect()->back()->withMessage('Не удалось исключить, так как пользователь ' . $follower->user_name . ' является администратором сообщества.');
+            }
+        } catch (Exception $e) {
         }
     }
 }

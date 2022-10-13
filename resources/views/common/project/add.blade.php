@@ -88,7 +88,9 @@
                         <label><input onclick="Project.toggleAll(this)" type="checkbox"  id="chk_all" class="chk-all">{{__('base.select_all')}}</label>
                     </div>
                     <div class="project-creation__project-main">
-                        <p class="project-creation__project-main--empty">Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.</p>
+                        <p class="project-creation__project-main--empty">
+                            Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.
+                        </p>
                         <div class="project-creation__list-communities" onchange="Project.qtyOfCheckedCommunitiesInProject(this)">
 
                         <!-- START список сообществ проекта -->

@@ -107,7 +107,7 @@
 
             <div
                 class="channel-connection__add-channel"
-                data-community-answer-container="Telegram-channel"
+                data-community-answer-container="Telegram-group"
             >
                 <div
                     class="d-flex flex-column align-items-center"
@@ -124,7 +124,7 @@
                     </p>
                 </div>
 
-
+                <div data-community-answer-success-message></div>
 
                 <!-- <div  data-community-answer-success-message>
                     <div class="channel-connection__add-channel-wrap">

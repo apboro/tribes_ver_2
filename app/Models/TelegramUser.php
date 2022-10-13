@@ -81,6 +81,11 @@ class TelegramUser extends Model
         return $this->hasMany(Payment::class, 'telegram_user_id', 'telegram_id');
     }
 
+    public function paymentForCommunity($community_id)
+    {
+        return $this->payment()->where('community_id', $community_id)->get();
+    }
+
     function messages()
     {
         return $this->hasMany(TelegramMessage::class, 'telegram_user_id', 'telegram_id');

@@ -27,9 +27,9 @@ class TeleDialogRepositoryTest extends TestCase
 
     public function testMembersList()
     {
-        $paginator = $this->repository->getMembersList(1,$this->filter);
+        $paginator = $this->repository->getMembersList([1],$this->filter);
         $this->assertInstanceOf(LengthAwarePaginator::class,$paginator);
-        $builder = $this->repository->getMembersListForFile(1,$this->filter);
+        $builder = $this->repository->getMembersListForFile([1],$this->filter);
         $this->assertInstanceOf(Builder::class,$builder);
         //print_r($builder->toSql());
     }
@@ -37,18 +37,18 @@ class TeleDialogRepositoryTest extends TestCase
     public function testMembersChart()
     {
         $filter = app()->make(MembersChartFilter::class);
-        $chartData = $this->repository->getJoiningMembersChart(1,$filter);
+        $chartData = $this->repository->getJoiningMembersChart([1],$filter);
         $this->assertInstanceOf(ChartData::class,$chartData);
-        $exitingChartData = $this->repository->getExitingMembersChart(1,$filter);
+        $exitingChartData = $this->repository->getExitingMembersChart([1],$filter);
         $this->assertInstanceOf(ChartData::class,$exitingChartData);
         $complexChartData = $chartData->includeChart($exitingChartData,[
              'users' => 'exit_users'
         ]);
         $this->assertArrayHasKey('users',$complexChartData->getValues());
         $this->assertArrayHasKey('exit_users',$complexChartData->getValues());
-        $this->assertCount(24,$complexChartData->getValues()['users']);
-        $this->assertCount(24,$complexChartData->getValues()['exit_users']);
-        $this->assertCount(24,$complexChartData->getMarks());
+        $this->assertCount(7,$complexChartData->getValues()['users']);
+        $this->assertCount(7,$complexChartData->getValues()['exit_users']);
+        $this->assertCount(7,$complexChartData->getMarks());
         $this->assertArrayHasKey('count_join_users',$complexChartData->getAdditions());
         $this->assertArrayHasKey('all_users',$complexChartData->getAdditions());
         $this->assertArrayHasKey('count_exit_users',$complexChartData->getAdditions());

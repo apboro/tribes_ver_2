@@ -90,6 +90,8 @@ export class CreateCommunityBot {
                 }
             }, messenger);    
         } catch(error) {
+            console.log('invoke', error);
+
             new Toasts({
                 type: 'error',
                 message: createServerErrorMessage(error)
@@ -111,6 +113,7 @@ export class CreateCommunityBot {
     
                 callback(resp.data);    
             } catch (error) {
+                console.log('answer', error);
                 new Toasts({
                     type: 'error',
                     message: createServerErrorMessage(error)
@@ -122,7 +125,7 @@ export class CreateCommunityBot {
     botConnectedEvent(data, messenger, type) {
         new Toasts({
             type: 'success',
-            message: Dict.write('service_message', 'success_add_community')
+            message: 'Перейти к списку подключённых сообществ'
         });
 
         this.drawToHTML(data, messenger, type);
@@ -140,8 +143,7 @@ export class CreateCommunityBot {
         
         this.loadingBlock.classList.add('hide');
         this.successMessageBlock.innerHTML = this.createSuccessMessage(data, type);
-        this.createRedirectBlock(data);
-        
+        // this.createRedirectBlock(data);
     }
 
     createRedirectBlock(data) {
@@ -188,32 +190,32 @@ export class CreateCommunityBot {
         //     <div></div>
         // `;
         return `
-        <div  data-community-answer-success-message>
-        <div class="channel-connection__add-channel-wrap">
-            <div class="channel-connection__connected-community">
-                <div class="channel-connection__image">
-                    <img src="/images/avatars/1.png">
-                </div>
-                <div class="channel-connection__description">
-                    <p class="channel-connection__channel">${ data.community.title }</p>
-                    <div class="channel-connection__messenger">
-                        <img src="/images/icons/social/telegram.png">
-                        <p class="profile__text">${ type == 'channel' ? 'Канал' : 'Группа' }</p>
+            <div class="channel-connection__add-channel-wrap">
+                <div class="channel-connection__connected-community">
+                    <div class="channel-connection__image">
+                        <img src="${ data.community.image }">
+                    </div>
+                    <div class="channel-connection__description">
+                        <p class="channel-connection__channel">${ data.community.title }</p>
+                        <div class="channel-connection__messenger">
+                            <img src="/images/icons/social/telegram.png">
+                            <p class="profile__text">${ type == 'channel' ? 'Канал' : 'Группа' }</p>
+                        </div>
                     </div>
                 </div>
+                <span class="channel-connection__connected">Подключено <i>✓</i></span>
             </div>
-            <span class="channel-connection__connected">Подключено</span>
-        </div>
-        <a href="/profile/communities" class="button-empty button-empty--primary">Перейти к списку подключённых сообществ</a>
-    </div>
+            <a href="/profile/communities" class="button-empty button-empty--primary">Перейти к списку подключённых сообществ</a>
         `;
     }
 
     redirectToNewCommunity(data) {
-        if (Dict.language === 'en') {
-            window.location.href = `/en/community/${ data.community.id }/statistic`;
-        } else {
-            window.location.href = `/community/${ data.community.id }/statistic`;
-        }
+        window.location.href = `/profile/communities`;
+        
+        // if (Dict.language === 'en') {
+        //     window.location.href = `/en/community/${ data.community.id }/statistic`;
+        // } else {
+        //     window.location.href = `/community/${ data.community.id }/statistic`;
+        // }
     }
 }

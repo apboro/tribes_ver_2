@@ -74,6 +74,9 @@ class NewTariffPaymentMemberInGroupTest extends TestCase
         DB::insert('INSERT INTO "users" ("id", "name", "email", "code", "phone", "email_verified_at", "password", "phone_confirmed", "role_index", "hash", "remember_token", "created_at", "updated_at", "locale", "api_token") VALUES
     (8,	\'posta.vka\',	\'posta.vka@mail.ru\',	0,	NULL,	NULL,	\'$2y$10$b.yEHpj1wTLuSdS.AhOifuVWZT/LgkZkx1oaHM0kQA4IJV61M1J8u\',	\'f\',	0,	\'$2y$10$45xQWI0nm4.ZOKBXu71dpu7qt9lRiW3jziTrfjT7V74L1vBFi8e7K\',	NULL,	\'2022-08-12 10:04:06\',	\'2022-08-12 10:04:06\',	\'ru\',	\'4|9ZBAx6HcEciWfMVUIjLo3EexEaifwQ860om3e2yz\')
 ');
+        DB::insert('INSERT INTO "telegram_connections" ("id", "user_id", "telegram_user_id", "chat_id", "chat_title", "chat_type", "isAdministrator", "botStatus", "isActive", "isChannel", "isGroup", "hash", "status", "created_at", "updated_at", "chat_invite_link", "photo_url") VALUES
+    (4,	7,	416272404,	\'-608142614\',	\'@test1.spodial.com\',	\'group\',	\'f\',	\'administrator\',	\'f\',	\'f\',	\'t\',	\'c0a3772c0875aa57bc4712bff430aa70\',	\'completed\',	\'2022-08-12 09:43:15\',	\'2022-08-12 10:05:10\',	\'https://t.me/+-zrPEHVgknExYjAy\',	\'/images/no-image.svg\');
+');
         DB::insert('INSERT INTO "communities" ("id", "connection_id", "owner", "title", "image", "description", "created_at", "updated_at", "hash", "balance") VALUES
     (5,	4,	7,	\'@test1.spodial.com\',	\'/images/no-image.svg\',	NULL,	\'2022-08-12 09:48:28\',	\'2022-08-12 10:04:42\',	\'5ac1Nvb5\',	2);
     ');
@@ -83,9 +86,7 @@ class NewTariffPaymentMemberInGroupTest extends TestCase
         DB::insert('INSERT INTO "telegram_users" ("id", "user_id", "telegram_id", "auth_date", "hash", "scene", "first_name", "last_name", "photo_url", "created_at", "updated_at", "user_name", "scene_for_donate") VALUES
     (5,	8,	1032346420,	NULL,	NULL,	NULL,	\'Дмитрий\',	\'Сеошин\',	NULL,	\'2022-08-12 10:05:10\',	\'2022-08-12 10:05:10\',	\'IDmtro\',	NULL);
     ');
-        DB::insert('INSERT INTO "telegram_connections" ("id", "user_id", "telegram_user_id", "chat_id", "chat_title", "chat_type", "isAdministrator", "botStatus", "isActive", "isChannel", "isGroup", "hash", "status", "created_at", "updated_at", "chat_invite_link", "photo_url") VALUES
-    (4,	7,	416272404,	\'-608142614\',	\'@test1.spodial.com\',	\'group\',	\'f\',	\'administrator\',	\'f\',	\'f\',	\'t\',	\'c0a3772c0875aa57bc4712bff430aa70\',	\'completed\',	\'2022-08-12 09:43:15\',	\'2022-08-12 10:05:10\',	\'https://t.me/+-zrPEHVgknExYjAy\',	\'/images/no-image.svg\');
-');
+
         DB::insert('INSERT INTO "tariffs" ("id", "community_id", "test_period", "title", "main_description", "main_image_id", "welcome_description", "welcome_image_id", "reminder_description", "reminder_image_id", "thanks_description", "thanks_image_id", "created_at", "updated_at", "tariff_notification", "publication_description", "publication_image_id") VALUES
     (5,	5,	0,	NULL,	NULL,	NULL,	\'Приветствуем вас в нашем сообществе!\',	NULL,	\'Благодарим вас за участие в нашем сообществе! Чтобы я дальше радовал вас новинками своего сообщества, прошу меня поддержать продлением вашего тарифа\',	NULL,	\'Благодарим вас за подписку на мой канал! Благодаря вашей поддержке, я могу продолжать радовать вас новыми релизами. Я приложу все усилия для того, чтобы вы были довольны своим нахождением в моём сообществе!\',	NULL,	\'2022-08-12 09:48:28\',	\'2022-08-12 09:48:28\',	\'t\',	\'Доступные тарифы\',	NULL);
     ');

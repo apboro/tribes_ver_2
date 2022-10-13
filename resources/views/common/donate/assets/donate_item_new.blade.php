@@ -8,8 +8,9 @@
                 {{ $donate->title }}
             </h4>
             
+           
             <a
-                href="{{ route('community.donate.add', ['community' => $community, 'id' => $donate->id]) }}"
+                href="{{ route('community.donate.add', ['community' => $donate->community, 'id' => $donate->id]) }}"
                 class="button-text button-text--primary button-text--only-icon community-tariff-card__edit"
             >
                 <!-- <i data-feather='edit' class="font-medium-1"></i> -->
@@ -18,6 +19,7 @@
                     <path class="icon__stroke" d="M14 6L18 10" stroke="#B5B4B8"/>
                 </svg>
             </a>
+           
         </div>
 
         <div class="community-tariff-card__donate-text">
@@ -30,17 +32,17 @@
             <span>{{ count($donate->getSumDonateByIndex()) }}</span>
         </div>
         
-        <div class="community-tariff-card__donate-text">
+        {{-- <div class="community-tariff-card__donate-text">
             <span>Индекс:</span>
             <span>{{ $donate->index }}</span>
-        </div>
-
+        </div> --}}
+        
         <div class="community-tariff-card__donate-text">
             <span>Сообщество:</span>
-            <span>{{ $community->title }}</span>
+            <span>{{ $donate->community->title }}</span>
         </div>
     </div>
-    <div class="community-settings__inline-command list">
+    <div class="community-settings__inline-command d list">
         <span class="form-label-red">
             Инлайн команда одного доната
         </span>

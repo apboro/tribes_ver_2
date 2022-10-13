@@ -91,21 +91,23 @@
 
     &__connected {
         @include font($green-5, 16px, 22px, 500);
-        margin: 0 0 10px;
-        padding: 0 20px 0 0;
+        // margin: 0 0 10px;
+        // padding: 0 20px 0 0;
         position: relative;
-        color: $green-5;
-
-        &:before {
-            content: '✓';
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 16px;
+        
+        i {
             font-weight: 600;
-            color: $green-5;
         }
+        // &:before {
+        //     content: '✓';
+        //     position: absolute;
+        //     right: 0;
+        //     top: 50%;
+        //     transform: translateY(-50%);
+        //     font-size: 16px;
+        //     font-weight: 600;
+        //     color: $green-5;
+        // }
     }
 
     &__image {

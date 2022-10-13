@@ -129,7 +129,7 @@ class Community extends Model
             $params = '?' . http_build_query($data);
         }
 //        $this->generateHash();
-        return route('community.tariff.payment', ['hash' => $this->hash]) . $params;
+        return route('community.tariff.confirmSubscription', ['hash' => $this->hash]) . $params;
     }
 
     public function isTelegram()
@@ -184,6 +184,12 @@ class Community extends Model
     public function tariffVariants()
     {
         return $this->hasManyThrough(TariffVariant::class, Tariff::class);
+    }
+
+    public function hasNotActiveTariffVariants()
+    {
+        
+        return $this->tariffVariants()->where('isActive',1)->where('isPersonal',0)->doesntExist();
     }
 
     function donate()

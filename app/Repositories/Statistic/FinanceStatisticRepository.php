@@ -26,7 +26,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         ]);
 
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period']??'day')->toDateTimeString();
+        $start = $filter->getStartDate($filterData['period'] ?? 'week')->toDateTimeString();
         $end = $filter->getEndDate()->toDateTimeString();
 
         $p = 'payments';
@@ -92,12 +92,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $perPage = $filterData['per-page'] ?? 15;
         $page = $filterData['page'] ?? 1;
 
-        return new LengthAwarePaginator(
-            $builder->offset(($page-1)*$perPage)->limit($perPage)->get(),
-            $builder->getCountForPagination(),
-            $perPage,
-            $filterData['page'] ?? null
-        );
+        return $builder->paginate($perPage, ['*'], 'page', $page);
     }
 
     public function getPaymentsListForFile(array $communityIds, FinanceFilter $filter): Builder
@@ -116,20 +111,22 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $p = 'payments';
         $tu = 'telegram_users';
 
-        $builder = DB::table($p)
-            ->leftJoin($tu,function (JoinClause $join) use ($p,$tu) {
-                $join->on("$tu.telegram_id", '=', "$p.telegram_user_id")
-                    ->on("$tu.user_id", '=',"$p.user_id",'OR');
-            })
-            ->select([
-                "$p.amount",
-                "$p.type",
-                DB::raw("$p.created_at as buy_date"),
-                "$p.status",
-                "$tu.user_name as tele_login",
-                "$tu.first_name",
-            ]);
-        $builder->where("$p.community_id", $communityIds);
+        $builder = Payment::where('community_id', $communityIds)
+        ->where('status', 'CONFIRMED')
+        ->leftJoin($tu,function ($join) use ($p,$tu) {
+            $join->on("$tu.telegram_id", '=', "$p.telegram_user_id")
+                ->on("$tu.user_id", '=',"$p.user_id",'OR');
+        })
+        ->select(
+            'amount', 
+            'type', 
+            "payments.created_at as buy_date", 
+            'status',
+            "payable_id",
+            "payable_type",
+            "$tu.user_name as tele_login", 
+            "$tu.first_name"
+        );
         $builder = $filter->apply($builder);
         return $builder;
     }

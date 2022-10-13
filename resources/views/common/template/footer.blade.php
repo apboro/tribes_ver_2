@@ -17,8 +17,13 @@
                     8-800-101-42-62
                 </a>
             </p>
+            <li class="footer__item">
+                <a href="#" class="btn-link">
+                    Контакты
+                </a>
+            </li>
         </div>
-        <ul class="footer__right">
+        <!-- <ul class="footer__right">
             <li class="footer__item">
                 <a href="{{ route('terms.index') }}" target="_blank" class="btn-link">
                     {{ __('terms.title') }}
@@ -42,6 +47,44 @@
                     {{ __('agency_contract.title') }}
                 </a>
             </li>
-        </ul>
+        </ul> -->
+
+        <div class="footer__right">
+            <ul>
+                <li class="footer__item">
+                    <a href="{{ route('payment_processing.index') }}" target="_blank" class="btn-link">
+                        {{ __('security_guarantees.title') }}
+                    </a>
+                </li>
+
+                <li class="footer__item img-payments">
+                    <div>
+                        <img class="footer__payment-img" src="/images/tinkoff.png" alt="Tinkoff">
+                        <img class="footer__payment-img" src="/images/mastercard.png" alt="Mastercard">
+                        <img class="footer__payment-img" src="/images/mir.png" alt="Mir">
+                        <img class="footer__payment-img" src="/images/visa.png" alt="Telegram">
+                    </div>
+                </li>
+            </ul>
+            <ul>
+                <li class="footer__item">
+                    <a href="{{ route('privacy.index') }}" target="_blank" class="btn-link">
+                        {{ __('personal_data.title') }}
+                    </a>
+                </li>
+
+                <li class="footer__item">
+                    <a href="{{ route('terms.index') }}" target="_blank" class="btn-link">
+                        {{ __('terms.title') }}
+                    </a>
+                </li>
+
+                <li class="footer__item">
+                    <a href="{{ route('agency_contract.index') }}" target="_blank" class="btn-link">
+                        {{ __('agency_contract.title') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </footer>

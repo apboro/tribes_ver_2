@@ -183,9 +183,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
         Route::get('/{hash}/knowledge/help', 'KnowledgeController@help')->name('public.knowledge.help');
 
-        Route::get('/community/add', function () {
-            return view('common.community.form');
-        })->name('community.add');
+        Route::get('/community/add', 'CommunityController@add')->name('community.add');
 
         Route::post('/community/invoke', 'CommunityController@initCommunityConnect')->name('invoke.community.connect');
         Route::post('/community/connection/check', 'CommunityController@checkCommunityConnect')->name('check.community.connect');
@@ -272,6 +270,7 @@ Route::get('media/{hash}/success', 'App\Http\Controllers\CourseController@succes
 
 Route::any('community/{community}/tariff/form', 'App\Http\Controllers\TariffController@tariffFormPay')->name('community.tariff.form');
 Route::any('community/{hash}', 'App\Http\Controllers\TariffController@tariffPayment')->name('community.tariff.payment');
+Route::any('community/tariff/{hash}', 'App\Http\Controllers\TariffController@confirmSubscription')->name('community.tariff.confirmSubscription');
 
 // Footer Routes
 Route::get('/privacy', function () {
