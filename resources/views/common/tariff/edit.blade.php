@@ -29,14 +29,11 @@
             id="tariff_edit_form"
             class="community-settings"
         >
-
             @foreach ($community->tariff->variants as $tariff)
                 @if ($tariff->id == $variantId)
                 <!-- Название тарифа -->
-
-
-                <div class="community-settings__change-tariff @if($tariff->arbitrary_term == true) active @endif" id="community-settings__change-tariff">
-                    <div class="community-settings__form-item">
+                <div class="community-settings__form-item community-settings__change-tariff @if($tariff->arbitrary_term == true) active @endif" id="community-settings__change-tariff">
+                    <div class="">
                         <label
                             class="form-label-red"
                             for="tariff_name"
@@ -61,7 +58,7 @@
 
                     <div class="community-settings__wrap-input-group">
                         <div class="community-settings__input-group">
-                            <div class="community-settings__form-item tariff-cost">
+                            <div class="tariff-cost">
                                 <label
                                     class="form-label-red"
                                     for="tariff_cost"
@@ -84,12 +81,12 @@
                                 @enderror
                             </div>
 
-                            <div class="community-settings__form-item tariff_pay_period">
+                            <div class="tariff_pay_period">
                                 <label
                                     class="form-label-red"
                                     for="tariff_pay_period"
                                 >
-                                    {{ __('base.term_access_community') }}
+                                    Срок доступа к сообществу
                                 </label>
                                 <input type="hidden" name="arbitrary_term" id="arbitrary_term" value="{{ $tariff->arbitrary_term ?? false }}"/>
                                 <input type="hidden" name="tariff_pay_period" id="tariff_pay_period" value="{{ $tariff->period }}">
@@ -135,7 +132,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="community-settings__your-value-mobile">
+                <div class="community-settings__your-value-mobile community-settings__form-item">
                     <div class="community-settings__wrap-left">
                         <div class="community-settings__form-item your-value-wrap-mobile">
                             <label
@@ -159,7 +156,7 @@
                                 class="form-label-red"
                                 for="tariff_name"
                             >
-                                {{ __('tariff.number_button') }}
+                                Номер кнопки тарифа
                             </label>
 
                             <input
@@ -172,27 +169,7 @@
                                 value="{{ $tariff->number_button ? $tariff->number_button : '' }}"
                             >
                         </div>
-                        <div class="toggle-switch community-settings__checkbox" id="disabled_checkbox">        
-                            <label class="toggle-switch__switcher">
-                                
-                                <input
-                                    type="checkbox"
-                                    id="tariff_active"
-                                    class="toggle-switch__input"
-                                    value="1"
-                                    name="tariff"
-                                    @if($tariff->isActive) checked @endif
-                                >
-                                <span class="toggle-switch__slider"></span>
-                            </label>
-
-                            <label
-                                for="tariff_active"
-                                class="toggle-switch__label"
-                            >
-                                {{ __('tariff.activate_tariff') }}
-                            </label>
-                        </div>
+                        
                     </div>
                 
                     <div class="community-settings__active_personal">
@@ -200,13 +177,36 @@
                             <span class="form-label-red">Инлайн команда данного тарифа</span>
                             <p class="community-settings__inline-link">{{$tariff->getInlineLink()}}</p>
                         </div>
-                        <div class="checkbox">
-                            <div class="checkbox__wrapper community-settings__personal_tariff">
-                                <input type="checkbox" id="isPersonal" class="checkbox__input" name="isPersonal" value="1" onchange="CommunityPage.tariffPageAdd.setActive(event)">
-                                <label for="isPersonal" class="checkbox__decor"></label>
-                            </div>
-                            <label class="community-settings__personal-label" for="isPersonal">{{__('tariff.personal_tariff')}}</label>
+                    </div>
+
+                    <div class="toggle-switch community-settings__checkbox" id="disabled_checkbox">        
+                        <label class="toggle-switch__switcher">
+                            
+                            <input
+                                type="checkbox"
+                                id="tariff_active"
+                                class="toggle-switch__input"
+                                value="1"
+                                name="tariff"
+                                @if($tariff->isActive) checked @endif
+                            >
+                            <span class="toggle-switch__slider"></span>
+                        </label>
+
+                        <label
+                            for="tariff_active"
+                            class="toggle-switch__label"
+                        >
+                            {{ __('tariff.activate_tariff') }}
+                        </label>
+                    </div>
+
+                    <div class="checkbox">
+                        <div class="checkbox__wrapper community-settings__personal_tariff">
+                            <input type="checkbox" id="isPersonal" class="checkbox__input" name="isPersonal" value="1" onchange="CommunityPage.tariffPageAdd.setActive(event)">
+                            <label for="isPersonal" class="checkbox__decor"></label>
                         </div>
+                        <label class="community-settings__personal-label" for="isPersonal">{{__('tariff.personal_tariff')}}</label>
                     </div>
                 </div>
                 @endif

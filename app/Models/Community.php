@@ -186,6 +186,12 @@ class Community extends Model
         return $this->hasManyThrough(TariffVariant::class, Tariff::class);
     }
 
+    public function hasNotActiveTariffVariants()
+    {
+        
+        return $this->tariffVariants()->where('isActive',1)->where('isPersonal',0)->doesntExist();
+    }
+
     function donate()
     {
         return $this->hasMany(Donate::class, 'community_id', 'id');
