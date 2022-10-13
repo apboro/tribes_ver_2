@@ -73,10 +73,13 @@ class AuthorController extends Controller
         }
 
         if ($result == true) { 
-            $mes = 'Сообщение поступит на указанный номер в течение 3 минут.';
+            $mes = 'Сообщение поступит на указанный номер в течение 5 минут.';
         } else $mes = 'Что-то пошло не так, пожалуйста обратитесь в службу поддержки.';
 
-        return $mes;
+        return response()->json([
+            'status' => $result,
+            'message' => $mes,
+        ]);
     }
 
     public function confirmedCode(Request $request)
