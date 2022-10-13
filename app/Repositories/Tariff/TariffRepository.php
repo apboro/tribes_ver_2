@@ -288,10 +288,15 @@ class TariffRepository implements TariffRepositoryContract
         $variant->title = $data['tariff_name'];
         $variant->price = $data['tariff_cost'];
         $variant->period = $data['tariff_pay_period'] ?? $data['quantity_of_days'];
-        $variant->isActive = $data['tariff'] ?? false;
+        $variant->isPersonal = $data['isPersonal'] ?? false;
+        if($variant->isPersonal) {
+            $variant->isActive = true;
+        } else {
+            $variant->isActive = $data['tariff'] ?? false;
+        }
         $variant->number_button = $data['number_button'];
         $variant->arbitrary_term = $data['arbitrary_term'] ?? false;
-        $variant->isPersonal = $data['isPersonal'] ?? false;
+
         if(empty( $variant->inline_link)) {
             $this->generateLink($variant);
         }

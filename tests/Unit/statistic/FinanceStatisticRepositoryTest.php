@@ -5,7 +5,6 @@ namespace Tests\Unit\statistic;
 use App\Filters\API\FinanceChartFilter;
 use App\Filters\API\FinanceFilter;
 use App\Repositories\Statistic\DTO\ChartData;
-use App\Repositories\Statistic\FinanceStatisticRepository;
 use App\Repositories\Statistic\FinanceStatisticRepositoryContract;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
