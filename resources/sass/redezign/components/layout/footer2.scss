@@ -12,6 +12,7 @@
         padding-bottom: 20px;
         @media (min-width: $lg) {
             grid-template-columns: minmax(190px, 1fr) minmax(320px, 1fr) 337px;
+            justify-items: stretch;
         }
     }
 

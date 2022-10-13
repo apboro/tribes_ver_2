@@ -76,7 +76,7 @@
         @include('common.tariff.assets.tariff_publication')
 
         <!-- Отправить в сообщество -->
-        <div class="toggle-switch community-settings__item">
+        <div class="toggle-switch @if ($community->hasNotActiveTariffVariants()) toggle-switch--disabled @endif community-settings__item">
             <label class="toggle-switch__switcher">
                 <input
                     type="checkbox"
@@ -92,10 +92,10 @@
                 for="tariff_item_check_6"
                 class="toggle-switch__label"
             >
-            {{ __('form.send_to_community') }}
+                {{ __('form.send_to_community') }}
             </label>
         </div>
-    
+        
         <!-- Submit -->
         <div class="community-settings__buttons">
             <button
