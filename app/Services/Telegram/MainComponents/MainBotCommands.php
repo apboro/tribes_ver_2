@@ -937,11 +937,12 @@ class MainBotCommands
     private function createAndSaveInviteLink($telegramConnection)
     {
         try {
-            $invite = $this->bot->getExtentionApi()->createInviteLink($telegramConnection->chat_id);
+            $invite = $this->bot->getExtentionApi()->createAdditionalLink($telegramConnection->chat_id);
+            $link = ($invite->object())->result->invite_link;
             $telegramConnection->update([
-                'chat_invite_link' => $invite
+                'chat_invite_link' => $link
             ]);
-            return $invite;
+            return $link;
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
