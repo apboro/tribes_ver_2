@@ -7,7 +7,7 @@
     }
 
     &__title {
-        @include font($text-color-1, 52px, 60px, 700);
+        @include font($text-color-1, 30px, 36px, 600);
         @include truncate(97%);
         padding: 0 25px 0 0;
         pointer-events: none;

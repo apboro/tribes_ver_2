@@ -1,12 +1,14 @@
 .project-creation {
+    gap: 30px;
     min-height: 570px; //EXAMPLE
-    margin: 0 -10px;
+    // margin: 0 -10px;
     display: flex;
     flex-wrap: wrap;
 
     &__form-wrap {
-        width: 75%;
+        // width: 75%;
         display: flex;
+        flex: 1;
         flex-wrap: wrap;
         flex-direction: column;
         justify-content: space-between;
@@ -19,7 +21,7 @@
     }
 
     &__communities {
-        padding: 0 10px;
+        // padding: 0 10px;
         width: 25%;
         display: flex;
         flex-direction: column;
@@ -76,14 +78,18 @@
         border-radius: 5px;
     }
 
-    &__project-header,
     &__project-footer {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
+        gap: 30px;
     }
 
     &__project-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
         label {
             @include font($text-color-1, 14px, 20px, 400);
             display: flex;
