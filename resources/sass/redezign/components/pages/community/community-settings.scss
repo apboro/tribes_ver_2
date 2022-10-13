@@ -61,7 +61,7 @@
                 position: relative;
                 opacity: 0;
                 visibility: hidden;
-                display: flex;
+                display: block;
                 flex-wrap: wrap;
                 transition: all 0.3s;
                 // left: 440px;
@@ -99,7 +99,7 @@
 
         @media (min-width: $lg) {
             // margin: 0 0 30px 40px;
-            width: 575px;
+            // width: 575px;
             position: relative;
         }
     }

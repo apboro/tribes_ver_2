@@ -92,16 +92,16 @@
                 </option>
             </select>
         </div>
-        @if((request('active') == null || request('active') == 'true') && $tariffs->first())
+        @if((request('active') == null || request('active') == 'true') && $tariffs->first() && ($isPersonal !== true && $isActive === true))
             <div>
                 @if($activeCommunity)
                     <span>{{__('tariff.inline_command_all_tariffs')}}</span>
-                    <a
+                    <button
                             class="community-settings__inline-link all-tariffs"
                             onclick="copyText('{{$activeCommunity->tariff ? $activeCommunity->tariff()->first()->getInlineLink() : 'Создастся при сохранении'}}')"
                     >
                         {{$activeCommunity->tariff()->first()->getInlineLink()??''}}
-                    </a>
+                    </button>
                 @endif
             </div>
         @endif
@@ -165,7 +165,7 @@
                                 </label>
 
                                 <label for="is_tariff-list" class="toggle-switch__label">
-                                    @if(request('active') == null)
+                                    @if($tariff->isActive)
                                         Активный
                                     @else
                                         Неактивный
@@ -173,6 +173,7 @@
                                 </label>
                             </a>
                         </div>
+                        @if($tariff->isActive)
                         <div class="community-settings__inline-command list">
                             <span class="form-label-red">{{__('tariff.inline_command')}}</span>
                             <a
@@ -182,6 +183,7 @@
                                 {{$tariff->getInlineLink()}}
                             </a>
                         </div>
+                        @endif
                     </li>
                 @empty
 

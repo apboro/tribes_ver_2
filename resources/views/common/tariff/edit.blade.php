@@ -51,9 +51,9 @@
                             value="{{ $tariff->title ? $tariff->title : '' }}"
                         >
 
-                        @error('tariff_name')
+                        {{--@error('tariff_name')
                             <span class="form-message form-message--danger">{{ $message }}</span>
-                        @enderror
+                        @enderror--}}
                     </div>
 
                     <div class="community-settings__wrap-input-group">
@@ -68,7 +68,7 @@
 
                                 <input
                                     type="number"
-                                    class="form-control-red"
+                                    class="form-control-red @error('tariff_cost') form-control-red--danger @enderror"
                                     id="tariff_cost"
                                     aria-describedby="tariff_cost"
                                     name="tariff_cost"
@@ -76,9 +76,9 @@
                                     value="{{ $tariff->price ? $tariff->price : '' }}"
                                 />
 
-                                @error('tariff_cost')
+                                {{--@error('tariff_cost')
                                     <span class="form-message form-message--danger">{{ $message }}</span>
-                                @enderror
+                                @enderror--}}
                             </div>
 
                             <div class="tariff_pay_period">
@@ -203,7 +203,15 @@
 
                     <div class="checkbox">
                         <div class="checkbox__wrapper community-settings__personal_tariff">
-                            <input type="checkbox" id="isPersonal" class="checkbox__input" name="isPersonal" value="1" onchange="CommunityPage.tariffPageAdd.setActive(event)">
+                            <input
+                                type="checkbox"
+                                id="isPersonal"
+                                class="checkbox__input"
+                                name="isPersonal"
+                                value="1"
+                                @if($tariff->isPersonal) checked @endif
+                                onchange="CommunityPage.tariffPageAdd.setActive(event)"
+                            >
                             <label for="isPersonal" class="checkbox__decor"></label>
                         </div>
                         <label class="community-settings__personal-label" for="isPersonal">{{__('tariff.personal_tariff')}}</label>
