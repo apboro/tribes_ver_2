@@ -3,4 +3,3 @@ name: tribes
 description: A Helm chart for tribes
 version: 0.3.8
 appVersion: "0.1.0"
-

@@ -41,9 +41,8 @@ spec:
           args:
           - queue
           volumeMounts:
-          - name: storage
-            persistentVolumeClaim:
-              claimName: {{ include "..names.name" . }}-storage
+          - mountPath: /app/storage
+            name: storage
           env: 
             - name: APP_NAME
               value: {{ quote .Values.config.app.name }}
