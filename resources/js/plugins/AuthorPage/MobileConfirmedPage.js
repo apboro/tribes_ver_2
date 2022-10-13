@@ -32,14 +32,22 @@ export class MobileConfirmedPage {
             this.code.classList.remove('error');
 
             try {
-                const res = await axios.post(
+                const { data } = await axios.post(
                     this.form.action,
                     {
                         phone: Number(this.phone.value.match(/\d/g).join('')),
                         code: this.code.value
                     }
                 );
-                this.openRightsModal()
+                
+                if (data.status == true) {
+                    this.openRightsModal()
+                } else {
+                    new Toasts({
+                        type: 'error',
+                        message: data.message
+                    });
+                }
             } catch (error) {
                 console.error(error)
             }
