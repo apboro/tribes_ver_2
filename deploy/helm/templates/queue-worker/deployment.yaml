@@ -31,12 +31,19 @@ spec:
       - name: fpm-config
         configMap: 
           name: {{ include "..names.name" . }}-fpm
+      - name: storage
+        persistentVolumeClaim:
+          claimName: {{ include "..names.name" . }}-storage
       containers:
         - name: queue-worker
           image: {{ include "..imageName" .Values.queueWorker.image}}
           imagePullPolicy: {{ .Values.queueWorker.image.pullPolicy }}
           args:
           - queue
+          volumes:
+          - name: storage
+            persistentVolumeClaim:
+              claimName: {{ include "..names.name" . }}-storage
           env: 
             - name: APP_NAME
               value: {{ quote .Values.config.app.name }}

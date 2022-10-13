@@ -28,6 +28,9 @@ spec:
       volumes:
       - name: fpm-socket
         emptyDir: {}
+      - name: storage
+        persistentVolumeClaim:
+          claimName: {{ include "..names.name" . }}-storage
       containers:
         - name: proxy
           image: {{ include "..imageName" .Values.backend.image}}
@@ -79,6 +82,8 @@ spec:
           volumeMounts:
           - mountPath: /var/run/php
             name: fpm-socket
+          - mountPath: /app/storage
+            name: storage
           env: 
             - name: APP_NAME
               value: {{ quote .Values.config.app.name }}

@@ -10,7 +10,7 @@ persistence:
   storageClassName: ""
   size: 10Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
 
 backend:
   image:
