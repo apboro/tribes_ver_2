@@ -83,7 +83,7 @@ class TelegramUser extends Model
 
     public function paymentForCommunity($community_id)
     {
-        return $this->payment()->where('community_id', $community_id)->get();
+        return $this->payment()->where('community_id', $community_id)->get()->sortBy('created_at');
     }
 
     function messages()
