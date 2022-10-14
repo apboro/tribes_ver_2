@@ -2,7 +2,7 @@
     &__auto-public {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-        column-gap: 30px;
+        gap: 20px 30px;
     }
 
     &__time {

@@ -3,7 +3,12 @@
     min-height: 570px; //EXAMPLE
     // margin: 0 -10px;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
+
+    @media (min-width: $md) {
+        flex-direction: row;
+    }
 
     &__form-wrap {
         // width: 75%;
@@ -22,10 +27,13 @@
 
     &__communities {
         // padding: 0 10px;
-        width: 25%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        
+        @media (min-width: $md) {
+            width: 25%;
+        }
     }
 
     &__communities-another {
@@ -52,8 +60,14 @@
         &--top {
             margin: 0 0 30px;
             display: flex;
+            gap: 10px;
             justify-content: space-between;
-            align-items: flex-end;
+            flex-direction: column;
+            
+            @media (min-width: $sm) {
+                flex-direction: row;
+                align-items: flex-end;
+            }
         }
 
         &--bottom {

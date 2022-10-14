@@ -1,6 +1,7 @@
-@extends('common.community.profile')
+@extends('layouts.app-redezign')
 
-@section('tab')
+@section('content')
+<div class="container" data-plugin="CommunityPage">
     <section
         class="community-tab"
         data-tab="tariffPageAdd"
@@ -234,4 +235,5 @@
             </div>
         </form>
     </section>
+</div>
 @endsection

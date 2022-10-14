@@ -1,8 +1,8 @@
 @extends('layouts.app-redezign')
 
 @section('content')
-    @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors])
-    <div class="container" data-plugin="CommunityPage">
+<div class="container" data-plugin="CommunityPage">
+        {{-- @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors]) --}}
         <section
             class="container"
             data-tab="donatePageSettings"

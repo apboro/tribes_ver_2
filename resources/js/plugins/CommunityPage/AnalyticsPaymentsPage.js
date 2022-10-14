@@ -90,6 +90,8 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
             this.paginationData = data.meta;
         } catch (error) {
             console.log(error);
+            this.tableData = false;
+            this.paginationData = false;
         }
     }
 
