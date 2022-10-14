@@ -1,8 +1,8 @@
 .donate-add {
 
     &__head {
-        display: inline-grid;
-        grid-template-columns: 300px 230px 1fr;
+        display: grid;
+        grid-template-columns: 1fr;
         align-items: end;
         gap: 30px;
         width: 100%;
@@ -11,10 +11,21 @@
             margin: 0;
             padding: 0;
         }
+
+        @media (min-width: $lg) {
+            grid-template-columns: 300px 230px 1fr;
+        }
     }
 
     &__settings-btn {
-        justify-self: end;
+
+        @media (min-width: $sm) {
+            justify-self: start;
+        }
+
+        @media (min-width: $lg) {
+            justify-self: end;
+        }
     }
 
     &__curency {

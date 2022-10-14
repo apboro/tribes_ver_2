@@ -38,55 +38,57 @@
         @enderror
     </div>
 
-    <div>
-        <label class="form-label-red">
-            {{ __('base.amount_min') }}
-        </label>
-        
-        <input
-            type="number"
-            id="donatemin_min_cost_2"
-            class="form-control-red @error('donate.' . $index . '.min_price') form-control-red--danger @enderror"
-            name="donate[{{ $index }}][min_price]"
-            aria-describedby="donate_max_cost_2"
-            placeholder="100"
-            value="{{ $donate && $donate->getVariantByIndex($index)->min_price ? $donate->getVariantByIndex($index)->min_price : old('donate.' . $index . '.min_price') }}"
-        >
-        
-        @error('donate.' . $index . '.min_price')
-            <span class="form-message form-message--danger">{{ $message }}</span>
-        @enderror
-    </div>
+    <div class="donate-variant__money--special">
+        <div>
+            <label class="form-label-red">
+                {{ __('base.amount_min') }}
+            </label>
+            
+            <input
+                type="number"
+                id="donatemin_min_cost_2"
+                class="form-control-red @error('donate.' . $index . '.min_price') form-control-red--danger @enderror"
+                name="donate[{{ $index }}][min_price]"
+                aria-describedby="donate_max_cost_2"
+                placeholder="100"
+                value="{{ $donate && $donate->getVariantByIndex($index)->min_price ? $donate->getVariantByIndex($index)->min_price : old('donate.' . $index . '.min_price') }}"
+            >
+            
+            @error('donate.' . $index . '.min_price')
+                <span class="form-message form-message--danger">{{ $message }}</span>
+            @enderror
+        </div>
 
-    <div>
-        <label class="form-label-red">
-            {{ __('base.amount_max') }}
-        </label>
-        
-        <input
-            type="number"
-            id="donatemin_min_cost_2"
-            class="form-control-red @error('donate.' . $index . '.max_price') form-control-red--danger @enderror"
-            name="donate[{{ $index }}][max_price]"
-            aria-describedby="donate_max_cost_2"
-            placeholder="1000"
-            value="{{ $donate && $donate->getVariantByIndex($index)->max_price ? $donate->getVariantByIndex($index)->max_price : old('donate.' . $index . '.max_price') }}"
-        >
-        
-        @error('donate.' . $index . '.max_price')
-            <span class="form-message form-message--danger">{{ $message }}</span>
-        @enderror
-    </div>
+        <div>
+            <label class="form-label-red">
+                {{ __('base.amount_max') }}
+            </label>
+            
+            <input
+                type="number"
+                id="donatemin_min_cost_2"
+                class="form-control-red @error('donate.' . $index . '.max_price') form-control-red--danger @enderror"
+                name="donate[{{ $index }}][max_price]"
+                aria-describedby="donate_max_cost_2"
+                placeholder="1000"
+                value="{{ $donate && $donate->getVariantByIndex($index)->max_price ? $donate->getVariantByIndex($index)->max_price : old('donate.' . $index . '.max_price') }}"
+            >
+            
+            @error('donate.' . $index . '.max_price')
+                <span class="form-message form-message--danger">{{ $message }}</span>
+            @enderror
+        </div>
 
-    <div class="donate-add__curency">
-        <label class="form-label-red">
-            {{ __('base.currency') }}
-        </label>
-        @include('common.donate.assets.currency_selector', [
-            'id' => 'donate_currency_' . $index,
-            'name' => 'donate[' . $index . '][currency]',
-            'currencies' => App\Models\Donate::getCurrencyData($donate, $index),
-            'active' => $donate && $donate->getVariantByIndex($index)->isActive
-        ])
+        <div class="donate-add__curency">
+            <label class="form-label-red">
+                {{ __('base.currency') }}
+            </label>
+            @include('common.donate.assets.currency_selector', [
+                'id' => 'donate_currency_' . $index,
+                'name' => 'donate[' . $index . '][currency]',
+                'currencies' => App\Models\Donate::getCurrencyData($donate, $index),
+                'active' => $donate && $donate->getVariantByIndex($index)->isActive
+            ])
+        </div>
     </div>
 </div>

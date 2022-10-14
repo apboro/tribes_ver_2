@@ -1,11 +1,20 @@
 .donate-variant {
-    display: inline-grid;
-    grid-template-columns: 42px 483px 350px 48px;
+    display: grid;
+    grid-template-columns: 42px 273px;
     align-items: start;
-    column-gap: 30px;
+    gap: 15px 10px;
+
+    @media (min-width: $lg) {
+        grid-template-columns: 42px 483px 350px 48px;
+        column-gap: 30px;
+    }
 
     &--special {
-        grid-template-columns: 42px 483px 160px 160px 48px;
+        grid-template-columns: 42px 273px;
+
+        @media (min-width: $lg) {
+            grid-template-columns: 42px 483px 160px 160px 48px;
+        }
     }
 
     &__switcher {
@@ -14,5 +23,31 @@
 
     &__currency {
         @include font($text-color-2, 14px, 20px, 500);
+    }
+
+    &__money {
+        display: grid;
+        grid-template-columns: 210px 48px;
+        gap: 15px 10px;
+        grid-column: 2 / 3;
+
+        @media (min-width: $lg) {
+            grid-template-columns: 350px 48px;
+            column-gap: 30px;
+            grid-column: 3 / 4;
+        }
+
+        &--special {
+            display: grid;
+            grid-template-columns: 102px 102px 48px;
+            gap: 15px 10px;
+            grid-column: 2 / 3;
+
+            @media (min-width: $lg) {
+                grid-template-columns: 160px 160px 48px;
+                column-gap: 30px;
+                grid-column: 3 / 4;
+            }
+        }
     }
 }
