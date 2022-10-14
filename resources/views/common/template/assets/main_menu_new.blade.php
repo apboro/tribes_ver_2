@@ -92,7 +92,7 @@
                                 class="dropdown-menu-item__link {{ request()->is('*members*') ? 'active' : ''  }}"
                                 href="{{ route('project.members', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}"
                             >
-                                <span>Учасники</span>
+                                <span>Участники</span>
                             </a>
                         </li>
 
