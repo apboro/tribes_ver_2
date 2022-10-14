@@ -19,6 +19,7 @@
                 >
                     @csrf
                     <input type="hidden" name="community_id" value="{{ $community->id }}">
+                    <input type="hidden" name="donate_id" value="{{ $donate->id }}">
 
                     <!-- Сумма -->
                     <div class="mb-1">
