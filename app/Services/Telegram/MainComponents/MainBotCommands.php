@@ -268,7 +268,7 @@ class MainBotCommands
                     'currency' => 0,
                     'type' => 'tariff',
                     'telegram_user_id' => null,
-                    'inline_link'=> $variant->inline_link,
+                    'inline_link'=> PseudoCrypt::hash($variant->id, 8),
                 ]));
 
             }elseif($tariff instanceof Tariff) {
