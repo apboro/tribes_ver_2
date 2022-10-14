@@ -90,7 +90,7 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
     }
 
     fillLabels() {
-        this.countAllMessageNode.textContent = this.countAllMessageNode != 0 ? numberFormatting(this.countAllMessage) : 0;
+        this.countAllMessageNode.textContent = this.countAllMessage != 0 ? numberFormatting(this.countAllMessage) : 0;
 
         this.countNewMessageNode.textContent = this.countNewMessage != 0 ? `+${ numberFormatting(this.countNewMessage) }` : 0;
         this.countNewMessageNode.style.color = this.chartDatasets[1].borderColor;

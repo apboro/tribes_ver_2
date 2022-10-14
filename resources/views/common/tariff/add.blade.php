@@ -1,6 +1,7 @@
-@extends('common.community.profile')
+@extends('layouts.project')
 
-@section('tab')
+@section('content')
+
     <section
         class="community-tab"
         data-tab="tariffPageAdd"
