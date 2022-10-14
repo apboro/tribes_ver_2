@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
 use App\Models\Knowledge\Question;
+use App\Services\TelegramMainBotService;
 use Database\Factories\CommunityFactory;
 use Hamcrest\Arrays\IsArray;
 use Illuminate\Database\Eloquent\Builder;
@@ -248,7 +249,8 @@ class Community extends Model
 
     public function getCountFollowersAttribute()
     {
-        $countFollowers = $this->followers()->count();
+        $countFollowers = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $this->connection()->first()->chat_id);
+        // $countFollowers = $this->followers()->where('exit_date', null)->count();
         $string = $this->getFollowerString($countFollowers);
 
         for ($rank = 0; $countFollowers > 999; $rank++) {
