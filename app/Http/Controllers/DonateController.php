@@ -67,7 +67,7 @@ class DonateController extends Controller
 
         $amount = $request['amount'];
 
-        $rangeDonate = $community->donateVariants()->where('isStatic', false)->first();
+        $rangeDonate = $community->donateVariants()->where('donate_id',$request['donate_id'])->where('isStatic', false)->first();
 
         if (!$rangeDonate) {
             abort(404);
