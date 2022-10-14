@@ -1,7 +1,7 @@
-@extends('layouts.project')
+@extends('layouts.app-redezign')
 
 @section('content')
-
+<div class="container" data-plugin="CommunityPage">
     <section
         class="community-tab"
         data-tab="tariffPageAdd"
@@ -235,4 +235,5 @@
             </div>
         </form>
     </section>
+</div>
 @endsection
