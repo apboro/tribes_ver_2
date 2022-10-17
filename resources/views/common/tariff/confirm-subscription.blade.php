@@ -20,8 +20,8 @@
             <div class="confirmation_subscription__header-col1--right">
                 <h4 class="confirmation_subscription__header-col1-title">{{$community->title}}</h4>
                 <p class="confirmation_subscription__name-value subscribers">
-                    <span class="col1">Подписчиков:</span>
-                    <span>300.5К</span>
+                    <!-- <span class="col1">Подписчиков:</span>
+                    <span>300.5К</span> -->
                 </p>
             </div>
         </div>
