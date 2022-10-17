@@ -270,7 +270,8 @@ class MainBotCommands
                 $message = new InputTextMessageContent();
                 $message->parseMode('HTML');
 
-                if ($tariff instanceof TariffVariant) {
+
+                if($tariff instanceof TariffVariant) {
                     //todo для одиночного тарифа
                     $menu = Menux::Create('links')->inline();
                     $variant = $tariff;
@@ -284,8 +285,9 @@ class MainBotCommands
                         'currency' => 0,
                         'type' => 'tariff',
                         'telegram_user_id' => null,
-                        'inline_link' => $variant->inline_link,
+                        'inline_link'=> PseudoCrypt::hash($variant->id, 8),
                     ]));
+
                 } elseif ($tariff instanceof Tariff) {
                     //todo для всех активных не персональных тарифов сообщества
                     $image = $tariff->getMainImage() ? $tariff->getMainImage()->url : '';
@@ -297,6 +299,7 @@ class MainBotCommands
                 }
                 $article->title($community->title);
                 $article->inputMessageContent($message);
+
 
                 $article->keyboard($menu->getAsObject());
                 $result->add($article);
@@ -983,7 +986,8 @@ class MainBotCommands
                     'amount' => $variant->price,
                     'currency' => 0,
                     'type' => 'tariff',
-                    'telegram_user_id' => $userId
+                    'telegram_user_id' => null,
+                    'inline_link'=> PseudoCrypt::hash($variant->id, 8),
                 ]));
             }
             return [$text, $menu];
