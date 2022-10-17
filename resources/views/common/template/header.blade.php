@@ -34,7 +34,7 @@
         </a>
         
         @include('common.template.assets.main_menu_new')
-
+        
         {{-- @include('common.template.assets.project_list_mobile') --}}
 
         <div class="main-header-red__auxiliary">
