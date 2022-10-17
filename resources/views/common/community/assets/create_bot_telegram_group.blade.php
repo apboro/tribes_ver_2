@@ -68,6 +68,20 @@
                             {{ __('base.copy') }}
                         </span>
                     </div>
+
+                    <div class="channel-connection__userbot">
+                        <p>Для отображения детальной статистики по Вашему сообществу необходимо добавить следующего бота и выдать ему права администратора:</p>
+                        <div class="channel-connection__copy">
+                            Юзербот
+                            <span class="channel-connection__copy--titleBot">{{ '@' . env('TELEGRAM_USERBOT_NAME') }}</span>  — 
+                            <span
+                                class="channel-connection__copy--text"
+                                onclick="copyText('{{ '@' . env('TELEGRAM_USERBOT_NAME') }}')"
+                            >
+                                {{ __('base.copy') }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 <!-- @include('common.community.assets.add_user_bot') -->
 
