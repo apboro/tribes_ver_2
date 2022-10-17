@@ -847,7 +847,8 @@ class MainBotCommands
                                         'amount' => $variant->price,
                                         'currency' => 0,
                                         'type' => 'tariff',
-                                        'telegram_user_id' => $ctx->getUserID()
+                                        'telegram_user_id' => $ctx->getUserID(),
+                                        'inline_link'=> PseudoCrypt::hash($variant->id, 8),
                                     ]));
                                 }
                             }
@@ -1055,7 +1056,8 @@ class MainBotCommands
                         'amount' => $variant->price,
                         'currency' => 0,
                         'type' => 'tariff',
-                        'telegram_user_id' => NULL
+                        'telegram_user_id' => NULL,
+                        'inline_link'=> PseudoCrypt::hash($variant->id, 8),
                     ];
 
                     $button[] = [[
@@ -1096,7 +1098,8 @@ class MainBotCommands
                         'amount' => $variant->price,
                         'currency' => 0,
                         'type' => 'tariff',
-                        'telegram_user_id' => NULL
+                        'telegram_user_id' => NULL,
+                        'inline_link'=> PseudoCrypt::hash($variant->id, 8),
                     ];
 
                     $button[] = [[
