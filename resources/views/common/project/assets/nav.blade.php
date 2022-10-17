@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-12">
         <ul class="nav nav-tabs">
+            @if(Auth::user()->hasCommunities())
             <li class="nav-item vertical_line">
                 <a
                     class="nav-link {{ request()->is('*profile/projects*') ? 'active_projects_communities' : ''  }}"
@@ -10,7 +11,7 @@
                     {{ __('base.projects') }}
                 </a>
             </li>
-
+            @endif
             <li class="nav-item vertical_line">
                 <a
                     class="nav-link {{ request()->is('*profile/communities*') ? 'active_projects_communities' : ''  }}"
