@@ -12,7 +12,7 @@
     @if(session()->has('admin_id')) data-admin="true" @endif
 >
     <!-- Header-->
-    @include('common.template.header')
+    @include('common.template.header-project-list')
 
     <!-- Content -->
     <main class="main">

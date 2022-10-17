@@ -38,12 +38,11 @@
 
             <ul class="dropdown-project-list__community-list">
                 @foreach($communities as $community)
-
                     <li class="dropdown-project-list__community-item">
                             <a href="{{route(request()->route()->getName(),['project'=>'c','community' => $community->id])}}" class="dropdown-project-list__community-link">
                             <div class="dropdown-project-list__community-link-avatar">
 
-                                <img src="{{$community->image}}" alt="">
+                                <img src="{{ $community->image ? $community->image : '/images/no-image.svg' }}" alt="">
                             </div>
 
                             <div class="dropdown-project-list__project-link-active-wrapper">
