@@ -1,12 +1,14 @@
 .community-settings {
 
-    @media (min-width: $lg) {
-        &.active {
+    &.active {
 
-            .community-settings__form-item.your-value-wrap {
-                opacity: 1;
-            }
-        }   
+        .community-settings__form-item.your-value-wrap {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+        }
+    }   
+    @media (min-width: $lg) {
     }
 
     &__item {
@@ -57,26 +59,25 @@
             display: none;
             margin-top: 0;
 
+            position: relative;
+            opacity: 0;
+            visibility: hidden;
+            // display: block;
+            flex-wrap: wrap;
+            transition: all 0.3s;
             @media (min-width: $lg) {
-                position: relative;
-                opacity: 0;
-                visibility: hidden;
-                display: block;
-                flex-wrap: wrap;
-                transition: all 0.3s;
                 // left: 440px;
                 // top: 55%;
                 // transform: translateY(-50%);
-            }
-
-            &::before {
-                content: '';
-                position: absolute;
-                right: 100%;
-                bottom: 21px;
-                width: 30px;
-                height: 1px;
-                background-color: $grey-4;
+                &::before {
+                    content: '';
+                    position: absolute;
+                    right: 100%;
+                    bottom: 21px;
+                    width: 30px;
+                    height: 1px;
+                    background-color: $grey-4;
+                }
             }
         }
 
@@ -93,13 +94,15 @@
 
     &__wrap-input-group {
         display: flex;
-        gap: 30px;
+        flex-direction: column;
+        gap: 20px 30px;
         width: 100%;
         position: relative;
 
         @media (min-width: $lg) {
             // margin: 0 0 30px 40px;
             // width: 575px;
+            flex-direction: row;
             position: relative;
         }
     }
@@ -123,16 +126,17 @@
         grid-template-columns: 1fr;
         gap: 20px 40px; 
 
+        &.active {
+
+            .community-settings__form-item.your-value-wrap {
+                display: block;
+                opacity: 1;
+                visibility: visible;
+            }
+        }   
         @media (min-width: $lg) {
             grid-template-columns: 300px 1fr;
 
-            &.active {
-    
-                .community-settings__form-item.your-value-wrap {
-                    opacity: 1;
-                    visibility: visible;
-                }
-            }   
         }
     }
 
@@ -216,16 +220,16 @@
 
         &.your-value-wrap {
 
-            display: none;
+            // display: none;
 
+            display: flex;
+            opacity: 0;
+            transition: all .3s;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
             @media (min-width: $lg) {
-                display: flex;
-                opacity: 0;
-                transition: all .3s;
-                position: absolute;
-                right: 0;
-                top: 50%;
-                transform: translateY(-50%);
             }
 
             &::before {

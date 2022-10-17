@@ -87,7 +87,7 @@
                     @endif
 
                     <li class="dropdown-personal__link-item">
-                        <a href="" class="dropdown-personal__link">
+                        <a href="{{ route('faq.index') }}" class="dropdown-personal__link {{ request()->is('*faq*') ? 'active' : ''  }}">
                             Помощь
                         </a>
                     </li>

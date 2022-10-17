@@ -135,23 +135,6 @@
                 </div>
                 <div class="community-settings__your-value-mobile community-settings__form-item">
                     <div class="community-settings__wrap-left">
-                        <div class="community-settings__form-item your-value-wrap-mobile">
-                            <label
-                                class="form-label-red"
-                                for="quantity_of_days"
-                            >
-                                {{ __('base.number_access_days') }}
-                            </label>
-                            <input 
-                                class="form-control-red your-value-input" 
-                                type="number" 
-                                id="quantity_of_days"
-                                name="quantity_of_days"
-                                onchange="CommunityPage.tariffPageAdd.getChanges(this.value)"
-                                value="{{ $tariff->arbitrary_term ? $tariff->period : '' }}"
-                            >
-                        </div>
-                        
                         <div class="community-settings__number-btn">
                             <label
                                 class="form-label-red"

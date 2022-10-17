@@ -129,8 +129,8 @@ class Community extends Model
         if($data && is_array($data)){
             $params = '?' . http_build_query($data);
         }
-//        $this->generateHash();
-        return route('community.tariff.confirmSubscription', ['hash' => $this->hash]) . $params;
+
+        return route('community.tariff.confirmSubscription', ['hash' => $data['inline_link']]) . $params;
     }
 
     public function isTelegram()
