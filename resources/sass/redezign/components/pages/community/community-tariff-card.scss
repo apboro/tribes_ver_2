@@ -21,6 +21,17 @@
         @include font($text-color-1, 14px, 20px, 400);
     }
 
+    &__donate-text {
+        display: flex;
+        justify-content: space-between;
+        margin-top: $indent-1;
+        @include font($text-color-1, 14px, 20px, 400);
+
+        span:nth-child(2) {
+            color: $primary-1;
+        }
+    }
+
     &__price {
         color: $primary-1;
         font-weight: 500;

@@ -17,7 +17,7 @@
 
                     <a
                         class="btn btn-primary mb-2 btn-sm-block"
-                        href="/community"
+                        href="{{\App\Providers\RouteServiceProvider::HOME}}"
                     >
                         {{ __('base.to_home') }}
                     </a>

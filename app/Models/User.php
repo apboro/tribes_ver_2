@@ -123,7 +123,7 @@ class User extends Authenticatable
 
     function confirmationUserDate($format = 'time')
     {
-        $time_stamp = $this->confirmation()->first()->updated_at;
+        $time_stamp = $this->confirmation()->first() ? $this->confirmation()->first()->updated_at : $this->updated_at;
 
         $date = $time_stamp->translatedFormat('d F Y');
         $time = $time_stamp->format('H:i');
@@ -154,6 +154,11 @@ class User extends Authenticatable
     function communities()
     {
         return $this->hasMany(Community::class, 'owner', 'id');
+    }
+
+    function projects()
+    {
+        return $this->hasMany(Project::class, 'user_id', 'id');
     }
 
     function accumulation()

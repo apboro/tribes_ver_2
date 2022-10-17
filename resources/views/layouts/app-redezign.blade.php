@@ -19,19 +19,22 @@
 
     <!-- Content -->
     <main class="main">
+    <!-- <div class="container" data-plugin="CommunityPage"> -->
         <div class="content-overlay"></div>
         @yield('content')
+    <!-- </div> -->
     </main>
 
     <!-- Footer-->
-    @include('common.template.footer')
+    @include('common.template.footer2')
     
     <!-- Service container -->
     @include('common.template.service_container')
-    
+
     <!-- Scripts
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script> -->
     <script src="{{ mix('js/app.js') }}" defer></script>
+    @if(!env('APP_DEBUG'))
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript" >
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -46,5 +49,6 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/88949577" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+    @endif
 </body>
 </html>

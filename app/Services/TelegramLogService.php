@@ -11,12 +11,11 @@ class TelegramLogService implements TelegramLogServiceContract
 {
 
     protected MainBotCollection $botCollect;
-    
+
 
     public function __construct(MainBotCollection $botCollection)
     {
         $this->botCollect = $botCollection;
-
     }
 
     public function sendLogMessage(string $text)
@@ -35,11 +34,7 @@ class TelegramLogService implements TelegramLogServiceContract
 
     public static function staticSendLogMessage(string $text)
     {
-        // if(!env('APP_DEBUG')){
-            $service = new self(app(MainBotCollection::class));
-            $service->sendLogMessage($text);
-        // }
+        $service = new self(app(MainBotCollection::class));
+        $service->sendLogMessage($text);
     }
 }
-
-    

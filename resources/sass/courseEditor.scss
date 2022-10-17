@@ -6,6 +6,7 @@
 
 // Variables
 @import './core/variables';
+@import "./redezign/core/variables/variables";
 // Mixins
 @import './core/mixins';
 
@@ -16,6 +17,22 @@
 // import
 @import '../../node_modules/quill/dist/quill.bubble';
 @import '../../node_modules/quill/dist/quill.snow';
+
+
+@import "./redezign/components/layout/components";
+.main-header-red {
+    .container {
+        
+        margin: 0 auto!important;
+        max-width: 1140px!important;
+        padding-left: 15px!important;
+        padding-right: 15px!important;
+    }
+}
+@import "./redezign/components/ui/nav/tab-nav";
+@import "./redezign/components/ui/dropdown/dropdown-personal";
+@import "./redezign/components/ui/dropdown/dropdown-menu-item";
+@import "./redezign/components/ui/components";
 
 // Components
 @import "./components/button/button";
@@ -51,7 +68,7 @@ body {
     .layout {
         display: flex;
         flex-direction: column;
-        //height: 100vh;
+        min-height: 100vh;
         position: relative;
         
         .container {

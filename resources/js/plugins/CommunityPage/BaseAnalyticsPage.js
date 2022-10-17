@@ -88,7 +88,7 @@ export class BaseAnalyticsPage {
                 hoverRadius: 0,
                 borderWidth: 2,
                 pointBorderColor: 'transparent',
-                //tension: 0.1,
+                // tension: 1,
                 
                 animation: {
                     duration: 1000,
@@ -116,7 +116,6 @@ export class BaseAnalyticsPage {
                     y: {
                         ticks: {    
                             color: '#000000',
-                            callback: function (value) { if (Number.isInteger(value)) { return value; } },
                             stepSize: 1,
                             font: {
                                 size: 14,
@@ -130,7 +129,7 @@ export class BaseAnalyticsPage {
                             color: 'transparent',
                             tickColor: '#7367F0'
                         },
-                    }
+                    },
                 },
 
                 plugins: {
@@ -193,7 +192,38 @@ export class BaseAnalyticsPage {
         this.activePage = 1;
     }
 
-    toggleChartVisibility() {}
+    toggleChartVisibility() {
+    }
+
+    async loadFile(type) {
+        let exportType = type == 'csv' ? 'csv' : 'xlsx';
+        try {
+            const res = await axios({
+                method: 'post',
+                url: this.fileUploadUrl,
+                responseType: "blob",
+                data: {
+                    community_ids: this.communityId,
+                    export_type: exportType,
+                    filter: {
+                        period: this.filterPeriodValue,
+                    }
+                }
+            });
+
+            let blob = new Blob([res.data], {
+                type: res.headers['content-type'],
+            });
+
+            let anchor = document.createElement('a');
+            anchor.download = `StatisticExport(${ res.headers.date })`;
+            anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+            anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
+            anchor.click();
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     get marks() {
         if (this.filterPeriodValue === 'week') {
@@ -218,36 +248,6 @@ export class BaseAnalyticsPage {
                 date: mark,
                 month: 'long',
             }));
-        }
-    }
-
-    async loadFile(type) {
-        let exportType = type == 'csv' ? 'csv' : 'xlsx';
-        try {
-            const res = await axios({
-                method: 'post',
-                url: this.fileUploadUrl,
-                responseType: "blob",
-                data: {
-                    community_id: this.communityId,
-                    export_type: exportType,
-                    filter: {
-                        period: this.filterPeriodValue,
-                    }
-                }
-            });
-
-            let blob = new Blob([res.data], {
-                type: res.headers['content-type'],
-            });
-
-            let anchor = document.createElement('a');
-            anchor.download = `StatisticExport(${ res.headers.date })`;
-            anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-            anchor.dataset.downloadurl = [res.headers['content-type'], anchor.download, anchor.href].join(':');
-            anchor.click();
-        } catch (error) {
-            console.log(error);
         }
     }
 

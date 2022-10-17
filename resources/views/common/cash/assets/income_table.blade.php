@@ -94,7 +94,15 @@
                 </td>
 
                 <td valign="top" colspan="1" class="dataTables_empty">
-                    {{ $payment->from }}
+                    @if($payment->telegram_user_id != null)
+                        {{$payment->telegram_user_id}}
+                    @else
+                        @if($payment->payer()->first())
+                            {{$payment->getUserNickFromEmail()}}
+                        @else
+                            Анонимный пользователь
+                        @endif
+                    @endif
                 </td>
 
                 <td valign="top" colspan="1" class="dataTables_empty">

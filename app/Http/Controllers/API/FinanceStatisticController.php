@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\API\FinanceStatRequest;
 
-class FinanceStatisticController extends Controller
+class FinanceStatisticController extends StatController
 {
 
     private FinanceStatisticRepositoryContract $financeRepository;
@@ -30,12 +30,12 @@ class FinanceStatisticController extends Controller
         $this->fileSendService = $fileSendService;
     }
 
-    public function paymentsCharts(FinanceStatRequest $request, FinanceChartFilter $filter)
+    public function paymentsCharts(TeleDialogStatRequest $request, FinanceChartFilter $filter)
     {
-        $chartPaymentsData = $this->financeRepository->getPaymentsCharts($request->get('community_id'),$filter, $type = 'all');
-        $coursePaymentsData = $this->financeRepository->getPaymentsCharts($request->get('community_id'),$filter, $type = 'course');
-        $donatePaymentsData = $this->financeRepository->getPaymentsCharts($request->get('community_id'),$filter, $type = 'donate');
-        $tariffPaymentsData = $this->financeRepository->getPaymentsCharts($request->get('community_id'),$filter, $type = 'tariff');
+        $chartPaymentsData = $this->financeRepository->getPaymentsCharts($this->getCommunityIds($request),$filter, $type = 'all');
+        $coursePaymentsData = $this->financeRepository->getPaymentsCharts($this->getCommunityIds($request),$filter, $type = 'course');
+        $donatePaymentsData = $this->financeRepository->getPaymentsCharts($this->getCommunityIds($request),$filter, $type = 'donate');
+        $tariffPaymentsData = $this->financeRepository->getPaymentsCharts($this->getCommunityIds($request),$filter, $type = 'tariff');
 
         $chartPaymentsData->includeChart($coursePaymentsData,['balance' => 'course_balance']);
         $chartPaymentsData->includeChart($donatePaymentsData,['balance' => 'donate_balance']);
@@ -44,9 +44,9 @@ class FinanceStatisticController extends Controller
         return (new FinancesChartsResource($chartPaymentsData));
     }
 
-    public function paymentsList(FinanceStatRequest $request, FinanceFilter $filter)
+    public function paymentsList(TeleDialogStatRequest $request, FinanceFilter $filter)
     {
-        $payments = $this->financeRepository->getPaymentsList($request->get('community_id'),$filter);
+        $payments = $this->financeRepository->getPaymentsList($this->getCommunityIds($request),$filter);
 
         return (new FinancesResource($payments))->forApi();
     }
@@ -82,7 +82,7 @@ class FinanceStatisticController extends Controller
             ],
         ];
         $type = $request->get('export_type');
-        $membersBuilder = $this->financeRepository->getPaymentsListForFile($request->get('community_id'),$filter);
+        $membersBuilder = $this->financeRepository->getPaymentsListForFile($this->getCommunityIds($request),$filter);
 
         return $this->fileSendService->sendFile($membersBuilder, $columnNames,FinanceResource::class,$type,'members');
     }

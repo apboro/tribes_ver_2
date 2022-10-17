@@ -275,6 +275,45 @@
 			"response": []
 		},
 		{
+			"name": "manager/user/commission",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "percent",
+							"value": "0",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/v2/user/commission",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
 			"name": "вопросы список",
 			"request": {
 				"method": "POST",
@@ -1565,13 +1604,13 @@
 						{
 							"key": "export_type",
 							"value": "csv",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						},
 						{
 							"key": "export_type",
 							"value": "xlsx",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "filter[period]",
@@ -1599,6 +1638,315 @@
 					]
 				},
 				"url": "{{host}}/api/tele-statistic/export-payments"
+			},
+			"response": []
+		},
+		{
+			"name": "/community/connection/check",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "_token",
+							"value": "DrIHWhpAeO9XYNRsZbn6sMGVldJb2gOiBi7DmJzT",
+							"type": "text"
+						},
+						{
+							"key": "hash",
+							"value": "123",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/community/connection/check"
+			},
+			"response": []
+		},
+		{
+			"name": "проэкты список",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "filter[page]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "filter[per_page]",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "filter[project_id]",
+							"value": "4",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/projects/list",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "проэкт создать",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Новый проект",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/projects/add",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"projects",
+						"add"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				},
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "проэкт редактировать",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Отредактированный проект1",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "8",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/projects/store",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"projects",
+						"store"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				},
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "проэкт получить",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "8",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/projects/get",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "проэкт удалить",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "7",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/projects/delete",
+				"description": "запросить список доступных вопросов"
+			},
+			"response": []
+		},
+		{
+			"name": "проэкт привязать сообщества",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api-token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "6",
+							"type": "text"
+						},
+						{
+							"key": "communities[]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "communities[]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "communities[]",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "communities[]",
+							"value": "4",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/api/projects/attach-communities",
+				"description": "запросить список доступных вопросов"
 			},
 			"response": []
 		}

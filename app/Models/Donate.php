@@ -55,7 +55,12 @@ class Donate extends Model
 
     function getSumDonateByIndex()
     {
-        $payments = Payment::select('add_balance')->where('payable_id', $this->id)->where('type', 'donate')->get();
+        $ids = $this->variants()->pluck('id')->all();
+        $payments = Payment::select('add_balance')
+            ->whereIn('payable_id', $ids)
+            ->where('type', 'donate')
+            ->where('status', 'CONFIRMED')
+            ->get();
         $sum = [];
         foreach ($payments as $payment) {
             $sum[] = $payment->add_balance;

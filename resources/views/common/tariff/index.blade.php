@@ -43,16 +43,7 @@
                 @foreach ($community->tariff->getTariffVariants($inline_link) as $tariff)
                     @if ($tariff->isActive === true && $tariff->price !== 0)
                     <li class="tariff-public__item">
-                        <button
-                            class="tariff-public__variant"
-                            onclick="TariffSelectionPage.openRightsModal({ 
-                                communityName: '{{ $community->title }}',
-                                communityTariff: '{{ $tariff->title }}',
-                                communityTariffID: '{{ $tariff->id }}',
-                                communityAmount: '{{ $tariff->price }}',
-                                url: `{{ $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
-                            })"
-                        >
+                        <a href="{{route('community.tariff.confirmSubscription', ['hash'=>App\Helper\PseudoCrypt::hash($tariff->id, 8)])}}" target="_blank">
                             <div class="tariff-public__variant-header">
                                 <h4 class="tariff-public__variant-title" title="{{ $tariff->title }}">
                                     {{ $tariff->title }}
@@ -74,7 +65,7 @@
                                     <span class="tariff-public__old-price"></span>
                                 </div>
                             </div>
-                        </button>
+                        </a>
                     </li>
                     @endif
                 @endforeach

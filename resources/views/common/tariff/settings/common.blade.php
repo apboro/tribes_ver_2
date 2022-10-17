@@ -67,7 +67,7 @@
             </button>
 
             <a
-                href="{{ route('community.tariff.list', $community) }}"
+                href="{{ url()->previous() }}"
                 class="button-filled button-filled--primary-15"
             >
                 Отменить

@@ -2,6 +2,7 @@
 
 namespace App\Services\Telegram\TelegramMtproto;
 
+use App\Jobs\GetTelegramMessageHistory;
 use App\Jobs\SetNewTelegramUsers;
 use App\Models\TelegramConnection;
 use App\Models\TestData;
@@ -63,7 +64,8 @@ class Event
                             $connect->is_there_userbot = true;
                             $connect->save();
                         }
-                        dispatch(new SetNewTelegramUsers($participants->chat_id))->delay(10);
+                        dispatch(new SetNewTelegramUsers($participants->chat_id));
+                        dispatch(new GetTelegramMessageHistory($participants->chat_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
                     }
                 }
             }
@@ -80,10 +82,10 @@ class Event
                 foreach ($update->updates as $newUpdate) {
                     if ($newUpdate->_ === 'updateChannel' && $update->chats[0]->_ === 'channel' && !$admin_rights) {
 
-                        $this->addUserBot($newUpdate, $update->chats[0]->access_hash);
+                        $this->addUserBot($newUpdate, $update->chats[0]);
                     } elseif ($newUpdate->_ === 'updateChannel' && $update->chats[0]->_ === 'channel' && $admin_rights) {
-
-                        dispatch(new SetNewTelegramUsers($newUpdate->channel_id))->delay(10);
+                        dispatch(new SetNewTelegramUsers($newUpdate->channel_id));
+                        dispatch(new GetTelegramMessageHistory($newUpdate->channel_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
                     } elseif ($newUpdate->_ === 'updateChannel' && $update->chats[0]->_ === 'channelForbidden') {
 
                         $this->deleteUserBot($newUpdate);
@@ -92,20 +94,21 @@ class Event
                         && isset($newUpdate->message->replies->comments)
                         && $newUpdate->message->replies->comments === true
                     ) {
-
+                        
                         $chat_id = isset($newUpdate->message->peer_id->channel_id) ? $newUpdate->message->peer_id->channel_id : null;
                         $comment_chat = isset($newUpdate->message->replies->channel_id) ? $newUpdate->message->replies->channel_id : null;
                         $this->saveCommentChat($chat_id, $comment_chat, $update);
-
+                        dispatch(new GetTelegramMessageHistory($chat_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
                         if ($newUpdate->message->post == true)
                             $this->postRepository->savePost($newUpdate->message);
+
                     } elseif (
                         $newUpdate->_ === 'updateNewMessage'
                         && isset($newUpdate->message->action)
                         && $newUpdate->message->action->_ === 'messageActionChatDeleteUser'
                     ) {
 
-                        $chat_id = $update->message->peer_id->chat_id ?? null;
+                        $chat_id = $newUpdate->message->peer_id->chat_id ?? null;
                         $this->deleteUserBotInGroup($chat_id);
 
                     } elseif ($newUpdate->_ === 'updateNewChannelMessage' && $newUpdate->message->post == false) {
@@ -114,6 +117,9 @@ class Event
                     } elseif ($newUpdate->_ === 'updateEditMessage' && isset($newUpdate->message->reactions)) {
 
                         $this->saveMessageReaction($newUpdate);
+                    } elseif ($newUpdate->_ === 'updateEditMessage') {
+
+                        $this->messageRepository->editMessage($newUpdate->message);
                     } elseif ($newUpdate->_ === 'updateMessageReactions' && isset($newUpdate->reactions->recent_reactions)) {
 
                         $this->saveCommentMessageReaction($newUpdate);
@@ -141,17 +147,29 @@ class Event
         }
     }
 
-    protected function addUserBot($newUpdate, $access_hash)
+    protected function addUserBot($newUpdate, $chat)
     {
         try {
             $connect = TelegramConnection::where('chat_id', '-100' . $newUpdate->channel_id)->first();
             if ($connect) {
+                $connect->chat_title = $chat->title ?? null;
                 $connect->is_there_userbot = true;
-                $connect->access_hash = $access_hash;
+                $connect->access_hash = $chat->access_hash;
                 $connect->save();
+                $this->updateParentChannel($connect, $chat->access_hash);
+                dispatch(new GetTelegramMessageHistory($connect->chat_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
             }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    protected function updateParentChannel($connect, $access_hash)
+    {
+        $parrentConnect = TelegramConnection::where('comment_chat_id', $connect->chat_id)->first();
+        if ($parrentConnect) {
+            $parrentConnect->comment_chat_hash = $access_hash;
+            $parrentConnect->save();
         }
     }
 
@@ -227,16 +245,17 @@ class Event
                 $connect->comment_chat_hash = $commentHash;
                 $connect->save();
 
-                TelegramConnection::create([
+                $commentConnect = TelegramConnection::firstOrCreate([
                     'user_id' => $connect->user_id,
                     'telegram_user_id' => $connect->telegram_user_id,
-                    'chat_id' => '-100' . $comment_chat,
-                    'chat_title' => $connect->chat_title . ' Chat',
-                    'chat_type' => 'comment',
-                    'isGroup' => true,
-                    'is_there_userbot' => true,
-                    'access_hash' => $commentHash
+                    'chat_id' => '-100' . $comment_chat
                 ]);
+                $commentConnect->chat_title = $connect->chat_title;
+                $commentConnect->chat_type = 'comment';
+                $commentConnect->isGroup = true;
+                $commentConnect->is_there_userbot = true;
+                $commentConnect->access_hash = $commentHash;
+                $commentConnect->save();
             }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());

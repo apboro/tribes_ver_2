@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
 use App\Services\TelegramMainBotService;
+use Exception;
 use Illuminate\Console\Command;
 
 class CheckNewAdmin extends Command
@@ -40,24 +41,38 @@ class CheckNewAdmin extends Command
      */
     public function handle()
     {
-        $telegram_connections = TelegramConnection::select('chat_id')->all();
+        $telegram_connections = TelegramConnection::where('botStatus', 'administrator')->get();
         $tele_users = TelegramUser::select('telegram_id')->get();
 
         foreach ($telegram_connections as $connection) {
-            $admins = TelegramMainBotService::staticGetChatAdministratorsList(config('telegram_bot.bot.botName'), $connection->chat_id);
-            foreach ($admins as $admin) {
-                foreach ($tele_users as $tu) {
-                    if ($tu->telegram_id === $admin['user']['id']) {
-                        if ($tu->communities()->find($connection->community->id) === null) {
-                            $tu->communities()->attach($connection->community->id, ['role' => $admin['status'], 'accession_date' => time()]);
-                        } else {
-                            $tu->communities()->updateExistingPivot($connection->community->id, [
-                                'role' => $admin['status']
-                            ]);
+            $admins = $this->getAdmins($connection->chat_id);
+            if ($admins) {
+                foreach ($admins as $admin) {
+                    foreach ($tele_users as $tu) {
+                        if ($tu->telegram_id === $admin['user']['id']) {
+                            $communityId = isset($connection->community->id) ? $connection->community->id : null;
+                            if ($communityId) {
+                                if ($tu->communities()->find($communityId) === null) {
+                                    $tu->communities()->attach($communityId, ['role' => $admin['status'], 'accession_date' => time()]);
+                                } else {
+                                    $tu->communities()->updateExistingPivot($communityId, [
+                                        'role' => $admin['status']
+                                    ]);
+                                }
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+
+    protected function getAdmins($chat_id)
+    {
+        try {
+            return TelegramMainBotService::staticGetChatAdministratorsList(config('telegram_bot.bot.botName'), $chat_id);
+        } catch (Exception $e) {
+            return null;
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Administrator;
 use App\Models\Knowledge\Question;
+use App\Models\SmsConfirmations;
 use App\Models\TelegramUser;
 use App\Models\User;
 use App\Models\Community;
@@ -40,7 +41,38 @@ class DatabaseSeeder extends Seeder
         Administrator::factory()->create([
             'user_id' => $userTest->id
         ]);
-        //Auth::login($user);
+
+        (new SmsConfirmations([
+            'user_id' => $user->id,
+            'phone' => 79056714805,
+            'status' => 'OK',
+            'code' => 3221,
+            'status_code' => null,
+            'sms_id' => '6599552632944675770001',
+            'cost' => 3.5,
+            'ip' => '95.71.116.119',
+            'attempts' => 1,
+            'isblocked' => 0,
+            'confirmed' => 1,
+            'created_at' => '2022-08-08 13:41:03',
+            'updated_at' => '2022-08-08 13:41:03',
+        ]))->save();
+
+        (new SmsConfirmations([
+            'user_id' => $userTest->id,
+            'phone' => 79056714805,
+            'status' => 'OK',
+            'code' => 3221,
+            'status_code' => null,
+            'sms_id' => '6599552632944675770001',
+            'cost' => 3.5,
+            'ip' => '95.71.116.119',
+            'attempts' => 1,
+            'isblocked' => 0,
+            'confirmed' => 1,
+            'created_at' => '2022-08-08 13:41:03',
+            'updated_at' => '2022-08-08 13:41:03',
+        ]))->save();
 
 
         $this->call([

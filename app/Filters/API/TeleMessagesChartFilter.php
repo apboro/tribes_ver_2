@@ -43,13 +43,13 @@ class TeleMessagesChartFilter extends QueryAPIFilter
         if (in_array($value, $this->allowedPeriods())) {
             switch ($value) {
                 case self::DAY:
-                    return $this->getEndDate()->subDay();
+                    return $this->getEndDate()->sub('23 hours')->startOfHour();
                 case self::WEEK:
-                    return $this->getEndDate()->subWeek();
+                    return $this->getEndDate()->sub('6 days')->startOfDay();
                 case self::MONTH:
-                    return $this->getEndDate()->subMonth();
+                    return $this->getEndDate()->sub('30 days')->startOfDay();
                 case self::YEAR:
-                    return $this->getEndDate()->subYear();
+                    return $this->getEndDate()->sub('11 months')->startOfMonth();
                     break;
             }
         }
@@ -65,17 +65,17 @@ class TeleMessagesChartFilter extends QueryAPIFilter
 
     public function getScale()
     {
-        $value = $this->filters()['period'] ?? 'day';
+        $value = $this->filters()['period'] ?? 'week';
         if (in_array($value, $this->allowedPeriods())) {
             switch ($value) {
                 case self::DAY:
-                    return 3600;//час
+                    return "1 hour";//час
                 case self::WEEK:
-                    return 3600 * 24;//день
+                    return "1 day";//день
                 case self::MONTH:
-                    return 3600 * 24;//день
+                    return "1 day";//день
                 case self::YEAR:
-                    return 2628000;//в среднем месяц
+                    return "1 month";//в среднем месяц
             }
             throw new StatisticException('Не определен период времени для значения фильтра', [
                 'period' => $value,

@@ -24,7 +24,7 @@ export class Table {
     createTableHeader() {
         const header = new CreateNode({
             parent: this.container,
-            class: 'table__header',
+            class: `table__header ${ this.data.length && this.data ? '' : 'table__header--disabled' }`,
         }).init();
 
         this.headerItems.forEach((headerItem) => {

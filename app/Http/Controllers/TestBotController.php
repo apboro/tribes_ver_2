@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\TelegramException;
 use App\Helper\PseudoCrypt;
 use App\Jobs\SetNewTelegramUsers;
 use App\Models\Community;
@@ -44,16 +45,17 @@ use App\Services\Telegram\MainComponents\Madeline;
 use App\Services\Telegram\TelegramMtproto\UserBot;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Services\SMS16 as SmsService;
 
 use DateTime;
+use Exception;
 
 class TestBotController extends Controller
 {
-
     public function index(Request $request)
     {
-        $string = '1234';
-        dd(gettype($string));
+        
     }
 
+    
 }

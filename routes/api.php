@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
 
 Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(function() {
 
+    Route::post('/test-tariff','TestTariffController@test');
     Route::post('/file/upload','FileController@upload');
     Route::post('/file/get','FileController@get');
     Route::post('/file/delete','FileController@delete');
@@ -95,6 +96,15 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
         /*Route::post('add', 'CommunityController@add')->name('api.community.add');
         Route::post('store', 'CommunityController@store')->name('api.community.store');
         Route::post('delete', 'CommunityController@delete')->name('api.community.delete');*/
+    });
+
+    Route::group(['prefix' => 'projects'], function () {
+        Route::post('list', 'ProjectController@list')->name('api.project.list');
+        Route::post('get', 'ProjectController@get')->name('api.project.get');
+        Route::post('add', 'ProjectController@add')->name('api.project.add');
+        Route::post('store', 'ProjectController@store')->name('api.project.store');
+        Route::post('delete', 'ProjectController@delete')->name('api.project.delete');
+        Route::post('attach-communities', 'ProjectController@attachCommunities')->name('api.project.attach-communities');
     });
 
     Route::group(['prefix' => 'media-statistic'], function () {

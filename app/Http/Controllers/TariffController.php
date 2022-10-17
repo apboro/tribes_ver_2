@@ -9,6 +9,7 @@ use App\Mail\ExceptionMail;
 use App\Mail\RegisterMail;
 use App\Models\Community;
 use App\Models\Payment;
+use App\Models\Tariff;
 use App\Services\SMTP\Mailer;
 use App\Services\TelegramLogService;
 use \App\Services\Tinkoff\Payment as Pay;
@@ -141,6 +142,22 @@ class TariffController extends Controller
         return view('common.tariff.index',['inline_link'=>$inline_link])->withCommunity($community);
     }
 
+    public function confirmSubscription($hash){
+        $tariff = TariffVariant::find(PseudoCrypt::unhash($hash));
+        $community = $tariff->community();
+//        dd($community);
+
+        return view('common.tariff.confirm-subscription', compact('tariff', 'community'));
+
+        /*[
+            'hash'=>1,
+            'communityName'=>$community->title,
+            'communityTariff'=>$tariff->title,
+            'communityTariffID'=>$tariff->id,
+            'communityAmount'=>$tariff->price,
+            'url'=>$community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community)]*/
+    }
+
     public function tariff(Community $community)
     {
         return view('common.tariff.list')->withCommunity($community);
@@ -150,7 +167,7 @@ class TariffController extends Controller
     {
         if ($request->isMethod('post')) {
             $this->tariffRepo->updateOrCreate($community, $request);
-            return redirect()->route('community.tariff.list', $community);
+            return redirect()->route('project.tariffs', ['project' => $community->project_id ?? 'c', 'community' => $community->id]);
         }
         return view('common.tariff.add')->withCommunity($community);
     }
@@ -160,11 +177,11 @@ class TariffController extends Controller
         // dd($request);   
         if (!$request->isMethod('post') && isset($activate)) {
             $this->tariffRepo->activate($variantId, $activate);
-            return redirect()->route('community.tariff.list', $community);
+            return redirect()->route('project.tariffs', ['project' => $community->project_id ?? 'c', 'community' => $community->id]);
         }
         if ($request->isMethod('post')) { //Сохранение \ создание тарифа
             $this->tariffRepo->updateOrCreate($community, $request, $variantId);
-            return redirect()->route('community.tariff.list', $community)
+            return redirect()->route('project.tariffs', ['project' => $community->project_id ?? 'c', 'community' => $community->id])
             ->withMessage(__('tariff.success_message'));
         }
         return view('common.tariff.edit', ['variantId' => $variantId])->withCommunity($community);
@@ -176,7 +193,7 @@ class TariffController extends Controller
 
         if ($request->isMethod('post')) {
             $this->tariffRepo->settingsUpdate($community, $request);
-            return redirect()->back()->withCommunity($community)
+            return redirect()->route('project.tariffs', ['project' => $community->project_id ?? 'c', 'community' => $community->id])->withCommunity($community)
             ->withMessage(__('tariff.settings_success_message'));
         }
         return view('common.tariff.settings.index')->withCommunity($community);

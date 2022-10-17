@@ -3,6 +3,7 @@
 namespace App\Repositories\Tariff;
 
 use App\Helper\PseudoCrypt;
+use App\Models\Community;
 use App\Models\Tariff;
 use App\Models\TariffVariant;
 use App\Models\Statistic;
@@ -17,7 +18,9 @@ use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TariffRepository implements TariffRepositoryContract
 {
@@ -239,14 +242,40 @@ class TariffRepository implements TariffRepositoryContract
 
     public function getList(TariffFilter $filters, $community)
     {
+        if(empty($community)){
+            return (new Community())->followers()->paginate();
+        }
         $followers = $community->followers();
         $followers = $filters->apply($followers);
         return $followers->paginate($this->perPage);
     }
 
+
+    public function getTariffVariantsByCommunities(array $communityIds,$isActive = true,$isPersonal = null): Collection
+    {
+        $builder =  TariffVariant::where('price', '>', 0)
+            ->orderBy('number_button', 'ASC');
+        if ($communityIds[0] == 'all') {
+            $builder->whereHas('tariff', function ($query) {
+                $query->whereHas('community', function ($query) {
+                    $query->where('owner', Auth::user()->id);
+                });
+            });
+        } else {
+            $builder->whereHas('tariff', function ($query) use ($communityIds) {
+                $query->whereIn('community_id', $communityIds);
+            });
+        }
+        $builder->where('isActive', $isActive);
+        if($isPersonal !== null){
+            $builder->where('isPersonal',$isPersonal);
+        }
+
+        return $builder->get();
+    }
+
     public function updateOrCreate($community, $data, $variantId = NULL)
     {
-        // dd($data->all());
         $this->initTariffModel($community);
 
         if ($variantId !== NULL) {
@@ -259,10 +288,15 @@ class TariffRepository implements TariffRepositoryContract
         $variant->title = $data['tariff_name'];
         $variant->price = $data['tariff_cost'];
         $variant->period = $data['tariff_pay_period'] ?? $data['quantity_of_days'];
-        $variant->isActive = $data['tariff'] ?? false;
+        $variant->isPersonal = $data['isPersonal'] ?? false;
+        if($variant->isPersonal) {
+            $variant->isActive = true;
+        } else {
+            $variant->isActive = $data['tariff'] ?? false;
+        }
         $variant->number_button = $data['number_button'];
         $variant->arbitrary_term = $data['arbitrary_term'] ?? false;
-        $variant->isPersonal = $data['isPersonal'] ?? false;
+
         if(empty( $variant->inline_link)) {
             $this->generateLink($variant);
         }

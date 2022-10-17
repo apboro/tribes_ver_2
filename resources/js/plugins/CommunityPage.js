@@ -20,7 +20,7 @@ export default class CommunityPage extends Page {
     }
     
     init() {
-        this.communityId = window.location.pathname.split('/')[2];
+        this.communityId = window.community_id;
         
         if (this.isBlock('[data-tab="profileBlock"]')) {
             this.profileBlock = new ProfileBlock(this);
@@ -89,12 +89,12 @@ export default class CommunityPage extends Page {
         let active = document.getElementById("btn_profile");
 
         if (this.profileBlock.isVisible) {
-            event.target.textContent = 'Скрыть профиль';
+            event.target.textContent = 'Скрыть';
             active.classList.remove("active");
 
         } else {
-            event.target.textContent = 'Открыть профиль';
-            active.classList.add("active");
+            event.target.textContent = 'Раскрыть';
+            active.className += " active";
         }
     }
 
