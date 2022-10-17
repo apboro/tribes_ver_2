@@ -123,7 +123,7 @@ class User extends Authenticatable
 
     function confirmationUserDate($format = 'time')
     {
-        $time_stamp = $this->confirmation()->first()->updated_at;
+        $time_stamp = $this->confirmation()->first() ? $this->confirmation()->first()->updated_at : $this->updated_at;
 
         $date = $time_stamp->translatedFormat('d F Y');
         $time = $time_stamp->format('H:i');

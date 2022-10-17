@@ -1,8 +1,8 @@
-@extends('common.community.profile')
+@extends('layouts.app-redezign')
 
-@section('tab')
-    @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors])
-
+@section('content')
+    {{-- @include('common.template.alert.form_info', ['message' => \Session::get('message'), 'errors' => $errors]) --}}
+<div class="container" data-plugin="CommunityPage">
     <section
         class="community-tab"
         data-tab="tariffPagePublications"
@@ -44,4 +44,5 @@
         <!-- TABS -->
         @yield('subtab')
     </section>
+</div>
 @endsection

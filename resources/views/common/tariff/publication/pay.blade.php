@@ -83,7 +83,7 @@
             </button>
 
             <a
-                href="{{ route('community.tariff.list', $community) }}"
+                href="{{ route('project.tariffs', ['project' => $community->project_id ?? 'c', 'community' => $community->id]) }}"
                 class="button-filled button-filled--primary-15"
             >
                 Отменить

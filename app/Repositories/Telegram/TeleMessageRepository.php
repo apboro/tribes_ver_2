@@ -95,6 +95,26 @@ class TeleMessageRepository implements TeleMessageRepositoryContract
         }
     }
 
+    public function editMessage($message) 
+    {
+        try {
+            if ($message->peer_id->_ === 'peerChannel') 
+                $group_chat_id = '-100' . $message->peer_id->channel_id;
+            else 
+                $group_chat_id = '-' . $message->peer_id->chat_id;
+            
+            $messageModel = TelegramMessage::where('message_id', $message->id)->where('group_chat_id', $group_chat_id)->first();
+            if ($messageModel) {
+                if ($message->message) {
+                    $messageModel->text	= $message->message;
+                    $messageModel->save();
+                }
+            }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
     protected function addAnswers($message_id, $chat_id)
     {
         try {

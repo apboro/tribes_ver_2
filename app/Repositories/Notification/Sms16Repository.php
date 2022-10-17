@@ -38,11 +38,13 @@ class Sms16Repository implements NotificationRepositoryContract
         $code = rand(1000, 9999);
         $message = new SmsService();
         $sms = $message->sendMessage($phone, 'Код подтверждения ' . env('APP_NAME') . ':' . $code);
+
+        if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] == 'phone_code_user') {
+            TelegramLogService::staticSendLogMessage('Предположительно на sms16.ru закончились деньги. ' . 'Ответ сервиса: ' .$sms[0][$phone]['error']);
+
+            return 'Что-то пошло не так, пожалуйста обратитесь в службу поддержки.';
+        }
         if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] == 0) {
-            
-            if ($sms[0][$phone]['error'] == 'phone_code_user') {
-                TelegramLogService::staticSendLogMessage('Предположительно на sms16.ru закончились деньги.');
-            }
 
             $sms_confirmation = SmsConfirmation::firstOrNew(['user_id' => $user->id]);
 

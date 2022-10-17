@@ -7,6 +7,7 @@
                 {{ __('base.tariffs') }}
             </h2>
 
+            @if($activeCommunity)
             <div class="dropdown-red dropdown-red--left main-header__dropdown">
                 <button class="button-text button-text--primary button-text--only-icon dropdown-red__head" data-dropdown-btn onclick="Dropdown.toggle(this)">
                     <span
@@ -46,6 +47,7 @@
                     </li>
                 </ul>
             </div>
+            @endif
             
             <!-- Nav -->
             <select
@@ -73,7 +75,7 @@
             </select>
         </div>
         @if((request('active') == null || request('active') == 'true') && isset($tariffs[0]))
-        <div>
+        <div class="community-tab__inline-all">
             <span>{{__('tariff.inline_command_all_tariffs')}}</span>
             <a 
                 class="community-settings__inline-link all-tariffs"

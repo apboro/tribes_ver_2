@@ -3,7 +3,6 @@
 namespace App\Services\Telegram\MainComponents;
 
 use App\Exceptions\KnowledgeException;
-use App\Exceptions\TelegramException;
 use App\Helper\ArrayHelper;
 use App\Models\Community;
 use App\Repositories\Tariff\TariffRepositoryContract;
@@ -19,9 +18,7 @@ class MainBotEvents
     public function __construct(MainBot $bot, ?object $data)
     {
         $this->bot = $bot;
-        if ($data === null)
-            throw new TelegramException('Пустой запрос');
-        else $this->data = $data;
+        $this->data = $data;
     }
 
     public function initEventsMainBot(array $config = [
@@ -121,8 +118,7 @@ class MainBotEvents
 
                             $description = $community->tariff->welcome_description;
                             if ($description && $description != '') {
-                                $text = ($userName ?: $firstName)
-                                    . ', ' . $description . $image;
+                                $text = $description . $image;
                                 $this->bot->getExtentionApi()->sendMess($chatId, $text);
                             }
                         }
@@ -305,19 +301,6 @@ class MainBotEvents
             return env('TELEGRAM_BASE_URL') . '/file/bot' . $this->bot->getToken() . '/' . $photoPath;
         } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
-        return '';
-    }
-
-    /* Слушатель сообщений, возвращает текст, chatId, userId */
-    protected function hearsAndWriting($callable, $params = [])
-    {
-        if (isset($this->data->message->text)) {
-            $callable([
-                'text' => $this->data->message->text,
-                'chat_id' => $this->data->message->chat->id,
-                'user_id' => $this->data->message->from->id
-            ]);
         }
     }
 

@@ -18,7 +18,7 @@ class MemberResource extends JsonResource
             "c_messages" => $this->resource->c_messages,
             "c_put_reactions" => $this->resource->c_put_reactions,
             "c_got_reactions" => $this->resource->c_got_reactions,
-            "utility" => $this->resource->user_utility,
+            "utility" => $this->resource->utility,
         ];
     }
 }

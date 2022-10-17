@@ -5,6 +5,11 @@
     min-width: 42px;
     height: 24px;
 
+    &--disabled {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
     input {
         display: none;
 

@@ -27,14 +27,20 @@ export default class Project extends Page {
         let totalQty = document.querySelectorAll('.project-creation__list-communities .profile__list .profile__item-wrap').length;
 
         //удаления дефолтного блока с текстом, если в сообществах проекта есть элементы
-        let emptyBlock = document.querySelector('.project-creation__project-main--empty');
-        if(emptyBlock !== null && totalQty > 0) {
-            emptyBlock.remove();
+        // let emptyBlock = document.querySelector('.project-creation__project-main--empty');
+        // if(emptyBlock !== null && totalQty > 0) {
+        //     emptyBlock.remove();
+        // }
+        if (totalQty == 0) {
+            document.querySelector('#empty_text').classList.remove('hide');
+        } else {
+            document.querySelector('#empty_text').classList.add('hide');
         }
 
         //изменение количества всех сообществ (checked && !checked)
         let qtyCommunitiesInProject = document.getElementById('qty_of_communities_in_project')
-        qtyCommunitiesInProject.textContent = `${totalQty}`
+        qtyCommunitiesInProject.textContent = totalQty;
+        console.log(totalQty);
     }
 
     deleteSelectedCommunitiesFromProject(){
@@ -56,15 +62,20 @@ export default class Project extends Page {
 
         let totalQty = document.querySelectorAll('.project-creation__list-communities .profile__list .profile__item-wrap').length;
         let qtyCommunitiesInProject = document.getElementById('qty_of_communities_in_project');
-        qtyCommunitiesInProject.textContent = `${totalQty}`;
+        qtyCommunitiesInProject.textContent = totalQty;
+        if (totalQty == 0) {
+            document.querySelector('#empty_text').classList.remove('hide');
+        } else {
+            document.querySelector('#empty_text').classList.add('hide');
+        }
 
-        let emptyBlock = document.querySelector('.project-creation__project-main--empty');
-        if ( emptyBlock !== null && totalQty === 0) {
-            return
-        } else if(totalQty === 0){
-            let wrap = document.querySelector('.project-creation__list-communities');
-            wrap.insertAdjacentHTML("beforeBegin" , "<p class='project-creation__project-main--empty'>Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.</p>");
-        } 
+        // let emptyBlock = document.querySelector('.project-creation__project-main--empty');
+        // if ( emptyBlock != null && totalQty == 0) {
+        //     return
+        // } else if(totalQty == 0){
+        //     let wrap = document.querySelector('.project-creation__list-communities');
+        //     wrap.insertAdjacentHTML("beforeBegin" , "<p class='project-creation__project-main--empty'>Здесь находится список сообществ проекта, выберите сообщества из общего списка (слева) и добавьте их в свой проект.</p>");
+        // }
     }
 
     toggleAll(source){

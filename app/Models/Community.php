@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
 use App\Models\Knowledge\Question;
+use App\Services\TelegramMainBotService;
 use Database\Factories\CommunityFactory;
 use Hamcrest\Arrays\IsArray;
 use Illuminate\Database\Eloquent\Builder;
@@ -186,6 +187,12 @@ class Community extends Model
         return $this->hasManyThrough(TariffVariant::class, Tariff::class);
     }
 
+    public function hasNotActiveTariffVariants()
+    {
+        
+        return $this->tariffVariants()->where('isActive',1)->where('isPersonal',0)->doesntExist();
+    }
+
     function donate()
     {
         return $this->hasMany(Donate::class, 'community_id', 'id');
@@ -242,7 +249,12 @@ class Community extends Model
 
     public function getCountFollowersAttribute()
     {
-        $countFollowers = $this->followers()->count();
+        try {
+            $countFollowers = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $this->connection()->first()->chat_id);
+        } catch (\Exception $e) {
+            $countFollowers = $this->followers()->where('exit_date', null)->count();
+        }
+
         $string = $this->getFollowerString($countFollowers);
 
         for ($rank = 0; $countFollowers > 999; $rank++) {
