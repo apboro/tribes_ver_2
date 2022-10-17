@@ -83,7 +83,7 @@ class TinkoffService
 
                     }
 
-                    TelegramLogService::staticSendLogMessage("В копилку с ID  " . $accumulation->id . " зачислено" . $payment->amount / 100 . " Рублей");
+                    TelegramLogService::staticSendLogMessage("В копилку с ID " . $accumulation->id . " зачислено " . $payment->amount / 100 . " р.");
 
                     if($community){
                         TelegramLogService::staticSendLogMessage(
