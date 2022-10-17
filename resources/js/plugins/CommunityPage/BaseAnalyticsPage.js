@@ -207,6 +207,10 @@ export class BaseAnalyticsPage {
                     export_type: exportType,
                     filter: {
                         period: this.filterPeriodValue,
+                        sort: {
+                            name: this.sortName,
+                            rule: this.sortRule
+                        },
                     }
                 }
             });
