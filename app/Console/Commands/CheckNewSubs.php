@@ -56,7 +56,7 @@ class CheckNewSubs extends Command
                     }
 
                     $membersIdent = $community->followers->count();
-                    if ($membersOrigin != $membersIdent) {
+                    if ($membersOrigin && $membersOrigin != $membersIdent) {
                         dispatch(new SetNewTelegramUsers($community->connection->chat_id));
                     }
                     break;
