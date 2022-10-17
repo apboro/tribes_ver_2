@@ -895,7 +895,8 @@ class MainBotCommands
                     'amount' => $variant->price,
                     'currency' => 0,
                     'type' => 'tariff',
-                    'telegram_user_id' => $userId
+                    'telegram_user_id' => null,
+                    'inline_link'=> PseudoCrypt::hash($variant->id, 8),
                 ]));
             }
             return [$text, $menu];
