@@ -9,9 +9,9 @@ use App\Models\Payment;
 use App\Repositories\Statistic\DTO\ChartData;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -103,7 +103,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
     /**
      * @param int $communityId
      * @param FinanceFilter $filter
-     * @return \Illuminate\Database\Eloquent\Builder|Builder
+     * @return Builder|Builder
      * @throws Exception
      */
     protected function queryPayments(array $communityIds, FinanceFilter $filter)
