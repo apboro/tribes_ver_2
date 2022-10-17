@@ -6,7 +6,7 @@ use App\Filters\API\FinanceChartFilter;
 use App\Filters\API\FinanceFilter;
 use App\Repositories\Statistic\DTO\ChartData;
 use App\Repositories\Statistic\FinanceStatisticRepositoryContract;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Tests\TestCase;
 
