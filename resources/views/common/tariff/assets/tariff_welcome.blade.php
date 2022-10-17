@@ -8,13 +8,15 @@
             {{ __('tariff.welcome_description_title') }}
         </label>
 
-        <textarea
+        @include('common.tariff.assets.tariff_welcome_editor')
+
+        {{--<textarea
             class="form-control-red @error('publication_description') form-control-red--danger @enderror"
             id="welcome_description"
                 name="welcome_description"
                 rows="5"
                 placeholder="{{__('form.message_text')}}"
-            >@if($community->tariff && $community->tariff->welcome_description){{$community->tariff->welcome_description}}@endif</textarea>
+            >@if($community->tariff && $community->tariff->welcome_description){{$community->tariff->welcome_description}}@endif</textarea>--}}
         
         <!-- <span
             class="badge bg-warning hide"
