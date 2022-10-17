@@ -249,8 +249,12 @@ class Community extends Model
 
     public function getCountFollowersAttribute()
     {
-        $countFollowers = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $this->connection()->first()->chat_id);
-        // $countFollowers = $this->followers()->where('exit_date', null)->count();
+        try {
+            $countFollowers = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $this->connection()->first()->chat_id);
+        } catch (\Exception $e) {
+            $countFollowers = $this->followers()->where('exit_date', null)->count();
+        }
+
         $string = $this->getFollowerString($countFollowers);
 
         for ($rank = 0; $countFollowers > 999; $rank++) {

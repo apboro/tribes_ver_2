@@ -144,18 +144,11 @@ class TariffController extends Controller
 
     public function confirmSubscription($hash){
         $tariff = TariffVariant::find(PseudoCrypt::unhash($hash));
+        if (!$tariff)
+            abort(404);
         $community = $tariff->community();
-//        dd($community);
 
         return view('common.tariff.confirm-subscription', compact('tariff', 'community'));
-
-        /*[
-            'hash'=>1,
-            'communityName'=>$community->title,
-            'communityTariff'=>$tariff->title,
-            'communityTariffID'=>$tariff->id,
-            'communityAmount'=>$tariff->price,
-            'url'=>$community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community)]*/
     }
 
     public function tariff(Community $community)

@@ -302,7 +302,6 @@ class MainBotEvents
         } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
-        return '';
     }
 
     /**
