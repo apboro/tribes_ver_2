@@ -1,15 +1,21 @@
 import { CropImageController } from "../../Helper/CropImageController/CropImageController";
 import { CropImageOnMoveCroppController } from "./CropImageOnMoveCroppController";
+import { ContentEditor } from "../../Helper/ContentEditor";
 
 export class tariffPageSettingsMessages {
     constructor(options) {
         this.container = options.parent.querySelector('[data-tab="tariffPageSettingsMessages"]');
+
+        this.editorDataEl = this.container.querySelector('#editor_data');
+        this.tariffWelcomeEditorEvent = 'ContentEditor:text';
 
         this.init();
     }
 
     init() {   
         this.initCroppImageController();
+        this.initListeners();
+        this.initEditor();
     }
 
     initCroppImageController() {
@@ -37,6 +43,18 @@ export class tariffPageSettingsMessages {
             container: this.container,
             id: 'publication',
         }); */
+    }
+
+    initListeners() {
+        // Подписываемся на событие изменения
+        Emitter.subscribe(this.tariffWelcomeEditorEvent, (data) => {
+            console.log(data.html);
+            this.setEditorData = data.html;
+        });
+    }
+
+    initEditor() {
+        this.editor = new ContentEditor(this.container, '#editor_container', this.tariffWelcomeEditorEvent);
     }
 
     trialPeriodAttention(event, savedPeriod) {
@@ -92,5 +110,9 @@ export class tariffPageSettingsMessages {
         modalFooter.append(acceptBtn);
 
         return modalContainer;
+    }
+
+    set setEditorData(value) {
+        this.editorDataEl.value = value;
     }
 }
