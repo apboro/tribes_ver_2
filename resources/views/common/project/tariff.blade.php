@@ -6,7 +6,7 @@
 
 <div class="profile__list communities">
     <div class="profile__community_not_selected">
-        <p>Для работы с участниками выберите конкретное сообщество в проекте.</p>
+        <p>Для работы с тарифами выберите конкретное сообщество в проекте.</p>
     </div>
 </div>
 
@@ -192,23 +192,27 @@
         @else
             <!-- Empty tariffs -->
             <div class="community-tariff__empty-wrapper">
-                @if(request()->has('active') && request()->get('active') == "false")
+                @if($isActive === false)
                     <p class="community-tariff__empty-text">
                         Отсутствуют неактивные тарифы.
+                    </p>
+                @elseif($isPersonal === true)
+                    <p class="community-tariff__empty-text">
+                        Отсутствуют персональные тарифы.
                     </p>
                 @else
                     <p class="community-tariff__empty-text">
                         Отсутствуют активные тарифы.
                     </p>
-                    <p class="community-tariff__empty-text">
-                        Добавьте активный тариф или измените статус неактивного тарифа
-                    </p>
+                    <!-- <p class="community-tariff__empty-text">
+                        Добавьте активный тариф или измените статус неактивного не персонального тарифа
+                    </p> -->
                 @endif
 
                 @if($activeCommunity)
                     <a
-                            href="{{ route('community.tariff.add', $activeCommunity) }}"
-                            class="button-filled button-filled--primary community-tariff__empty-btn"
+                        href="{{ route('community.tariff.add', $activeCommunity) }}"
+                        class="button-filled button-filled--primary community-tariff__empty-btn"
                     >
                         {{ __('tariff.add_tariff') }}
                     </a>
