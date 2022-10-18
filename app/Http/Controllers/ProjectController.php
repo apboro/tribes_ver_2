@@ -40,6 +40,10 @@ class ProjectController extends Controller
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
+        if (!Auth::user()->hasCommunities()) {
+            return redirect()->route('profile.communities.list');
+        }
+
         return view('common.project.list')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity')
         );
