@@ -18,6 +18,10 @@ Route::namespace('App\Http\Controllers\API')->group(function() {
 });
 
 Route::namespace('App\Http\Controllers\API')->group(function() {
+    Route::post('/password/email', 'ForgotPasswordController@reset')->name('password.email');
+});
+
+Route::namespace('App\Http\Controllers\API')->group(function() {
     Route::post('/login-as-admin', 'AuthController@loginAsAdmin')->name('auth.login_as_admin');
 });
 
