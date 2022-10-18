@@ -83,12 +83,17 @@ class Event
                     if ($newUpdate->_ === 'updateChannel' && $update->chats[0]->_ === 'channel' && !$admin_rights) {
 
                         $this->addUserBot($newUpdate, $update->chats[0]);
+
                     } elseif ($newUpdate->_ === 'updateChannel' && $update->chats[0]->_ === 'channel' && $admin_rights) {
+
+                        $this->updateUserBotStatus($newUpdate->channel_id);
                         dispatch(new SetNewTelegramUsers($newUpdate->channel_id));
                         dispatch(new GetTelegramMessageHistory($newUpdate->channel_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
+
                     } elseif ($newUpdate->_ === 'updateChannel' && $update->chats[0]->_ === 'channelForbidden') {
 
                         $this->deleteUserBot($newUpdate);
+
                     } elseif (
                         $newUpdate->_ === 'updateEditChannelMessage'
                         && isset($newUpdate->message->replies->comments)
@@ -99,6 +104,7 @@ class Event
                         $comment_chat = isset($newUpdate->message->replies->channel_id) ? $newUpdate->message->replies->channel_id : null;
                         $this->saveCommentChat($chat_id, $comment_chat, $update);
                         dispatch(new GetTelegramMessageHistory($chat_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
+
                         if ($newUpdate->message->post == true)
                             $this->postRepository->savePost($newUpdate->message);
 
@@ -111,21 +117,31 @@ class Event
                         $chat_id = $newUpdate->message->peer_id->chat_id ?? null;
                         $this->deleteUserBotInGroup($chat_id);
 
+                    } elseif ($newUpdate->_ === 'updateEditChannelMessage') {
+
+                        $this->messageRepository->editMessage($newUpdate->message);
+
                     } elseif ($newUpdate->_ === 'updateNewChannelMessage' && $newUpdate->message->post == false) {
 
                         $this->messageRepository->saveChatMessage($newUpdate->message, true);
+
                     } elseif ($newUpdate->_ === 'updateEditMessage' && isset($newUpdate->message->reactions)) {
 
                         $this->saveMessageReaction($newUpdate);
+                        $this->messageRepository->editMessage($newUpdate->message);
+
                     } elseif ($newUpdate->_ === 'updateEditMessage') {
 
                         $this->messageRepository->editMessage($newUpdate->message);
+
                     } elseif ($newUpdate->_ === 'updateMessageReactions' && isset($newUpdate->reactions->recent_reactions)) {
 
                         $this->saveCommentMessageReaction($newUpdate);
+
                     } elseif ($update->_ == 'updateNewMessage') {
 
                         $this->messageRepository->saveChatMessage($newUpdate->message);
+
                     } else {
                         continue;
                     }
@@ -158,6 +174,19 @@ class Event
                 $connect->save();
                 $this->updateParentChannel($connect, $chat->access_hash);
                 dispatch(new GetTelegramMessageHistory($connect->chat_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
+            }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    protected function updateUserBotStatus($chat_id)
+    {
+        try {
+            $connect = TelegramConnection::where('chat_id', '-100' . $chat_id)->first();
+            if ($connect) {
+                $connect->userBotStatus = 'administrator';
+                $connect->save();
             }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
