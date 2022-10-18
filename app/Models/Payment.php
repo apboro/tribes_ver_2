@@ -19,10 +19,28 @@ class Payment extends Model
     protected $guarded = [];
 
     public static $status = [
-        'CONFIRMED' => "Подтверждён",
         'COMPLETED' => "Завершен",
-        'NEW' => "Попытка оплаты",
-        'REFUNDED' => "Возвращён",
+        'NEW' => 'Создан',
+        'FORM_SHOWED' => 'Платежная форма открыта покупателем',
+        'DEADLINE_EXPIRED' => 'Платежная сессия закрыта в связи с превышением срока отсутствия активности по текущему статусу',
+        'CANCELED' => 'Отменен',
+        'PREAUTHORIZING' => 'Проверка платежных данных',
+        'AUTHORIZING' => 'Резервируется',
+        'AUTH_FAIL' => 'Не прошел авторизацию',
+        'REJECTED' => 'Отклонен',
+        '3DS_CHECKING' => 'Проверяется по протоколу 3-D Secure',
+        '3DS_CHECKED' => 'Проверен по протоколу 3-D Secure',
+        'PAY_CHECKING' => 'Платеж обрабатывается',
+        'AUTHORIZED' => 'Зарезервирован',
+        'REVERSING' => 'Резервирование отменяется',
+        'PARTIAL_REVERSED' => 'Резервирование отменено частично',
+        'REVERSED' => 'Резервирование отменено',
+        'CONFIRMING' => 'Подтверждается',
+        'CONFIRM_CHECKING' => 'Платеж обрабатывается',
+        'CONFIRMED' => 'Подтвержден',
+        'REFUNDING' => 'Возвращается',
+        'PARTIAL_REFUNDED' => 'Возвращен частично',
+        'REFUNDED' => 'Возвращен полностью',
     ];
 
     public static $types = ["payout", "tariff", "donate", "course"];
