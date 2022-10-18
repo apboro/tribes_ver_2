@@ -5,7 +5,7 @@
     right: 0;
     left: 0;
     background-color: #fff;
-    z-index: 10;
+    z-index: 15;
     //убрать эффект тряски верстки
     width: auto !important;
     margin-right: calc(-1 * (100vw - 100%));
@@ -16,8 +16,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-top: 20px;
-        padding-bottom: 20px;
+        padding-top: 30px;
+        padding-bottom: 30px;
     }
 
     &__logo {
