@@ -36,7 +36,7 @@ class ProjectController extends Controller
         $this->tariffRepository = $tariffRepository;
     }
 
-    public function listProjects( ProjectRequest $request)
+    public function listProjects(ProjectRequest $request)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
@@ -49,7 +49,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function listCommunities( ProjectRequest $request)
+    public function listCommunities(ProjectRequest $request)
     {
         list($projects, $communitiesWP, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
         $communities = $this->projectRepository->getUserCommunitiesList(Auth::user()->id)->keyBy('id');
@@ -66,41 +66,41 @@ class ProjectController extends Controller
 
             $project = $this->projectRepository->create([
                 'user_id' => Auth::user()->id,
-                'title'=> $request->get('title'),
+                'title' => $request->get('title'),
                 'communities' => $request->get('communities'),
             ]);
             return redirect()->route('profile.project.list')->withMessage('Сохранено');
         }
         return view('common.project.add')->with(
-            compact('project','communities', 'request')
+            compact('project', 'communities', 'request')
         );
     }
 
     public function edit(Project $project, ProjectRequest $request)
     {
-        if($project->user_id !== Auth::user()->id) {
+        if ($project->user_id !== Auth::user()->id) {
             abort('403', 'Доступ запрещен');
         }
         $communities = $this->projectRepository->getUserCommunitiesWithoutProjectList(Auth::user()->id)->keyBy('id');
         if ($request->isMethod('post')) {
             $requestUpdate = app()->make(ProjectEditRequest::class);
             $project = $this->projectRepository->update(
-                $project->id ,
+                $project->id,
                 [
-                    'title'=>$requestUpdate->get('title'),
+                    'title' => $requestUpdate->get('title'),
                     'communities' => $request->get('communities'),
                 ],
                 ['user_id' => Auth::user()->id]
             );
-            if(empty($project)) {
+            if (empty($project)) {
                 return view('common.project.edit')->with(
-                    compact('project','communities', 'requestUpdate')
+                    compact('project', 'communities', 'requestUpdate')
                 );
             }
             return redirect()->route('profile.project.list')->withMessage('Сохранено');
         }
         return view('common.project.edit')->with(
-            compact('project','communities')
+            compact('project', 'communities')
         );
     }
 
@@ -109,8 +109,8 @@ class ProjectController extends Controller
 
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
-        if($project === null && $projects->isNotEmpty()) {
-            return redirect()->route('project.analytics',['project'=>$projects->first()]);
+        if ($project === null && $projects->isNotEmpty()) {
+            return redirect()->route('project.analytics', ['project' => $projects->first()]);
         }
         return view('common.project.analytics')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
@@ -148,10 +148,10 @@ class ProjectController extends Controller
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
-        if($project === null && $projects->isNotEmpty()) {
-            return redirect()->route('project.donates',['project'=>$projects->first()]);
+        if ($project === null && $projects->isNotEmpty()) {
+            return redirect()->route('project.donates', ['project' => $projects->first()]);
         }
-        $donates = empty($ids)? null : $this->donateRepository->getDonatesByCommunities(explode('-', $ids));
+        $donates = empty($ids) ? null : $this->donateRepository->getDonatesByCommunities(explode('-', $ids));
 
         return view('common.project.donate')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community', 'donates')
@@ -161,8 +161,8 @@ class ProjectController extends Controller
     public function tariffs($project = null, $community = null, ProjectRequest $request)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
-        if($project === null && $projects->isNotEmpty()) {
-            return redirect()->route('project.tariffs',['project'=>$projects->first()]);
+        if ($project === null && $projects->isNotEmpty()) {
+            return redirect()->route('project.tariffs', ['project' => $projects->first()]);
         }
         if ($request->get('isPersonal')) {
             $isPersonal = true;
@@ -174,7 +174,7 @@ class ProjectController extends Controller
             $isActive = false;
             $isPersonal = null;
         }
-        $tariffs =  empty($ids)? null :$this->tariffRepository->getTariffVariantsByCommunities(explode('-', $ids), $isActive, $isPersonal);
+        $tariffs = empty($ids) ? null : $this->tariffRepository->getTariffVariantsByCommunities(explode('-', $ids), $isActive, $isPersonal);
 
         return view('common.project.tariff')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity',
@@ -224,7 +224,8 @@ class ProjectController extends Controller
         if (request('community') && $activeProject && empty($activeCommunity)) {
             abort(404, 'Страница не существует');
         }
-
+        // todo set last $activeProject $activeCommunity pair into session for backlinks and redirect after save actions
+        session(['activeCommunity' => $activeCommunity->id ?? null, 'activeProject' => $activeProject->id ?? null]);
 
         return [$projects, $communitiesWP, $activeProject, $activeCommunity, $ids];
     }

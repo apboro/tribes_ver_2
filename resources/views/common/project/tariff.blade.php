@@ -22,8 +22,8 @@
                 <button class="button-text button-text--primary button-text--only-icon dropdown-red__head"
                         data-dropdown-btn onclick="Dropdown.toggle(this)">
                     <span
-                            class="dropdown-red__name"
-                            title="{{ Auth::user()->name }}"
+                        class="dropdown-red__name"
+                        title="{{ Auth::user()->name }}"
                     >
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_1145_9321)">
