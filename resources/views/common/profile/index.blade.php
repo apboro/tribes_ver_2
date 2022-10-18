@@ -131,7 +131,7 @@
                                                 name="community-item"
                                                 class="profile__input"> -->
                                                
-                                            <div id="community-item_{{ $community->id }}" class="profile__item @if($activeCommunity->id == $community->id) active @endif">
+                                            <div id="community-item_{{ $community->id }}" class="profile__item @if($activeCommunity && $activeCommunity->id == $community->id) active @endif">
                                                 <div class="profile__item-image">
                                                     <img class="profile__image" src="{{ $community->image ?? '/images/no-image.png' }}">
                                                 </div>
