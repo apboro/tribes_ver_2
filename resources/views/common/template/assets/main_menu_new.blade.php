@@ -38,7 +38,8 @@
             <!-- Аналитика -->
             <li class="main-nav-new__item">
                 <a
-                    href="{{ route('project.analytics') }}"
+                    href="{{ route('project.analytics', array_filter(
+    [ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}"
                     class="main-nav-new__link {{ request()->is('*analytics*') ? 'active' : ''  }}"
                 >
                     <span>Аналитика</span>
