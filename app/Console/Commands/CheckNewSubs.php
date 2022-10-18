@@ -49,12 +49,8 @@ class CheckNewSubs extends Command
             $time = time();
             while (true) {
                 if (time() > $time) {
-                    try {
-                        $membersOrigin = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $community->connection->chat_id);
-                    } catch (Exception $e) {
-                        $membersOrigin = null;
-                    }
-
+                    $membersOrigin = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $community->connection->chat_id);
+            
                     $membersIdent = $community->followers->count();
                     if ($membersOrigin && $membersOrigin != $membersIdent) {
                         dispatch(new SetNewTelegramUsers($community->connection->chat_id));

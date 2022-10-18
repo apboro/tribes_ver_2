@@ -49,7 +49,7 @@ class SetNewTelegramUsers implements ShouldQueue
             $offset = 0;
             if ($connection && $connection->is_there_userbot === true) {
                 $chat_id = str_replace('-', '', (str_replace(-100, '', $connection->chat_id)));
-                if ($connection->access_hash !== null) {
+                if ($connection->access_hash !== null and $connection->userBotStatus == 'administrator') {
 
                     $participants = $userBot->getUsersInChannel($chat_id, $connection->access_hash, $limit, $offset);
                     $this->getChannelUsers($community, $participants);
