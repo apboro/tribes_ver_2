@@ -38,8 +38,7 @@
             <!-- Аналитика -->
             <li class="main-nav-new__item">
                 <a
-                    href="{{ route('project.analytics', array_filter(
-    [ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}"
+                    href="{{ route('project.analytics', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}"
                     class="main-nav-new__link {{ request()->is('*analytics*') ? 'active' : ''  }}"
                 >
                     <span>Аналитика</span>
@@ -115,7 +114,7 @@
             <li class="main-nav-new__item">
                 <a
                     href="{{ route('payment.list') }}"
-                    class="main-nav-new__link {{ request()->is('*payments*') ? 'active' : ''  }}"
+                    class="main-nav-new__link {{ request()->is('*payments/outcome', '*payments/income', '*payments/card') ? 'active' : ''  }}"
                 >
                     <span>Финансы</span>
                 </a>
