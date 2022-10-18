@@ -120,7 +120,7 @@ class DonateController extends Controller
         $messages = [];
 
         $messages[] = $request->get('settingsUpdate') ? __('donate.success_settings_message') : null;
-        return redirect()->route('project.donates', ['project' => $community->project_id??'c','community' =>  $community->id])
+        return redirect()->route('project.donates', ['project' => session('activeProject') ?? 'c', 'community' => session('activeCommunity')])
             ->withMessage($messages);
     }
 
