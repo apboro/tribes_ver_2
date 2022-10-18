@@ -254,7 +254,8 @@
             transition: all .3s;
         }
 
-        &:hover {
+        &:hover,
+        &.active {
             background-color: $white;
             border: 1px solid $primary-1;
             box-shadow: 0px 4px 10px rgba($primary-1, .25);
