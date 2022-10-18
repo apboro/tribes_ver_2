@@ -45,6 +45,6 @@
                 type: Object,
                 default: () => {},
             },
-        }
+        },
     }
 </script>
