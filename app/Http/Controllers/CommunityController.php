@@ -42,28 +42,36 @@ class CommunityController extends Controller
             ->withCommunities($communities);
     }
 
-    public function statistic(Community $community)
+    public function add()
+    {
+        if(!Auth::user()->hasTelegramAccount()){
+            return redirect()->route('author.messenger.list');
+        }
+        return view('common.community.form');
+    }
+
+    public function statistic(Request $request)
     {
         return view('common.statistic.list')
-            ->withCommunity($community);
+            ->withCommunity(request('community'));
     }
 
-    public function statisticSubscribers(Community $community)
+    public function statisticSubscribers(Request $request)
     {
         return view('common.statistic.subscribers.index')
-            ->withCommunity($community);
+            ->withCommunity(request('community'));
     }
 
-    public function statisticMessages(Community $community)
+    public function statisticMessages(Request $request)
     {
         return view('common.statistic.messages.index')
-            ->withCommunity($community);
+            ->withCommunity(request('community'));
     }
 
-    public function statisticPayments(Community $community)
+    public function statisticPayments(Request $request)
     {
         return view('common.statistic.payments.index')
-            ->withCommunity($community);
+            ->withCommunity(request('community'));
     }
 
     public function knowledgeBaseAdd(Community $community)

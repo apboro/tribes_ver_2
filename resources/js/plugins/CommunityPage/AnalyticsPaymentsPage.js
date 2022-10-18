@@ -9,7 +9,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.headerItems = [
             { text: 'Имя подписчика', sortName: 'first_name' },
             { text: 'Никнейм', sortName: 'tele_login' },
-            { text: 'Название транзакций', sortName: false },
+            { text: 'Статус транзакции', sortName: false },
             { text: 'Тип транзакции', sortName: false },
             { text: 'Дата', sortName: 'buy_date' },
             { text: 'Сумма', sortName: 'amount' }
@@ -35,8 +35,8 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.countDonationsValueNode = this.countDonationsNode.querySelector('#count_donations_value');
         this.countTariffsNode = this.container.querySelector('#count_tariffs');
         this.countTariffsValueNode = this.countTariffsNode.querySelector('#count_tariffs_value');
-        this.countCoursesNode = this.container.querySelector('#count_courses');
-        this.countCoursesValueNode = this.countCoursesNode.querySelector('#count_courses_value');
+        // this.countCoursesNode = this.container.querySelector('#count_courses');
+        // this.countCoursesValueNode = this.countCoursesNode.querySelector('#count_courses_value');
 
         this.isDonationsHidden = false;
         this.isTariffsHidden = false;
@@ -51,7 +51,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
                 method: 'post',
                 url: '/api/tele-statistic/payments-charts',
                 data: {
-                    community_id: this.communityId,
+                    community_ids: window.community_ids,
                     filter: {
                         period: this.filterPeriodValue
                     }
@@ -73,7 +73,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
                 method: 'post',
                 url: '/api/tele-statistic/payments-list',
                 data: {
-                    community_id: this.communityId,
+                    community_ids: window.community_ids,
                     filter: {
                         period: this.filterPeriodValue,
                         sort: {
@@ -90,6 +90,8 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
             this.paginationData = data.meta;
         } catch (error) {
             console.log(error);
+            this.tableData = false;
+            this.paginationData = false;
         }
     }
 
@@ -103,8 +105,8 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.countTariffsValueNode.textContent = this.countTariffs != 0 ? numberFormatting(convertToRub(this.countTariffs)) : 0;
         this.countTariffsNode.style.color = this.chartDatasets[1].borderColor;
 
-        this.countCoursesValueNode.textContent = this.countCourses != 0 ? numberFormatting(convertToRub(this.countCourses)) : 0;
-        this.countCoursesNode.style.color = this.chartDatasets[2].borderColor;
+        // this.countCoursesValueNode.textContent = this.countCourses != 0 ? numberFormatting(convertToRub(this.countCourses)) : 0;
+        // this.countCoursesNode.style.color = this.chartDatasets[2].borderColor;
     }
 
     toggleChartVisibility(name) {
@@ -172,11 +174,11 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
                 borderColor: "#E24041",
                 hidden: this.isTariffsHidden,
             },
-            {
-                data: this.courses,
-                borderColor: "#FF9F43",
-                hidden: this.isCoursesHidden,
-            }
+            // {
+            //     data: this.courses,
+            //     borderColor: "#FF9F43",
+            //     hidden: this.isCoursesHidden,
+            // }
         ]
     }
 

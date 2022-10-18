@@ -31,10 +31,11 @@ export class Dropdown {
             this.toInactiveContent();
             this.removeBtn();
         }
+
+        // btn.classList.toggle("active");
     }
 
     toActiveContent() {
-        console.log(this.btn);
         this.btn.classList.add('active');
         this.btn.nextElementSibling.classList.add('active');
     }
@@ -57,6 +58,7 @@ export class Dropdown {
             if (content.classList.contains('active') && this.btn) {
                 content.classList.remove('active');
                 this.btn.classList.remove('active');
+                
             }
         });
     }

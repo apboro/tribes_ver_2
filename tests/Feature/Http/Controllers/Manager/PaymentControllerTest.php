@@ -27,8 +27,8 @@ class PaymentControllerTest extends TestCase
                         'add_balance',
                         'created_at',
                         'type',
-                    ]
-                ]
+                    ],
+                ],
             ]);
     }
 
@@ -37,11 +37,11 @@ class PaymentControllerTest extends TestCase
         $user = $this->CreatePayments();
         $this->AuthSanctum($user);
 
-        $response = $this->postJson('api/v2/payments', ['search' => 'er 0']);
+        $response = $this->postJson('api/v2/payments', ['filter' => ['search' => 'Buyer 0']]);
 
         $response->assertOk()
             ->assertJsonFragment([
-                'from' => 'Buyer 0'
+                'from' => 'Buyer 0',
             ])
             ->assertValid()
             ->assertJsonCount('1', 'data');
@@ -54,11 +54,11 @@ class PaymentControllerTest extends TestCase
 
         $date = Payment::findOrFail(1)->created_at;
 
-        $response = $this->postJson('api/v2/payments', ['date' => $date->toDateString()]);
+        $response = $this->postJson('api/v2/payments', ['filter' => ['date' => $date->toDateString()]]);
 
         $response->assertOk()
             ->assertJsonFragment([
-                'created_at' => $date
+                'created_at' => $date,
             ])
             ->assertJsonCount('1', 'data');
     }
@@ -68,7 +68,7 @@ class PaymentControllerTest extends TestCase
         $user = $this->CreatePayments();
         $this->AuthSanctum($user);
 
-        $response = $this->postJson('api/v2/payments', ['search' => 'Strange query', 'date' => '01.01.0001']);
+        $response = $this->postJson('api/v2/payments', ['filter' => ['search' => 'Strange query', 'date' => '01.01.0001']]);
 
         $response->assertOk()
             ->assertJsonCount(0, 'data');
@@ -79,14 +79,18 @@ class PaymentControllerTest extends TestCase
         $user = $this->CreatePayments();
         $this->AuthSanctum($user);
 
-        $response = $this->postJson('api/v2/payments', ['sort' => ['name' => 'user', 'rule' => 'asc']]);
-
+        $response = $this->postJson('api/v2/payments', ['filter' => ['sort' => ['name' => 'user', 'rule' => 'asc']]]);
         $response->assertOk()
             ->assertValid()
             ->assertJsonCount(5, 'data');
 
-        $content = json_encode(json_decode($response->getContent()), JSON_PRETTY_PRINT);
-        $this->assertEquals($content, str_replace("\r", '', $this->getDataFromFile('Manager/payments.asc.json', true)), '');
+        $content = json_decode($response->getContent());
+        foreach ($content->data as $key => $item) {
+            if ($key != 0) {
+                $this->assertLessThan($item->user_id, $previous);
+            }
+            $previous = $item->user_id;
+        }
     }
 
     public function testGetSortingListPaymentsByDescUserId()
@@ -94,14 +98,19 @@ class PaymentControllerTest extends TestCase
         $user = $this->CreatePayments();
         $this->AuthSanctum($user);
 
-        $response = $this->postJson('api/v2/payments', ['sort' => ['name' => 'user', 'rule' => 'desc']]);
+        $response = $this->postJson('api/v2/payments', ['filter' => ['sort' => ['name' => 'user', 'rule' => 'desc']]]);
 
         $response->assertOk()
             ->assertJsonCount(5, 'data');
 
-        $content = json_encode(json_decode($response->getContent()), JSON_PRETTY_PRINT);
-        $this->assertEquals($content, str_replace("\r", '', $this->getDataFromFile('Manager/payments.desc.json', true)), '');
+        $content = json_decode($response->getContent());
 
+        foreach ($content->data as $key => $item) {
+            if ($key != 0) {
+                $this->assertGreaterThan($item->user_id, $previous);
+            }
+            $previous = $item->user_id;
+        }
     }
 
     public function testGetSortingListPaymentsByAscDate()
@@ -109,13 +118,19 @@ class PaymentControllerTest extends TestCase
         $user = $this->CreatePayments();
         $this->AuthSanctum($user);
 
-        $response = $this->postJson('api/v2/payments', ['sort' => ['name' => 'date', 'rule' => 'asc']]);
+        $response = $this->postJson('api/v2/payments',['filter' =>  ['sort' => ['name' => 'date', 'rule' => 'asc']]]);
 
         $response->assertOk()
             ->assertJsonCount(5, 'data');
 
-        $content = json_encode(json_decode($response->getContent()), JSON_PRETTY_PRINT);
-        $this->assertEquals($content, str_replace("\r", '', $this->getDataFromFile('Manager/payments.asc.json', true)), '');
+        $content = json_decode($response->getContent());
+
+        foreach ($content->data as $key => $item) {
+            if ($key != 0) {
+                $this->assertLessThan($item->created_at, $previous);
+            }
+            $previous = $item->created_at;
+        }
     }
 
     public function testGetSortingListPaymentsByDescDate()
@@ -123,13 +138,18 @@ class PaymentControllerTest extends TestCase
         $user = $this->CreatePayments();
         $this->AuthSanctum($user);
 
-        $response = $this->postJson('api/v2/payments', ['sort' => ['name' => 'date', 'rule' => 'desc']]);
+        $response = $this->postJson('api/v2/payments', ['filter' =>  ['sort' => ['name' => 'date', 'rule' => 'desc']]]);
 
         $response->assertOk()
             ->assertJsonCount(5, 'data');
 
-        $content = json_encode(json_decode($response->getContent()), JSON_PRETTY_PRINT);
-        $this->assertEquals($content, str_replace("\r", '', $this->getDataFromFile('Manager/payments.desc.json', true)), '');
+        $content = json_decode($response->getContent());
+        foreach ($content->data as $key => $item) {
+            if ($key != 0) {
+                $this->assertGreaterThan($item->created_at, $previous);
+            }
+            $previous = $item->created_at;
+        }
     }
 
     public function testGetWrongSortingListPaymentsByUserId()
@@ -137,27 +157,18 @@ class PaymentControllerTest extends TestCase
         $user = $this->CreatePayments();
         $this->AuthSanctum($user);
 
-        $response = $this->postJson('api/v2/payments', ['sort' => ['name' => 'date', 'rule' => '']]);
+        $response = $this->postJson('api/v2/payments', ['filter' =>  ['sort' => ['name' => 'date', 'rule' => '']]]);
 
         $response->assertOk()
             ->assertJsonCount(5, 'data');
 
-        $content = json_encode(json_decode($response->getContent()), JSON_PRETTY_PRINT);
-        $this->assertNotEquals($content, str_replace("\r", '', $this->getDataFromFile('Manager/payments.asc.json', true)), '');
-    }
-
-    public function testGetWrongSortingListPaymentsByDate()
-    {
-        $user = $this->CreatePayments();
-        $this->AuthSanctum($user);
-
-        $response = $this->postJson('api/v2/payments', ['sort' => ['name' => 'user', 'rule' => '']]);
-
-        $response->assertOk()
-            ->assertJsonCount(5, 'data');
-
-        $content = json_encode(json_decode($response->getContent()), JSON_PRETTY_PRINT);
-        $this->assertNotEquals($content, str_replace("\r", '', $this->getDataFromFile('Manager/payments.asc.json', true)), '');
+        $content = json_decode($response->getContent());
+        foreach ($content->data as $key => $item) {
+            if ($key != 0) {
+                $this->assertGreaterThan($item->created_at, $previous);
+            }
+            $previous = $item->created_at;
+        }
     }
 
     public function testError401()
@@ -169,11 +180,12 @@ class PaymentControllerTest extends TestCase
 
     public function testNotAdmin()
     {
-        $this->AuthSanctum(User::factory()->create());
+        $this->AuthSanctum($user = User::factory()->create());
 
         $response = $this->postJson('api/v2/payments');
 
-        $response->assertRedirect('/');
+        $response->assertUnauthorized();
+        $this->assertEquals($response->getContent(),'{"message":"\u0432\u044b - \u043d\u0435 \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440"}');
     }
 
     private function AuthSanctum($user)
@@ -186,11 +198,11 @@ class PaymentControllerTest extends TestCase
     private function CreatePayments()
     {
         $user = User::factory()->has(Community::factory()->state([
-            'title' => 'Test'
+            'title' => 'Test',
         ]))->create();
 
         Administrator::factory()->create([
-            'user_id' => $user
+            'user_id' => $user,
         ]);
 
         $community = $user->communities()->first();

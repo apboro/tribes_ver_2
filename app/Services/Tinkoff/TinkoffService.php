@@ -51,8 +51,9 @@ class TinkoffService
                 }
             }
             $new_status = $data->Status;
+            $previous_status = trim($previous_status); // todo в базе почему то тип char, надо убрать, ставит кучу пробелов
 
-            if ($previous_status !== $new_status) {
+            if ($previous_status != $new_status) {
                 $community = $payment->community ?? null;
                 if (($previous_status == 'FORM_SHOWED' || $previous_status == 'NEW' || $previous_status == 'AUTHORIZED') && $new_status == 'CONFIRMED') {
                     $decoder = [
@@ -82,7 +83,7 @@ class TinkoffService
 
                     }
 
-                    TelegramLogService::staticSendLogMessage("В копилку с ID  " . $accumulation->id . " зачислено" . $payment->amount / 100 . " Рублей");
+                    TelegramLogService::staticSendLogMessage("В копилку с ID " . $accumulation->id . " зачислено " . $payment->amount / 100 . " р.");
 
                     if($community){
                         TelegramLogService::staticSendLogMessage(
@@ -150,7 +151,7 @@ class TinkoffService
 
             }
             DB::commit();
-            return response('OK', 200);
+            return true;
         } catch (\Exception $e) {
             DB::rollback();
             //переделать на репор от
@@ -158,6 +159,7 @@ class TinkoffService
                 "Платёж " . $payment->id . " завершился неуспешно, Администрация в курсе" .
                 json_encode($e->getMessage())
             );
+            return false;
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
 use App\Models\Knowledge\Question;
+use App\Services\TelegramMainBotService;
 use Database\Factories\CommunityFactory;
 use Hamcrest\Arrays\IsArray;
 use Illuminate\Database\Eloquent\Builder;
@@ -79,6 +80,11 @@ class Community extends Model
         return $this->hasOne(Statistic::class, 'community_id', 'id');
     }
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class, 'project_id', 'id');
+    }
+
     public function payments()
     {
         return $this->hasMany(Payment::class, 'community_id', 'id');
@@ -123,8 +129,8 @@ class Community extends Model
         if($data && is_array($data)){
             $params = '?' . http_build_query($data);
         }
-//        $this->generateHash();
-        return route('community.tariff.payment', ['hash' => $this->hash]) . $params;
+
+        return route('community.tariff.confirmSubscription', ['hash' => $data['inline_link']]) . $params;
     }
 
     public function isTelegram()
@@ -179,6 +185,12 @@ class Community extends Model
     public function tariffVariants()
     {
         return $this->hasManyThrough(TariffVariant::class, Tariff::class);
+    }
+
+    public function hasNotActiveTariffVariants()
+    {
+        
+        return $this->tariffVariants()->where('isActive',1)->where('isPersonal',0)->doesntExist();
     }
 
     function donate()
@@ -237,7 +249,8 @@ class Community extends Model
 
     public function getCountFollowersAttribute()
     {
-        $countFollowers = $this->followers()->count();
+        $countFollowers = $this->followers()->where('role','member')->where('exit_date', null)->count();
+
         $string = $this->getFollowerString($countFollowers);
 
         for ($rank = 0; $countFollowers > 999; $rank++) {

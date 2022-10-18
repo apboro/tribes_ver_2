@@ -43,7 +43,7 @@ class CheckNewSubs extends Command
     public function handle()
     {
         $communities = Community::whereHas('connection', function ($q) {
-            $q->where('chat_type', 'channel')->where('is_there_userbot', true);
+            $q->where('chat_type', 'channel')->where('is_there_userbot', true)->where('botStatus', 'administrator');
         })->get();
         foreach ($communities as $community) {
             $time = time();
@@ -56,7 +56,7 @@ class CheckNewSubs extends Command
                     }
 
                     $membersIdent = $community->followers->count();
-                    if ($membersOrigin != $membersIdent) {
+                    if ($membersOrigin && $membersOrigin != $membersIdent) {
                         dispatch(new SetNewTelegramUsers($community->connection->chat_id));
                     }
                     break;

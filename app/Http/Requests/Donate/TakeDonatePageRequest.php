@@ -25,7 +25,8 @@ class TakeDonatePageRequest extends FormRequest
     {
         return [
             'amount' => ['required', 'integer'],
-            'community_id' => ['required', 'integer', 'exists:communities,id']
+            'community_id' => ['required', 'integer', 'exists:communities,id'],
+            'donate_id' => ['required', 'integer', 'exists:donates,id']
         ];
     }
 

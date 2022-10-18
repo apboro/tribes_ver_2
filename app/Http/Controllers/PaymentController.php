@@ -92,6 +92,7 @@ class PaymentController extends Controller
 //        }
 
         if ($data['Status'] == 'REFUNDED') {
+            TelegramLogService::staticSendLogMessage("Попытка сделать возврат " . json_decode($data));
             return response('OK', 200);
         }
         if ($data['Status'] == 'AUTHORIZED') {
@@ -108,6 +109,7 @@ class PaymentController extends Controller
             if (!$payment) {
                 (new PaymentException("NOTY: Платёж с OrderId " . $request['OrderId'] . " и PaymentId " .
                     $request['PaymentId'] . " не найден"))->report();
+                TelegramLogService::staticSendLogMessage("Tinkoff получил ответ ОК");
                 return response('OK', 200);
             }
 
@@ -118,7 +120,10 @@ class PaymentController extends Controller
             $payment->RebillId = $request->RebillId ?? null;
             $payment->save();
 
-            TinkoffService::checkStatus($request, $payment, $previous_status);
+            if(TinkoffService::checkStatus($request, $payment, $previous_status)){
+                TelegramLogService::staticSendLogMessage("Tinkoff получил ответ ОК");
+                return response('OK', 200);
+            }
 
         } else {
             //todo сделать через Исключение

@@ -7,13 +7,18 @@ use App\Filters\API\FinanceFilter;
 use App\Repositories\Statistic\DTO\ChartData;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 interface FinanceStatisticRepositoryContract
 {
-    public function getPaymentsList(int $communityId, FinanceFilter $filters): LengthAwarePaginator;
+    public function getPaymentsList(array $communityIds, FinanceFilter $filters): LengthAwarePaginator;
 
-    public function getPaymentsListForFile(int $communityId, FinanceFilter $filter): Builder;
+    /**
+     * @param array $communityIds
+     * @param FinanceFilter $filter
+     * @return Builder
+     */
+    public function getPaymentsListForFile(array $communityIds, FinanceFilter $filter): Builder;
 
-    public function getPaymentsCharts(int $communityId, FinanceChartFilter $filters,string $type): ChartData;
+    public function getPaymentsCharts(array $communityIds, FinanceChartFilter $filters,string $type): ChartData;
 }

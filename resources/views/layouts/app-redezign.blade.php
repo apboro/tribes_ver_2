@@ -19,12 +19,14 @@
 
     <!-- Content -->
     <main class="main">
+    <!-- <div class="container" data-plugin="CommunityPage"> -->
         <div class="content-overlay"></div>
         @yield('content')
+    <!-- </div> -->
     </main>
 
     <!-- Footer-->
-    @include('common.template.footer')
+    @include('common.template.footer2')
     
     <!-- Service container -->
     @include('common.template.service_container')

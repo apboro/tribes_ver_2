@@ -6,7 +6,12 @@
     &__header {
         display: flex;
         align-items: center;
-        column-gap: 90px;
+        flex-wrap: wrap;
+        column-gap: 40px;
+        
+        @media (min-width: $md) {
+            column-gap: 90px;
+        }
     }
 
     &__label {
@@ -24,15 +29,30 @@
     }
 
     &__text {
-       @include font($text-color-1, 18px, 24px, 500);
+        @include font($text-color-1, 12px, 15px, 500);
+
+        @media (min-width: $md) {
+            font-size: 18px;
+            line-height: 24px;
+        }
     }
 
     &__value {
-       @include font($text-color-1, 34px, 40px, 600);
+       @include font($text-color-1, 18px, 21px, 600);
+
+        @media (min-width: $md) {
+            font-size: 34px;
+            line-height: 40px;
+        }
     }
 
     &__currency {
-        @include font(inherit, 34px, 40px, 400);
+        @include font(inherit, 18px, 21px, 400);
+
+        @media (min-width: $md) {
+            font-size: 34px;
+            line-height: 40px;
+        }
     }
 
     &__chart {

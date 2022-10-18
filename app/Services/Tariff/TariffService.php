@@ -8,6 +8,7 @@ use App\Models\TariffVariant;
 use App\Models\TelegramUser;
 use App\Models\User;
 use App\Services\TelegramMainBotService;
+use App\Traits\Declination;
 use Illuminate\Support\Facades\DB;
 use App\Helper\ArrayHelper;
 use App\Services\SMTP\Mailer;
@@ -96,8 +97,8 @@ class TariffService {
 
             if(!empty($rec_tvc_ids)) {
                 $textMessage = 'Приветствуем ' . $user_name . '!' .
-                    'Срок действия тарифа ' . $tariff_variant_name . '(' . $tariff_variant_period . ' дней) для сообщества ' . $community_name . ' закончится через ' .
-                    $days_left . ' дней. Для подключения к сообществу выберите другой активный тариф из этого списка:';
+                    'Срок действия тарифа ' . $tariff_variant_name . '(' . $tariff_variant_period . ' ' . Declination::defineDeclination($tariff_variant_period) . ') для сообщества ' . $community_name . ' закончится через ' .
+                    $days_left . ' ' . Declination::defineDeclination($days_left) . '. Для подключения к сообществу выберите другой активный тариф из этого списка:';
 
                 $this->telegramMainBotService->sendMessageFromBotWithTariff(config('telegram_bot.bot.botName'), $telegram_user['telegram_id'], $textMessage, $community);
 
@@ -107,8 +108,8 @@ class TariffService {
             } else {
 
                 $textMessage = 'Приветствуем ' . $user_name . '!' .
-                'Срок действия тарифа ' . $tariff_variant_name . '(' . $tariff_variant_period . ' дней) для сообщества ' . $community_name . ' закончится через ' .
-                    $days_left . ' дней. Обратитесь к владельцу сообщества, чтобы уточнить информацию об условиях доступа.';
+                'Срок действия тарифа ' . $tariff_variant_name . '(' . $tariff_variant_period . ' ' . Declination::defineDeclination($tariff_variant_period) . ') для сообщества ' . $community_name . ' закончится через ' .
+                    $days_left . ' ' . Declination::defineDeclination($tariff_variant_period) . '. Обратитесь к владельцу сообщества, чтобы уточнить информацию об условиях доступа.';
 
                 $this->telegramMainBotService->sendMessageFromBot(config('telegram_bot.bot.botName'), $user['telegram_id'], $textMessage);
 

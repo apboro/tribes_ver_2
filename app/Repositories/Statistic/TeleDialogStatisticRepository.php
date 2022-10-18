@@ -17,14 +17,14 @@ use Illuminate\Support\Facades\Log;
 class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryContract
 {
 
-    public function getMembersList(int $communityId, MembersFilter $filter): LengthAwarePaginator
+    public function getMembersList(array $communityIds, MembersFilter $filter): LengthAwarePaginator
     {
 
         $filterData = $filter->filters();
         Log::debug("TeleDialogStatisticRepository::getMembersList", [
             'filter' => $filterData,
         ]);
-        $builder = $this->queryMembers($communityId, $filter);
+        $builder = $this->queryMembers($communityIds, $filter);
 
         $perPage = $filterData['per-page'] ?? 15;
         $page = $filterData['page'] ?? 1;
@@ -37,22 +37,22 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         );
     }
 
-    public function getMembersListForFile(int $communityId, MembersFilter $filter): Builder
+    public function getMembersListForFile(array $communityIds, MembersFilter $filter): Builder
     {
-        return $this->queryMembers($communityId, $filter);
+        return $this->queryMembers($communityIds, $filter);
     }
 
     /**
      * @throws StatisticException
      */
-    public function getJoiningMembersChart(int $communityId, MembersChartFilter $filter): ChartData
+    public function getJoiningMembersChart(array $communityIds, MembersChartFilter $filter): ChartData
     {
         $filterData = $filter->filters();
         Log::debug("TeleDialogStatisticRepository::getJoiningMembersChart", [
             'filter' => $filterData,
         ]);
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period']??'day')->toDateTimeString();
+        $start = $filter->getStartDate($filterData['period']??'week')->toDateTimeString();
         $end = $filter->getEndDate()->toDateTimeString();
 
         $tuc = 'telegram_users_community';
@@ -66,7 +66,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 DB::raw("d.dt"),
                 DB::raw("COUNT(distinct($tuc.telegram_user_id)) as users"),
             ]);
-        $sub->where(["$tuc.community_id" => $communityId]);
+        $sub->whereIn("$tuc.community_id", $communityIds);
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
 
@@ -86,21 +86,21 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
         $chart->addAdditionParam('count_join_users', array_sum(ArrayHelper::getColumn($result, 'users')));
         $allMembers = DB::table($tuc)
             ->select(DB::raw("COUNT(telegram_user_id) as c"))
-            ->where('community_id',"=",$communityId)
+            ->whereIn('community_id',$communityIds)
             ->whereNull('exit_date')
         ->value('c');
         $chart->addAdditionParam('all_users', $allMembers);
         return $chart;
     }
 
-    public function getExitingMembersChart(int $communityId, MembersChartFilter $filter): ChartData
+    public function getExitingMembersChart(array $communityIds, MembersChartFilter $filter): ChartData
     {
         $filterData = $filter->filters();
         Log::debug("TeleDialogStatisticRepository::getJoiningMembersChart", [
             'filter' => $filterData,
         ]);
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period']??'day')->toDateTimeString();
+        $start = $filter->getStartDate($filterData['period'] ?? 'week')->toDateTimeString();
         $end = $filter->getEndDate()->toDateTimeString();
 
         $tuc = 'telegram_users_community';
@@ -114,7 +114,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 DB::raw("d.dt"),
                 DB::raw("COUNT(distinct($tuc.telegram_user_id)) as users"),
             ]);
-        $sub->where(["$tuc.community_id" => $communityId]);
+        $sub->whereIn("$tuc.community_id", $communityIds);
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
 
@@ -136,12 +136,12 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
     }
 
     /**
-     * @param int $communityId
+     * @param array $communityIds
      * @param MembersFilter $filter
      * @return Builder|\Illuminate\Database\Eloquent\Builder
      * @throws \Exception
      */
-    protected function queryMembers(int $communityId, MembersFilter $filter)
+    protected function queryMembers(array $communityIds, MembersFilter $filter)
     {
         $com = "communities";
         $tc = "telegram_connections";
@@ -166,7 +166,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
             ->select([
                 "chat_id",
                 "$tu.telegram_id as tele_id",
-                "$tuc.user_utility as user_utility",
+                "$tuc.user_utility as utility",
                 DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
                 "$tu.user_name as nick_name",
                 DB::raw("to_timestamp($tuc.accession_date) as accession_date"),
@@ -176,7 +176,7 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
                 DB::raw("COUNT(distinct(pmr.id)) as c_put_reactions"),
             ]);
         $builder->groupBy("$tu.telegram_id", "$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tuc.exit_date", 'chat_id', "$tuc.user_utility");
-        $builder->where(["$tuc.community_id" => $communityId]);
+        $builder->whereIn("$tuc.community_id", $communityIds);
         $builder = $filter->apply($builder);
         return $builder;
     }

@@ -28,7 +28,7 @@ class User extends Authenticatable
 
     public static $role = [
         'author' => 0,
-        'follower' => 1
+        'follower' => 1,
     ];
 
     /**
@@ -78,7 +78,7 @@ class User extends Authenticatable
 
         $arr = explode(' ', $this->name);
 
-        foreach ($arr as $elem_name){
+        foreach ($arr as $elem_name) {
             $letters .= mb_substr($elem_name, 0, 1);
         }
 
@@ -123,7 +123,7 @@ class User extends Authenticatable
 
     function confirmationUserDate($format = 'time')
     {
-        $time_stamp = $this->confirmation()->first()->updated_at;
+        $time_stamp = $this->confirmation()->first() ? $this->confirmation()->first()->updated_at : $this->updated_at;
 
         $date = $time_stamp->translatedFormat('d F Y');
         $time = $time_stamp->format('H:i');
@@ -154,6 +154,16 @@ class User extends Authenticatable
     function communities()
     {
         return $this->hasMany(Community::class, 'owner', 'id');
+    }
+
+    public function hasCommunities()
+    {
+        return $this->communities()->exists();
+    }
+
+    function projects()
+    {
+        return $this->hasMany(Project::class, 'user_id', 'id');
     }
 
     function accumulation()
@@ -196,7 +206,7 @@ class User extends Authenticatable
 
     function getTribesCommission()
     {
-        return (int) (UserSettings::findByUserId($this->id)->get('percent')->value ?? env('TRIBES_COMMISSION',4));
+        return (int)(UserSettings::findByUserId($this->id)->get('percent')->value ?? env('TRIBES_COMMISSION', 4));
     }
 
     public function sendPasswordResetNotification($token)
@@ -205,7 +215,7 @@ class User extends Authenticatable
             [
                 'token' => $token,
                 'email' => $this->email,
-                'ip' => request()->ip()
+                'ip' => request()->ip(),
             ])->render();
 
         new Mailer('Сервис ' . env('APP_NAME'), $v, 'Восстановление пароля', $this->email);
@@ -228,7 +238,7 @@ class User extends Authenticatable
 
     public function phoneNumber($phone)
     {
-        return "(".substr($phone, 0, 3).") ".substr($phone, 3, 3)." ".substr($phone,6);
+        return "(" . substr($phone, 0, 3) . ") " . substr($phone, 3, 3) . " " . substr($phone, 6);
     }
 
     public function getPhoneAttribute($phone)
@@ -238,12 +248,12 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return Administrator::where('user_id',$this->id)->exists();
+        return Administrator::where('user_id', $this->id)->exists();
     }
 
     public function administrator()
     {
-        return $this->hasOne(Administrator::class, 'user_id','id');
+        return $this->hasOne(Administrator::class, 'user_id', 'id');
     }
 
     public function createTempToken()
@@ -256,13 +266,13 @@ class User extends Authenticatable
     private function setTempToken($token) //todo при переходе на FullRest - Удалить
     {
         $this->api_token = $token;
-        Session::put('current_token',$token);
+        Session::put('current_token', $token);
         return $this->save();
     }
 
     public function payments()
     {
-        return $this->hasMany(Payment::class,'user_id');
+        return $this->hasMany(Payment::class, 'user_id');
     }
 }
 

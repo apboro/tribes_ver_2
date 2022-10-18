@@ -82,12 +82,12 @@
                                             </p>
                                             <p class="sm-leading-32" style="font-family: 'Arial', sans-serif; mso-line-height-rule: exactly; margin: 0; font-size: 16px; line-height: 22px; font-weight: 400; color: #252129;">
                                                 Срок действия тарифа
-                                                <span style="color: #7367F0;">{{$tariff_variant_name}}, {{$tariff_variant_period}} дней</span>
+                                                <span style="color: #7367F0;">{{$tariff_variant_name}}, {{$tariff_variant_period}} {{\App\Traits\Declination::defineDeclination($tariff_variant_period)}}</span>
                                                 для сообщества
                                                 <span style="color: #7367F0;">{{$community_name}}</span>
                                                 закончится через
                                                 <span style="color: #D0221D; font-weight: 600;">{{$days_left}}</span>
-                                                дня.
+                                                {{\App\Traits\Declination::defineDeclination($days_left)}}.
                                             </p>
 
                                             @if(count($recTarVars) > 0)

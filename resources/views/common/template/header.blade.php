@@ -33,9 +33,20 @@
             @endif
         </a>
         
+        @include('common.template.assets.main_menu_new')
+        
+        {{-- @include('common.template.assets.project_list_mobile') --}}
 
-        @include('common.template.assets.main_menu_redezign')
+        <div class="main-header-red__auxiliary">
+            <i class="main-header-red__search">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="icon__stroke" d="M14.4121 14.4121L20 20" stroke="#B5B4B8" stroke-width="2" stroke-linecap="round"/>
+                    <path class="icon__stroke" fill-rule="evenodd" clip-rule="evenodd" d="M10 16C13.3137 16 16 13.3137 16 10C16 6.68629 13.3137 4 10 4C6.68629 4 4 6.68629 4 10C4 13.3137 6.68629 16 10 16Z" stroke="#B5B4B8" stroke-width="2"/>
+                </svg>
+            </i>
 
+            @include('auth.headuser-new')
+        </div>
         <!-- <div class="main-header__auxiliary"> -->
             
         <!-- </div> -->

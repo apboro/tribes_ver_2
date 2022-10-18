@@ -65,7 +65,7 @@ class TeleMessagesChartFilter extends QueryAPIFilter
 
     public function getScale()
     {
-        $value = $this->filters()['period'] ?? 'day';
+        $value = $this->filters()['period'] ?? 'week';
         if (in_array($value, $this->allowedPeriods())) {
             switch ($value) {
                 case self::DAY:

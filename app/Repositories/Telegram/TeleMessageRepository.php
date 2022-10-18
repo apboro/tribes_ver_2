@@ -63,7 +63,7 @@ class TeleMessageRepository implements TeleMessageRepositoryContract
     public function saveShortChatMessage($message, $isComment = false)
     {
         try {
-            $connection = TelegramConnection::where('chat_id', $message->chat_id)->first();
+            $connection = TelegramConnection::where('chat_id', '-' . $message->chat_id)->first();
             if ($connection) {
                 $replyTo = isset($message->reply_to->reply_to_msg_id) ? $message->reply_to->reply_to_msg_id : null;
 
@@ -92,6 +92,26 @@ class TeleMessageRepository implements TeleMessageRepositoryContract
         if ($tm) {
             $tm->utility = 0;
             $tm->save();
+        }
+    }
+
+    public function editMessage($message) 
+    {
+        try {
+            if ($message->peer_id->_ === 'peerChannel') 
+                $group_chat_id = '-100' . $message->peer_id->channel_id;
+            else 
+                $group_chat_id = '-' . $message->peer_id->chat_id;
+            
+            $messageModel = TelegramMessage::where('message_id', $message->id)->where('group_chat_id', $group_chat_id)->first();
+            if ($messageModel) {
+                if ($message->message) {
+                    $messageModel->text	= $message->message;
+                    $messageModel->save();
+                }
+            }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 

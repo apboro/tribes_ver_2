@@ -15,10 +15,10 @@ use Illuminate\Database\Query\JoinClause;
 
 class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryContract
 {
-    public function getMessagesList(int $communityId, TeleMessagesFilter $filter): LengthAwarePaginator
+    public function getMessagesList(array $communityIds, TeleMessagesFilter $filter): LengthAwarePaginator
     {
 
-        $builder = $this->queryMessages($communityId, $filter);
+        $builder = $this->queryMessages($communityIds, $filter);
 
         $filterData = $filter->filters();
         Log::debug("TeleMessageStatisticRepository::getMessagesList", [
@@ -35,19 +35,19 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
         );
     }
 
-    public function getMessagesListForFile(int $communityId, TeleMessagesFilter $filter): Builder
+    public function getMessagesListForFile(array $communityIds, TeleMessagesFilter $filter): Builder
     {
-        return $this->queryMessages($communityId, $filter);
+        return $this->queryMessages($communityIds, $filter);
     }
 
-    public function getMessageChart(int $communityId, TeleMessagesChartFilter $filter): ChartData
+    public function getMessageChart(array $communityIds, TeleMessagesChartFilter $filter): ChartData
     {
         $filterData = $filter->filters();
         Log::debug("TeleMessageStatisticRepository::getMessageChart", [
             'filter' => $filterData,
         ]);
         $scale = $filter->getScale();
-        $start = $filter->getStartDate($filterData['period'] ?? 'day')->toDateTimeString();
+        $start = $filter->getStartDate($filterData['period'] ?? 'week')->toDateTimeString();
         $end = $filter->getEndDate()->toDateTimeString();
 
         $tm = 'telegram_messages';
@@ -68,7 +68,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
                     ->on("$tm.group_chat_id", '=','telegram_connections.comment_chat_id','OR');
             })
             ->join('communities','communities.connection_id',"=","telegram_connections.id")
-            ->where('communities.id',"=",$communityId);
+            ->whereIn('communities.id',$communityIds);
         $sub->groupBy("d.dt");
 
 
@@ -95,14 +95,14 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
                     ->on("$tm.group_chat_id", '=','telegram_connections.comment_chat_id','OR');
             })
             ->join('communities','communities.connection_id',"=","telegram_connections.id")
-            ->where('communities.id',"=",$communityId)
+            ->whereIn('communities.id',$communityIds)
             ->value('c');
 
         $chart->addAdditionParam('count_all_message', $allMessages);
         return $chart;
     }
 
-    public function getUtilityMessageChart(int $communityId, TeleMessagesChartFilter $filter): ChartData
+    public function getUtilityMessageChart(array $communityIds, TeleMessagesChartFilter $filter): ChartData
     {
         $filterData = $filter->filters();
         Log::debug("TeleMessageStatisticRepository::getUtilityMessageChart", [
@@ -131,7 +131,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
                     ->on("$tm.group_chat_id", '=','telegram_connections.comment_chat_id','OR');
             })
             ->join('communities','communities.connection_id',"=","telegram_connections.id")
-            ->where('communities.id',"=",$communityId);
+            ->whereIn('communities.id',$communityIds);
 
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
@@ -153,12 +153,12 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
     }
 
     /**
-     * @param int $communityId
+     * @param array $communityIds
      * @param TeleMessagesFilter $filter
      * @return \Illuminate\Database\Eloquent\Builder|Builder
      * @throws \Exception
      */
-    protected function queryMessages(int $communityId, TeleMessagesFilter $filter)
+    protected function queryMessages(array $communityIds, TeleMessagesFilter $filter)
     {
         $tc = 'telegram_connections';
         $tm = 'telegram_messages';
@@ -172,7 +172,7 @@ class TeleMessageStatisticRepository implements TeleMessageStatisticRepositoryCo
                     ->on("$tm.group_chat_id", '=','telegram_connections.comment_chat_id','OR');
             })
             ->join('communities','communities.connection_id',"=","telegram_connections.id")
-            ->where('communities.id',"=",$communityId)
+            ->whereIn('communities.id',$communityIds)
             ->join($tu, "$tm.telegram_user_id", "=", "$tu.telegram_id")
             ->leftJoin($tmr, function ($join) use ($tm, $tmr) {
                 $join->on("$tm.message_id", "=", "$tmr.message_id")

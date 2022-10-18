@@ -48,18 +48,20 @@ class SetNewTelegramUsers implements ShouldQueue
             $limit = 100;
             $offset = 0;
             if ($connection && $connection->is_there_userbot === true) {
-                $chat_id = str_replace('-', '',(str_replace(-100, '', $connection->chat_id)));
+                $chat_id = str_replace('-', '', (str_replace(-100, '', $connection->chat_id)));
                 if ($connection->access_hash !== null) {
 
                     $participants = $userBot->getUsersInChannel($chat_id, $connection->access_hash, $limit, $offset);
                     $this->getChannelUsers($community, $participants);
-                    $count = $participants[0]->users->count;
-                    if ($count > $limit) {
-                        $offset = $limit;
-                        for ($i = 0; $i <= ceil($count / $limit); $i++) {
-                            $participants = $userBot->getUsersInChannel($chat_id, $connection->access_hash, $limit, $offset);
-                            $this->getChannelUsers($community, $participants);
-                            $offset += $limit;
+                    if (isset($participants[0]->users->count)) {
+                        $count = $participants[0]->users->count;
+                        if ($count > $limit) {
+                            $offset = $limit;
+                            for ($i = 0; $i <= ceil($count / $limit); $i++) {
+                                $participants = $userBot->getUsersInChannel($chat_id, $connection->access_hash, $limit, $offset);
+                                $this->getChannelUsers($community, $participants);
+                                $offset += $limit;
+                            }
                         }
                     }
                 } else {
@@ -75,13 +77,15 @@ class SetNewTelegramUsers implements ShouldQueue
     protected function getChannelUsers($community, $participants)
     {
         try {
-            $newParticipants = $participants[0]->users->participants;
-            $users = $participants[0]->users->users;
-            foreach ($newParticipants as $participant) {
-                foreach ($users as $user) {
-                    $role = $this->getChannelRole($participant);
-                    if ($participant->user_id === $user->id)
-                        $this->saveUser($community, $user, $participant->date ?? null, $role);
+            $newParticipants = isset($participants[0]->users->participants) ? $participants[0]->users->participants : null;
+            $users = isset($participants[0]->users->users) ? $participants[0]->users->users : null;
+            if ($newParticipants && $users) {
+                foreach ($newParticipants as $participant) {
+                    foreach ($users as $user) {
+                        $role = $this->getChannelRole($participant);
+                        if ($participant->user_id === $user->id)
+                            $this->saveUser($community, $user, $participant->date ?? null, $role);
+                    }
                 }
             }
         } catch (\Exception $e) {

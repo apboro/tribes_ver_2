@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="content-wrapper container-xxl p-0" data-plugin="AuthorPage">
+    <div class="content-wrapper container" data-plugin="AuthorPage">
         <!-- Breadcrumbs block -->
         <div class="content-header row">
             <div class="content-header-left col-md-9 col-12 mb-2">
