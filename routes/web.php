@@ -123,20 +123,16 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         // Community
 
 
-
         Route::group(['prefix' => 'community'], function () {
 
-            Route::get('/{community}/{any?}', function(){
-                abort(404);
-            })->name('community.list');
+            Route::get('/', 'CommunityController@index')->name('community.list');
 
             Route::middleware('sms_confirmed', 'owned_group_community')->group(function () {
-                // Statistic (DEPRECATED)
-//                abort(404);
-                Route::get('/{community}/statistic', 'CommunityController@statistic')->name('community.statistic');
-                Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
-                Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
-                Route::get('/{community}/statistic/payments', 'CommunityController@statisticPayments')->name('community.statistic.payment');
+                // Statistic
+                Route::get('/{community}/statistic/{any?}', function(){abort(404);})->name('community.statistic');
+//                Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
+//                Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
+//                Route::get('/{community}/statistic/payments', 'CommunityController@statisticPayments')->name('community.statistic.payment');
 
             });
 
