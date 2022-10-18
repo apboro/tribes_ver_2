@@ -108,14 +108,16 @@ class SetNewTelegramUsers implements ShouldQueue
     protected function getUsersForGroup($community, $participants)
     {
         try {
-            $newParticipants = $participants[0]->chatInfo->full_chat->participants->participants;
-            $users = $participants[0]->chatInfo->users;
+            $newParticipants = isset($participants[0]->chatInfo->full_chat->participants->participants) ? $participants[0]->chatInfo->full_chat->participants->participants : null;
+            $users = isset($participants[0]->chatInfo->users) ? $participants[0]->chatInfo->users : null;
 
-            foreach ($newParticipants as $participant) {
-                foreach ($users as $user) {
-                    $role = $this->getGroupRole($participant);
-                    if ($participant->user_id === $user->id)
-                        $this->saveUser($community, $user, $participant->date ?? null, $role);
+            if ($newParticipants and $users) {
+                foreach ($newParticipants as $participant) {
+                    foreach ($users as $user) {
+                        $role = $this->getGroupRole($participant);
+                        if ($participant->user_id === $user->id)
+                            $this->saveUser($community, $user, $participant->date ?? null, $role);
+                    }
                 }
             }
         } catch (\Exception $e) {
