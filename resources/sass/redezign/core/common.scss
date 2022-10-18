@@ -23,7 +23,7 @@ body {
 }
 
 .main {
-    padding-top: 90px;
+    padding-top: $header-height;
     flex: 1 0 auto;
 
     @media (min-width: $md) {

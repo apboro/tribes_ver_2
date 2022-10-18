@@ -39,16 +39,22 @@ class TinkoffService
             if(isset($data->SpAccumulationId)){
                 TelegramLogService::staticSendLogMessage("Запрос на пополнение копилки " . $data->SpAccumulationId . " на сумму" . $payment->amount / 100 . "рублей" );
                 $accumulation = Accumulation::where('SpAccumulationId', (int)$data->SpAccumulationId)->where('status', 'active')->first();
-                if(!$accumulation){
-                    $accumulation = Accumulation::create([
-                        'user_id' => $payment->author,
-                        'SpAccumulationId' => $data->SpAccumulationId,
-                        'started_at' => Carbon::now(),
-                        'ended_at' => Carbon::now()->endOfDay()->modify('last day of this month'),
-                        'status' => 'active',
-                    ]);
-                    // todo выбрасывать Ексепшн, если не удалось создать $accumulation увеличить информативность исключений
+                if(Accumulation::where('SpAccumulationId', (int)$data->SpAccumulationId)->count()){
+                    TelegramLogService::staticSendLogMessage("Рассинхронизация копилок. Тинькофф пытается оформить платёж в закрытую копилку. ID копилки: " . $data->SpAccumulationId );
+                    return true;
+                } else {
+                    if(!$accumulation){
+                        $accumulation = Accumulation::create([
+                            'user_id' => $payment->author,
+                            'SpAccumulationId' => $data->SpAccumulationId,
+                            'started_at' => Carbon::now(),
+                            'ended_at' => Carbon::now()->endOfDay()->modify('last day of this month'),
+                            'status' => 'active',
+                        ]);
+                        // todo выбрасывать Ексепшн, если не удалось создать $accumulation увеличить информативность исключений
+                    }
                 }
+
             }
             $new_status = $data->Status;
             $previous_status = trim($previous_status); // todo в базе почему то тип char, надо убрать, ставит кучу пробелов

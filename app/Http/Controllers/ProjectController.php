@@ -186,7 +186,7 @@ class ProjectController extends Controller
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
         $followers = $this->tariffRepository->getList($filters, $activeCommunity);
-        //dd($activeCommunity);
+
         return view('common.project.members')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community', 'followers')
         );

@@ -44,8 +44,10 @@ abstract class QueryAPIFilter extends QueryFilter
     public function replace(array $params): void
     {
         $filter = $this->request->get('filter',[]);
+        $all = $this->request->all();
         $filter = array_merge($filter,$params);
-        $this->request->replace(['filter'=>$filter]);
+        $all = array_merge($all,['filter'=>$filter]);
+        $this->request->replace($all);
     }
 
     /**
