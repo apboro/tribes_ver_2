@@ -210,6 +210,7 @@ class Payment
                     $this->payment->SpAccumulationId = $chargeRes->SpAccumulationId ?? null;
                     $this->payment->RebillId = $chargeRes->RebillId ?? null;
                     $this->payment->save();
+
                     TinkoffService::checkStatus($chargeRes, $this->payment, $previous_status);
                 } else {
                     //todo сохранять в лог файл TelegramLogService::staticSendLogMessage заменить на

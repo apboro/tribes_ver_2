@@ -128,7 +128,8 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
             Route::get('/', 'CommunityController@index')->name('community.list');
 
             Route::middleware('sms_confirmed', 'owned_group_community')->group(function () {
-                // Statistic
+                // Statistic (DEPRECATED)
+                abort(404);
                 Route::get('/{community}/statistic', 'CommunityController@statistic')->name('community.statistic');
                 Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
                 Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
