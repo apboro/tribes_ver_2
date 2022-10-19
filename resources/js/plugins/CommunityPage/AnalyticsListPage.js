@@ -114,6 +114,7 @@ export class AnalyticsListPage {
         this.messagesRightLabel.textContent = this.messagesRight != 0 ? `+${ numberFormatting(this.messagesRight) }` : 0;
         this.paymentsLeftLabel.textContent = this.paymentsLeft != 0 ? `+${ numberFormatting(this.paymentsLeft / 100) }` : 0;
         this.paymentsRightLabel.textContent = this.paymentsRight != 0 ? `+${ numberFormatting(this.paymentsRight / 100) }` : 0;
+        console.log(this.paymentsLeft);
     }
 
     initCharts() {
@@ -184,38 +185,38 @@ export class AnalyticsListPage {
     }
 
     get subscribersItems() {
-        return this.subscribersData.items.users;
+        return this.subscribersData.items.users ? this.subscribersData.items.users : 0;
     }
 
     get subscribersLeft() {
-        return this.subscribersData.meta.count_exit_users;
+        return this.subscribersData.meta.count_exit_users ? this.subscribersData.meta.count_exit_users : 0;
     }
 
     get subscribersRight() {
-        return this.subscribersData.meta.count_join_users;
+        return this.subscribersData.meta.count_join_users ? this.subscribersData.meta.count_join_users : 0;
     }
 
     get messagesItems() {
-        return this.messagesData.items.messages;
+        return this.messagesData.items.messages ? this.messagesData.items.messages : 0;
     }
 
     get messagesLeft() {
-        return this.messagesData.meta.count_new_message;
+        return this.messagesData.meta.count_new_message ? this.messagesData.meta.count_new_message : 0;
     }
 
     get messagesRight() {
-        return this.messagesData.meta.count_new_utility;
+        return this.messagesData.meta.count_new_utility ? this.messagesData.meta.count_new_utility : 0;
     }
 
     get paymentsItems() {
-        return this.paymentsData.items.balance;
+        return this.paymentsData.items.balance ? this.paymentsData.items.balance : 0;
     }
 
     get paymentsLeft() {
-        return this.paymentsData.meta.total_amount;
+        return this.paymentsData.meta.total_amount ? this.paymentsData.meta.total_amount : 0;
     }
 
     get paymentsRight() {
-        return this.paymentsData.meta.all;
+        return this.paymentsData.meta.all ? this.paymentsData.meta.all : 0;
     }
 }

@@ -183,22 +183,22 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
     }
 
     get countAll() {
-        return this.data.meta.all;
+        return this.data.meta.all ? this.data.meta.all : 0;
     }
 
     get countTotalAmount() {
-        return this.data.meta.total_amount;
+        return this.data.meta.total_amount ? this.data.meta.total_amount : 0;
     }
 
     get countDonations() {
-        return this.data.meta.donate;
+        return this.data.meta.donate ? this.data.meta.donate : 0;
     }
 
     get countTariffs() {
-        return this.data.meta.tariff;
+        return this.data.meta.tariff ? this.data.meta.tariff : 0;
     }
 
     get countCourses() {
-        return this.data.meta.course;
+        return this.data.meta.course ? this.data.meta.course : 0;
     }
 }

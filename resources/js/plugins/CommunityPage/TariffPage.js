@@ -9,10 +9,11 @@ export class TariffPage {
     }
 
     init() {
-        this.tabsSwitcher.addEventListener('change', (event) => {
-            console.log(event.target.value);
-            window.location.href = event.target.value;
-        });
+        if (this.tabsSwitcher) {
+            this.tabsSwitcher.addEventListener('change', (event) => {
+                window.location.href = event.target.value;
+            });
+        }
     }
 
     checkTab(link) {

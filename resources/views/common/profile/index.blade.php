@@ -15,7 +15,7 @@
             <div class="profile__start-work">
                 <div class="profile__community_not_selected">
                     <p>
-                        У вас нет проектов. Начните работу с Tribes, создав новый проект и добавив в него свои сообщетсва.
+                        Начните работу с Tribes, подключив свои сообщетсва.
                     </p>
                 </div>
 
@@ -24,7 +24,7 @@
                     href="{{route('profile.communities.list')}}"
                     data-repeater-create
                 >
-                    Начать работу
+                    Начать работу!
                 </a>
             </div>
             <!--END нет проектов и сообществ -->
@@ -187,7 +187,10 @@
         class="profile__hide-info @if(data::get('is_visible_sidebar') == 'false') active @endif"
     >
         <span class="hide-info-project">
-            {{ $activeProject->title ?? $activeCommunity->title ?? 'Без имени' }}
+            @if(!empty($activeProject->title))
+                {{$activeProject->title}}
+            @endif
+            
         </span>
         @if(!empty($activeCommunity->title))
             <span  class="hide-info-community">
