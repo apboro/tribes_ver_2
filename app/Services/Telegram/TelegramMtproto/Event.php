@@ -62,6 +62,7 @@ class Event
                         $connect = TelegramConnection::where('chat_id', '-' . $participants->chat_id)->first();
                         if ($connect) {
                             $connect->is_there_userbot = true;
+                            $connect->userBotStatus = 'administrator';
                             $connect->save();
                         }
                         dispatch(new SetNewTelegramUsers($participants->chat_id));
