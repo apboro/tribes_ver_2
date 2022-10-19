@@ -12,7 +12,7 @@
                     <p>
                         Настоящим Пользователь, действуя свободно, своей волей и в своем интересе, а также подтверждая свою дееспособность, дает настоящее Согласие на обработку персональных данных, 
                         а также иных данных (далее –&nbsp;<b>«Согласие»</b>)&nbsp;
-                        <b>Индивидуальному предпринимателю Бордияну Андрею Сергеевичу&nbsp;</b>(ОГРНИП 313313012600090, ИНН 312181691267) (далее – «Оператор»).<br>
+                        <b>Обществу с ограниченной ответственностью «Фабрика информационных технологий» (ООО «ФИТ»)&nbsp;</b>(ОГРН 1073123023160, ИНН 3123164163) (далее – «Оператор»).<br>
                         Термины и понятия используются в Согласии в значении, указанном в Политике обработки персональных данных Оператора (доступно для ознакомления по адресу&nbsp;
                         <a href="/privacy/" class="btn-link" target="_blank">{{ env('APP_URL') }}/privacy</a>).
                     </p>
@@ -134,7 +134,7 @@
                         </li>
                         <li>
                             Пользователь имеет право отозвать Согласие путем направления соответствующего запроса в службу поддержки&nbsp;
-                            <a class="text-primary">privacy@trbs.co</a>, <a class="text-primary">support@trbs.co</a> или в Мессенджере: <a href="https://t.me/TribesSupport_bot">@TribesSupport_bot</a>.
+                            <a href="mailto:privacy@trbs.co" class="text-primary">privacy@trbs.co</a>, <a href="mailto:support@trbs.co" class="text-primary">support@trbs.co</a> или в Мессенджере Телеграм: <a href="https://t.me/TribesSupport_bot">@TribesSupport_bot</a>.
                         </li>
                         <li>
                             Пользователь согласен с тем, что на основании его письменного обращения с требованием о прекращении обработки Персональных данных (Данных) Оператор прекратит их Обработку в течение 30 (тридцати) календарных дней.
@@ -145,45 +145,41 @@
                         <li>
                             Реквизиты и контактная информация Оператора:
                             <div>
-                                <p><b>Индивидуальный предприниматель Бордиян Андрей Сергеевич</b></p>
+                                <p><b>Общество с ограниченной ответственностью «Фабрика информационных технологий» (ООО «ФИТ»)</b></p>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col col-6">
-                                                <b>ОГРНИП:</b>
+                                                <b>ОГРН:</b>
                                             </div>
-                                            <div class="col col-6">313313012600090</div>
+                                            <div class="col col-6">1073123023160</div>
                                         </div>
                                         <div class="row">
                                             <div class="col col-6">
                                                 <b>ИНН:</b>
                                             </div>
-                                            <div class="col col-6">312181691267</div>
+                                            <div class="col col-6">3123164163</div>
                                         </div>
                                         <div class="row">
                                             <div class="col col-6">
                                                 <b>КПП:</b>
                                             </div>
-                                            <div class="col col-6">773401001</div>
+                                            <div class="col col-6">312301001</div>
                                         </div>
                                         <div class="row">
                                             <div class="col col-6">
                                                 <b>Юридический адрес:</b>
                                             </div>
-                                            <div class="col col-6">309085, РОССИЯ, ОБЛ БЕЛГОРОДСКАЯ, Р-Н ЯКОВЛЕВСКИЙ, П ТОМАРОВКА, УЛ МАГИСТРАЛЬНАЯ, 92А, 20</div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col col-6"><b>Почтовый адрес:</b></div>
-                                            <div class="col col-6">309085, РОССИЯ, ОБЛ БЕЛГОРОДСКАЯ, Р-Н ЯКОВЛЕВСКИЙ, П ТОМАРОВКА, УЛ МАГИСТРАЛЬНАЯ, 92А, 20</div>
+                                            <div class="col col-6">308033, г. Белгород, ул. Королева, д. 2А, помещение 8</div>
                                         </div>
                                         <div class="row">
                                             <div class="col col-6"><b>Телефон:</b></div>
-                                            <div class="col col-6">8(952)424-50-38</div>
+                                            <div class="col col-6">+7(4722) 777-213</div>
                                         </div>
                                         <div class="row">
                                             <div class="col col-6"><b>Email:</b></div>
                                             <div class="col col-6">
-                                                <a class="text-primary">hello@webstyle.top</a>
+                                                <a class="text-primary">contact@fabit.ru</a>
                                             </div>
                                         </div>
                                     </div>
