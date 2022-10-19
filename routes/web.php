@@ -113,10 +113,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                 Route::post('/assign/telegram', 'AuthorController@assignTelegramAccount')->name('follower.profile.assign.telegram');
                 Route::post('/detach/telegram', 'AuthorController@detachTelegramAccount')->name('follower.profile.detach.telegram');
             });
-
-
         });
-
 
         // Content
         Route::any('/video/add', 'PostController@saveVideo')->name('save.video');
@@ -125,7 +122,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
         Route::group(['prefix' => 'community'], function () {
 
-            Route::get('/', 'CommunityController@index')->name('community.list');
+            Route::get('/', function(){abort(404);})->name('community.list');
 
             Route::middleware('sms_confirmed', 'owned_group_community')->group(function () {
                 // Statistic
