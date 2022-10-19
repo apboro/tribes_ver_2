@@ -53,7 +53,7 @@
                         data-dropdown-btn
                         onclick="Dropdown.toggle(this)"
                     >
-                        <span class="dropdown-menu-item__name main-nav-new__link {{ request()->is('*donates*', '*tariffs*', '*members*', '*courses*') ? 'active' : ''  }}">
+                        <span class="dropdown-menu-item__name main-nav-new__link">
                             Монетизация
                         </span>
                         
