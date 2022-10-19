@@ -15,6 +15,7 @@
 
     <div class="dropdown-project-list__body" data-dropdown-content>
         <div class="dropdown-project-list__scroll">
+            @if(count($projects))
             <h6 class="dropdown-project-list__category">
                 Проекты
             </h6>
@@ -31,7 +32,9 @@
                 </li>
                 @endforeach
             </ul>
+            @endif
 
+            @if(count($communities))
             <h6 class="dropdown-project-list__category">
                 Сообщества вне проектов
             </h6>
@@ -58,8 +61,8 @@
                         </a>
                     </li>
                 @endforeach
-
             </ul>
+            @endif
         </div>
     </div>
 
