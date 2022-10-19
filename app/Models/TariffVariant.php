@@ -61,4 +61,9 @@ class TariffVariant extends Model
         $bot = $bot ?? env('TELEGRAM_BOT_NAME', '');
         return "@$bot {$this->inline_link}";
     }
+
+    public function isDeactivate()
+    {
+        return !$this->isActive;
+    }
 }
