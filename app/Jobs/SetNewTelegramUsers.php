@@ -147,7 +147,11 @@ class SetNewTelegramUsers implements ShouldQueue
         $ty->last_name   = $user->last_name ?? NULL;
         $ty->save();
 
-        if (!$ty->communities()->find($community->id))
+        if (!$ty->communities()->find($community->id)){
             $ty->communities()->attach($community, ['role' => $role, 'accession_date' => $accession_date ?? time()]);
+        } else {
+            $ty->communities()->updateExistingPivot($community->id, ['exit_date' => null]);
+        }
+
     }
 }

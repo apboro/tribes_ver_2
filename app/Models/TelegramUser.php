@@ -95,4 +95,9 @@ class TelegramUser extends Model
     {
         return $this->hasMany(TelegramMessageReaction::class, 'telegram_user_id', 'telegram_id');
     }
+
+    public function hasLeaveCommunity($communityId)
+    {
+        return $this->communities()->wherePivot('community_id',$communityId)->wherePivotNotNull('exit_date')->exists();
+    }
 }

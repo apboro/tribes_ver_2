@@ -68,7 +68,15 @@ class CheckTariff extends Command
                                 if ($variant->pivot->days < 1) {
 
                                     if ($variant->pivot->isAutoPay === true) {
-                                        if ($variant->isActive) {
+                                        if(false/*todo проверить через бот состоит ли пользователь в группе на данный момент*/){
+                                            //если проверка что-то ответила, то обновить параметр exit_date
+                                        }
+                                        //  если участник покинул группу exit_date IS NOT NULL
+                                        //  то переводить подписку в состояние isAutoPay = false, платеж не создавать $payment = NULL;
+
+                                        if ($user->hasLeaveCommunity($variant->tariff->community_id)) {
+                                            $payment = NULL;
+                                        } elseif ($variant->isActive) {
                                             //echo "create pay {$variant->title} \n";
                                             $p = new Pay();
                                             $p->amount($variant->price * 100)
@@ -78,7 +86,8 @@ class CheckTariff extends Command
 
                                             $payment = $p->pay();
                                             $payId = $payment->id ?? 'undefined';
-                                        }else {
+                                        } else {
+                                            //если тариф вариант неактивный, то платеж не создавать
                                             $payment = NULL;
                                         }
 
@@ -113,7 +122,6 @@ class CheckTariff extends Command
                                     } else {
 
                                         //echo "not create payment  \n";
-                                        //todo убрать пользователя из сообщества, сделать отметку в участниках exit_date
                                         // отключить рекуррентный платеж
                                         if ($variant->pivot->isAutoPay === true) {
                                             $user->tariffVariant()->updateExistingPivot($variant->id, [
