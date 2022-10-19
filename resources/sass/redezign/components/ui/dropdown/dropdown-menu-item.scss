@@ -13,12 +13,12 @@
         height: 100%;
         cursor: pointer;
         
-        &.active,
-        &:hover {
-            .dropdown-menu-item__name {
-                color: $primary-1;
-            }
-        }
+        // &.active,
+        // &:hover {
+        //     .dropdown-menu-item__name {
+        //         color: $primary-1;
+        //     }
+        // }
     }
     
     &__name {
@@ -116,9 +116,7 @@
         clear: both;
         transition: .3s;
 
-        &.active,
-        &:hover,
-        &:focus {
+        &.active {
             //background-color: $secondary-hover-color;
 
             span {

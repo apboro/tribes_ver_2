@@ -60,7 +60,14 @@
         text-transform: uppercase;
         transition: $transition;
 
-        &:hover,
+        &:hover {
+            color: $text-color-1;
+        }
+
+        &.active:hover {
+            color: $primary-1;
+        }
+
         &.active {
             color: $primary-1;
 

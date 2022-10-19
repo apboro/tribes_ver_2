@@ -13,7 +13,7 @@
 </head>
 
 <body
-    style="padding-top: 85px;"
+    style="padding-top: 100px;"
     @if(session()->has('admin_id')) data-admin="true" @endif
 >
 
