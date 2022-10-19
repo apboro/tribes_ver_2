@@ -2,7 +2,7 @@
 
 @section('content')
 
-@if(empty($tariffs))
+@if($ids == 'all' || empty($tariffs))
     <section class="community-tab" data-tab="tariffPage">
         <div class="community-tab__main-header">
             <h2 class="community-tab__main-title">
