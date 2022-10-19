@@ -90,7 +90,8 @@ class Telegram extends Messenger
                     } else {
                         $ty->communities()->updateExistingPivot($community, [
                             'role' => 'member',
-                            'accession_date' => time()
+                            'accession_date' => time(),
+                            'exit_date' => null
                         ]);
                     }
 
@@ -161,9 +162,10 @@ class Telegram extends Messenger
             if ($community && $ty) {
                 $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
                 if ($variantForThisCommunity)
-                    $ty->tariffVariant()->detach($variantForThisCommunity->id);
+                    //ставить exit_date в состояние false, не удалять подписку пользователя
+                    //$ty->tariffVariant()->detach($variantForThisCommunity->id);
 
-                if ($ty->communities()->find($community->id)) 
+                if ($ty->getCommunityById($community->id))
                     $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time()]);
             }
         } catch (\Exception $e) {
