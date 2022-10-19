@@ -112,7 +112,11 @@ class ProjectController extends Controller
         if ($project === null && $projects->isNotEmpty()) {
             return redirect()->route('project.analytics', ['project' => $projects->first()]);
         }
-        if($community === null && $projects->isEmpty() && $communities->isNotEmpty()) {
+
+        if(
+            ( $community === null && $projects->isEmpty() && $communities->isNotEmpty() ) ||
+            ($project == 'c' && $community === null)
+        ) {
             return redirect()->route('project.analytics', ['project' => 'c', 'community' => $communities->first()]);
         }
         return view('common.project.analytics')->with(
@@ -154,7 +158,10 @@ class ProjectController extends Controller
         if ($project === null && $projects->isNotEmpty()) {
             return redirect()->route('project.donates', ['project' => $projects->first()]);
         }
-        if($community === null && $projects->isEmpty() && $communities->isNotEmpty()) {
+        if(
+            ( $community === null && $projects->isEmpty() && $communities->isNotEmpty() ) ||
+            ($project == 'c' && $community === null)
+        ) {
             return redirect()->route('project.donates', ['project' => 'c', 'community' => $communities->first()]);
         }
         $donates = empty($ids) ? null : $this->donateRepository->getDonatesByCommunities(explode('-', $ids));
@@ -170,7 +177,10 @@ class ProjectController extends Controller
         if ($project === null && $projects->isNotEmpty()) {
             return redirect()->route('project.tariffs', ['project' => $projects->first()]);
         }
-        if($community === null && $projects->isEmpty() && $communities->isNotEmpty()) {
+        if(
+            ( $community === null && $projects->isEmpty() && $communities->isNotEmpty() ) ||
+            ($project == 'c' && $community === null)
+        ) {
             return redirect()->route('project.tariffs', ['project' => 'c', 'community' => $communities->first()]);
         }
         if ($request->get('isPersonal')) {
