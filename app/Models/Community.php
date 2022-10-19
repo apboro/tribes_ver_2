@@ -250,7 +250,7 @@ class Community extends Model
     public function getCountFollowersAttribute()
     {
         $connection = $this->connection()->first();
-        if ($connection->botStatus = 'administrator') {
+        if ($connection->botStatus != 'kicked') {
             $countFollowers = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $connection->chat_id);
         } else {
             $countFollowers = $this->followers()->where('role','member')->where('exit_date', null)->count();
