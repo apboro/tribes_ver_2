@@ -39,7 +39,7 @@ class Community extends Model
 
         static::creating(function ($m) {
             //todo перенести логики привязки создаваемого сообщества в сервис контроллера
-            if(($au = Auth::user()) ==! null){
+            if (($au = Auth::user()) == !null) {
                 $m->owner = $au->id;
             }
         });
@@ -72,7 +72,7 @@ class Community extends Model
      */
     public function connection()
     {
-        return $this->belongsTo( TelegramConnection::class, 'connection_id');
+        return $this->belongsTo(TelegramConnection::class, 'connection_id');
     }
 
     public function statistic()
@@ -93,7 +93,7 @@ class Community extends Model
     public function getRangeDonatePaymentLink($activeVariantIndex)
     {
         $donate = $this->donate()->first();
-        if($donate) {
+        if ($donate) {
             $variant = $donate->getVariantByIndex($activeVariantIndex);
             if ($variant) {
                 if ($variant->isActive && !$variant->isStatic) {
@@ -107,7 +107,7 @@ class Community extends Model
     public function getDonatePaymentLink($data = null)
     {
         $params = '';
-        if($data && is_array($data)){
+        if ($data && is_array($data)) {
             $params = '?' . http_build_query($data);
         }
         $this->generateHash();
@@ -117,7 +117,7 @@ class Community extends Model
     public function getTariffPayLink($data = null)
     {
         $params = '';
-        if($data && is_array($data)){
+        if ($data && is_array($data)) {
             $params = '?' . http_build_query($data);
         }
         return route('community.tariff.form', ['community' => $this]) . $params;
@@ -126,7 +126,7 @@ class Community extends Model
     public function getTariffPaymentLink($data = null)
     {
         $params = '';
-        if($data && is_array($data)){
+        if ($data && is_array($data)) {
             $params = '?' . http_build_query($data);
         }
 
@@ -149,7 +149,7 @@ class Community extends Model
         return $this->connection()->first()->chat_type === 'channel';
     }
 
-    public function isOwnedByUser(User $user) : bool
+    public function isOwnedByUser(User $user): bool
     {
         return $this->owner()->first() && $this->owner()->first()->id === $user->id;
     }
@@ -163,8 +163,7 @@ class Community extends Model
     {
         $questions = $this->questions();
 
-        if ($questions->count() === 0)
-        {
+        if ($questions->count() === 0) {
             return null;
         }
 
@@ -189,8 +188,8 @@ class Community extends Model
 
     public function hasNotActiveTariffVariants()
     {
-        
-        return $this->tariffVariants()->where('isActive',1)->where('isPersonal',0)->doesntExist();
+
+        return $this->tariffVariants()->where('isActive', 1)->where('isPersonal', 0)->doesntExist();
     }
 
     function donate()
@@ -211,7 +210,7 @@ class Community extends Model
     public function getDonateMainDescription()
     {
         $donate = $this->donate()->first();
-        if($donate && $donate->description){
+        if ($donate && $donate->description) {
             return $donate->description;
         }
         return 'Без комментария';
@@ -220,9 +219,9 @@ class Community extends Model
     public function getDonateMainImage()
     {
         $donate = $this->donate()->first();
-        if($donate){
+        if ($donate) {
             $image = $donate->getMainImage();
-            if($image){
+            if ($image) {
                 return $image->url;
             }
         }
@@ -244,17 +243,12 @@ class Community extends Model
     function followers()
     {
         return $this->belongsToMany(TelegramUser::class, 'telegram_users_community', 'community_id', 'telegram_user_id', 'id', 'telegram_id')
-            ->withPivot(['excluded', 'role','accession_date','exit_date']);
+            ->withPivot(['excluded', 'role', 'accession_date', 'exit_date']);
     }
 
     public function getCountFollowersAttribute()
     {
-        $connection = $this->connection()->first();
-        if ($connection->botStatus != 'kicked') {
-            $countFollowers = TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $connection->chat_id);
-        } else {
-            $countFollowers = $this->followers()->where('role','member')->where('exit_date', null)->count();
-        }
+        $countFollowers = $this->getCountFollowers();
 
         $string = $this->getFollowerString($countFollowers);
 
@@ -263,6 +257,18 @@ class Community extends Model
         }
 
         return $countFollowers . $this->followerMap[$rank] . $string;
+    }
+
+    protected function getCountFollowers()
+    {
+        try {
+            $connection = $this->connection()->first();
+            if ($connection->botStatus != 'kicked') {
+                return TelegramMainBotService::staticGetChatMemberCount(config('telegram_bot.bot.botName'), $connection->chat_id);
+            }
+        } catch (\Exception $e) {
+        }
+        return $this->followers()->where('role', 'member')->where('exit_date', null)->count();
     }
 
     /**
