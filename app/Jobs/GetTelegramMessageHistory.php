@@ -55,6 +55,7 @@ class GetTelegramMessageHistory implements ShouldQueue
         try {
             $telegramConnection = TelegramConnection::select('chat_id', 'access_hash', 'chat_type', 'comment_chat_id', 'comment_chat_hash')
                 ->where('is_there_userbot', true)
+                ->where('userBotStatus', 'administrator')
                 ->where('chat_id', '-' . $this->chatId)
                 ->orWhere('chat_id', '-100' . $this->chatId)
                 ->first();
