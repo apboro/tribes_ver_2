@@ -48,6 +48,13 @@
                     @include('common.donate.assets.donate_item_new')
                 @endforeach
             </ul>
+        @elseif($projects->isEmpty() && $communities->isEmpty())
+            <!-- Empty list -->
+            <div class="community-tariff__empty-wrapper">
+                <p class="community-tariff__empty-text">
+                    Для работы с донатами, Вам необходимо подключить сообщество
+                </p>
+            </div>
         @else
             <!-- Empty list -->
             <div class="community-tariff__empty-wrapper">

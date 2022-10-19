@@ -52,21 +52,8 @@ use Exception;
 
 class TestBotController extends Controller
 {
-    private $telegramMainBotService;
-
-    public function __construct(TelegramMainBotService $telegramMainBotService)
-    {
-        $this->telegramMainBotService = $telegramMainBotService;
-    }
-
     public function index(Request $request)
     {
-        try {
-            $textMessage = 'hello';
-            $community = Community::find(17);
-            $this->telegramMainBotService->sendMessageFromBotWithTariff(config('telegram_bot.bot.botName'), 507752964, $textMessage, $community);
-        } catch (\Exception $e) {
-            $this->telegramMainBotService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
-        }
+       
     }
 }

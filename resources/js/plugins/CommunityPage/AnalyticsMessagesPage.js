@@ -132,14 +132,14 @@ export class AnalyticsMessagesPage extends BaseAnalyticsPage {
     }
 
     get countAllMessage() {
-        return this.data.meta.count_all_message;
+        return this.data.meta.count_all_message ? this.data.meta.count_all_message : 0;
     }
 
     get countNewMessage() {
-        return this.data.meta.count_new_message;
+        return this.data.meta.count_new_message ? this.data.meta.count_new_message : 0;
     }
     
     get countNewUtility() {
-        return this.data.meta.count_new_utility;
+        return this.data.meta.count_new_utility ? this.data.meta.count_new_utility : 0;
     }
 }

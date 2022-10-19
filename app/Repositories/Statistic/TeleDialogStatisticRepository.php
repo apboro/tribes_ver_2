@@ -154,14 +154,23 @@ class TeleDialogStatisticRepository implements TeleDialogStatisticRepositoryCont
             ->leftJoin($tuc, "$tu.telegram_id", "=", "$tuc.telegram_user_id")
             ->leftJoin($com, "$tuc.community_id", "$com.id")
             ->leftJoin($tc, "$com.connection_id", "$tc.id")
-            ->leftJoin($tm, function (JoinClause $join) use ($tm, $tu, $tc) {
-                $join->on("$tm.telegram_user_id", '=', "$tu.telegram_id")->on("$tm.group_chat_id", '=', "$tc.chat_id");
+            ->leftJoin($tm, function ($join) use ($tm, $tu, $tc) {
+                $join->on("$tm.telegram_user_id", '=', "$tu.telegram_id")
+                ->on("$tm.group_chat_id", '=', "$tc.comment_chat_id")
+                ->orOn("$tm.telegram_user_id", '=', "$tu.telegram_id")
+                ->on("$tm.group_chat_id", '=', "$tc.chat_id");
             })
-            ->leftJoin($gmr, function (JoinClause $join) use ($tm, $tc) {
-                $join->on("gmr.message_id", '=', "$tm.message_id")->on("gmr.group_chat_id", '=', "$tc.chat_id");
+            ->leftJoin($gmr, function ($join) use ($tm, $tc) {
+                $join->on("gmr.message_id", '=', "$tm.message_id")
+                ->on("gmr.group_chat_id", '=', "$tc.comment_chat_id")
+                ->orOn("gmr.message_id", '=', "$tm.message_id")
+                ->on("gmr.group_chat_id", '=', "$tc.chat_id");
             })
-            ->leftJoin($pmr, function (JoinClause $join) use ($tuc, $tc) {
-                $join->on("pmr.telegram_user_id", '=', "$tuc.telegram_user_id")->on("pmr.group_chat_id", '=', "$tc.chat_id");
+            ->leftJoin($pmr, function ($join) use ($tuc, $tc) {
+                $join->on("pmr.telegram_user_id", '=', "$tuc.telegram_user_id")
+                ->on("pmr.group_chat_id", '=', "$tc.comment_chat_id")
+                ->orOn("pmr.telegram_user_id", '=', "$tuc.telegram_user_id")
+                ->on("pmr.group_chat_id", '=', "$tc.chat_id");
             })
             ->select([
                 "chat_id",

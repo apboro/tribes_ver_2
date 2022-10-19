@@ -132,14 +132,14 @@ export class AnalyticsSubscribersPage extends BaseAnalyticsPage {
     }
 
     get countAllUsers() {
-        return this.data.meta.all_users;
+        return this.data.meta.all_users ? this.data.meta.all_users : 0;
     }
 
     get countExitUsers() {
-        return this.data.meta.count_exit_users;
+        return this.data.meta.count_exit_users ? this.data.meta.count_exit_users : 0;
     }
     
     get countJoinUsers() {
-        return this.data.meta.count_join_users;
+        return this.data.meta.count_join_users ? this.data.meta.count_join_users : 0;
     }
 }

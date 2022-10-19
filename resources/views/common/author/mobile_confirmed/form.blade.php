@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-body">
                 @if ($user->isConfirmed())
-                    <div class="col-sm-7 col-lg-4 col-xl-3 col-12"> 
+                    <div class="col-sm-7 col-lg-4 col-12"> 
                         <h4 class="card-title">
                             {{ __('author.number_confirmed') }}
                         </h4>
@@ -21,12 +21,12 @@
                             </span>
                         </p>
 
-                        <p id="date_field">Дата подтверждения: {{ $user->confirmationUserDate('date') }} </p>
-                        <p>Время подтверждения: {{ $user->confirmationUserDate() }}</p>
+                        <p class="mt-1" id="date_field">Дата подтверждения: {{ $user->confirmationUserDate('date') }} </p>
+                        <p class="mt-1">Время подтверждения: {{ $user->confirmationUserDate() }}</p>
                         <span>
                             <a
                                 type="submit"
-                                class="btn btn-primary text-white"
+                                class="btn btn-primary text-white mt-2"
                                 href="{{ route('author.mobile.reset') }}"
                             >
                                 {{ __('author.reset_phone') }}
@@ -34,7 +34,7 @@
                         </span>
                     </div>
                 @else
-                <div class="col-sm-7 col-lg-4 col-xl-3 col-12">
+                <div class="col-sm-7 col-lg-4 col-12">
                     <h4 class="card-title">
                         {{ __('author.welcome') }}! 👋
                     </h4>

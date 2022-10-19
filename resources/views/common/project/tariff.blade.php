@@ -2,14 +2,21 @@
 
 @section('content')
 
-@if(empty($ids))
+@if($ids == 'all')
+    <section class="community-tab" data-tab="tariffPage">
+        <div class="community-tab__main-header">
+            <h2 class="community-tab__main-title">
+                {{ __('base.tariffs') }}
+            </h2>
 
-<div class="profile__list communities">
-    <div class="profile__community_not_selected">
-        <p>Для работы с тарифами выберите конкретное сообщество в проекте.</p>
-    </div>
-</div>
-
+            <!-- Empty list -->
+            <div class="community-tariff__empty-wrapper">
+                <p class="community-tariff__empty-text">
+                    Для работы с тарифами, Вам необходимо подключить сообщество
+                </p>
+            </div>
+        </div>
+    </section>
 @else
     <section class="community-tab" data-tab="tariffPage">
         <div class="community-tab__main-header">
