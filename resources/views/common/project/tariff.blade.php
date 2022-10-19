@@ -99,7 +99,7 @@
                 </option>
             </select>
         </div>
-        @if((request('active') == null || request('active') == 'true') && $tariffs->first() && ($isPersonal !== true && $isActive === true))
+        @if((request('active') == null || request('active') == 'true') && isset($tariffs) && $tariffs->first() && ($isPersonal !== true && $isActive === true))
             <div>
                 @if($activeCommunity)
                     <span>{{__('tariff.inline_command_all_tariffs')}}</span>
