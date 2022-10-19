@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\TariffVariant;
 use App\Models\TelegramUser;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
@@ -59,23 +60,31 @@ class CheckTariff extends Command
                 if ($follower) {
                     if ($user->tariffVariant->first()) {
                         foreach ($user->tariffVariant as $variant) {
+                            /** @var TariffVariant $variant*/
                             //echo "var{$variant->title} \n";
                             if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
                                 $userName = ($user->user_name) ? '<a href="t.me/' . $user->user_name . '">' . $user->user_name . '</a>' : $user->telegram_id;
                                 //echo "job for {$variant->title} \n";
                                 if ($variant->pivot->days < 1) {
-                                    if ($variant->pivot->isAutoPay === true) {
-                                        //echo "create pay {$variant->title} \n";
-                                        $p = new Pay();
-                                        $p->amount($variant->price * 100)
-                                            ->charged(true)
-                                            ->payFor($variant)
-                                            ->payer($follower);
 
-                                        $payment = $p->pay();
-                                        $payId = $payment->id??'undefined';
-                                        //echo "create pay  $payId\n";
-                                    } else $payment = NULL;
+                                    if ($variant->pivot->isAutoPay === true) {
+                                        if ($variant->isActive) {
+                                            //echo "create pay {$variant->title} \n";
+                                            $p = new Pay();
+                                            $p->amount($variant->price * 100)
+                                                ->charged(true)
+                                                ->payFor($variant)
+                                                ->payer($follower);
+
+                                            $payment = $p->pay();
+                                            $payId = $payment->id ?? 'undefined';
+                                        }else {
+                                            $payment = NULL;
+                                        }
+
+                                    } else {
+                                        $payment = NULL;
+                                    }
                                     if ($payment) {
                                         $lastName = $user->last_name ?? '';
                                         $firstName = $user->first_name ?? '';
@@ -102,7 +111,10 @@ class CheckTariff extends Command
                                             'prompt_time' => date('H:i')
                                         ]);
                                     } else {
+
                                         //echo "not create payment  \n";
+                                        //todo убрать пользователя из сообщества, сделать отметку в участниках exit_date
+                                        // отключить рекуррентный платеж
                                         if ($variant->pivot->isAutoPay === true) {
                                             $user->tariffVariant()->updateExistingPivot($variant->id, [
                                                 'days' => 0,
