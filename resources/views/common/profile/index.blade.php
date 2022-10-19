@@ -10,7 +10,7 @@
         @if(data::get('is_visible_sidebar') == 'false')  style="max-height:  0" @endif
         data-tab="profileBlock"
     >
-        @if( $projects->isEmpty())
+        @if( $projects->isEmpty() && $communities->isEmpty())
             <!--START нет проектов и сообществ -->
             <div class="profile__start-work">
                 <div class="profile__community_not_selected">
