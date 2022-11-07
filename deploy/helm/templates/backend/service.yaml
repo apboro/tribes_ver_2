@@ -1,0 +1,19 @@
+{{- if .Values.mode.app }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "..names.name" . }}-backend
+  labels:
+    {{- include "..labels.standard" . | nindent 4 }}
+    app: {{ include "..names.name" . }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: {{ .Values.backend.service.port }}
+      targetPort: {{ .Values.backend.service.port }}
+  selector:
+    {{- include "..labels.matchLabels" . | nindent 4 }}
+    app: {{ include "..names.name" . }}
+{{- end }}

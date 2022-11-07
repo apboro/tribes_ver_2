@@ -1,0 +1,69 @@
+{{- if .Values.mode.app }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "..names.name" . }}-static
+  labels:
+    {{- include "..labels.standard" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.static.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "..labels.matchLabels" . | nindent 6 }}
+      app: {{ include "..names.name" . }}-static
+  template:
+    metadata:
+      labels:
+        {{- include "..labels.standard" . | nindent 8 }}
+        app: {{ include "..names.name" . }}-static
+      annotations:
+        checksum/container-registry: {{ include (print $.Template.BasePath "/static/docker-secret.yaml") . | sha256sum }}
+    spec:
+      imagePullSecrets:
+        - name: {{ include "..names.name" . }}-static-pull-secret
+      {{- if .Values.static.tolerations }}
+      tolerations: {{- include "..tplvalues.render" (dict "value" .Values.static.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: backend
+          image: {{ include "..imageName" .Values.static.image}}
+          imagePullPolicy: {{ .Values.static.image.pullPolicy }}
+          args:
+          - frontend 
+          ports:
+          - name: http
+            containerPort: {{ .Values.static.service.port }}
+            protocol: TCP
+        {{- if .Values.static.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /healthCheck
+              port: http
+            initialDelaySeconds: {{ .Values.static.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.static.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.static.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.static.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.static.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.static.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /healthCheck
+              port: http
+            initialDelaySeconds: {{ .Values.static.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.static.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.static.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.static.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.static.readinessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.static.startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: /healthCheck
+              port: http
+            failureThreshold: {{ .Values.static.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.static.startupProbe.periodSeconds }}
+        {{- end }}
+
+{{- end }}

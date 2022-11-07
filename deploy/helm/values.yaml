@@ -1,0 +1,218 @@
+nameOverride: ""
+fullnameOverride: ""
+
+mode:
+  app: true
+  migrations: false
+
+persistence:
+  enabled: true
+  storageClassName: ""
+  size: 10Gi
+  accessModes:
+    - ReadWriteMany
+
+backend:
+  image:
+    registry: registry.fabit.ru
+    repository: tribes/tribes
+    tag: latest
+    pullPolicy: IfNotPresent
+    credentials:
+      username: username
+      password: password
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  replicaCount: 1
+  tolerations: []
+
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 3
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 3
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 3
+
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    failureThreshold: 120
+    periodSeconds: 5
+
+queueWorker:
+  image:
+    registry: registry.fabit.ru
+    repository: tribes/tribes
+    tag: latest
+    pullPolicy: IfNotPresent
+    credentials:
+      username: username
+      password: password
+
+  replicaCount: 1
+  tolerations: []
+
+scheduleWorker:
+  image:
+    registry: registry.fabit.ru
+    repository: tribes/tribes
+    tag: latest
+    pullPolicy: IfNotPresent
+    credentials:
+      username: username
+      password: password
+
+  tolerations: []
+
+static:
+  image:
+    registry: registry.fabit.ru
+    repository: kzrf/backend
+    tag: latest
+    pullPolicy: IfNotPresent
+    credentials:
+      username: username
+      password: password
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  replicaCount: 1
+  tolerations: []
+
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 3
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 3
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 3
+
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    failureThreshold: 120
+    periodSeconds: 5
+
+migrations:
+  activeDeadlineSeconds: 7200
+  backoffLimit: 5
+
+config:
+  app:
+    name: "Tribes"
+    env: "local"
+    key: "base64:key"
+    debug: "true"
+    url: "http://localhost"
+  log:
+    channel: "stack"
+    deprecationsChannel: "null"
+    level: "debug"
+  broadcast:
+    driver: "log"
+  cache:
+    driver: "file"
+  filesystem:
+    driver: "local"
+  queue:
+    connection: "redis"
+  session:
+    driver: "file"
+    lifetime: "120"
+  mail:
+    driver: "smtp"
+    host: "smtp-host.example"
+    port: "587"
+    username: "username"
+    password: "password"
+    encryption: "tls"
+    from:
+      address: "no-reply@example.com"
+      name: "Support"
+  s3:
+    accessKey: ""
+    secretKey: ""
+    region: "us-east-1"
+    bucket: ""
+    pathStyleEndpoint: 'false'
+  postgresql:
+    host: "localhost"
+    port: "5432"
+    database: "kzrf"
+    username: "username"
+    password: "password"
+    schemas:
+      main: "public"
+      knowledge: "knowledge"
+  redis:
+    host: "localhost"
+    port: "6379"
+    password: "null"
+  memcached:
+    host: "localhost"
+  pusherApp:
+    id: ""
+    key: ""
+    secret: ""
+    cluster: "mt1"
+  tinkoff:
+    terminalKey: ""
+    secretKey: ""
+    termicalKeyE2E: ""
+    secretKeyE2E: ""
+    x509serial: ""
+  telegram:
+    bot:
+      id: "bot_id"
+      firstName: "bot_first_name"
+      name: "bot_name"
+      token: "bot_token"
+      hookOnFirstRequest: "true"
+    botKn:
+      id: "bot_id"
+      firstName: "bot_first_name"
+      name: "bot_name"
+      token: "bot_token"
+      hookOnFirstRequest: "true"
+    baseUrl: "https://api.telegram.org"
+    api:
+      id: "api_id"
+      hash: "api_hash"
+      proto: "api_proto"
+    logChat: "507752964"
+  smsRuCode: "sms_code"
+  smsMaxAttempts: "5"
+  webcaster:
+    client:
+      name: "webcaster_name"
+      password: "webcaster_password"
+  elk:
+    enabled: "false"
+    hosts: "localhost:9200"
+  grabTestData: "false"
+  useTrialPeriod: "true"
+  forTester: "false"
+  debugTinkoff: "false"
+  mqprotoHost: ""

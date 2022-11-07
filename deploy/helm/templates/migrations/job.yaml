@@ -1,0 +1,52 @@
+{{- if .Values.mode.migrations }}
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "..names.name" . }}-migration-{{ .Release.Revision }}
+  labels:
+    {{- include "..labels.standard" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  activeDeadlineSeconds: {{ .Values.migrations.activeDeadlineSeconds }}
+  backoffLimit: {{ .Values.migrations.backoffLimit }}
+  {{- if .Values.migrations.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ .Values.migrations.ttlSecondsAfterFinished }}
+  {{- end }}
+  template:
+    spec:
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: {{ include "..names.name" . }}-migration-pull-secret
+      containers:
+      - name: migrations
+        args:
+        - artisan
+        - migrate
+        image: {{ include "..imageName" .Values.backend.image}}
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+        env: 
+        - name: DB_DRIVER
+          value: "pgsql"
+        - name: DB_HOST_MAIN
+          value: {{ quote .Values.config.postgresql.host }}
+        - name: DB_PORT_MAIN
+          value: {{ quote .Values.config.postgresql.port }}
+        - name: DB_DATABASE_MAIN
+          value: {{ quote .Values.config.postgresql.database }}
+        - name: DB_USERNAME_MAIN
+          value: {{ quote .Values.config.postgresql.username }}
+        - name: DB_PASSWORD_MAIN
+          value: {{ quote .Values.config.postgresql.password }}
+        - name: DB_SCHEMA_MAIN
+          value: {{ quote .Values.config.postgresql.schemas.main }}
+        - name: DB_SCHEMA_KNOWLEDGE
+          value: {{ quote .Values.config.postgresql.schemas.knowledge }}
+        - name: REDIS_HOST
+          value: {{ quote .Values.config.redis.host }}
+        - name: REDIS_PASSWORD
+          value: {{ quote .Values.config.redis.password }}
+        - name: REDIS_PORT
+          value: {{ quote .Values.config.redis.port }}
+{{- end }}
