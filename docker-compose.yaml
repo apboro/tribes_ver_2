@@ -7,7 +7,36 @@ services:
     build: .
     command: "php-fpm"
     environment: 
-    - APP_URL=http://localhost12412312
+    - APP_URL=http://localhost
+    - REDIS_HOST=redis
+    - REDIS_PASSWORD=null
+    - REDIS_PORT=6379
+    - DB_HOST_MAIN=postgresql
+    - DB_DATABASE_MAIN=tribes_community
+    - DB_USERNAME_MAIN=tribes
+    - DB_PASSWORD_MAIN=tribes1q2w3e4r
+  queue-worker:
+    build: .
+    command: "queue"
+    environment: 
+    - REDIS_HOST=redis
+    - REDIS_PASSWORD=null
+    - REDIS_PORT=6379
+    - DB_HOST_MAIN=postgresql
+    - DB_DATABASE_MAIN=tribes_community
+    - DB_USERNAME_MAIN=tribes
+    - DB_PASSWORD_MAIN=tribes1q2w3e4r
+  schedule:
+    build: .
+    command: "schedule"
+    environment: 
+    - REDIS_HOST=redis
+    - REDIS_PASSWORD=null
+    - REDIS_PORT=6379
+    - DB_HOST_MAIN=postgresql
+    - DB_DATABASE_MAIN=tribes_community
+    - DB_USERNAME_MAIN=tribes
+    - DB_PASSWORD_MAIN=tribes1q2w3e4r
   proxy:
     build: .
     command: "proxy"
@@ -19,3 +48,9 @@ services:
       - "80:80"
   redis:
     image: "redis:alpine"
+  postgresql:
+    image: 'bitnami/postgresql:14.5.0-debian-11-r6'
+    environment: 
+    - POSTGRESQL_USERNAME=tribes_community
+    - POSTGRESQL_PASSWORD=tribes1q2w3e4r
+    - POSTGRESQL_DATABASE=tribes
