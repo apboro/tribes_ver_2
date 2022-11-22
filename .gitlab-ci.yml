@@ -47,3 +47,14 @@ deploy_dev:
     DEPLOYMENT: dev-tribes
   rules: 
   - if: $CI_COMMIT_BRANCH == "dev"
+
+deploy_prod:
+  stage: deploy
+  extends:
+  - .base_template
+  - .commit_versions_template
+  - .common_deploy
+  variables: 
+    DEPLOYMENT: prod-tribes
+  rules: 
+  - if: $CI_COMMIT_BRANCH == "master"
