@@ -30,7 +30,8 @@ build_image:
   when: on_success
   rules: 
   - if: $CI_COMMIT_BRANCH == "dev"
-
+  - if: $CI_COMMIT_BRANCH == "master"
+  
 push_chart:
   stage: build
   extends:
@@ -47,6 +48,7 @@ deploy_dev:
     DEPLOYMENT: dev-tribes
   rules: 
   - if: $CI_COMMIT_BRANCH == "dev"
+  - if: $CI_COMMIT_BRANCH == "master"
 
 deploy_prod:
   stage: deploy
