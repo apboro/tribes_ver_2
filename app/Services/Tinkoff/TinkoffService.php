@@ -84,11 +84,11 @@ class TinkoffService
 
                         // Уведомления о покупке автору и покупателю
                         $v = view('mail.media_thanks_buyer')->withCourse($course)->render();
-                        new Mailer('Сервис TRIBES', $v, 'Покупка ' .  $course->title, $payer->email);
+                        new Mailer('Сервис Spodial', $v, 'Покупка ' .  $course->title, $payer->email);
 
                         if($course->shipping_noty){
                             $v = view('mail.media_thanks_author')->withCourse($course)->render();
-                            new Mailer('Сервис TRIBES', $v, 'Покупка ' .  $course->title, $course->author()->first()->email);
+                            new Mailer('Сервис Spodial', $v, 'Покупка ' .  $course->title, $course->author()->first()->email);
                         }
 
                     }

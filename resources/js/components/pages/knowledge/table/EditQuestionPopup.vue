@@ -19,7 +19,7 @@
                     type="text"
                     id="question"
                     class="form-control"
-                    placeholder="Что такое Tribes?"
+                    placeholder="Что такое Spodial?"
                     v-model="questionText"
                 >
 

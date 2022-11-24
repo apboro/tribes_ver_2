@@ -120,11 +120,11 @@ class CourseController extends Controller
             ]);
             // Уведомления о покупке автору и покупателю
             $v = view('mail.media_thanks_buyer')->withCourse($course)->render();
-            new Mailer('Сервис TRIBES', $v, 'Покупка ' .  $course->title, $user->email);
+            new Mailer('Сервис Spodial', $v, 'Покупка ' .  $course->title, $user->email);
 
             if($course->shipping_noty){
                 $v = view('mail.media_thanks_author')->withCourse($course)->render();
-                new Mailer('Сервис TRIBES', $v, 'Покупка ' .  $course->title, $course->author()->first()->email);
+                new Mailer('Сервис Spodial', $v, 'Покупка ' .  $course->title, $course->author()->first()->email);
             }
         } else {
 
@@ -159,7 +159,7 @@ class CourseController extends Controller
         $author = $course->author()->first();
 
         $v = view('mail.media_feedback')->withCourse($course)->withMessage($request['message'])->render();
-        new Mailer('Сервис TRIBES', $v, 'Читатель оставил отзыв о товаре ' .  $course->title, $author->email);
+        new Mailer('Сервис Spodial', $v, 'Читатель оставил отзыв о товаре ' .  $course->title, $author->email);
 
         return redirect()->back()->with(['message' => 'Сообщение отправлено']);
     }

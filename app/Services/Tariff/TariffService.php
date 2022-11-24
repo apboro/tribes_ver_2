@@ -103,7 +103,7 @@ class TariffService {
                 $this->telegramMainBotService->sendMessageFromBotWithTariff(config('telegram_bot.bot.botName'), $telegram_user['telegram_id'], $textMessage, $community);
 
                 if ($user->email){
-                    new Mailer('Сервис TRIBES', $textMessageView, 'Заканчивается тариф ', $user->email);
+                    new Mailer('Сервис Spodial', $textMessageView, 'Заканчивается тариф ', $user->email);
                 }
             } else {
 
@@ -114,7 +114,7 @@ class TariffService {
                 $this->telegramMainBotService->sendMessageFromBot(config('telegram_bot.bot.botName'), $user['telegram_id'], $textMessage);
 
                 if ($user->email){
-                    new Mailer('Сервис TRIBES', $textMessageView, 'Заканчивается тариф ', $user->email);
+                    new Mailer('Сервис Spodial', $textMessageView, 'Заканчивается тариф ', $user->email);
                 }
             }
         }
