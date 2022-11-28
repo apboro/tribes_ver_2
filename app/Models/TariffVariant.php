@@ -33,7 +33,7 @@ class TariffVariant extends Model
 
     function payFollowers()
     {
-        return $this->belongsToMany(TelegramUser::class, 'telegram_users_tarif_variants', 'tarif_variants_id', 'telegram_user_id')->withPivot(['days', 'isAutoPay', 'prompt_time', 'created_at']);
+        return $this->belongsToMany(TelegramUser::class, 'telegram_users_tarif_variants', 'tarif_variants_id', 'telegram_user_id')->withPivot(['days', 'isAutoPay', 'prompt_time', 'created_at', 'end_tarif_date']);
     }
 
     function getFollowersById($id)

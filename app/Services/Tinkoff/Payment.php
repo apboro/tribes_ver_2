@@ -215,7 +215,7 @@ class Payment
                 } else {
                     //todo сохранять в лог файл TelegramLogService::staticSendLogMessage заменить на
                     // \App\Exceptions\TelegramException::report() сделать похожий для платежей
-                    TelegramLogService::staticSendLogMessage("Charge ответил с ошибкой: " . utf8_encode(json_encode($chargeRes)));
+                    TelegramLogService::staticSendLogMessage("Charge ответил с ошибкой: " . json_encode($chargeRes, JSON_UNESCAPED_UNICODE));
                     return false;
                 }
             }
@@ -224,7 +224,7 @@ class Payment
 
             return $this->payment;
         } else {
-            TelegramLogService::staticSendLogMessage("Оплата по карте с ошибкой: " . utf8_encode(json_encode($resp)));
+            TelegramLogService::staticSendLogMessage("Оплата по карте с ошибкой: " . json_encode($resp, JSON_UNESCAPED_UNICODE));
             return false;
         }
     }
