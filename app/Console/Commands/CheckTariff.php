@@ -4,12 +4,12 @@ namespace App\Console\Commands;
 
 use App\Models\TariffVariant;
 use App\Models\TelegramUser;
+use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
+use App\Services\Tinkoff\Payment as Pay;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use App\Services\Tinkoff\Payment as Pay;
-use App\Models\User;
 
 class CheckTariff extends Command
 {
@@ -37,8 +37,8 @@ class CheckTariff extends Command
      */
     public function __construct(
         TelegramMainBotService $telegramService,
-        TelegramLogService $telegramLogService
-    ) 
+        TelegramLogService     $telegramLogService
+    )
     {
         parent::__construct();
         $this->telegramService = $telegramService;
@@ -63,10 +63,10 @@ class CheckTariff extends Command
                             /** @var TariffVariant $variant*/
                             //echo "var{$variant->title} \n";
                             if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
+                                echo "Time = {$variant->pivot->prompt_time}". "Period = {$variant->period}".PHP_EOL;
                                 $userName = ($user->user_name) ? '<a href="t.me/' . $user->user_name . '">' . $user->user_name . '</a>' : $user->telegram_id;
                                 //echo "job for {$variant->title} \n";
                                 if ($variant->pivot->days < 1) {
-
                                     if ($variant->pivot->isAutoPay === true) {
                                         if(false/*todo проверить через бот состоит ли пользователь в группе на данный момент*/){
                                             //если проверка что-то ответила, то обновить параметр exit_date
@@ -77,15 +77,18 @@ class CheckTariff extends Command
                                         if ($user->hasLeaveCommunity($variant->tariff->community_id)) {
                                             $payment = NULL;
                                         } elseif ($variant->isActive) {
-                                            //echo "create pay {$variant->title} \n";
-                                            $p = new Pay();
-                                            $p->amount($variant->price * 100)
-                                                ->charged(true)
-                                                ->payFor($variant)
-                                                ->payer($follower);
-
-                                            $payment = $p->pay();
-                                            $payId = $payment->id ?? 'undefined';
+                                            echo 'found payer!'. PHP_EOL;
+//                                            if ($variant->pivot->end_tarif_date < Carbon::now()) {
+                                                //echo "create pay {$variant->title} \n";
+                                                dump('Oplata tarifa: ', $follower, $variant);
+                                                $p = new Pay();
+                                                $p->amount($variant->price * 100)
+                                                    ->charged(true)
+                                                    ->payFor($variant)
+                                                    ->payer($follower);
+                                                $payment = $p->pay();
+                                                $payId = $payment->id ?? 'undefined';
+//                                            }
                                         } else {
                                             //если тариф вариант неактивный, то платеж не создавать
                                             $payment = NULL;
@@ -97,18 +100,20 @@ class CheckTariff extends Command
                                     if ($payment) {
                                         $lastName = $user->last_name ?? '';
                                         $firstName = $user->first_name ?? '';
+                                        echo 'sending logs to chat '. PHP_EOL;
                                         $this->telegramService->sendMessageFromBot(
                                             config('telegram_bot.bot.botName'),
                                             env('TELEGRAM_LOG_CHAT'),
                                             "Рекуррентное списание от " . $firstName . $lastName . " в сообщество "
                                         );
                                         //todo
-                                        $payerName = $user->publicName()??'';
-                                        $tariffName = $variant->title??'';
-                                        $tariffCost = ($payment->amount/100)??0;
-                                        $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y')??'';
+                                        $payerName = $user->publicName() ?? '';
+                                        $tariffName = $variant->title ?? '';
+                                        $tariffCost = ($payment->amount / 100) ?? 0;
+                                        $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y') ?? '';
                                         $message = "Участник $payerName оплатил $tariffName в сообществе {$payment->community->title},
                                 стоимость $tariffCost рублей действует до $tariffEndDate г.";
+                                        echo 'sending message to comminity author '. PHP_EOL;
                                         $this->telegramService->sendMessageFromBot(
                                             config('telegram_bot.bot.botName'),
                                             $payment->community->connection->telegram_user_id,
@@ -117,10 +122,10 @@ class CheckTariff extends Command
 
                                         $user->tariffVariant()->updateExistingPivot($variant->id, [
                                             'days' => $variant->period,
+//                                            'end_tarif_date' => Carbon::now()->addDays($variant->period)->format('d.m.Y'),
                                             'prompt_time' => date('H:i')
                                         ]);
                                     } else {
-
                                         //echo "not create payment  \n";
                                         // отключить рекуррентный платеж
                                         if ($variant->pivot->isAutoPay === true) {

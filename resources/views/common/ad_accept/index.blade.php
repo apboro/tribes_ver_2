@@ -42,7 +42,7 @@
                         </li>
                         <li>
                             Пользователь имеет право отозвать свое Согласие в любое время путем направления соответствующего запроса в службу поддержки&nbsp;
-                            <a href="mailto:privacy@trbs.co" class="text-primary">privacy@trbs.co</a>, <a href="mailto:support@trbs.co" class="text-primary">support@trbs.co</a> или в Мессенджере Телеграм: <a href="https://t.me/TribesSupport_bot">@TribesSupport_bot</a>, а также путем удаления Чат-бота <a href="https://t.me/lms_9388Bot" class="text-primary">@lms_9388Bot</a>.
+                            <a href="mailto:privacy@trbs.co" class="text-primary">privacy@trbs.co</a>, <a href="mailto:support@trbs.co" class="text-primary">support@trbs.co</a> или в Мессенджере Телеграм: <a href="https://t.me/TribesSupport_bot">@SpodialSupport_bot</a>, а также путем удаления Чат-бота <a href="https://t.me/lms_9388Bot" class="text-primary">@lms_9388Bot</a>.
                         </li>
                     </ol>
 

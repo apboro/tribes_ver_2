@@ -18,7 +18,7 @@
                     type="text"
                     id="new_question"
                     class="form-control"
-                    placeholder="Что такое Tribes?"
+                    placeholder="Что такое Spodial?"
                     v-model="newQuestionText"
                 >
                 

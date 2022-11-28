@@ -3,7 +3,7 @@
 @section('og')
     
     
-    <title>{{ $course->title }} | Tribes</title>
+    <title>{{ $course->title }} | Spodial</title>
     <meta property="og:title" content="
         <?php
             function reduction($text, $length) {
