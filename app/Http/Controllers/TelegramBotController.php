@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\TelegramException;
 use App\Models\TestData;
+use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -22,6 +24,7 @@ class TelegramBotController extends Controller
 
     public function index(Request $request)
     {
+        try {
         $data = $request->collect();
         TestData::create([
             'data' => $data
@@ -36,6 +39,10 @@ class TelegramBotController extends Controller
         }
 
         $this->mainBotService->run($botName, $request->collect());
+        } catch (Exception $e) {
+            TelegramLogService::staticSendLogMessage('Error: '. $e->getMessage());
+        }
+
     }
 
     //hook for second register bot

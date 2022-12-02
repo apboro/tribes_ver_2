@@ -78,9 +78,9 @@ class PaymentController extends Controller
 
         if($payment->isTariff()) {
             $v = view('mail.telegram_invitation')->withPayment($payment)->render();
-            new Mailer('Сервис TRIBES', $v, 'Приглашение', $payment->payer->email);
+            new Mailer('Сервис Spodial', $v, 'Приглашение', $payment->payer->email);
+            return view('common.tariff.success')->withPayment($payment);
         }
-
         return view('common.donate.success')->withPayment($payment);
     }
 

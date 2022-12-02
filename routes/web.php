@@ -10,6 +10,7 @@ use App\Http\Controllers\TelegramUserBotController;
 use App\Http\Controllers\UserBotFormController;
 use App\Models\TelegramUser;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\TestController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -346,4 +347,5 @@ Route::any('/manager{any}', function () {
 Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name('telegram.interface');
 
 Route::get('/tinkofftestdata', 'App\Http\Controllers\TariffController@testData');
+Route::get('/test', [App\Http\Controllers\TestController::class, 'test']);
 
