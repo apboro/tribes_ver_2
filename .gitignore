@@ -50,6 +50,8 @@ _ide_helper.php
 /lib/tdLib
 /tdLib
 /tests/Browser
+/app/Http/Controllers/TestController.php
+
 
 test.json
 /videos/donate-success.mp4

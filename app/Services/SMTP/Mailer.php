@@ -12,6 +12,7 @@ class Mailer
     {
         $err = $this->send($subject, $from, $html, $to);
 
+        //FALLS with Bad Request: group chat was upgraded to a supergroup chat, switch off now
         if ($err) {
                 TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . $err);
         } else {

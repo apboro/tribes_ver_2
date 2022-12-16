@@ -5,7 +5,7 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'Tribes Swagger UI',
+                'title' => 'Spodial Swagger UI',
             ],
 
             'routes' => [
