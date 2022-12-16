@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Community;
 use App\Services\Telegram\BotInterface\TelegramLogServiceContract;
-use App\Services\Telegram\MainBotCollection;
 use App\Services\Telegram\Extention\ExtentionApi;
+use App\Services\Telegram\MainBotCollection;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class TelegramLogService implements TelegramLogServiceContract
 {
@@ -20,11 +21,15 @@ class TelegramLogService implements TelegramLogServiceContract
 
     public function sendLogMessage(string $text)
     {
-        $this->getApiCommandsForBot(config('telegram_bot.bot.botName'))->sendMessage([
-            'chat_id'        => env('TELEGRAM_LOG_CHAT'),
-            'text'           => $text,
-            'parse_mode'     => 'HTML'
-        ]);
+        try {
+            $this->getApiCommandsForBot(config('telegram_bot.bot.botName'))->sendMessage([
+                'chat_id' => env('TELEGRAM_LOG_CHAT'),
+                'text' => $text,
+                'parse_mode' => 'HTML'
+            ]);
+        } catch (Exception $e) {
+            Log::channel('telegram-bot-log')->alert('Telegram log trouble: '.$e->getMessage());
+        }
     }
 
     protected function getApiCommandsForBot(string $nameBot): ExtentionApi
@@ -34,7 +39,11 @@ class TelegramLogService implements TelegramLogServiceContract
 
     public static function staticSendLogMessage(string $text)
     {
-        $service = new self(app(MainBotCollection::class));
-        $service->sendLogMessage($text);
+        try {
+            $service = new self(app(MainBotCollection::class));
+            $service->sendLogMessage($text);
+        } catch (Exception $e) {
+            Log::channel('telegram-bot-log')->alert('Telegram log trouble: '.$e->getMessage());
+        }
     }
 }

@@ -126,6 +126,16 @@ class TinkoffApi
         return $this->buildQuery('Charge', $args);
     }
 
+    public function reSend()
+    {
+        return $this->buildQuery('Resend', '');
+    }
+
+    public function checkOrder($args)
+    {
+        return $this->buildQuery('CheckOrder', $args);
+    }
+
     public function addCustomer($args)
     {
         return $this->buildQuery('AddCustomer', $args);
@@ -149,6 +159,11 @@ class TinkoffApi
     public function removeCard($args)
     {
         return $this->buildQuery('RemoveCard', $args);
+    }
+
+    public function cancel($args)
+    {
+        return $this->buildQuery('Cancel', $args);
     }
 
     public function removeCardA2C($args)

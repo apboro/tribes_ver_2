@@ -72,6 +72,13 @@ return [
             'permission' => 0666,
         ],
 
+        'tinkoff' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/tinkoff.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'permission' => 0666,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

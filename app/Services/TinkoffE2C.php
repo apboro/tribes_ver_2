@@ -7,6 +7,7 @@ namespace App\Services;
 class TinkoffE2C
 {
     public TinkoffApi $api;
+    private TinkoffApi $apiE2C;
 
     public function __construct()
     {
@@ -90,7 +91,7 @@ class TinkoffE2C
         $r['message']       = isset($resp->Message)     && $resp->Message ? $resp->Message : null;
         $r['details']       = isset($resp->Details)     && $resp->Details ? $resp->Details : null;
         $r['paymentUrl']    = isset($resp->PaymentURL)  && $resp->PaymentURL ? $resp->PaymentURL : null;
-
+        
         return $r;
     }
 }

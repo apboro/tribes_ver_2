@@ -17,6 +17,10 @@ abstract class StatController extends Controller
     protected function getCommunityIds(TeleDialogStatRequest $request): array
     {
         $community_ids = $request->get('community_ids');
+        if (!$community_ids)
+        {
+            $community_ids = 'all';
+        }
         if ($community_ids == 'all') {
             $communityIds = ArrayHelper::getColumn(Community::where('owner', Auth::user()->id)->get(),'id');
         } else {

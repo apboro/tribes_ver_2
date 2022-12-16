@@ -15,7 +15,7 @@ class TeleDialogStatRequest extends FormRequest
     public function rules()
     {
         return [
-            'community_ids' => ['required','string',new OwnCommunityGroupRule()],
+            'community_ids' => ['string',new OwnCommunityGroupRule()],
             'export_type' => 'string|in:xlsx,csv',
         ];
     }

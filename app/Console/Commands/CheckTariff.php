@@ -10,6 +10,7 @@ use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\Payment as Pay;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CheckTariff extends Command
 {
@@ -63,7 +64,7 @@ class CheckTariff extends Command
                             /** @var TariffVariant $variant*/
                             //echo "var{$variant->title} \n";
                             if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
-                                echo "Time = {$variant->pivot->prompt_time}". "Period = {$variant->period}".PHP_EOL;
+                                
                                 $userName = ($user->user_name) ? '<a href="t.me/' . $user->user_name . '">' . $user->user_name . '</a>' : $user->telegram_id;
                                 //echo "job for {$variant->title} \n";
                                 if ($variant->pivot->days < 1) {
@@ -77,10 +78,10 @@ class CheckTariff extends Command
                                         if ($user->hasLeaveCommunity($variant->tariff->community_id)) {
                                             $payment = NULL;
                                         } elseif ($variant->isActive) {
-                                            echo 'found payer!'. PHP_EOL;
 //                                            if ($variant->pivot->end_tarif_date < Carbon::now()) {
                                                 //echo "create pay {$variant->title} \n";
-                                                dump('Oplata tarifa: ', $follower, $variant);
+                                                Log::channel('tinkoff')
+                                                    ->info(now() .' Oplata tarifa: follower_id - '. $follower->id .' summa: '.$variant->price * 100 . ' community_id - '. $variant->tariff->community_id);
                                                 $p = new Pay();
                                                 $p->amount($variant->price * 100)
                                                     ->charged(true)
@@ -100,7 +101,6 @@ class CheckTariff extends Command
                                     if ($payment) {
                                         $lastName = $user->last_name ?? '';
                                         $firstName = $user->first_name ?? '';
-                                        echo 'sending logs to chat '. PHP_EOL;
                                         $this->telegramService->sendMessageFromBot(
                                             config('telegram_bot.bot.botName'),
                                             env('TELEGRAM_LOG_CHAT'),
@@ -113,8 +113,7 @@ class CheckTariff extends Command
                                         $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y') ?? '';
                                         $message = "Участник $payerName оплатил $tariffName в сообществе {$payment->community->title},
                                 стоимость $tariffCost рублей действует до $tariffEndDate г.";
-                                        echo 'sending message to comminity author '. PHP_EOL;
-                                        $this->telegramService->sendMessageFromBot(
+                                         $this->telegramService->sendMessageFromBot(
                                             config('telegram_bot.bot.botName'),
                                             $payment->community->connection->telegram_user_id,
                                             $message
@@ -125,6 +124,7 @@ class CheckTariff extends Command
 //                                            'end_tarif_date' => Carbon::now()->addDays($variant->period)->format('d.m.Y'),
                                             'prompt_time' => date('H:i')
                                         ]);
+                                        Log::channel('tinkoff')->info('Next payment in days -'. $variant->period . ' at '. date('H:i'));
                                     } else {
                                         //echo "not create payment  \n";
                                         // отключить рекуррентный платеж

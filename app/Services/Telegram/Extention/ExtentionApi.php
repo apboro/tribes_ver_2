@@ -28,16 +28,22 @@ class ExtentionApi extends Api implements ExtentionApiInterface
      */
     public function sendMess(int $chatId, string $text, bool $preview = false, array $keyboard = [])
     {
-        $params = [
-            'chat_id'        => $chatId,
-            'text'           => $text,
-            'parse_mode'     => 'HTML',
-            'disable_web_page_preview' => $preview,
-            'reply_markup'   => [
-                "inline_keyboard" => $keyboard
-            ]
-        ];
-        Http::post(env('TELEGRAM_BASE_URL') . '/bot' . $this->token . '/sendMessage', $params);
+        try {
+            $params = [
+                'chat_id' => $chatId,
+                'text' => $text,
+                'parse_mode' => 'HTML',
+                'disable_web_page_preview' => $preview,
+                'reply_markup' => [
+                    "inline_keyboard" => $keyboard
+                ]
+            ];
+            Http::post(env('TELEGRAM_BASE_URL') . '/bot' . $this->token . '/sendMessage', $params);
+        } catch (\Exception $e)
+        {
+            \Illuminate\Support\Facades\Log::channel('telegram-bot-log')
+                ->alert('Error from '. get_called_class(). ' text: '. $e->getMessage(). PHP_EOL);
+        }
     }
 
     /**
