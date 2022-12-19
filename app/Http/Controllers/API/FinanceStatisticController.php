@@ -64,17 +64,16 @@ class FinanceStatisticController extends StatController
                 'title' => 'Никнейм'
             ],
             [
-                'attribute' => 'buy_date',
-                'title' => 'Дата оплаты'
+                'attribute' => 'status',
+                'title' => 'Статус транзакции'
             ],
-
             [
                 'attribute' => 'type',
                 'title' => 'Тип транзакции'
             ],
             [
-                'attribute' => 'status',
-                'title' => 'Статус транзакции'
+                'attribute' => 'buy_date',
+                'title' => 'Дата оплаты'
             ],
             [
                 'attribute' => 'amount',

@@ -86,6 +86,10 @@ class TeleDialogStatisticController extends StatController
                 'attribute' => 'c_got_reactions',
                 'title' => 'Количество реакций получил'
             ],
+            [
+                'attribute' => 'utility',
+                'title' => 'Полезность'
+            ], s
         ];
         $type = $request->get('export_type');
         $membersBuilder = $this->statisticRepository->getMembersListForFile($this->getCommunityIds($request),$filter);

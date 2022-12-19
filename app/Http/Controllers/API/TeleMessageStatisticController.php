@@ -47,6 +47,10 @@ class TeleMessageStatisticController extends StatController
     {
         $columnNames = [
             [
+                'attribute' => 'text',
+                'title' => 'Текст сообщения'
+            ],
+            [
                 'attribute' => 'name',
                 'title' => 'Имя'
             ],
@@ -55,10 +59,13 @@ class TeleMessageStatisticController extends StatController
                 'title' => 'Никнейм'
             ],
             [
-                'attribute' => 'text',
-                'title' => 'Текст сообщения'
+                'attribute' => 'message_date',
+                'title' => 'Дата публикации'
             ],
-
+            [
+                'attribute' => 'count_reactions',
+                'title' => 'Количество реакций'
+            ],
             [
                 'attribute' => 'answers',
                 'title' => 'Количество ответов'
@@ -66,14 +73,6 @@ class TeleMessageStatisticController extends StatController
             [
                 'attribute' => 'utility',
                 'title' => 'Полезность'
-            ],
-            [
-                'attribute' => 'count_reactions',
-                'title' => 'Количество реакций'
-            ],
-            [
-                'attribute' => 'message_date',
-                'title' => 'Дата публикации'
             ],
         ];
         $type = $request->get('export_type');
