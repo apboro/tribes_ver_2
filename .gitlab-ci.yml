@@ -29,8 +29,8 @@ build_image:
   - .build_image_args_template
   when: on_success
   rules: 
-  - if: $CI_COMMIT_BRANCH == "dev"
-  - if: $CI_COMMIT_BRANCH == "master"
+  - if: $CI_COMMIT_BRANCH == "dev_spodial"
+  - if: $CI_COMMIT_BRANCH == "production"
   
 push_chart:
   stage: build
@@ -47,8 +47,8 @@ deploy_dev:
   variables: 
     DEPLOYMENT: dev-tribes
   rules: 
-  - if: $CI_COMMIT_BRANCH == "dev"
-  - if: $CI_COMMIT_BRANCH == "master"
+  - if: $CI_COMMIT_BRANCH == "dev_spodial"
+  - if: $CI_COMMIT_BRANCH == "production"
 
 deploy_prod:
   stage: deploy
@@ -59,4 +59,4 @@ deploy_prod:
   variables: 
     DEPLOYMENT: prod-tribes
   rules: 
-  - if: $CI_COMMIT_BRANCH == "master"
+  - if: $CI_COMMIT_BRANCH == "production"
