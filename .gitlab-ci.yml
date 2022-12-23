@@ -48,6 +48,7 @@ deploy_dev:
     DEPLOYMENT: dev-tribes
   rules: 
   - if: $CI_COMMIT_BRANCH == "dev"
+  - if: $CI_COMMIT_BRANCH == "dev_spodial"
   - if: $CI_COMMIT_BRANCH == "master"
 
 deploy_prod:
