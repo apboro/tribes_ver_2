@@ -15,7 +15,7 @@
             <div class="profile__start-work">
                 <div class="profile__community_not_selected">
                     <p>
-                        Начните работу со Spodial, подключив свои сообщетсва.
+                        Начните работу со Spodial, подключив свои сообщества.
                     </p>
                 </div>
 

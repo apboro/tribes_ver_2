@@ -82,7 +82,7 @@ class PaymentRepository implements PaymentRepositoryContract
 
 
         $receiptItem = [[
-            'Name'          => 'Оплата доступа к сообществу',
+            'Name'          => 'Оплата за использование системы',
             'Price'         => $amount,
             'Quantity'      => 1,
             'Amount'        => $amount,

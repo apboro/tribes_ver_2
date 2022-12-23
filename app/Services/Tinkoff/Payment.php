@@ -241,7 +241,7 @@ class Payment
         }
 
         $receiptItem = [[
-            'Name'          => 'Оплата доступа к сообществу',
+            'Name'          => 'Оплата за использование системы',
             'Price'         => $this->amount / 100,
             'Quantity'      => 1,
             'Amount'        => $this->amount,

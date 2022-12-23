@@ -48,7 +48,7 @@
                             href="{{ route('author.messenger.list') }}"
                             class="dropdown-personal__link {{ request()->is('*profile/messengers*') ? 'active' : ''  }}"
                         >
-                            Мессенджеры
+                            Профиль
                         </a>
                     </li>
 

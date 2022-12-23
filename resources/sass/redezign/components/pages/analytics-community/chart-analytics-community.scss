@@ -11,6 +11,7 @@
         
         @media (min-width: $md) {
             column-gap: 90px;
+            flex-direction: column;
         }
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'messengers' => 'Мессенджеры',
+    'messengers' => 'Профиль',
     'password_change' => 'Смена пароля',
     'new_password' => 'Новый пароль',
     'repeat_new_password' => 'Повторите новый пароль',
