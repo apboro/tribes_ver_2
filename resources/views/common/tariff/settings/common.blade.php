@@ -12,7 +12,7 @@
         @csrf
         @if (env('USE_TRIAL_PERIOD', true))
         <!-- Пробный период -->
-        {{-- <div>
+         <div>
             <div class="row align-items-center">
                 <div class="col-sm-10 col-12">
                     <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center">
@@ -47,7 +47,7 @@
                 </div>
             </div>
             <hr />
-        </div> --}}
+        </div>
         @endif
 
         <!-- Приветственное сообщение -->

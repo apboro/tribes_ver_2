@@ -12,7 +12,7 @@
         @csrf
         @if (env('USE_TRIAL_PERIOD', true))
         <!-- Пробный период -->
-        {{--<div>
+        <div>
             <div class="row align-items-center">
                 <div class="col-sm-10 col-12">
                     <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center">
@@ -47,9 +47,9 @@
                 </div>
             </div>
             <hr />
-        </div>--}}
+        </div>
         @endif
-        {{--<div class="inactive-form-items">
+        <div class="inactive-form-items">
             <div class="row align-items-center">
                 <div class="col-md-12 col-12">
                     <div class="d-flex align-items-center">
@@ -70,7 +70,7 @@
                 </div>
             </div>
             <hr />
-        </div>--}}
+        </div>
 
         <!-- Описание к публикации тарифов -->
         @include('common.tariff.assets.tariff_publication')

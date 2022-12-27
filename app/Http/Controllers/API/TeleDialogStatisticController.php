@@ -79,6 +79,10 @@ class TeleDialogStatisticController extends StatController
                 'title' => 'Количество сообщений'
             ],
             [
+                'attribute' => 'comm_name',
+                'title' => 'Название сообщества'
+            ],
+            [
                 'attribute' => 'c_put_reactions',
                 'title' => 'Количество реакций оставил'
             ],

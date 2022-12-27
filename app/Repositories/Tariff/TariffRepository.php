@@ -294,7 +294,7 @@ class TariffRepository implements TariffRepositoryContract
         } else {
             $variant->isActive = $data['tariff'] ?? false;
         }
-        $variant->number_button = $data['number_button'];
+        $variant->number_button = $data['number_button'] ?? null;
         $variant->arbitrary_term = $data['arbitrary_term'] ?? false;
 
         if(empty( $variant->inline_link)) {
