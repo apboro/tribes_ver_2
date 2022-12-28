@@ -9,7 +9,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
         this.headerItems = [
             { text: 'Имя подписчика', sortName: 'first_name' },
             { text: 'Никнейм', sortName: 'tele_login' },
-            { text: 'Статус транзакции', sortName: false },
+            { text: 'Оплата', sortName: false },
             { text: 'Тип транзакции', sortName: false },
             { text: 'Дата', sortName: 'buy_date' },
             { text: 'Сумма', sortName: 'amount' }
@@ -155,7 +155,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
     }
 
     get tariffs() {
-        return this.data.items.tariff_balance.map((item) => convertToRub(item));
+        return this.data.items.tariff_balance.map((item) => item);
     }
 
     get courses() {

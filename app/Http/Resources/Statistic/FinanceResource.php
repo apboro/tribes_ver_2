@@ -11,13 +11,13 @@ class FinanceResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "amount" => $this->resource->amount,
+            "amount" => $this->resource->amount/100,
             "type" => [
                 'value' => $this->resource->type,
                 'name' => $this->getTypeName($this->resource->type),
             ],
             "buy_date" => $this->resource->buy_date,
-            "status" => isset($this->resource->payable->title) ? $this->resource->payable->title : '-',
+            "status" => $this->resource->payable->title ?? '-',
             "tele_login" => $this->resource->tele_login,
             "first_name" => $this->resource->first_name,
         ];

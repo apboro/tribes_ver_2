@@ -41,12 +41,13 @@ class FileSendService
 
         if ($type == 'csv') {
             $headers = [
-                'Content-Type' => 'text/csv',
+                'Content-Type' => 'text/csv; charset=cp1251;' 
             ];
             $callback = function () use ($builder, $columnNames, $sourceClass) {
 
                 // Open output stream
                 $handle = fopen('php://output', 'w');
+                fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
 
                 // Add CSV headers
                 fputcsv($handle, ArrayHelper::getColumn($columnNames, 'title'));

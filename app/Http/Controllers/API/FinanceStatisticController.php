@@ -65,7 +65,7 @@ class FinanceStatisticController extends StatController
             ],
             [
                 'attribute' => 'status',
-                'title' => 'Статус транзакции'
+                'title' => 'Оплата'
             ],
             [
                 'attribute' => 'type',
