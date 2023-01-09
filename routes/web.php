@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\TeleDialogStatisticController;
 use App\Http\Controllers\API\TeleMessageStatisticController;
 use App\Http\Controllers\DonateController;
+use App\Http\Controllers\FeedbackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestBotController;
 use App\Http\Controllers\TelegramBotController;
@@ -205,6 +206,10 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::get('/faq', function () {
             return view('common.faq.index');
         })->name('faq.index');
+
+        // Feedback
+        Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+        Route::post('/feedback/save', [FeedbackController::class, 'save'])->name('feedback.save');
 
         // Education
         Route::get('/education', function () {

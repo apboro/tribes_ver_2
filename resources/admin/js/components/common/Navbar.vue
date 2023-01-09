@@ -67,6 +67,16 @@
                                             </a>
                                         </li>
                                     </router-link>
+                                  <router-link :to="{name:'feedback'}" v-slot="{ href, navigate, isActive }" custom>
+                                    <li class="nav-item" :class="[isActive && 'active']" >
+                                      <a class="nav-link" :href="href" @click="navigate">
+                                                <span class="nav-link-title">
+                                                    Обратная связь
+                                                </span>
+                                      </a>
+                                    </li>
+                                  </router-link>
+
                                 </ul>
                             </div>
                         </div>

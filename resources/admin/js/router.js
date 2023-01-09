@@ -43,10 +43,24 @@ let router =  new Router({
         },
 
         {
+            path: '/feedback',
+            name: 'feedback',
+            meta: {layout: 'main', requiresAuth: true},
+            // meta: {layout: 'main', requiresAuth: true},
+            component: () => import(/* webpackChunkName: "Payments" */ './components/pages/Feedback.vue')
+        },
+
+        {
             path: '/user/:id',
             name: 'Profile',
             // meta: {layout: 'main'},
             component: () => import(/* webpackChunkName: "Profile" */ './components/pages/Profile.vue'),
+        },
+        {
+            path: '/answer_feedback',
+            name: 'Answer',
+            // meta: {layout: 'main'},
+            component: () => import(/* webpackChunkName: "Profile" */ './components/pages/FeedbackView.vue'),
         },
 
 

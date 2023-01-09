@@ -155,7 +155,7 @@ export class AnalyticsPaymentsPage extends BaseAnalyticsPage {
     }
 
     get tariffs() {
-        return this.data.items.tariff_balance.map((item) => item);
+        return this.data.items.tariff_balance.map((item) => convertToRub(item));
     }
 
     get courses() {

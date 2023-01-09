@@ -22,5 +22,9 @@ Route::middleware(['auth:sanctum', 'admin'])->namespace('App\Http\Controllers\Ma
     //Community
     Route::post('/communities', 'CommunityController@list')->name('manager.community.list');
     Route::post('/community', 'CommunityController@get')->name('manager.community.get');
+    //Feedback
+    Route::get('/feedback/list', [\App\Http\Controllers\Manager\AdminFeedbackController::class, 'list'])->name('manager.feedback.list');
+    Route::post('/feedback/answer', [\App\Http\Controllers\Manager\AdminFeedbackController::class, 'answer'])->name('manager.feedback.answer');
+    Route::post('/feedback/close/{feedback}', [\App\Http\Controllers\Manager\AdminFeedbackController::class, 'close'])->name('manager.feedback.close');
 
 });

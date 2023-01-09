@@ -214,6 +214,9 @@
     &__item-wrap {
         padding: 0 5px 10px;
         width: 100%;
+        @media (min-width: $md){
+            width: 50%;
+        }
     }
 
     &__item-image {

@@ -58,6 +58,7 @@ return [
     'enter_name' => 'Enter name',
     'entries_rus_low' => 'entries',
     'exit' => 'Exit',
+    'email' => 'E-mail',
     // F
     'follow' => 'Follow',
     'finance' => 'Finance',
@@ -79,6 +80,7 @@ return [
     'login' => 'Login',
     // M
     'media_product' => 'Media products',
+    'message' => 'Message',
     'months' => 'Months',
     'months_2_low' => 'months',
     'months_3_low' => 'months',

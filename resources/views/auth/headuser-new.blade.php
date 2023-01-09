@@ -92,6 +92,12 @@
                         </a>
                     </li>
 
+                        <li class="dropdown-personal__link-item">
+                            <a href="{{ route('feedback.index') }}" class="dropdown-personal__link {{ request()->is('*feedback*') ? 'active' : ''  }}">
+                                Обратная связь
+                            </a>
+                        </li>
+
                     <li class="dropdown-personal__link-item">
                         <a
                             href="{{ route('logout') }}"
