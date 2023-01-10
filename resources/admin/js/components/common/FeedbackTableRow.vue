@@ -2,7 +2,13 @@
   <tr>
     <td>{{ message.id }}</td>
     <td>
-      {{ message.name }}
+      <transition>
+        <router-link
+            :to="{ name:'Profile', params: {id: message.user_id} }"
+        >
+          {{ message.name }}
+        </router-link>
+      </transition>
     </td>
     <td>
       {{ message.email }}
@@ -21,18 +27,19 @@
     <td>
       {{ message.status }}
     </td>
-    <td v-if="message.status !== 'Закрыт'" class ="text-end">
+    <td>
       <button type="button" class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
         Действия
       </button>
       <ul class="dropdown-menu dropdown-menu-end">
-
-        <li>
-          <button @click.prevent="view(message)" class="dropdown-item">Ответить</button>
+        <li v-if="message.status === 'Новый'">
+          <button @click.prevent="answer(message.id)" class="dropdown-item">Ответить</button>
         </li>
-
-        <li>
+        <li v-if="message.status === 'Новый'">
           <button @click.prevent="close" class="dropdown-item">Закрыть обращение</button>
+        </li>
+        <li v-if="message.status !== 'Новый'">
+          <button @click.prevent="answer(message.id)" class="dropdown-item">Просмотреть</button>
         </li>
       </ul>
     </td>
@@ -66,10 +73,10 @@ export default {
         axios.post('/api/v2/feedback/close/' + this.message.id).then(this.message.status = 'Закрыт');
       }
     },
-    view(message){
-      this.$router.push({ name: 'Answer', params: {message} })
-    }
 
+    answer(message_id){
+      this.$router.push({ name: 'answer', params: {id: message_id} })
+    },
   }
 }
 </script>

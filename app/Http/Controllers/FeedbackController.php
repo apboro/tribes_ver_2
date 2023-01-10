@@ -16,12 +16,11 @@ class FeedbackController extends Controller
 
     public function save(Request $request)
     {
-//        dd($request->all());
         Feedback::create([
             'user_id' => Auth::user()->id,
             'email' => $request->fb_email,
-            'phone' => $request->fb_phone,
-            'name' => $request->fb_name,
+            'phone' => $request->fb_phone ?? null,
+            'name' => $request->fb_name ?? null,
             'text' => $request->fb_message,
             'status' => 'Новый',
         ]);

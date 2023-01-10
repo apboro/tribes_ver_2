@@ -44,7 +44,7 @@
                                 placeholder="{{ __('base.phone') }}"
                                 value="{{$user->phone}}"
                         >
-                        <label
+                        <label 
                                 class="form-label-red"
                                 for="fb_name"
                         >
@@ -68,6 +68,7 @@
                         <textarea
 
                                 class="form-control-red"
+                                required
                                 id="fb_message"
                                 name="fb_message"
                                 placeholder="{{ __('base.message') }}"

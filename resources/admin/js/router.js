@@ -57,8 +57,9 @@ let router =  new Router({
             component: () => import(/* webpackChunkName: "Profile" */ './components/pages/Profile.vue'),
         },
         {
-            path: '/answer_feedback',
-            name: 'Answer',
+            path: '/feedback/:id',
+            name: 'answer',
+            meta: {layout: 'main', requiresAuth: true},
             // meta: {layout: 'main'},
             component: () => import(/* webpackChunkName: "Profile" */ './components/pages/FeedbackView.vue'),
         },
