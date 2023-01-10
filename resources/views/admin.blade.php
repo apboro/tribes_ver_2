@@ -10,7 +10,7 @@
     @endauth
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ 'APP_NAME' }} | Администратор</title>
+    <title>{{ env('APP_NAME') }} | Администратор</title>
 
     <link href="{{ mix('admin/css/index.css') }}" rel="stylesheet">
     <script src="{{ mix('admin/js/index.js') }}" defer></script>

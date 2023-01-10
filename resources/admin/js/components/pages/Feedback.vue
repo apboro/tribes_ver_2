@@ -5,7 +5,7 @@
           <div class="ms-auto text-muted">
             Статус:
             <div class="ms-2 d-inline-block">
-                <select class="form-select" v-model="filter" @change="filteredMessages" aria-label="filter">
+                <select class="form-select" v-model="filter" @select="filteredMessages" aria-label="filter">
                   <option selected>Все статусы</option>
                   <option>Новый</option>
                   <option>Отвечен</option>
@@ -88,7 +88,7 @@ export default {
       }
     },
     searchMessages(){
-      this.filtered_messages = this.messages.filter(message => message.name.match(this.search))
+      this.filtered_messages = this.messages.filter(message => message.name.toUpperCase().match(this.search.toUpperCase()))
     }
   }
 }

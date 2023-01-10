@@ -62,7 +62,11 @@ class FileSendService
                                     $valData = $data[$eachCol['attribute']];
                                     $row[] = last($valData);
                                 } else {
-                                    $row[] = $data[$eachCol['attribute']];
+                                    if ($eachCol['attribute'] === 'amount') {
+                                        $row[] = $data[$eachCol['attribute']] / 100;
+                                    } else {
+                                        $row[] = $data[$eachCol['attribute']];
+                                    }
                                 }
                             }
                         } else {
