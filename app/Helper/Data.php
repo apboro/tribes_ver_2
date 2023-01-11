@@ -14,7 +14,7 @@ class Data extends Facade
         return 'data';
     }
 
-    public function get($key)
+    public static function get($key)
     {
         if(Auth::check()){
             $data = \App\Models\Data::where('user_id', Auth::user()->id)->where('key', $key)->first();

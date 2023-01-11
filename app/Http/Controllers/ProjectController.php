@@ -104,7 +104,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function analytics($project = null, $community = null, ProjectRequest $request)
+    public function analytics(ProjectRequest $request, $project = null, $community = null)
     {
 
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);

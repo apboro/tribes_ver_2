@@ -108,7 +108,7 @@
     <div class="confirmation_subscription__footer">
         <div>
             <label class="confirmation_subscription__email-label" for="email">Email*</label>
-            <input class="confirmation_subscription__email-input" id="email" placeholder="ivan@moyapochta.ru" name="email" required="true">
+            <input class="confirmation_subscription__email-input" id="email" @auth value={{auth()->user()->email}} @endauth placeholder="ivan@moyapochta.ru" name="email" required="true">
         </div>
         <!-- <a class="button-filled button-filled--primary" href="{{$community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community)}}">Оплатить</a> -->
         
@@ -121,7 +121,7 @@
             communityTariff: '{{ $tariff->title }}',
             communityTariffID: '{{ $tariff->id }}',
             communityAmount: '{{ $tariff->price }}',
-            url: `{{ $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
+            url: `{{ $tariff->price == 0 ? view('common.tariff.success_trial')->withCommunity($community) : $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
         })"
         >
         Оплатить

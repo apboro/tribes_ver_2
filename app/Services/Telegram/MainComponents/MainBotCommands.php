@@ -1050,8 +1050,8 @@ class MainBotCommands
     {
         try {
             $tariff = $community->tariff;
-            foreach ($tariff->variants as $variant) {
-                if ($variant->price !== 0 && $variant->isActive !== false && $variant->isPersonal == false) {
+            foreach ($tariff->variants->sortBy('price') as $variant) {
+                if ($variant->isActive !== false && $variant->isPersonal == false) {
                     $data = [
                         'amount' => $variant->price,
                         'currency' => 0,
@@ -1061,7 +1061,7 @@ class MainBotCommands
                     ];
 
                     $button[] = [[
-                        'text' => $variant->title . ' — ' . $variant->price . '₽' . '/' . $variant->period . ' ' . Declination::defineDeclination($variant->period),
+                        'text' => $variant->title . ' — ' . $variant->price . ' ₽' . ' / ' . $variant->period . ' ' . Declination::defineDeclination($variant->period),
                         "url" => $community->getTariffPaymentLink($data)
                     ]];
                 }
