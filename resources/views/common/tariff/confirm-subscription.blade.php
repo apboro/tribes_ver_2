@@ -121,7 +121,7 @@
             communityTariff: '{{ $tariff->title }}',
             communityTariffID: '{{ $tariff->id }}',
             communityAmount: '{{ $tariff->price }}',
-            url: `{{ $tariff->price == 0 ? view('common.tariff.success_trial')->withCommunity($community) : $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
+            url: `{{ $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
         })"
         >
         Оплатить

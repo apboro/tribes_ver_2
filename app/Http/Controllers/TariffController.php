@@ -98,7 +98,7 @@ class TariffController extends Controller
             new Mailer('Сервис ' . env('APP_NAME'), $v, 'Регистрация', $email);
         }
         ### /Регистрация плательщика #####
-
+        redirect('trialSubscribeSuccess');
         $p = new Pay();
         $p->amount($variant->price * 100)
             ->payFor($variant)
@@ -280,4 +280,10 @@ class TariffController extends Controller
         }
         return view('tinkoffDebug', ['logs' => $logs]);
     }
+
+    public function trialSubscribeSuccess(Community $community)
+    {
+        return view('common.tariff.success_trial')->withCommunity($community);
+    }
+
 }

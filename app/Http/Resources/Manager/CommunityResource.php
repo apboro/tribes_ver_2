@@ -15,8 +15,13 @@ class CommunityResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'title' => $this->title,
+         'id' => $this ->id,
+         'title' => $this -> title,
+         'owner' => $this->owner()->first()->name,
+         'telegram' => $this->connection()->first()->chat_type,
+         'created_at' => $this -> created_at,
+         'followers' => $this->countFollowers,
+         'balance' => $this->balance / 100
         ];
     }
 }

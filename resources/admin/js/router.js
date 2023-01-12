@@ -63,6 +63,13 @@ let router =  new Router({
             // meta: {layout: 'main'},
             component: () => import(/* webpackChunkName: "Profile" */ './components/pages/FeedbackView.vue'),
         },
+        {
+            path: '/communities',
+            name: 'communities',
+            meta: {layout: 'main', requiresAuth: true},
+            // meta: {layout: 'main'},
+            component: () => import(/* webpackChunkName: "Profile" */ './components/pages/Communities.vue'),
+        },
 
 
         // {

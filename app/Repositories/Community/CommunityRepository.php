@@ -66,7 +66,7 @@ class CommunityRepository implements CommunityRepositoryContract
 
     public function getAllCommunity()
     {
-        return Community::all();
+        return Community::paginate(20);
     }
 
     public function getCommunityById($id): ?Community

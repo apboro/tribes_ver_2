@@ -21,15 +21,15 @@
                             <div class="navbar-nav">
                                 <ul class="navbar-nav">
 
-                                    <router-link :to="{name:'dashboard'}" v-slot="{ href, navigate, isActive }" custom exact>
-                                        <li class="nav-item" :class="[isActive && 'active']" >
-                                            <a class="nav-link" :href="href" @click="navigate">
-                                                <span class="nav-link-title">
-                                                    Панель управления
-                                                </span>
-                                            </a>
-                                        </li>
-                                    </router-link>
+<!--                                    <router-link :to="{name:'dashboard'}" v-slot="{ href, navigate, isActive }" custom exact>-->
+<!--                                        <li class="nav-item" :class="[isActive && 'active']" >-->
+<!--                                            <a class="nav-link" :href="href" @click="navigate">-->
+<!--                                                <span class="nav-link-title">-->
+<!--                                                    Панель управления-->
+<!--                                                </span>-->
+<!--                                            </a>-->
+<!--                                        </li>-->
+<!--                                    </router-link>-->
                                     <router-link :to="{name:'users'}" v-slot="{ href, navigate, isActive }" custom>
                                         <li class="nav-item" :class="[isActive && 'active']" >
                                             <a class="nav-link" :href="href" @click="navigate">
@@ -40,11 +40,21 @@
                                         </li>
                                     </router-link>
 
-                                    <router-link :to="{name:'courses'}" v-slot="{ href, navigate, isActive }" custom>
+<!--                                    <router-link :to="{name:'courses'}" v-slot="{ href, navigate, isActive }" custom>-->
+<!--                                        <li class="nav-item" :class="[isActive && 'active']" >-->
+<!--                                            <a class="nav-link" :href="href" @click="navigate">-->
+<!--                                                <span class="nav-link-title">-->
+<!--                                                    Медиатовары-->
+<!--                                                </span>-->
+<!--                                            </a>-->
+<!--                                        </li>-->
+<!--                                    </router-link>-->
+
+                                    <router-link :to="{name:'communities'}" v-slot="{ href, navigate, isActive }" custom>
                                         <li class="nav-item" :class="[isActive && 'active']" >
                                             <a class="nav-link" :href="href" @click="navigate">
                                                 <span class="nav-link-title">
-                                                    Медиатовары
+                                                    Сообщества
                                                 </span>
                                             </a>
                                         </li>
