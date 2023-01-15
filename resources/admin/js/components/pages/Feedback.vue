@@ -2,24 +2,32 @@
   <div class="card">
     <div class="card-body border-bottom py-3">
       <div class="d-flex align-items-center justify-content-between">
-          <div class="ms-auto text-muted">
-            Статус:
-            <div class="ms-2 d-inline-block">
-                <select class="form-select" v-model="filter" @change="filteredMessages" aria-label="filter">
-                  <option selected>Все статусы</option>
-                  <option>Новый</option>
-                  <option>Отвечен</option>
-                  <option>Закрыт</option>
-                </select>
+         <div class="text-muted">
+            показать
+            <div class="mx-2 d-inline-block">
+              <input type="text" class="form-control" :value="this.filter_data.filter.entries" @input="changePageEntries" size="3">
             </div>
+            на странице
           </div>
         <div class="ms-auto text-muted">
-          Поиск по ФИО:
+        Статус
+        <div class="mx-2 d-inline-block">
+          <select class="form-control" v-model="filter_data.filter.status">
+            <option>Все статусы</option>
+            <option>Новый</option>
+            <option>Отвечен</option>
+            <option>Закрыт</option>
+          </select>
+        </div>
+        </div>
+
+        <div class="ms-auto text-muted">
+          Поиск (ID, имя, email):
           <div class="ms-2 d-inline-block">
-            <input type="text" class="form-control" v-model="search" @input="searchMessages" aria-label="поиск">
+            <input type="text" class="form-control" v-model="filter_data.filter.search" @input="" aria-label="поиск">
           </div>
         </div>
-        </div>
+      </div>
     </div>
 
     <div class="table-responsive">
@@ -36,12 +44,27 @@
           <th></th>
         </tr>
         </thead>
-        <tbody v-if="messages">
-        <feedback-table-row v-for="(message,index) in filtered_messages" :key="index" :message="message" />
+        <tbody v-if="feedbacks">
+        <feedback-table-row v-for="(message, index) in feedbacks.data" :key="index" :message="message"/>
         </tbody>
       </table>
       <div>
-      <Pagination :pagination="pagination" @pagination="(page, per_page) => load(page, per_page)"/>
+        <div v-if="feedbacks && feedbacks.per_page < feedbacks.total"
+             class="card-footer d-flex align-items-center">
+          <p class="m-0 text-muted">Показано <span>{{ feedbacks.per_page }}</span> из <span>{{
+              feedbacks.total
+            }}</span> записей</p>
+          <ul class="pagination m-0 ms-auto">
+            <li
+                v-for="(link, idx) in feedbacks.links"
+                class="page-item"
+                :class="{'active' : link.active}"
+                :key="idx"
+            >
+              <a class="page-link" @click="setPageByUrl(link.url)" href="#">{{ link.label }}</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -50,46 +73,46 @@
 <script>
 import FeedbackTableRow from "../common/FeedbackTableRow.vue";
 import Pagination from "../common/Pagination.vue";
+import FilterDataFeedbacks from "../../mixins/filterData";
+
 
 export default {
   name: "Feedback",
-  components: {Pagination, FeedbackTableRow },
+  components: {Pagination, FeedbackTableRow},
+  mixins: [FilterDataFeedbacks],
 
   data() {
-    return{
-      messages: null,
-      filtered_messages: null,
-      filter: 'Все статусы',
-      search: null,
-      pagination: null,
+    return {
+    }
+  },
+
+  watch: {
+    filter_data: {
+      deep: true,
+      handler: _.debounce(function (v) {
+        console.log(this.filter_data.filter.entries)
+        this.$store.dispatch('loadFeedbackList', v);
+      }, 400)
     }
   },
 
   mounted() {
-    this.load();
+    this.$store.dispatch('loadFeedbackList', this.filter_data);
   },
 
   computed: {
+    feedbacks() {
+      return this.$store.getters.getFeedbacks;
+    },
   },
 
   methods: {
-    load(page = 1, per_page = 10){
-      axios.get(`/api/v2/feedback/list?page=${page}&per_page=${per_page}`).then((response)=>{
-        this.messages = response.data.data;
-        this.filtered_messages = response.data.data;
-        this.pagination = response.data;
-      });
+
+    changePageEntries(event) {
+      this.filter_data.filter.entries = event.target.value;
+      this.filter_data.filter.page = 1;
     },
-    filteredMessages(){
-      this.filtered_messages = this.messages.filter(message => message.status === this.filter);
-      if (this.filter === 'Все статусы')
-      {
-        this.filtered_messages = this.messages;
-      }
-    },
-    searchMessages(){
-      this.filtered_messages = this.messages.filter(message => message.name.toUpperCase().match(this.search.toUpperCase()))
-    }
+
   }
 }
 </script>

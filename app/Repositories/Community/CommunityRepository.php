@@ -9,6 +9,7 @@ use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Http;
 
 class CommunityRepository implements CommunityRepositoryContract
 {
@@ -66,7 +67,16 @@ class CommunityRepository implements CommunityRepositoryContract
 
     public function getAllCommunity()
     {
-        return Community::paginate(20);
+        $community =  Community::with('communityOwner', 'connection')->orderBy('created_at', 'desc');
+//        foreach ($community->get() as $c) {
+//            if ($c->connection->chat_invite_link === null && $c->connection->botStatus === 'administrator') {
+//                $response = Http::get('https://api.telegram.org/bot'.env('TELEGRAM_BOT_TOKEN').'/createChatInviteLink?chat_id='.$c->connection->chat_id);
+//                $c->connection->chat_invite_link = $response->json('result.invite_link');
+//                $c->save();
+//                sleep(1);
+//            }
+//        }
+        return $community->paginate(50);
     }
 
     public function getCommunityById($id): ?Community

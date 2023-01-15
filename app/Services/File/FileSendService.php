@@ -100,7 +100,6 @@ class FileSendService
                         $rowNum = $key + 2;
                         if ($sourceClass) {
                             $data = (new $sourceClass($record))->toArray(new Request());
-
                             foreach ($columnNames as $colKey => $eachCol) {
                                 if (is_array($data[$eachCol['attribute']])) {
                                     $valData = $data[$eachCol['attribute']];

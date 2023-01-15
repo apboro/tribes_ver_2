@@ -35,7 +35,7 @@ class UserController extends Controller
 
     public function list(Request $request, UsersFilter $filter)
     {
-        $users = User::filter($filter)->paginate(request('filter.entries'), ['*'], 'filter.page');
+        $users = User::with('telegramMeta')->filter($filter)->paginate(request('filter.entries'), ['*'], 'filter.page');
         return new UsersResource($users);
     }
 

@@ -103,6 +103,7 @@ export default {
             handler: _.debounce(function(v) {
                 this.$store.dispatch('loadPayments', v);
             },400)
+
         },
 
         customer_data: {

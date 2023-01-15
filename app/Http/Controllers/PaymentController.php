@@ -92,7 +92,7 @@ class PaymentController extends Controller
 //        }
 
         if ($data['Status'] == 'REFUNDED') {
-            TelegramLogService::staticSendLogMessage("Попытка сделать возврат " . json_decode($data));
+            TelegramLogService::staticSendLogMessage("Попытка вывода средств " . json_encode($data));
             return response('OK', 200);
         }
         if ($data['Status'] == 'AUTHORIZED') {

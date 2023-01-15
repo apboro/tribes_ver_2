@@ -21,10 +21,12 @@ Route::middleware(['auth:sanctum', 'admin'])->namespace('App\Http\Controllers\Ma
     Route::post('/payments', 'PaymentController@list')->name('manager.payments.list');
     Route::post('/customers', 'PaymentController@customers')->name('manager.customers.list');
     //Community
-    Route::post('/communities', 'CommunityController@list')->name('manager.community.list');
-    Route::post('/community', 'CommunityController@get')->name('manager.community.get');
+    Route::post('/communities', 'AdminCommunityController@list')->name('manager.community.list');
+    Route::post('/community', 'AdminCommunityController@get')->name('manager.community.get');
+    Route::post('/communities-export', 'AdminCommunityController@export')->name('manager.communities.export');
+
     //Feedback
-    Route::get('/feedback/list', [AdminFeedbackController::class, 'list'])->name('manager.feedback.list');
+    Route::post('/feedback/list', [AdminFeedbackController::class, 'list'])->name('manager.feedback.list');
     Route::get('/feedback/{feedback}', [AdminFeedbackController::class, 'get'])->name('manager.feedback.get');
     Route::post('/feedback/answer', [AdminFeedbackController::class, 'answer'])->name('manager.feedback.answer');
     Route::post('/feedback/close/{feedback}', [AdminFeedbackController::class, 'close'])->name('manager.feedback.close');

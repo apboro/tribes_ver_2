@@ -1,6 +1,5 @@
 <template>
     <tr>
-        <td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
         <td><span class="text-muted">{{ user.id }}</span></td>
         <td>
             <transition>
@@ -11,6 +10,11 @@
                 </router-link>
             </transition>
         </td>
+      <td>
+        <a :href="'https://t.me/'+user.telegram" target="_blank">
+        {{ user.telegram }}
+        </a>
+      </td>
         <td>
             <a :href="`mailto:${ user.email }`">
                 {{ user.email }}

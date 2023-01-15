@@ -2,16 +2,19 @@
   <tr>
     <td>{{ community.id }}</td>
     <td>
-      <transition>
-        <router-link
-            :to="{ name:'Profile', params: {id: community.user_id} }"
-        >
-          {{ community.title }}
-        </router-link>
-      </transition>
+      <a :href="community.chat_invite_link" target="_blank">
+        {{ community.title }}
+      </a>
+
     </td>
     <td>
-      {{ community.owner }}
+      <transition>
+        <router-link
+            :to="{ name:'Profile', params: {id: community.owner_id} }"
+        >
+          {{ community.owner_name }}
+        </router-link>
+      </transition>
     </td>
     <td>
       {{ community.telegram }}
@@ -23,17 +26,18 @@
       {{ community.followers }}
     </td>
     <td>
-      {{ community.balance }}
+      {{ formatCash(community.balance) }}
     </td>
   </tr>
 </template>
 
 <script>
 import formatDateTime from '../../mixins/formatDateTime'
+import FormatCash from "../../mixins/formatCash";
 
 export default {
   name: 'TableRow',
-  mixins: [formatDateTime],
+  mixins: [formatDateTime, FormatCash],
 
   props: {
     community: {}

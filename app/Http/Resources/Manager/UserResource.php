@@ -23,6 +23,7 @@ class UserResource extends JsonResource
             'updated_at' => $this->resource->updated_at,
             'locale' => $this->resource->locale,
             'commission' =>  $this->resource->getTribesCommission(),
+            'telegram' => $this->resource->telegramMeta->user_name ?? '—',
         ];
     }
 }

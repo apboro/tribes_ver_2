@@ -202,6 +202,11 @@ class Community extends Model
         return $this->belongsTo(User::class, 'owner', 'id');
     }
 
+    function communityOwner()
+    {
+        return $this->belongsTo(User::class, 'owner', 'id');
+    }
+
     public function donateVariants()
     {
         return $this->hasManyThrough(DonateVariant::class, Donate::class);

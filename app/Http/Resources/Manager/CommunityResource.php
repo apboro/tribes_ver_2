@@ -17,11 +17,13 @@ class CommunityResource extends JsonResource
         return [
          'id' => $this ->id,
          'title' => $this -> title,
-         'owner' => $this->owner()->first()->name,
-         'telegram' => $this->connection()->first()->chat_type,
+         'owner_name' => $this->whenLoaded('communityOwner')->name,
+         'owner_id' => $this->whenLoaded('communityOwner')->id,
+         'telegram' => $this->whenLoaded('connection')->chat_type,
          'created_at' => $this -> created_at,
          'followers' => $this->countFollowers,
-         'balance' => $this->balance / 100
+         'balance' => $this->balance,
+         'chat_invite_link' => $this->whenLoaded('connection')->chat_invite_link,
         ];
     }
 }

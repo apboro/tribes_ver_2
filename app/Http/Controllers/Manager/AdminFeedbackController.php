@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Manager\Filters\FeedbackFilter;
 use App\Models\Feedback;
 use App\Models\TelegramMessage;
 use App\Models\User;
@@ -19,9 +20,10 @@ class AdminFeedbackController extends Controller
         $this->telegramService = $telegramService;
     }
 
-    public function list(Request $request)
+    public function list(Request $request, FeedbackFilter $filter)
     {
-        return response(Feedback::query()->latest()->paginate($request->input('per_page')));
+        $feedbacks =  Feedback::query()->filter($filter)->paginate(request('filter.entries'), ['*'], 'filter.page');
+        return $feedbacks;
     }
 
     public function get(Feedback $feedback)

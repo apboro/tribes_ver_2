@@ -6,6 +6,7 @@ let initialState = () =>  {
                 entries : 20,
                 page : 1,
                 date: null,
+                status: null,
                 sort: {
                     name: '', rule: ''
                 }
