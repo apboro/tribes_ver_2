@@ -24,6 +24,12 @@ class UserResource extends JsonResource
             'locale' => $this->resource->locale,
             'commission' =>  $this->resource->getTribesCommission(),
             'telegram' => $this->resource->telegramMeta->user_name ?? '—',
+            'community_owner_num' => $this->resource->getOwnCommunities()->count() ?? '—',
+            'is_blocked' => $this->resource->is_blocked,
+            'payins' => $this->resource->accumulation()->sum('amount') / 100,
+            'payouts' =>$this->resource->accumulation()
+                ->where('status','closed')
+                ->sum('amount') / 100 ?? '—',
         ];
     }
 }

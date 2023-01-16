@@ -98,7 +98,7 @@ class TariffController extends Controller
             new Mailer('Сервис ' . env('APP_NAME'), $v, 'Регистрация', $email);
         }
         ### /Регистрация плательщика #####
-        redirect('trialSubscribeSuccess');
+
         $p = new Pay();
         $p->amount($variant->price * 100)
             ->payFor($variant)
@@ -142,13 +142,23 @@ class TariffController extends Controller
         return view('common.tariff.index',['inline_link'=>$inline_link])->withCommunity($community);
     }
 
-    public function confirmSubscription($hash){
+    public function confirmSubscription(Request $request, $hash)
+    {
         $tariff = TariffVariant::find(PseudoCrypt::unhash($hash));
         if (!$tariff)
             abort(404);
         $community = $tariff->community();
+        if ($request->input('amount') != 0) {
+            return view('common.tariff.confirm-subscription', compact('tariff', 'community'));
+        } else {
+            return $this->trialSubscribeSuccess($tariff, $community);
+        }
+    }
 
-        return view('common.tariff.confirm-subscription', compact('tariff', 'community'));
+    public function trialSubscribeSuccess(TariffVariant $tariff, Community $community)
+    {
+        return view('common.tariff.confirm-trial-subscription', compact('tariff', 'community'));
+            //view('common.tariff.success_trial')->withCommunity($community);
     }
 
     public function tariff(Community $community)
@@ -281,9 +291,6 @@ class TariffController extends Controller
         return view('tinkoffDebug', ['logs' => $logs]);
     }
 
-    public function trialSubscribeSuccess(Community $community)
-    {
-        return view('common.tariff.success_trial')->withCommunity($community);
-    }
+
 
 }

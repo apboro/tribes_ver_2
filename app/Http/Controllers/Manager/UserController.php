@@ -10,11 +10,14 @@ use App\Http\Resources\Manager\UsersResource;
 use App\Models\UserSettings;
 use App\Services\Admin\UserService;
 use App\Services\File\FileSendService;
+use App\Services\TelegramMainBotService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
@@ -23,19 +26,23 @@ class UserController extends Controller
 
     private UserService $userService;
     private FileSendService $fileSendService;
+    private TelegramMainBotService $telegramMainBotService;
+
 
     public function __construct(
         UserService $userService,
-        FileSendService $fileSendService
+        FileSendService $fileSendService,
+        TelegramMainBotService $telegramMainBotService
     )
     {
         $this->userService = $userService;
         $this->fileSendService = $fileSendService;
+        $this->telegramMainBotService = $telegramMainBotService;
     }
 
     public function list(Request $request, UsersFilter $filter)
     {
-        $users = User::with('telegramMeta')->filter($filter)->paginate(request('filter.entries'), ['*'], 'filter.page');
+        $users = User::with('telegramMeta','accumulation')->filter($filter)->paginate(request('filter.entries'), ['*'], 'filter.page');
         return new UsersResource($users);
     }
 
@@ -127,5 +134,28 @@ class UserController extends Controller
             $request->get('type','csv'),
             'users'
         );
+    }
+
+    public function block(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->is_blocked = 1;
+        $user->save();
+    }
+
+    public function unblock(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->is_blocked = 0;
+        $user->save();
+    }
+
+    public function sendNewPassword(Request $request)
+    {
+        $user = User::find($request->id);
+        $password = Str::random(6);
+        $user->password = Hash::make($password);
+        $user->save();
+        $this->telegramMainBotService->sendMessageFromBot(config('telegram_bot.bot.botName'), $user->telegramMeta->telegram_id, 'Ваш новый пароль: '. $password);
     }
 }

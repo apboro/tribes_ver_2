@@ -2,66 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\PseudoCrypt;
+use App\Models\Accumulation;
+use App\Models\Payment;
 use App\Models\TariffVariant;
 use App\Models\TelegramUser;
 use App\Models\User;
-use App\Models\Payment;
-use App\Services\Telegram;
-use App\Services\Telegram\MainBotCollection;
-use App\Services\Telegram\MainComponents\MainBotCommands;
-use App\Services\Telegram\MainComponents\TelegramMidlwares;
-use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\Payment as Pay;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 
 class TestController extends Controller
 {
+    protected TelegramMainBotService $telegramService;
+    public function __construct(TelegramMainBotService $telegramService)
+    {
+        $this->telegramService = $telegramService;
+    }
+
     public function test()
     {
-//        dd(Carbon::tomorrow()->translatedFormat('d M Y'));
-        $collectionRecords = DB::table( DB::raw("telegram_users_tarif_variants as tutv") )
-            ->join( DB::raw("tarif_variants as tv"), 'tv.id', '=', 'tutv.tarif_variants_id' )
-            ->join( DB::raw("tariffs as t"), 't.id', '=', 'tv.tariff_id' )
-            ->leftJoin( DB::raw("tarif_variants as tvc"), 'tvc.tariff_id', '=', 't.id' )
+        dd(User::find(129)->telegramMeta);
+    }
 
-            ->join( DB::raw("telegram_users as tu"), 'tu.id', '=', 'tutv.telegram_user_id' )
-            ->join( DB::raw("users as u"), 'u.id', '=', 'tu.user_id' )
-
-            ->join( DB::raw("communities as c"),'c.id','=','t.community_id' )
-
-            ->select([
-                DB::raw("u.id as user_id"),
-                DB::raw("tu.telegram_id as telegram_user_id"),
-                DB::raw("c.id as community_id"),
-                DB::raw("tv.id as tariff_variant_id"),
-                DB::raw("tutv.days as days_left"),
-                DB::raw("coalesce(array_agg(tvc.id) FILTER ( WHERE tvc.\"isActive\"=true AND tvc.\"isPersonal\"=false),'{}') as tvc_ids"),
-            ])
-
-            ->orWhereRaw("tutv.days = 1")
-
-            ->groupBy("u.id","tu.telegram_id", "c.id", "tv.id", "tutv.days")
-
-            ->get();
-
-        dd($collectionRecords);
-        $user = User::find(540);
-        dd($user->payments[2]->community->connection->telegram_user_id);
-        /** @var User @user */
-        dd($user->telegramData()->telegram_id, $user->payments);
+    public function sendTlgMsg()
+    {
         $this->telegramService->sendMessageFromBot(
             config('telegram_bot.bot.botName'),
-            $payment->community->connection->telegram_user_id,
-            $message
+            472966552,
+            'Gugugaga'
         );
-//        $this->checkTariff();
-//        Artisan::call('check:tariff');
+    }
+
+    public function rebuild_accumulations()
+    {
+
+        $p = Payment::where('created_at', '>', '2022-12-23 11:32:44')->get();
+        foreach ($p as $item) {
+            if ($item->status === 'CONFIRMED') {
+                $a = Accumulation::where('SpAccumulationId', $item->SpAccumulationId)->first();
+                if (empty($a)){
+                    dd('a is empty');
+                    $a->user_id = $item->user_id;
+                    $a->SpAccumulationId = $item->SpAccumulationId;
+                    $a->amount = $item->amount;
+                    $a->started_at = $item->created_at;
+                    $a->status = 'active';
+                } else {
+                    dd('a not empty');
+                    $a->SpAccumulationId = $a->SpAccumulationId + $item->SpAccumulationId;
+                }
+                $a->save();
+            }
+        }
+
     }
 
 
@@ -103,7 +97,7 @@ class TestController extends Controller
                                             $p->add_balance = 10;
 //                                            $p->save();
 //                                            dd($p);
-                                            $payment=$p;
+                                            $payment = $p;
 //                                            dd($payment->payable()->first()->tariff()->first()->getThanksImage());
 
                                             dd(User::find(12)->getBalance());

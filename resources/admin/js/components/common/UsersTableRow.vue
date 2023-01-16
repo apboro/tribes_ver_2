@@ -6,6 +6,8 @@
                 <router-link 
                     :to="{ name:'Profile', params: {id: user.id} }"
                 >
+                  <p style="background-color: red;"
+                     v-if="user.is_blocked">заблокирован</p>
                     {{ user.name }}
                 </router-link>
             </transition>
@@ -27,6 +29,12 @@
         <td>
             {{ date }}
         </td>
+      <td>
+        {{user.community_owner_num}}
+      </td>
+      <td>{{formatDateTime(user.updated_at)}}</td>
+      <td>{{ user.payins }}</td>
+      <td>{{ user.payouts }}</td>
         <td>
             <editable-value
                 :isEditMode="isEditCommissionMode"
@@ -57,6 +65,13 @@
                         Изменить процент
                     </button>
                 </li>
+              <li>
+                <button v-if="!user.is_blocked" @click.prevent="blockUser(user.id)" class="dropdown-item">Заблокировать пользователя</button>
+                <button v-if="user.is_blocked" @click.prevent="un_blockUser(user.id)" class="dropdown-item">Разблокировать пользователя</button>
+              </li>
+              <li>
+                <button @click.prevent="send_new_password(user.id)" class="dropdown-item">Выслать пароль</button>
+              </li>
             </ul>
         </td>
     </tr>
@@ -106,6 +121,24 @@
                         })
                 })
             },
+
+          blockUser(user_id){
+            axios.post('/api/v2/user/block', {id: user_id}).
+            then(()=>alert('Пользователь заблокирован'))
+                .then(()=>window.location.reload());
+          },
+
+          send_new_password(user_id){
+            axios.post('/api/v2/user/sendNewPassword', {id: user_id}).
+            then(()=>alert('Новый пароль отправлен'))
+          },
+
+
+          un_blockUser(user_id){
+            axios.post('/api/v2/user/unblock', {id: user_id}).
+            then(()=>alert('Пользователь разблокирован'))
+                .then(()=>window.location.reload());
+          },
 
             toggleEditCommissionMode() {
                 this.isEditCommissionMode = !this.isEditCommissionMode;

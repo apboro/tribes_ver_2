@@ -17,6 +17,9 @@ Route::middleware(['auth:sanctum', 'admin'])->namespace('App\Http\Controllers\Ma
     Route::post('/auth', 'UserController@auth')->name('manager.users.self');
     Route::post('/user/appoint-admin', 'UserController@appointAdmin')->name('manager.users.appoint-admin');
     Route::post('/user/commission', 'UserController@commission')->name('manager.users.commission');
+    Route::post('/user/block', 'UserController@block')->name('manager.users.block');
+    Route::post('/user/unblock', 'UserController@unblock')->name('manager.users.unblock');
+    Route::post('/user/sendNewPassword', 'UserController@sendNewPassword')->name('manager.users.send-new-password');
     //Payment
     Route::post('/payments', 'PaymentController@list')->name('manager.payments.list');
     Route::post('/customers', 'PaymentController@customers')->name('manager.customers.list');
