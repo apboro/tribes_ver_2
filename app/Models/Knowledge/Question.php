@@ -102,4 +102,9 @@ class Question extends Model
             $this->is_draft = false;
         }
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }

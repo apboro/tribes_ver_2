@@ -113,12 +113,21 @@
             <!-- База знаний -->
             <li class="main-nav-new__item">
                 <a
-                    href="{{ route('payment.list') }}"
-                    class="main-nav-new__link {{ request()->is('*payments/outcome', '*payments/income', '*payments/card') ? 'active' : ''  }}"
+                    href="{{ route('knowledge.list') }}"
+                    class="main-nav-new__link {{ request()->is('*knowledge/list') ? 'active' : ''  }}"
                 >
-                    <span>Финансы</span>
+                    <span>База знаний</span>
                 </a>
             </li>
+                <!-- Финансы -->
+                <li class="main-nav-new__item">
+                    <a
+                            href="{{ route('payment.list') }}"
+                            class="main-nav-new__link {{ request()->is('*payments/outcome', '*payments/income', '*payments/card') ? 'active' : ''  }}"
+                    >
+                        <span>Финансы</span>
+                    </a>
+                </li>
             <!-- FAQ будущая Помощь -->
             <li class="main-nav-new__item">
                 <a

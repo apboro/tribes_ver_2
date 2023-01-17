@@ -1,53 +1,38 @@
 @extends('layouts.app')
 @section('content')
     <div data-plugin="KnowledgeList">
-        <section class="breadcrumbs">
-            <div class="container">
-                <ul class="breadcrumbs__list">
-                    <li class="breadcrumbs__item">
-                        <a href="/" class="link breadcrumbs__link">Главная</a>
-                    </li>
-
-                    <li class="breadcrumbs__item">
-                        <span class="breadcrumbs__link--last">
-                            {{ $community -> title }}
-                        </span>
-                    </li>
-                </ul>
-            </div>
-        </section>
-
         <section class="knowledge-list__title">
             <div class="container">
-                Вопрос-ответ сообщества "{{ $community -> title }}"
+                База знаний сообщества "{{ $community -> title }}"
             </div>
         </section>
 
-        <section class="knowledge-list__data-container">
+        <section>
             <div class="container">
-                <div class="knowledge-list__author">
-                    <div class="knowledge-list__avatar">
-                        <img src="/images/no-image.svg" alt="">
-                    </div>
-
-                    <div>
-                        <span class="knowledge-list__author-name">Lucij Seneka</span>
-                        <span class="knowledge-list__author-subscribers">1K subscribers</span>
-                    </div>
-                    
-                    <i class="icon knowledge-list__messenger icon--size-2">
-                        <svg width="100%" height="100%" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M29.5 15C29.5 23.0081 23.0081 29.5 15 29.5C6.99187 29.5 0.5 23.0081 0.5 15C0.5 6.99187 6.99187 0.5 15 0.5C23.0081 0.5 29.5 6.99187 29.5 15Z" fill="url(#paint0_linear_29_1587)" stroke="white"/>
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.78979 14.8415C11.1626 12.9363 14.0785 11.6803 15.5374 11.0735C19.7031 9.34085 20.5687 9.03985 21.1328 9.02989C21.2569 9.02772 21.5344 9.05848 21.7141 9.20432C21.9807 9.42065 21.9822 9.89022 21.9526 10.201C21.7269 12.5729 20.7501 18.3287 20.2532 20.9852C20.0429 22.1093 19.6289 22.4862 19.2281 22.5231C18.357 22.6032 17.6955 21.9474 16.8519 21.3944C15.5317 20.529 14.7858 19.9903 13.5043 19.1458C12.0234 18.1699 12.9834 17.6335 13.8274 16.7569C14.0483 16.5275 17.8863 13.0365 17.9606 12.7198C17.9699 12.6802 17.9785 12.5326 17.8908 12.4546C17.8031 12.3767 17.6736 12.4033 17.5802 12.4245C17.4478 12.4546 15.3388 13.8486 11.2532 16.6065C10.6545 17.0176 10.1123 17.2178 9.62649 17.2074C9.09088 17.1958 8.06069 16.9045 7.29481 16.6556C6.35543 16.3502 5.60883 16.1888 5.67387 15.6702C5.70774 15.4 6.07969 15.1238 6.78979 14.8415Z" fill="white"/>
-                            <defs>
-                            <linearGradient id="paint0_linear_29_1587" x1="15" y1="0" x2="15" y2="29.7656" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#2AABEE"/>
-                            <stop offset="1" stop-color="#229ED9"/>
-                            </linearGradient>
-                            </defs>
-                        </svg>
-                    </i>
+                <div class="ms-auto text-muted">
+                        <span>Постоянные категории</span>
                 </div>
+                <div> ЧАТБОТ</div>
+
+                <div class="ms-auto text-muted">
+                    <span>Пользовательские категории</span>
+                </div>
+                <div>
+
+                    @foreach($categories as $category)
+                        <p>{{$category->title}}</p>
+                    @endforeach
+                        <div class="col-sm-4 col-lg-3 mt-1 mt-sm-0">
+                            <button
+                                    type="submit"
+                                    class="btn btn-outline-primary waves-effect w-100 rounded-pill"
+                            >
+                                Добавить категорию
+                            </button>
+                        </div>
+                </div>
+
+
 
                 <div class="knowledge-list__control">
                     <div
@@ -66,13 +51,6 @@
                             </svg>
                         </i>
                     </div>
-
-                    <button
-                        class="button-filled knowledge-list__question-btn button-filled--primary"
-                        onclick="KnowledgeList.showModal()"
-                    >
-                        Задать вопрос
-                    </button>
                 </div>
 
                 <ul class="knowledge-list__list">

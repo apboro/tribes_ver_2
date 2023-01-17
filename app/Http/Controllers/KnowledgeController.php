@@ -7,6 +7,7 @@ use App\Helper\PseudoCrypt;
 use App\Models\Article;
 use App\Models\Community;
 use App\Models\Knowledge\Answer;
+use App\Models\Knowledge\Category;
 use App\Models\Knowledge\Question;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,9 +18,11 @@ class KnowledgeController extends Controller
     public $perPage = 15;
     private $community_id;
 
-    public function list(Request $request, QuestionFilter $filter, $hash)
+    public function list(Request $request, QuestionFilter $filter)//, $hash)
     {
-        $community = Community::findOrFail((int)PseudoCrypt::unhash($hash));
+//        $community = Community::findOrFail((int)PseudoCrypt::unhash($hash));
+        $community = Community::find(480);
+
         $this->community_id = $community->id;
 
         if ($request->has('search') && $request['search'] !== null) {
@@ -27,16 +30,16 @@ class KnowledgeController extends Controller
                 ->where('community_id', $this->community_id)
                 ->paginate($this->perPage);
         } else {
-            $questions = Question::with('answer')
+            $questions = Question::with('answer', 'category', 'community')
                 ->orderBy('id')
                 ->where('community_id', $community->id)
                 ->paginate($this->perPage);
         }
-
+        $categories = Category::where('community_id', $this->community_id)->get();
         $community->load('owner');
-
         return view('common.knowledge.list')
             ->withCommunity($community)
+            ->withCategories($categories)
             ->withQuestions($questions);
     }
 

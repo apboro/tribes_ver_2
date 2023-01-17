@@ -172,13 +172,13 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                     return view('common.knowledge.index');
                 })->name('knowledge.index');
 
-                Route::get('/{community}/knowledge/list', function () {
-                    return view('common.knowledge.list2');
-                })->name('common.knowledge.list');
 
             });
 
         });
+
+        Route::get('/knowledge/list', [\App\Http\Controllers\KnowledgeController::class, 'list'])->name('knowledge.list');
+
 
 
         Route::get('/{hash}/knowledge/help', 'KnowledgeController@help')->name('public.knowledge.help');

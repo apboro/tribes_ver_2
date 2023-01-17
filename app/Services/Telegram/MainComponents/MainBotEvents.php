@@ -250,8 +250,10 @@ class MainBotEvents
     {
         try {
             if (isset($this->data->message->left_chat_member)) {
-                $telegram = new Telegram(app(TariffRepositoryContract::class));
-                $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
+                if ($this->data->message->left_chat_member->id != env('TELEGRAM_BOT_ID')){
+                    $telegram = new Telegram(app(TariffRepositoryContract::class));
+                    $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
+                }
             }
         } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
