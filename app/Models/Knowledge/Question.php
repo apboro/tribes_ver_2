@@ -33,6 +33,17 @@ class Question extends Model
 
     protected $connection = 'main';
 
+    protected $fillable = [
+        'community_id',
+        'author_id',
+        'uri_hash',
+        'is_draft',
+        'is_public',
+        'c_enquiry',
+        'context',
+        'category_id'
+    ];
+
     protected $table = 'knowledge.questions';
 
     /**

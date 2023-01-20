@@ -11,6 +11,11 @@
                         {{ __('error.title_404') }} 🕵🏻‍♀️
                     </h2>
 
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     <p class="mb-2">
                         {{ __('error.description_404') }} 😖
                     </p>

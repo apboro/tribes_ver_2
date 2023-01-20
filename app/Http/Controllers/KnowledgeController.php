@@ -11,7 +11,10 @@ use App\Models\Knowledge\Category;
 use App\Models\Knowledge\Question;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class KnowledgeController extends Controller
 {
@@ -35,12 +38,55 @@ class KnowledgeController extends Controller
                 ->where('community_id', $community->id)
                 ->paginate($this->perPage);
         }
-        $categories = Category::where('community_id', $this->community_id)->get();
+        $categories = Category::where('community_id', $this->community_id)->orderBy('id','asc')->get();
         $community->load('owner');
         return view('common.knowledge.list')
             ->withCommunity($community)
             ->withCategories($categories)
             ->withQuestions($questions);
+    }
+
+    public function processCategory(Request $request)
+    {
+        switch ($request->command){
+            case 'add':
+                $cat = new Category;
+                $cat->community_id = 480;
+                $cat->title = $request->title;
+                $cat->save();
+                break;
+            case 'edit':
+                $cat = Category::find($request->category_id);
+                $cat->title = $request->title;
+                $cat->save();
+                break;
+            case 'del':
+                $cat = Category::find($request->category_id);
+                $cat->delete();
+                break;
+        }
+
+    }
+
+    public function processKnowledge(Request $request)
+    {
+        $question = Question::create([
+            'community_id' => 480,//$request->
+            'author_id' => Auth::user()->id,
+            'uri_hash' => Str::random(32),
+            'is_draft' => 1,
+            'is_public' => 1,
+            'c_enquiry' => 0,
+            'context' => $request->vopros,
+            'category_id' => $request->category_id
+        ]);
+
+        Answer::create([
+            'question_id' => $question->id,
+            'community_id' => 480,
+            'is_draft' => 1,
+            'context' => $request->otvet,
+        ]);
     }
 
     public function get(Request $request, $hash, Question $question)

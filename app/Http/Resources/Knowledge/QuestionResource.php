@@ -31,7 +31,8 @@ class QuestionResource extends JsonResource
             "updated_at" => $this->resource->updated_at,
             'community' => CommunityResource::make($this->whenLoaded('community')),
             'answer' => AnswerResource::make($this->whenLoaded('answer')),
-            'public_link' => $this->resource->getPublicLink()
+            'public_link' => $this->resource->getPublicLink(),
+            'category_id' => $this->resource->category->id
         ];
     }
 }

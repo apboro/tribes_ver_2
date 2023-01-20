@@ -26,6 +26,7 @@
                                 type="email"
                                 class="form-control-red"
                                 id="fb_email"
+                                required
                                 name="fb_email"
                                 placeholder="{{ __('base.email') }}"
                                 value="{{$user->email}}"

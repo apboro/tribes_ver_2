@@ -220,7 +220,7 @@ class MainBotCommands
     protected function inlineCommand()
     {
         try {
-            $communities = $this->communityRepo->getAllCommunity();
+            $communities = Community::all();//$this->communityRepo->getAllCommunity();
             foreach ($communities as $community) {
                 foreach ($community->donate as $donate) {
                     if (!$donate)
@@ -243,7 +243,7 @@ class MainBotCommands
     protected function inlineTariffCommand()
     {
         try {
-            $communities = $this->communityRepo->getAllCommunity();
+            $communities = Community::all();//$this->communityRepo->getAllCommunity();
             foreach ($communities as $community) {
                 $this->inlineTariffQuery($community->tariff()->first(), $community);
                 foreach ($community->tariffVariants as $tv) {
@@ -263,6 +263,7 @@ class MainBotCommands
     private function inlineTariffQuery($tariff, $community)
     {
         try {
+            if ($tariff)
             $this->bot->onInlineQuery($tariff->inline_link, function (Context $ctx) use ($tariff, $community) {
 
                 $result = new Result();
@@ -666,6 +667,7 @@ class MainBotCommands
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
+        return $context;
     }
 
     private function subscription()

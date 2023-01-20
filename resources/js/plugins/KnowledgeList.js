@@ -1,56 +1,118 @@
 import Page from './Abstract/Page';
-import { Popup } from './Abstract/Popup';
-import { CreateNode } from './Helper/CreateNode';
+import {Popup} from './Abstract/Popup';
+import {CreateNode} from './Helper/CreateNode';
+import axios from "axios";
 
 export default class KnowledgeList extends Page {
     constructor(container) {
         super(container);
 
         this.questions = this.container.querySelectorAll('[data-id]');
-        this.popupQuestion = null;
+        this.popupCat = null;
+        this.category_id = null;
     }
 
     init() {
-        
+
     }
 
-    showModal() {
-        this.popupQuestion = new Popup({
-            content: this.createModalContent(),
-            footer: this.createModalFooter()
-        });
-        
+    showModal(event) {
+        switch (event) {
+            case 'add':
+                this.popupCat = new Popup({
+                    header: this.createModalHeader(),
+                    content: this.createModalContent('Название категории'),
+                    footer: this.createModalFooter('Сохранить', 'add'),
+                    title: 'Добавить категорию',
+                });
+                break;
+            case 'edit':
+                if (this.category_id == null) {
+                    alert('Сначала нужно выбрать категорию.')
+                    return;
+                }
+                this.popupCat = new Popup({
+                    header: this.createModalHeader(),
+                    content: this.createModalContent('Новое название категории'),
+                    footer: this.createModalFooter('Сохранить', 'edit'),
+                    title: 'Переименовать категорию',
+                });
+                break;
+            case 'del':
+                if (this.category_id == null) {
+                    alert('Сначала нужно выбрать категорию.')
+                    return;
+                }
+                this.popupCat = new Popup({
+                    header: this.createModalHeader(),
+                    footer: this.createModalFooter('Удалить', 'del'),
+                    title: 'Удалить категорию',
+                });
+                break;
+        }
     }
 
-    createModalContent() {
+    createModalContent(name) {
         const content = new CreateNode({}).init();
 
         new CreateNode({
             parent: content,
             tag: 'label',
-            text: 'Ваш вопрос'
+            text: name
         }).init();
 
         new CreateNode({
             parent: content,
-            tag: 'textarea',
+            id: 'cat_title',
+            name: 'cat_title',
+            tag: 'input',
         }).init();
 
         return content;
     }
 
-    createModalFooter() {
+    createModalFooter(btn_name, command) {
         const footer = new CreateNode({}).init();
-        
-        this.sendQuestionBtn = new CreateNode({
+
+        this.sendCatBtn = new CreateNode({
             parent: footer,
             tag: 'button',
-            text: 'Send'
+            text: btn_name
+        }).init();
+        this.sendCatBtn.onclick = () => {
+            let cat_name = (command === 'del') ? null : document.getElementById("cat_title").value
+            this.processCategory(cat_name, command);
+        }
+
+        return footer;
+    }
+
+    createModalHeader() {
+        const header = new CreateNode({}).init();
+
+        new CreateNode({
+            parent: header,
+            tag: 'p',
+            text: 'Сохранить'
         }).init();
 
-        this.sendQuestionBtn.onclick = () => this.popupQuestion.hide();
-        
-        return footer;
+        new CreateNode({
+            parent: header,
+            tag: 'h2',
+            class: 'popup__title',
+            text: 'Добавление категории'
+        }).init();
+
+        this.closeBtn = new CreateNode({
+            parent: header,
+            tag: 'button',
+            class: 'popup__close-btn',
+            text: 'Закрыть'
+        }).init();
+
+        this.closeBtn.onclick = () => this.hide();
+
+        return header;
     }
 
     toggleAnswerVisibility(index) {
@@ -61,11 +123,42 @@ export default class KnowledgeList extends Page {
         });
     }
 
+    filterByCategory(id) {
+        this.category_id = id;
+        this.questions.forEach((question) => {
+            question.classList.remove('hide')
+            if (question.dataset.category != id) {
+                question.classList.add('hide');
+            }
+        });
+    }
+
     hideAnswerVisibility(index) {
         this.questions.forEach((question) => {
             if (question.dataset.id == index) {
                 question.classList.remove('active');
             }
         });
+    }
+
+    processCategory(title, command) {
+        axios.post('/knowledge/process_category', {title: title, command: command, category_id: this.category_id}).then(() => {
+            location.reload();
+            return false;
+        })
+    }
+
+    openKnowledgeForm() {
+        document.getElementsByClassName('knowledge-list__new_knowledge')[0].classList.toggle('active')
+    }
+
+    addKnowledge() {
+        let vopros = document.getElementById("vopros").value;
+        let otvet = document.getElementById("otvet").value
+        axios.post('/knowledge/process_knowledge', {vopros: vopros, otvet: otvet, category_id: this.category_id})
+            .then(() => {
+                location.reload();
+                return false;
+            })
     }
 }

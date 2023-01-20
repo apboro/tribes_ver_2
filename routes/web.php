@@ -159,7 +159,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                 Route::post('/{community}/subscribers/change', 'TariffController@subscriptionsChange')->name('community.tariff.subscriptionsChange');
 
                 Route::get('/{community}/tariff', 'TariffController@list')->name('community.tariff.list');
-                Route::get('/{community}/tariff/trial_subscribe_success', 'TariffController@trialSubscribeSuccess')->name('community.tariff.trial_subscribe_success');
+                Route::post('/{community}/tariff/trial_subscribe', 'TariffController@trialSubscribe')->name('community.tariff.trial_subscribe');
 
                 Route::get('/{community}/tariff/settings/{tab?}', 'TariffController@settings')->name('community.tariff.settings');
                 Route::get('/{community}/tariff/publication/{tab?}', 'TariffController@publication')->name('community.tariff.publication');
@@ -178,8 +178,8 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         });
 
         Route::get('/knowledge/list', [\App\Http\Controllers\KnowledgeController::class, 'list'])->name('knowledge.list');
-
-
+        Route::post('/knowledge/process_category', [\App\Http\Controllers\KnowledgeController::class, 'processCategory'])->name('knowledge.process_category');
+        Route::post('/knowledge/process_knowledge', [\App\Http\Controllers\KnowledgeController::class, 'processKnowledge'])->name('knowledge.process_knowledge');
 
         Route::get('/{hash}/knowledge/help', 'KnowledgeController@help')->name('public.knowledge.help');
 
@@ -355,4 +355,6 @@ Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name(
 Route::get('/tinkofftestdata', 'App\Http\Controllers\TariffController@testData');
 Route::get('/test', [App\Http\Controllers\TestController::class, 'test'])->name('test');
 Route::get('/testNot', [App\Http\Controllers\TestController::class, 'testNot'])->name('testNot');
-
+Route::get('/404', function() {
+    return view('errors.404');
+})->name('404') ;

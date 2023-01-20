@@ -13,9 +13,11 @@ use App\Http\Requests\API\QuestionsRequest;
 use App\Http\Requests\API\UpdateQuestionRequest;
 use App\Http\Resources\Knowledge\QuestionResource;
 use App\Http\Resources\Knowledge\QuestionsResource;
+use App\Models\Knowledge\Question;
 use App\Repositories\Knowledge\KnowledgeRepositoryContract;
 use App\Services\Knowledge\ManageQuestionService;
 use DB;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class QuestionController extends Controller
@@ -32,11 +34,12 @@ class QuestionController extends Controller
         $this->knowledgeRepository = $knowledgeRepository;
     }
 
-    public function list(QuestionsRequest $questionRequest, QuestionsFilter $filters): QuestionsResource
+    public function list(Request $request, QuestionsFilter $filters)
     {
-        $models = $this->knowledgeRepository->getQuestionsByCommunityId($questionRequest->community_id, $filters);
-
-        return (new QuestionsResource($models))->forApi();
+//        $models = $this->knowledgeRepository->getQuestionsByCommunityId($questionRequest->community_id, $filters);
+//
+//        return (new QuestionsResource($models))->forApi();
+        return Question::where('category_id', $request->category_id)->get();
     }
 
     public function get(QuestionRequest $questionRequest): QuestionResource

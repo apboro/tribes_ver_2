@@ -1,5 +1,12 @@
 .knowledge-list {
 
+    &__new_knowledge {
+        display: none;
+        &.active {
+            display: block;
+        }
+    }
+
     &__title {
         margin-top: $indent-4;
         @include font($text-color-2, 24px, 32px, 700);
@@ -79,7 +86,9 @@
     }
 
     &__item {
-        
+        &.hide {
+            visibility: hidden;
+        }
         &.active .knowledge-list__question {
             grid-template: 1fr / 80px auto;
             border-color: #91C4F6;

@@ -56,27 +56,28 @@ class CheckTrialTariff extends Command
                             if ($variant->pivot->days = 1) {
                                 $communityTitle = $variant->tariff->community->title ?? '';
                                 $this->telegramService->sendMessageFromBot(config('telegram_bot.bot.botName'), $user->telegram_id,
-                                 'Пробный период в сообществе' . $communityTitle . ' подходит к концу. Оплатите подписку: <a href="' .
-                                  route('community.tariff.payment', ['hash' => PseudoCrypt::hash($variant->tariff->community->id, 8)])  . '">Ссылка</a>', true, []);
+                                    'Пробный период в сообществе' . $communityTitle . ' подходит к концу. Оплатите подписку: <a href="' .
+                                    route('community.tariff.payment', ['hash' => PseudoCrypt::hash($variant->tariff->community->id, 8)]) . '">Ссылка</a>', true, []);
                             }
 
                             $follower = User::find($user->user_id);
+                            if ($follower) {
+                                $tariffVariant = TariffVariant::where('tariff_id', $variant->tariff->id)->whereHas('payUsers', function ($q) use ($follower) {
+                                    $q->where('id', $follower->id);
+                                })->first();
 
-                            $tariffVariant = TariffVariant::where('tariff_id', $variant->tariff->id)->whereHas('payUsers', function ($q) use($follower) {
-                                $q->where('id', $follower->id);
-                            })->first();
+                                if ($variant->pivot->days < 1 and $tariffVariant !== NULL) {
 
-                            if ($variant->pivot->days < 1 and $tariffVariant !== NULL) {
+                                    // $this->telegramService->kickUser(config('telegram_bot.bot.botName'), $user->telegram_id, $variant->tariff->community->connection->chat_id);
+                                    // $user->communities()->detach($variant->tariff->community->id);
 
-                                // $this->telegramService->kickUser(config('telegram_bot.bot.botName'), $user->telegram_id, $variant->tariff->community->connection->chat_id);
-                                // $user->communities()->detach($variant->tariff->community->id);
-
-                                // if ($variant->tariff->tariff_notification == true) {
-                                //     $this->telegramService->sendMessageFromBot(config('telegram_bot.bot.botName'),
-                                //         $variant->tariff->community->connection->telegram_user_id,
-                                //         'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа', false, []
-                                //     );
-                                // }
+                                    // if ($variant->tariff->tariff_notification == true) {
+                                    //     $this->telegramService->sendMessageFromBot(config('telegram_bot.bot.botName'),
+                                    //         $variant->tariff->community->connection->telegram_user_id,
+                                    //         'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа', false, []
+                                    //     );
+                                    // }
+                                }
                             }
                         }
                     }

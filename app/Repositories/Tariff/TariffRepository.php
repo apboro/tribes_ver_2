@@ -21,6 +21,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use function PHPUnit\Framework\isTrue;
 
 class TariffRepository implements TariffRepositoryContract
 {
@@ -287,7 +288,7 @@ class TariffRepository implements TariffRepositoryContract
         $variant->tariff_id = $this->tariffModel->id;
         $variant->title = $data['tariff_name'];
         $variant->price = $data['tariff_cost'];
-        $variant->period = $data['tariff_pay_period'] ?? $data['quantity_of_days'];
+        $variant->period = $data['tariff_pay_period'];
         $variant->isPersonal = $data['isPersonal'] ?? false;
         if($variant->isPersonal) {
             $variant->isActive = true;
@@ -318,7 +319,7 @@ class TariffRepository implements TariffRepositoryContract
     {
         if ($community->tariff->variants->first() == NULL) {
             $ty = $community->followers()->get();
-            $days = ($community->tariff->test_period !== 0) ? $community->tariff->test_period : 7;
+            $days = ($community->tariff->test_period != 0) ? $community->tariff->test_period : 7;
             foreach ($ty as $user) {
                 $user->tariffVariant()->attach($variant, ['days' => $days, 'prompt_time' => date('H:i')]);
             }
@@ -351,9 +352,7 @@ class TariffRepository implements TariffRepositoryContract
         //            $this->tariffModel->test_period = $data['trial_period'];
         //        }
 
-        $this->tariffModel->test_period = $data['trial_period']  && env('USE_TRIAL_PERIOD', true)
-            ? $data['trial_period']
-            : $this->tariffModel->test_period;
+        $this->tariffModel->test_period = isset($data['trial_period']) ? $data['trial_period'] : $this->tariffModel->test_period;
 
         $this->tariffModel->tariff_notification = $data['tariff_notification'];
 
@@ -368,20 +367,19 @@ class TariffRepository implements TariffRepositoryContract
 
         $this->tariffModel->save();
 
-        // dd($data['send_to_community']);
         $this->sendToCommunityAction($data, $community);
 
-        if ($data['trial_period'] && env('USE_TRIAL_PERIOD', true)) {
+        if (isset($data['trial_period']) && env('USE_TRIAL_PERIOD', true)) {
             $trialData = [
                 'tariff_name' => 'Пробный период',
                 'tariff_cost' => 0,
                 'tariff_pay_period' => $data['trial_period'],
-                'tariff' => ($data['trial_period'] !== 0) ? true : false
+                'tariff' => $data['trial_period'] != 0
             ];
 
             $variantId = NULL;
             foreach ($community->tariff->variants as $variant) {
-                if ($variant->price == 0 && $variant->isActive == true) {
+                if ($variant->price == 0 && $variant->title = 'Пробный период') {
                     $variantId = $variant->id;
                 }
             }
