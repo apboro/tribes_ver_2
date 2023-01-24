@@ -128,10 +128,10 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
             Route::middleware('sms_confirmed', 'owned_group_community')->group(function () {
                 // Statistic
-                Route::get('/{community}/statistic/{any?}', function(){abort(404);})->name('community.statistic');
-//                Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
-//                Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
-//                Route::get('/{community}/statistic/payments', 'CommunityController@statisticPayments')->name('community.statistic.payment');
+                Route::get('/{community}/statistic', 'CommunityController@statistic')->name('community.statistic');
+                Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
+                Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
+                Route::get('/{community}/statistic/payments', 'CommunityController@statisticPayments')->name('community.statistic.payment');
 
             });
 
@@ -177,9 +177,9 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
         });
 
-        Route::get('/knowledge/list', [\App\Http\Controllers\KnowledgeController::class, 'list'])->name('knowledge.list');
-        Route::post('/knowledge/process_category', [\App\Http\Controllers\KnowledgeController::class, 'processCategory'])->name('knowledge.process_category');
-        Route::post('/knowledge/process_knowledge', [\App\Http\Controllers\KnowledgeController::class, 'processKnowledge'])->name('knowledge.process_knowledge');
+        Route::get('/{community}/knowledge/list', [\App\Http\Controllers\KnowledgeController::class, 'list'])->name('knowledge.list');
+        Route::post('/{community}/knowledge/process_category', [\App\Http\Controllers\KnowledgeController::class, 'processCategory'])->name('knowledge.process_category');
+        Route::post('/{community}/knowledge/process_knowledge', [\App\Http\Controllers\KnowledgeController::class, 'processKnowledge'])->name('knowledge.process_knowledge');
 
         Route::get('/{hash}/knowledge/help', 'KnowledgeController@help')->name('public.knowledge.help');
 

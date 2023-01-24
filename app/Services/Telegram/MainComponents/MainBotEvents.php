@@ -185,7 +185,7 @@ class MainBotEvents
                     $this->data->my_chat_member->new_chat_member->user->id == $this->bot->botId and
                     $this->data->my_chat_member->new_chat_member->status == 'administrator'
                 ) {
-                    $this->bot->logger()->debug('Бот в группе стал администратором', ArrayHelper::toArray($this->data));
+//                    $this->bot->logger()->debug('Бот в группе стал администратором', ArrayHelper::toArray($this->data));
                     $chatId = $this->data->my_chat_member->chat->id;
                     Telegram::botGetPermissionsEvent(
                         $this->data->my_chat_member->from->id,

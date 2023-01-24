@@ -16,13 +16,13 @@ export default class KnowledgeList extends Page {
 
     }
 
-    showModal(event) {
+    showModal(event, community_id) {
         switch (event) {
             case 'add':
                 this.popupCat = new Popup({
                     header: this.createModalHeader(),
                     content: this.createModalContent('Название категории'),
-                    footer: this.createModalFooter('Сохранить', 'add'),
+                    footer: this.createModalFooter('Сохранить', 'add', community_id),
                     title: 'Добавить категорию',
                 });
                 break;
@@ -34,7 +34,7 @@ export default class KnowledgeList extends Page {
                 this.popupCat = new Popup({
                     header: this.createModalHeader(),
                     content: this.createModalContent('Новое название категории'),
-                    footer: this.createModalFooter('Сохранить', 'edit'),
+                    footer: this.createModalFooter('Сохранить', 'edit', community_id),
                     title: 'Переименовать категорию',
                 });
                 break;
@@ -45,7 +45,7 @@ export default class KnowledgeList extends Page {
                 }
                 this.popupCat = new Popup({
                     header: this.createModalHeader(),
-                    footer: this.createModalFooter('Удалить', 'del'),
+                    footer: this.createModalFooter('Удалить', 'del', community_id),
                     title: 'Удалить категорию',
                 });
                 break;
@@ -71,7 +71,7 @@ export default class KnowledgeList extends Page {
         return content;
     }
 
-    createModalFooter(btn_name, command) {
+    createModalFooter(btn_name, command, community_id) {
         const footer = new CreateNode({}).init();
 
         this.sendCatBtn = new CreateNode({
@@ -81,7 +81,7 @@ export default class KnowledgeList extends Page {
         }).init();
         this.sendCatBtn.onclick = () => {
             let cat_name = (command === 'del') ? null : document.getElementById("cat_title").value
-            this.processCategory(cat_name, command);
+            this.processCategory(cat_name, command, community_id);
         }
 
         return footer;
@@ -141,8 +141,12 @@ export default class KnowledgeList extends Page {
         });
     }
 
-    processCategory(title, command) {
-        axios.post('/knowledge/process_category', {title: title, command: command, category_id: this.category_id}).then(() => {
+    processCategory(title, command, community_id) {
+        axios.post('/' + community_id + '/knowledge/process_category', {
+            title: title,
+            command: command,
+            category_id: this.category_id
+        }).then(() => {
             location.reload();
             return false;
         })
@@ -152,13 +156,35 @@ export default class KnowledgeList extends Page {
         document.getElementsByClassName('knowledge-list__new_knowledge')[0].classList.toggle('active')
     }
 
-    addKnowledge() {
+    processKnowledge(command, community_id, question_id) {
         let vopros = document.getElementById("vopros").value;
         let otvet = document.getElementById("otvet").value
-        axios.post('/knowledge/process_knowledge', {vopros: vopros, otvet: otvet, category_id: this.category_id})
-            .then(() => {
-                location.reload();
-                return false;
+        if (command === 'del') {
+            if (confirm("Удалить вопрос-ответ?")) {
+                axios.post('/' + community_id + '/knowledge/process_knowledge', {
+                    command: command,
+                    vopros: vopros,
+                    otvet: otvet,
+                    category_id: this.category_id,
+                    question_id: question_id
+                })
+                    .then(() => {
+                        location.reload();
+                        return false;
+                    })
+            }
+        } else {
+            axios.post('/' + community_id + '/knowledge/process_knowledge', {
+                command: command,
+                vopros: vopros,
+                otvet: otvet,
+                category_id: this.category_id,
+                question_id: question_id
             })
+                .then(() => {
+                    location.reload();
+                    return false;
+                })
+        }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\TariffVariant;
 use App\Models\TelegramUser;
 use App\Models\User;
+use App\Services\SMTP\Mailer;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\Payment as Pay;
@@ -61,11 +62,13 @@ class CheckTariff extends Command
                 if ($follower) {
                     if ($user->tariffVariant->first()) {
                         foreach ($user->tariffVariant as $variant) {
+                            if ($variant->price == 0 && $variant->period == $variant->tariff->test_period)
+                                continue;
                             /** @var TariffVariant $variant*/
                             //echo "var{$variant->title} \n";
                             if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
                                 
-                                $userName = ($user->user_name) ? '<a href="t.me/' . $user->user_name . '">' . $user->user_name . '</a>' : $user->telegram_id;
+                                $userName = $user->user_name;
                                 //echo "job for {$variant->title} \n";
                                 if ($variant->pivot->days < 1) {
                                     if ($variant->pivot->isAutoPay === true) {
@@ -78,7 +81,6 @@ class CheckTariff extends Command
                                         if ($user->hasLeaveCommunity($variant->tariff->community_id)) {
                                             $payment = NULL;
                                         } elseif ($variant->isActive) {
-//                                            if ($variant->pivot->end_tarif_date < Carbon::now()) {
                                                 //echo "create pay {$variant->title} \n";
                                                 Log::channel('tinkoff')
                                                     ->info(now() .' Oplata tarifa: follower_id - '. $follower->id .' summa: '.$variant->price * 100 . ' community_id - '. $variant->tariff->community_id);
@@ -121,33 +123,53 @@ class CheckTariff extends Command
 
                                         $user->tariffVariant()->updateExistingPivot($variant->id, [
                                             'days' => $variant->period,
-//                                            'end_tarif_date' => Carbon::now()->addDays($variant->period)->format('d.m.Y'),
+                                            'recurrent_attempt' => 0,
                                             'prompt_time' => date('H:i')
                                         ]);
                                         Log::channel('tinkoff')->info('Next payment in days -'. $variant->period . ' at '. date('H:i'));
                                     } else {
-                                        //echo "not create payment  \n";
-                                        // отключить рекуррентный платеж
-                                        if ($variant->pivot->isAutoPay === true) {
+                                        $tariff_variant_name = $variant->title;
+                                        $community_name = $variant->community()->title;
+
+                                        if ($variant->pivot->recurrent_attempt >= 3) {
+                                             $this->telegramService->kickUser(
+                                                 config('telegram_bot.bot.botName'),
+                                                 $user->telegram_id,
+                                                 $variant->tariff->community->connection->chat_id
+                                             );
+                                             $user->communities()->detach($variant->tariff->community->id);
+
+
+                                             if ($variant->tariff->tariff_notification) {
+                                                 $this->telegramService->sendMessageFromBot(
+                                                     config('telegram_bot.bot.botName'),
+                                                     $variant->tariff->community->connection->telegram_user_id,
+                                                     'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа'
+                                                 );
+                                             }
+                                            $userTextMessageView = view('mail.kick_user', compact('tariff_variant_name', 'community_name'))->render();
+                                            $ownerTextMessageView = view('mail.kick_user', compact('userName','tariff_variant_name', 'community_name'))->render();
+                                            new Mailer('Сервис Spodial', $userTextMessageView, 'Вы исключены', $user->user->email);
+                                            new Mailer('Сервис Spodial', $ownerTextMessageView, 'Пользователь исключен', $variant->community()->communityOwner->email);
+
+                                        } else {
+                                            $message = "Не удалось оплатить $variant->title в сообществе {$variant->tariff->community->title},
+                                стоимостью $variant->price руб.";
+                                            $this->telegramService->sendMessageFromBot(
+                                                config('telegram_bot.bot.botName'),
+                                                $user->telegram_id,
+                                                $message
+                                            );
+
                                             $user->tariffVariant()->updateExistingPivot($variant->id, [
                                                 'days' => 0,
-                                                'isAutoPay' => false
                                             ]);
+                                            $variant->pivot->increment('recurrent_attempt');
 
-                                            // $this->telegramService->kickUser(
-                                            //     config('telegram_bot.bot.botName'),
-                                            //     $user->telegram_id,
-                                            //     $variant->tariff->community->connection->chat_id
-                                            // );
-                                            // $user->communities()->detach($variant->tariff->community->id);
-
-                                            // if ($variant->tariff->tariff_notification == true) {
-                                            //     $this->telegramService->sendMessageFromBot(
-                                            //         config('telegram_bot.bot.botName'),
-                                            //         $variant->tariff->community->connection->telegram_user_id,
-                                            //         'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа'
-                                            //     );
-                                            // }
+                                            $userTextMessageView = view('mail.recurrent_bad_attempt', compact('tariff_variant_name', 'community_name'))->render();
+                                            $ownerTextMessageView = view('mail.recurrent_bad_attempt', compact('userName','tariff_variant_name', 'community_name'))->render();
+                                            new Mailer('Сервис Spodial', $userTextMessageView, 'Оплата не удалась', $user->user->email);
+                                            new Mailer('Сервис Spodial', $ownerTextMessageView, 'Оплата не удалась', $variant->community()->communityOwner->email);
                                         }
                                     }
                                 }
@@ -158,6 +180,7 @@ class CheckTariff extends Command
             }
 
         } catch (\Exception $e) {
+            Log::channel('tinkoff')->error($e);
             $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
         return 0;

@@ -6,16 +6,23 @@ use App\Filters\QueryFilter;
 use App\Services\TelegramLogService;
 use Carbon\Carbon;
 use Database\Factories\PaymentFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-/** @method PaymentFactory factory() */
+/** @method PaymentFactory factory()
+ * @property Community $community
+ * @property int $amount
+ */
 class Payment extends Model
 {
     use HasFactory;
 
+    /**
+     * @var mixed
+     */
     protected $guarded = [];
 
     public static $status = [

@@ -40,21 +40,21 @@
                             <button
                                     type="submit"
                                     class="btn btn-outline-primary rounded-pill"
-                                    onclick="KnowledgeList.showModal('add')"
+                                    onclick="KnowledgeList.showModal('add', {{$community->id}})"
                             >
                                 Добавить категорию
                             </button>
                             <button
                                     type="submit"
                                     class="btn btn-outline-primary rounded-pill"
-                                    onclick="KnowledgeList.showModal('edit')"
+                                    onclick="KnowledgeList.showModal('edit', {{$community->id}})"
                             >
                                 Переименовать категорию
                             </button>
                             <button
                                     type="submit"
                                     class="btn btn-outline-primary rounded-pill"
-                                    onclick="KnowledgeList.showModal('del')"
+                                    onclick="KnowledgeList.showModal('del', {{$community->id}})"
                             >
                                 Удалить категорию
                             </button>
@@ -94,7 +94,7 @@
                         OTVET
                         <textarea id="otvet" style="border: 1px solid" cols="50" rows="10">Napishite otvet</textarea>
                     </div>
-                    <button class="btn-sm btn-outline-primary rounded-pill" onclick="KnowledgeList.addKnowledge()">
+                    <button class="btn-sm btn-outline-primary rounded-pill" onclick="KnowledgeList.processKnowledge('add',{{$community->id}})">
                         SAVE
                     </button>
                     </div>
@@ -123,8 +123,9 @@
                                         <span class="knowledge-list__item-icon-label">
                                     Вопрос
                                 </span>
+                                        <button>edit</button>
+                                        <button onclick="KnowledgeList.processKnowledge('del', {{$community->id}}, {{$question->id}})">delete</button>
                                     </div>
-
                                     <p class="knowledge-list__item-text">
                                         {{ $question -> context }}
                                     </p>

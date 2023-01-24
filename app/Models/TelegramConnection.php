@@ -9,11 +9,15 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @method TelegramConnectionFactory factory()
  * @property mixed $id
+ * @property int $telegram_user_id
  */
 class TelegramConnection extends Model
 {
     use HasFactory;
 
+    /**
+     * @var mixed
+     */
     protected $guarded = [];
 
     public function community()

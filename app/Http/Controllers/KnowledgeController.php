@@ -21,10 +21,10 @@ class KnowledgeController extends Controller
     public $perPage = 15;
     private $community_id;
 
-    public function list(Request $request, QuestionFilter $filter)//, $hash)
+    public function list(Request $request, QuestionFilter $filter, Community $community)
     {
 //        $community = Community::findOrFail((int)PseudoCrypt::unhash($hash));
-        $community = Community::find(480);
+//        $community = Community::find(461);
 
         $this->community_id = $community->id;
 
@@ -46,17 +46,18 @@ class KnowledgeController extends Controller
             ->withQuestions($questions);
     }
 
-    public function processCategory(Request $request)
+    public function processCategory(Request $request, Community $community)
     {
         switch ($request->command){
             case 'add':
                 $cat = new Category;
-                $cat->community_id = 480;
+                $cat->community_id = $community->id;
                 $cat->title = $request->title;
                 $cat->save();
                 break;
             case 'edit':
                 $cat = Category::find($request->category_id);
+                $cat->community_id = $community->id;
                 $cat->title = $request->title;
                 $cat->save();
                 break;
@@ -68,25 +69,38 @@ class KnowledgeController extends Controller
 
     }
 
-    public function processKnowledge(Request $request)
+    public function processKnowledge(Request $request, Community $community)
     {
-        $question = Question::create([
-            'community_id' => 480,//$request->
-            'author_id' => Auth::user()->id,
-            'uri_hash' => Str::random(32),
-            'is_draft' => 1,
-            'is_public' => 1,
-            'c_enquiry' => 0,
-            'context' => $request->vopros,
-            'category_id' => $request->category_id
-        ]);
 
-        Answer::create([
-            'question_id' => $question->id,
-            'community_id' => 480,
-            'is_draft' => 1,
-            'context' => $request->otvet,
-        ]);
+        switch ($request->command){
+            case 'add':
+                $question = Question::create([
+                    'community_id' => $community->id,
+                    'author_id' => Auth::user()->id,
+                    'uri_hash' => Str::random(32),
+                    'is_draft' => 1,
+                    'is_public' => 1,
+                    'c_enquiry' => 0,
+                    'context' => $request->vopros,
+                    'category_id' => $request->category_id
+                ]);
+
+                Answer::create([
+                    'question_id' => $question->id,
+                    'community_id' => $community->id,
+                    'is_draft' => 1,
+                    'context' => $request->otvet,
+                ]);
+                break;
+            case 'edit':
+                break;
+            case 'del':
+                $question = Question::find($request->question_id);
+                $answer = $question->answer();
+                $question->delete();
+                $answer->delete();
+                break;
+        }
     }
 
     public function get(Request $request, $hash, Question $question)

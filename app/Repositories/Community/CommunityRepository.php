@@ -68,14 +68,6 @@ class CommunityRepository implements CommunityRepositoryContract
     public function getAllCommunity()
     {
         $community =  Community::with('communityOwner', 'connection')->orderBy('created_at', 'desc');
-//        foreach ($community->get() as $c) {
-//            if ($c->connection->chat_invite_link === null && $c->connection->botStatus === 'administrator') {
-//                $response = Http::get('https://api.telegram.org/bot'.env('TELEGRAM_BOT_TOKEN').'/createChatInviteLink?chat_id='.$c->connection->chat_id);
-//                $c->connection->chat_invite_link = $response->json('result.invite_link');
-//                $c->save();
-//                sleep(1);
-//            }
-//        }
         return $community->paginate(50);
     }
 
@@ -87,6 +79,11 @@ class CommunityRepository implements CommunityRepositoryContract
     public function getCommunitiesForOwner(int $ownerId, ?CommunitiesFilter $filters = null): Collection
     {
         return Community::filter($filters)->where('owner', $ownerId)->get();
+    }
+
+    public function getUsersCommunities($userId): Collection
+    {
+        return Community::where('owner', $userId)->get();
     }
 
     public function isChatBelongsToTeleUserId(int $chatId, int $teleUserId): bool

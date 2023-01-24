@@ -171,7 +171,18 @@ class Payment
         $this->orderId = $this->payment->id . date("_md_s");
 
         $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
-        $resp = json_decode($this->tinkoff->initPay($params)); // Шлём запрос в банк
+        if ($params['Amount'] == 0)
+        {
+            $resp = (object)[
+                'PaymentId' => rand(1000000000, 9999999999),
+                'PaymentURL' => route('payment.success', ['hash' =>PseudoCrypt::hash($this->payment->id), 'telegram_id'=>$this->telegram_id]),
+                'Status' => 'CONFIRMED',
+                'ErrorCode' => null,
+                'Success' => true,
+            ];
+        } else {
+            $resp = json_decode($this->tinkoff->initPay($params)); // Шлём запрос в банк
+        }
 
         if(isset($resp->Success) && $resp->Success){
 

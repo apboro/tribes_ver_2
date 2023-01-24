@@ -4,15 +4,27 @@ namespace App\Models;
 
 use App\Traits\Authorable;
 use Database\Factories\TariffVariantFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/** @method TariffVariantFactory factory() */
+
+
+/** @method TariffVariantFactory factory()
+ *  @property int $period;
+ *  @property int $id;
+ *  @property int $price;
+ *  @property string $title;
+ *  @property Tariff $tariff;
+ *  @property Community $community;
+ */
 class TariffVariant extends Model
 {
     use HasFactory, Authorable;
 
     protected $guarded = [];
+
+    protected $fillable = ['recurrent_attempt'];
 
     protected $table = 'tarif_variants';
 
@@ -33,7 +45,7 @@ class TariffVariant extends Model
 
     function payFollowers()
     {
-        return $this->belongsToMany(TelegramUser::class, 'telegram_users_tarif_variants', 'tarif_variants_id', 'telegram_user_id')->withPivot(['days', 'isAutoPay', 'prompt_time', 'created_at', 'end_tarif_date']);
+        return $this->belongsToMany(TelegramUser::class, 'telegram_users_tarif_variants', 'tarif_variants_id', 'telegram_user_id')->withPivot(['days', 'isAutoPay', 'prompt_time', 'created_at', 'end_tarif_date', 'recurrent_attempt']);
     }
 
     function getFollowersById($id)

@@ -124,7 +124,7 @@
             url: `{{ $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
         })"
         >
-        Оплатить
+        @if ($tariff->price === 0) Подтвердить @else Оплатить @endif
     </button>
 </div>
     <span

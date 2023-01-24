@@ -9,6 +9,7 @@ use App\Services\TelegramMainBotService;
 use Database\Factories\CommunityFactory;
 use Hamcrest\Arrays\IsArray;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 /** @method CommunityFactory factory()
  * @property mixed $owner
  * @property mixed $id
+ * @property TelegramConnection $connection
+ * @property string $title
  */
 class Community extends Model
 {

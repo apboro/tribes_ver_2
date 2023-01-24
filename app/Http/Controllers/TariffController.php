@@ -149,34 +149,7 @@ class TariffController extends Controller
         if (!$tariff or !$tariff->isActive)
             return redirect()->route('404')->with('error', 'Этот тариф не активен');
         $community = $tariff->community();
-        if ($request->input('amount') != 0) {
             return view('common.tariff.confirm-subscription', compact('tariff', 'community'));
-        } else {
-            return view('common.tariff.confirm-trial-subscription', compact('tariff', 'community'));
-        }
-    }
-    public function trialSubscribe(Request $request, Community $community)
-    {
-
-        $user = $this->getOrRegUser($request);
-        $tariff = $community->tariffVariants()->where('tarif_variants.title', 'Пробный период')->first();
-        $payment = new Payment();
-        $payment->community_id = $community->id;
-        $payment->add_balance = 0;
-        $payment->from = $user->email;
-        $payment->comment = 'trial';
-        $payment->paymentId = rand(1000000000, 9999999999);
-        $payment->activated = true;
-        $payment->user_id = $user->id;
-        $payment->payable_id = $tariff->id;
-        $payment->payable_type = 'App\Models\TariffVariant';
-        $payment->save();
-
-        $tu = $user->telegramMeta()->first();
-
-        $tu->telegram_id = $tu ? $tu->telegram_id : null;
-
-        return view('common.tariff.success_trial')->withCommunity($community);
     }
 
     public function tariff(Community $community)
@@ -308,37 +281,5 @@ class TariffController extends Controller
         }
         return view('tinkoffDebug', ['logs' => $logs]);
     }
-
-    private function getOrRegUser(Request $request): User
-    {
-        $password = Str::random(6);
-
-        $email = strtolower($request['email']);
-
-        $user = User::where('email',  strtolower($email))->first();
-
-        if($email != null && $user == null){
-            /** @var User $user */
-            $user = User::create([
-                'email' => strtolower($email),
-                'name' => explode('@', $email)[0],
-                'code' => 0000,
-                'phone' => null,
-                'password' => Hash::make($password),
-                'phone_confirmed' => false,
-            ]);
-
-            $token = $user->createTempToken();
-
-            $user->tinkoffSync();
-            $user->hashMake();
-
-            $v = view('mail.registration')->with(['login' => $email,'password' => $password])->render();
-            new Mailer('Сервис ' . env('APP_NAME'), $v, 'Регистрация', $email);
-        }
-        return $user;
-    }
-
-
 
 }
