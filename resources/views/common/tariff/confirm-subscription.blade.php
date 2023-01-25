@@ -116,7 +116,7 @@
         <button
         id="submit_btn"
         class="button-filled button-filled--primary button-filled--disabled"
-        onclick="TariffConfirmation.openRightsModal({ 
+        onclick="TariffConfirmation.openRightsModal({
             communityName: '{{ $community->title }}',
             communityTariff: '{{ $tariff->title }}',
             communityTariffID: '{{ $tariff->id }}',

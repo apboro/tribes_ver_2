@@ -2,37 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\TariffFilter;
+use App\Helper\PseudoCrypt;
 use App\Http\Requests\Tariff\TariffFormPayRequest;
 use App\Http\Requests\Tariff\TariffRequest;
 use App\Http\Requests\Tariff\TariffSettingsRequest;
 use App\Mail\ExceptionMail;
 use App\Mail\RegisterMail;
 use App\Models\Community;
-use App\Models\Payment;
-use App\Models\Tariff;
-use App\Models\TelegramUser;
-use App\Services\SMTP\Mailer;
-use App\Services\TelegramLogService;
-use \App\Services\Tinkoff\Payment as Pay;
 use App\Models\Recurrent;
 use App\Models\TariffVariant;
 use App\Models\User;
-use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Repositories\Payment\PaymentRepository;
-use App\Helper\PseudoCrypt;
-use App\Filters\TariffFilter;
-
-
+use App\Repositories\Tariff\TariffRepositoryContract;
+use App\Services\SMTP\Mailer;
+use App\Services\TelegramLogService;
+use App\Services\Tinkoff\Payment as Pay;
 use Carbon\Carbon;
 use Discord\Http\Exceptions\NotFoundException;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use function React\Promise\reduce;
+
 
 class TariffController extends Controller
 {
@@ -58,10 +50,10 @@ class TariffController extends Controller
     {
         $variant = $community->tariff->variants()->whereId($request['communityTariffID'])->first();
 
-        if(!$variant) return $request->wantsJson() ? response()->json(['success' => 'false', 'message' => 'Тариф не найден']) :
+        if (!$variant) return $request->wantsJson() ? response()->json(['success' => 'false', 'message' => 'Тариф не найден']) :
             redirect()->back(404)->withErrors('Тариф не найден');
 
-        if(!$variant->isActive) return $request->wantsJson() ?
+        if (!$variant->isActive) return $request->wantsJson() ?
             response()->json(['success' => 'false', 'message' => 'Выбраный тариф временно недоступен']) :
             redirect()->back(404)->withErrors('Выбраный тариф временно недоступен');
 
@@ -75,14 +67,11 @@ class TariffController extends Controller
         ### Регистрация плательщика #####
         $password = Str::random(6);
 
+        /** @var User $user */
         $email = strtolower($request['email']);
 
-        $user = User::where('email',  strtolower($email))->first();
-
-        if($email != null && $user == null){
-            /** @var User $user */
-            $user = User::create([
-                'email' => strtolower($email),
+        $user = User::firstOrCreate(['email' => $email],
+            [
                 'name' => explode('@', $email)[0],
                 'code' => 0000,
                 'phone' => null,
@@ -90,14 +79,28 @@ class TariffController extends Controller
                 'phone_confirmed' => false,
             ]);
 
-            $token = $user->createTempToken();
+        if ($v = $user->telegramMeta) {
+            if ($v = $v->tariffVariant()->whereId($variant->id)->first()) {
+                if ($v->title === 'Пробный период') {
+                    return $request->wantsJson() ?
+                        response()->json(['success' => 'false', 'message' => 'Вы уже использовали пробный период', 'redirect' => route('404')]) :
+                        redirect()->back(404)->withErrors('Вы уже использовали пробный период');
+                }
+            }
+        }
 
-            $user->tinkoffSync();
-            $user->hashMake();
+        if ($user->wasRecentlyCreated)
+        {
+        $token = $user->createTempToken();
 
-            $v = view('mail.registration')->with(['login' => $email,'password' => $password])->render();
+        $user->tinkoffSync();
+        $user->hashMake();
+
+
+            $v = view('mail.registration')->with(['login' => $email, 'password' => $password])->render();
             new Mailer('Сервис ' . env('APP_NAME'), $v, 'Регистрация', $email);
         }
+
         ### /Регистрация плательщика #####
 
         $p = new Pay();
@@ -108,11 +111,11 @@ class TariffController extends Controller
 
         $payment = $p->pay();
 
-        if($payment){
+        if ($payment) {
             return $request->ajax() ? response()->json([
-                    'status' => 'ok',
-                    'redirect' => $payment->paymentUrl
-                ]) : redirect()->to($payment->paymentUrl);
+                'status' => 'ok',
+                'redirect' => $payment->paymentUrl
+            ]) : redirect()->to($payment->paymentUrl);
         } else {
             $this->telegramLogService->sendLogMessage(
                 'При инициализации оплаты тарифа произошла ошибка Payment:' . ($payment->id ?? null)
@@ -131,26 +134,26 @@ class TariffController extends Controller
     public function tariffPayment($hash, Request $request)
     {
         $community = Community::find(PseudoCrypt::unhash($hash));
-        if(empty($community)) {
+        if (empty($community)) {
             abort(404);
         }
         $inline_link = null;
-        if($request->get('inline_link')){
+        if ($request->get('inline_link')) {
             $inline_link = $request->get('inline_link');
         }
         $this->tariffRepo->statisticView($request, $community);
 
-        return view('common.tariff.index',['inline_link'=>$inline_link])->withCommunity($community);
+        return view('common.tariff.index', ['inline_link' => $inline_link])->withCommunity($community);
     }
 
     public function confirmSubscription(Request $request, $hash)
     {
         $tariff = TariffVariant::find(PseudoCrypt::unhash($hash));
-        $tariff->increment('views');
         if (!$tariff or !$tariff->isActive)
             return redirect()->route('404')->with('error', 'Этот тариф не активен');
         $community = $tariff->community();
-            return view('common.tariff.confirm-subscription', compact('tariff', 'community'));
+        $tariff->increment('views');
+        return view('common.tariff.confirm-subscription', compact('tariff', 'community'));
     }
 
     public function tariff(Community $community)
@@ -197,17 +200,17 @@ class TariffController extends Controller
         $isPersonal = $request->isPersonal ?? false;
         $isActive = $request->active ?? 'true';
         $isActive = $isActive == 'true';
-        $builder =  $community->tariffVariants()
+        $builder = $community->tariffVariants()
             ->where('price', '>', 0)
             ->orderBy('number_button', 'ASC');
-        if($isPersonal){
-            $builder->where('isActive',"=", true);
-            $builder->where('isPersonal',"=", true);
-        } elseif($isActive) {
-            $builder->where('isActive',"=", true);
-            $builder->where('isPersonal',"=", false);
+        if ($isPersonal) {
+            $builder->where('isActive', "=", true);
+            $builder->where('isPersonal', "=", true);
+        } elseif ($isActive) {
+            $builder->where('isActive', "=", true);
+            $builder->where('isPersonal', "=", false);
         } else {
-            $builder->where('isActive',"=", false);
+            $builder->where('isActive', "=", false);
         }
         $tariffs = $builder->get();
         return view('common.tariff.list')->withCommunity($community)->withTariffs($tariffs);
@@ -260,7 +263,7 @@ class TariffController extends Controller
 
     public function subscriptions(Community $community, TariffFilter $filters)
     {
-        $followers = $this->tariffRepo->getList($filters, $community); 
+        $followers = $this->tariffRepo->getList($filters, $community);
         return view('common.tariff.subscriptions', ['followers' => $followers, 'community' => $community]);
     }
 
@@ -274,7 +277,7 @@ class TariffController extends Controller
     {
         $files = Storage::disk('tinkoff_data')->allFiles();
         $logs = [];
-        foreach ($files as $file){
+        foreach ($files as $file) {
             $data = [];
             $data['data'] = json_decode(Storage::disk('tinkoff_data')->get($file));
             $data['time'] = Carbon::parse(Storage::disk('tinkoff_data')->lastModified($file));
