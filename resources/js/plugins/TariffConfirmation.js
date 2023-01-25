@@ -66,7 +66,6 @@ export default class TariffConfirmation extends Page {
     }
 
     async openRightsModal(data) {
-        console.log(data);
         this.data = data;
         this.email = this.container.querySelector('#email').value
         await this.sendData();
@@ -85,9 +84,13 @@ export default class TariffConfirmation extends Page {
                 url: uri,
                 data: query
             });
+            if (res.data.success == 'false'){
+                window.location.href = res.data.redirect;
+            }
             if (res.data.status == 'ok' && res.data.redirect != 'undefined'){
                 window.location.href = res.data.redirect;
             }
+
 
             return res.data;
         } catch(error) {
