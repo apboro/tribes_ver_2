@@ -252,6 +252,7 @@ class MainBotEvents
             if (isset($this->data->message->left_chat_member)) {
                 if ($this->data->message->left_chat_member->id != env('TELEGRAM_BOT_ID')){
                     $telegram = new Telegram(app(TariffRepositoryContract::class));
+                    $this->bot->logger()->debug('Delete user with:', [$this->data->message->chat->id, $this->data->message->left_chat_member->id]);
                     $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
                 }
             }

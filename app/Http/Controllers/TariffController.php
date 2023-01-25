@@ -146,6 +146,7 @@ class TariffController extends Controller
     public function confirmSubscription(Request $request, $hash)
     {
         $tariff = TariffVariant::find(PseudoCrypt::unhash($hash));
+        $tariff->increment('views');
         if (!$tariff or !$tariff->isActive)
             return redirect()->route('404')->with('error', 'Этот тариф не активен');
         $community = $tariff->community();

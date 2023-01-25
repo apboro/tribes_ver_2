@@ -4,6 +4,7 @@ namespace App\Services\Telegram\MainComponents;
 
 use App\Exceptions\TelegramException;
 use App\Helper\ArrayHelper;
+use App\Models\Knowledge\Category;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Services\Knowledge\ManageQuestionService;
 use App\Services\TelegramMainBotService;

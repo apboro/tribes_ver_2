@@ -142,7 +142,7 @@ export default class KnowledgeList extends Page {
     }
 
     processCategory(title, command, community_id) {
-        axios.post('/' + community_id + '/knowledge/process_category', {
+        axios.post('/community/' + community_id + '/knowledge/process_category', {
             title: title,
             command: command,
             category_id: this.category_id
@@ -161,7 +161,7 @@ export default class KnowledgeList extends Page {
         let otvet = document.getElementById("otvet").value
         if (command === 'del') {
             if (confirm("Удалить вопрос-ответ?")) {
-                axios.post('/' + community_id + '/knowledge/process_knowledge', {
+                axios.post('/community/' + community_id + '/knowledge/process_knowledge', {
                     command: command,
                     vopros: vopros,
                     otvet: otvet,
@@ -174,7 +174,7 @@ export default class KnowledgeList extends Page {
                     })
             }
         } else {
-            axios.post('/' + community_id + '/knowledge/process_knowledge', {
+            axios.post('/community/' + community_id + '/knowledge/process_knowledge', {
                 command: command,
                 vopros: vopros,
                 otvet: otvet,

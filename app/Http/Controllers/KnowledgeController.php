@@ -52,6 +52,7 @@ class KnowledgeController extends Controller
             case 'add':
                 $cat = new Category;
                 $cat->community_id = $community->id;
+                $cat->variant = 'users';
                 $cat->title = $request->title;
                 $cat->save();
                 break;
@@ -88,7 +89,7 @@ class KnowledgeController extends Controller
                 Answer::create([
                     'question_id' => $question->id,
                     'community_id' => $community->id,
-                    'is_draft' => 1,
+                    'is_draft' => false,
                     'context' => $request->otvet,
                 ]);
                 break;

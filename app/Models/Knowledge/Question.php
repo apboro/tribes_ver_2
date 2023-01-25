@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed|string $uri_hash
  * @property int|mixed $c_enquiry
  * @property mixed $id
+ * @property int $category_id
  */
 class Question extends Model
 {

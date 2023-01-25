@@ -15,27 +15,38 @@
                     </div>
                     <button
                             class="button-text knowledge-list__item-btn button-text--primary"
-                            onclick=""
+                            onclick="KnowledgeList.filterByCategory()"
                     >
-                        ЧАТБОТ
+                        @foreach($categories as $category)
+                            @if ($category->variant === 'permanent')
+                                    <button
+                                            class="button-text knowledge-list__item-btn button-text--primary"
+                                            onclick="KnowledgeList.filterByCategory('{{ $category->id }}')"
+                                    >
+                                        {{ $category->title }}
+                                    </button>
+                            @endif
+                        @endforeach
                     </button>
 
                     <div class="ms-auto text-muted">
                         <span>Пользовательские категории</span>
                     </div>
                     <div>
-                        <ul>
+
                         @foreach($categories as $category)
+                            @if ($category->variant === 'users')
                             <li>
-                            <button
+                                <button
                                     class="button-text knowledge-list__item-btn button-text--primary"
                                     onclick="KnowledgeList.filterByCategory('{{ $category->id }}')"
                             >
                                 {{ $category->title }}
                             </button>
                             </li>
+                            @endif
                         @endforeach
-                        </ul>
+
                         <div class="col-sm-4 col-lg-3 mt-1 mt-sm-0">
                             <button
                                     type="submit"
@@ -78,6 +89,7 @@
                             </i>
 
                         </div>
+
                         <button class="btn-sm btn-outline-primary rounded-pill" onclick="KnowledgeList.openKnowledgeForm()">Добавить
                             вопрос-ответ
                         </button>

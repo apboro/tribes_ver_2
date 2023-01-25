@@ -1,17 +1,12 @@
 <?php
 
-use App\Http\Controllers\API\TeleDialogStatisticController;
-use App\Http\Controllers\API\TeleMessageStatisticController;
-use App\Http\Controllers\DonateController;
 use App\Http\Controllers\FeedbackController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestBotController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\TelegramUserBotController;
+use App\Http\Controllers\TestBotController;
 use App\Http\Controllers\UserBotFormController;
-use App\Models\TelegramUser;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\TestController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -124,7 +119,9 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
         Route::group(['prefix' => 'community'], function () {
 
-            Route::get('/', function(){abort(404);})->name('community.list');
+            Route::get('/', function () {
+                abort(404);
+            })->name('community.list');
 
             Route::middleware('sms_confirmed', 'owned_group_community')->group(function () {
                 // Statistic
@@ -138,7 +135,6 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
             Route::middleware('sms_confirmed', 'owned_community')->group(function () {
 
                 Route::get('{community}', 'CommunityController@statistic')->where(['community' => '[0-9]+'])->name('community.view');
-
 
 
                 // Donate
@@ -172,15 +168,12 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                     return view('common.knowledge.index');
                 })->name('knowledge.index');
 
-
             });
 
+            Route::get('/{community}/knowledge/list', [\App\Http\Controllers\KnowledgeController::class, 'list'])->name('knowledge.list');
+            Route::post('/{community}/knowledge/process_category', [\App\Http\Controllers\KnowledgeController::class, 'processCategory'])->name('knowledge.process_category');
+            Route::post('/{community}/knowledge/process_knowledge', [\App\Http\Controllers\KnowledgeController::class, 'processKnowledge'])->name('knowledge.process_knowledge');
         });
-
-        Route::get('/{community}/knowledge/list', [\App\Http\Controllers\KnowledgeController::class, 'list'])->name('knowledge.list');
-        Route::post('/{community}/knowledge/process_category', [\App\Http\Controllers\KnowledgeController::class, 'processCategory'])->name('knowledge.process_category');
-        Route::post('/{community}/knowledge/process_knowledge', [\App\Http\Controllers\KnowledgeController::class, 'processKnowledge'])->name('knowledge.process_knowledge');
-
         Route::get('/{hash}/knowledge/help', 'KnowledgeController@help')->name('public.knowledge.help');
 
         Route::get('/community/add', 'CommunityController@add')->name('community.add');
@@ -337,7 +330,7 @@ Route::group(['prefix' => 'bot'], function () {
     Route::match(['get', 'post'], 'webhook-bot2', [TelegramBotController::class, 'index-bot2']);
 });
 
-Route::middleware(['auth'])->group(function() {
+Route::middleware(['auth'])->group(function () {
     Route::get('/user-bot-form', [UserBotFormController::class, 'index'])->name('user.bot.form');
 });
 
@@ -355,6 +348,6 @@ Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name(
 Route::get('/tinkofftestdata', 'App\Http\Controllers\TariffController@testData');
 Route::get('/test', [App\Http\Controllers\TestController::class, 'test'])->name('test');
 Route::get('/testNot', [App\Http\Controllers\TestController::class, 'testNot'])->name('testNot');
-Route::get('/404', function() {
+Route::get('/404', function () {
     return view('errors.404');
-})->name('404') ;
+})->name('404');

@@ -8,6 +8,7 @@ use App\Helper\PseudoCrypt;
 use App\Jobs\SendTeleMessageToChatFromBot;
 use App\Models\Community;
 use App\Models\Donate;
+use App\Models\Knowledge\Category;
 use App\Models\Knowledge\Question;
 use App\Models\Payment;
 use App\Models\Tariff;
@@ -760,6 +761,9 @@ class MainBotCommands
                         array_merge(['community_id' => $community->id], $data)
                     );
 
+                $category = Category::firstOrCreate(['title'=>'ЧАТБОТ', 'community_id' => $community->id],[
+                    'variant' => 'permanent',
+                ]);
                 $this->manageQuestionService->setUserId($community->owner);
                 $this->manageQuestionService->createFromArray([
                     'community_id' => $community->id,
@@ -767,6 +771,7 @@ class MainBotCommands
                         'context' => ArrayHelper::getValue($data, 'q'),
                         'is_public' => false,
                         'is_draft' => false,
+                        'category_id' => $category->id,
                         'answer' => [
                             'context' => ArrayHelper::getValue($data, 'a'),
                             'is_draft' => false,

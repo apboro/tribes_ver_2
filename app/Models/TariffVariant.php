@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  *  @property int $price;
  *  @property string $title;
  *  @property Tariff $tariff;
+ *  @property int $views;
  *  @property Community $community;
  */
 class TariffVariant extends Model
@@ -45,7 +46,7 @@ class TariffVariant extends Model
 
     function payFollowers()
     {
-        return $this->belongsToMany(TelegramUser::class, 'telegram_users_tarif_variants', 'tarif_variants_id', 'telegram_user_id')->withPivot(['days', 'isAutoPay', 'prompt_time', 'created_at', 'end_tarif_date', 'recurrent_attempt']);
+        return $this->belongsToMany(TelegramUser::class, 'telegram_users_tarif_variants', 'tarif_variants_id', 'telegram_user_id')->withPivot(['days', 'isAutoPay', 'prompt_time', 'created_at', 'recurrent_attempt']);
     }
 
     function getFollowersById($id)
