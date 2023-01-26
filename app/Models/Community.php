@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
+use App\Models\Knowledge\Category;
 use App\Models\Knowledge\Question;
 use App\Services\TelegramMainBotService;
 use Database\Factories\CommunityFactory;
@@ -157,9 +158,14 @@ class Community extends Model
         return $this->owner()->first() && $this->owner()->first()->id === $user->id;
     }
 
-    function questions()
+    public function questions()
     {
         return $this->hasMany(Question::class, 'community_id', 'id');
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(Category::class, 'community_id', 'id');
     }
 
     public function getPopularQuestionsAttribute()

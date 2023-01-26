@@ -61,6 +61,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::get('/analytics/messages/{project?}/{community?}', 'ProjectController@messages')->name('project.analytics.messages');
         Route::get('/analytics/payments/{project?}/{community?}', 'ProjectController@payments')->name('project.analytics.payments');
         Route::get('/analytics/{project?}/{community?}', 'ProjectController@analytics')->name('project.analytics');
+        Route::get('/knowledge/{project?}/{community?}', 'ProjectController@knowledge')->name('project.knowledge');
 
         Route::get('/donates/{project?}/{community?}', 'ProjectController@donates')->name('project.donates');
         Route::get('/tariffs/{project?}/{community?}', 'ProjectController@tariffs')->name('project.tariffs');
@@ -163,7 +164,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                 Route::post('/{community}/tariff/settings/update', 'TariffController@tariffSettings')->name('tariff.settings.update');
 
 
-                // Knowledge
+                // Knowledge old
                 Route::get('/{community}/knowledge', function () {
                     return view('common.knowledge.index');
                 })->name('knowledge.index');
@@ -174,6 +175,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
             Route::post('/{community}/knowledge/process_category', [\App\Http\Controllers\KnowledgeController::class, 'processCategory'])->name('knowledge.process_category');
             Route::post('/{community}/knowledge/process_knowledge', [\App\Http\Controllers\KnowledgeController::class, 'processKnowledge'])->name('knowledge.process_knowledge');
         });
+
         Route::get('/{hash}/knowledge/help', 'KnowledgeController@help')->name('public.knowledge.help');
 
         Route::get('/community/add', 'CommunityController@add')->name('community.add');
@@ -268,6 +270,9 @@ Route::get('media/{hash}/success', 'App\Http\Controllers\CourseController@succes
 Route::any('community/{community}/tariff/form', 'App\Http\Controllers\TariffController@tariffFormPay')->name('community.tariff.form');
 Route::any('community/{hash}', 'App\Http\Controllers\TariffController@tariffPayment')->name('community.tariff.payment');
 Route::any('community/tariff/{hash}', 'App\Http\Controllers\TariffController@confirmSubscription')->name('community.tariff.confirmSubscription');
+
+Route::get('/{hash}/knowledge', [\App\Http\Controllers\KnowledgeController::class, 'public'])->name('knowledge.public');
+
 
 // Footer Routes
 Route::get('/privacy', function () {
