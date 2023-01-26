@@ -4,14 +4,12 @@
     @if ($activeCommunity)
     <div data-plugin="KnowledgeList">
         <section class="knowledge-list__title">
-            <div class="container">
-{{--                База знаний сообщества "{{ $community -> title }}"--}}
-            </div>
+{{--                База знаний сообщества "{{ $community -> title }}"--}}База знаний
         </section>
 
         <section>
-            <div class="d-flex flex-row">
-                <div class="p-2">
+            <div class="d-flex flex-row knowledge-list__columns">
+                <div class="p-2 p-2_left">
                     <div class="ms-auto text-muted">
                         <span>Постоянные категории</span>
                     </div>
@@ -19,7 +17,7 @@
                             class="button-text knowledge-list__item-btn button-text--primary"
                             onclick="KnowledgeList.filterByCategory()"
                     >
-                        @foreach($activeCommunity->categories() as $category)
+                        @foreach($activeCommunity->categories as $category)
                             @if ($category->variant === 'permanent')
                                 <button
                                         class="button-text knowledge-list__item-btn button-text--primary"
@@ -36,46 +34,44 @@
                     </div>
                     <div>
 
-                        @foreach($activeCommunity->categories() as $category)
+                        @foreach($activeCommunity->categories as $category)
                             @if ($category->variant === 'users')
-                                <li>
-                                    <button
-                                            class="button-text knowledge-list__item-btn button-text--primary"
-                                            onclick="KnowledgeList.filterByCategory('{{ $category->id }}')"
-                                    >
-                                        {{ $category->title }}
-                                    </button>
-                                </li>
+                                <button
+                                        class="button-text knowledge-list__item-btn button-text--primary"
+                                        onclick="KnowledgeList.filterByCategory('{{ $category->id }}')"
+                                >
+                                    {{ $category->title }}
+                                </button>
                             @endif
                         @endforeach
 
-                        <div class="col-sm-4 col-lg-3 mt-1 mt-sm-0">
+                        <div class="p-2__buttons">
                             <button
                                     type="submit"
-                                    class="btn btn-outline-primary rounded-pill"
+                                    class="btn btn-outline-primary rounded-pill p-2__button"
                                     onclick="KnowledgeList.showModal('add', {{$activeCommunity->id}})"
                             >
                                 Добавить категорию
                             </button>
-                            <button
-                                    type="submit"
-                                    class="btn btn-outline-primary rounded-pill"
-                                    onclick="KnowledgeList.showModal('edit', {{$activeCommunity->id}})"
-                            >
-                                Переименовать категорию
-                            </button>
-                            <button
-                                    type="submit"
-                                    class="btn btn-outline-primary rounded-pill"
-                                    onclick="KnowledgeList.showModal('del', {{$activeCommunity->id}})"
-                            >
-                                Удалить категорию
-                            </button>
+{{--                            <button--}}
+{{--                                    type="submit"--}}
+{{--                                    class="btn btn-outline-primary rounded-pill p-2__button"--}}
+{{--                                    onclick="KnowledgeList.showModal('edit', {{$activeCommunity->id}})"--}}
+{{--                            >--}}
+{{--                                Переименовать категорию--}}
+{{--                            </button>--}}
+{{--                            <button--}}
+{{--                                    type="submit"--}}
+{{--                                    class="btn btn-outline-primary rounded-pill p-2__button"--}}
+{{--                                    onclick="KnowledgeList.showModal('del', {{$activeCommunity->id}})"--}}
+{{--                            >--}}
+{{--                                Удалить категорию--}}
+{{--                            </button>--}}
                         </div>
                     </div>
                 </div>
 
-                <div class="p-2">
+                <div class="p-2 p-2_right">
                     <div class="knowledge-list__control">
                         <div class="search-field">
                             <input type="text" class="search-field__field" placeholder="Поиск">
@@ -108,15 +104,21 @@
                             OTVET
                             <textarea id="otvet" style="border: 1px solid" cols="50" rows="10">Napishite otvet</textarea>
                         </div>
-                        <button class="btn-sm btn-outline-primary rounded-pill" onclick="KnowledgeList.processKnowledge('add',{{$activeCommunity->id}})">
-                            SAVE
-                        </button>
+{{--                        <button class="btn-sm btn-outline-primary rounded-pill" onclick="KnowledgeList.processKnowledge('add',{{$activeCommunity->id}})">--}}
+{{--                            SAVE--}}
+{{--                        </button>--}}
                     </div>
 
                     <ul class="knowledge-list__list">
                         @forelse($activeCommunity->questions as $question)
                             <li class="knowledge-list__item" data-id="{{ $loop->index }}"
                                 data-category="{{ $question->category_id }}">
+
+                                <div class="knowledge-list__item-actions">
+                                    <button class="knowledge-list__item-actions__button_edit"></button>
+                                    <button class="knowledge-list__item-actions__button_delete" onclick="KnowledgeList.processKnowledge('del', {{$activeCommunity->id}}, {{$question->id}})"></button>
+                                </div>
+
                                 <div class="knowledge-list__question">
                                     <div class="knowledge-list__item-icon-wrapper">
                                         <i class="icon knowledge-list__item-icon icon--size-3">
@@ -137,19 +139,18 @@
                                         <span class="knowledge-list__item-icon-label">
                                     Вопрос
                                 </span>
-                                        <button>edit</button>
-                                        <button onclick="KnowledgeList.processKnowledge('del', {{$activeCommunity->id}}, {{$question->id}})">delete</button>
+
                                     </div>
                                     <p class="knowledge-list__item-text">
                                         {{ $question -> context }}
                                     </p>
 
-                                    <button
-                                            class="button-text knowledge-list__item-btn button-text--primary"
-                                            onclick="KnowledgeList.toggleAnswerVisibility('{{ $loop->index }}')"
-                                    >
-                                        Смотреть ответ
-                                    </button>
+{{--                                    <button--}}
+{{--                                            class="button-text knowledge-list__item-btn button-text--primary"--}}
+{{--                                            onclick="KnowledgeList.toggleAnswerVisibility('{{ $loop->index }}')"--}}
+{{--                                    >--}}
+{{--                                        Смотреть ответ--}}
+{{--                                    </button>--}}
                                 </div>
 
                                 <div class="knowledge-list__answer">
@@ -180,24 +181,24 @@
                                     Ответ
                                 </span>
 
-                                        <button class="button-text button-text--primary button-text--only-icon">
-                                            <i class="icon button-text__icon icon--size-2">
-                                                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                    <path class="icon__fill" fill-rule="evenodd" clip-rule="evenodd"
-                                                          d="M17.163 13.7754L19.6368 11.3124C21.5334 9.42417 21.4509 6.22235 19.3894 4.41619C17.4929 2.52794 14.4419 2.52794 12.5453 4.41619L11.1435 5.81186C10.8137 6.14025 10.8137 6.63284 11.1435 6.96123C11.4733 7.28962 11.9681 7.28962 12.2979 6.96123L13.6997 5.56556C15.0191 4.33409 16.9981 4.33409 18.3175 5.56556C19.6368 6.79704 19.6368 8.84949 18.3999 10.1631L15.9261 12.626C15.8437 12.7902 15.7612 12.8723 15.5963 12.9544C14.112 14.0217 12.0505 13.7754 10.9786 12.2976C10.7312 11.9692 10.154 11.8871 9.82415 12.1334C9.49431 12.3797 9.41185 12.9544 9.65923 13.2828C10.6487 14.5964 12.133 15.2531 13.6173 15.2531C14.6892 15.2531 15.6788 14.9247 16.5858 14.268C16.8332 14.1038 16.9981 13.9396 17.163 13.7754ZM10.154 18.3728L11.5558 16.9772C11.8857 16.6488 12.4629 16.7309 12.7927 17.0593C13.1226 17.3877 13.1226 17.8802 12.7927 18.2086L11.3909 19.6043C10.4014 20.5074 9.16451 21 7.92762 21C6.69073 21 5.45384 20.5074 4.46433 19.6043C2.56776 17.7161 2.4853 14.5963 4.38187 12.626L6.85565 10.163L7.3504 9.67044C8.42237 8.84946 9.74172 8.52107 10.9786 8.76736C12.2155 8.93156 13.3699 9.58835 14.1945 10.6556C14.4419 10.984 14.3594 11.5587 14.0296 11.805C13.6998 12.0513 13.1226 11.9692 12.8752 11.6408C12.3804 10.9019 11.6383 10.4914 10.7312 10.3272C9.82418 10.2451 8.99959 10.4914 8.25746 10.984L7.92762 11.3124L5.45384 13.7753C4.21695 15.0068 4.21695 17.1414 5.5363 18.3728C6.85565 19.6043 8.83467 19.6043 10.154 18.3728Z"
-                                                          fill="#4C4957"/>
-                                                </svg>
-                                            </i>
-                                        </button>
+{{--                                        <button class="button-text button-text--primary button-text--only-icon">--}}
+{{--                                            <i class="icon button-text__icon icon--size-2">--}}
+{{--                                                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none"--}}
+{{--                                                     xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                                    <path class="icon__fill" fill-rule="evenodd" clip-rule="evenodd"--}}
+{{--                                                          d="M17.163 13.7754L19.6368 11.3124C21.5334 9.42417 21.4509 6.22235 19.3894 4.41619C17.4929 2.52794 14.4419 2.52794 12.5453 4.41619L11.1435 5.81186C10.8137 6.14025 10.8137 6.63284 11.1435 6.96123C11.4733 7.28962 11.9681 7.28962 12.2979 6.96123L13.6997 5.56556C15.0191 4.33409 16.9981 4.33409 18.3175 5.56556C19.6368 6.79704 19.6368 8.84949 18.3999 10.1631L15.9261 12.626C15.8437 12.7902 15.7612 12.8723 15.5963 12.9544C14.112 14.0217 12.0505 13.7754 10.9786 12.2976C10.7312 11.9692 10.154 11.8871 9.82415 12.1334C9.49431 12.3797 9.41185 12.9544 9.65923 13.2828C10.6487 14.5964 12.133 15.2531 13.6173 15.2531C14.6892 15.2531 15.6788 14.9247 16.5858 14.268C16.8332 14.1038 16.9981 13.9396 17.163 13.7754ZM10.154 18.3728L11.5558 16.9772C11.8857 16.6488 12.4629 16.7309 12.7927 17.0593C13.1226 17.3877 13.1226 17.8802 12.7927 18.2086L11.3909 19.6043C10.4014 20.5074 9.16451 21 7.92762 21C6.69073 21 5.45384 20.5074 4.46433 19.6043C2.56776 17.7161 2.4853 14.5963 4.38187 12.626L6.85565 10.163L7.3504 9.67044C8.42237 8.84946 9.74172 8.52107 10.9786 8.76736C12.2155 8.93156 13.3699 9.58835 14.1945 10.6556C14.4419 10.984 14.3594 11.5587 14.0296 11.805C13.6998 12.0513 13.1226 11.9692 12.8752 11.6408C12.3804 10.9019 11.6383 10.4914 10.7312 10.3272C9.82418 10.2451 8.99959 10.4914 8.25746 10.984L7.92762 11.3124L5.45384 13.7753C4.21695 15.0068 4.21695 17.1414 5.5363 18.3728C6.85565 19.6043 8.83467 19.6043 10.154 18.3728Z"--}}
+{{--                                                          fill="#4C4957"/>--}}
+{{--                                                </svg>--}}
+{{--                                            </i>--}}
+{{--                                        </button>--}}
                                     </div>
 
-                                    <button
-                                            class="button-text knowledge-list__item-btn button-text--primary"
-                                            onclick="KnowledgeList.hideAnswerVisibility('{{ $loop->index }}')"
-                                    >
-                                        Скрыть ответ
-                                    </button>
+{{--                                    <button--}}
+{{--                                            class="button-text knowledge-list__item-btn button-text--primary"--}}
+{{--                                            onclick="KnowledgeList.hideAnswerVisibility('{{ $loop->index }}')"--}}
+{{--                                    >--}}
+{{--                                        Скрыть ответ--}}
+{{--                                    </button>--}}
 
                                 </div>
                             </li>
