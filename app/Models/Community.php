@@ -291,7 +291,7 @@ class Community extends Model
     public function getPublicKnowledgeLink(): string
     {
         $hash = PseudoCrypt::hash($this->id);
-        return route('public.knowledge.list', compact('hash'));
+        return route('knowledge.public', compact('hash'));
     }
     /**
      *   Взять ссылку на справку "Как это работает"

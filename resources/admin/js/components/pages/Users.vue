@@ -1,4 +1,4 @@
-w<template>
+<template>
     <div class="card">
         <div class="card-body border-bottom py-3">
             <div class="d-flex align-items-center justify-content-between">
@@ -39,7 +39,7 @@ w<template>
                     <th>Почта</th>
                     <th>Телефон</th>
                     <th>
-                        Дата регистрации
+                        Дата<br> регистрации
                         <i
                             class="col-1"
                             style="cursor: pointer;"
@@ -67,10 +67,14 @@ w<template>
                             </template>
                         </i>    
                     </th>
-                    <th>Кол-во сообществ</th>
-                    <th>Последняя активность</th>
-                    <th>Сумма поступлений, руб</th>
-                    <th>Сумма выводов, руб</th>
+                    <th>Кол-во<br>
+                      сообществ</th>
+                    <th>Последняя<br>
+                      активность</th>
+                    <th>Сумма<br>
+                      поступлений</th>
+<!--                    <th>Сумма<br>-->
+<!--                      выводов</th>-->
                     <th>Комиссия, %</th>
                     <th></th>
                 </tr>
@@ -81,7 +85,6 @@ w<template>
             </table>
         </div>
         <div v-if="users.meta && users.meta.per_page < users.meta.total" class="card-footer d-flex align-items-center">
-            <p class="m-0 text-muted">Показано <span>{{ users.meta.per_page }}</span> из <span>{{ users.meta.total }}</span> записей</p>
             <ul class="pagination m-0 ms-auto">
                 <li
                     v-for="(link, idx) in users.meta.links"

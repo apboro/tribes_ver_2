@@ -62,13 +62,13 @@ class CourseController extends Controller
         if($isAuthor){
             $course = Course::where('owner', Auth::user()->id)->first();
         } else {
-            $course = Course::with('byers')->where('id', (int)PseudoCrypt::unhash($hash))
-                ->whereHas('byers', function($q){
+            $course = Course::with('buyers')->where('id', (int)PseudoCrypt::unhash($hash))
+                ->whereHas('buyers', function($q){
                     $q->where('user_id', Auth::user()->id);
                 })
                 ->where('isPublished', true)
                 ->first();
-            $expired_at = $course->byers()->where('id', Auth::user()->id)->first()->pivot->expired_at;
+            $expired_at = $course->buyers()->where('id', Auth::user()->id)->first()->pivot->expired_at;
 
 
             if($expired_at < Carbon::now()){

@@ -5,7 +5,7 @@
         <div class="media-views__info">
 {{--            {{ dd($course) }}--}}
             @if($course->owner == Auth::user()->id){{--автор--}}
-                <p class="media-views__info-item"><b>Автор:</b> мой курс (@if($course->isPublished == true)опубликовано@elseне опубликовано@endif) </p>
+                <p class="media-views__info-item"><b>Автор:</b> мой курс @if ($course->isPublished == true) опубликовано @else не опубликовано @endif </p>
                 <p class="media-views__info-item"><b>Предпросмотр</b></p>
                 <p class="media-views__info-item"><b>Дата создания: </b>
                     {{ date('d.m.Y', strtotime($course->created_at)) }}
@@ -22,11 +22,11 @@
 
                 <p class="media-views__info-item"><b>Автор:</b> {{ $course->author()->first()->name ?? 'null' }} </p>
                 <p class="media-views__info-item"><b>Дата покупки:</b>
-                    {{ date('d.m.Y', strtotime($course->byers()->find(Auth::user()->id)->pivot->byed_at)) }}
+                    {{ date('d.m.Y', strtotime($course->buyers()->find(Auth::user()->id)->pivot->byed_at)) }}
                 </p>
-                <p class="media-views__info-item"><b>Стоимость:</b> {{ $course->byers()->find(Auth::user()->id)->pivot->cost }} руб.</p>
+                <p class="media-views__info-item"><b>Стоимость:</b> {{ $course->buyers()->find(Auth::user()->id)->pivot->cost }} руб.</p>
                 <p class="media-views__info-item"><b>Доступен до:</b>
-                    {{ date('d.m.Y', strtotime($course->byers()->find(Auth::user()->id)->pivot->expired_at)) }}
+                    {{ date('d.m.Y', strtotime($course->buyers()->find(Auth::user()->id)->pivot->expired_at)) }}
                 </p>
             @endif
 

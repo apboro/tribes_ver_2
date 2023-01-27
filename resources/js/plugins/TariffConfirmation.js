@@ -85,7 +85,7 @@ export default class TariffConfirmation extends Page {
                 data: query
             });
             if (res.data.success == 'false'){
-                window.location.href = res.data.redirect;
+                document.getElementById('error_msg').innerHTML = res.data.message
             }
             if (res.data.status == 'ok' && res.data.redirect != 'undefined'){
                 window.location.href = res.data.redirect;

@@ -49,10 +49,11 @@ class MainBotCommands
         //  имя команды => описание
         'start' => 'Начало работы с ботом' . "\n",
         'myid' => 'Показывает ваш уникальный ID' . "\n",
-        'chatId' => 'Показывает уникальный ID текущего чата' . "\n",
+        'chatid' => 'Показывает уникальный ID текущего чата' . "\n",
         'tafiff' => 'Список тарифов сообщества',
         'donate' => 'Материальная помощь сообществу',
         'qa' => 'Найти ответ в Базе Знаний сообщества',
+        'bz' => 'Открыть базу знаний',
 
     ];
     private ManageQuestionService $manageQuestionService;
@@ -88,6 +89,7 @@ class MainBotCommands
         'inlineCommand',
         "inlineTariffCommand",
         'donateOnChat',
+        'helpOnChat',
         'donateOnUser',
         'materialAid',
         'personalArea',
@@ -160,7 +162,7 @@ class MainBotCommands
 
     protected function getChatId()
     {
-        $this->bot->onCommand('chatId', function (Context $ctx) {
+        $this->bot->onCommand('chatid', function (Context $ctx) {
             $ctx->reply($ctx->getChatID());
         });
     }
@@ -380,6 +382,19 @@ class MainBotCommands
         }
     }
 
+    protected function helpOnChat()
+    {
+        try {
+            $this->bot->onCommand('bz', function (Context $ctx) {
+                $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
+                $link = $community->getPublicKnowledgeLink();
+                $ctx->reply('Ссылка на Базу Знаний по сообществу: '. $link);
+            });
+            } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
     protected function donateOnChat()
     {
         try {
@@ -557,7 +572,7 @@ class MainBotCommands
     protected function faq()
     {
         try {
-            $this->bot->onHears('🔧Помощь', function (Context $ctx) {
+            $this->bot->onCommand('/help', function (Context $ctx) {
                 $menu = Menux::Create('links')->inline();
                 $menu->row()->uBtn('Помощь', route('faq.index'));
                 $ctx->reply('Для того чтобы получить помощь перейдите по ссылке', $menu);
@@ -900,7 +915,8 @@ class MainBotCommands
                     }
 
                     $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
-                    $ctx->replyHTML($image . $message . $defMassage . $invite);
+//                    $ctx->replyHTML($image . $message . $defMassage . $invite); //отключить приветствие в боте после подписки
+                    $ctx->replyHTML($defMassage . $invite);
                     //todo отправить сообщение автору через личный чат с ботом,
                     $ty = TelegramUser::where([
                         'telegram_id' => $ctx->getUserID()
@@ -936,7 +952,8 @@ class MainBotCommands
                     }
                     $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
 
-                    $ctx->replyHTML($image . $message . $defMassage . $invite);
+//                    $ctx->replyHTML($image . $message . $defMassage . $invite); //отключить приветствие в боте после подписки
+                    $ctx->replyHTML($defMassage . $invite);
                 } else $ctx->replyHTML('Сообщество не существует');
             }
         } catch (\Exception $e) {

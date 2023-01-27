@@ -31,14 +31,17 @@
                 <span class="confirmation_subscription__name">Тарифный план:</span>
                 <span class="confirmation_subscription__value">{{$tariff->title}}</span>
             </p>
+            @if ($tariff->price != 0)
             <p>
                 <span class="confirmation_subscription__name">Стоимость:</span>
                 <span class="confirmation_subscription__value">{{$tariff->price}} &#8381;</span>
-            </p> 
+            </p>
+            @endif
         </div>
 
     </div>
-    <div class="confirmation_subscription__body">
+    <div class="confirmation_subscription__body @if ($tariff->price == 0) hidden @endif">
+
         <div class="checkbox confirmation_subscription__confirm-check">
             <div class="checkbox__wrapper community-settings__personal_tariff">
                 <input
@@ -115,7 +118,7 @@
         
         <button
         id="submit_btn"
-        class="button-filled button-filled--primary button-filled--disabled"
+        class="button-filled button-filled--primary @if ($tariff->price != 0) button-filled--disabled @endif"
         onclick="TariffConfirmation.openRightsModal({
             communityName: '{{ $community->title }}',
             communityTariff: '{{ $tariff->title }}',
@@ -131,5 +134,7 @@
         id="email_message"
         class="form-message form-message--danger hide"
     ></span>
+    <div id="error_msg" class="alert alert-warning text-center" role="alert"></div>
+
 </div>
 @endsection
