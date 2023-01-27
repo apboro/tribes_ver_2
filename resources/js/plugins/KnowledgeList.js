@@ -187,4 +187,38 @@ export default class KnowledgeList extends Page {
                 })
         }
     }
+
+    inputLengthCheck() {
+        let voprosVal = document.getElementById("vopros").value;
+        let otvetVal = document.getElementById("otvet").value;
+        let saveButton = document.querySelector('.knowledge-list__new_knowledge__buttons-save');
+
+        if ((voprosVal !== '') && (otvetVal !== '')) {
+            saveButton.removeAttribute("disabled");
+        } else {
+            saveButton.setAttribute("disabled", "disabled");
+        }
+    }
+
+    inputClearer() {
+        if (window.matchMedia('(max-width: 767px)').matches) {
+            let searchField = document.querySelector('.search-field__field').value;
+            let searchClear = document.querySelector('.search-field__clear');
+
+            if (searchField !== '') {
+                searchClear.style.display = 'inline'
+            } else {
+                searchClear.style.display = 'none'
+            }
+        }
+    }
+
+    inputClear() {
+        if (window.matchMedia('(max-width: 767px)').matches) {
+            let searchFields = document.querySelector('.search-field__field');
+            let searchClears = document.querySelector('.search-field__clear');
+            searchFields.value = '';
+            searchClears.style.display = 'none';
+        }
+    }
 }
