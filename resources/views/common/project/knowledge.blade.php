@@ -81,8 +81,9 @@
                 <div class="p-2 p-2_right">
                     <div class="knowledge-list__control">
                         <div class="search-field">
-                            <input type="text" class="search-field__field" placeholder="Поиск" oninput="KnowledgeList.inputClearer()">
+                            <input type="text" id="search_field" class="search-field__field" placeholder="Поиск" oninput="KnowledgeList.inputClearer()">
                             <span class="search-field__clear" onclick="KnowledgeList.inputClear()"></span>
+                            <button onclick="KnowledgeList.search()">
                             <i class="icon search-field__icon icon--size-2">
                                 <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -93,7 +94,7 @@
                                           stroke="#B5B4B8" stroke-width="2"/>
                                 </svg>
                             </i>
-
+                            </button>
                         </div>
 
                         <button class="btn-sm btn-outline-primary rounded-pill" onclick="KnowledgeList.openKnowledgeForm()">Добавить
@@ -165,11 +166,11 @@
 
                     <ul class="knowledge-list__list">
                         @forelse($activeCommunity->questions as $question)
-                            <li class="knowledge-list__item" data-id="{{ $loop->index }}"
+                            <li class="knowledge-list__item" data-id="{{ $question->id }}"
                                 data-category="{{ $question->category_id }}">
 
                                 <div class="knowledge-list__item-actions">
-                                    <button class="knowledge-list__item-actions__button_edit"></button>
+                                    <button class="knowledge-list__item-actions__button_edit" onclick="KnowledgeList.editQuestion({{$question->id}})"></button>
                                     <button class="knowledge-list__item-actions__button_delete" onclick="KnowledgeList.processKnowledge('del', {{$activeCommunity->id}}, {{$question->id}})"></button>
                                 </div>
 
@@ -253,6 +254,14 @@
 {{--                                    >--}}
 {{--                                        Скрыть ответ--}}
 {{--                                    </button>--}}
+                                    <div id="save_question_button" class="knowledge-list__new_knowledge">
+                                    <div  class="knowledge-list__new_knowledge__buttons">
+                                        <button disabled class="btn-sm btn-outline-primary rounded-pill knowledge-list__new_knowledge__buttons-save" onclick="KnowledgeList.editQuestion({{$activeCommunity->id}})">
+                                            Сохранить
+                                        </button>
+                                        <button class="btn-sm btn-outline-primary rounded-pill knowledge-list__new_knowledge__buttons-cancel" onclick="KnowledgeList.openKnowledgeForm()">Отмена</button>
+                                    </div>
+                                    </div>
 
                                 </div>
                             </li>
