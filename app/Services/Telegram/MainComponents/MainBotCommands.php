@@ -914,7 +914,7 @@ class MainBotCommands
                         $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
                     }
 
-                    $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
+                    $defMassage = "\n\n". 'Сообщество: ' . $payment->community->title ."\n". 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
 //                    $ctx->replyHTML($image . $message . $defMassage . $invite); //отключить приветствие в боте после подписки
                     $ctx->replyHTML($defMassage . $invite);
                     //todo отправить сообщение автору через личный чат с ботом,
@@ -950,7 +950,7 @@ class MainBotCommands
                             $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
                         }
                     }
-                    $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
+                    $defMassage = "\n\n". 'Сообщество: ' . $community->title ."\n". 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
 
 //                    $ctx->replyHTML($image . $message . $defMassage . $invite); //отключить приветствие в боте после подписки
                     $ctx->replyHTML($defMassage . $invite);

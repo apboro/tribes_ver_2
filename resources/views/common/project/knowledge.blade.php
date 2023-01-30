@@ -170,7 +170,7 @@
                                 data-category="{{ $question->category_id }}">
 
                                 <div class="knowledge-list__item-actions">
-                                    <button class="knowledge-list__item-actions__button_edit" onclick="KnowledgeList.editQuestion({{$question->id}})"></button>
+{{--                                    <button class="knowledge-list__item-actions__button_edit" onclick="KnowledgeList.editQuestion({{$question->id}})"></button>--}}
                                     <button class="knowledge-list__item-actions__button_delete" onclick="KnowledgeList.processKnowledge('del', {{$activeCommunity->id}}, {{$question->id}})"></button>
                                 </div>
 
@@ -254,9 +254,9 @@
 {{--                                    >--}}
 {{--                                        Скрыть ответ--}}
 {{--                                    </button>--}}
-                                    <div id="save_question_button" class="knowledge-list__new_knowledge">
+                                    <div class="knowledge-list__new_knowledge">
                                     <div  class="knowledge-list__new_knowledge__buttons">
-                                        <button disabled class="btn-sm btn-outline-primary rounded-pill knowledge-list__new_knowledge__buttons-save" onclick="KnowledgeList.editQuestion({{$activeCommunity->id}})">
+                                        <button disabled id="save_question_button" class="btn-sm btn-outline-primary rounded-pill knowledge-list__new_knowledge__buttons-save" onclick="KnowledgeList.editQuestion({{$activeCommunity->id}})">
                                             Сохранить
                                         </button>
                                         <button class="btn-sm btn-outline-primary rounded-pill knowledge-list__new_knowledge__buttons-cancel" onclick="KnowledgeList.openKnowledgeForm()">Отмена</button>

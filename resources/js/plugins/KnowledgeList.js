@@ -242,13 +242,14 @@ export default class KnowledgeList extends Page {
 
     editQuestion(id){
         //console.log(document.getElementById("save_question_button"))//.classList.toggle('active')
-        console.log(document.getElementsByClassName('knowledge-list__new_knowledge')[1])//.classList.toggle('active')
         this.questions.forEach((question) => {
             // console.log(question.dataset.id)
             question.classList.add('hide')
             if (question.dataset.id == id) {
                 // console.log(question.dataset.id)
+                document.getElementsByClassName('knowledge-list__new_knowledge')[1].classList.toggle('active')
                 question.classList.remove('hide');
+                document.getElementById("save_question_button").removeAttribute("disabled");
             }
         });
     }

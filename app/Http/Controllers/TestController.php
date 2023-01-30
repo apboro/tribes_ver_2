@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Console\Commands\CheckCourses;
 use App\Jobs\SendEmails;
 use App\Models\Accumulation;
+use App\Models\Community;
 use App\Models\Course;
 use App\Models\Payment;
 use App\Models\TariffVariant;
@@ -27,7 +28,7 @@ class TestController extends Controller
         $this->telegramService = $telegramService;
     }
 
-    public function test()
+    public function CheckCourse()
     {
         $courses = Course::with('buyers')->whereNotNull('activation_date')  ->get();
         foreach ($courses as $course){
@@ -104,12 +105,15 @@ class TestController extends Controller
         dd($user);
     }
 
-    public function sendTlgMsg()
+    public function test()
     {
+        $msg = strip_tags(str_replace('<br>', "\n",Community::find(484)->tariff->welcome_description));
+//        dd('111'. chr(10). '222');
+//        dd($msg);
         $this->telegramService->sendMessageFromBot(
             config('telegram_bot.bot.botName'),
-            472966552,
-            'Gugugaga'
+            -829777113,
+            $msg
         );
     }
 

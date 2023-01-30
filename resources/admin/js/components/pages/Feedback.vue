@@ -51,9 +51,6 @@
       <div>
         <div v-if="feedbacks && feedbacks.per_page < feedbacks.total"
              class="card-footer d-flex align-items-center">
-          <p class="m-0 text-muted">Показано <span>{{ feedbacks.per_page }}</span> из <span>{{
-              feedbacks.total
-            }}</span> записей</p>
           <ul class="pagination m-0 ms-auto">
             <li
                 v-for="(link, idx) in feedbacks.links"
@@ -90,8 +87,8 @@ export default {
     filter_data: {
       deep: true,
       handler: _.debounce(function (v) {
-        console.log(this.filter_data.filter.entries)
         this.$store.dispatch('loadFeedbackList', v);
+        this.filter_data.filter.page =1;
       }, 400)
     }
   },

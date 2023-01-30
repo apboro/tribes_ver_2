@@ -153,7 +153,6 @@
       </table>
       <div>
         <div v-if="communities.meta && communities.meta.per_page < communities.meta.total" class="card-footer d-flex align-items-center">
-          <p class="m-0 text-muted">Показано <span>{{ communities.meta.per_page }}</span> из <span>{{ communities.meta.total }}</span> записей</p>
           <ul class="pagination m-0 ms-auto">
             <li
                 v-for="(link, idx) in communities.meta.links"
@@ -199,6 +198,7 @@ export default {
       deep: true,
       handler: _.debounce(function (v) {
         this.$store.dispatch('loadCommunities', v);
+        this.filter_data.filter.page =1;
       }, 400)
     }
   },

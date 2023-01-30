@@ -116,7 +116,7 @@ class MainBotEvents
                                 ]);
                             }
 
-                            $description = strip_tags($community->tariff->welcome_description);
+                            $description = strip_tags(str_replace('<br>', "\n",$community->tariff->welcome_description ));
                             if ($description && $description != '') {
                                 $text = $description . $image;
                                 $this->bot->getExtentionApi()->sendMess($chatId, $text);

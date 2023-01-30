@@ -123,6 +123,7 @@ export default {
             deep: true,
             handler: _.debounce(function(v) {
                 this.$store.dispatch('get_users', v);
+                this.filter_data.filter.page =1;
             },400)
         }
     },
