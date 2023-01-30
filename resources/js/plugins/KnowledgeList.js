@@ -221,4 +221,13 @@ export default class KnowledgeList extends Page {
             searchClears.style.display = 'none';
         }
     }
+
+    showCategory() {
+        let categoryMenu = document.querySelector('.p-2_left');
+        if ( categoryMenu.classList.contains("mobile-hidden") ) {
+            categoryMenu.classList.remove("mobile-hidden")
+        } else {
+            categoryMenu.classList.add("mobile-hidden")
+        }
+    }
 }

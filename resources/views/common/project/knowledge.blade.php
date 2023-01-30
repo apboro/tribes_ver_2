@@ -9,7 +9,14 @@
 
         <section>
             <div class="d-flex knowledge-list__columns">
-                <div class="p-2 p-2_left">
+                <button
+                        type="button"
+                        class="btn btn-outline-primary rounded-pill p-2__button knowledge-list__category-menu"
+                        onclick="KnowledgeList.showCategory()">
+                    Меню категорий
+                </button>
+
+                <div class="p-2 p-2_left mobile-hidden">
                     <div class="ms-auto text-muted">
                         <span>Постоянные категории</span>
                     </div>

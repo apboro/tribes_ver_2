@@ -426,14 +426,32 @@
     color: #B5B4B8 !important;
 }
 
+.knowledge-list__category-menu {
+    display: none;
+}
+
 @media (max-width: 767px) {
 
     .knowledge-list__title {
         display: none;
     }
 
-    .p-2_left {
+    .knowledge-list__category-menu {
+        display: block;
+        margin-top: 30px;
+    }
+
+    .mobile-hidden {
         display: none;
+    }
+
+    .knowledge-list__columns {
+        flex-direction: column;
+    }
+
+    .p-2_left {
+        width: 100%;
+        margin-top: 30px;
     }
 
     .p-2_right {
@@ -505,7 +523,7 @@
     .p-2_right .search-field__icon {
         right: auto;
         left: 18px;
-        top: calc(50% - 22px);
+        top: calc(50% - 32px);
     }
 
     .search-field__icon .icon__stroke {
