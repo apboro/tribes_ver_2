@@ -68,14 +68,14 @@
                   id="course_period"
                   class="input"
                   v-model="access_days"
-                  :disabled="course.course_meta.isEthernal"
+                  :disabled="!!(this.course.course_meta.isEthernal || this.course.course_meta.deactivation_date)"
               >
             </div>
           </div>
           <div class="course-settings__group-item">
-            <div class="course-settings__toggle-switch">
+            <div class="course-settings__toggle-switch" >
               <label class="toggle-switch">
-                <input type="checkbox" id="course_ethernal" v-model="course.course_meta.isEthernal">
+                <input type="checkbox" id="course_ethernal" v-model="course.course_meta.isEthernal" :disabled="!!this.course.course_meta.deactivation_date">
                 <span class="toggle-switch__slider"></span>
               </label>
 
@@ -99,7 +99,7 @@
 
               <div class="course-settings__toggle-switch">
                 <label class="toggle-switch">
-                  <input type="checkbox" id="course_activated" v-model="course.course_meta.isActivated">
+                  <input type="checkbox" id="course_activated" v-model="course.course_meta.isActive">
                   <span class="toggle-switch__slider"></span>
                 </label>
                 <label for="course_activated" class="course-settings__toggle-switch-label">
@@ -111,17 +111,17 @@
             <label for="activation_date">
               Дата публикации
             </label>
-            <input type="datetime-local" id="publication_date" :disabled="course.course_meta.isPublished" v-model="publication_date"/>
+            <input type="datetime-local" :min="today()" id="publication_date" :disabled="course.course_meta.isPublished" v-model="course.course_meta.publication_date"/>
 
             <label for="publication_date">
               Дата активации
             </label>
-            <input type="datetime-local" id="activation_date" :disabled="course.course_meta.isActivated" v-model="activation_date"/>
+            <input type="datetime-local" :min="today()" id="activation_date" :disabled="course.course_meta.isActive" v-model="course.course_meta.activation_date"/>
 
             <label for="deactivation_date">
               Дата деактивации
             </label>
-            <input type="datetime-local" id="deactivation_date" v-model="deactivation_date"/>
+            <input type="datetime-local" id="deactivation_date" :min="getMinDate()" v-model="course.course_meta.deactivation_date"/>
           </div>
 
           <div class="course-settings__link-wrapper">
@@ -260,11 +260,8 @@ export default {
       quill: null,
       isCopied: false,
       activation_date: null,
-      activation_time: null,
       publication_date: null,
-      publication_time: null,
       deactivation_date: null,
-      deactivation_time: null,
     }
   },
 
@@ -329,6 +326,19 @@ export default {
   },
 
   methods: {
+    today(){
+      return new Date().toISOString().slice(0,16)
+    },
+
+    getMinDate(){
+      let deactivation_date_from = (this.course.course_meta.activation_date > this.course.course_meta.publication_date) ?
+      new Date(this.course.course_meta.activation_date) :
+      new Date(this.course.course_meta.publication_date);
+
+      deactivation_date_from.setDate(deactivation_date_from.getDate()+1);
+      return deactivation_date_from.toISOString().slice(0,16);
+    },
+
     getFileFromServer(id) {
       axios({url: '/api/file/get', data: {id: id}, method: 'POST'})
           .then(resp => {

@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Manager\Filters\UsersFilter;
 use App\Http\Requests\Auth\LoginAsRequest;
 use App\Http\Requests\Manager\CommissionRequest;
+use App\Http\Resources\Manager\UserResource;
 use App\Http\Resources\Manager\UsersResource;
 use App\Models\UserSettings;
 use App\Services\Admin\UserService;
 use App\Services\File\FileSendService;
+use App\Services\SMTP\Mailer;
 use App\Services\TelegramMainBotService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
@@ -115,22 +117,38 @@ class UserController extends Controller
                 'attribute' => 'name',
             ],
             [
-                'title' => 'Телефон',
-                'attribute' => 'phone',
-            ],
-            [
                 'title' => 'E-mail',
                 'attribute' => 'email',
+            ],
+            [
+                'title' => 'Телефон',
+                'attribute' => 'phone',
             ],
             [
                 'title' => 'Дата регистрации',
                 'attribute' => 'created_at',
             ],
+            [
+                'title' => 'Количество сообществ',
+                'attribute' => 'community_owner_num',
+            ],
+            [
+                'title' => 'Последняя активность',
+                'attribute' => 'updated_at',
+            ],
+            [
+                'title' => 'Сумма поступлений',
+                'attribute' => 'payins',
+            ],
+            [
+                'title' => 'Комиссия',
+                'attribute' => 'commission',
+            ],
         ];
         return $this->fileSendService->sendFile(
-            User::filter($filter),
+            User::query(), 
             $names,
-            null,
+            UserResource::class,
             $request->get('type','csv'),
             'users'
         );
@@ -156,6 +174,11 @@ class UserController extends Controller
         $password = Str::random(6);
         $user->password = Hash::make($password);
         $user->save();
-        $this->telegramMainBotService->sendMessageFromBot(config('telegram_bot.bot.botName'), $user->telegramMeta->telegram_id, 'Ваш новый пароль: '. $password);
+        if ($user->telegramMeta) {
+            $this->telegramMainBotService->sendMessageFromBot(config('telegram_bot.bot.botName'), $user->telegramMeta->telegram_id, 'Ваш новый пароль: ' . $password);
+        }
+        $v = view('mail.remind_password')->with(['password' => $password])->render();
+        new Mailer('Сервис ' . env('APP_NAME'), $v, 'Восстановление доступа', $user->email);
+
     }
 }

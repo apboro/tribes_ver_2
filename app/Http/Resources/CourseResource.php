@@ -25,7 +25,7 @@ class CourseResource extends JsonResource
                 'payment_description' => $this->payment_description,
                 'payment_link' => $this->paymentLink(),
                 'preview_link' => $this->getProductWithLesson($this->lessons->first()->id ?? 0),
-                'active' => $this->isActive,
+                'isActive' => $this->isActive,
                 'isPublished' => $this->isPublished,
                 'isEthernal' => $this->isEthernal,
                 'price' => $this->price,
@@ -33,6 +33,9 @@ class CourseResource extends JsonResource
                 'attachments' => $this->attachments,
                 'thanks_text' => $this->thanks_text,
                 'shipping_noty' => $this->shipping_noty,
+                'activation_date' => $this->activation_date,
+                'deactivation_date' => $this->deactivation_date,
+                'publication_date' => $this->publication_date,
             ],
 //            'lessons' => LessonForCourseResource::collection($this->lessons)
             'lessons' => LessonResource::collection($this->lessons()->orderBy('id')->get())

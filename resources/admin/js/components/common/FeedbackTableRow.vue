@@ -2,13 +2,7 @@
   <tr>
     <td>{{ message.id }}</td>
     <td>
-      <transition>
-        <router-link
-            :to="{ name:'Profile', params: {id: message.user_id} }"
-        >
-          {{ message.name }}
-        </router-link>
-      </transition>
+        {{ message.name }}
     </td>
     <td>
       {{ message.email }}

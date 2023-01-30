@@ -302,8 +302,8 @@ class TariffRepository implements TariffRepositoryContract
             $this->generateLink($variant);
         }
         $variant->save();
-       
-        $this->tariffWithUser($community, $variant);
+
+//        $this->tariffWithUser($community, $variant);
     }
 
     /**
@@ -315,6 +315,7 @@ class TariffRepository implements TariffRepositoryContract
         $variant->inline_link = PseudoCrypt::hash(Carbon::now()->timestamp.rand(1,99999999999), 8);
     }
 
+    //если заводим первый тариф, то всех юзеров к нему привязываем
     private function tariffWithUser($community, $variant)
     {
         if ($community->tariff->variants->first() == NULL) {

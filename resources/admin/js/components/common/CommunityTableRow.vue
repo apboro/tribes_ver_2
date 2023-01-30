@@ -2,19 +2,10 @@
   <tr>
     <td>{{ community.id }}</td>
     <td>
-      <a :href="community.chat_invite_link" target="_blank">
         {{ community.title }}
-      </a>
-
     </td>
     <td>
-      <transition>
-        <router-link
-            :to="{ name:'Profile', params: {id: community.owner_id} }"
-        >
           {{ community.owner_name }}
-        </router-link>
-      </transition>
     </td>
     <td>
       {{ community.telegram }}

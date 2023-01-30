@@ -29,16 +29,7 @@ class AdminCommunityController extends Controller
 
     public function list(Request $request, CommunityFilter $filter)
     {
-        $communities =  Community::with('communityOwner', 'connection')->filter($filter)->paginate(request('filter.entries'), ['*'], 'filter.page');
-//        foreach ($communities->get() as $c) {
-//            if ($c->connection->chat_invite_link === null && $c->connection->botStatus === 'administrator') {
-//                $response = Http::get('https://api.telegram.org/bot'.env('TELEGRAM_BOT_TOKEN').'/createChatInviteLink?chat_id='.$c->connection->chat_id);
-//                $c->connection->chat_invite_link = $response->json('result.invite_link');
-//                $c->save();
-//                sleep(1);
-//            }
-//        }
-//        $communities = $communities->paginate($request->filter['entries']);
+        $communities =  Community::with('communityOwner', 'connection')->withCount('followers')->filter($filter)->paginate(request('filter.entries'), ['*'], 'filter.page');
         return CommunityResource::collection($communities);
     }
 
@@ -57,16 +48,24 @@ class AdminCommunityController extends Controller
                 'attribute' => 'id',
             ],
             [
-                'title' => 'Владелец',
-                'attribute' => 'owner_name',
-            ],
-            [
                 'title' => 'Название',
                 'attribute' => 'title',
             ],
             [
-                'title' => 'Дата регистрации',
+                'title' => 'Владелец',
+                'attribute' => 'owner_name',
+            ],
+            [
+                'title' => 'Telegram',
+                'attribute' => 'telegram',
+            ],
+            [
+                'title' => 'Дата подключения',
                 'attribute' => 'created_at',
+            ],
+            [
+                'title' => 'Кол-во подписчиков',
+                'attribute' => 'followers',
             ],
             [
                 'title' => 'Сумма поступлений',
@@ -74,7 +73,7 @@ class AdminCommunityController extends Controller
             ],
         ];
         return $this->fileSendService->sendFile(
-            Community::with('communityOwner', 'connection')->filter($filter),
+            Community::with('communityOwner', 'connection')->withCount('followers'),
             $names,
             CommunityResource::class,
             $request->get('type','csv'),

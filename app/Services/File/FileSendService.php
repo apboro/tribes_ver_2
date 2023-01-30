@@ -95,7 +95,7 @@ class FileSendService
                     $sheet->setCellValue("{$alphas[$colKey]}1", $eachCol['title']);
                 }
 
-                $builder->chunk(100, function ($results, $page) use ($sheet, $alphas, $columnNames, $sourceClass) {
+                $builder->chunk(10000, function ($results, $page) use ($sheet, $alphas, $columnNames, $sourceClass) {
                     foreach ($results as $key => $record) {
                         $rowNum = $key + 2;
                         if ($sourceClass) {

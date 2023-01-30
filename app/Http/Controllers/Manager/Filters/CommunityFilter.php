@@ -30,7 +30,7 @@ class CommunityFilter extends QueryAPIFilter
     {
         $list = [
             'title' => 'title',
-            'followers' => 'owner',
+            'followers' => 'followers_count',
             'balance' =>'balance',
             'created_at' => 'created_at',
         ];

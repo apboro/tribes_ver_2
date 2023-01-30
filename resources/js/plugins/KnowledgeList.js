@@ -124,6 +124,7 @@ export default class KnowledgeList extends Page {
     }
 
     filterByCategory(id) {
+        document.getElementsByClassName('knowledge-list__new_knowledge')[0].classList.remove('active')
         this.category_id = id;
         this.questions.forEach((question) => {
             question.classList.remove('hide')

@@ -1,17 +1,11 @@
 <template>
     <tr>
         <td><span class="text-muted">{{ user.id }}</span></td>
-        <td>
-            <transition>
-                <router-link 
-                    :to="{ name:'Profile', params: {id: user.id} }"
-                >
-                  <p style="background-color: red;"
-                     v-if="user.is_blocked">заблокирован</p>
-                    {{ user.name }}
-                </router-link>
-            </transition>
-        </td>
+      <td>
+        <p style="background-color: red;"
+           v-if="user.is_blocked">заблокирован</p>
+        {{ user.name }}
+      </td>
       <td>
         <a :href="'https://t.me/'+user.telegram" target="_blank">
         {{ user.telegram }}
@@ -32,9 +26,9 @@
       <td>
         {{user.community_owner_num}}
       </td>
-      <td>{{formatDateTime(user.updated_at)}}</td>
+      <td>{{formatDate(user.updated_at)}}</td>
       <td>{{ user.payins }}</td>
-      <td>{{ user.payouts }}</td>
+<!--      <td>{{ user.payouts }}</td>-->
         <td>
             <editable-value
                 :isEditMode="isEditCommissionMode"
@@ -103,7 +97,7 @@
 
         computed: {
             date() {
-                return this.formatDateTime(this.user.created_at);
+                return this.formatDate(this.user.created_at);
             }
         },
 
