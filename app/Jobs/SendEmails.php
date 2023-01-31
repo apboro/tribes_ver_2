@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Services\SMTP\Mailer;
+use App\Services\TelegramLogService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,12 +11,13 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\View\View;
+use PHPUnit\Exception;
 
 class SendEmails implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private Collection  $recipients;
+    private $recipients;
     private string $subject;
     private string $from;
     private string $view;
@@ -41,8 +43,16 @@ class SendEmails implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->recipients as $recipient) {
-            new Mailer($this->from, $this->view, $this->subject, $recipient->email);
+        try {
+            if (is_iterable($this->recipients)) {
+                foreach ($this->recipients as $recipient) {
+                    new Mailer($this->from, $this->view, $this->subject, $recipient->email);
+                }
+            } else {
+                new Mailer($this->from, $this->view, $this->subject, $this->recipients);
+            }
+        } catch (Exception $e) {
+            TelegramLogService::staticSendLogMessage(json_encode($e));
         }
     }
 }

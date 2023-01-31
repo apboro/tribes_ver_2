@@ -49,7 +49,7 @@
         </tbody>
       </table>
       <div>
-        <div v-if="feedbacks && feedbacks.per_page < feedbacks.total"
+        <div
              class="card-footer d-flex align-items-center">
           <ul class="pagination m-0 ms-auto">
             <li
@@ -88,7 +88,6 @@ export default {
       deep: true,
       handler: _.debounce(function (v) {
         this.$store.dispatch('loadFeedbackList', v);
-        this.filter_data.filter.page =1;
       }, 400)
     }
   },

@@ -147,13 +147,18 @@ export default class KnowledgeList extends Page {
             command: command,
             category_id: this.category_id
         }).then(() => {
-            location.reload();
+            location.reload()
             return false;
         })
     }
 
     openKnowledgeForm() {
-        document.getElementsByClassName('knowledge-list__new_knowledge')[0].classList.toggle('active')
+        console.log(this.category_id)
+        if (this.category_id != null) {
+            document.getElementsByClassName('knowledge-list__new_knowledge')[0].classList.toggle('active')
+        } else {
+            alert('Сначала нужно выбрать категорию.')
+        }
     }
 
     processKnowledge(command, community_id, question_id) {
@@ -173,7 +178,7 @@ export default class KnowledgeList extends Page {
                         return false;
                     })
             }
-        } else {
+                } else {
             axios.post('/community/' + community_id + '/knowledge/process_knowledge', {
                 command: command,
                 vopros: vopros,

@@ -68,7 +68,7 @@
                 </tbody>
             </table>
         </div>
-        <div v-if="payments.meta && payments.meta.per_page < payments.meta.total" class="card-footer d-flex align-items-center">
+        <div class="card-footer d-flex align-items-center">
 
             <ul class="pagination m-0 ms-auto">
                 <li 
@@ -102,7 +102,6 @@ export default {
             deep: true,
             handler: _.debounce(function(v) {
                 this.$store.dispatch('loadPayments', v);
-                this.filter_data.filter.page =1;
             },400)
 
         },
@@ -111,7 +110,6 @@ export default {
             deep: true,
             handler: _.debounce(function(v) {
                 this.$store.dispatch('loadUniqUsersPayments', v);
-                this.filter_data.filter.page =1;
             },400)
         }
     },
