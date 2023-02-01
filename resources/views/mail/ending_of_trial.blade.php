@@ -78,7 +78,7 @@
                                             style="mso-line-height-rule: exactly; border-radius: 4px; background-color: #ffffff; padding: 48px; text-align: left; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 16px; line-height: 24px; color: #626262;"
                                         >
                                             <p style="font-family: 'Arial', sans-serif; mso-line-height-rule: exactly; margin-top: 0; margin-bottom: 15px; font-size: 24px; font-weight: 700; color: #7367F0;">
-                                                Добрый день, {{$user->name}}!
+                                                Добрый день {{$user ? ', '. $user->name : ''}}!
                                             </p>
                                             <p class="sm-leading-32" style="font-family: 'Arial', sans-serif; mso-line-height-rule: exactly; margin: 0; font-size: 16px; line-height: 22px; font-weight: 400; color: #252129;">
                                                 Напоминаем, что сегодня Ваш последний день бесплатного доступа к сообществу {{$variant->tariff->community->title}}.

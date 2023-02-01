@@ -56,20 +56,20 @@
                                         >
                                             Добавить категорию
                                         </button>
-                                        {{--                            <button--}}
-                                        {{--                                    type="submit"--}}
-                                        {{--                                    class="btn btn-outline-primary rounded-pill p-2__button"--}}
-                                        {{--                                    onclick="KnowledgeList.showModal('edit', {{$activeCommunity->id}})"--}}
-                                        {{--                            >--}}
-                                        {{--                                Переименовать категорию--}}
-                                        {{--                            </button>--}}
-                                        {{--                            <button--}}
-                                        {{--                                    type="submit"--}}
-                                        {{--                                    class="btn btn-outline-primary rounded-pill p-2__button"--}}
-                                        {{--                                    onclick="KnowledgeList.showModal('del', {{$activeCommunity->id}})"--}}
-                                        {{--                            >--}}
-                                        {{--                                Удалить категорию--}}
-                                        {{--                            </button>--}}
+                                        <button
+                                                type="submit"
+                                                class="btn btn-outline-primary rounded-pill p-2__button"
+                                                onclick="KnowledgeList.showModal('edit', {{$activeCommunity->id}})"
+                                        >
+                                            Переименовать категорию
+                                        </button>
+                                        <button
+                                                type="submit"
+                                                class="btn btn-outline-primary rounded-pill p-2__button"
+                                                onclick="KnowledgeList.showModal('del', {{$activeCommunity->id}})"
+                                        >
+                                            Удалить категорию
+                                        </button>
                                     </div>
                                 </div>
                     </div>
@@ -174,7 +174,8 @@
                                     data-category="{{ $question->category_id }}">
 
                                     <div class="knowledge-list__item-actions">
-                                        {{--                                    <button class="knowledge-list__item-actions__button_edit" onclick="KnowledgeList.editQuestion({{$question->id}})"></button>--}}
+                                        <button class="knowledge-list__item-actions__button_edit"
+                                                onclick="KnowledgeList.editQuestion({{$question->id}})"></button>
                                         <button class="knowledge-list__item-actions__button_delete"
                                                 onclick="KnowledgeList.processKnowledge('del', {{$activeCommunity->id}}, {{$question->id}})"></button>
                                     </div>

@@ -79,7 +79,6 @@ export class Popup {
             this.content = new CreateNode({
                 parent: this.modalBody,
                 class: 'popup__content',
-                text: 'Пропущен контент'
             }).init();
 
             return false;
