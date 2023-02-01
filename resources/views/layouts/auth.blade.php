@@ -34,7 +34,7 @@
             <div class="content-header row">
             </div>
             <div class="content-body">
-                <div class="auth-wrapper auth-basic px-2">
+                <div class="auth-wrapper auth-basic px-2 container" style="display: block">
                     @yield('content')
                 </div>
             </div>
