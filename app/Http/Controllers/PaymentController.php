@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\PaymentException;
 use App\Filters\PaymentFilter;
 use App\Helper\PseudoCrypt;
+use App\Jobs\SendEmails;
 use App\Mail\ExceptionMail;
 use App\Models\Accumulation;
 use App\Models\Community;
@@ -77,8 +78,13 @@ class PaymentController extends Controller
         $payment = Payment::find(PseudoCrypt::unhash($hash));
 
         if($payment->isTariff()) {
-            $v = view('mail.telegram_invitation')->withPayment($payment)->render();
-            new Mailer('Сервис Spodial', $v, 'Приглашение', $payment->payer->email);
+            if ($payment->comment !== 'trial') {
+                $v = view('mail.telegram_invitation')->withPayment($payment)->render();
+            } else {
+                $variant = $payment->community->tariff->variants()->find($payment->payable_id);
+                $v = view('mail.telegram_invitation_trial')->withPayment($payment)->withVariant($variant)->render();
+            }
+            SendEmails::dispatch($payment->payer->email, 'Приглашение', 'Сервис Spodial', $v);
             return view('common.tariff.success')->withPayment($payment);
         }
         return view('common.donate.success')->withPayment($payment);

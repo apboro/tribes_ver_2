@@ -124,12 +124,11 @@ export default class KnowledgeList extends Page {
     }
 
     filterByCategory(id) {
-        document.getElementsByClassName('knowledge-list__new_knowledge')[0].classList.remove('active')
         this.category_id = id;
         this.questions.forEach((question) => {
-            question.classList.remove('hide')
-            if (question.dataset.category != id) {
-                question.classList.add('hide');
+            question.classList.add('hide')
+            if (question.dataset.category === id) {
+                question.classList.remove('hide');
             }
         });
     }
@@ -148,13 +147,18 @@ export default class KnowledgeList extends Page {
             command: command,
             category_id: this.category_id
         }).then(() => {
-            location.reload();
+            location.reload()
             return false;
         })
     }
 
     openKnowledgeForm() {
-        document.getElementsByClassName('knowledge-list__new_knowledge')[0].classList.toggle('active')
+        console.log(this.category_id)
+        if (this.category_id != null) {
+            document.getElementsByClassName('knowledge-list__new_knowledge')[0].classList.toggle('active')
+        } else {
+            alert('Сначала нужно выбрать категорию.')
+        }
     }
 
     processKnowledge(command, community_id, question_id) {
@@ -174,7 +178,7 @@ export default class KnowledgeList extends Page {
                         return false;
                     })
             }
-        } else {
+                } else {
             axios.post('/community/' + community_id + '/knowledge/process_knowledge', {
                 command: command,
                 vopros: vopros,
@@ -230,5 +234,28 @@ export default class KnowledgeList extends Page {
         } else {
             categoryMenu.classList.add("mobile-hidden")
         }
+    }
+
+    search() {
+        this.questions.forEach((question) => {
+            question.classList.add('hide')
+            if (question.textContent.includes(document.getElementById('search_field').value)) {
+            question.classList.remove('hide')
+            }
+        });
+    }
+
+    editQuestion(id){
+        //console.log(document.getElementById("save_question_button"))//.classList.toggle('active')
+        this.questions.forEach((question) => {
+            // console.log(question.dataset.id)
+            question.classList.add('hide')
+            if (question.dataset.id == id) {
+                // console.log(question.dataset.id)
+                document.getElementsByClassName('knowledge-list__new_knowledge')[1].classList.toggle('active')
+                question.classList.remove('hide');
+                document.getElementById("save_question_button").removeAttribute("disabled");
+            }
+        });
     }
 }

@@ -28,8 +28,8 @@ class Category extends Model
         return $this->belongsTo(Community::class, 'community_id');
     }
 
-    public function quiestions(): HasMany
+    public function questions(): HasMany
     {
-        return $this->hasMany(Question::class, 'question_id');
+        return $this->hasMany(Question::class, 'category_id');
     }
 }

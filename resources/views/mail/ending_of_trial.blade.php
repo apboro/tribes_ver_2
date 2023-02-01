@@ -9,7 +9,7 @@
   <!--[if mso]>
     <xml><o:officedocumentsettings><o:pixelsperinch>96</o:pixelsperinch></o:officedocumentsettings></xml>
   <![endif]-->
-    <title>Регистрация</title>
+    <title>Окончание тарифа</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700" rel="stylesheet" media="screen">
     <style>
 .hover-underline:hover {
@@ -35,7 +35,7 @@
 </head>
 <body style="margin: 0; width: 100%; padding: 0; word-break: break-word; -webkit-font-smoothing: antialiased; background-color: #eceff1;">
     <div style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; display: none;">
-        {{ env('APP_NAME') }} - новое уведомление
+        Окончание тарифа
     </div>
 
     <div
@@ -72,24 +72,29 @@
                                     cellspacing="0"
                                     role="presentation"
                                 >
-                                    {{ env('APP_NAME') }}
                                     <tr>
                                         <td
                                             class="sm-px-24"
                                             style="mso-line-height-rule: exactly; border-radius: 4px; background-color: #ffffff; padding: 48px; text-align: left; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 16px; line-height: 24px; color: #626262;"
                                         >
-                                            <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin-top: 0; font-size: 24px; font-weight: 700; color: #ff5850;">
-                                                {{$mailBody}} {{$courseName}}
+                                            <p style="font-family: 'Arial', sans-serif; mso-line-height-rule: exactly; margin-top: 0; margin-bottom: 15px; font-size: 24px; font-weight: 700; color: #7367F0;">
+                                                Добрый день {{$user ? ', '. $user->name : ''}}!
+                                            </p>
+                                            <p class="sm-leading-32" style="font-family: 'Arial', sans-serif; mso-line-height-rule: exactly; margin: 0; font-size: 16px; line-height: 22px; font-weight: 400; color: #252129;">
+                                                Напоминаем, что сегодня Ваш последний день бесплатного доступа к сообществу {{$variant->tariff->community->title}}.
                                             </p>
 
-                                            <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; margin-bottom: 24px;">
-
-                                            </p>
+                                                <p style="font-family: 'Arial', sans-serif; margin: 0; margin-bottom: 24px;">
+                                                    Для продления доступа Вы можете оплатить тариф:
+                                                <a href="{{$link}}" style="font-family: 'Montserrat', sans-serif; color: #FFFFFF; margin: auto; letter-spacing: 0.02em; text-transform: uppercase; padding: 10px 40px; font-weight: 600; font-size: 14px; line-height: 20px; text-decoration: none; background: #7367F0; border-radius: 5px; display: inline-block; text-align: center;">
+                                                    Перейти
+                                                </a>
+                                                </p>
+                                                <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; margin-bottom: 24px;">
+                                                    Обратитесь к владельцу сообщества, чтобы уточнить информацию об условиях доступа.
+                                                </p>
                                         </td>
                                     </tr>
-                                    Если мы не решили Ваш вопрос, отправьте, пожалуйста, повторное обращение или свяжитесь с нашими специалистами в Telegram.
-                                    <br>
-                                    <a href="{{env('APP_URL')}}">{{env('APP_NAME')}}</a>
                                 </table>
                             </td>
                         </tr>

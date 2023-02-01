@@ -25,7 +25,7 @@ class Payment
     private TinkoffService $tinkoff;
 
     public $amount = 0; // Сумма в копейках
-
+    public string $comment;
     public $community;
     public $author;
     public $payer;
@@ -173,6 +173,7 @@ class Payment
         $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
         if ($params['Amount'] == 0)
         {
+            $this->comment = 'trial';
             $resp = (object)[
                 'PaymentId' => rand(1000000000, 9999999999),
                 'PaymentURL' => route('payment.success', ['hash' =>PseudoCrypt::hash($this->payment->id), 'telegram_id'=>$this->telegram_id]),

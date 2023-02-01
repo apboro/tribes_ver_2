@@ -908,13 +908,13 @@ class MainBotCommands
                     $message = $payment->community->tariff->thanks_description ?? '';
 
                     $image = ($payment->community->tariff->getThanksImage()) ? ' <a href="' . route('main') . $payment->community->tariff->getThanksImage()->url . '">&#160</a>' : '';
-                    $variant = $payment->community->tariff->variants()->find($payment->payable_id);
+                        $variant = $payment->community->tariff->variants()->find($payment->payable_id);
                     if ($variant->isActive === true) {
                         $variantName = $variant->title ?? '{Название тарифа}';
                         $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
                     }
 
-                    $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
+                    $defMassage = "\n\n". 'Сообщество: ' . $payment->community->title ."\n". 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
 //                    $ctx->replyHTML($image . $message . $defMassage . $invite); //отключить приветствие в боте после подписки
                     $ctx->replyHTML($defMassage . $invite);
                     //todo отправить сообщение автору через личный чат с ботом,
@@ -926,11 +926,20 @@ class MainBotCommands
                     $tariffName = $variant->title ?? '';
                     $tariffCost = ($payment->amount / 100) ?? 0;
                     $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y') ?? '';
-                    $message = "Участник $payerName оплатил $tariffName в сообществе {$payment->community->title},
+
+                    if ($payment->comment !== 'trial') {
+
+                        $message = "Участник $payerName оплатил $tariffName в сообществе {$payment->community->title},
                                 стоимость $tariffCost рублей действует до $tariffEndDate г.";
+                    } else {
+                        $message = "Участник $payerName присоединился к сообществу {$payment->community->title}
+                         на Пробный период продолжительностью {$variant->period} дней, действует до $tariffEndDate г.";
+
+                    }
                     Log::info('send tariff pay message to own author chat bot', [
                         'message' =>  $message
                     ]);
+
                     $authorTeleUserId = $payment->community->connection->telegram_user_id ?? 0;
                     SendTeleMessageToChatFromBot::dispatch(config('telegram_bot.bot.botName'), $authorTeleUserId, $message);
                 }
@@ -950,7 +959,7 @@ class MainBotCommands
                             $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
                         }
                     }
-                    $defMassage = "\n\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
+                    $defMassage = "\n\n". 'Сообщество: ' . $community->title ."\n". 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
 
 //                    $ctx->replyHTML($image . $message . $defMassage . $invite); //отключить приветствие в боте после подписки
                     $ctx->replyHTML($defMassage . $invite);

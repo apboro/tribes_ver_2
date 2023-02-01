@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\SendEmails;
 use App\Models\Course;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class CheckCourses extends Command
@@ -12,14 +14,14 @@ class CheckCourses extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'check:course';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Check courses status by time and send emails';
 
     /**
      * Create a new command instance.
@@ -38,11 +40,61 @@ class CheckCourses extends Command
      */
     public function handle(): int
     {
-        $courses = Course::all();
+        $courses = Course::with('buyers')->whereNotNull('activation_date')  ->get();
         foreach ($courses as $course){
-            $course->activation_date;
-            $course->publication_date;
-            $course->deactivation_date;
+            $activationDate = $course->activation_date ? Carbon::parse($course->activation_date) : null;
+            $publicationDate = $course->publication_date ? Carbon::parse($course->publication_date) : null ;
+            $deactivationDate = $course->deactivation_date ? Carbon::parse($course->deactivation_date) : null;
+
+            $courseName = $course->title;
+            $checkout_time = Carbon::now()->setSeconds(0)->toDateTimeString();
+
+            //ACTIVATE COURSE
+            $mailBody='Курс доступен!';
+            $activation_time = $activationDate->toDateTimeString();
+            if ($activationDate && $activation_time === $checkout_time)
+            {
+                $course->isActive = true;
+                $course->save();
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс активирован!','Cервис Spodial', $view);
+            }
+
+            $mailBody = 'Курс будет доступен через 24 часа!';
+            $activation_time_minus_24hrs = $activationDate->subDay()->toDateTimeString();
+            if ($activationDate && $activation_time_minus_24hrs === $checkout_time)
+            {
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс скоро будет доступен','Cервис Spodial', $view);
+            }
+
+            //DEACTIVATE COURSE
+            $mailBody = 'Курс деактивирован!';
+            $deactivation_time = $deactivationDate->toDateTimeString();
+            if ($deactivationDate && $deactivation_time === $checkout_time)
+            {
+                $course->isActive = false;
+                $course->save();
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс деактивирован','Cервис Spodial', $view);
+            }
+
+            $mailBody = 'Курс будет отключен через 24 часа!';
+            $deactivation_time_minus_24hrs = $deactivationDate->subDay()->toDateTimeString();
+            if ($deactivationDate && $deactivation_time_minus_24hrs === $checkout_time)
+            {
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс скоро будет деактивирован','Cервис Spodial', $view);
+            }
+
+            //PUBLIC COURSE
+            $publication_time = $publicationDate->toDateTimeString();
+            if ($publicationDate && $publication_time === $checkout_time)
+            {
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс деактивирован','Cервис Spodial', $view);
+            }
+
         }
 
         return 0;

@@ -84,7 +84,7 @@
                 </tbody>
             </table>
         </div>
-        <div v-if="users.meta && users.meta.per_page < users.meta.total" class="card-footer d-flex align-items-center">
+        <div class="card-footer d-flex align-items-center">
             <ul class="pagination m-0 ms-auto">
                 <li
                     v-for="(link, idx) in users.meta.links"
@@ -147,6 +147,7 @@ export default {
     },
 
     methods: {
+
         async loadUsersData() {
             await this.$store.dispatch('get_users', this.filter_data);
         },

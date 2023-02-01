@@ -7,7 +7,7 @@
         {{ user.name }}
       </td>
       <td>
-        <a :href="'https://t.me/'+user.telegram" target="_blank">
+        <a v-if="user.telegram != '—'" :href="'https://t.me/'+user.telegram" target="_blank">
         {{ user.telegram }}
         </a>
       </td>

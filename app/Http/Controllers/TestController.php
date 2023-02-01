@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Console\Commands\CheckCourses;
+use App\Jobs\SendEmails;
 use App\Models\Accumulation;
+use App\Models\Community;
+use App\Models\Course;
 use App\Models\Payment;
 use App\Models\TariffVariant;
 use App\Models\TelegramUser;
 use App\Models\User;
+use App\Services\SMTP\Mailer;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\Payment as Pay;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class TestController extends Controller
 {
@@ -20,17 +28,92 @@ class TestController extends Controller
         $this->telegramService = $telegramService;
     }
 
-    public function test()
+    public function CheckCourse()
     {
-        dd(User::find(129)->telegramMeta);
+        $courses = Course::with('buyers')->whereNotNull('activation_date')  ->get();
+        foreach ($courses as $course){
+            $activationDate = $course->activation_date ? Carbon::parse($course->activation_date) : null;
+            $publicationDate = $course->publication_date ? Carbon::parse($course->publication_date) : null ;
+            $deactivationDate = $course->deactivation_date ? Carbon::parse($course->deactivation_date) : null;
+
+            $courseName = $course->title;
+            $checkout_time = Carbon::now()->setSeconds(0)->toDateTimeString();
+
+            //ACTIVATE COURSE
+            $mailBody='Курс доступен!';
+            $activation_time = $activationDate->toDateTimeString();
+            if ($activationDate && $activation_time === $checkout_time)
+            {
+                $course->isActive = true;
+                $course->save();
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс активирован!','Cервис Spodial', $view);
+            }
+
+            $mailBody = 'Курс будет доступен через 24 часа!';
+            $activation_time_minus_24hrs = $activationDate->subDay()->toDateTimeString();
+            if ($activationDate && $activation_time_minus_24hrs === $checkout_time)
+            {
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс скоро будет доступен','Cервис Spodial', $view);
+            }
+
+            //DEACTIVATE COURSE
+            $mailBody = 'Курс деактивирован!';
+            $deactivation_time = $deactivationDate->toDateTimeString();
+            if ($deactivationDate && $deactivation_time === $checkout_time)
+            {
+                $course->isActive = false;
+                $course->save();
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс деактивирован','Cервис Spodial', $view);
+            }
+
+            $mailBody = 'Курс будет отключен через 24 часа!';
+            $deactivation_time_minus_24hrs = $deactivationDate->subDay()->toDateTimeString();
+            if ($deactivationDate && $deactivation_time_minus_24hrs === $checkout_time)
+            {
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс скоро будет деактивирован','Cервис Spodial', $view);
+            }
+
+            //PUBLIC COURSE
+            $publication_time = $publicationDate->toDateTimeString();
+            if ($publicationDate && $publication_time === $checkout_time)
+            {
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс деактивирован','Cервис Spodial', $view);
+            }
+
+        }
     }
 
-    public function sendTlgMsg()
+    public function firstOrCreateUser()
     {
+        $password = Str::random(6);
+
+        $email = strtolower('12b1212orodachev@gmail.com');
+
+        $user = User::firstOrCreate(['email' => $email],
+            [
+                'name' => explode('@', $email)[0],
+                'code' => 0000,
+                'phone' => null,
+                'password' => Hash::make($password),
+                'phone_confirmed' => false,
+            ]);
+        dd($user);
+    }
+
+    public function test()
+    {
+        $msg = strip_tags(str_replace('<br>', "\n",Community::find(484)->tariff->welcome_description));
+//        dd('111'. chr(10). '222');
+//        dd($msg);
         $this->telegramService->sendMessageFromBot(
             config('telegram_bot.bot.botName'),
-            472966552,
-            'Gugugaga'
+            -829777113,
+            $msg
         );
     }
 

@@ -88,7 +88,8 @@ public function list(Request $request, Community $community)
 
     switch ($request->command) {
         case 'add':
-            $question = Question::create([
+            $question = Question::updateOrCreate(['id'=>$request->question_id],
+                [
                 'community_id' => $community->id,
                 'author_id' => Auth::user()->id,
                 'uri_hash' => Str::random(32),
@@ -99,8 +100,9 @@ public function list(Request $request, Community $community)
                 'category_id' => $request->category_id
             ]);
 
-            Answer::create([
-                'question_id' => $question->id,
+            Answer::updateOrCreate(
+                ['question_id' => $question->id],
+                [
                 'community_id' => $community->id,
                 'is_draft' => false,
                 'context' => $request->otvet,
