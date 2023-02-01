@@ -53,26 +53,28 @@
 
           <div class="course-settings__group">
             <div class="course-settings__group-item">
-              <label for="course_cost" class="course-settings__label">
-                Стоимость
-              </label>
               <input type="number" id="course_cost" class="input" v-model="course.course_meta.cost">
-            </div>
-
-            <div class="course-settings__group-item">
-              <label for="course_period" class="course-settings__label">
-                Срок доступа (дней)
+              <label for="course_cost" class="course-settings__label">
+                Стоимость (руб.)
               </label>
+            </div>
+          </div>
+
+          <div class="course-settings__group">
+            <div class="course-settings__group-item">
               <input
                   type="number"
                   id="course_period"
                   class="input"
                   v-model="access_days"
                   :disabled="!!(this.course.course_meta.isEthernal || this.course.course_meta.deactivation_date)"
+                  placeholder="0"
               >
+              <label for="course_period" class="course-settings__label">
+                Срок доступа (дней)
+              </label>
             </div>
-          </div>
-          <div class="course-settings__group-item">
+
             <div class="course-settings__toggle-switch" >
               <label class="toggle-switch">
                 <input type="checkbox" id="course_ethernal" v-model="course.course_meta.isEthernal" :disabled="!!this.course.course_meta.deactivation_date">
@@ -87,41 +89,69 @@
 
           <div class="course-settings__group">
             <div class="course-settings__group-item">
-              <div class="course-settings__toggle-switch">
-                <label class="toggle-switch">
-                  <input type="checkbox" id="course_published" v-model="course.course_meta.isPublished">
-                  <span class="toggle-switch__slider"></span>
-                </label>
-                <label for="course_published" class="course-settings__toggle-switch-label">
-                  Опубликовать сейчас
-                </label>
-              </div>
-
-              <div class="course-settings__toggle-switch">
-                <label class="toggle-switch">
-                  <input type="checkbox" id="course_activated" v-model="course.course_meta.isActive">
-                  <span class="toggle-switch__slider"></span>
-                </label>
-                <label for="course_activated" class="course-settings__toggle-switch-label">
-                  Активировать сейчас
-                </label>
-              </div>
+              <input
+                  type="datetime-local"
+                  :min="today()"
+                  id="publication_date"
+                  class="input"
+                  :disabled="course.course_meta.isPublished"
+                  v-model="course.course_meta.publication_date"
+              />
+              <label for="activation_date" class="course-settings__label">
+                Дата публикации
+              </label>
             </div>
 
-            <label for="activation_date">
-              Дата публикации
-            </label>
-            <input type="datetime-local" :min="today()" id="publication_date" :disabled="course.course_meta.isPublished" v-model="course.course_meta.publication_date"/>
+            <div class="course-settings__toggle-switch">
+              <label class="toggle-switch">
+                <input type="checkbox" id="course_published" v-model="course.course_meta.isPublished">
+                <span class="toggle-switch__slider"></span>
+              </label>
+              <label for="course_published" class="course-settings__toggle-switch-label">
+                Опубликовать сейчас
+              </label>
+            </div>
+          </div>
 
-            <label for="publication_date">
-              Дата активации
-            </label>
-            <input type="datetime-local" :min="today()" id="activation_date" :disabled="course.course_meta.isActive" v-model="course.course_meta.activation_date"/>
+          <div class="course-settings__group">
+            <div class="course-settings__group-item">
+              <input
+                  type="datetime-local"
+                  :min="today()"
+                  id="activation_date"
+                  class="input"
+                  :disabled="course.course_meta.isActive"
+                  v-model="course.course_meta.activation_date"
+              />
+              <label for="publication_date" class="course-settings__label">
+                Дата активации
+              </label>
+            </div>
 
-            <label for="deactivation_date">
-              Дата деактивации
-            </label>
-            <input type="datetime-local" id="deactivation_date" :min="getMinDate()" v-model="course.course_meta.deactivation_date"/>
+            <div class="course-settings__toggle-switch">
+              <label class="toggle-switch">
+                <input type="checkbox" id="course_activated" v-model="course.course_meta.isActive">
+                <span class="toggle-switch__slider"></span>
+              </label>
+              <label for="course_activated" class="course-settings__toggle-switch-label">
+                Активировать сейчас
+              </label>
+            </div>
+          </div>
+
+          <div class="course-settings__group">
+            <div class="course-settings__group-item">
+              <input
+                  type="datetime-local"
+                  id="deactivation_date"
+                  class="input"
+                  :min="getMinDate()"
+                  v-model="course.course_meta.deactivation_date"
+              />
+              <label for="deactivation_date" class="course-settings__label">
+                Дата деактивации
+              </label>
+            </div>
           </div>
 
           <div class="course-settings__link-wrapper">
@@ -147,11 +177,11 @@
 
           <div class="meta-settings">
             <!--                        <div class="course-settings__group">-->
-            <label class="course-settings__label course-settings__label--first-item">
-              Текст благодарности за покупку
-            </label>
-            <textarea class="input" name="thanks_text" cols="30" rows="5"
-                      v-model="course.course_meta.thanks_text"></textarea>
+<!--            <label class="course-settings__label course-settings__label&#45;&#45;first-item">-->
+<!--              Текст благодарности за покупку-->
+<!--            </label>-->
+<!--            <textarea class="input" name="thanks_text" cols="30" rows="5"-->
+<!--                      v-model="course.course_meta.thanks_text"></textarea>-->
             <!--                        </div>-->
             <div class="course-settings__group">
               <div class="course-settings__toggle-switch">
@@ -426,4 +456,30 @@ export default {
 </script>
 
 <style scoped>
+  .course-settings__group {
+    flex-direction: row;
+    justify-content: start;
+  }
+
+  .course-settings__group-item {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .course-settings__toggle-switch {
+    margin-left: 18px;
+    padding-top: 20px;
+  }
+
+  .course-settings__group-item>input:disabled {
+    opacity: 0.4;
+  }
+
+  .course-settings__group-item>input:disabled+label {
+    opacity: 0.4;
+  }
+
+  .course-settings__link-wrapper {
+    margin-top: 30px;
+  }
 </style>
