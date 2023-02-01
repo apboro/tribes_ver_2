@@ -31,9 +31,10 @@
                     </div>
 
                     <div class="p-2 p-2_right">
-                        <ul class="knowledge-list__list">
+                        <div class="knowledge-list__control">
                             <div class="search-field">
-                                <input type="text" id="search_field" class="search-field__field" placeholder="Поиск" oninput="KnowledgeList.inputClearer()">
+                                <input type="text" id="search_field" class="search-field__field" placeholder="Поиск"
+                                       oninput="KnowledgeList.inputClearer()">
                                 <span class="search-field__clear" onclick="KnowledgeList.inputClear()"></span>
                                 <button onclick="KnowledgeList.search()">
                                     <i class="icon search-field__icon icon--size-2">
@@ -49,6 +50,8 @@
                                 </button>
                             </div>
 
+                        </div>
+                        <ul class="knowledge-list__list">
                         @forelse ($community->questions as $question)
                                 @if ($question->category->variant ==='users')
                                     <li class="knowledge-list__item" data-id="{{ $loop->index }}"
