@@ -249,12 +249,16 @@ export default class KnowledgeList extends Page {
         //console.log(document.getElementById("save_question_button"))//.classList.toggle('active')
         this.questions.forEach((question) => {
             // console.log(question.dataset.id)
-            question.classList.add('hide')
+            question.classList.add('hide');
             if (question.dataset.id == id) {
                 // console.log(question.dataset.id)
                 document.getElementsByClassName('knowledge-list__new_knowledge')[1].classList.toggle('active')
                 question.classList.remove('hide');
                 document.getElementById("save_question_button").removeAttribute("disabled");
+                question.getElementsByClassName('knowledge-list__item-text')[0].setAttribute('contenteditable', 'true');
+                question.getElementsByClassName('knowledge-list__item-text')[0].style.cssText = 'background: #fff; border: 1px solid #7367F0; color: #363440;'
+                question.getElementsByClassName('knowledge-list__item-text')[1].setAttribute('contenteditable', 'true');
+                question.getElementsByClassName('knowledge-list__item-text')[1].style.cssText = 'background: rgba(115, 103, 240, 0.05); border: 1px solid #7367F0; color: #363440;'
             }
         });
     }
