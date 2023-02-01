@@ -118,7 +118,7 @@
                     <li class="main-nav-new__item">
                             <a
                                     href="{{ route('project.knowledge', array_filter([ 'project' => isset($activeProject)? $activeProject->id :(isset($activeCommunity)?'c':''), 'community'=> isset($activeCommunity)?$activeCommunity->id:''])) }}"
-                                    class="main-nav-new__link {{ request()->is('*knowledge/list') ? 'active' : ''  }}"
+                                    class="main-nav-new__link {{ request()->is('*knowledge*') ? 'active' : ''  }}"
                             >
                             <span>База знаний</span>
                             </a>

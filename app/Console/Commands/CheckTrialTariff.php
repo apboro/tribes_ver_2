@@ -64,8 +64,10 @@ class CheckTrialTariff extends Command
                                     Срок окончания пробного периода: '. $tariffEndDate ."\n".
                                     'Для продления доступа Вы можете оплатить тариф: <a href="' .
                                     $link . '">Ссылка</a>', true, []);
-                                $v = view('mail.ending_of_trial')->withVariant($variant)->withUser($user->user)->withLink($link)->render();
-                                SendEmails::dispatch($user->user->email, 'Заканчивается Пробный период', 'Сервис Spodial', $v);
+                                if ($user->user) {
+                                    $v = view('mail.ending_of_trial')->withVariant($variant)->withUser($user->user)->withLink($link)->render();
+                                    SendEmails::dispatch($user->user->email, 'Заканчивается Пробный период', 'Сервис Spodial', $v);
+                                }
                             }
 
                             $follower = User::find($user->user_id);
