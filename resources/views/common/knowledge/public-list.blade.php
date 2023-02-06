@@ -2,7 +2,7 @@
 
 @section('content')
     @if ($community)
-        <div data-plugin="KnowledgeList">
+        <div data-plugin="KnowledgeList" style="width: 100%; min-height: 100vh">
             <section class="knowledge-list__title">
                 База знаний сообщества "{{ $community -> title }}"
             </section>
