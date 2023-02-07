@@ -94,6 +94,7 @@
                   :min="today()"
                   id="publication_date"
                   class="input"
+                  :max="getMaxDate()"
                   :disabled="course.course_meta.isPublished"
                   v-model="course.course_meta.publication_date"
               />
@@ -120,6 +121,7 @@
                   :min="today()"
                   id="activation_date"
                   class="input"
+                  :max="getMaxDate()"
                   :disabled="course.course_meta.isActive"
                   v-model="course.course_meta.activation_date"
               />
@@ -367,6 +369,12 @@ export default {
 
       deactivation_date_from.setDate(deactivation_date_from.getDate()+1);
       return deactivation_date_from.toISOString().slice(0,16);
+    },
+
+    getMaxDate(){
+      let max_date = new Date(this.course.course_meta.deactivation_date);
+      max_date.setDate(max_date.getDate()-1);
+      return max_date.toISOString().slice(0,16);
     },
 
     getFileFromServer(id) {

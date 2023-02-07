@@ -53,7 +53,6 @@ class MainBotCommands
         'tafiff' => 'Список тарифов сообщества',
         'donate' => 'Материальная помощь сообществу',
         'qa' => 'Найти ответ в Базе Знаний сообщества',
-        'bz' => 'Открыть базу знаний',
 
     ];
     private ManageQuestionService $manageQuestionService;
@@ -385,7 +384,7 @@ class MainBotCommands
     protected function helpOnChat()
     {
         try {
-            $this->bot->onCommand('bz', function (Context $ctx) {
+            $this->bot->onText('база знаний', function (Context $ctx) {
                 $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
                 $link = $community->getPublicKnowledgeLink();
                 $ctx->reply('Ссылка на Базу Знаний по сообществу: '. $link);
@@ -925,16 +924,14 @@ class MainBotCommands
                     $payerName = $ty->publicName() ?? '';
                     $tariffName = $variant->title ?? '';
                     $tariffCost = ($payment->amount / 100) ?? 0;
-                    $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y') ?? '';
+                    $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y H:i') ?? '';
+                    $communityTitle = strip_tags($payment->community->title);
+                    $variantPeriod = $variant->period. ' ' .trans_choice('plurals.days', $variant->period, [], 'ru');
 
                     if ($payment->comment !== 'trial') {
-
-                        $message = "Участник $payerName оплатил $tariffName в сообществе {$payment->community->title},
-                                стоимость $tariffCost рублей действует до $tariffEndDate г.";
+                        $message = "Участник $payerName оплатил $tariffName в сообществе $communityTitle, стоимость $tariffCost рублей, действует до $tariffEndDate г.";
                     } else {
-                        $message = "Участник $payerName присоединился к сообществу {$payment->community->title}
-                         на Пробный период продолжительностью {$variant->period} дней, действует до $tariffEndDate г.";
-
+                        $message = "Участник $payerName присоединился к сообществу $communityTitle на Пробный период продолжительностью $variantPeriod." ."\n". "Действует до $tariffEndDate";
                     }
                     Log::info('send tariff pay message to own author chat bot', [
                         'message' =>  $message

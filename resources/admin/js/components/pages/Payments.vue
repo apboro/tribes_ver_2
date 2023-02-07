@@ -102,6 +102,7 @@ export default {
             deep: true,
             handler: _.debounce(function(v) {
                 this.$store.dispatch('loadPayments', v);
+              if (this.filter_data.filter.search) this.filter_data.filter.page = 1
             },400)
 
         },

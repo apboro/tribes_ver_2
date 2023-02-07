@@ -86,7 +86,7 @@
 
                                             </p>
                                             <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; margin-bottom: 24px;">
-                                                Cрок окончания пробного периода: {{\Carbon\Carbon::now()->addDays($variant->period)->format('d.m.Y')}}<br>
+                                                Cрок окончания пробного периода: {{\Carbon\Carbon::now()->addDays($variant->period)->format('d.m.Y H:i')}}<br>
                                                 Если вы ещё не подключились к сообществу, вам необходимо выполнить следующие действия:
                                             </p>
                                             <ul>

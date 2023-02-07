@@ -2,32 +2,67 @@
 
 namespace App\Http\Controllers;
 
-use App\Console\Commands\CheckCourses;
+
 use App\Jobs\SendEmails;
 use App\Models\Accumulation;
 use App\Models\Community;
 use App\Models\Course;
 use App\Models\Payment;
 use App\Models\TariffVariant;
-use App\Models\TelegramUser;
 use App\Models\User;
-use App\Services\SMTP\Mailer;
+use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
-use App\Services\Tinkoff\Payment as Pay;
+use App\Services\Tinkoff\TinkoffService;
 use Carbon\Carbon;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use stdClass;
 
 class TestController extends Controller
 {
+    private TinkoffService $tinkoff;
     protected TelegramMainBotService $telegramService;
     public function __construct(TelegramMainBotService $telegramService)
     {
         $this->telegramService = $telegramService;
+        $this->tinkoff = new TinkoffService();
     }
 
+
+    public function test()
+    {
+//        $params = [
+//            'NotificationURL' => null,
+//            'OrderId' => 666,
+//            'Amount'  => 500,
+//            'SuccessURL' => null,
+//            'DATA'    => [
+//                'Email'  => null,
+//            ],
+//            'CustomerKey' => 'vasya',
+//        ];
+        $params = [
+        'PaymentId' => 2322347606,
+            ];
+
+//        dd($params);
+//        $resp = json_decode($this->tinkoff->initPay($params));
+
+
+//dd(json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => 2322347606]), true));
+        $state = [];
+        $i = 0;
+        while (!isset($state['Status']) && $i < 5) {
+            $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => 2322347606]), true);
+            if ($state['Status'] == 'AUTHORIZED') break;
+            TelegramLogService::staticSendLogMessage("Proverka posle oplaty: " . json_encode($state));
+            sleep(1);
+            $i++;
+        }
+        dump($state['Status']);
+//        $this->tinkoff->payTerminal->checkOrder(666);
+    }
+    
     public function CheckCourse()
     {
         $courses = Course::with('buyers')->whereNotNull('activation_date')  ->get();
@@ -105,15 +140,29 @@ class TestController extends Controller
         dd($user);
     }
 
-    public function test()
+    public function sendMessageToTelegramChat()
     {
-        $msg = strip_tags(str_replace('<br>', "\n",Community::find(484)->tariff->welcome_description));
-//        dd('111'. chr(10). '222');
-//        dd($msg);
+
+        $variant= TariffVariant::find(222);
+        $community = Community::find(484);
+        $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y H:i') ?? '';
+        $communityTitle = strip_tags($community->title);
+        $variantPeriod = $variant->period. ' ' .trans_choice('plurals.days', $variant->period, [], 'ru');
+//        dd("Made payment on $communityTitle with $variantPeriod");
+        TelegramLogService::staticSendLogMessage("Made payment on $communityTitle with $variantPeriod $tariffEndDate");
+        exit();
+
+        $msg1= "Участник Vasya присоединился к сообществу $communityTitle на Пробный период продолжительностью $variantPeriod
+            \n действует до $tariffEndDate г.";
+
+        $msg2 = "Пробный период в сообществе $communityTitle подходит к концу." . "\n" .
+            "Срок окончания пробного периода: $tariffEndDate."."\n".
+            "Для продления доступа Вы можете оплатить тариф: <a href='http://ya.ru'>Ссылка</a>";
+
         $this->telegramService->sendMessageFromBot(
             config('telegram_bot.bot.botName'),
             -829777113,
-            $msg
+            $msg2
         );
     }
 
@@ -140,69 +189,6 @@ class TestController extends Controller
         }
 
     }
-
-
-    public function checkTariff()
-    {
-        //               Artisan::call('check:tariff');
-        try {
-            $telegramUsers = TelegramUser::with('tariffVariant')->where('user_id', '<>', 0)->get();
-            foreach ($telegramUsers as $user) {
-                $follower = User::find($user->user_id);
-                if ($follower) {
-                    if ($user->tariffVariant->first()) {
-                        foreach ($user->tariffVariant as $variant) {
-                            /** @var TariffVariant $variant */
-                            if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
-                                if ($variant->pivot->days < 1) {
-                                    if ($variant->pivot->isAutoPay === true) {
-                                        dd('ka');
-                                        if ($user->hasLeaveCommunity($variant->tariff->community_id)) {
-                                            $payment = NULL;
-                                        } elseif ($variant->isActive) {
-                                            dd('ku');
-                                            $p = new Pay();
-//                                            $p->amount($variant->price * 100)
-//                                                ->charged(true)
-//                                                ->payFor($variant)
-//                                                ->payer($follower);
-//                                            $payment = $p->pay();
-
-                                            $p->amount(100)
-                                                ->recurrent(true)
-                                                ->payFor($variant)
-                                                ->payer($follower);
-                                            $p->type = 'tariff';
-                                            $p->amount = 1000;
-                                            $p->from = $follower;
-                                            $p->community_id = 1;
-                                            $p->author = 4;
-                                            $p->add_balance = 10;
-//                                            $p->save();
-//                                            dd($p);
-                                            $payment = $p;
-//                                            dd($payment->payable()->first()->tariff()->first()->getThanksImage());
-
-                                            dd(User::find(12)->getBalance());
-//                                            $payment = Payment::find(2109);
-//                                            dd($payment->payable_type);
-//                                            return view('common.tariff.success')
-//                                                ->withPayment($payment);
-//                                            exit;
-                                            $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
-                                            $resp = json_decode($this->tinkoff->initPay($params)); // Шлём запрос в банк
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            throw $e;
-        }
-    }
+    
 
 }

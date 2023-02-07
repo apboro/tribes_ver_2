@@ -54,22 +54,23 @@ class CheckTrialTariff extends Command
                         if (date('H:i') == $variant->pivot->prompt_time) {
 
                             $userName = ($user->user_name) ? '<a href="t.me/' . $user->user_name . '">' . $user->user_name . '</a>' : $user->telegram_id;
-                            $link = route('community.tariff.payment', ['hash' => PseudoCrypt::hash($variant->tariff->community->id, 8)]);
-                            $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y') ?? '';
+                            if ($variant->pivot->days == 1) {
+                                $link = route('community.tariff.payment', ['hash' => PseudoCrypt::hash($variant->tariff->community->id, 8)]);
+                                $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y H:i') ?? '';
+                                $communityTitle = strip_tags($variant->tariff->community->title) ?? '';
 
-                            if ($variant->pivot->days = 1) {
-                                $communityTitle = $variant->tariff->community->title ?? '';
+                                $message = "Пробный период в сообществе $communityTitle подходит к концу." . "\n" .
+                                    "Срок окончания пробного периода: $tariffEndDate."."\n".
+                                    "Для продления доступа Вы можете оплатить тариф: <a href='$link'>Ссылка</a>";
+
+
                                 $this->telegramService->sendMessageFromBot(config('telegram_bot.bot.botName'), $user->telegram_id,
-                                    'Пробный период в сообществе ' . $communityTitle . ' подходит к концу."\n"
-                                    Срок окончания пробного периода: '. $tariffEndDate ."\n".
-                                    'Для продления доступа Вы можете оплатить тариф: <a href="' .
-                                    $link . '">Ссылка</a>', true, []);
+                                    $message, true, []);
                                 if ($user->user) {
                                     $v = view('mail.ending_of_trial')->withVariant($variant)->withUser($user->user)->withLink($link)->render();
                                     SendEmails::dispatch($user->user->email, 'Заканчивается Пробный период', 'Сервис Spodial', $v);
                                 }
                             }
-
                             $follower = User::find($user->user_id);
                             if ($follower) {
                                 $tariffVariant = TariffVariant::where('tariff_id', $variant->tariff->id)->whereHas('payUsers', function ($q) use ($follower) {

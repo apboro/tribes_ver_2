@@ -151,7 +151,7 @@
         <community-table-row v-for="(community,index) in communities.data" :key="index" :community="community" />
         </tbody>
       </table>
-      <div>
+      <div v-if="communities">
         <div class="card-footer d-flex align-items-center">
           <ul class="pagination m-0 ms-auto">
             <li
@@ -198,8 +198,9 @@ export default {
       deep: true,
       handler: _.debounce(function (v) {
         this.$store.dispatch('loadCommunities', v);
+        if (this.filter_data.filter.search && this.communities.meta.total<this.communities.meta.per_page) this.filter_data.filter.page = 1
       }, 400)
-    }
+    },
   },
 
     mounted(){
