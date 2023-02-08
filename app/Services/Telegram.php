@@ -72,7 +72,7 @@ class Telegram extends Messenger
             if ($trial === false) {
                 $payment = Payment::where('id', $payId)->where('activated', false)->first();
 
-                if ($payment && $payment->type == 'tariff' && $payment->status == 'CONFIRMED') {
+                if ($payment && $payment->type == 'tariff' && ($payment->status == 'CONFIRMED' || $payment->status == 'AUTHORIZED')) {
 
                     $payment->telegram_user_id = $telegram_id;
                     $payment->save();

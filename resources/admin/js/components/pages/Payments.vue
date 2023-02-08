@@ -70,7 +70,7 @@
         </div>
         <div class="card-footer d-flex align-items-center">
 
-            <ul class="pagination m-0 ms-auto">
+            <ul v-if="payments.meta" class="pagination m-0 ms-auto">
                 <li 
                     v-for="(link, idx) in payments.meta.links"
                     class="page-item" 

@@ -85,7 +85,9 @@ class PaymentController extends Controller
             $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => $payment->paymentId]), true);
             TelegramLogService::staticSendLogMessage("Proverka posle oplaty: " . json_encode($state));
             sleep(1);
+            if ($state['Status'] == 'REJECTED') return redirect()->back(404)->withErrors('Оплата была отклонена');
         }
+
 
             if ($payment->isTariff()) {
                 if ($payment->comment !== 'trial') {
@@ -134,7 +136,7 @@ class PaymentController extends Controller
             $payment->save();
 
             if(TinkoffService::checkStatus($request, $payment, $previous_status)){
-                TelegramLogService::staticSendLogMessage("Notify from tinkoff: ". json_encode($data));
+                TelegramLogService::staticSendLogMessage("Notify from tinkoff: ". json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
                 return response('OK', 200);
             }
 
