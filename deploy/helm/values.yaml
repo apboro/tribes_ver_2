@@ -120,6 +120,7 @@ migrations:
   backoffLimit: 5
 
 config:
+  tribesCommision: 0
   app:
     name: "Tribes"
     env: "local"
@@ -160,7 +161,9 @@ config:
   postgresql:
     host: "localhost"
     port: "5432"
-    database: "kzrf"
+    databases:
+      main: "community2"
+      knowledge: "knowledge"
     username: "username"
     password: "password"
     schemas:
@@ -184,6 +187,11 @@ config:
     secretKeyE2E: ""
     x509serial: ""
   telegram:
+    userbot:
+      name: "Analytics_Tribes"
+      ident: tribes
+      phone: +79999999999
+      id: 5555555555
     bot:
       id: "bot_id"
       firstName: "bot_first_name"
@@ -215,4 +223,4 @@ config:
   useTrialPeriod: "true"
   forTester: "false"
   debugTinkoff: "false"
-  mqprotoHost: ""
+  mqprotoHost: "http://host:3000"

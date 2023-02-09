@@ -35,6 +35,11 @@ spec:
         - name: proxy
           image: {{ include "..imageName" .Values.backend.image}}
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          envFrom:
+          - configMapRef:
+              name: {{ include "..names.name" . }}-envs
+          - secretRef:
+              name: {{ include "..names.name" . }}-envs
           args:
           - proxy
           volumeMounts:

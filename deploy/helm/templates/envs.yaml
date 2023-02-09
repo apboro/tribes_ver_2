@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "..names.name" . }}-envs
+data:
+  TRIBES_COMMISSION: "{{ .Values.config.tribesCommision }}"
+  APP_NAME: {{ quote .Values.config.app.name }}
+  APP_ENV: {{ quote .Values.config.app.env }}
+  APP_DEBUG: {{ quote .Values.config.app.debug }}
+  APP_URL: {{ quote .Values.config.app.url }}
+  LOG_CHANNEL: {{ quote .Values.config.log.channel }}
+  LOG_DEPRECATIONS_CHANNEL: {{ quote .Values.config.log.deprecationsChannel }}
+  LOG_LEVEL: {{ quote .Values.config.log.level }} 
+  BROADCAST_DRIVER: {{ quote .Values.config.broadcast.driver }}
+  CACHE_DRIVER: {{ quote .Values.config.cache.driver }}
+  FILESYSTEM_DRIVER: {{ quote .Values.config.filesystem.driver }}
+  QUEUE_CONNECTION: {{ quote .Values.config.queue.connection }}
+  SESSION_DRIVER: {{ quote .Values.config.session.driver }}
+  SESSION_LIFETIME: {{ quote .Values.config.session.lifetime }}
+  MEMCACHED_HOST: {{ quote .Values.config.memcached.host }}
+  REDIS_HOST: {{ quote .Values.config.redis.host }}
+  REDIS_PORT: {{ quote .Values.config.redis.port }}
+  MAIL_DRIVER:  {{ quote .Values.config.mail.driver }}
+  MAIL_HOST: {{ quote .Values.config.mail.host }}
+  MAIL_PORT: {{ quote .Values.config.mail.port }}
+  MAIL_ENCRYPTION: {{ quote .Values.config.mail.encryption }}
+  MAIL_FROM_ADDRESS: {{ quote .Values.config.mail.from.address }}
+  MAIL_FROM_NAME: {{ quote .Values.config.mail.from.name }}
+  AWS_DEFAULT_REGION: {{ quote .Values.config.s3.region }}
+  AWS_BUCKET: {{ quote .Values.config.s3.bucket }}
+  AWS_USE_PATH_STYLE_ENDPOINT: {{ quote .Values.config.s3.pathStyleEndpoint }}
+  PUSHER_APP_ID: {{ quote .Values.config.pusherApp.id }}
+  PUSHER_APP_CLUSTER: {{ quote .Values.config.pusherApp.cluster }}
+  MIX_PUSHER_APP_KEY: {{ quote .Values.config.pusherApp.key }}
+  MIX_PUSHER_APP_CLUSTER: {{ quote .Values.config.pusherApp.cluster }}
+  TELEGRAM_API_ID: {{ quote .Values.config.telegram.api.id }}
+  TELEGRAM_API_PROTO: {{ quote .Values.config.telegram.api.proto }}
+  DB_HOST_MAIN: {{ quote .Values.config.postgresql.host }}
+  DB_PORT_MAIN: {{ quote .Values.config.postgresql.port }}
+  DB_DATABASE_MAIN: {{ quote .Values.config.postgresql.databases.main }}
+  DB_HOST_KNOWLEDGE: {{ quote .Values.config.postgresql.host }}
+  DB_PORT_KNOWLEDGE: {{ quote .Values.config.postgresql.port }}
+  DB_DATABASE_KNOWLEDGE: {{ quote .Values.config.postgresql.databases.knowledge }}
+  SMS_MAX_ATTEMPTS: {{ quote .Values.config.smsMaxAttempts }}
+  TELEGRAM_BOT_HOOK_ON_FIRST_REQUEST: {{ quote .Values.config.telegram.bot.hookOnFirstRequest }}
+  TELEGRAM_BOT_FIRST_NAME: {{ quote .Values.config.telegram.bot.firstName }}
+  TELEGRAM_BOT_NAME: {{ quote .Values.config.telegram.bot.name }}
+  TELEGRAM_BOT_ID: {{ quote .Values.config.telegram.bot.id }}
+  TELEGRAM_BASE_URL: {{ quote .Values.config.telegram.baseUrl }}
+  TELEGRAM_LOG_CHAT: {{ quote .Values.config.telegram.logChat }}
+  TELEGRAM_USERBOT_NAME: {{ quote .Values.config.telegram.userbot.name }}
+  MTPROTO_HOST: {{ quote .Values.config.mqprotoHost }}
+  IDENT_USER_BOT: "{{ .Values.config.telegram.userbot.ident }}"
+  PHONE_USER_BOT: "{{ .Values.config.telegram.userbot.phone }}"
+  TELEGRAM_USER_BOT_ID: {{ .Values.config.telegram.userbot.id }}
+  ELASTICSEARCH_ENABLED: {{ quote .Values.config.elk.enabled }}
+  ELASTICSEARCH_HOSTS: {{ quote .Values.config.elk.hosts }}
+  TELEGRAM_BOT_KN_FIRST_NAME: {{ quote .Values.config.telegram.botKn.firstName }}
+  TELEGRAM_BOT_KN_NAME: {{ quote .Values.config.telegram.botKn.name }}
+  TELEGRAM_BOT_KN_ID: {{ quote .Values.config.telegram.botKn.id }}
+  GRAB_TEST_DATA: {{ quote .Values.config.grabTestData }}
+  # USE_TRIAL_PERIOD: {{ quote .Values.config.useTrialPeriod }}
+  # FOR_TESTER: {{ quote .Values.config.forTester }}
+  # DEBUG_TINKOFF: {{ quote .Values.config.debugTinkoff }}
+  # TELEGRAM_BOT_KN_TOKEN: {{ quote .Values.config.telegram.botKn.token }}
+  # TELEGRAM_BOT_KN_HOOK_ON_FIRST_REQUEST: {{ quote .Values.config.telegram.botKn.hookOnFirstRequest }}
+  # DB_DRIVER: "pgsql"
+  # DB_SCHEMA_MAIN: {{ quote .Values.config.postgresql.schemas.main }}
+  # DB_SCHEMA_KNOWLEDGE: {{ quote .Values.config.postgresql.schemas.knowledge }}
+  # WEBCASTER_CLIENT_NAME: {{ quote .Values.config.webcaster.client.name }}
+  # WEBCASTER_CLIENT_PASSWORD: {{ quote .Values.config.webcaster.client.password }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "..names.name" . }}-envs
+type: Opaque
+data:
+  APP_KEY: {{ quote .Values.config.app.key | b64enc  }}
+  REDIS_PASSWORD: {{ quote .Values.config.redis.password | b64enc }}
+  MAIL_USERNAME: {{ quote .Values.config.mail.username | b64enc }}
+  MAIL_PASSWORD: {{ quote .Values.config.mail.password | b64enc }}
+  AWS_ACCESS_KEY_ID: {{ quote .Values.config.s3.accessKey | b64enc }}
+  AWS_SECRET_ACCESS_KEY: {{ quote .Values.config.s3.secretKey | b64enc }}
+  PUSHER_APP_KEY: {{ quote .Values.config.pusherApp.key | b64enc }}
+  PUSHER_APP_SECRET: {{ quote .Values.config.pusherApp.secret | b64enc }}
+  TELEGRAM_API_HASH: {{ quote .Values.config.telegram.api.hash | b64enc }}
+  DB_USERNAME_MAIN: {{ quote .Values.config.postgresql.username | b64enc }}
+  DB_PASSWORD_MAIN: {{ quote .Values.config.postgresql.password | b64enc }}
+  DB_USERNAME_KNOWLEDGE:  {{ quote .Values.config.postgresql.username | b64enc }}
+  DB_PASSWORD_KNOWLEDGE: {{ quote .Values.config.postgresql.password | b64enc }}
+  SMS_RU_CODE: {{ quote .Values.config.smsRuCode | b64enc }}
+  TINKOFF_TERMINAL_KEY_E2C: {{ quote .Values.config.tinkoff.termicalKeyE2E | b64enc }}
+  TINKOFF_SECRET_KEY_E2C: {{ quote .Values.config.tinkoff.secretKeyE2E | b64enc }}
+  TINKOFF_TERMINAL_KEY: {{ quote .Values.config.tinkoff.terminalKey | b64enc }}
+  TINKOFF_SECRET_KEY: {{ quote .Values.config.tinkoff.secretKey | b64enc }}
+  TINKOFF_X509SERIAL: {{ quote .Values.config.tinkoff.x509serial | b64enc }}
+  TELEGRAM_BOT_TOKEN: {{ quote .Values.config.telegram.bot.token | b64enc }}
