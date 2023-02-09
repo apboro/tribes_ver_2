@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "..names.name" . }}-envs
 data:
-  TRIBES_COMMISSION: "{{ .Values.config.tribesCommision }}"
+  TRIBES_COMMISSION: {{ quote .Values.config.tribesCommision }}
   APP_NAME: {{ quote .Values.config.app.name }}
   APP_ENV: {{ quote .Values.config.app.env }}
   APP_DEBUG: {{ quote .Values.config.app.debug }}

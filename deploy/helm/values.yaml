@@ -120,7 +120,7 @@ migrations:
   backoffLimit: 5
 
 config:
-  tribesCommision: 0
+  tribesCommision: "0"
   app:
     name: "Tribes"
     env: "local"
