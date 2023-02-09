@@ -40,19 +40,19 @@ class CheckCourses extends Command
      */
     public function handle(): int
     {
-        $courses = Course::with('buyers')->whereNotNull('activation_date')  ->get();
+        $courses = Course::with('buyers')->whereNotNull('activation_date')->get();
         foreach ($courses as $course){
             $activationDate = $course->activation_date ? Carbon::parse($course->activation_date) : null;
-            $publicationDate = $course->publication_date ? Carbon::parse($course->publication_date) : null ;
+            $publicationDate = $course->publication_date ? Carbon::parse($course->publication_date) : null;
             $deactivationDate = $course->deactivation_date ? Carbon::parse($course->deactivation_date) : null;
 
             $courseName = $course->title;
-            $checkout_time = Carbon::now()->setSeconds(0)->toDateTimeString();
+            $checkoutTime = Carbon::now()->setSeconds(0)->toDateTimeString();
 
             //ACTIVATE COURSE
             $mailBody='Курс доступен!';
-            $activation_time = $activationDate->toDateTimeString();
-            if ($activationDate && $activation_time === $checkout_time)
+            $activationTime = $activationDate->toDateTimeString();
+            if ($activationTime == $checkoutTime)
             {
                 $course->isActive = true;
                 $course->save();
@@ -62,7 +62,7 @@ class CheckCourses extends Command
 
             $mailBody = 'Курс будет доступен через 24 часа!';
             $activation_time_minus_24hrs = $activationDate->subDay()->toDateTimeString();
-            if ($activationDate && $activation_time_minus_24hrs === $checkout_time)
+            if ($activation_time_minus_24hrs === $checkoutTime)
             {
                 $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
                 SendEmails::dispatch($course->buyers, 'Курс скоро будет доступен','Cервис Spodial', $view);
@@ -71,7 +71,7 @@ class CheckCourses extends Command
             //DEACTIVATE COURSE
             $mailBody = 'Курс деактивирован!';
             $deactivation_time = $deactivationDate->toDateTimeString();
-            if ($deactivationDate && $deactivation_time === $checkout_time)
+            if ($deactivationDate && $deactivation_time === $checkoutTime)
             {
                 $course->isActive = false;
                 $course->save();
@@ -81,7 +81,7 @@ class CheckCourses extends Command
 
             $mailBody = 'Курс будет отключен через 24 часа!';
             $deactivation_time_minus_24hrs = $deactivationDate->subDay()->toDateTimeString();
-            if ($deactivationDate && $deactivation_time_minus_24hrs === $checkout_time)
+            if ($deactivationDate && $deactivation_time_minus_24hrs === $checkoutTime)
             {
                 $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
                 SendEmails::dispatch($course->buyers, 'Курс скоро будет деактивирован','Cервис Spodial', $view);
@@ -89,7 +89,7 @@ class CheckCourses extends Command
 
             //PUBLIC COURSE
             $publication_time = $publicationDate->toDateTimeString();
-            if ($publicationDate && $publication_time === $checkout_time)
+            if ($publicationDate && $publication_time === $checkoutTime)
             {
                 $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
                 SendEmails::dispatch($course->buyers, 'Курс деактивирован','Cервис Spodial', $view);

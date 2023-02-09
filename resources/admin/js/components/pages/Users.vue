@@ -85,7 +85,7 @@
             </table>
         </div>
         <div class="card-footer d-flex align-items-center">
-            <ul class="pagination m-0 ms-auto">
+            <ul v-if="users.meta" class="pagination m-0 ms-auto">
                 <li
                     v-for="(link, idx) in users.meta.links"
                     class="page-item"
@@ -123,6 +123,7 @@ export default {
             deep: true,
             handler: _.debounce(function(v) {
                 this.$store.dispatch('get_users', v);
+              if (this.filter_data.filter.search) this.filter_data.filter.page = 1
             },400)
         }
     },

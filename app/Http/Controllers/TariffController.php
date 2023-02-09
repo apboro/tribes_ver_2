@@ -89,12 +89,11 @@ class TariffController extends Controller
             }
         }
 
-        if ($user->wasRecentlyCreated)
-        {
-        $token = $user->createTempToken();
+        if ($user->wasRecentlyCreated) {
+            $token = $user->createTempToken();
 
-        $user->tinkoffSync();
-        $user->hashMake();
+            $user->tinkoffSync();
+            $user->hashMake();
 
 
             $v = view('mail.registration')->with(['login' => $email, 'password' => $password])->render();
@@ -110,7 +109,6 @@ class TariffController extends Controller
             ->payer($user);
 
         $payment = $p->pay();
-
         if ($payment) {
             return $request->ajax() ? response()->json([
                 'status' => 'ok',

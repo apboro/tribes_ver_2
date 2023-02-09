@@ -146,6 +146,11 @@ class TinkoffApi
         return $this->buildQuery('GetCardList', $args);
     }
 
+    public function checkOrder($args)
+    {
+        return $this->buildQuery('CheckOrder', $args);
+    }
+
     public function removeCard($args)
     {
         return $this->buildQuery('RemoveCard', $args);
@@ -194,9 +199,9 @@ class TinkoffApi
                     $args['TerminalKey'] = $this->terminalKey;
                 }
 
-                if (!array_key_exists('Token', $args)) {
-                    $args['Token'] = $this->_genToken($args);
-                }
+//                if (!array_key_exists('Token', $args)) {
+//                    $args['Token'] = $this->_genToken($args);
+//                }
 
                 $args = $this->updateSecuresData($args);
 

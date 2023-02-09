@@ -170,12 +170,13 @@
 
                         <ul class="knowledge-list__list">
                             @forelse($activeCommunity->questions as $question)
-                                <li class="knowledge-list__item" data-id="{{ $question->id }}"
+                                <li class="knowledge-list__item"
+                                    data-id="{{ $question->id }}"
                                     data-category="{{ $question->category_id }}">
 
                                     <div class="knowledge-list__item-actions">
-                                        <button class="knowledge-list__item-actions__button_edit"
-                                                onclick="KnowledgeList.editQuestion({{$question->id}})"></button>
+                                        <button id="edit_button" class="knowledge-list__item-actions__button_edit"
+                                                onclick="KnowledgeList.editQuestionShow({{$question->id}})"></button>
                                         <button class="knowledge-list__item-actions__button_delete"
                                                 onclick="KnowledgeList.processKnowledge('del', {{$activeCommunity->id}}, {{$question->id}})"></button>
                                     </div>
@@ -202,7 +203,7 @@
                                         </span>
 
                                         </div>
-                                        <p class="knowledge-list__item-text">
+                                        <p id="{{$activeCommunity->id}}-{{$question->id}}" class="knowledge-list__item-text">
                                             {{ $question -> context }}
                                         </p>
 
@@ -219,7 +220,7 @@
                                             @if(empty($question->answer))
                                                 <p class="knowledge-list__item-text">Ответ отсутствует</p>
                                             @else
-                                                <span class="knowledge-list__item-text">{!! $question->answer->context !!}</span>
+                                                <span id="{{$activeCommunity->id}}-{{$question->answer->id}}"class="knowledge-list__item-text">{!! $question->answer->context !!}</span>
                                             @endif
                                         </div>
 
@@ -260,15 +261,15 @@
                                         {{--                                    >--}}
                                         {{--                                        Скрыть ответ--}}
                                         {{--                                    </button>--}}
-                                        <div class="knowledge-list__new_knowledge">
+                                        <div id="{{$question->id}}" class="knowledge-list__new_knowledge">
                                             <div class="knowledge-list__new_knowledge__buttons">
-                                                <button disabled id="save_question_button"
+                                                <button id="save_question_button"
                                                         class="btn-sm btn-outline-primary rounded-pill knowledge-list__new_knowledge__buttons-save"
-                                                        onclick="KnowledgeList.editQuestion({{$activeCommunity->id}})">
+                                                        onclick="KnowledgeList.editQuestion({{$question->category->id}}, {{$activeCommunity->id}}, {{$question->id}}, {{$question->answer->id}})">
                                                     Сохранить
                                                 </button>
                                                 <button class="btn-sm btn-outline-primary rounded-pill knowledge-list__new_knowledge__buttons-cancel"
-                                                        onclick="KnowledgeList.openKnowledgeForm()">Отмена
+                                                        onclick="KnowledgeList.cancelEdit({{$question->id}})">Отмена
                                                 </button>
                                             </div>
                                         </div>
