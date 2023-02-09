@@ -16,7 +16,7 @@ data:
   FILESYSTEM_DRIVER: {{ quote .Values.config.filesystem.driver }}
   QUEUE_CONNECTION: {{ quote .Values.config.queue.connection }}
   SESSION_DRIVER: {{ quote .Values.config.session.driver }}
-  SESSION_LIFETIME: {{ quote .Values.config.session.lifetime }}
+  SESSION_LIFETIME: "{{ quote .Values.config.session.lifetime }}"
   MEMCACHED_HOST: {{ quote .Values.config.memcached.host }}
   REDIS_HOST: {{ quote .Values.config.redis.host }}
   REDIS_PORT: {{ quote .Values.config.redis.port }}

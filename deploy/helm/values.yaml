@@ -189,9 +189,9 @@ config:
   telegram:
     userbot:
       name: "Analytics_Tribes"
-      ident: tribes
-      phone: +79999999999
-      id: 5555555555
+      ident: "tribes"
+      phone: "+79999999999"
+      id: "5555555555"
     bot:
       id: "bot_id"
       firstName: "bot_first_name"
