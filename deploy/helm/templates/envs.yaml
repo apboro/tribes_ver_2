@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "..names.name" . }}-envs
 data:
-  TRIBES_COMMISSION: {{ quote .Values.config.tribesCommision }}
+  TRIBES_COMMISSION: "{{ .Values.config.tribesCommision }}"
   APP_NAME: {{ quote .Values.config.app.name }}
   APP_ENV: {{ quote .Values.config.app.env }}
   APP_DEBUG: {{ quote .Values.config.app.debug }}
@@ -16,7 +16,7 @@ data:
   FILESYSTEM_DRIVER: {{ quote .Values.config.filesystem.driver }}
   QUEUE_CONNECTION: {{ quote .Values.config.queue.connection }}
   SESSION_DRIVER: {{ quote .Values.config.session.driver }}
-  SESSION_LIFETIME: {{ quote .Values.config.session.lifetime }}
+  SESSION_LIFETIME: "{{ .Values.config.session.lifetime }}"
   MEMCACHED_HOST: {{ quote .Values.config.memcached.host }}
   REDIS_HOST: {{ quote .Values.config.redis.host }}
   REDIS_PORT: {{ quote .Values.config.redis.port }}
@@ -41,18 +41,18 @@ data:
   DB_HOST_KNOWLEDGE: {{ quote .Values.config.postgresql.host }}
   DB_PORT_KNOWLEDGE: {{ quote .Values.config.postgresql.port }}
   DB_DATABASE_KNOWLEDGE: {{ quote .Values.config.postgresql.databases.knowledge }}
-  SMS_MAX_ATTEMPTS: {{ quote .Values.config.smsMaxAttempts }}
+  SMS_MAX_ATTEMPTS: "{{ .Values.config.smsMaxAttempts }}"
   TELEGRAM_BOT_HOOK_ON_FIRST_REQUEST: {{ quote .Values.config.telegram.bot.hookOnFirstRequest }}
   TELEGRAM_BOT_FIRST_NAME: {{ quote .Values.config.telegram.bot.firstName }}
   TELEGRAM_BOT_NAME: {{ quote .Values.config.telegram.bot.name }}
   TELEGRAM_BOT_ID: {{ quote .Values.config.telegram.bot.id }}
   TELEGRAM_BASE_URL: {{ quote .Values.config.telegram.baseUrl }}
-  TELEGRAM_LOG_CHAT: {{ quote .Values.config.telegram.logChat }}
+  TELEGRAM_LOG_CHAT: "{{ .Values.config.telegram.logChat }}"
   TELEGRAM_USERBOT_NAME: {{ quote .Values.config.telegram.userbot.name }}
   MTPROTO_HOST: {{ quote .Values.config.mqprotoHost }}
   IDENT_USER_BOT: "{{ .Values.config.telegram.userbot.ident }}"
   PHONE_USER_BOT: "{{ .Values.config.telegram.userbot.phone }}"
-  TELEGRAM_USER_BOT_ID: {{ .Values.config.telegram.userbot.id }}
+  TELEGRAM_USER_BOT_ID: "{{ .Values.config.telegram.userbot.id }}"
   ELASTICSEARCH_ENABLED: {{ quote .Values.config.elk.enabled }}
   ELASTICSEARCH_HOSTS: {{ quote .Values.config.elk.hosts }}
   TELEGRAM_BOT_KN_FIRST_NAME: {{ quote .Values.config.telegram.botKn.firstName }}
