@@ -31,6 +31,7 @@ build_image:
   rules: 
   - if: $CI_COMMIT_BRANCH == "dev_spodial"
   - if: $CI_COMMIT_BRANCH == "production"
+  - if: $CI_COMMIT_BRANCH =~ "devops/*"
   
 push_chart:
   stage: build
@@ -49,6 +50,7 @@ deploy_dev:
   rules: 
   - if: $CI_COMMIT_BRANCH == "dev_spodial"
   - if: $CI_COMMIT_BRANCH == "production"
+  - if: $CI_COMMIT_BRANCH =~ "/devops.*/""
 
 deploy_prod:
   stage: deploy
