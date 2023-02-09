@@ -5,6 +5,7 @@ namespace App\Repositories\Course;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Repositories\Lesson\LessonRepositoryContract;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -42,9 +43,9 @@ class CourseRepository implements CourseRepositoryContract
 
         $course->thanks_text =              $requestData['course_meta']['thanks_text'];
         $course->shipping_noty =            $requestData['course_meta']['shipping_noty'];
-        $course->activation_date =          $requestData['course_meta']['activation_date'];
-        $course->deactivation_date =        $requestData['course_meta']['deactivation_date'];
-        $course->publication_date =         $requestData['course_meta']['publication_date'];
+        $course->activation_date =          $requestData['course_meta']['isActive'] ? Carbon::now() : $requestData['course_meta']['activation_date'];
+        $course->deactivation_date =        $requestData['course_meta']['deactivation_date'] ?? null;
+        $course->publication_date =         $requestData['course_meta']['isPublished'] ? Carbon::now() : $requestData['course_meta']['publication_date'];
 
         $course->owner =                    Auth::user()->id;
 

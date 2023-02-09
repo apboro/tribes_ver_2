@@ -372,6 +372,8 @@ export default {
     },
 
     getMaxDate(){
+      if (this.course.course_meta.deactivation_date == null ||
+          this.course.course_meta.deactivation_date == '') return '2100-12-31T00:00';
       let max_date = new Date(this.course.course_meta.deactivation_date);
       max_date.setDate(max_date.getDate()-1);
       return max_date.toISOString().slice(0,16);
