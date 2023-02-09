@@ -50,8 +50,8 @@ data:
   TELEGRAM_LOG_CHAT: {{ quote .Values.config.telegram.logChat }}
   TELEGRAM_USERBOT_NAME: {{ quote .Values.config.telegram.userbot.name }}
   MTPROTO_HOST: {{ quote .Values.config.mqprotoHost }}
-  IDENT_USER_BOT: {{ quote .Values.config.telegram.userbot.ident }}
-  PHONE_USER_BOT: {{ quote .Values.config.telegram.userbot.phone }}
+  IDENT_USER_BOT: "{{ .Values.config.telegram.userbot.ident }}"
+  PHONE_USER_BOT: "{{ .Values.config.telegram.userbot.phone }}"
   TELEGRAM_USER_BOT_ID: {{ .Values.config.telegram.userbot.id }}
   ELASTICSEARCH_ENABLED: {{ quote .Values.config.elk.enabled }}
   ELASTICSEARCH_HOSTS: {{ quote .Values.config.elk.hosts }}
