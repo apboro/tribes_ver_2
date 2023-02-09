@@ -16,6 +16,11 @@
                             {{ session('error') }}
                         </div>
                     @endif
+                    @if ($exception->getMessage())
+                        <div class="alert alert-danger">
+                            {{ $exception->getMessage() }}
+                        </div>
+                    @endif
                     <p class="mb-2">
                         {{ __('error.description_404') }} 😖
                     </p>

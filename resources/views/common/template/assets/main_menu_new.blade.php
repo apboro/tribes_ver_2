@@ -5,35 +5,36 @@
     >
         <span class="main-nav-new__burger-lines"></span>
     </button>
+
     <nav class="main-nav-new__nav" data-burger>
         <ul class="main-nav-new__list">
             @if (request()->is('*follower*'))
-                <li class="main-nav-new__item">
-                    <a
-                            href="{{ route('follower.product', ['hash' => 123]) }}"
-                            class="main-nav-new__link {{ request()->is('*product*') ? 'active' : ''  }}"
-                    >
-                        <span>{{ __('base.product') }}</span>
-                    </a>
-                </li>
+{{--                <li class="main-nav-new__item">--}}
+{{--                    <a--}}
+{{--                            href="{{ route('follower.product', ['hash' => 123]) }}"--}}
+{{--                            class="main-nav-new__link {{ request()->is('*product*') ? 'active' : ''  }}"--}}
+{{--                    >--}}
+{{--                        <span>{{ __('base.product') }}</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
 
-                <li class="main-nav-new__item">
-                    <a
-                            href="{{ route('audience.list') }}"
-                            class="main-nav-new__link {{ request()->is('*audience*') ? 'active' : ''  }}"
-                    >
-                        <span>{{ __('base.audience') }}</span>
-                    </a>
-                </li>
+{{--                <li class="main-nav-new__item">--}}
+{{--                    <a--}}
+{{--                            href="{{ route('audience.list') }}"--}}
+{{--                            class="main-nav-new__link {{ request()->is('*audience*') ? 'active' : ''  }}"--}}
+{{--                    >--}}
+{{--                        <span>{{ __('base.audience') }}</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
 
-                <li class="main-nav-new__item">
-                    <a
-                            href="{{ route('faq.index') }}"
-                            class="main-nav-new__link {{ request()->is('*faq*') ? 'active' : ''  }}"
-                    >
-                        <span>{{ __('base.help') }}</span>
-                    </a>
-                </li>
+{{--                <li class="main-nav-new__item">--}}
+{{--                    <a--}}
+{{--                            href="{{ route('faq.index') }}"--}}
+{{--                            class="main-nav-new__link {{ request()->is('*faq*') ? 'active' : ''  }}"--}}
+{{--                    >--}}
+{{--                        <span>{{ __('base.help') }}</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
             @else
                 <!-- Аналитика -->
                 <li class="main-nav-new__item">
@@ -134,14 +135,14 @@
                     </a>
                 </li>
                 <!-- FAQ будущая Помощь -->
-                <li class="main-nav-new__item">
-                    <a
-                            href="{{ route('faq.index') }}"
-                            class="main-nav-new__link {{ request()->is('*faq*') ? 'active' : ''  }}"
-                    >
-                        <span>Помощь</span>
-                    </a>
-                </li>
+{{--                <li class="main-nav-new__item">--}}
+{{--                    <a--}}
+{{--                            href="{{ route('faq.index') }}"--}}
+{{--                            class="main-nav-new__link {{ request()->is('*faq*') ? 'active' : ''  }}"--}}
+{{--                    >--}}
+{{--                        <span>Помощь</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
             @endif
         </ul>
     </nav>

@@ -34,6 +34,8 @@
 
             <div class="dropdown-personal__links-block">
                 <ul class="dropdown-personal__link-list">
+
+                    @if (!request()->is('*follower*'))
                     <li class="dropdown-personal__link-item">
                         <a
                             href="{{route('profile.project.list')}}"
@@ -58,6 +60,14 @@
                             class="dropdown-personal__link {{ request()->is('*payments*') ? 'active' : ''  }}"
                         >
                             Финансы
+                        </a>
+                    </li>
+                    <li class="dropdown-personal__link-item">
+                        <a
+                                href="{{ route('follower.products') }}"
+                                class="dropdown-personal__link {{ request()->is('*follower*') ? 'active' : ''  }}"
+                        >
+                            Перейти в режим читателя
                         </a>
                     </li>
                 </ul>
@@ -97,7 +107,16 @@
                                 Обратная связь
                             </a>
                         </li>
-
+                        @else
+                            <li class="dropdown-personal__link-item">
+                                <a
+                                        href="{{route('main')}}"
+                                        class="dropdown-personal__link {{ request()->is('*projects*') ? 'active' : ''  }}"
+                                >
+                                    Перейти в режим автора
+                                </a>
+                            </li>
+                        @endif
                     <li class="dropdown-personal__link-item">
                         <a
                             href="{{ route('logout') }}"
@@ -108,6 +127,7 @@
                             Выход
                         </a>
                     </li>
+
                 </ul>
             </div>
         </div>

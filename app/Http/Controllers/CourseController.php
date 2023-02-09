@@ -45,6 +45,8 @@ class CourseController extends Controller
         $course = Course::find((int)PseudoCrypt::unhash($hash));
         $course->increment('views');
 
+        if (!$course->isActive) return abort(404,'Курс не активен');
+
         return view('common.course.pay')->withCourse($course);
     }
 
@@ -84,6 +86,7 @@ class CourseController extends Controller
         $course = Course::findOrFail((int)PseudoCrypt::unhash($request['hash']));
 
         $course->increment('clicks');
+
 
         ### Регистрация плательщика #####
         $email = strtolower($request['email']);
