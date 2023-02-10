@@ -24,7 +24,7 @@
                             @if ($category->variant === 'permanent')
                                 <button
                                         class="button-text knowledge-list__item-btn button-text--primary"
-                                        onclick="KnowledgeList.filterByCategory('{{ $category->id }}')"
+                                        onclick="KnowledgeList.filterByCategory('{{ $category->id }}'); this.style.color = '#7367f0'"
                                 >
                                     {{ $category->title }}
                                 </button>
@@ -42,7 +42,7 @@
                                             <button
                                                     id="{{ $category->id }}"
                                                     class="button-text knowledge-list__item-btn button-text--primary"
-                                                    onclick="KnowledgeList.filterByCategory('{{ $category->id }}')"
+                                                    onclick="KnowledgeList.filterByCategory('{{ $category->id }}'); this.style.color = '#7367f0'"
                                             >
                                                 {{ $category->title }}
                                             </button>
