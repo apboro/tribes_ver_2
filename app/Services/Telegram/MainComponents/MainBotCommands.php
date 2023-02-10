@@ -20,6 +20,7 @@ use App\Repositories\Telegram\TelegramConnectionRepositoryContract;
 use App\Services\Knowledge\ManageQuestionService;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
+use App\Services\TelegramLogService;
 use App\Traits\Declination;
 use Askoldex\Teletant\Context;
 use Askoldex\Teletant\Addons\Menux;
@@ -89,6 +90,7 @@ class MainBotCommands
         "inlineTariffCommand",
         'donateOnChat',
         'helpOnChat',
+        'helpOnBot',
         'donateOnUser',
         'materialAid',
         'personalArea',
@@ -393,6 +395,24 @@ class MainBotCommands
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
+    protected function helpOnBot()
+    {
+        try {
+            $this->bot->onCommand('qa', function (Context $ctx) {
+                $menu = Menux::Create('links')->inline();
+                $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
+                if ($communities->first()) {
+                    foreach ($communities as $community) {
+                        $link = $community->getPublicKnowledgeLink();
+                        $menu->row()->uBtn($community->title, $link);
+                    }
+                    $ctx->reply('Выберите сообщество', $menu);
+                } else $ctx->reply('У вас нет подписок');
+            });
+            } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
 
     protected function donateOnChat()
     {
@@ -488,7 +508,7 @@ class MainBotCommands
                     $ctx->reply('Ваша подписка уже активирована, что-бы получить ссылку на ресурс пройдите в раздел "Мои подписки".');
                 }
 
-                if ($payment && $payment->type == 'tariff' && $payment->status == 'CONFIRMED') {
+                if ($payment && $payment->type == 'tariff' && ($payment->status == 'CONFIRMED' || $payment->status == 'AUTHORIZED')) {
 
                     $community = $payment->community;
 

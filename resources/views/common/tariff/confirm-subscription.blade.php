@@ -13,7 +13,7 @@
         <div class="confirmation_subscription__header-col1">
             <img
                 class="confirmation_subscription__avatar"
-                src="/images/no-user-avatar.svg"
+                src="{{$community->image ?? '/images/no-image.png'}}"
                 alt="photo of subscriber"
             >
             

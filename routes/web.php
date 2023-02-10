@@ -342,7 +342,7 @@ Route::middleware(['auth'])->group(function () {
 Route::any('/webhook-user-bot', [TelegramUserBotController::class, 'index'])->name('user.bot.webhook');
 Route::get('/set-webhook-for-user-bot', [TelegramUserBotController::class, 'setWebhook']);
 
-Route::any('/test', [TestBotController::class, 'index']);
+Route::any('/testBot', [TestBotController::class, 'index']);
 
 Route::any('/manager{any}', function () {
     return view('admin');

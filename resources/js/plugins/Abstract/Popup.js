@@ -46,6 +46,7 @@ export class Popup {
         this.modalBody = new CreateNode({
             parent: this.modal,
             tag: 'section',
+            id: 'popup',
             class: 'popup'
         }).init();
     }
@@ -60,6 +61,7 @@ export class Popup {
         new CreateNode({
             parent: this.header,
             tag: 'h2',
+            id: 'popup__title',
             class: 'popup__title',
             text: this.title
         }).init();

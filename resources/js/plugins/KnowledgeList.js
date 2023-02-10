@@ -45,11 +45,23 @@ export default class KnowledgeList extends Page {
                 }
                 this.popupCat = new Popup({
                     header: this.createModalHeader(),
+                    content: this.createModalContentDel(document.getElementById(this.category_id).innerText),
                     footer: this.createModalFooter('Удалить', 'del', community_id),
                     title: 'Удалить категорию',
                 });
                 break;
         }
+    }
+    createModalContentDel(name) {
+        const content = new CreateNode({}).init();
+
+        new CreateNode({
+            parent: content,
+            tag: 'label',
+            text: name
+        }).init();
+
+        return content;
     }
 
     createModalContent(name) {
@@ -65,6 +77,9 @@ export default class KnowledgeList extends Page {
             parent: content,
             id: 'cat_title',
             name: 'cat_title',
+            value: name === 'Новое название категории' ? document.getElementById(this.category_id).innerText : '',
+            maxlength: '80',
+            require: true,
             tag: 'input',
         }).init();
 
@@ -76,12 +91,26 @@ export default class KnowledgeList extends Page {
 
         this.sendCatBtn = new CreateNode({
             parent: footer,
+            class: 'btn btn-primary btn-sm',
             tag: 'button',
+            type: 'submit',
             text: btn_name
         }).init();
         this.sendCatBtn.onclick = () => {
             let cat_name = (command === 'del') ? null : document.getElementById("cat_title").value
+            if (command !== 'del' && !document.getElementById("cat_title").value.trim()) alert('Введите название категории')
             this.processCategory(cat_name, command, community_id);
+        }
+
+        this.cancelBtn = new CreateNode({
+            parent: footer,
+            class: 'btn btn-secondary btn-sm',
+            tag: 'button',
+            text: 'Отменить'
+        }).init();
+        this.cancelBtn.onclick = () => {
+            document.getElementById('popup').setAttribute('hidden', 'true');
+            document.getElementsByClassName('overlay')[0].remove();
         }
 
         return footer;

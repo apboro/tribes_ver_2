@@ -40,6 +40,7 @@
                                     @foreach($activeCommunity->categories as $category)
                                         @if ($category->variant === 'users')
                                             <button
+                                                    id="{{ $category->id }}"
                                                     class="button-text knowledge-list__item-btn button-text--primary"
                                                     onclick="KnowledgeList.filterByCategory('{{ $category->id }}')"
                                             >
@@ -51,21 +52,21 @@
                                     <div class="p-2__buttons">
                                         <button
                                                 type="submit"
-                                                class="btn btn-outline-primary rounded-pill p-2__button"
+                                                class="btn btn-outline-primary mt-1 rounded-pill"
                                                 onclick="KnowledgeList.showModal('add', {{$activeCommunity->id}})"
                                         >
                                             Добавить категорию
                                         </button>
                                         <button
                                                 type="submit"
-                                                class="btn btn-outline-primary rounded-pill p-2__button"
+                                                class="btn btn-outline-primary mt-1 rounded-pill"
                                                 onclick="KnowledgeList.showModal('edit', {{$activeCommunity->id}})"
                                         >
                                             Переименовать категорию
                                         </button>
                                         <button
                                                 type="submit"
-                                                class="btn btn-outline-primary rounded-pill p-2__button"
+                                                class="btn btn-outline-primary mt-1 rounded-pill"
                                                 onclick="KnowledgeList.showModal('del', {{$activeCommunity->id}})"
                                         >
                                             Удалить категорию

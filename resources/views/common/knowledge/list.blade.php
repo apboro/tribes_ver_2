@@ -47,24 +47,24 @@
                             @endif
                         @endforeach
 
-                        <div class="col-sm-4 col-lg-3 mt-1 mt-sm-0">
+                        <div class="col-sm-4 col-lg-3 mt-1 mt-sm-0 ">
                             <button
                                     type="submit"
-                                    class="btn btn-outline-primary rounded-pill"
+                                    class="btn btn-outline-primary rounded-pill mt-3"
                                     onclick="KnowledgeList.showModal('add', {{$community->id}})"
                             >
                                 Добавить категорию
                             </button>
                             <button
                                     type="submit"
-                                    class="btn btn-outline-primary rounded-pill"
+                                    class="btn btn-outline-primary rounded-pill mt-3"
                                     onclick="KnowledgeList.showModal('edit', {{$community->id}})"
                             >
                                 Переименовать категорию
                             </button>
                             <button
                                     type="submit"
-                                    class="btn btn-outline-primary rounded-pill"
+                                    class="btn btn-outline-primary rounded-pill mt-3"
                                     onclick="KnowledgeList.showModal('del', {{$community->id}})"
                             >
                                 Удалить категорию
