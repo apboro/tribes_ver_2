@@ -77,7 +77,7 @@ metadata:
 type: Opaque
 data:
   APP_KEY: {{ quote .Values.config.app.key | b64enc  }}
-  REDIS_PASSWORD: {{ quote .Values.config.redis.password | b64enc }}
+  # REDIS_PASSWORD: {{ quote .Values.config.redis.password | b64enc }}
   MAIL_USERNAME: {{ quote .Values.config.mail.username | b64enc }}
   MAIL_PASSWORD: {{ quote .Values.config.mail.password | b64enc }}
   AWS_ACCESS_KEY_ID: {{ quote .Values.config.s3.accessKey | b64enc }}

@@ -1,6 +1,6 @@
 apiVersion: v2
 name: tribes
 description: A Helm chart for tribes
-version: 0.4.0
+version: 0.4.1
 appVersion: "0.1.0"
 
