@@ -160,6 +160,10 @@ export default class KnowledgeList extends Page {
                 question.classList.remove('hide');
             }
         });
+        let catButtons = document.getElementsByClassName('knowledge-list__item-btn');
+        for (let i = 0; i < catButtons.length; i++) {
+            catButtons[i].style.color = '#363440';
+        }
     }
 
     hideAnswerVisibility(index) {
