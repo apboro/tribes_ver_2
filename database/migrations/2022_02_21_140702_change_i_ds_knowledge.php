@@ -13,12 +13,12 @@ class ChangeIDsKnowledge extends Migration
      */
     public function up()
     {
-        // Schema::connection('knowledge')->table('answers', function (Blueprint $table) {
-        //     $table->dropColumn('question_id');
-        // });
-        // Schema::connection('knowledge')->table('questions', function (Blueprint $table) {
-        //     $table->unsignedBigInteger('answer_id');
-        // });
+         Schema::table('answers', function (Blueprint $table) {
+             $table->dropColumn('question_id');
+         });
+         Schema::table('questions', function (Blueprint $table) {
+             $table->unsignedBigInteger('answer_id')->nullable();
+         });
     }
 
     /**
@@ -28,11 +28,11 @@ class ChangeIDsKnowledge extends Migration
      */
     public function down()
     {
-        // Schema::connection('knowledge')->table('answers', function (Blueprint $table) {
-        //     $table->unsignedBigInteger('question_id');
-        // });
-        // Schema::connection('knowledge')->table('questions', function (Blueprint $table) {
-        //     $table->dropColumn('answer_id');
-        // });
+         Schema::table('answers', function (Blueprint $table) {
+             $table->unsignedBigInteger('question_id');
+         });
+         Schema::table('questions', function (Blueprint $table) {
+             $table->dropColumn('answer_id');
+         });
     }
 }

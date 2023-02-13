@@ -21,7 +21,7 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = ['variant', 'title', 'community_id'];
-    protected $table = 'knowledge.categories';
+    protected $table = 'categories';
 
     public function community(): BelongsTo
     {

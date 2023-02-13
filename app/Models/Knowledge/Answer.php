@@ -28,7 +28,7 @@ class Answer extends Model
     ];
     //protected $connection = 'knowledge';
 
-    protected $table = 'knowledge.answers';
+    protected $table = 'answers';
 
     protected $casts = [
         'tags' => 'json',

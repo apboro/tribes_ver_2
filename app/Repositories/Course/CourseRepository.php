@@ -44,7 +44,7 @@ class CourseRepository implements CourseRepositoryContract
         $course->thanks_text =              $requestData['course_meta']['thanks_text'];
         $course->shipping_noty =            $requestData['course_meta']['shipping_noty'];
         $course->activation_date =          $requestData['course_meta']['isActive'] ? Carbon::now() : $requestData['course_meta']['activation_date'];
-        $course->deactivation_date =        $requestData['course_meta']['deactivation_date'] ?? null;
+        $course->deactivation_date =        $requestData['course_meta']['isEthernal'] ? null : $requestData['course_meta']['deactivation_date'];
         $course->publication_date =         $requestData['course_meta']['isPublished'] ? Carbon::now() : $requestData['course_meta']['publication_date'];
 
         $course->owner =                    Auth::user()->id;

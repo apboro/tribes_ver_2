@@ -13,10 +13,10 @@ class CreateQuestionsTable extends Migration
      */
     public function up()
     {
-        // Schema::connection('knowledge')->create('questions', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->timestamps();
-        // });
+         Schema::create('questions', function (Blueprint $table) {
+             $table->id();
+             $table->timestamps();
+         });
     }
 
     /**
@@ -26,6 +26,6 @@ class CreateQuestionsTable extends Migration
      */
     public function down()
     {
-        // Schema::connection('knowledge')->dropIfExists('questions');
+         Schema::dropIfExists('questions');
     }
 }

@@ -38,7 +38,7 @@ class UpdateQuestionRequest extends FormRequest
                 'array:id,context,is_draft,is_public,answer',
 
             ],
-            'question.id' => 'required|integer|exists:knowledge.questions,id',
+            'question.id' => 'required|integer|exists:questions,id',
             'question.context' => 'required|string',
             'question.is_draft' => 'boolean',
             'question.is_public' => 'boolean',

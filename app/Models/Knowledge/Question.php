@@ -32,8 +32,6 @@ class Question extends Model
 
     public $useSearchType = 'Question';
 
-    protected $connection = 'main';
-
     protected $fillable = [
         'community_id',
         'author_id',
@@ -42,10 +40,11 @@ class Question extends Model
         'is_public',
         'c_enquiry',
         'context',
-        'category_id'
+        'category_id',
+        'answer_id'
     ];
 
-    protected $table = 'knowledge.questions';
+    protected $table = 'questions';
 
     /**
      *   Question::filter($filters)

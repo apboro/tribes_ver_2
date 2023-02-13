@@ -13,7 +13,7 @@ class CreateCategoriesTable extends Migration
      */
     public function up()
     {
-         Schema::connection('knowledge')->create('categories', function (Blueprint $table) {
+         Schema::create('categories', function (Blueprint $table) {
              $table->id();
              $table->timestamps();
              $table->string('variant')->nullable();
@@ -34,6 +34,6 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-         Schema::connection('knowledge')->dropIfExists('categories');
+         Schema::dropIfExists('categories');
     }
 }

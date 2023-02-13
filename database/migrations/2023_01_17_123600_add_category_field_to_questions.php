@@ -13,8 +13,8 @@ class AddCategoryFieldToQuestions extends Migration
      */
     public function up()
     {
-        Schema::connection('knowledge')->table('questions', function (Blueprint $table) {
-            $table->foreignId('category_id')->nullable()->constrained('knowledge.categories')
+        Schema::table('questions', function (Blueprint $table) {
+            $table->foreignId('category_id')->nullable()->constrained('categories')
                 ->onDelete('cascade')->onUpdate('cascade');
         });
     }
@@ -27,7 +27,7 @@ class AddCategoryFieldToQuestions extends Migration
     public function down()
     {
         Schema::table('questions', function (Blueprint $table) {
-            //
+            $table->dropConstrainedForeignId('category_id');
         });
     }
 }

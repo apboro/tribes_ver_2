@@ -63,33 +63,6 @@
           <div class="course-settings__group">
             <div class="course-settings__group-item">
               <input
-                  type="number"
-                  id="course_period"
-                  class="input"
-                  v-model="access_days"
-                  :disabled="!!(this.course.course_meta.isEthernal || this.course.course_meta.deactivation_date)"
-                  placeholder="0"
-              >
-              <label for="course_period" class="course-settings__label">
-                Срок доступа (дней)
-              </label>
-            </div>
-
-            <div class="course-settings__toggle-switch" >
-              <label class="toggle-switch">
-                <input type="checkbox" id="course_ethernal" v-model="course.course_meta.isEthernal" :disabled="!!this.course.course_meta.deactivation_date">
-                <span class="toggle-switch__slider"></span>
-              </label>
-
-              <label for="course_ethernal" class="course-settings__toggle-switch-label">
-                Бессрочный
-              </label>
-            </div>
-          </div>
-
-          <div class="course-settings__group">
-            <div class="course-settings__group-item">
-              <input
                   type="datetime-local"
                   :min="today()"
                   id="publication_date"
@@ -148,10 +121,21 @@
                   id="deactivation_date"
                   class="input"
                   :min="getMinDate()"
+                  :disabled="course.course_meta.isEthernal"
                   v-model="course.course_meta.deactivation_date"
               />
               <label for="deactivation_date" class="course-settings__label">
                 Дата деактивации
+              </label>
+            </div>
+            <div class="course-settings__toggle-switch" >
+              <label class="toggle-switch">
+                <input type="checkbox" id="course_ethernal" v-model="course.course_meta.isEthernal">
+                <span class="toggle-switch__slider"></span>
+              </label>
+
+              <label for="course_ethernal" class="course-settings__toggle-switch-label">
+                Бессрочный
               </label>
             </div>
           </div>

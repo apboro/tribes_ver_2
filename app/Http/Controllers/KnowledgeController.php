@@ -100,13 +100,15 @@ public function list(Request $request, Community $community)
                 'category_id' => $request->category_id
             ]);
 
-            Answer::updateOrCreate(
+            $answer = Answer::updateOrCreate(
                 ['question_id' => $question->id],
                 [
                 'community_id' => $community->id,
                 'is_draft' => false,
                 'context' => $request->otvet,
             ]);
+            $question->update(['answer_id' => $answer->id]);
+
             break;
         case 'edit':
             break;
