@@ -13,8 +13,8 @@ class UserBotFormController extends Controller
         $dialogs = $userBot->getDialogs();
 
         $data = null;
-        if ($request->method) {
-            switch ($request->method) {
+        if ($request->get('method')) {
+            switch ($request->get('method')) {
                 case 'getMessages':
                     $data = $userBot->getMessages($request->chat_id, $request->type, $request->access_hash ?? null, null, $request->limit ?? null, $request->offset ?? null);
                     break;

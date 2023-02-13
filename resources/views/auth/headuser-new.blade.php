@@ -33,9 +33,9 @@
             </div>
 
             <div class="dropdown-personal__links-block">
+                @if (!request()->is('*follower*'))
                 <ul class="dropdown-personal__link-list">
 
-                    @if (!request()->is('*follower*'))
                     <li class="dropdown-personal__link-item">
                         <a
                             href="{{route('profile.project.list')}}"
@@ -108,6 +108,7 @@
                             </a>
                         </li>
                         @else
+                            <ul class="dropdown-personal__link-list">
                             <li class="dropdown-personal__link-item">
                                 <a
                                         href="{{route('main')}}"

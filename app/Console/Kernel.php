@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('check:admin')->dailyAt('23:59')->timezone('Europe/Moscow');
         $schedule->command('calculate:utility')->everyFiveMinutes()->timezone('Europe/Moscow');
         $schedule->command('check:new_subs')->hourly()->timezone('Europe/Moscow');
+        $schedule->command('userBot:setWebhook')->everyFiveMinutes()->timezone('Europe/Moscow');
     }
 
     /**

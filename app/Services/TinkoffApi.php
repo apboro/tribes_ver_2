@@ -199,9 +199,9 @@ class TinkoffApi
                     $args['TerminalKey'] = $this->terminalKey;
                 }
 
-//                if (!array_key_exists('Token', $args)) {
-//                    $args['Token'] = $this->_genToken($args);
-//                }
+                if (!array_key_exists('Token', $args)) {
+                    $args['Token'] = $this->_genToken($args);
+                }
 
                 $args = $this->updateSecuresData($args);
 

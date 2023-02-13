@@ -40,7 +40,8 @@ class Event
             $this->getProcessingMethods($updates);
         } else {
             TelegramLogService::staticSendLogMessage(
-                'В обработчик событий App\Services\Telegram\TelegramMtproto\Event пришел не массив и не объект. Просмотреть возможные варианты.'
+                'В обработчик событий App\Services\Telegram\TelegramMtproto\Event пришел не массив и не объект.
+                 Просмотреть возможные варианты.'
             );
         }
     }

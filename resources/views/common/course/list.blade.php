@@ -70,7 +70,7 @@
 
                                     <div class="product__btns">
                                         <a
-                                            @if (!$course->isPublished || !$course->isActive)
+                                            @if (!$course->isPublished)
                                                 style="pointer-events: none;
                                                  background-color:#f1f1f1;"
                                             @endif

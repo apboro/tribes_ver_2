@@ -80,14 +80,14 @@ class PaymentController extends Controller
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
 
-        $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => $payment->paymentId]), true);
-        while ($state['Status']  != 'AUTHORIZED') {
+        if (!$payment->comment == 'trial') {
             $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => $payment->paymentId]), true);
-            TelegramLogService::staticSendLogMessage("Proverka posle oplaty: " . json_encode($state));
-            sleep(1);
-            if ($state['Status'] == 'REJECTED') return redirect()->back(404)->withErrors('Оплата была отклонена');
+            while ($state['Status'] != 'AUTHORIZED') {
+                $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => $payment->paymentId]), true);
+                sleep(1);
+                if ($state['Status'] == 'REJECTED') return redirect()->back(404)->withErrors('Оплата была отклонена');
+            }
         }
-
 
             if ($payment->isTariff()) {
                 if ($payment->comment !== 'trial') {

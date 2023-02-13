@@ -145,7 +145,7 @@ class KnowledgeObserver
                 foreach ($communityCollection as $eachCommunity) {
                     $menu[][] = ['text' => $eachCommunity->title, 'callback_data' => 'add-qa-community-' . $eachCommunity->id];
                 }
-                $this->mainBotService->sendMessageFromBot($params['botName'], $mChatId, 'Выбирете сообщество',false, $menu);
+                $this->mainBotService->sendMessageFromBot($params['botName'], $mChatId, 'Выберите сообщество',false, $menu);
                 $this->logger->debug('telegram scene on forward messages for more communities');
             }
             Cache::forget($key);

@@ -11,7 +11,7 @@
                     <h5 class="card-title">{{ $course->title }}</h5>
                     <span class="card-text text-muted d-flex align-items-center justify-content-center">
                         @if (!$course->isActive)
-                            <span>Курс не активирован автором</span>
+                            <span>Курс не активен</span>
                         @else
                             <span>{{ __('base.follow') }}</span>
                         @endif
@@ -25,7 +25,7 @@
         </a>
 
         <span class="badge badge-glow bg-info badge-up product-badge">
-            До {{ date('d.m.Y', strtotime($course->pivot->expired_at)) }}
+            До {{ $course->isEthereal ? 'Бессрочный' : date('d.m.Y', strtotime($course->pivot->expired_at)) }}
         </span>
     </div>
 </div>
