@@ -35,9 +35,12 @@ data:
   MIX_PUSHER_APP_CLUSTER: {{ quote .Values.config.pusherApp.cluster }}
   TELEGRAM_API_ID: {{ quote .Values.config.telegram.api.id }}
   TELEGRAM_API_PROTO: {{ quote .Values.config.telegram.api.proto }}
+  DB_DRIVER: "pgsql"
+  DB_SCHEMA_MAIN: {{ quote .Values.config.postgresql.schemas.main }}
   DB_HOST_MAIN: {{ quote .Values.config.postgresql.host }}
   DB_PORT_MAIN: {{ quote .Values.config.postgresql.port }}
   DB_DATABASE_MAIN: {{ quote .Values.config.postgresql.databases.main }}
+  DB_SCHEMA_KNOWLEDGE: {{ quote .Values.config.postgresql.schemas.knowledge }}
   DB_HOST_KNOWLEDGE: {{ quote .Values.config.postgresql.host }}
   DB_PORT_KNOWLEDGE: {{ quote .Values.config.postgresql.port }}
   DB_DATABASE_KNOWLEDGE: {{ quote .Values.config.postgresql.databases.knowledge }}
@@ -64,9 +67,7 @@ data:
   # DEBUG_TINKOFF: {{ quote .Values.config.debugTinkoff }}
   # TELEGRAM_BOT_KN_TOKEN: {{ quote .Values.config.telegram.botKn.token }}
   # TELEGRAM_BOT_KN_HOOK_ON_FIRST_REQUEST: {{ quote .Values.config.telegram.botKn.hookOnFirstRequest }}
-  # DB_DRIVER: "pgsql"
-  # DB_SCHEMA_MAIN: {{ quote .Values.config.postgresql.schemas.main }}
-  # DB_SCHEMA_KNOWLEDGE: {{ quote .Values.config.postgresql.schemas.knowledge }}
+
   # WEBCASTER_CLIENT_NAME: {{ quote .Values.config.webcaster.client.name }}
   # WEBCASTER_CLIENT_PASSWORD: {{ quote .Values.config.webcaster.client.password }}
 ---
