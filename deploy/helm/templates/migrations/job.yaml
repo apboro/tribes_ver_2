@@ -28,7 +28,7 @@ spec:
         imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
         envFrom:
           - configMapRef:
-              name: {{ include "..names.name" . }}-envs
+              name: {{ include "..names.fullname" . }}-envs
           - secretRef:
-              name: {{ include "..names.name" . }}-envs
+              name: {{ include "..names.fullname" . }}-envs
 {{- end }}
