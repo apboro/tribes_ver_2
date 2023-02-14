@@ -26,7 +26,7 @@
         </a>
 
         <span class="badge badge-glow bg-info badge-up product-badge">
-            {{ $course->isEthernal ? 'Бессрочный' : 'До '. date('d.m.Y', strtotime($course->pivot->expired_at)) }}
+            {{ ($course->isEthernal || !$course->deactivation_date) ? 'Бессрочный' : 'До '. date('d.m.Y', strtotime($course->deactivation_date)) }}
         </span>
     </div>
 </div>

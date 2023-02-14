@@ -34,18 +34,18 @@ class QuestionController extends Controller
         $this->knowledgeRepository = $knowledgeRepository;
     }
 
-    public function list(Request $request, QuestionsFilter $filters)
+    public function list(QuestionRequest $questionRequest, QuestionsFilter $filters)
     {
-//        $models = $this->knowledgeRepository->getQuestionsByCommunityId($questionRequest->community_id, $filters);
-//
-//        return (new QuestionsResource($models))->forApi();
-        return Question::where('category_id', $request->category_id)->get();
+        $models = $this->knowledgeRepository->getQuestionsByCommunityId($questionRequest->community_id, $filters);
+
+        return (new QuestionsResource($models))->forApi();
+
+//        return Question::where('category_id', $request->category_id)->get();
     }
 
     public function get(QuestionRequest $questionRequest): QuestionResource
     {
-        $question = $this->knowledgeRepository->getQuestionById($questionRequest->id
-        );
+        $question = $this->knowledgeRepository->getQuestionById($questionRequest->id);
 
         return new QuestionResource($question);
     }

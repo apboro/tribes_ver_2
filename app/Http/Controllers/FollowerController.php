@@ -36,9 +36,9 @@ class FollowerController extends Controller
             return view('common.follower.wait');
         }
 
-        if($course === 'expired'){
-            return view('common.follower.empty');
-        }
+//        if($course === 'expired'){
+//            return view('common.follower.empty');
+//        }
         $lesson = $this->followerRepo->getLesson($request, $course);
 
         $template = $this->followerRepo->getTemplate($lesson);

@@ -136,7 +136,7 @@ class PaymentController extends Controller
             $payment->save();
 
             if(TinkoffService::checkStatus($request, $payment, $previous_status)){
-                TelegramLogService::staticSendLogMessage("Notify from tinkoff: ". json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+//                TelegramLogService::staticSendLogMessage("Notify from tinkoff: ". json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
                 return response('OK', 200);
             }
 

@@ -17,6 +17,7 @@ class VerifyCsrfToken extends Middleware
         'test/',
         '/payment/donate/range',
         '/tinkoff/notify',
-        '/webhook-user-bot'
+        '/webhook-user-bot',
+        '/api/*'
     ];
 }

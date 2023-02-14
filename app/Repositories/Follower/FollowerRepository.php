@@ -39,11 +39,11 @@ class FollowerRepository implements FollowerRepositoryContract
                 return 'wait';
             }
 
-            $expired_at = $course->buyers()->find(Auth::user()->id)->pivot->expired_at;
-
-            if ($expired_at < Carbon::now()) {
-                return 'expired';
-            }
+//            $expired_at = $course->buyers()->find(Auth::user()->id)->pivot->expired_at;
+//
+//            if ($expired_at < Carbon::now()) {
+//                return 'expired';
+//            }
         }
         return $course;
     }

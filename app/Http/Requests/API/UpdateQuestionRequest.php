@@ -45,7 +45,7 @@ class UpdateQuestionRequest extends FormRequest
             'question.answer' => [
                 'array:context,is_draft',
             ],
-            //'question.answer.id' => ['exists:knowledge.answers,id'],
+            //'question.answer.id' => ['exists:answers,id'],
             'question.answer.context' => 'nullable|string',
             'question.answer.is_draft' => 'boolean',
         ];

@@ -24,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if (app()->environment('development')){
+            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+        }
         $this->app->bind('pseudoCrypt',function(){
             return new PseudoCrypt();
         });

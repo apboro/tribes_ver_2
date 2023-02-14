@@ -139,7 +139,7 @@ return [
              * @note This option overwrites `paths.excludes`
              * @see \OpenApi\scan
             */
-            'exclude' => [],
+            'exclude' => ['Laravel\Telescope'],
         ],
 
         /*
@@ -285,7 +285,7 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://tribes/api'),
+            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'https://dev.spodial.com/api'),
             'L5_SWAGGER_CONST_EMAIL' => env('MAIL_FROM_ADDRESS', 'no-reply@example.com'),
         ],
     ],

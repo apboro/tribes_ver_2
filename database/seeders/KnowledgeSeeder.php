@@ -38,6 +38,7 @@ class KnowledgeSeeder extends Seeder
             ->create([
             'community_id' => $community->id,
             'author_id' => $userTest->id,
+            'answer_id' => 1
         ]);
 
     }

@@ -31,7 +31,7 @@ class QuestionRequest extends FormRequest
     {
         return [
             'community_id' => ['required','integer',new OwnCommunityRule()],
-            'id' => 'required|integer|exists:knowledge.questions',
+            'id' => 'required|integer|exists:questions',
         ];
     }
 }

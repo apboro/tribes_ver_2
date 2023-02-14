@@ -8,42 +8,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController extends Controller
+class LoginController extends Controller implements LC
 {
     /**
-     * @OA\Post(
-     *     path="/v2/loginAs",
-     *     tags={"LoginController"},
-     *     summary="Login as another user",
-     *     operationId="LoginAsAnotherUser",
-     *     security={{"sanctum": {} }},
-     *     @OA\RequestBody(
-     *         required=false,
-     *         description="Тело запроса для входа другим пользователем",
-     *         @OA\JsonContent(
-     *              @OA\Property(
-     *                  property="id",
-     *                  type="integer",
-     *              ),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Redirect to main page"
-     *     ),
-     *     @OA\Response(
-     *         response=302,
-     *         description="Redirect to main page, if user is not admin"
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *     ),
-     *     @OA\Response(
-     *         response=419,
-     *         description="Page expired",
-     *     ),
-     * )
+     * @inheritDoc
      */
 
     public function loginAs(Request $request)

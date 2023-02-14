@@ -31,6 +31,14 @@ class TestController extends Controller
 
     public function test()
     {
+       $resp = $this->telegramService->kickUser(config('telegram_bot.bot.botName'),
+           '5698914985',
+           '-1001600527246');
+       dd($resp);
+    }
+
+    public function test_payments()
+    {
 //        $params = [
 //            'NotificationURL' => null,
 //            'OrderId' => 666,
@@ -65,7 +73,7 @@ class TestController extends Controller
     
     public function CheckCourse()
     {
-        $courses = Course::with('buyers')->whereNotNull('activation_date')  ->get();
+        $courses = Course::with('buyers')->where('id',119)->whereNotNull('activation_date')->get();
         foreach ($courses as $course){
             $activationDate = $course->activation_date ? Carbon::parse($course->activation_date) : null;
             $publicationDate = $course->publication_date ? Carbon::parse($course->publication_date) : null ;
@@ -77,10 +85,13 @@ class TestController extends Controller
             //ACTIVATE COURSE
             $mailBody='Курс доступен!';
             $activation_time = $activationDate->toDateTimeString();
-            if ($activationDate && $activation_time === $checkout_time)
+
+            if ($activationDate && $activation_time == $checkout_time)
             {
+
                 $course->isActive = true;
                 $course->save();
+                dd($courseName, $activation_time, $checkout_time, $course->isActive);
                 $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
                 SendEmails::dispatch($course->buyers, 'Курс активирован!','Cервис Spodial', $view);
             }

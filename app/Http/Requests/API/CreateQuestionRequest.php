@@ -32,7 +32,7 @@ class CreateQuestionRequest extends FormRequest
 
         return [
             'community_id' => ['required','integer',new OwnCommunityRule()],
-            //'id' => 'required|integer|exists:knowledge.questions',
+            //'id' => 'required|integer|exists:questions',
             'question' => [
                 'required',
                 'array:context,is_draft,is_public,answer',
