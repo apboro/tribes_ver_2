@@ -4,6 +4,11 @@
     <div class="auth-inner my-2">
         <div class="card mb-0">
             <div class="card-body" data-plugin="LoginPage">
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
                 <h4 class="card-title mb-1">
                     {{ __('base.welcome') }} 👋
                 </h4>

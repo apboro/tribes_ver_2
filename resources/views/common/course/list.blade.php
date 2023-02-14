@@ -26,7 +26,7 @@
                     </a>
                 </div>
             </div>
-            
+
         </div>
         <div> Сортировать по </div>
         <a href="{{ request()->fullUrlWithQuery(
@@ -40,9 +40,9 @@
             ) }}">стоимости</a> |
         <a href="{{ request()->fullUrlWithQuery(['sort' => '', 'dir' => '']) }}">очистить фильтр</a>
         <div class="community__communities-page" data-plugin="CommunitiesPage">
-            
+
             <div class="row">
-               
+
                 @forelse($courses as $course)
                     <!-- Cards -->
                     <div class="col-sm-4 col-md-3 col-lg-2">
@@ -70,6 +70,10 @@
 
                                     <div class="product__btns">
                                         <a
+                                            @if (!$course->isPublished)
+                                                style="pointer-events: none;
+                                                 background-color:#f1f1f1;"
+                                            @endif
                                             href="{{ $course->paymentLink() }}"
                                             class="product__icon product__icon--first"
                                             title="Страница покупки товара"
@@ -104,6 +108,15 @@
                                         @else
                                             <span class="badge-glow bg-danger">
                                                 Не опубликовано
+                                            </span>
+                                        @endif
+                                        @if($course->isActive)
+                                            <span class="badge-glow bg-success">
+                                              Активный
+                                             </span>
+                                        @else
+                                            <span class="badge-glow bg-danger">
+                                             Не активный
                                             </span>
                                         @endif
 
@@ -144,7 +157,7 @@
                                                 </a>
                                             </h5>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>

@@ -6,10 +6,10 @@ use App\Exceptions\StatisticException;
 use App\Helper\ArrayHelper;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use \Illuminate\Http\Request;
 
 class FileSendService
 {
@@ -41,12 +41,13 @@ class FileSendService
 
         if ($type == 'csv') {
             $headers = [
-                'Content-Type' => 'text/csv',
+                'Content-Type' => 'text/csv; charset=cp1251;'
             ];
             $callback = function () use ($builder, $columnNames, $sourceClass) {
 
                 // Open output stream
                 $handle = fopen('php://output', 'w');
+                fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
                 // Add CSV headers
                 fputcsv($handle, ArrayHelper::getColumn($columnNames, 'title'));
@@ -54,14 +55,18 @@ class FileSendService
                 $builder->chunk(100, function ($results, $page) use ($handle, $columnNames, $sourceClass) {
                     foreach ($results as $record) {
                         $row = [];
-                        if($sourceClass){
+                        if ($sourceClass) {
                             $data = (new $sourceClass($record))->toArray(new Request());
                             foreach ($columnNames as $eachCol) {
-                                if(is_array($data[$eachCol['attribute']])){
+                                if (is_array($data[$eachCol['attribute']])) {
                                     $valData = $data[$eachCol['attribute']];
                                     $row[] = last($valData);
-                                }else {
-                                    $row[] = $data[$eachCol['attribute']];
+                                } else {
+                                    if ($eachCol['attribute'] === 'amount') {
+                                        $row[] = $data[$eachCol['attribute']] / 100;
+                                    } else {
+                                        $row[] = $data[$eachCol['attribute']];
+                                    }
                                 }
                             }
                         } else {
@@ -90,22 +95,26 @@ class FileSendService
                     $sheet->setCellValue("{$alphas[$colKey]}1", $eachCol['title']);
                 }
 
-                $builder->chunk(100, function ($results, $page) use ($sheet, $alphas, $columnNames, $sourceClass) {
+                $builder->chunk(10000, function ($results, $page) use ($sheet, $alphas, $columnNames, $sourceClass) {
                     foreach ($results as $key => $record) {
                         $rowNum = $key + 2;
-                        if($sourceClass){
+                        if ($sourceClass) {
                             $data = (new $sourceClass($record))->toArray(new Request());
-                            foreach($columnNames as $colKey => $eachCol) {
-                                if(is_array($data[$eachCol['attribute']])){
+                            foreach ($columnNames as $colKey => $eachCol) {
+                                if (is_array($data[$eachCol['attribute']])) {
                                     $valData = $data[$eachCol['attribute']];
                                     $sheet->setCellValue("{$alphas[$colKey]}$rowNum", last($valData));
-                                }else {
-                                    $sheet->setCellValue("{$alphas[$colKey]}$rowNum", $data[$eachCol['attribute']]);
+                                } else {
+                                    if ($eachCol['attribute'] === 'amount') {
+                                        $sheet->setCellValue("{$alphas[$colKey]}$rowNum", $data[$eachCol['attribute']] / 100);
+                                    } else {
+                                        $sheet->setCellValue("{$alphas[$colKey]}$rowNum", $data[$eachCol['attribute']]);
+                                    }
                                 }
 
                             }
                         } else {
-                            foreach($columnNames as $colKey => $eachCol) {
+                            foreach ($columnNames as $colKey => $eachCol) {
                                 $sheet->setCellValue("{$alphas[$colKey]}$rowNum", $record->{$eachCol['attribute']});
                             }
                         }

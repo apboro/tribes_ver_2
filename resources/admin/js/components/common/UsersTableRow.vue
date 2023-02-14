@@ -1,16 +1,16 @@
 <template>
     <tr>
-        <td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
         <td><span class="text-muted">{{ user.id }}</span></td>
-        <td>
-            <transition>
-                <router-link 
-                    :to="{ name:'Profile', params: {id: user.id} }"
-                >
-                    {{ user.name }}
-                </router-link>
-            </transition>
-        </td>
+      <td>
+        <p style="background-color: red;"
+           v-if="user.is_blocked">заблокирован</p>
+        {{ user.name }}
+      </td>
+      <td>
+        <a v-if="user.telegram != '—'" :href="'https://t.me/'+user.telegram" target="_blank">
+        {{ user.telegram }}
+        </a>
+      </td>
         <td>
             <a :href="`mailto:${ user.email }`">
                 {{ user.email }}
@@ -23,6 +23,12 @@
         <td>
             {{ date }}
         </td>
+      <td>
+        {{user.community_owner_num}}
+      </td>
+      <td>{{formatDate(user.updated_at)}}</td>
+      <td>{{ user.payins }}</td>
+<!--      <td>{{ user.payouts }}</td>-->
         <td>
             <editable-value
                 :isEditMode="isEditCommissionMode"
@@ -53,6 +59,13 @@
                         Изменить процент
                     </button>
                 </li>
+              <li>
+                <button v-if="!user.is_blocked" @click.prevent="blockUser(user.id)" class="dropdown-item">Заблокировать пользователя</button>
+                <button v-if="user.is_blocked" @click.prevent="un_blockUser(user.id)" class="dropdown-item">Разблокировать пользователя</button>
+              </li>
+              <li>
+                <button @click.prevent="send_new_password(user.id)" class="dropdown-item">Выслать пароль</button>
+              </li>
             </ul>
         </td>
     </tr>
@@ -84,7 +97,7 @@
 
         computed: {
             date() {
-                return this.formatDateTime(this.user.created_at);
+                return this.formatDate(this.user.created_at);
             }
         },
 
@@ -102,6 +115,24 @@
                         })
                 })
             },
+
+          blockUser(user_id){
+            axios.post('/api/v2/user/block', {id: user_id}).
+            then(()=>alert('Пользователь заблокирован'))
+                .then(()=>window.location.reload());
+          },
+
+          send_new_password(user_id){
+            axios.post('/api/v2/user/sendNewPassword', {id: user_id}).
+            then(()=>alert('Новый пароль отправлен'))
+          },
+
+
+          un_blockUser(user_id){
+            axios.post('/api/v2/user/unblock', {id: user_id}).
+            then(()=>alert('Пользователь разблокирован'))
+                .then(()=>window.location.reload());
+          },
 
             toggleEditCommissionMode() {
                 this.isEditCommissionMode = !this.isEditCommissionMode;

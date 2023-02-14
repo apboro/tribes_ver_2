@@ -13,7 +13,7 @@
         <div class="confirmation_subscription__header-col1">
             <img
                 class="confirmation_subscription__avatar"
-                src="/images/no-user-avatar.svg"
+                src="{{$community->image ?? '/images/no-image.png'}}"
                 alt="photo of subscriber"
             >
             
@@ -31,14 +31,17 @@
                 <span class="confirmation_subscription__name">Тарифный план:</span>
                 <span class="confirmation_subscription__value">{{$tariff->title}}</span>
             </p>
+            @if ($tariff->price != 0)
             <p>
                 <span class="confirmation_subscription__name">Стоимость:</span>
                 <span class="confirmation_subscription__value">{{$tariff->price}} &#8381;</span>
-            </p> 
+            </p>
+            @endif
         </div>
 
     </div>
-    <div class="confirmation_subscription__body">
+    <div class="confirmation_subscription__body @if ($tariff->price == 0) hidden @endif">
+
         <div class="checkbox confirmation_subscription__confirm-check">
             <div class="checkbox__wrapper community-settings__personal_tariff">
                 <input
@@ -108,15 +111,15 @@
     <div class="confirmation_subscription__footer">
         <div>
             <label class="confirmation_subscription__email-label" for="email">Email*</label>
-            <input class="confirmation_subscription__email-input" id="email" placeholder="ivan@moyapochta.ru" name="email" required="true">
+            <input class="confirmation_subscription__email-input" id="email" @auth value={{auth()->user()->email}} @endauth placeholder="ivan@moyapochta.ru" name="email" required="true">
         </div>
         <!-- <a class="button-filled button-filled--primary" href="{{$community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community)}}">Оплатить</a> -->
         
         
         <button
         id="submit_btn"
-        class="button-filled button-filled--primary button-filled--disabled"
-        onclick="TariffConfirmation.openRightsModal({ 
+        class="button-filled button-filled--primary @if ($tariff->price != 0) button-filled--disabled @endif"
+        onclick="TariffConfirmation.openRightsModal({
             communityName: '{{ $community->title }}',
             communityTariff: '{{ $tariff->title }}',
             communityTariffID: '{{ $tariff->id }}',
@@ -124,12 +127,14 @@
             url: `{{ $community->getTariffPayLink(['amount' => $tariff->price,'currency' => 0,'type' => 'tariff'], $community) }}`
         })"
         >
-        Оплатить
+        @if ($tariff->price === 0) Подтвердить @else Оплатить @endif
     </button>
 </div>
     <span
         id="email_message"
         class="form-message form-message--danger hide"
     ></span>
+    <div id="error_msg" class="alert alert-warning text-center" role="alert"></div>
+
 </div>
 @endsection

@@ -29,8 +29,8 @@ class FollowerRepository implements FollowerRepositoryContract
         if ($isAuthor) {
             $course = Course::find($id);
         } else {
-            $course = Course::with('byers')->where('id', (int)PseudoCrypt::unhash($hash))
-                ->whereHas('byers', function ($q) {
+            $course = Course::with('buyers')->where('id', (int)PseudoCrypt::unhash($hash))
+                ->whereHas('buyers', function ($q) {
                     $q->where('user_id', Auth::user()->id);
                 })
                 ->first();
@@ -39,7 +39,7 @@ class FollowerRepository implements FollowerRepositoryContract
                 return 'wait';
             }
 
-            $expired_at = $course->byers()->find(Auth::user()->id)->pivot->expired_at;
+            $expired_at = $course->buyers()->find(Auth::user()->id)->pivot->expired_at;
 
             if ($expired_at < Carbon::now()) {
                 return 'expired';

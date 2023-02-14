@@ -3,9 +3,10 @@ let initialState = () =>  {
         filter_data: {
             filter: {
                 search : null,
-                entries : 5,
+                entries : 20,
                 page : 1,
                 date: null,
+                status: null,
                 sort: {
                     name: '', rule: ''
                 }

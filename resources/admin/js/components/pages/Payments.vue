@@ -68,9 +68,9 @@
                 </tbody>
             </table>
         </div>
-        <div v-if="payments.meta && payments.meta.per_page < payments.meta.total" class="card-footer d-flex align-items-center">
-            <p class="m-0 text-muted">Показано <span>{{ payments.meta.per_page }}</span> из <span>{{ payments.meta.total }}</span> записей</p>
-            <ul class="pagination m-0 ms-auto">
+        <div class="card-footer d-flex align-items-center">
+
+            <ul v-if="payments.meta" class="pagination m-0 ms-auto">
                 <li 
                     v-for="(link, idx) in payments.meta.links"
                     class="page-item" 
@@ -102,7 +102,9 @@ export default {
             deep: true,
             handler: _.debounce(function(v) {
                 this.$store.dispatch('loadPayments', v);
+              if (this.filter_data.filter.search) this.filter_data.filter.page = 1
             },400)
+
         },
 
         customer_data: {

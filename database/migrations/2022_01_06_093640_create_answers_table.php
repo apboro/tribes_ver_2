@@ -13,10 +13,10 @@ class CreateAnswersTable extends Migration
      */
     public function up()
     {
-        // Schema::connection('knowledge')->create('answers', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->timestamps();
-        // });
+         Schema::create('answers', function (Blueprint $table) {
+             $table->id();
+             $table->timestamps();
+         });
     }
 
     /**
@@ -26,6 +26,6 @@ class CreateAnswersTable extends Migration
      */
     public function down()
     {
-        // Schema::connection('knowledge')->dropIfExists('answers');
+         Schema::dropIfExists('answers');
     }
 }

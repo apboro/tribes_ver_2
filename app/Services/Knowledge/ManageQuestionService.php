@@ -132,6 +132,7 @@ class ManageQuestionService
         $this->question->community_id = ArrayHelper::getValue($questionData, 'community_id');
         $this->question->context = $questionText;
         $this->question->is_public = ArrayHelper::getValue($questionData, 'question.is_public', false);
+        $this->question->category_id = ArrayHelper::getValue($questionData, 'question.category_id', null);
         $this->question->author_id = $this->getUserId();
         $this->question->setDraft(ArrayHelper::getValue($questionData, 'question.is_draft', false));
 

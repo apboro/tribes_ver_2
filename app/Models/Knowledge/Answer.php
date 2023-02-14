@@ -20,9 +20,15 @@ class Answer extends Model
 
     public $useSearchType = 'Answer';
 
+    protected $fillable =[
+        'question_id',
+        'community_id',
+        'is_draft',
+        'context',
+    ];
     //protected $connection = 'knowledge';
 
-    protected $table = 'knowledge.answers';
+    protected $table = 'answers';
 
     protected $casts = [
         'tags' => 'json',

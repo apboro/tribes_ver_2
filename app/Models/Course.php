@@ -76,7 +76,7 @@ class Course extends Model
         return $this->belongsTo(File::class, 'preview');
     }
 
-    function byers()
+    function buyers()
     {
         return $this->belongsToMany(User::class, 'course_user')->withPivot(['expired_at', 'byed_at', 'cost']);
     }

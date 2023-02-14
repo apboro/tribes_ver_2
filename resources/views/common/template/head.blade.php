@@ -18,7 +18,4 @@
     window.botName = '{{ env('TELEGRAM_BOT_FIRST_NAME') }}';
     window.botLogin = '{{ env('TELEGRAM_BOT_NAME') }}';
 </script>
-
-@if(ENV('APP_DEBUG') !== true)
-    <script src="//code.jivo.ru/widget/Fp7nrxvh0u" async></script>
-@endif
+<script src="https://hinted.me/script.js" organizationId="455979c2-d1c3-4530-9c10-cffe9cb17780" host="https://hinted.me/api/"  ></script>

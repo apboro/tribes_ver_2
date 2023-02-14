@@ -18,15 +18,15 @@
             <div class="card-body d-flex flex-column align-items-center">
                 <p class="card-text mb-2" style="word-break: break-all;">
                     @if ($payment->type == 'tariff')
-                        {{ $payment->payable()->first()->tariff()->first()->thanks_description }}
-                    @endif
-                </p>
+        {!! nl2br(e($payment->payable()->first()->tariff()->first()->thanks_description)) !!}
+    @endif
+</p>
 
-                    <a href="https://t.me/{{ env('TELEGRAM_BOT_NAME') }}?start={{ App\Helper\PseudoCrypt::hash($payment->id) }}"
-                        type="btn" class="btn btn-primary mt-1 mb-1">
-                        {{ __('base.go_telegram') }}
-                    </a>
-            </div>
-        </div>
-    </div>
+    <a href="https://t.me/{{ env('TELEGRAM_BOT_NAME') }}?start={{ App\Helper\PseudoCrypt::hash($payment->id) }}"
+        type="btn" class="btn btn-primary mt-1 mb-1">
+        {{ __('base.go_telegram') }}
+    </a>
+</div>
+</div>
+</div>
 @endsection

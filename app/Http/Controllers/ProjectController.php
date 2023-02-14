@@ -104,7 +104,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function analytics($project = null, $community = null, ProjectRequest $request)
+    public function analytics(ProjectRequest $request, $project = null, $community = null)
     {
 
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
@@ -120,6 +120,26 @@ class ProjectController extends Controller
             return redirect()->route('project.analytics', ['project' => 'c', 'community' => $communities->first()]);
         }
         return view('common.project.analytics')->with(
+            compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
+        );
+    }
+
+    public function knowledge(ProjectRequest $request, $project = null, $community = null)
+    {
+
+        list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
+
+        if ($project === null && $projects->isNotEmpty()) {
+            return redirect()->route('project.knowledge', ['project' => $projects->first()]);
+        }
+
+        if (
+            ( $community === null && $projects->isEmpty() && $communities->isNotEmpty() ) ||
+            ($project == 'c' && $community === null)
+        ) {
+            return redirect()->route('project.knowledge', ['project' => 'c', 'community' => $communities->first()]);
+        }
+        return view('common.project.knowledge')->with(
             compact('projects', 'communities', 'activeProject', 'activeCommunity', 'ids', 'project', 'community')
         );
     }

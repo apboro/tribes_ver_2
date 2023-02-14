@@ -41,9 +41,9 @@
 
             <ul class="tariff-public__list">
                 @foreach ($community->tariff->getTariffVariants($inline_link) as $tariff)
-                    @if ($tariff->isActive === true && $tariff->price !== 0)
+                    @if ($tariff->isActive === true)
                     <li class="tariff-public__item">
-                        <a href="{{route('community.tariff.confirmSubscription', ['hash'=>App\Helper\PseudoCrypt::hash($tariff->id, 8)])}}" target="_blank">
+                        <a href="{{route('community.tariff.confirmSubscription', ['hash'=>App\Helper\PseudoCrypt::hash($tariff->id, 8), 'amount' => $tariff->price])}}" target="_blank">
                             <div class="tariff-public__variant-header">
                                 <h4 class="tariff-public__variant-title" title="{{ $tariff->title }}">
                                     {{ $tariff->title }}

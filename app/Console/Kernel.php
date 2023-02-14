@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('send:donate')->everyMinute()->timezone('Europe/Moscow');
         $schedule->command('check:tariff')->everyMinute()->timezone('Europe/Moscow')->appendOutputTo(storage_path('logs/checktariff.log'));
+        $schedule->command('check:course')->everyMinute()->timezone('Europe/Moscow');
         env('USE_TRIAL_PERIOD', true) ?
             $schedule->command('check:trial')->everyMinute()->timezone('Europe/Moscow')
             : null;
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('check:admin')->dailyAt('23:59')->timezone('Europe/Moscow');
         $schedule->command('calculate:utility')->everyFiveMinutes()->timezone('Europe/Moscow');
         $schedule->command('check:new_subs')->hourly()->timezone('Europe/Moscow');
+        $schedule->command('userBot:setWebhook')->everyFiveMinutes()->timezone('Europe/Moscow');
     }
 
     /**

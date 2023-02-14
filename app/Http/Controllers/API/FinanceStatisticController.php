@@ -65,7 +65,7 @@ class FinanceStatisticController extends StatController
             ],
             [
                 'attribute' => 'status',
-                'title' => 'Статус транзакции'
+                'title' => 'Оплата'
             ],
             [
                 'attribute' => 'type',
@@ -82,7 +82,6 @@ class FinanceStatisticController extends StatController
         ];
         $type = $request->get('export_type');
         $membersBuilder = $this->financeRepository->getPaymentsListForFile($this->getCommunityIds($request),$filter);
-
         return $this->fileSendService->sendFile($membersBuilder, $columnNames,FinanceResource::class,$type,'members');
     }
 }

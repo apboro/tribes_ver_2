@@ -13,7 +13,6 @@ class PaymentsFilter extends QueryAPIFilter
     public function search($string)
     {
         $string = Str::lower($string);
-
         return $this->builder->where(function($query) use ($string){
            $query
                ->where('from', 'ilike', "%{$string}%")

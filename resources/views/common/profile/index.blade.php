@@ -15,7 +15,7 @@
             <div class="profile__start-work">
                 <div class="profile__community_not_selected">
                     <p>
-                        Начните работу со Spodial, подключив свои сообщетсва.
+                        Начните работу со Spodial, подключив свои сообщества.
                     </p>
                 </div>
 
@@ -70,7 +70,7 @@
                                     <p class="profile__community-description--subscribers">
                                     <h6 class="profile__community-description--subscribers-text">Подписчиков:</h6>
                                     <p class="profile__community-description--subscribers-quantity">{{$activeCommunity->getCountFollowersAttribute()}}</p>
-                                    </p>
+
                                 </div>
                             </div>
                             <div class="profile-community__pay-link-block">
@@ -100,6 +100,7 @@
                                         Редактировать
                                     </a>
                                 </div>
+                                <p>Просмотры страницы: {{$activeCommunity->statistic->repository()->getViews()}}</p>
                             </div>
                         </div>
                         <!-- END профиль выбранного сообщества -->

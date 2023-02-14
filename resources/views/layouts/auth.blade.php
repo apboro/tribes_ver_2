@@ -19,7 +19,7 @@
 
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
-    <script src="//code.jivo.ru/widget/Fp7nrxvh0u" async></script>
+{{--    <script src="//code.jivo.ru/widget/Fp7nrxvh0u" async></script>--}}
 </head>
 <!-- END: Head-->
 
@@ -34,7 +34,7 @@
             <div class="content-header row">
             </div>
             <div class="content-body">
-                <div class="auth-wrapper auth-basic px-2">
+                <div class="auth-wrapper auth-basic px-2 container">
                     @yield('content')
                 </div>
             </div>

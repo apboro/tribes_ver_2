@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
+use App\Models\Knowledge\Category;
 use App\Models\Knowledge\Question;
 use App\Services\TelegramMainBotService;
 use Database\Factories\CommunityFactory;
 use Hamcrest\Arrays\IsArray;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +18,8 @@ use Illuminate\Support\Facades\Auth;
 /** @method CommunityFactory factory()
  * @property mixed $owner
  * @property mixed $id
+ * @property TelegramConnection $connection
+ * @property string $title
  */
 class Community extends Model
 {
@@ -154,9 +158,14 @@ class Community extends Model
         return $this->owner()->first() && $this->owner()->first()->id === $user->id;
     }
 
-    function questions()
+    public function questions()
     {
         return $this->hasMany(Question::class, 'community_id', 'id');
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(Category::class, 'community_id', 'id');
     }
 
     public function getPopularQuestionsAttribute()
@@ -198,6 +207,11 @@ class Community extends Model
     }
 
     function owner()
+    {
+        return $this->belongsTo(User::class, 'owner', 'id');
+    }
+
+    function communityOwner()
     {
         return $this->belongsTo(User::class, 'owner', 'id');
     }
@@ -277,7 +291,7 @@ class Community extends Model
     public function getPublicKnowledgeLink(): string
     {
         $hash = PseudoCrypt::hash($this->id);
-        return route('public.knowledge.list', compact('hash'));
+        return route('knowledge.public', compact('hash'));
     }
     /**
      *   Взять ссылку на справку "Как это работает"

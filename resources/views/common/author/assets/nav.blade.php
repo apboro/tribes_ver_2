@@ -30,6 +30,15 @@
                     {{ __('author.password_change') }}
                 </a>
             </li>
+            <li class="nav-item">
+                <a
+                        class="nav-link {{ request()->is('*courses*') ? 'active' : ''  }}"
+                        href="{{ route('course.list') }}"
+                        aria-controls="change-password"
+                >
+                    {{ __('base.mediaProducts') }}
+                </a>
+            </li>
         </ul>
     </div>
 </div>

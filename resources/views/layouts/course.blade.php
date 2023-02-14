@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="loading" lang="{{ app()->getLocale() }}" data-textdirection="ltr">
-<head></head>
+<head><title>{{ env('APP_NAME') }}</title></head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="{{ asset('css/courseEditor.css') }}" rel="stylesheet">

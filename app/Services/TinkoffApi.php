@@ -146,6 +146,11 @@ class TinkoffApi
         return $this->buildQuery('GetCardList', $args);
     }
 
+    public function checkOrder($args)
+    {
+        return $this->buildQuery('CheckOrder', $args);
+    }
+
     public function removeCard($args)
     {
         return $this->buildQuery('RemoveCard', $args);

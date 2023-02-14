@@ -25,7 +25,7 @@ class Payment
     private TinkoffService $tinkoff;
 
     public $amount = 0; // Сумма в копейках
-
+    public string $comment;
     public $community;
     public $author;
     public $payer;
@@ -171,58 +171,70 @@ class Payment
         $this->orderId = $this->payment->id . date("_md_s");
 
         $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
-        $resp = json_decode($this->tinkoff->initPay($params)); // Шлём запрос в банк
+        if ($params['Amount'] == 0)
+        {
+            $this->comment = 'trial';
+            $resp = (object)[
+                'PaymentId' => rand(1000000000, 9999999999),
+                'PaymentURL' => route('payment.success', ['hash' =>PseudoCrypt::hash($this->payment->id), 'telegram_id'=>$this->telegram_id]),
+                'Status' => 'CONFIRMED',
+                'ErrorCode' => null,
+                'Success' => true,
+            ];
+        } else {
+            $resp = json_decode($this->tinkoff->initPay($params)); // Шлём запрос в банк
+        }
 
         if(isset($resp->Success) && $resp->Success){
-
 //            if(isset($resp->SpAccumulationId, $this->payment)){
 //                $this->accumulation($resp->SpAccumulationId);
 //            }
 
 
-            $this->payment->OrderId = $this->orderId;
-            $this->payment->paymentId = $resp->PaymentId;
-            $this->payment->paymentUrl = $resp->PaymentURL;
-            $this->payment->response = 'deprecated';
-            $this->payment->status = $resp->Status;
-            $this->payment->token = hash('sha256', $this->payment->id);
-            $this->payment->error = $resp->ErrorCode;
-            $this->payment->isNotify = isset($this->notify);
-            $this->payment->comment = $this->comment ?? null;
-            $this->payment->save();
 
-            if($this->payFor){
-                $this->payFor->payments()->save($this->payment);
-            }
-            $this->payment->payer()->associate($this->payer)->save();
+                $this->payment->OrderId = $this->orderId;
+                $this->payment->paymentId = $resp->PaymentId;
+                $this->payment->paymentUrl = $resp->PaymentURL;
+                $this->payment->response = 'deprecated';
+                $this->payment->status = $resp->Status;
+                $this->payment->token = hash('sha256', $this->payment->id);
+                $this->payment->error = $resp->ErrorCode;
+                $this->payment->isNotify = isset($this->notify);
+                $this->payment->comment = $this->comment ?? null;
+                $this->payment->save();
 
-            if($this->charged){
-                $chargeRes = $this->tinkoff->payTerminal->Charge([
-                    'PaymentId' => $this->payment->paymentId,
-                    'RebillId' => !empty($rebildPayment->RebillId) ? $rebildPayment->RebillId : null,
-                ]);
-                $chargeRes = json_decode($chargeRes);
-
-                if(isset($chargeRes->Success) && $chargeRes->Success){
-
-                    $previous_status = $this->payment->status;
-                    $this->payment->status = $chargeRes->Status;
-                    $this->payment->SpAccumulationId = $chargeRes->SpAccumulationId ?? null;
-                    $this->payment->RebillId = $chargeRes->RebillId ?? null;
-                    $this->payment->save();
-
-                    TinkoffService::checkStatus($chargeRes, $this->payment, $previous_status);
-                } else {
-                    //todo сохранять в лог файл TelegramLogService::staticSendLogMessage заменить на
-                    // \App\Exceptions\TelegramException::report() сделать похожий для платежей
-                    TelegramLogService::staticSendLogMessage("Charge ответил с ошибкой: " . json_encode($chargeRes, JSON_UNESCAPED_UNICODE));
-                    return false;
+                if ($this->payFor) {
+                    $this->payFor->payments()->save($this->payment);
                 }
-            }
-            $this->payFor->payments()->save($this->payment);
-            $this->payment->payer()->associate($this->payer)->save();
+                $this->payment->payer()->associate($this->payer)->save();
 
-            return $this->payment;
+                if ($this->charged) {
+                    $chargeRes = $this->tinkoff->payTerminal->Charge([
+                        'PaymentId' => $this->payment->paymentId,
+                        'RebillId' => !empty($rebildPayment->RebillId) ? $rebildPayment->RebillId : null,
+                    ]);
+                    $chargeRes = json_decode($chargeRes);
+
+                    if (isset($chargeRes->Success) && $chargeRes->Success) {
+
+                        $previous_status = $this->payment->status;
+                        $this->payment->status = $chargeRes->Status;
+                        $this->payment->SpAccumulationId = $chargeRes->SpAccumulationId ?? null;
+                        $this->payment->RebillId = $chargeRes->RebillId ?? null;
+                        $this->payment->save();
+
+                        TinkoffService::checkStatus($chargeRes, $this->payment, $previous_status);
+                    } else {
+                        //todo сохранять в лог файл TelegramLogService::staticSendLogMessage заменить на
+                        // \App\Exceptions\TelegramException::report() сделать похожий для платежей
+                        TelegramLogService::staticSendLogMessage("Charge ответил с ошибкой: " . json_encode($chargeRes, JSON_UNESCAPED_UNICODE));
+                        return false;
+                    }
+                }
+                $this->payFor->payments()->save($this->payment);
+                $this->payment->payer()->associate($this->payer)->save();
+
+                return $this->payment;
         } else {
             TelegramLogService::staticSendLogMessage("Оплата по карте с ошибкой: " . json_encode($resp, JSON_UNESCAPED_UNICODE));
             return false;
@@ -241,7 +253,7 @@ class Payment
         }
 
         $receiptItem = [[
-            'Name'          => 'Оплата доступа к сообществу',
+            'Name'          => 'Оплата за использование системы',
             'Price'         => $this->amount / 100,
             'Quantity'      => 1,
             'Amount'        => $this->amount,

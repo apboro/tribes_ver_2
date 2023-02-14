@@ -39,6 +39,7 @@ class MembersFilter extends QueryAPIFilter
             'accession_date' => 'telegram_users_community.accession_date', 
             'exit_date' => 'telegram_users_community.exit_date',
             'c_messages' => 'c_messages',
+            'comm_name' => 'comm_name',
             'c_put_reactions' => 'c_put_reactions',
             'c_got_reactions' => 'c_got_reactions',
             'utility' => 'user_utility',

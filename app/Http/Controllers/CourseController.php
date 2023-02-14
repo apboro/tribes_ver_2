@@ -45,6 +45,8 @@ class CourseController extends Controller
         $course = Course::find((int)PseudoCrypt::unhash($hash));
         $course->increment('views');
 
+        if (!$course->isActive && !$course->isPublished) return abort(404,'Курс не активен');
+
         return view('common.course.pay')->withCourse($course);
     }
 
@@ -62,13 +64,13 @@ class CourseController extends Controller
         if($isAuthor){
             $course = Course::where('owner', Auth::user()->id)->first();
         } else {
-            $course = Course::with('byers')->where('id', (int)PseudoCrypt::unhash($hash))
-                ->whereHas('byers', function($q){
+            $course = Course::with('buyers')->where('id', (int)PseudoCrypt::unhash($hash))
+                ->whereHas('buyers', function($q){
                     $q->where('user_id', Auth::user()->id);
                 })
                 ->where('isPublished', true)
                 ->first();
-            $expired_at = $course->byers()->where('id', Auth::user()->id)->first()->pivot->expired_at;
+            $expired_at = $course->buyers()->where('id', Auth::user()->id)->first()->pivot->expired_at;
 
 
             if($expired_at < Carbon::now()){
@@ -84,6 +86,7 @@ class CourseController extends Controller
         $course = Course::findOrFail((int)PseudoCrypt::unhash($request['hash']));
 
         $course->increment('clicks');
+
 
         ### Регистрация плательщика #####
         $email = strtolower($request['email']);

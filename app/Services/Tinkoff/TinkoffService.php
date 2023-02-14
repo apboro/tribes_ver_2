@@ -65,7 +65,7 @@ class TinkoffService
 
             if ($previous_status != $new_status) {
                 $community = $payment->community ?? null;
-                if (($previous_status == 'FORM_SHOWED' || $previous_status == 'NEW' || $previous_status == 'AUTHORIZED') && $new_status == 'CONFIRMED') {
+                if (($previous_status == 'FORM_SHOWED' || $previous_status == 'NEW' || $previous_status == 'AUTHORIZED') && ($new_status == 'CONFIRMED' || $new_status == 'AUTHORIZED')) {
                     $decoder = [
                         'tariff' => 'тариф',
                         'donate' => 'донат'

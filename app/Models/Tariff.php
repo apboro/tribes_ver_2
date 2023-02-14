@@ -29,8 +29,7 @@ class Tariff extends Model
     {
         $builder = TariffVariant::where('tariff_id', $this->id)
             ->where('isActive', true)
-            ->where('price', '>', 0)
-            ->orderBy('number_button', 'ASC');
+            ->orderBy('price', 'ASC');
         if($inlineLink) {
             $builder->where('inline_link', '=', $inlineLink);
         } else {

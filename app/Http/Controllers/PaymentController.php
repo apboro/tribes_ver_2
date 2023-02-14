@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\PaymentException;
 use App\Filters\PaymentFilter;
 use App\Helper\PseudoCrypt;
+use App\Jobs\SendEmails;
 use App\Mail\ExceptionMail;
 use App\Models\Accumulation;
 use App\Models\Community;
@@ -31,6 +32,8 @@ class PaymentController extends Controller
     private $paymentRepo;
     protected TelegramMainBotService $botService;
     private TelegramLogService $telegramLogService;
+    private TinkoffService $tinkoff;
+
 
     public function __construct(
         PaymentRepository      $paymentRepo,
@@ -41,6 +44,7 @@ class PaymentController extends Controller
         $this->botService = $botService;
         $this->paymentRepo = $paymentRepo;
         $this->telegramLogService = $telegramLogService;
+        $this->tinkoff = new TinkoffService();
     }
 
     public function list()
@@ -76,13 +80,28 @@ class PaymentController extends Controller
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
 
-        if($payment->isTariff()) {
-            $v = view('mail.telegram_invitation')->withPayment($payment)->render();
-            new Mailer('Сервис Spodial', $v, 'Приглашение', $payment->payer->email);
-            return view('common.tariff.success')->withPayment($payment);
+        if (!$payment->comment == 'trial') {
+            $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => $payment->paymentId]), true);
+            while ($state['Status'] != 'AUTHORIZED') {
+                $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => $payment->paymentId]), true);
+                sleep(1);
+                if ($state['Status'] == 'REJECTED') return redirect()->back(404)->withErrors('Оплата была отклонена');
+            }
         }
-        return view('common.donate.success')->withPayment($payment);
-    }
+
+            if ($payment->isTariff()) {
+                if ($payment->comment !== 'trial') {
+                    $v = view('mail.telegram_invitation')->withPayment($payment)->render();
+                } else {
+                    $variant = $payment->community->tariff->variants()->find($payment->payable_id);
+                    $v = view('mail.telegram_invitation_trial')->withPayment($payment)->withVariant($variant)->render();
+                }
+                SendEmails::dispatch($payment->payer->email, 'Приглашение', 'Сервис Spodial', $v);
+                return view('common.tariff.success')->withPayment($payment);
+            }
+            return view('common.donate.success')->withPayment($payment);
+        }
+
 
     public function notify(Request $request)
     {
@@ -92,10 +111,7 @@ class PaymentController extends Controller
 //        }
 
         if ($data['Status'] == 'REFUNDED') {
-            TelegramLogService::staticSendLogMessage("Попытка сделать возврат " . json_decode($data));
-            return response('OK', 200);
-        }
-        if ($data['Status'] == 'AUTHORIZED') {
+            TelegramLogService::staticSendLogMessage("Попытка вывода средств " . json_encode($data));
             return response('OK', 200);
         }
 
@@ -109,7 +125,6 @@ class PaymentController extends Controller
             if (!$payment) {
                 (new PaymentException("NOTY: Платёж с OrderId " . $request['OrderId'] . " и PaymentId " .
                     $request['PaymentId'] . " не найден"))->report();
-                TelegramLogService::staticSendLogMessage("Tinkoff получил ответ ОК");
                 return response('OK', 200);
             }
 
@@ -121,7 +136,7 @@ class PaymentController extends Controller
             $payment->save();
 
             if(TinkoffService::checkStatus($request, $payment, $previous_status)){
-                TelegramLogService::staticSendLogMessage("Tinkoff получил ответ ОК");
+                TelegramLogService::staticSendLogMessage("Notify from tinkoff: ". json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
                 return response('OK', 200);
             }
 

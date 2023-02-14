@@ -9,6 +9,7 @@ use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Http;
 
 class CommunityRepository implements CommunityRepositoryContract
 {
@@ -66,7 +67,8 @@ class CommunityRepository implements CommunityRepositoryContract
 
     public function getAllCommunity()
     {
-        return Community::all();
+        $community =  Community::with('communityOwner', 'connection')->orderBy('created_at', 'desc');
+        return $community->paginate(50);
     }
 
     public function getCommunityById($id): ?Community
@@ -77,6 +79,11 @@ class CommunityRepository implements CommunityRepositoryContract
     public function getCommunitiesForOwner(int $ownerId, ?CommunitiesFilter $filters = null): Collection
     {
         return Community::filter($filters)->where('owner', $ownerId)->get();
+    }
+
+    public function getUsersCommunities($userId): Collection
+    {
+        return Community::where('owner', $userId)->get();
     }
 
     public function isChatBelongsToTeleUserId(int $chatId, int $teleUserId): bool

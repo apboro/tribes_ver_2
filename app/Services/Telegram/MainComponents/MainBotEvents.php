@@ -116,7 +116,7 @@ class MainBotEvents
                                 ]);
                             }
 
-                            $description = $community->tariff->welcome_description;
+                            $description = strip_tags(str_replace('<br>', "\n",$community->tariff->welcome_description ));
                             if ($description && $description != '') {
                                 $text = $description . $image;
                                 $this->bot->getExtentionApi()->sendMess($chatId, $text);
@@ -185,7 +185,7 @@ class MainBotEvents
                     $this->data->my_chat_member->new_chat_member->user->id == $this->bot->botId and
                     $this->data->my_chat_member->new_chat_member->status == 'administrator'
                 ) {
-                    $this->bot->logger()->debug('Бот в группе стал администратором', ArrayHelper::toArray($this->data));
+//                    $this->bot->logger()->debug('Бот в группе стал администратором', ArrayHelper::toArray($this->data));
                     $chatId = $this->data->my_chat_member->chat->id;
                     Telegram::botGetPermissionsEvent(
                         $this->data->my_chat_member->from->id,
@@ -250,8 +250,11 @@ class MainBotEvents
     {
         try {
             if (isset($this->data->message->left_chat_member)) {
-                $telegram = new Telegram(app(TariffRepositoryContract::class));
-                $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
+                if ($this->data->message->left_chat_member->id != env('TELEGRAM_BOT_ID')){
+                    $telegram = new Telegram(app(TariffRepositoryContract::class));
+                    $this->bot->logger()->debug('Delete user with:', [$this->data->message->chat->id, $this->data->message->left_chat_member->id]);
+                    $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
+                }
             }
         } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());

@@ -179,6 +179,7 @@
                                     @endif
                                 </label>
                             </a>
+                            Просмотров: {{$tariff->views}}
                         </div>
                         @if($tariff->isActive)
                         <div class="community-settings__inline-command list">

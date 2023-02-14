@@ -1,16 +1,12 @@
 <?php
 
-use App\Http\Controllers\API\TeleDialogStatisticController;
-use App\Http\Controllers\API\TeleMessageStatisticController;
-use App\Http\Controllers\DonateController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestBotController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\TelegramUserBotController;
+use App\Http\Controllers\TestBotController;
 use App\Http\Controllers\UserBotFormController;
-use App\Models\TelegramUser;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\TestController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -65,6 +61,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::get('/analytics/messages/{project?}/{community?}', 'ProjectController@messages')->name('project.analytics.messages');
         Route::get('/analytics/payments/{project?}/{community?}', 'ProjectController@payments')->name('project.analytics.payments');
         Route::get('/analytics/{project?}/{community?}', 'ProjectController@analytics')->name('project.analytics');
+        Route::get('/knowledge/{project?}/{community?}', 'ProjectController@knowledge')->name('project.knowledge');
 
         Route::get('/donates/{project?}/{community?}', 'ProjectController@donates')->name('project.donates');
         Route::get('/tariffs/{project?}/{community?}', 'ProjectController@tariffs')->name('project.tariffs');
@@ -123,21 +120,22 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
         Route::group(['prefix' => 'community'], function () {
 
-            Route::get('/', function(){abort(404);})->name('community.list');
+            Route::get('/', function () {
+                abort(404);
+            })->name('community.list');
 
             Route::middleware('sms_confirmed', 'owned_group_community')->group(function () {
                 // Statistic
-                Route::get('/{community}/statistic/{any?}', function(){abort(404);})->name('community.statistic');
-//                Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
-//                Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
-//                Route::get('/{community}/statistic/payments', 'CommunityController@statisticPayments')->name('community.statistic.payment');
+                Route::get('/{community}/statistic', 'CommunityController@statistic')->name('community.statistic');
+                Route::get('/{community}/statistic/subscriber', 'CommunityController@statisticSubscribers')->name('community.statistic.subscribers');
+                Route::get('/{community}/statistic/messages', 'CommunityController@statisticMessages')->name('community.statistic.messages');
+                Route::get('/{community}/statistic/payments', 'CommunityController@statisticPayments')->name('community.statistic.payment');
 
             });
 
             Route::middleware('sms_confirmed', 'owned_community')->group(function () {
 
                 Route::get('{community}', 'CommunityController@statistic')->where(['community' => '[0-9]+'])->name('community.view');
-
 
 
                 // Donate
@@ -158,6 +156,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                 Route::post('/{community}/subscribers/change', 'TariffController@subscriptionsChange')->name('community.tariff.subscriptionsChange');
 
                 Route::get('/{community}/tariff', 'TariffController@list')->name('community.tariff.list');
+                Route::post('/{community}/tariff/trial_subscribe', 'TariffController@trialSubscribe')->name('community.tariff.trial_subscribe');
 
                 Route::get('/{community}/tariff/settings/{tab?}', 'TariffController@settings')->name('community.tariff.settings');
                 Route::get('/{community}/tariff/publication/{tab?}', 'TariffController@publication')->name('community.tariff.publication');
@@ -165,19 +164,17 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
                 Route::post('/{community}/tariff/settings/update', 'TariffController@tariffSettings')->name('tariff.settings.update');
 
 
-                // Knowledge
+                // Knowledge old
                 Route::get('/{community}/knowledge', function () {
                     return view('common.knowledge.index');
                 })->name('knowledge.index');
 
-                Route::get('/{community}/knowledge/list', function () {
-                    return view('common.knowledge.list2');
-                })->name('common.knowledge.list');
-
             });
 
+            Route::get('/{community}/knowledge/list', [\App\Http\Controllers\KnowledgeController::class, 'list'])->name('knowledge.list');
+            Route::post('/{community}/knowledge/process_category', [\App\Http\Controllers\KnowledgeController::class, 'processCategory'])->name('knowledge.process_category');
+            Route::post('/{community}/knowledge/process_knowledge', [\App\Http\Controllers\KnowledgeController::class, 'processKnowledge'])->name('knowledge.process_knowledge');
         });
-
 
         Route::get('/{hash}/knowledge/help', 'KnowledgeController@help')->name('public.knowledge.help');
 
@@ -205,6 +202,10 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::get('/faq', function () {
             return view('common.faq.index');
         })->name('faq.index');
+
+        // Feedback
+        Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+        Route::post('/feedback/save', [FeedbackController::class, 'save'])->name('feedback.save');
 
         // Education
         Route::get('/education', function () {
@@ -270,6 +271,9 @@ Route::any('community/{community}/tariff/form', 'App\Http\Controllers\TariffCont
 Route::any('community/{hash}', 'App\Http\Controllers\TariffController@tariffPayment')->name('community.tariff.payment');
 Route::any('community/tariff/{hash}', 'App\Http\Controllers\TariffController@confirmSubscription')->name('community.tariff.confirmSubscription');
 
+Route::get('/{hash}/knowledge', [\App\Http\Controllers\KnowledgeController::class, 'public'])->name('knowledge.public');
+
+
 // Footer Routes
 Route::get('/privacy', function () {
     return view('common.privacy.index');
@@ -331,14 +335,14 @@ Route::group(['prefix' => 'bot'], function () {
     Route::match(['get', 'post'], 'webhook-bot2', [TelegramBotController::class, 'index-bot2']);
 });
 
-Route::middleware(['auth'])->group(function() {
+Route::middleware(['auth'])->group(function () {
     Route::get('/user-bot-form', [UserBotFormController::class, 'index'])->name('user.bot.form');
 });
 
 Route::any('/webhook-user-bot', [TelegramUserBotController::class, 'index'])->name('user.bot.webhook');
 Route::get('/set-webhook-for-user-bot', [TelegramUserBotController::class, 'setWebhook']);
 
-Route::any('/test', [TestBotController::class, 'index']);
+Route::any('/testBot', [TestBotController::class, 'index']);
 
 Route::any('/manager{any}', function () {
     return view('admin');
@@ -349,4 +353,6 @@ Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name(
 Route::get('/tinkofftestdata', 'App\Http\Controllers\TariffController@testData');
 Route::get('/test', [App\Http\Controllers\TestController::class, 'test'])->name('test');
 Route::get('/testNot', [App\Http\Controllers\TestController::class, 'testNot'])->name('testNot');
-
+Route::get('/404', function () {
+    return view('errors.404');
+})->name('404');

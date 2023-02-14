@@ -33,7 +33,9 @@
             </div>
 
             <div class="dropdown-personal__links-block">
+                @if (!request()->is('*follower*'))
                 <ul class="dropdown-personal__link-list">
+
                     <li class="dropdown-personal__link-item">
                         <a
                             href="{{route('profile.project.list')}}"
@@ -48,7 +50,7 @@
                             href="{{ route('author.messenger.list') }}"
                             class="dropdown-personal__link {{ request()->is('*profile/messengers*') ? 'active' : ''  }}"
                         >
-                            Мессенджеры
+                            Профиль
                         </a>
                     </li>
 
@@ -58,6 +60,14 @@
                             class="dropdown-personal__link {{ request()->is('*payments*') ? 'active' : ''  }}"
                         >
                             Финансы
+                        </a>
+                    </li>
+                    <li class="dropdown-personal__link-item">
+                        <a
+                                href="{{ route('follower.products') }}"
+                                class="dropdown-personal__link {{ request()->is('*follower*') ? 'active' : ''  }}"
+                        >
+                            Перейти в режим читателя
                         </a>
                     </li>
                 </ul>
@@ -92,6 +102,22 @@
                         </a>
                     </li>
 
+                        <li class="dropdown-personal__link-item">
+                            <a href="{{ route('feedback.index') }}" class="dropdown-personal__link {{ request()->is('*feedback*') ? 'active' : ''  }}">
+                                Обратная связь
+                            </a>
+                        </li>
+                        @else
+                            <ul class="dropdown-personal__link-list">
+                            <li class="dropdown-personal__link-item">
+                                <a
+                                        href="{{route('main')}}"
+                                        class="dropdown-personal__link {{ request()->is('*projects*') ? 'active' : ''  }}"
+                                >
+                                    Перейти в режим автора
+                                </a>
+                            </li>
+                        @endif
                     <li class="dropdown-personal__link-item">
                         <a
                             href="{{ route('logout') }}"
@@ -102,6 +128,7 @@
                             Выход
                         </a>
                     </li>
+
                 </ul>
             </div>
         </div>

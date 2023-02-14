@@ -59,6 +59,7 @@ return [
     'enter_name' => 'Введите название',
     'entries_rus_low' => 'записей',
     'exit' => 'Выход',
+    'email' => 'E-mail',
     // F
     'finance' => 'Финансы',
     'follow' => 'Перейти',
@@ -84,6 +85,7 @@ return [
     'mediaProducts' => 'Медиатовары',
     'mediaProduct' => 'Медиатовар',
     'mediaProducts_empty' => 'У вас нет ниодного медиатовара',
+    'message' => 'Сообщение',
     'months' => 'Месяцы',
     'months_2_low' => 'месяцев',
     'months_3_low' => 'месяца',
@@ -132,7 +134,7 @@ return [
     'subscribers' => 'Участники',
 
     'audience' => 'Аудитория',
-    'product' => 'Медиапродукты',
+    'product' => 'Медиатовары',
     'panel_author' => 'Перейти в панель автора',
     'panel_follower' => 'Перейти в панель пользователя',
 

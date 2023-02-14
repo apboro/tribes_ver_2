@@ -13,10 +13,17 @@
                     {{ $course->thanks_text  }}
                 </h2>
 
-                <a href="{{ $course->getProductWithLesson($course->lessons->first()->id ?? 0) }}"
+                @if ($course->isActive)
+                    <a href="{{ $course->getProductWithLesson($course->lessons->first()->id ?? 0) }}"
+                       type="btn" class="btn btn-primary mt-1 mb-1">
+                         Приступить к просмотру
+                    </a>
+                @else
+                <a href="{{ route('follower.products') }}"
                     type="btn" class="btn btn-primary mt-1 mb-1">
-                    Приступить к просмотру
+                     Перейти в мои покупки
                 </a>
+                @endif
             </div>
         </div>
     </div>

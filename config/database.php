@@ -50,20 +50,6 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        'knowledge' => [
-            'driver' => env('DB_DRIVER', 'pgsql'),
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST_MAIN', '127.0.0.1'),
-            'port' => env('DB_PORT_MAIN', '5432'),
-            'database' => env('DB_DATABASE_MAIN', 'knowledge'),
-            'username' => env('DB_USERNAME_MAIN', 'yooda'),
-            'password' => env('DB_PASSWORD_MAIN', '315405'),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'schema' => env('DB_SCHEMA_KNOWLEDGE', 'knowledge'),
-            'sslmode' => 'prefer',
-        ],
     ],
 
     /*

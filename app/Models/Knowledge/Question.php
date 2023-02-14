@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed|string $uri_hash
  * @property int|mixed $c_enquiry
  * @property mixed $id
+ * @property int $category_id
  */
 class Question extends Model
 {
@@ -31,9 +32,19 @@ class Question extends Model
 
     public $useSearchType = 'Question';
 
-    protected $connection = 'main';
+    protected $fillable = [
+        'community_id',
+        'author_id',
+        'uri_hash',
+        'is_draft',
+        'is_public',
+        'c_enquiry',
+        'context',
+        'category_id',
+        'answer_id'
+    ];
 
-    protected $table = 'knowledge.questions';
+    protected $table = 'questions';
 
     /**
      *   Question::filter($filters)
@@ -101,5 +112,10 @@ class Question extends Model
         if($publish) {
             $this->is_draft = false;
         }
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

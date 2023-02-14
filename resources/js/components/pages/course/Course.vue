@@ -73,9 +73,10 @@
     import {mapGetters} from 'vuex';
     import { PerfectScrollbar } from 'vue2-perfect-scrollbar'
     import Lesson from "./Lesson";
+    import FormatDateTime from "../../../../admin/js/mixins/formatDateTime";
     export default {
         name: "Course",
-        components: { Lesson, PerfectScrollbar },
+        components: {FormatDateTime, Lesson, PerfectScrollbar },
         
         data () {
             return {

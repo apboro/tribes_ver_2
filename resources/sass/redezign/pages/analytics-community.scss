@@ -37,9 +37,14 @@
     }
 
     &__card-list {
+
         display: grid;
         grid-template-rows: 1fr;
-        grid-template-columns: repeat(auto-fill, minmax(350px, calc(33% - 13px)));
+
+        @media (min-width: $md){
+            grid-template-columns: repeat(auto-fill, minmax(350px, calc(33% - 13px)));
+        }
+
         justify-content: center;
         column-gap: 25px;
         row-gap: 25px;

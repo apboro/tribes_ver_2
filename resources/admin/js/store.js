@@ -5,6 +5,8 @@ import user from './modules/users';
 import auth from './modules/auth';
 import payment from './modules/payments';
 import uniq_customers from './modules/uniq_customers';
+import communities from "./modules/communities";
+import feedbacks from "./modules/feedbacks";
 
 Vue.use(Vuex);
 
@@ -41,6 +43,8 @@ export default new Vuex.Store({
         user,
         auth,
         payment,
+        communities,
+        feedbacks,
         uniq_customers,
     },
 

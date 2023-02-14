@@ -31,15 +31,15 @@
             <table class="table card-table table-vcenter text-nowrap datatable">
                 <thead>
                 <tr>
-                    <th class="w-1"><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices"></th>
                     <th class="w-1">ID
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm text-dark icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 15 12 9 18 15"></polyline></svg>
                     </th>
                     <th>Имя</th>
+                    <th>Telegram</th>
                     <th>Почта</th>
                     <th>Телефон</th>
                     <th>
-                        Создан
+                        Дата<br> регистрации
                         <i
                             class="col-1"
                             style="cursor: pointer;"
@@ -67,6 +67,14 @@
                             </template>
                         </i>    
                     </th>
+                    <th>Кол-во<br>
+                      сообществ</th>
+                    <th>Последняя<br>
+                      активность</th>
+                    <th>Сумма<br>
+                      поступлений</th>
+<!--                    <th>Сумма<br>-->
+<!--                      выводов</th>-->
                     <th>Комиссия, %</th>
                     <th></th>
                 </tr>
@@ -76,9 +84,8 @@
                 </tbody>
             </table>
         </div>
-        <div v-if="users.meta && users.meta.per_page < users.meta.total" class="card-footer d-flex align-items-center">
-            <p class="m-0 text-muted">Показано <span>{{ users.meta.per_page }}</span> из <span>{{ users.meta.total }}</span> записей</p>
-            <ul class="pagination m-0 ms-auto">
+        <div class="card-footer d-flex align-items-center">
+            <ul v-if="users.meta" class="pagination m-0 ms-auto">
                 <li
                     v-for="(link, idx) in users.meta.links"
                     class="page-item"
@@ -116,6 +123,7 @@ export default {
             deep: true,
             handler: _.debounce(function(v) {
                 this.$store.dispatch('get_users', v);
+              if (this.filter_data.filter.search) this.filter_data.filter.page = 1
             },400)
         }
     },
@@ -140,6 +148,7 @@ export default {
     },
 
     methods: {
+
         async loadUsersData() {
             await this.$store.dispatch('get_users', this.filter_data);
         },

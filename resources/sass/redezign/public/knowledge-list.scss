@@ -1,9 +1,74 @@
 .knowledge-list {
 
+    &__new_knowledge {
+        display: none;
+
+        &.active {
+            display: block;
+            padding-bottom: 25px;
+            padding-top: 25px;
+            border-bottom: 1px solid #E0DEE6;
+
+            #vopros {
+                background: #fff;
+                border: 1px solid #7367F0;
+                color: #363440;
+                font-weight: 400;
+            }
+
+            #otvet {
+                border: 1px solid #7367F0;
+            }
+        }
+
+        &__buttons {
+            display: flex;
+            justify-content: center;
+
+            &-save {
+                padding: 10px 40px;
+                color: #fff;
+                background: #7367F0;
+                border-radius: 5px !important;
+                text-transform: uppercase;
+                font-weight: 600;
+                font-size: 14px;
+                line-height: 20px;
+                text-align: center;
+                letter-spacing: 0.02em;
+                margin-right: 8px;
+
+                &:disabled {
+                    opacity: 0.6;
+                    background: #7367F0;
+                    color: #fff;
+                }
+            }
+
+            &-cancel {
+                padding: 10px 54px;
+                color: #7367F0;
+                background: #FFFFFF;
+                border: 1px solid #7367F0;
+                border-radius: 5px !important;
+                text-transform: uppercase;
+                font-weight: 600;
+                font-size: 14px;
+                line-height: 20px;
+                text-align: center;
+                letter-spacing: 0.02em;
+            }
+        }
+    }
+
     &__title {
-        margin-top: $indent-4;
-        @include font($text-color-2, 24px, 32px, 700);
-        text-transform: uppercase;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        font-weight: 600;
+        font-size: 30px;
+        line-height: 36px;
+        letter-spacing: 0.04em;
+        color: #252129;
     }
 
     &__data-container {
@@ -73,13 +138,36 @@
     &__list {
         display: grid;
         grid-column: 2 / 3;
-        row-gap: 20px;
         padding: 0;
         list-style: none;
+        max-height: 750px;
+        overflow-y: auto;
+        border-bottom: 1px solid #7367F0;
+        margin-bottom: 45px;
+
+        &::-webkit-scrollbar {
+            width: 25px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #E0DEE6;
+            border-radius: 20px;
+            border: 9px solid #fff;
+        }
     }
 
     &__item {
-        
+        border-bottom: 1px solid #E0DEE6;
+        padding-bottom: 24px;
+        padding-top: 26px;
+
+        &.hide {
+            visibility: hidden;
+        }
         &.active .knowledge-list__question {
             grid-template: 1fr / 80px auto;
             border-color: #91C4F6;
@@ -122,6 +210,42 @@
                 fill: $primary-1;
             }
         }
+        &-btn {
+            padding: 0;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: #363440;
+            margin-bottom: 15px;
+            margin-top: 10px;
+            display: block;
+            background: transparent !important;
+
+            &:hover {
+                background: transparent;
+                color: #7367F0;
+            }
+        }
+        &-actions {
+            display: flex;
+            justify-content: end;
+            margin-bottom: 8px;
+
+            &__button_edit {
+                background: url("../icons/edit-icon.svg") no-repeat;
+                width: 16px;
+                height: 16px;
+                margin-right: 9px;
+            }
+
+            &__button_delete {
+                background: url("../icons/bin-icon.svg") no-repeat;
+                width: 16px;
+                height: 16px;
+            }
+        }
     }
     
     &__question {
@@ -133,7 +257,9 @@
         row-gap: $indent-1;
 
         .knowledge-list__item-text {
-            border: 2px solid $primary-2;
+            color: #FFFFFF;
+            background: #7367F0;
+            min-height: 90px;
         }
 
         .knowledge-list__item-btn {
@@ -150,11 +276,19 @@
 
     &__item-icon {
         .icon__stroke {
-            stroke: $primary-2;
+            stroke: #7367F0;
         }
 
         .icon__fill {
-            fill: $primary-2;
+            fill: #7367F0;
+        }
+
+        &-label {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 20px;
+            letter-spacing: 0.02em;
+            color: #333333;
         }
     }
 
@@ -165,9 +299,13 @@
     &__item-text {
         display: block;
         margin: 0;
-        padding: 30px;
-        @include font($grey-8, 16px, 22px, 400);
+        padding: 20px;
         border-radius: 6px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 0.02em;
+        border: none;
     }
 
     &__item-btn {
@@ -175,20 +313,28 @@
     }
 
     &__answer {
+        display: grid;
         position: relative;
-        display: none;
         align-items: start;
         grid-template: 1fr auto / auto 80px;
         column-gap: $indent-4;
         row-gap: $indent-1;
-        margin-top: $indent-4;
-        visibility: hidden;
-        opacity: 0;
+        margin-top: 20px;
         transition: .3s max-height;
 
         .knowledge-list__item-icon-wrapper {
             grid-row: 1/3;
             grid-column: 2/3;
+        }
+
+        .knowledge-list__item-text {
+            background: rgba(115, 103, 240, 0.05);
+            min-height: 90px;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 20px;
+            letter-spacing: 0.02em;
+            color: #363440;
         }
     }
 
@@ -206,4 +352,230 @@
     &__list-link {
         margin-top: $indent-3;
     }
+
+    &__columns {
+        justify-content: space-between;
+    }
+}
+
+.p-2 {
+    padding: 0 !important;
+
+    &_left {
+        width: 24%;
+    }
+
+    &__buttons {
+        margin-top: 30px;
+    }
+
+    &__button {
+        padding: 0.35rem 1.5rem;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        text-align: center;
+        letter-spacing: 0.02em;
+        color: #7367F0;
+    }
+
+    &_right {
+        width: 67%;
+
+        .search-field__field {
+            width: 496px;
+            border: 1px solid #7367F0;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 20px;
+            letter-spacing: 0.02em;
+            color: #363440;
+        }
+
+        .search-field__icon {
+            right: 45px;
+        }
+
+        .search-field__field:focus + .search-field__icon .icon__stroke {
+            stroke: #B5B4B8;
+        }
+
+        .knowledge-list__control {
+            align-items: normal;
+            margin-bottom: 5px;
+
+            .btn-outline-primary {
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 20px;
+                text-align: center;
+                letter-spacing: 0.02em;
+                color: #7367F0;
+            }
+        }
+    }
+}
+
+.text-muted {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+    color: #B5B4B8 !important;
+}
+
+.knowledge-list__category-menu {
+    display: none;
+}
+
+@media (max-width: 767px) {
+
+    .knowledge-list__title {
+        display: none;
+    }
+
+    .knowledge-list__category-menu {
+        display: block;
+        margin-top: 30px;
+    }
+
+    .mobile-hidden {
+        display: none;
+    }
+
+    .knowledge-list__columns {
+        flex-direction: column;
+    }
+
+    .p-2_left {
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    .p-2_right {
+        width: 100%;
+    }
+
+    .knowledge-list__list {
+        max-height: none;
+    }
+
+    .knowledge-list__question {
+        column-gap: 20px;
+        row-gap: 5px;
+        grid-template: 1fr auto/55px auto;
+    }
+
+    .knowledge-list__answer {
+        column-gap: 20px;
+        row-gap: 5px;
+        grid-template: 1fr auto/1fr auto;
+    }
+
+    .icon--size-3 {
+        width: 44px;
+        height: auto;
+    }
+    
+    .knowledge-list__control {
+        display: flex;
+        flex-direction: column;
+        margin-top: 30px;
+    }
+
+    .p-2_right .search-field__field {
+        width: 100%;
+        margin-bottom: 20px;
+        padding-left: 50px;
+        background: #F8F9FA;
+        border: none;
+        position: relative;
+    }
+
+    .p-2_right .search-field__clear {
+        display: none;
+    }
+
+    .p-2_right .search-field__clear::before {
+        position: absolute;
+        content: '';
+        width: 20px;
+        height: 2px;
+        transform: rotate(135deg);
+        background: #363440;
+        right: 15px;
+        top: 20px;
+    }
+
+    .p-2_right .search-field__clear::after {
+        position: absolute;
+        content: '';
+        width: 20px;
+        height: 2px;
+        transform: rotate(45deg);
+        background: #363440;
+        right: 15px;
+        top: 20px;
+    }
+
+    .p-2_right .search-field__icon {
+        right: auto;
+        left: 18px;
+        top: calc(50% - 32px);
+    }
+
+    .search-field__icon .icon__stroke {
+        stroke: #363440;
+    }
+
+    .p-2_right .search-field__field:focus + .search-field__icon .icon__stroke {
+        stroke: #363440;
+    }
+
+    .p-2_right .knowledge-list__control .btn-outline-primary {
+        width: 74%;
+        align-self: center;
+    }
+
+    .knowledge-list__new_knowledge__buttons {
+        margin-top: 20px;
+    }
+
+    .community__profile-btn.active::before {
+        top: 15%;
+        width: 12px;
+        height: 12px;
+    }
+
+    .profile__hide-info .hide-info-community {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 330px) {
+    .knowledge-list__new_knowledge__buttons-save {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .knowledge-list__new_knowledge__buttons-cancel {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+}
+
+.popup__header, .popup__content, .popup__footer {
+    background-color: #fff !important;
+}
+
+.popup__content #cat_title {
+    background: #FFFFFF;
+    border: 1px solid #7367F0;
+    border-radius: 100px;
+    padding: 5px 10px;
+    margin-left: 20px;
+    width: 55%;
 }

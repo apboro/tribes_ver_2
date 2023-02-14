@@ -14,6 +14,7 @@ class MemberResource extends JsonResource
             "name" => $this->resource->name,
             "nick_name" => $this->resource->nick_name,
             "accession_date" => $this->resource->accession_date,
+            "comm_name" => $this->resource->comm_name,
             "exit_date" => $this->resource->exit_date,
             "c_messages" => $this->resource->c_messages,
             "c_put_reactions" => $this->resource->c_put_reactions,

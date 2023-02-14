@@ -141,7 +141,7 @@ class TariffService
 
             $this->telegramMainBotService->sendMessageFromBot(config('telegram_bot.bot.botName'), $telegram_user['telegram_id'], $textMessage);
 
-            if ($user->email) {
+            if ($user->email && $tariff_variant_name !== 'Пробный период') {
                 new Mailer('Сервис Spodial', $textMessageView, 'Заканчивается тариф ', $user->email);
             }
         }

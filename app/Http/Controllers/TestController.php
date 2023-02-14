@@ -2,130 +2,193 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\PseudoCrypt;
-use App\Models\TariffVariant;
-use App\Models\TelegramUser;
-use App\Models\User;
+
+use App\Jobs\SendEmails;
+use App\Models\Accumulation;
+use App\Models\Community;
+use App\Models\Course;
 use App\Models\Payment;
-use App\Services\Telegram;
-use App\Services\Telegram\MainBotCollection;
-use App\Services\Telegram\MainComponents\MainBotCommands;
-use App\Services\Telegram\MainComponents\TelegramMidlwares;
+use App\Models\TariffVariant;
+use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
-use App\Services\Tinkoff\Payment as Pay;
+use App\Services\Tinkoff\TinkoffService;
 use Carbon\Carbon;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use stdClass;
 
 class TestController extends Controller
 {
+    private TinkoffService $tinkoff;
+    protected TelegramMainBotService $telegramService;
+    public function __construct(TelegramMainBotService $telegramService)
+    {
+        $this->telegramService = $telegramService;
+        $this->tinkoff = new TinkoffService();
+    }
+
+
     public function test()
     {
-//        dd(Carbon::tomorrow()->translatedFormat('d M Y'));
-        $collectionRecords = DB::table( DB::raw("telegram_users_tarif_variants as tutv") )
-            ->join( DB::raw("tarif_variants as tv"), 'tv.id', '=', 'tutv.tarif_variants_id' )
-            ->join( DB::raw("tariffs as t"), 't.id', '=', 'tv.tariff_id' )
-            ->leftJoin( DB::raw("tarif_variants as tvc"), 'tvc.tariff_id', '=', 't.id' )
+//        $params = [
+//            'NotificationURL' => null,
+//            'OrderId' => 666,
+//            'Amount'  => 500,
+//            'SuccessURL' => null,
+//            'DATA'    => [
+//                'Email'  => null,
+//            ],
+//            'CustomerKey' => 'vasya',
+//        ];
+        $params = [
+        'PaymentId' => 2322347606,
+            ];
 
-            ->join( DB::raw("telegram_users as tu"), 'tu.id', '=', 'tutv.telegram_user_id' )
-            ->join( DB::raw("users as u"), 'u.id', '=', 'tu.user_id' )
+//        dd($params);
+//        $resp = json_decode($this->tinkoff->initPay($params));
 
-            ->join( DB::raw("communities as c"),'c.id','=','t.community_id' )
 
-            ->select([
-                DB::raw("u.id as user_id"),
-                DB::raw("tu.telegram_id as telegram_user_id"),
-                DB::raw("c.id as community_id"),
-                DB::raw("tv.id as tariff_variant_id"),
-                DB::raw("tutv.days as days_left"),
-                DB::raw("coalesce(array_agg(tvc.id) FILTER ( WHERE tvc.\"isActive\"=true AND tvc.\"isPersonal\"=false),'{}') as tvc_ids"),
-            ])
-
-            ->orWhereRaw("tutv.days = 1")
-
-            ->groupBy("u.id","tu.telegram_id", "c.id", "tv.id", "tutv.days")
-
-            ->get();
-
-        dd($collectionRecords);
-        $user = User::find(540);
-        dd($user->payments[2]->community->connection->telegram_user_id);
-        /** @var User @user */
-        dd($user->telegramData()->telegram_id, $user->payments);
-        $this->telegramService->sendMessageFromBot(
-            config('telegram_bot.bot.botName'),
-            $payment->community->connection->telegram_user_id,
-            $message
-        );
-//        $this->checkTariff();
-//        Artisan::call('check:tariff');
+//dd(json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => 2322347606]), true));
+        $state = [];
+        $i = 0;
+        while (!isset($state['Status']) && $i < 5) {
+            $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => 2322347606]), true);
+            if ($state['Status'] == 'AUTHORIZED') break;
+            TelegramLogService::staticSendLogMessage("Proverka posle oplaty: " . json_encode($state));
+            sleep(1);
+            $i++;
+        }
+        dump($state['Status']);
+//        $this->tinkoff->payTerminal->checkOrder(666);
     }
-
-
-    public function checkTariff()
+    
+    public function CheckCourse()
     {
-        //               Artisan::call('check:tariff');
-        try {
-            $telegramUsers = TelegramUser::with('tariffVariant')->where('user_id', '<>', 0)->get();
-            foreach ($telegramUsers as $user) {
-                $follower = User::find($user->user_id);
-                if ($follower) {
-                    if ($user->tariffVariant->first()) {
-                        foreach ($user->tariffVariant as $variant) {
-                            /** @var TariffVariant $variant */
-                            if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
-                                if ($variant->pivot->days < 1) {
-                                    if ($variant->pivot->isAutoPay === true) {
-                                        dd('ka');
-                                        if ($user->hasLeaveCommunity($variant->tariff->community_id)) {
-                                            $payment = NULL;
-                                        } elseif ($variant->isActive) {
-                                            dd('ku');
-                                            $p = new Pay();
-//                                            $p->amount($variant->price * 100)
-//                                                ->charged(true)
-//                                                ->payFor($variant)
-//                                                ->payer($follower);
-//                                            $payment = $p->pay();
+        $courses = Course::with('buyers')->whereNotNull('activation_date')  ->get();
+        foreach ($courses as $course){
+            $activationDate = $course->activation_date ? Carbon::parse($course->activation_date) : null;
+            $publicationDate = $course->publication_date ? Carbon::parse($course->publication_date) : null ;
+            $deactivationDate = $course->deactivation_date ? Carbon::parse($course->deactivation_date) : null;
 
-                                            $p->amount(100)
-                                                ->recurrent(true)
-                                                ->payFor($variant)
-                                                ->payer($follower);
-                                            $p->type = 'tariff';
-                                            $p->amount = 1000;
-                                            $p->from = $follower;
-                                            $p->community_id = 1;
-                                            $p->author = 4;
-                                            $p->add_balance = 10;
-//                                            $p->save();
-//                                            dd($p);
-                                            $payment=$p;
-//                                            dd($payment->payable()->first()->tariff()->first()->getThanksImage());
+            $courseName = $course->title;
+            $checkout_time = Carbon::now()->setSeconds(0)->toDateTimeString();
 
-                                            dd(User::find(12)->getBalance());
-//                                            $payment = Payment::find(2109);
-//                                            dd($payment->payable_type);
-//                                            return view('common.tariff.success')
-//                                                ->withPayment($payment);
-//                                            exit;
-                                            $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
-                                            $resp = json_decode($this->tinkoff->initPay($params)); // Шлём запрос в банк
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            //ACTIVATE COURSE
+            $mailBody='Курс доступен!';
+            $activation_time = $activationDate->toDateTimeString();
+            if ($activationDate && $activation_time === $checkout_time)
+            {
+                $course->isActive = true;
+                $course->save();
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс активирован!','Cервис Spodial', $view);
             }
-        } catch (Exception $e) {
-            throw $e;
+
+            $mailBody = 'Курс будет доступен через 24 часа!';
+            $activation_time_minus_24hrs = $activationDate->subDay()->toDateTimeString();
+            if ($activationDate && $activation_time_minus_24hrs === $checkout_time)
+            {
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс скоро будет доступен','Cервис Spodial', $view);
+            }
+
+            //DEACTIVATE COURSE
+            $mailBody = 'Курс деактивирован!';
+            $deactivation_time = $deactivationDate->toDateTimeString();
+            if ($deactivationDate && $deactivation_time === $checkout_time)
+            {
+                $course->isActive = false;
+                $course->save();
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс деактивирован','Cервис Spodial', $view);
+            }
+
+            $mailBody = 'Курс будет отключен через 24 часа!';
+            $deactivation_time_minus_24hrs = $deactivationDate->subDay()->toDateTimeString();
+            if ($deactivationDate && $deactivation_time_minus_24hrs === $checkout_time)
+            {
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс скоро будет деактивирован','Cервис Spodial', $view);
+            }
+
+            //PUBLIC COURSE
+            $publication_time = $publicationDate->toDateTimeString();
+            if ($publicationDate && $publication_time === $checkout_time)
+            {
+                $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
+                SendEmails::dispatch($course->buyers, 'Курс деактивирован','Cервис Spodial', $view);
+            }
+
         }
     }
+
+    public function firstOrCreateUser()
+    {
+        $password = Str::random(6);
+
+        $email = strtolower('12b1212orodachev@gmail.com');
+
+        $user = User::firstOrCreate(['email' => $email],
+            [
+                'name' => explode('@', $email)[0],
+                'code' => 0000,
+                'phone' => null,
+                'password' => Hash::make($password),
+                'phone_confirmed' => false,
+            ]);
+        dd($user);
+    }
+
+    public function sendMessageToTelegramChat()
+    {
+
+        $variant= TariffVariant::find(222);
+        $community = Community::find(484);
+        $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y H:i') ?? '';
+        $communityTitle = strip_tags($community->title);
+        $variantPeriod = $variant->period. ' ' .trans_choice('plurals.days', $variant->period, [], 'ru');
+//        dd("Made payment on $communityTitle with $variantPeriod");
+        TelegramLogService::staticSendLogMessage("Made payment on $communityTitle with $variantPeriod $tariffEndDate");
+        exit();
+
+        $msg1= "Участник Vasya присоединился к сообществу $communityTitle на Пробный период продолжительностью $variantPeriod
+            \n действует до $tariffEndDate г.";
+
+        $msg2 = "Пробный период в сообществе $communityTitle подходит к концу." . "\n" .
+            "Срок окончания пробного периода: $tariffEndDate."."\n".
+            "Для продления доступа Вы можете оплатить тариф: <a href='http://ya.ru'>Ссылка</a>";
+
+        $this->telegramService->sendMessageFromBot(
+            config('telegram_bot.bot.botName'),
+            -829777113,
+            $msg2
+        );
+    }
+
+    public function rebuild_accumulations()
+    {
+
+        $p = Payment::where('created_at', '>', '2022-12-23 11:32:44')->get();
+        foreach ($p as $item) {
+            if ($item->status === 'CONFIRMED') {
+                $a = Accumulation::where('SpAccumulationId', $item->SpAccumulationId)->first();
+                if (empty($a)){
+                    dd('a is empty');
+                    $a->user_id = $item->user_id;
+                    $a->SpAccumulationId = $item->SpAccumulationId;
+                    $a->amount = $item->amount;
+                    $a->started_at = $item->created_at;
+                    $a->status = 'active';
+                } else {
+                    dd('a not empty');
+                    $a->SpAccumulationId = $a->SpAccumulationId + $item->SpAccumulationId;
+                }
+                $a->save();
+            }
+        }
+
+    }
+    
 
 }
