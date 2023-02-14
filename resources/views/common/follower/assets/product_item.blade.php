@@ -1,7 +1,8 @@
 <div class="col-sm-4 col-md-3 col-lg-2">
     <div class="card mb-3">
 
-        <a @if (!$course->isActive)style="pointer-events: none;" @endif href="{{ $course->getProductWithLesson($course->getOrderedLessons()->first()->id ?? 0) }}">
+        <a @if (!$course->isActive) style="pointer-events: none;"
+           @endif href="{{ $course->getProductWithLesson($course->getOrderedLessons()->first()->id ?? 0) }}">
         <div class="row g-0">
             <div class="col-4 col-sm-12">
                 <img src="{{ $course->preview()->first()->url ?? "/images/no-image.svg" }}" class="card-img-top" alt="...">
@@ -25,7 +26,7 @@
         </a>
 
         <span class="badge badge-glow bg-info badge-up product-badge">
-            До {{ $course->isEthereal ? 'Бессрочный' : date('d.m.Y', strtotime($course->pivot->expired_at)) }}
+            {{ $course->isEthernal ? 'Бессрочный' : 'До '. date('d.m.Y', strtotime($course->pivot->expired_at)) }}
         </span>
     </div>
 </div>
