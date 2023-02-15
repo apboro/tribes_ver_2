@@ -1,5 +1,11 @@
 <?php
 
+
+use App\Http\Controllers\APIv3\Admin\AdminAuthController;
+use App\Http\Controllers\APIv3\User\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,16 +19,17 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::namespace('App\Http\Controllers\API')->group(function() {
-    Route::post('/login', 'AuthController@login')->name('auth.login');
+Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->namespace('App\Http\Controllers\APIv3\User')->group(function () {
+    Route::post('/user/register',         [RegisterController::class,      'register']          )->name('auth.register');
+    Route::post('/user/login',            [AuthController::class,          'login']             )->name('auth.login');
+    Route::post('/user/logout',           [AuthController::class,          'logout']            )->name('auth.logout');
+    Route::post('/user/password/change',  [AuthController::class,          'passChange']        )->name('profile.password.change');
+    Route::post('/user/password/reset',   [ForgotPasswordController::class,'sendResetLinkEmail'])->name('auth.password.reset');
 });
 
-Route::namespace('App\Http\Controllers\API')->group(function() {
-    Route::post('/login-as-admin', 'AuthController@loginAsAdmin')->name('auth.login_as_admin');
-});
-
-Route::namespace('App\Http\Controllers\API')->middleware(['auth:sanctum', 'admin'])->group(function() {
-    Route::post('/login-as', 'AuthController@loginAs')->name('auth.login_as');
+Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->namespace('App\Http\Controllers\APIv3\Admin')->group(function () {
+    Route::post('/admin/login-as', [AdminAuthController::class, 'loginAs'])->name('auth.login_as')->middleware('admin');
+    Route::post('/admin/login-back', [AdminAuthController::class, 'loginBack'])->name('auth.login_back');
 });
 
 
@@ -31,13 +38,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->namespace('App\Http\Controllers')->group(function() {
+Route::middleware('auth:sanctum')->namespace('App\Http\Controllers')->group(function () {
     Route::post('/session/put', 'Controller@sessionPut')->name('api.session.put');
     Route::get('/session/get', 'Controller@sessionGet')->name('api.session.get');
     Route::post('/session/flush', 'Controller@sessionFlush')->name('api.session.flush');
 });
 
-Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(function() {
+Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(function () {
     Route::post('/payment/addCard', 'PaymentController@addCard')->name('api.payment.card.add'); // Имя Роута было Занято. Добавил в начало 'api'.
     Route::post('/payment/removeCard', 'PaymentController@removeCard')->name('payment.card.remove');
     Route::post('/payment/cardList', 'PaymentController@cardList')->name('api.payment.card.list'); // Имя Роута было Занято. Добавил в начало 'api'. 
@@ -45,15 +52,15 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
     Route::post('/payment/payout', 'PaymentController@payout')->name('api.payment.payout');
 });
 
-Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(function() {
+Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(function () {
 
-    Route::post('/test-tariff','TestTariffController@test');
-    Route::post('/file/upload','FileController@upload');
-    Route::post('/file/get','FileController@get');
-    Route::post('/file/delete','FileController@delete');
+    Route::post('/test-tariff', 'TestTariffController@test');
+    Route::post('/file/upload', 'FileController@upload');
+    Route::post('/file/get', 'FileController@get');
+    Route::post('/file/delete', 'FileController@delete');
 
 
-    Route::post('/video/upload','VideoController@upload');
+    Route::post('/video/upload', 'VideoController@upload');
 
     Route::get('/lesson/templates', 'LessonController@templateList')->name('api.template.list');
 

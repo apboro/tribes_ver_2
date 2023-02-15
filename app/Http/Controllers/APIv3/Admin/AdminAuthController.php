@@ -1,16 +1,21 @@
 <?php
+namespace App\Http\Controllers\APIv3\Admin;
 
-namespace App\Http\Controllers\Manager;
-
-use App\Helper\PseudoCrypt;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginAsRequest;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\PersonalAccessToken;
 
-class LoginController extends Controller implements LC
+class AdminAuthController extends Controller
 {
-
 
     public function loginAs(Request $request)
     {
@@ -21,10 +26,6 @@ class LoginController extends Controller implements LC
 
         return redirect('/');
     }
-
-    /**
-     * @inheritDoc
-     */
 
     public function loginBack()
     {

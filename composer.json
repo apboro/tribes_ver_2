@@ -10,6 +10,7 @@
         "ext-json": "*",
         "askoldex/teletant": "^1.4",
         "darkaonline/l5-swagger": "^8.3",
+        "doctrine/dbal": "^3.6",
         "elasticsearch/elasticsearch": "^5.5",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -27,6 +28,8 @@
     },
 
     "require-dev": {
+        "laravel/telescope": "^4.10",
+        "barryvdh/laravel-debugbar": "^3.7",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/dusk": "^6.24",
