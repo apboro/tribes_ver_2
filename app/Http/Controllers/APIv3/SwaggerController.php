@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\APIv3;
 
 /**
  * @OA\Info(
@@ -23,5 +23,6 @@ namespace App\Http\Controllers\API;
  *
  *
  */
-
-class SwaggerController extends \App\Http\Controllers\Controller {}
+class SwaggerController extends \App\Http\Controllers\Controller
+{
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\APIv3\User;
 
 
 use App\Services\SMTP\Mailer;
