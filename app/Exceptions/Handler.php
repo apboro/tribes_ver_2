@@ -2,10 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Http\ApiResponses\ApiResponse;
 use App\Services\TelegramLogService;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -26,6 +26,7 @@ class Handler extends ExceptionHandler
         506,
         511,
     ];
+
     /**
      * A list of the exception types that are not reported.
      *
@@ -34,6 +35,7 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         KnowledgeException::class,
     ];
+
     private TelegramLogService $telegramLogService;
 
     public function __construct(
@@ -88,4 +90,14 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        if($e instanceof ApiUnauthorizedException) {
+            return ApiResponse::unauthorized()->toResponse($request);
+        }
+
+        return parent::render($request, $e);
+    }
+
 }

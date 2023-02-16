@@ -1,0 +1,47 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Http\ApiResponses;
+
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+
+class ApiResponseList extends ApiResponse
+{
+    protected int $statusCode = self::CODE_OK;
+
+    /** @var array|Collection|Arrayable */
+    protected $list;
+
+    /**
+     * Get response.
+     *
+     * @param Request $request
+     *
+     * @return  JsonResponse
+     */
+    public function toResponse($request): JsonResponse
+    {
+        return response()->json([
+            'list' => $this->list ?? [],
+            'payload' => $this->payload,
+            'message' => $this->message,
+        ], $this->statusCode, $this->getHeaders());
+    }
+
+    /**
+     * List items.
+     *
+     * @param array|Collection|Arrayable $list
+     *
+     * @return  $this
+     */
+    public function items($list): ApiResponseList
+    {
+        $this->list = $list;
+
+        return $this;
+    }
+}
