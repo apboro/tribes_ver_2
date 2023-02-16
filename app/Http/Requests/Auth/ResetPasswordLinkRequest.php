@@ -2,28 +2,28 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\ApiRequests\ApiRequest;
 
-class ResetPasswordLinkRequest extends FormRequest
+class ResetPasswordLinkRequest extends ApiRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'email' => 'required|email',
         ];
     }
 
-    public function prepareForValidation()
+    public function prepareForValidation(): void
     {
         $this->request->set('email', strtolower($this->request->get('email')));
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'email.required' => 'email - обязательное поле',

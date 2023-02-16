@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Profile\ChangePassRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\Auth\ChangePassRequest;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller

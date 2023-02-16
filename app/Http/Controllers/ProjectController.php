@@ -144,7 +144,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function subscribers($project = null, $community = null, ProjectRequest $request)
+    public function subscribers(ProjectRequest $request, $project = null, $community = null)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
@@ -153,7 +153,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function messages($project = null, $community = null, ProjectRequest $request)
+    public function messages(ProjectRequest $request, $project = null, $community = null)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
@@ -162,7 +162,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function payments($project = null, $community = null, ProjectRequest $request)
+    public function payments(ProjectRequest $request, $project = null, $community = null)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
@@ -171,7 +171,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function donates($project = null, $community = null, ProjectRequest $request)
+    public function donates(ProjectRequest $request, $project = null, $community = null)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
 
@@ -191,7 +191,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function tariffs($project = null, $community = null, ProjectRequest $request)
+    public function tariffs(ProjectRequest $request, $project = null, $community = null)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
         if ($project === null && $projects->isNotEmpty()) {
@@ -221,7 +221,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function members($project = null, $community = null, ProjectRequest $request, TariffFilter $filters)
+    public function members(ProjectRequest $request, TariffFilter $filters, $project = null, $community = null)
     {
         list($projects, $communities, $activeProject, $activeCommunity, $ids) = $this->getAuthorProjects($request);
         $followers = $this->tariffRepository->getList($filters, $activeCommunity);

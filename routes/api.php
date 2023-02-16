@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->namespace('App\Http\Controllers\APIv3\User')->group(function () {
+Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->group(function () {
     Route::post('/user/register',         [RegisterController::class,      'register']          )->name('auth.register');
     Route::post('/user/login',            [AuthController::class,          'login']             )->name('auth.login');
     Route::post('/user/logout',           [AuthController::class,          'logout']            )->name('auth.logout');
@@ -28,8 +28,8 @@ Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->namespace('App\Http
 });
 
 Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->namespace('App\Http\Controllers\APIv3\Admin')->group(function () {
-    Route::post('/admin/login-as', [AdminAuthController::class, 'loginAs'])->name('auth.login_as')->middleware('admin');
-    Route::post('/admin/login-back', [AdminAuthController::class, 'loginBack'])->name('auth.login_back');
+    Route::post('/admin/login-as',       [AdminAuthController::class,       'loginAs'          ])->name('auth.login_as')->middleware('admin');
+    Route::post('/admin/login-back',     [AdminAuthController::class,       'loginBack'        ])->name('auth.login_back');
 });
 
 

@@ -4,6 +4,7 @@ namespace App\Http\Resources\Swagger\Manager;
 
 /**
 * @OA\Schema(
+ *     schema="UserResource",
  *     title="UserResource",
  *     description="User response",
  *     @OA\Xml(name="users"),

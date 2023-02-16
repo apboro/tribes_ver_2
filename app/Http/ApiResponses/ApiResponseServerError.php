@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\ApiResponses;
 
+use OpenApi\Attributes as OAT;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

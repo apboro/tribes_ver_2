@@ -2,23 +2,23 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\ApiRequests\ApiRequest;
 
-class LoginAsRequest extends FormRequest
+class LoginAsRequest extends ApiRequest
 {
     /*public function authorize()
     {
         return true;
     }*/
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'id' => 'required|integer',
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'id' => 'user_id - обязательное поле',

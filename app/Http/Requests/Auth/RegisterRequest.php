@@ -2,19 +2,47 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Http\ApiRequests\ApiRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+/**
+ * @OA\Post(
+ *     path="api/v3/user/register",
+ *     tags={"User"},
+ *     summary="Register User",
+ *     operationId="register_user",
+ *     security={{"sanctum": {} }},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Redirect to main page"
+ *     ),
+ *     @OA\Response(
+ *         response=302,
+ *         description="Redirect to main page, if user is not admin"
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthenticated",
+ *     ),
+ *     @OA\Response(
+ *         response=419,
+ *         description="Page expired",
+ *     ),
+ * )
+ *
+ */
+
+class RegisterRequest extends ApiRequest
 {
 
     protected $redirectRoute = 'register';
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => ['nullable', 'string', 'max:100'],
@@ -22,14 +50,14 @@ class RegisterRequest extends FormRequest
         ];
     }
 
-    public function prepareForValidation()
+    public function prepareForValidation(): void
     {
         $this->request->set('email', strtolower($this->request->get('email')));
         // $phone = preg_replace("/[^0-9]/", '', $this->request->get('phone'));
         // $this->request->set('phone', (int)$phone);
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             // 'name.required' => 'Имя обязательно для заполнения',

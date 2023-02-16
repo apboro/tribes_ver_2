@@ -6,6 +6,7 @@ namespace App\Http\ApiResponses;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OAT;
 
 class ApiResponseCommon extends ApiResponse
 {

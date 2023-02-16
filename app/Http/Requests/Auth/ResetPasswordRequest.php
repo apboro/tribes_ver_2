@@ -2,17 +2,17 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\ApiRequests\ApiRequest;
 use Illuminate\Validation\Rules;
 
-class ResetPasswordRequest extends FormRequest
+class ResetPasswordRequest extends ApiRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    protected function rules()
+    public function rules(): array
     {
         return [
             'token' => 'required',
@@ -21,12 +21,12 @@ class ResetPasswordRequest extends FormRequest
         ];
     }
 
-    public function prepareForValidation()
+    public function prepareForValidation(): void
     {
         $this->request->set('email', strtolower($this->request->get('email')));
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'email.required' => 'email - обязательное поле',

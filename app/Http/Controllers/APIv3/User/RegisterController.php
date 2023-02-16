@@ -41,43 +41,6 @@ class RegisterController extends Controller
         return $user;
     }
 
-    /**
-     * @OA\Post(
-     *     path="api/v3/user/register",
-     *     tags={"User"},
-     *     summary="Register User",
-     *     operationId="register_user",
-     *     security={{"sanctum": {} }},
-     *     @OA\Parameter(
-     *         name="email",
-     *         description="User email",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="array",
-     *             @OA\Items(type="string"),
-     *         ),
-     *         style="form"
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Redirect to main page"
-     *     ),
-     *     @OA\Response(
-     *         response=302,
-     *         description="Redirect to main page, if user is not admin"
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *     ),
-     *     @OA\Response(
-     *         response=419,
-     *         description="Page expired",
-     *     ),
-     * )
-     *
-     */
-
     public function register(RegisterRequest $request)
     {
         event(new Registered($user = $this->create($request->all())));
