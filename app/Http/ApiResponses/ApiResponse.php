@@ -6,6 +6,7 @@ namespace App\Http\ApiResponses;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Support\Facades\App;
 
 abstract class ApiResponse implements Responsable
 {
@@ -51,7 +52,7 @@ abstract class ApiResponse implements Responsable
      */
     public function message(?string $message): self
     {
-        $this->message = $message;
+        $this->message = trans('responses/common.'.$message);
         return $this;
     }
 
@@ -145,7 +146,7 @@ abstract class ApiResponse implements Responsable
      *
      * @return  ApiResponseTokenMismatch
      */
-    public static function tokenMismatch(string $message = 'Неверный токен', array $headers = []): ApiResponseTokenMismatch
+    public static function tokenMismatch(string $message = '', array $headers = []): ApiResponseTokenMismatch
     {
         return (new ApiResponseTokenMismatch($headers))->message($message);
     }
@@ -158,7 +159,7 @@ abstract class ApiResponse implements Responsable
      *
      * @return  ApiResponseForbidden
      */
-    public static function forbidden(string $message = 'Доступ запрещён', array $headers = []): ApiResponseForbidden
+    public static function forbidden(string $message = '', array $headers = []): ApiResponseForbidden
     {
         return (new ApiResponseForbidden($headers))->message($message);
     }
@@ -171,7 +172,7 @@ abstract class ApiResponse implements Responsable
      *
      * @return  ApiResponseUnauthorized
      */
-    public static function unauthorized(string $message = 'Пользователь не авторизован', array $headers = []): ApiResponseUnauthorized
+    public static function unauthorized(string $message = '', array $headers = []): ApiResponseUnauthorized
     {
         return (new ApiResponseUnauthorized($headers))->message($message);
     }
@@ -211,7 +212,7 @@ abstract class ApiResponse implements Responsable
      *
      * @return  ApiResponseValidationError
      */
-    public static function validationError(array $errors, string $message = 'Не все поля корректно заполнены', array $headers = []
+    public static function validationError(array $errors, string $message = '', array $headers = []
     ): ApiResponseValidationError
     {
         return (new ApiResponseValidationError($headers))->errors($errors)->message($message);
