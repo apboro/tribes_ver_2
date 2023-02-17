@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Api\v3\requests;
 
+use Api\v3\requests\ApiRequestForTest;
 use App\Exceptions\ApiUnauthorizedException;
-use App\Http\ApiRequests\ApiRequestForTest;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 

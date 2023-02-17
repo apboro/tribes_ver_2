@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\ApiRequests;
+namespace Api\v3\requests;
 
+use App\Http\ApiRequests\ApiRequest;
 use Illuminate\Support\Facades\Auth;
 
 class ApiRequestForTest extends ApiRequest
@@ -27,7 +28,7 @@ class ApiRequestForTest extends ApiRequest
     public function prepareForValidation(): void
     {
         $this->merge([
-            'test' => mb_strtolower($this->test),
+            'test' => \mb_strtolower($this->test),
         ]);
     }
 
