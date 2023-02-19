@@ -8,7 +8,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
 use OpenApi\Attributes as OAT;
 use Illuminate\Support\Facades\App;
-
+/*
 #[OAT\Schema(
       schema: "ApiResponseMessagePayload",
       title: "ApiResponse Message Payload",
@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\App;
     description: "Response with message and payload",
     content: new OAT\JsonContent(type: 'array', items: new OAT\Items(ref: '#/components/schemas/ApiResponseMessagePayload'))
 )]
-
+*/
 
 
 abstract class ApiResponse implements Responsable
