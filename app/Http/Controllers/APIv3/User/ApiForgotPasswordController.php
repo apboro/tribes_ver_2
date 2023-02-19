@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
+use App\Http\ApiRequests\ApiForgotPasswordLinkRequest;
+use App\Http\ApiResponses\ApiResponseError;
+use App\Http\ApiResponses\ApiResponseSuccess;
+use App\Http\ApiResponses\ApiResponseValidationError;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ResetPasswordLinkRequest;
+use App\Models\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 
-class ForgotPasswordController extends Controller
+class ApiForgotPasswordController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -23,19 +28,16 @@ class ForgotPasswordController extends Controller
 
     use SendsPasswordResetEmails;
 
-    public function sendResetLinkEmail(ResetPasswordLinkRequest $request)
-    {
-        $this->validateEmail($request);
-
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
+    public function sendPasswordResetLink(ApiForgotPasswordLinkRequest $request){
+        $user = User::where('email','=',$request->input('email'))->first();
+        if(empty($user)){
+            return (new ApiResponseValidationError())->message('user_dosent_exists');
+        }
         $response = $this->broker()->sendResetLink(
             $this->credentials($request)
         );
-
-        return $response == Password::RESET_LINK_SENT
-            ? $this->sendResetLinkResponse($request, $response)
-            : $this->sendResetLinkFailedResponse($request, $response);
+        return $response == Password::RESET_LINK_SENT ?
+            (new ApiResponseSuccess()):
+            (new ApiResponseError());
     }
 }

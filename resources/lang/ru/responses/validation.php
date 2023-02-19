@@ -1,0 +1,24 @@
+<?php
+return [
+    'register'=>[
+        'email_already_use'=>'Такое значение поля email уже существует. Забыли пароль?',
+        'incorrect_format'=>'Неверный формат',
+        'name_max_length'=>'Максимальная длина имени 40 символов',
+        'email_required'=>'email обязателен для заполнения',
+        'phone_required'=>'Телефон обязателен для заполнения',
+        'phone_already_use'=>'Номер телефона уже используется',
+        'password_require'=>'Пароль обязателен для заполнения',
+        'password_min_length'=>'Минимальная длина - 8 символов',
+        'password_confirm'=>'Пароль должен быть подтвержден'
+    ],
+    'login'=>[
+        'email_incorrect_format'=>'Значение поля email должно быть действительным электронным адресом.',
+        'email_required'=>'email  - обязательное поле',
+        'password_require'=>'пароль обязательное поле',
+    ],
+    'reset_password'=>[
+        'token_required'=>'Отсутствует токен',
+        'password_length'=>'Пароль должен быть не менее 6 символов',
+        'password_confirmed'=>'Не совпадает с полем “пароль”'
+    ]
+];

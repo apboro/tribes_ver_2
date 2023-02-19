@@ -2,7 +2,11 @@
 
 
 use App\Http\Controllers\APIv3\Admin\AdminAuthController;
-use App\Http\Controllers\APIv3\User\AuthController;
+use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
+use App\Http\Controllers\APIv3\User\ApiRegisterController;
+use App\Http\Controllers\APIv3\User\ApiAuthController;
+
+use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProfileController;
@@ -19,14 +23,30 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::prefix('api/v3')->group(function () {
+    Route::post('/user/register', [ApiRegisterController::class,'register'])->name('auth.register');
+    Route::post('/user/login', [ApiAuthController::class,'login'])->name('auth.login');
+    Route::post('/forgot-password', [ApiForgotPasswordController::class,'sendPasswordResetLink'])->name('password.forgot');
+    Route::post('/reset-password', [ApiResetPasswordController::class,'resetUserPassword'])->name('password.reset');
+});
+
 Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->group(function () {
-    Route::post('/user/register',         [RegisterController::class,      'register']          )->name('auth.register');
+    Route::get('/user/logout', [ApiAuthController::class,'logout'])->name('auth.logout');
+});
+
+/*
+ * old
+ */
+
+/*
+Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->group(function () {
+    Route::get('/user/register',          [RegisterController::class,      'register']          )->name('auth.register');
     Route::post('/user/login',            [AuthController::class,          'login']             )->name('auth.login');
     Route::post('/user/logout',           [AuthController::class,          'logout']            )->name('auth.logout');
     Route::post('/user/password/change',  [AuthController::class,          'passChange']        )->name('profile.password.change');
     Route::post('/user/password/reset',   [ForgotPasswordController::class,'sendResetLinkEmail'])->name('auth.password.reset');
 });
-
+*/
 Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->namespace('App\Http\Controllers\APIv3\Admin')->group(function () {
     Route::post('/admin/login-as',       [AdminAuthController::class,       'loginAs'          ])->name('auth.login_as')->middleware('admin');
     Route::post('/admin/login-back',     [AdminAuthController::class,       'loginBack'        ])->name('auth.login_back');

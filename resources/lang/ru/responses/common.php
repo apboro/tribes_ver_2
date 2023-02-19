@@ -4,5 +4,11 @@ return [
     'token_mismatch'=>'Неверный токен',
     'forbidden'=>'Доступ запрещён',
     'unauthorized'=>'Пользователь не авторизован',
-    'validation_error'=>'Не все поля корректно заполнены'
+    'validation_error'=>'Не все поля корректно заполнены',
+    'incorrect_login_or_password'=>'Неверный логин или пароль.',
+    'user_dosent_exists'=>'Пользователя с таким email не существует. Зарегистрироваться ?',
+    'reset_password_request_not_found'=>'Запрос на сброс пароля не найден',
+    'passwords'=>[
+        'token' => 'Токен восстановления некорректен',
+    ]
 ];
