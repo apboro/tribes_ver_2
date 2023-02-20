@@ -2,8 +2,6 @@
 
 namespace App\Http\ApiRequests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\App;
 use OpenApi\Annotations as OA;
 
 

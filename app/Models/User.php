@@ -19,8 +19,12 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\SmsConfirmations;
 
 /**
+ * @property int $id
+ * @property string $email
+ * @property string $password
+ *
+ *
  * @method UserFactory factory()
- * @property mixed $id
  */
 class User extends Authenticatable
 {

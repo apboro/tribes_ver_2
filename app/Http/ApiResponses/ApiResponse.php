@@ -198,12 +198,12 @@ abstract class ApiResponse implements Responsable
     /**
      * Success API response factory.
      *
-     * @param string $message
+     * @param string|null $message
      * @param array $headers
      *
      * @return  ApiResponseSuccess
      */
-    public static function success(string $message, array $headers = []): ApiResponseSuccess
+    public static function success(?string $message = null, array $headers = []): ApiResponseSuccess
     {
         return (new ApiResponseSuccess($headers))->message($message);
     }

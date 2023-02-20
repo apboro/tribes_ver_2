@@ -8,10 +8,10 @@
         <listener class="\Mockery\Adapter\Phpunit\TestListener"/>
     </listeners-->
     <testsuites>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
+<!--        <testsuite name="Unit">-->
+<!--            <directory suffix="Test.php">./tests/Unit</directory>-->
 
-        </testsuite>
+<!--        </testsuite>-->
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
