@@ -95,7 +95,7 @@ class ApiResetPasswordTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload'=>[
+                'data'=>[
                     'token'
                 ],
             ]
