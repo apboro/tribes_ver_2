@@ -5,33 +5,6 @@ namespace App\Http\Requests\Auth;
 use App\Http\ApiRequests\ApiRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * @OA\Post(
- *     path="api/v3/user/register",
- *     tags={"User"},
- *     summary="Register User",
- *     operationId="register_user",
- *     security={{"sanctum": {} }},
- *     @OA\Response(
- *         response=200,
- *         description="Redirect to main page"
- *     ),
- *     @OA\Response(
- *         response=302,
- *         description="Redirect to main page, if user is not admin"
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Unauthenticated",
- *     ),
- *     @OA\Response(
- *         response=419,
- *         description="Page expired",
- *     ),
- * )
- *
- */
-
 class RegisterRequest extends ApiRequest
 {
 

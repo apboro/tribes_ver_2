@@ -4,43 +4,6 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\ApiRequests\ApiRequest;
 
-/**
- * @OA\Post(
- *     path="api/v3/user/password/change",
- *     tags={"User"},
- *     summary="User change password",
- *     operationId="change_password",
- *     security={{"sanctum": {} }},
- *     @OA\RequestBody(
- *         required=false,
- *         description="Тело запроса для смены пароля",
- *         @OA\JsonContent(
- *              @OA\Property(
- *                  property="password",
- *                  type="string",
- *              ),
- *         ),
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Redirect to main page"
- *     ),
- *     @OA\Response(
- *         response=302,
- *         description="Redirect to main page, if user is not admin"
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Unauthenticated",
- *     ),
- *     @OA\Response(
- *         response=419,
- *         description="Page expired",
- *     ),
- * )
- *
- */
-
 class ChangePassRequest extends ApiRequest
 {
     /**

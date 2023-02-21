@@ -4,7 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\ApiRequests\ApiRequest;
 use OpenApi\Attributes as OAT;
-
+/**
 #[OAT\Schema(
     schema: "ApiResponseCommon_login",
     title: "ApiResponse Common for login",
@@ -70,6 +70,7 @@ use OpenApi\Attributes as OAT;
         ),
     ],
 )]
+ */
 class LoginRequest extends ApiRequest
 {
     public function authorize(): bool
