@@ -30,8 +30,8 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/reset-password', [ApiResetPasswordController::class,'resetUserPassword'])->name('password.reset');
 });
 
-Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->group(function () {
-    Route::get('/user/logout', [ApiAuthController::class,'logout'])->name('auth.logout');
+Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function () {
+    Route::post('/user/logout', [ApiAuthController::class,'logout'])->name('auth.logout');
 });
 
 /*

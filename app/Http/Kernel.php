@@ -58,6 +58,7 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth_v3' => \App\Http\Middleware\AuthenticateApiV3::class,
         'sms_confirmed' => \App\Http\Middleware\ConfirmedAccount::class,
         'owned_community' => \App\Http\Middleware\OwnedCommunity::class,
         'owned_group_community' => \App\Http\Middleware\OwnedGroupCommunity::class,
