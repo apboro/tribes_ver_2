@@ -25,9 +25,9 @@ class ApiLoginRequest extends ApiRequest
     public function messages(): array
     {
         return [
-            'email.required' => trans('responses/validation.login.email_required'),
-            'email.email'=>trans('responses/validation.login.email_incorrect_format'),
-            'password.required' => trans('responses/validation.login.password_require'),
+            'email.required' => $this->localizeValidation('login.email_required'),
+            'email.email'=>$this->localizeValidation('login.email_incorrect_format'),
+            'password.required' => $this->localizeValidation('login.password_require'),
         ];
     }
 }

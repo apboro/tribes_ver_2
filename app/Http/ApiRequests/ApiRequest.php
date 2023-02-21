@@ -114,4 +114,16 @@ abstract class ApiRequest extends FormRequest
     {
         throw new ApiUnauthorizedException();
     }
+
+    /**
+     * Localize message.
+     *
+     * @param string $message
+     *
+     * @return string
+     */
+    protected function localizeValidation(string $message): string
+    {
+        return trans('responses/validation.' . $message);
+    }
 }

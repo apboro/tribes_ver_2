@@ -1,11 +1,9 @@
 <?php
 
-namespace Api\v3;
+namespace Tests\Feature\Api\v3;
 
 use App\Models\User;
-use App\Services\TelegramLogService;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\App;
 use Tests\TestCase;
 
 class ApiUserRegisterTest extends TestCase

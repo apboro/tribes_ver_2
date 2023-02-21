@@ -21,8 +21,8 @@ class ApiForgotPasswordLinkRequest extends ApiRequest
     public function messages(): array
     {
         return [
-            'email.required' => trans('responses/validation.register.email_required'),
-            'email.email'=>trans('responses/validation.login.email_incorrect_format'),
+            'email.required' => $this->localizeValidation('register.email_required'),
+            'email.email'=>$this->localizeValidation('login.email_incorrect_format'),
         ];
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Http\ApiRequests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 class ApiChangePassRequest extends ApiRequest
 {
     /**
@@ -21,10 +19,10 @@ class ApiChangePassRequest extends ApiRequest
     public function messages(): array
     {
         return [
-            'password.required' => trans('responses/validation.register.password_require'),
-            'password.string' => trans('responses/validation.register.incorrect_format'),
-            'password.min' => trans('responses/validation.register.password_min_length'),
-            'password.confirmed' => trans('responses/validation.register.password_confirm'),
+            'password.required' => $this->localizeValidation('register.password_require'),
+            'password.string' => $this->localizeValidation('register.incorrect_format'),
+            'password.min' => $this->localizeValidation('register.password_min_length'),
+            'password.confirmed' => $this->localizeValidation('register.password_confirm'),
         ];
     }
 }

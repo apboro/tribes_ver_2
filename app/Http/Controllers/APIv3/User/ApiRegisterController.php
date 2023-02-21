@@ -22,7 +22,7 @@ class ApiRegisterController extends Controller
 
         /** @var User $user */
         $user = User::query()->create([
-            'name' => $data['name'] ?? 'No name yet', // TODO probably change to null
+            'name' => $data['name'],
             'email' => strtolower($data['email']),
             'password' => Hash::make($password),
             'phone_confirmed' => false,

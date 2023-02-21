@@ -4,9 +4,6 @@ namespace App\Http\Controllers\APIv3\User;
 
 use App\Http\ApiRequests\ApiForgotPasswordLinkRequest;
 use App\Http\ApiResponses\ApiResponse;
-use App\Http\ApiResponses\ApiResponseError;
-use App\Http\ApiResponses\ApiResponseSuccess;
-use App\Http\ApiResponses\ApiResponseValidationError;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
@@ -29,7 +26,7 @@ class ApiForgotPasswordController extends Controller
         $user = User::query()->where('email', '=', $request->input('email'))->first();
 
         if ($user === null) {
-            return ApiResponse::validationError(['email' => trans('responses/common.user_dosent_exists')]);
+            return ApiResponse::validationError()->addError('email', 'common.user_dosent_exists');
         }
 
         $response = $this->broker()->sendResetLink(
@@ -37,9 +34,9 @@ class ApiForgotPasswordController extends Controller
         );
 
         if ($response !== Password::RESET_LINK_SENT) {
-            return ApiResponse::error('responses/common.' . $response);
+            return ApiResponse::error('common.' . $response);
         }
 
-        return ApiResponse::success('responses/common.' . $response);
+        return ApiResponse::success('common.' . $response);
     }
 }

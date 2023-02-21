@@ -3,7 +3,6 @@
 namespace Tests\Feature\Api\v3;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -13,7 +12,7 @@ class ApiResetPasswordTest extends TestCase
 {
     use WithFaker;
 
-    private $url = 'api/v3/reset-password';
+    private $url = 'api/v3/user/password/reset';
     private $data = [
         'empty_data' => [
             'email' => '',
@@ -108,14 +107,18 @@ class ApiResetPasswordTest extends TestCase
         $response = $this->post($this->url,
             $this->data['empty_data']
         );
-        $response->assertStatus($this->data['empty_data']['expected_status'])
+
+        $response
+            ->assertStatus($this->data['empty_data']['expected_status'])
             ->assertJsonStructure($this->data['empty_data']['expected_structure']);
     }
 
     public function test_reset_password_error_email_not_valid()
     {
         $response = $this->post($this->url, $this->data['not_valid_email']);
-        $response->assertStatus($this->data['not_valid_email']['expected_status'])
+
+        $response
+            ->assertStatus($this->data['not_valid_email']['expected_status'])
             ->assertJsonStructure($this->data['empty_data']['expected_structure']);
     }
 

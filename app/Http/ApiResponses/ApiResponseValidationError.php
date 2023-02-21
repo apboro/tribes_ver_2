@@ -43,4 +43,27 @@ class ApiResponseValidationError extends ApiResponse
 
         return $this;
     }
+
+    /**
+     * Add validation error with localization.
+     *
+     * @param string $key
+     * @param string $message
+     *
+     * @return  $this
+     */
+    public function addError(string $key, string $message): self
+    {
+        if(!isset($this->errors)) {
+            $this->errors = [];
+        }
+
+        if(array_key_exists($key, $this->errors)) {
+            $this->errors[$key][] = $this->localize($message);
+        } else {
+            $this->errors[$key] = [$this->localize($message)];
+        }
+
+        return $this;
+    }
 }

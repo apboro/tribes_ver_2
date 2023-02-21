@@ -21,6 +21,7 @@ use App\Models\SmsConfirmations;
 /**
  * @property int $id
  * @property string $email
+ * @property string $name
  * @property string $password
  *
  *

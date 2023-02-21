@@ -40,7 +40,7 @@ class ApiResponseValidationErrorTest extends TestCase
         App::setLocale('ru');
         $response = new ApiResponseValidationError();
         $request = new Request();
-        $response->message('validation_error');
+        $response->message('common.validation_error');
         $result = $response->toResponse($request);
         $decoded = json_decode($result->content());
         $this->assertEquals(422,$result->status());

@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
 use OpenApi\Attributes as OAT;
 use Illuminate\Support\Facades\App;
+
 /*
 #[OAT\Schema(
       schema: "ApiResponseMessagePayload",
@@ -24,7 +25,6 @@ use Illuminate\Support\Facades\App;
     content: new OAT\JsonContent(type: 'array', items: new OAT\Items(ref: '#/components/schemas/ApiResponseMessagePayload'))
 )]
 */
-
 
 abstract class ApiResponse implements Responsable
 {
@@ -70,8 +70,20 @@ abstract class ApiResponse implements Responsable
      */
     public function message(?string $message): self
     {
-        $this->message = trans('responses/'.$message);
+        $this->message = $message ? $this->localize($message) : null;
         return $this;
+    }
+
+    /**
+     * Localize message.
+     *
+     * @param string $message
+     *
+     * @return string
+     */
+    protected function localize(string $message): string
+    {
+        return trans('responses/' . $message);
     }
 
     /**
@@ -141,7 +153,7 @@ abstract class ApiResponse implements Responsable
      */
     public static function notFound(string $message, array $headers = []): ApiResponseNotFound
     {
-        return (new ApiResponseNotFound( $headers))->message($message);
+        return (new ApiResponseNotFound($headers))->message($message);
     }
 
     /**
@@ -230,8 +242,7 @@ abstract class ApiResponse implements Responsable
      *
      * @return  ApiResponseValidationError
      */
-    public static function validationError(array $errors, string $message = 'common.validation_error', array $headers = []
-    ): ApiResponseValidationError
+    public static function validationError(array $errors = [], string $message = 'common.validation_error', array $headers = []): ApiResponseValidationError
     {
         return (new ApiResponseValidationError($headers))->errors($errors)->message($message);
     }

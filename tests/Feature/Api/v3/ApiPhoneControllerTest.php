@@ -4,7 +4,6 @@ namespace Tests\Feature\Api\v3;
 
 use App\Models\User;
 use App\Repositories\Notification\Sms16Repository;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
@@ -14,8 +13,8 @@ class ApiPhoneControllerTest extends TestCase
     use WithFaker;
 
     private $url = [
-     'reset_confirmed'=>'api/v3/phone/reset-confirmed',
-     'confirm_phone'=>'api/v3/phone/send-confirm-code',
+     'reset_confirmed'=>'api/v3/user/phone/reset-confirmed',
+     'confirm_phone'=>'api/v3/user/phone/send-confirm-code',
     ];
 
     private $data = [

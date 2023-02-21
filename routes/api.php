@@ -3,10 +3,12 @@
 
 use App\Http\Controllers\APIv3\Admin\AdminAuthController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
+use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiAuthController;
 
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
+use App\Http\Controllers\APIv3\User\ApiUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,24 +23,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::prefix('api/v3')->group(function () {
-    Route::post('/user/register', [ApiRegisterController::class,'register'])->name('auth.register');
-    Route::post('/user/login', [ApiAuthController::class,'login'])->name('auth.login');
-    Route::post('/forgot-password', [ApiForgotPasswordController::class,'sendPasswordResetLink'])->name('password.forgot');
-    Route::post('/reset-password', [ApiResetPasswordController::class,'resetUserPassword'])->name('password.reset');
+    Route::post('/user/login', [ApiAuthController::class,'login']);
+    Route::post('/user/register', [ApiRegisterController::class,'register']);
+    Route::post('/user/password/forgot', [ApiForgotPasswordController::class,'sendPasswordResetLink']);
+    Route::post('/user/password/reset', [ApiResetPasswordController::class,'resetUserPassword']);
 });
 
 Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function () {
-    Route::get('/user/logout', [ApiAuthController::class,'logout'])->name('auth.logout');
-    Route::post('/user/change-password', [ApiUserController::class,'passChange'])->name('user.change_password');
-    Route::get('/get-user-data', [ApiUserController::class,'show'])->name('user.show');
-    Route::get('/phone/reset-confirmed', [ApiPhoneController::class,'resetConfirmed'])->name('phone.reset_confirmed');
-    Route::post('/phone/send-confirm-code', [ApiPhoneController::class,'sendConfirmCode'])->name('phone.send_confirm_code');
-    Route::post('/phone/confirm', [ApiPhoneController::class,'confirmPhone'])->name('phone.confirm');
-});
+    Route::get('/user', [ApiUserController::class,'show']);
+    Route::get('/user/logout', [ApiAuthController::class,'logout']);
+    Route::post('/user/password/change', [ApiUserController::class,'passChange']);
 
-Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->namespace('App\Http\Controllers\APIv3\Admin')->group(function () {
-    Route::post('/admin/login-as',       [AdminAuthController::class,       'loginAs'          ])->name('auth.login_as')->middleware('admin');
-    Route::post('/admin/login-back',     [AdminAuthController::class,       'loginBack'        ])->name('auth.login_back');
+    Route::get('/user/phone/reset-confirmed', [ApiUserPhoneController::class,'resetConfirmed']);
+    Route::post('/user/phone/send-confirm-code', [ApiUserPhoneController::class,'sendConfirmCode']);
+    Route::post('/user/phone/confirm', [ApiUserPhoneController::class,'confirmPhone']);
 });
 
 
