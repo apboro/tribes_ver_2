@@ -70,7 +70,7 @@ abstract class ApiResponse implements Responsable
      */
     public function message(?string $message): self
     {
-        $this->message = trans('responses/common.'.$message);
+        $this->message = trans('responses/'.$message);
         return $this;
     }
 
@@ -164,7 +164,7 @@ abstract class ApiResponse implements Responsable
      *
      * @return  ApiResponseTokenMismatch
      */
-    public static function tokenMismatch(string $message = 'token_mismatch', array $headers = []): ApiResponseTokenMismatch
+    public static function tokenMismatch(string $message = 'common.token_mismatch', array $headers = []): ApiResponseTokenMismatch
     {
         return (new ApiResponseTokenMismatch($headers))->message($message);
     }
@@ -177,7 +177,7 @@ abstract class ApiResponse implements Responsable
      *
      * @return  ApiResponseForbidden
      */
-    public static function forbidden(string $message = 'forbidden', array $headers = []): ApiResponseForbidden
+    public static function forbidden(string $message = 'common.forbidden', array $headers = []): ApiResponseForbidden
     {
         return (new ApiResponseForbidden($headers))->message($message);
     }
@@ -190,7 +190,7 @@ abstract class ApiResponse implements Responsable
      *
      * @return  ApiResponseUnauthorized
      */
-    public static function unauthorized(string $message = 'unauthorized', array $headers = []): ApiResponseUnauthorized
+    public static function unauthorized(string $message = 'common.unauthorized', array $headers = []): ApiResponseUnauthorized
     {
         return (new ApiResponseUnauthorized($headers))->message($message);
     }
@@ -230,7 +230,7 @@ abstract class ApiResponse implements Responsable
      *
      * @return  ApiResponseValidationError
      */
-    public static function validationError(array $errors, string $message = 'validation_error', array $headers = []
+    public static function validationError(array $errors, string $message = 'common.validation_error', array $headers = []
     ): ApiResponseValidationError
     {
         return (new ApiResponseValidationError($headers))->errors($errors)->message($message);

@@ -4,7 +4,6 @@ namespace App\Http\ApiRequests;
 
 use OpenApi\Annotations as OA;
 
-
 /**
  * @OA\Post(
  *     path="api/v3/user/register",
@@ -31,7 +30,6 @@ use OpenApi\Annotations as OA;
  * )
  *
  */
-
 class ApiRegisterRequest extends ApiRequest
 {
 
@@ -50,15 +48,21 @@ class ApiRegisterRequest extends ApiRequest
 
     public function prepareForValidation(): void
     {
-        $this->request->set('email', strtolower($this->request->get('email')));
+        $email = strtolower($this->request->get('email'));
+        $this->request->set('email', $email);
+        $name = $this->request->get('name');
+        if (empty($name)) {
+            $name = explode('@', $email);
+            $this->request->set('name', $name[0] ?? 'No name yet');
+        }
     }
 
     public function messages(): array
     {
         return [
-            'email.required'=>trans('responses/validation.register.email_required'),
-            'email.email'=>trans('responses/validation.login.email_incorrect_format'),
-            'email.unique'=>trans('responses/validation.register.email_already_use'),
+            'email.required' => trans('responses/validation.register.email_required'),
+            'email.email' => trans('responses/validation.login.email_incorrect_format'),
+            'email.unique' => trans('responses/validation.register.email_already_use'),
             'name.string' => trans('responses/validation.register.incorrect_format'),
             'name.max' => trans('responses/validation.register.name_max_length'),
 
@@ -73,5 +77,20 @@ class ApiRegisterRequest extends ApiRequest
             'password.min' => trans('responses/validation.register.password_min_length'),
             'password.confirmed' => trans('responses/validation.register.password_confirm'),
         ];
+    }
+
+    public function passedValidation(): void
+    {
+        $email = $this->request->get('email');
+        $name = $this->request->get('name');
+
+        if (empty($name)) {
+            $name = explode('@', $email);
+        }
+
+        $this->merge([
+            'email' => strtolower($email),
+            'name' => $name,
+        ]);
     }
 }

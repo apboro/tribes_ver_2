@@ -29,7 +29,7 @@ class ApiForgotPasswordController extends Controller
         $user = User::query()->where('email', '=', $request->input('email'))->first();
 
         if ($user === null) {
-            return (new ApiResponseValidationError())->message('user_dosent_exists');
+            return ApiResponse::validationError(['email' => trans('responses/common.user_dosent_exists')]);
         }
 
         $response = $this->broker()->sendResetLink(
@@ -37,9 +37,9 @@ class ApiForgotPasswordController extends Controller
         );
 
         if ($response !== Password::RESET_LINK_SENT) {
-            return ApiResponse::error($response);
+            return ApiResponse::error('responses/common.' . $response);
         }
 
-        return ApiResponse::success($response);
+        return ApiResponse::success('responses/common.' . $response);
     }
 }

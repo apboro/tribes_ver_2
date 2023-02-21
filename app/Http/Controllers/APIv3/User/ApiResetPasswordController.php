@@ -27,11 +27,11 @@ class ApiResetPasswordController extends Controller
         $user = User::query()->where('email', '=', $request->input('email'))->first();
 
         if ($user === null) {
-            return ApiResponse::validationError(['email' => trans('responses.common.reset_password_request_not_found')]);
+            return ApiResponse::validationError(['email' => trans('responses/common.reset_password_request_not_found')]);
         }
 
         if (!$this->broker()->tokenExists($user, $request->input('token'))) {
-            return ApiResponse::validationError(['email' => trans('responses.common.reset_password_request_not_found')]);
+            return ApiResponse::validationError(['email' => trans('responses/common.reset_password_request_not_found')]);
         }
 
         $response = $this->broker()->reset($this->credentials($request), function ($user, $password) {
@@ -39,7 +39,7 @@ class ApiResetPasswordController extends Controller
         });
 
         if ($response !== Password::PASSWORD_RESET) {
-            return (new ApiResponseValidationError())->message($response);
+            return ApiResponse::validationError(['email' => trans('responses/common.'. $response)]);
         }
 
         return ApiResponse::common(['token' => $user->createToken('api-token')->plainTextToken]);
