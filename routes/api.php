@@ -3,10 +3,12 @@
 
 use App\Http\Controllers\APIv3\Admin\AdminAuthController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
+use App\Http\Controllers\APIv3\User\ApiPhoneController;
 use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiAuthController;
 
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
+use App\Http\Controllers\APIv3\User\ApiUserController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProfileController;
@@ -32,6 +34,11 @@ Route::prefix('api/v3')->group(function () {
 
 Route::prefix('api/v3')->middleware(['api','auth:sanctum'])->group(function () {
     Route::get('/user/logout', [ApiAuthController::class,'logout'])->name('auth.logout');
+    Route::post('/user/change-password', [ApiUserController::class,'passChange'])->name('user.change_password');
+    Route::get('/get-user-data', [ApiUserController::class,'show'])->name('user.show');
+    Route::get('/phone/reset-confirmed', [ApiPhoneController::class,'resetConfirmed'])->name('phone.reset_confirmed');
+    Route::post('/phone/send-confirm-code', [ApiPhoneController::class,'sendConfirmCode'])->name('phone.send_confirm_code');
+    Route::post('/phone/confirm', [ApiPhoneController::class,'confirmPhone'])->name('phone.confirm');
 });
 
 /*

@@ -70,10 +70,11 @@ class ApiUserRegisterTest extends TestCase
             'name'=>'test',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload'=>[
+                'data'=>[
                     'token'
                 ],
+                'message',
+                'payload',
             ]
         ]
     ];
@@ -121,6 +122,7 @@ class ApiUserRegisterTest extends TestCase
         $response = $this->post($this->url,$this->data['success']);
         $response->assertStatus($this->data['success']['expected_status'])
             ->assertJsonStructure($this->data['success']['expected_structure']);
+
     }
 }
 
