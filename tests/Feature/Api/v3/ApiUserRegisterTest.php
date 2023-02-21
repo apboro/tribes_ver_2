@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\v3;
+namespace Api\v3;
 
 use App\Models\User;
 use App\Services\TelegramLogService;
@@ -70,10 +70,11 @@ class ApiUserRegisterTest extends TestCase
             'name'=>'test',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
                 'data'=>[
                     'token'
                 ],
+                'message',
+                'payload',
             ]
         ]
     ];
