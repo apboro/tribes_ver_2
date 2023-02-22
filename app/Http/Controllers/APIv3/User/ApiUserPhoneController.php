@@ -76,7 +76,7 @@ class ApiUserPhoneController extends Controller
             return ApiResponse::validationError()->addError('sms_code', 'phone.confirm_send_is_blocked');
         }
 
-        if ($sms->code != $request['sms_code']) {
+        if ((string)$sms->code !== $request['sms_code']) {
             return ApiResponse::validationError()->addError('sms_code', 'phone.confirm_code_error');
         }
 

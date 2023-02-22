@@ -6,26 +6,15 @@ namespace App\Http\ApiResponses;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
 
 /**
- * @OA\Schema(
- *     schema="validation_error_response",
- *  @OA\Property(
- *     property="errors",
- *     type="array",
- *     @OA\Items(),
- *     example={"email"={"email - Обязательное поле"}}
+ * @OA\Schema(schema="api_response_validation_error",
+ *     @OA\Property(property="errors", type="array",
+ *         @OA\Items(), example={"prorerty_name"={"Поле обязательно для заполенения"}}
  *     ),
- *     @OA\Property(
- *     property="message",
- *     type="string",
- *      ),
- * @OA\Property(
- *     property="payload",
- *     type="array",
- *     @OA\Items(),
- *     example={},
- *     ),
+ *     @OA\Property(property="message", type="string", nullable=true),
+ *     @OA\Property(property="payload", type="array", @OA\Items(), example={}),
  * )
  */
 class ApiResponseValidationError extends ApiResponse
@@ -75,11 +64,11 @@ class ApiResponseValidationError extends ApiResponse
      */
     public function addError(string $key, string $message): self
     {
-        if(!isset($this->errors)) {
+        if (!isset($this->errors)) {
             $this->errors = [];
         }
 
-        if(array_key_exists($key, $this->errors)) {
+        if (array_key_exists($key, $this->errors)) {
             $this->errors[$key][] = $this->localize($message);
         } else {
             $this->errors[$key] = [$this->localize($message)];

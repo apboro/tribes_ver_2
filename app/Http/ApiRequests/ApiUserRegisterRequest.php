@@ -2,37 +2,39 @@
 
 namespace App\Http\ApiRequests;
 
-class ApiRegisterRequest extends ApiRequest
+use OpenApi\Annotations as OA;
+
+/**
+ * @OA\Post(
+ *     path="/api/v3/user/register",
+ *     operationId="register",
+ *     summary="Register user",
+ *     tags={"User"},
+ *
+ *     @OA\RequestBody(
+ *          @OA\JsonContent(
+ *               @OA\Property(property="email", type="string"),
+ *               @OA\Property(property="name", type="string"),
+ *         )
+ *      ),
+ *
+ *     @OA\Response(response=200, description="Login success", @OA\JsonContent(
+ *            @OA\Property(property="data", type="array",
+ *                @OA\Items(
+ *                    @OA\Property(property="token", type="string"),
+ *                ),
+ *            ),
+ *            @OA\Property(property="message", type="string", nullable=true),
+ *            @OA\Property(property="payload", type="array", @OA\Items(), example={}))
+ *     ),
+ *
+ *     @OA\Response(response=422, description="Validation error", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
+ *
+ *     @OA\Response(response=500, description="Server error", @OA\JsonContent(ref="#/components/schemas/api_response_server_error")),
+ * )
+ */
+class ApiUserRegisterRequest extends ApiRequest
 {
-
-    /**
-     * @OA\Post(
-     *    path="/api/v3/user/register",
-     *    operationId="register",
-     *    summary="User register",
-     *    tags={"User"},
-     *    @OA\Parameter(
-     *     name="email",
-     *      in="path",
-     *      required=true,
-     *      @OA\Schema(
-     *      type="string")
-     *      ),
-     *   @OA\Parameter(
-     *     name="name",
-     *      in="path",
-     *      required=false,
-     *      @OA\Schema(
-     *      type="string")
-     *      ),
-     *     @OA\Response(response=200, description="Register OK", @OA\JsonContent(ref="#/components/schemas/register_success_response")),
-     *     @OA\Response(response=400, description="Error", @OA\JsonContent(ref="#/components/schemas/standart_response")),
-     *     @OA\Response(response=422, description="Validation Error", @OA\JsonContent(ref="#/components/schemas/validation_error_response")),
-     *     @OA\Response(response=500, description="Server Error", @OA\JsonContent(ref="#/components/schemas/standart_response")),
-     *     )
-     * )
-     */
-
     public function authorize(): bool
     {
         return true;

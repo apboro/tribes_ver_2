@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiForgotPasswordLinkRequest;
+use App\Http\ApiRequests\ApiUserForgotPasswordLinkRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -14,12 +14,13 @@ class ApiForgotPasswordController extends Controller
     use SendsPasswordResetEmails;
 
     /**
+     * Send password reset link to user
      *
-     * @param ApiForgotPasswordLinkRequest $request
+     * @param ApiUserForgotPasswordLinkRequest $request
      *
      * @return ApiResponse
      */
-    public function sendPasswordResetLink(ApiForgotPasswordLinkRequest $request): ApiResponse
+    public function sendPasswordResetLink(ApiUserForgotPasswordLinkRequest $request): ApiResponse
     {
         /** @var User|null $user */
         $user = User::query()->where('email', '=', $request->input('email'))->first();
@@ -33,7 +34,7 @@ class ApiForgotPasswordController extends Controller
         );
 
         if ($response !== Password::RESET_LINK_SENT) {
-            return ApiResponse::error('common.' . $response);
+            return ApiResponse::validationError()->addError('email', 'common.' . $response);
         }
 
         return ApiResponse::success('common.' . $response);

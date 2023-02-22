@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3;
 
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\Info(

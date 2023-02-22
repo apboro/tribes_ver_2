@@ -5,7 +5,14 @@ namespace App\Http\ApiResponses;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Schema(schema="api_response_forbidden",
+ *     @OA\Property(property="message", type="string", nullable=true),
+ *     @OA\Property(property="payload", type="array", @OA\Items(), example={}),
+ * )
+ */
 class ApiResponseForbidden extends ApiResponse
 {
     protected int $statusCode = self::CODE_FORBIDDEN;

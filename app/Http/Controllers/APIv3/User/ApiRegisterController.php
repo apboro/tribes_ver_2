@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\APIv3\User;
 
 use App\Events\ApiUserRegister;
-use App\Http\ApiRequests\ApiRegisterRequest;
+use App\Http\ApiRequests\ApiUserRegisterRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -12,27 +12,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-/**
- * @OA\Schema(
- *     schema="register_success_response",
- *  @OA\Property(
- *     property="data",
- *     type="array",
- *     @OA\Items(),
- *     example={"token"="260|nAYVOcXotwMJLdTNKEiCmu8IbE5AIx2VJREAFAHM"},
- *     ),
- *     @OA\Property(
- *     property="message",
- *     type="string",
- *      ),
- * @OA\Property(
- *     property="payload",
- *     type="array",
- *     @OA\Items(),
- *     example={},
- *     ),
- * )
- */
 class ApiRegisterController extends Controller
 {
     use RegistersUsers;
@@ -55,12 +34,13 @@ class ApiRegisterController extends Controller
     }
 
     /**
+     * Perform user registration.
      *
-     * @param ApiRegisterRequest $request
+     * @param ApiUserRegisterRequest $request
      *
      * @return ApiResponse
      */
-    public function register(ApiRegisterRequest $request): ApiResponse
+    public function register(ApiUserRegisterRequest $request): ApiResponse
     {
         $user = $this->create($request->all());
 

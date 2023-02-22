@@ -2,43 +2,24 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiLoginRequest;
+use App\Http\ApiRequests\ApiUserLoginRequest;
+use App\Http\ApiRequests\ApiUserLogoutRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-/**
- * @OA\Schema(
- *     schema="login_success_response",
- *  @OA\Property(
- *     property="data",
- *     type="array",
- *     @OA\Items(),
- *     example={"token"="260|nAYVOcXotwMJLdTNKEiCmu8IbE5AIx2VJREAFAHM"},
- *     ),
- *     @OA\Property(
- *     property="message",
- *     type="string",
- *      ),
- * @OA\Property(
- *     property="payload",
- *     type="array",
- *     @OA\Items(),
- *     example={},
- *     ),
- * )
- */
 class ApiAuthController extends Controller
 {
     /**
+     * Perform user login.
      *
-     * @param ApiLoginRequest $request
+     * @param ApiUserLoginRequest $request
      *
      * @return ApiResponse
      */
-    public function login(ApiLoginRequest $request): ApiResponse
+    public function login(ApiUserLoginRequest $request): ApiResponse
     {
         /** @var User|null $user */
         $user = User::query()->where('email', $request->input('email'))->first();
@@ -51,23 +32,13 @@ class ApiAuthController extends Controller
     }
 
     /**
+     * Perform user logout
      *
-     * @OA\Post(
-     *        path="/api/v3/user/logout",
-     *        operationId="logout",
-     *        summary="User logout",
-     *        security={{"sanctum": {} }},
-     *        tags={"User"},
-     *     @OA\Response(response=200, description="Logout OK", @OA\JsonContent(ref="#/components/schemas/standart_response")),
-     *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/standart_response")),
-     *     @OA\Response(response=500, description="Server Error", @OA\JsonContent(ref="#/components/schemas/standart_response")),
-     *
-     *     ),
-     *
+     * @param ApiUserLogoutRequest $request
      *
      * @return ApiResponse
      */
-    public function logout(): ApiResponse
+    public function logout(ApiUserLogoutRequest $request): ApiResponse
     {
         /** @var User $user */
         $user = Auth::user();

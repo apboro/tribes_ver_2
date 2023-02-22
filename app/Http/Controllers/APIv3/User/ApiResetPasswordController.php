@@ -2,45 +2,25 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiResetPasswordLinkRequest;
+use App\Http\ApiRequests\ApiUserResetPasswordRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Support\Facades\Password;
 
-/**
- * @OA\Schema(
- *     schema="password_reset_success_response",
- *  @OA\Property(
- *     property="data",
- *     type="array",
- *     @OA\Items(),
- *     example={"token"="260|nAYVOcXotwMJLdTNKEiCmu8IbE5AIx2VJREAFAHM"},
- *     ),
- *     @OA\Property(
- *     property="message",
- *     type="string",
- *      ),
- * @OA\Property(
- *     property="payload",
- *     type="array",
- *     @OA\Items(),
- *     example={},
- *     ),
- * )
- */
 class ApiResetPasswordController extends Controller
 {
     use ResetsPasswords;
 
     /**
+     * Perform password reset.
      *
-     * @param ApiResetPasswordLinkRequest $request
+     * @param ApiUserResetPasswordRequest $request
      *
      * @return ApiResponse
      */
-    public function resetUserPassword(ApiResetPasswordLinkRequest $request): ApiResponse
+    public function resetUserPassword(ApiUserResetPasswordRequest $request): ApiResponse
     {
         /** @var User|null $user */
         $user = User::query()->where('email', '=', $request->input('email'))->first();
