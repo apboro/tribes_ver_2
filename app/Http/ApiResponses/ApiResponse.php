@@ -6,25 +6,7 @@ namespace App\Http\ApiResponses;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
-use OpenApi\Attributes as OAT;
-use Illuminate\Support\Facades\App;
 
-/*
-#[OAT\Schema(
-      schema: "ApiResponseMessagePayload",
-      title: "ApiResponse Message Payload",
-      description: "Api Response with message and payload",
-      properties: [
-          new OAT\Property(property: 'message', type: 'string'),
-          new OAT\Property(property: 'payload', type: 'array', items: new OAT\Items(), example: [])
-      ]
-)]
-#[OAT\Response(
-    response: 'response_with_message_and_payload',
-    description: "Response with message and payload",
-    content: new OAT\JsonContent(type: 'array', items: new OAT\Items(ref: '#/components/schemas/ApiResponseMessagePayload'))
-)]
-*/
 
 abstract class ApiResponse implements Responsable
 {

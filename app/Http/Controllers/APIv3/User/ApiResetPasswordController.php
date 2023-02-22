@@ -9,12 +9,32 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Support\Facades\Password;
 
+/**
+ * @OA\Schema(
+ *     schema="password_reset_success_response",
+ *  @OA\Property(
+ *     property="data",
+ *     type="array",
+ *     @OA\Items(),
+ *     example={"token"="260|nAYVOcXotwMJLdTNKEiCmu8IbE5AIx2VJREAFAHM"},
+ *     ),
+ *     @OA\Property(
+ *     property="message",
+ *     type="string",
+ *      ),
+ * @OA\Property(
+ *     property="payload",
+ *     type="array",
+ *     @OA\Items(),
+ *     example={},
+ *     ),
+ * )
+ */
 class ApiResetPasswordController extends Controller
 {
     use ResetsPasswords;
 
     /**
-     * TODO Swagger annotations
      *
      * @param ApiResetPasswordLinkRequest $request
      *

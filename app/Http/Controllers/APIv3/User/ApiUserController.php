@@ -28,7 +28,6 @@ class ApiUserController extends Controller
     }
 
     /**
-     * TODO Swagger annotations
      *
      * @param ApiChangePassRequest $request
      *

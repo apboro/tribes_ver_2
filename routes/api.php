@@ -37,6 +37,9 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::get('/user/phone/reset-confirmed', [ApiUserPhoneController::class,'resetConfirmed']);
     Route::post('/user/phone/send-confirm-code', [ApiUserPhoneController::class,'sendConfirmCode']);
     Route::post('/user/phone/confirm', [ApiUserPhoneController::class,'confirmPhone']);
+
+    Route::get('/profile/assign/telegram', [ApiAuthController::class,'logout'])->name('profile.assign_telegram_account');
+
 });
 
 

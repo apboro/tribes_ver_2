@@ -14,7 +14,6 @@ class ApiForgotPasswordController extends Controller
     use SendsPasswordResetEmails;
 
     /**
-     * TODO Swagger annotations
      *
      * @param ApiForgotPasswordLinkRequest $request
      *

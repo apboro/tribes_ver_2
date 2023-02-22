@@ -8,12 +8,31 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Schema(
+ *     schema="login_success_response",
+ *  @OA\Property(
+ *     property="data",
+ *     type="array",
+ *     @OA\Items(),
+ *     example={"token"="260|nAYVOcXotwMJLdTNKEiCmu8IbE5AIx2VJREAFAHM"},
+ *     ),
+ *     @OA\Property(
+ *     property="message",
+ *     type="string",
+ *      ),
+ * @OA\Property(
+ *     property="payload",
+ *     type="array",
+ *     @OA\Items(),
+ *     example={},
+ *     ),
+ * )
+ */
 class ApiAuthController extends Controller
 {
     /**
-     * TODO Swagger annotation
      *
      * @param ApiLoginRequest $request
      *
@@ -32,7 +51,19 @@ class ApiAuthController extends Controller
     }
 
     /**
-     * TODO Swagger annotation
+     *
+     * @OA\Post(
+     *        path="/api/v3/user/logout",
+     *        operationId="logout",
+     *        summary="User logout",
+     *        security={{"sanctum": {} }},
+     *        tags={"User"},
+     *     @OA\Response(response=200, description="Logout OK", @OA\JsonContent(ref="#/components/schemas/standart_response")),
+     *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/standart_response")),
+     *     @OA\Response(response=500, description="Server Error", @OA\JsonContent(ref="#/components/schemas/standart_response")),
+     *
+     *     ),
+     *
      *
      * @return ApiResponse
      */

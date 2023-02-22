@@ -12,6 +12,27 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+/**
+ * @OA\Schema(
+ *     schema="register_success_response",
+ *  @OA\Property(
+ *     property="data",
+ *     type="array",
+ *     @OA\Items(),
+ *     example={"token"="260|nAYVOcXotwMJLdTNKEiCmu8IbE5AIx2VJREAFAHM"},
+ *     ),
+ *     @OA\Property(
+ *     property="message",
+ *     type="string",
+ *      ),
+ * @OA\Property(
+ *     property="payload",
+ *     type="array",
+ *     @OA\Items(),
+ *     example={},
+ *     ),
+ * )
+ */
 class ApiRegisterController extends Controller
 {
     use RegistersUsers;
@@ -34,7 +55,6 @@ class ApiRegisterController extends Controller
     }
 
     /**
-     * TODO swagger annotations
      *
      * @param ApiRegisterRequest $request
      *

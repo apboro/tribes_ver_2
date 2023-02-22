@@ -7,6 +7,27 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Schema(
+ *     schema="validation_error_response",
+ *  @OA\Property(
+ *     property="errors",
+ *     type="array",
+ *     @OA\Items(),
+ *     example={"email"={"email - Обязательное поле"}}
+ *     ),
+ *     @OA\Property(
+ *     property="message",
+ *     type="string",
+ *      ),
+ * @OA\Property(
+ *     property="payload",
+ *     type="array",
+ *     @OA\Items(),
+ *     example={},
+ *     ),
+ * )
+ */
 class ApiResponseValidationError extends ApiResponse
 {
     protected int $statusCode = self::CODE_VALIDATION_ERROR;

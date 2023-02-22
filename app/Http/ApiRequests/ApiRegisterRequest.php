@@ -5,6 +5,34 @@ namespace App\Http\ApiRequests;
 class ApiRegisterRequest extends ApiRequest
 {
 
+    /**
+     * @OA\Post(
+     *    path="/api/v3/user/register",
+     *    operationId="register",
+     *    summary="User register",
+     *    tags={"User"},
+     *    @OA\Parameter(
+     *     name="email",
+     *      in="path",
+     *      required=true,
+     *      @OA\Schema(
+     *      type="string")
+     *      ),
+     *   @OA\Parameter(
+     *     name="name",
+     *      in="path",
+     *      required=false,
+     *      @OA\Schema(
+     *      type="string")
+     *      ),
+     *     @OA\Response(response=200, description="Register OK", @OA\JsonContent(ref="#/components/schemas/register_success_response")),
+     *     @OA\Response(response=400, description="Error", @OA\JsonContent(ref="#/components/schemas/standart_response")),
+     *     @OA\Response(response=422, description="Validation Error", @OA\JsonContent(ref="#/components/schemas/validation_error_response")),
+     *     @OA\Response(response=500, description="Server Error", @OA\JsonContent(ref="#/components/schemas/standart_response")),
+     *     )
+     * )
+     */
+
     public function authorize(): bool
     {
         return true;
