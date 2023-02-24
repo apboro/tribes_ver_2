@@ -83,7 +83,7 @@ class ApiForgotPasswordTest extends TestCase
     public function test_forgot_password_success()
     {
 
-        $this->data['success']['email'] = $this->user->email;
+        $this->data['success']['email'] = $this->custom_user->email;
         $response = $this->post($this->url,$this->data['success']);
         $response
             ->assertStatus($this->data['success']['expected_status'])

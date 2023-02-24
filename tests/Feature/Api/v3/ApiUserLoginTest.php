@@ -99,7 +99,7 @@ class ApiUserLoginTest extends TestCase
 
     public function test_auth_login_bad_credential()
     {
-        $this->data['bad_credential']['email'] = $this->user->email;
+        $this->data['bad_credential']['email'] = $this->custom_user->email;
         $response = $this->post($this->url, $this->data['bad_credential']);
 
         $response
@@ -131,7 +131,7 @@ class ApiUserLoginTest extends TestCase
     {
 
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->get('api/v3/user/logout');
 
         $response->assertStatus(200);

@@ -131,7 +131,7 @@ class ApiResetPasswordTest extends TestCase
 
     public function test_reset_password_error_password_confirmation()
     {
-        $this->data['error_password_confirmation']['email'] = $this->user->email;
+        $this->data['error_password_confirmation']['email'] = $this->custom_user->email;
         $response = $this->post($this->url, $this->data['error_password_confirmation']);
         $response->assertStatus($this->data['error_password_confirmation']['expected_status'])
             ->assertJsonStructure($this->data['empty_data']['expected_structure']);
@@ -147,7 +147,7 @@ class ApiResetPasswordTest extends TestCase
 
     public function test_reset_password_error_invalid_token()
     {
-        $this->data['invalid_token']['email'] = $this->user->email;
+        $this->data['invalid_token']['email'] = $this->custom_user->email;
         $response = $this->post($this->url, $this->data['invalid_token']);
         $response->assertStatus($this->data['invalid_token']['expected_status'])
             ->assertJsonStructure($this->data['invalid_token']['expected_structure']);

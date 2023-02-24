@@ -103,7 +103,7 @@ class ApiPhoneControllerTest extends TestCase
     {
         $response = $this->withHeaders([
             'Accept'=>'application/json',
-            'Authorization' => 'Bearer ' . $this->token
+            'Authorization' => 'Bearer ' . $this->custom_token
         ])->post($this->url['confirm_phone'],$this->data['confirm_error_phone_empty']);
         $response->assertStatus($this->data['confirm_error_phone_empty']['expected_status'])
             ->assertJsonStructure($this->data['confirm_error_phone_empty']['expected_structure']);
@@ -113,7 +113,7 @@ class ApiPhoneControllerTest extends TestCase
     {
         $response = $this->withHeaders([
             'Accept'=>'application/json',
-            'Authorization' => 'Bearer ' . $this->token
+            'Authorization' => 'Bearer ' . $this->custom_token
         ])->post($this->url['confirm_phone'],$this->data['confirm_error_phone_not_valid']);
 
         $response->assertStatus($this->data['confirm_error_phone_not_valid']['expected_status'])
@@ -136,7 +136,7 @@ class ApiPhoneControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Accept'=>'application/json',
-            'Authorization' => 'Bearer ' . $this->token
+            'Authorization' => 'Bearer ' . $this->custom_token
         ])->post($this->url['confirm_phone'],$this->data['success_send_code']);
         $response->assertStatus($this->data['success_send_code']['expected_status'])
             ->assertJsonStructure($this->data['success_send_code']['expected_structure']);

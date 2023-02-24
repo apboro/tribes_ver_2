@@ -33,10 +33,6 @@ abstract class TestCase extends BaseTestCase
     protected $logger;
 
     /** @var User */
-    protected $user;
-    protected $token;
-
-    /** @var User */
     protected $custom_user;
     protected $custom_token;
 
@@ -60,10 +56,7 @@ use WithFaker;
         $channel = Log::channel('testing');
         $this->logger = $channel->getLogger();
 
-        $this->user = User::factory()->create();
-        $this->token = $this->user->createToken('api-token')->plainTextToken;
         $this->createUserForTest();
-
     }
 
     /*protected function tearDown(): void

@@ -96,7 +96,7 @@ class ApiUserControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->get($this->url['get_user_data']);
 
         $response->assertStatus($this->data['success']['expected_status'])
@@ -117,7 +117,7 @@ class ApiUserControllerTest extends TestCase
     {
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['change_password']);
 
         $response->assertStatus($this->data['empty_password_validation']['expected_status'])
@@ -128,7 +128,7 @@ class ApiUserControllerTest extends TestCase
     {
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['change_password'], $this->data['empty_confirmation_validation']);
 
         $response->assertStatus($this->data['empty_confirmation_validation']['expected_status'])
@@ -139,7 +139,7 @@ class ApiUserControllerTest extends TestCase
     {
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['change_password'], $this->data['error_password_validation']);
 
         $response->assertStatus($this->data['error_password_validation']['expected_status'])
@@ -151,10 +151,10 @@ class ApiUserControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['change_password'], $this->data['change_password_success']);
 
-        $user_after = User::where('id', '=', $this->user->id)->first();
+        $user_after = User::where('id', '=', $this->custom_user->id)->first();
 
         $this->assertTrue(Hash::check($this->data['change_password_success']['password'], $user_after->password));
 
