@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\APIv3\Admin\AdminAuthController;
+use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\APIv3\User\ApiRegisterController;
@@ -37,6 +38,11 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::get('/user/phone/reset-confirmed', [ApiUserPhoneController::class,'resetConfirmed']);
     Route::post('/user/phone/send-confirm-code', [ApiUserPhoneController::class,'sendConfirmCode']);
     Route::post('/user/phone/confirm', [ApiUserPhoneController::class,'confirmPhone']);
+
+    Route::get('/projects/{id}', [ApiProjectController::class,'show']);
+    Route::post('/projects', [ApiProjectController::class,'create']);
+    Route::put('/projects/{id}', [ApiProjectController::class,'update']);
+    Route::get('/projects', [ApiProjectController::class,'index']);
 });
 
 

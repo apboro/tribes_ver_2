@@ -80,13 +80,9 @@ class ApiConfirmPhoneTest extends TestCase
     public function test_empty_data()
     {
 
-        $user = User::factory()->create();
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->token,
         ])->post($this->url, $this->data['empty_data']);
 
         $response
@@ -96,13 +92,9 @@ class ApiConfirmPhoneTest extends TestCase
 
     public function test_not_valid_code()
     {
-        $user = User::factory()->create();
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->token,
         ])->post($this->url, $this->data['not_valid']);
 
         $response

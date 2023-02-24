@@ -82,12 +82,9 @@ class ApiForgotPasswordTest extends TestCase
 
     public function test_forgot_password_success()
     {
-        $user = User::factory()->create();
 
-        $this->data['success']['email'] = $user->email;
-
+        $this->data['success']['email'] = $this->user->email;
         $response = $this->post($this->url,$this->data['success']);
-
         $response
             ->assertStatus($this->data['success']['expected_status'])
             ->assertJsonStructure($this->data['success']['expected_structure']);
