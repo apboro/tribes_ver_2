@@ -18,7 +18,7 @@ use OpenApi\Annotations as OA;
  *         )
  *      ),
  *
- *     @OA\Response(response=200, description="Login success", @OA\JsonContent(
+ *     @OA\Response(response=200, description="Registration successful", @OA\JsonContent(
  *            @OA\Property(property="data", type="array",
  *                @OA\Items(
  *                    @OA\Property(property="token", type="string"),

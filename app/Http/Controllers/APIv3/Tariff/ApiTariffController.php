@@ -19,9 +19,8 @@ class ApiTariffController extends Controller
         $this->tariffRepository = $tariffRepository;
     }
 
-    public function index(ApiTariffsRequest $request, $project = null, $community = null)
+    public function index(ApiTariffsRequest $request)
     {
-        $ids = ['all'];
-        $tariffs = $this->tariffRepository->getTariffVariantsByCommunities($ids);
+        $tariffs = $this->tariffRepository->getTariffVariantsByCommunities(['all']);
     }
 }

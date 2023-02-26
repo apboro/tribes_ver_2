@@ -10,6 +10,8 @@ use App\Models\Course;
 use App\Models\Payment;
 use App\Models\TariffVariant;
 use App\Models\User;
+use App\Repositories\Tariff\TariffRepository;
+use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffService;
@@ -21,15 +23,25 @@ use stdClass;
 class TestController extends Controller
 {
     private TinkoffService $tinkoff;
+    private TariffRepositoryContract $tariffRepository;
+
     protected TelegramMainBotService $telegramService;
-    public function __construct(TelegramMainBotService $telegramService)
+    public function __construct(TelegramMainBotService $telegramService,
+            TariffRepositoryContract  $tariffRepository)
     {
+        $this->tariffRepository = $tariffRepository;
         $this->telegramService = $telegramService;
         $this->tinkoff = new TinkoffService();
     }
 
-
     public function test()
+    {
+        $tariffs = $this->tariffRepository->getTariffVariantsByCommunities(['all']);
+        dd($tariffs);
+    }
+
+
+    public function testTelegramMessage()
     {
        $resp = $this->telegramService->kickUser(config('telegram_bot.bot.botName'),
            '5698914985',
@@ -37,7 +49,7 @@ class TestController extends Controller
        dd($resp);
     }
 
-    public function test_payments()
+    public function testTinkoff()
     {
 //        $params = [
 //            'NotificationURL' => null,
@@ -48,26 +60,32 @@ class TestController extends Controller
 //                'Email'  => null,
 //            ],
 //            'CustomerKey' => 'vasya',
-//        ];
+////        ];
+//        $params = [
+//        'PaymentId' => 2322347606,
+//            ];
         $params = [
-        'PaymentId' => 2322347606,
-            ];
+            'CustomerKey' => 'vasya',
+        ];
 
 //        dd($params);
-//        $resp = json_decode($this->tinkoff->initPay($params));
-
+//        $resp = json_decode($this->tinkoff->payTerminal->initPay($params));
+        dd(json_decode($this->tinkoff->payTerminal->addCustomer($params)));
+//        dump(json_decode($resp1, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+//        $resp2 = json_decode($this->tinkoff->payTerminal->getCustomer($params));
+//        dump(json_decode($resp2, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
 //dd(json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => 2322347606]), true));
-        $state = [];
-        $i = 0;
-        while (!isset($state['Status']) && $i < 5) {
-            $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => 2322347606]), true);
-            if ($state['Status'] == 'AUTHORIZED') break;
-            TelegramLogService::staticSendLogMessage("Proverka posle oplaty: " . json_encode($state));
-            sleep(1);
-            $i++;
-        }
-        dump($state['Status']);
+//        $state = [];
+//        $i = 0;
+//        while (!isset($state['Status']) && $i < 5) {
+//            $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => 2322347606]), true);
+//            if ($state['Status'] == 'AUTHORIZED') break;
+//            TelegramLogService::staticSendLogMessage("Proverka posle oplaty: " . json_encode($state));
+//            sleep(1);
+//            $i++;
+//        }
+//        dump($state['Status']);
 //        $this->tinkoff->payTerminal->checkOrder(666);
     }
     

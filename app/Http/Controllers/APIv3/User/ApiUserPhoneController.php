@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIv3\User;
 
 use App\Http\ApiRequests\ApiConfirmCodeRequest;
 use App\Http\ApiRequests\ApiConfirmPhoneRequest;
+use App\Http\ApiRequests\ApiResetPhoneRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -25,11 +26,10 @@ class ApiUserPhoneController extends Controller
     }
 
     /**
-     * TODO Swagger annotations
      *
      * @return ApiResponse
      */
-    public function resetConfirmed(): ApiResponse
+    public function resetConfirmed(ApiResetPhoneRequest $request): ApiResponse
     {
         if ($this->authorRepo->resetMobile()) {
             return ApiResponse::success('phone.reset_success');
