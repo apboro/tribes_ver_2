@@ -28,10 +28,6 @@ build_image:
   - .docker_build_image_template
   - .build_image_args_template
   when: on_success
-  rules: 
-  - if: $CI_COMMIT_BRANCH == "dev_spodial"
-  - if: $CI_COMMIT_BRANCH == "production"
-  - if: $CI_COMMIT_BRANCH =~ "devops/.*"
   
 push_chart:
   stage: build
@@ -47,10 +43,7 @@ deploy_dev:
   - .common_deploy
   variables: 
     DEPLOYMENT: dev-tribes
-  rules: 
-  - if: $CI_COMMIT_BRANCH == "dev_spodial"
-  - if: $CI_COMMIT_BRANCH == "production"
-  - if: $CI_COMMIT_BRANCH =~ "/devops.*/"
+  when: manual
 
 deploy_prod:
   stage: deploy
@@ -60,5 +53,4 @@ deploy_prod:
   - .common_deploy
   variables: 
     DEPLOYMENT: prod-tribes
-  rules: 
-  - if: $CI_COMMIT_BRANCH == "production"
+  when: manual
