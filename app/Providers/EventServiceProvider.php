@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Events\ApiUserRegister;
+use App\Events\CreateCommunity;
+use App\Listeners\CreateCommunityListener;
 use App\Listeners\UserRegisterSendEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -23,6 +25,9 @@ class EventServiceProvider extends ServiceProvider
         ApiUserRegister::class=>[
             UserRegisterSendEmail::class
         ],
+        CreateCommunity::class=>[
+            CreateCommunityListener::class
+        ]
     ];
 
     /**

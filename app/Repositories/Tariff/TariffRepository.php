@@ -492,4 +492,13 @@ class TariffRepository implements TariffRepositoryContract
             $this->mainServiceBot->sendTariffMessage(config('telegram_bot.bot.botName'), $community);
         }
     }
+
+    public function createTarif($community){
+        $tariff = new Tariff();
+        $this->initTariffModel($community);
+        $baseAttributes = Tariff::baseData();
+        $this->generateLink($tariff);
+        $baseAttributes['inline_link'] = $tariff->inline_link;
+        return $baseAttributes;
+    }
 }

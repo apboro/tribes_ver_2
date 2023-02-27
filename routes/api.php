@@ -2,6 +2,8 @@
 
 
 use App\Http\Controllers\APIv3\Admin\AdminAuthController;
+use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
+use App\Http\Controllers\APIv3\ApiCommunityController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
@@ -43,6 +45,14 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/projects', [ApiProjectController::class,'create']);
     Route::put('/projects/{id}', [ApiProjectController::class,'update']);
     Route::get('/projects', [ApiProjectController::class,'index']);
+
+    Route::get('/communities', [ApiCommunityController::class,'index']);
+    Route::post('/communities', [ApiCommunityController::class,'store']);
+    Route::get('/communities/{id}', [ApiCommunityController::class,'show']);
+
+    Route::post('/telegram-connections', [ApiTelegramConnectionController::class,'create']);
+    Route::post('/telegram-connections/get-telegram-connection', [ApiTelegramConnectionController::class,'checkStatus']);
+
 });
 
 
