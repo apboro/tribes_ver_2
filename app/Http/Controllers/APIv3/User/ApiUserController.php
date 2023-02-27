@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
+use App\Http\ApiRequests\ApiShowUserRequest;
 use App\Http\ApiRequests\ApiUserChangePassRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -13,13 +14,10 @@ use Illuminate\Support\Facades\Auth;
 class ApiUserController extends Controller
 {
     /**
-     * TODO Swagger annotations
-     *
-     * @param Request $request
      *
      * @return ApiResponse
      */
-    public function show(Request $request): ApiResponse
+    public function show(ApiShowUserRequest $request): ApiResponse
     {
         /** @var User $user */
         $user = Auth::user();

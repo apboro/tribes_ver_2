@@ -14,9 +14,9 @@ class UserResource extends JsonResource
     /**
      * @OA\Schema(
      *     title="user",
-     *     schema="user",
+     *     schema="userResource",
      *     description="User resource",
-     *     @OA\Xml(name="user"),
+     *     @OA\Xml(name="userResource"),
      *       @OA\Property(
      *            property="id",
      *            description="User ID",
