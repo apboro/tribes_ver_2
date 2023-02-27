@@ -19,7 +19,7 @@ stages:
 image: docker-registry.fitdev.ru:15500/docker-io/docker:20.10.14
 
 variables:
-  APP_NAME: tribes
+  APP_NAME: backend
 
 build_image:
   stage: build
