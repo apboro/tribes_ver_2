@@ -35,6 +35,9 @@ spec:
         - name: proxy
           image: {{ include "..imageName" .Values.backend.image}}
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
           envFrom:
           - configMapRef:
               name: {{ include "..names.fullname" . }}-envs
@@ -84,6 +87,9 @@ spec:
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           args:
           - php-fpm 
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
           volumeMounts:
           - mountPath: /var/run/php
             name: fpm-socket
