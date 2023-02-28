@@ -12,6 +12,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Client\Request;
 use Monolog\Logger;
 use Illuminate\Support\Facades\Http;
@@ -31,6 +32,12 @@ abstract class TestCase extends BaseTestCase
     /** @var Logger $testHandler */
     protected $logger;
 
+    /** @var User */
+    protected $custom_user;
+    protected $custom_token;
+
+use WithFaker;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -48,6 +55,8 @@ abstract class TestCase extends BaseTestCase
         $this->app = app();
         $channel = Log::channel('testing');
         $this->logger = $channel->getLogger();
+
+        $this->createUserForTest();
     }
 
     /*protected function tearDown(): void
@@ -85,6 +94,22 @@ abstract class TestCase extends BaseTestCase
     {
         $handlers = $this->logger->getHandlers();
         return current($handlers);
+    }
+
+    public function createUserForTest(array $parameters=[])
+    {
+        do{
+            $email = $this->faker->unique()->safeEmail();
+            $is_exists = User::where('email','=',$email)->first();
+        }while($is_exists);
+
+        $this->custom_user = User::create([
+            'name'=>(!empty($parameters['name']) ? $parameters['name'] :''),
+            'email'=>$email,
+            'password'=>bcrypt((!empty($parameters['password']) ? $parameters['password'] : 123456)),
+            'phone_confirmed'=>(!empty($parameters['phone_confirmed']) ? $parameters['phone_confirmed'] : false)
+        ]);
+         $this->custom_token = $this->custom_user->createToken('api-token')->plainTextToken;
     }
 
     /**

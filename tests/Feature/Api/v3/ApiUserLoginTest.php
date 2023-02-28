@@ -99,15 +99,7 @@ class ApiUserLoginTest extends TestCase
 
     public function test_auth_login_bad_credential()
     {
-        $user = User::create([
-            'name' => 'test',
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('123456'),
-            'phone_confirmed' => false,
-        ]);
-
-        $this->data['bad_credential']['email'] = $user->email;
-
+        $this->data['bad_credential']['email'] = $this->custom_user->email;
         $response = $this->post($this->url, $this->data['bad_credential']);
 
         $response
@@ -118,14 +110,14 @@ class ApiUserLoginTest extends TestCase
     public function test_auth_login_success()
     {
         $password = '123456';
-        $user = User::create([
-            'name' => 'test',
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt($password),
-            'phone_confirmed' => false,
-        ]);
+        $this->createUserForTest(
+            [
+                'password'=> $password
+            ]
+        );
 
-        $this->data['success']['email'] = $user->email;
+
+        $this->data['success']['email'] = $this->custom_user->email;
         $this->data['success']['password'] = $password;
 
         $response = $this->post($this->url, $this->data['success']);
@@ -137,18 +129,10 @@ class ApiUserLoginTest extends TestCase
 
     public function test_auth_logout()
     {
-        $user = User::create([
-            'name' => 'test',
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('123456'),
-            'phone_confirmed' => false,
-        ]);
-
-        $token = $user->createToken('api-token')->plainTextToken;
 
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->post('api/v3/user/logout');
+            'Authorization' => 'Bearer ' . $this->custom_token,
+        ])->get('api/v3/user/logout');
 
         $response->assertStatus(200);
     }

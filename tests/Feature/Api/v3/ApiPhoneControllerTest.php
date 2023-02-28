@@ -69,20 +69,17 @@ class ApiPhoneControllerTest extends TestCase
 
     public function test_reset_confirmed_success()
     {
-        $user = User::create([
-            'name'=>'test',
-            'email'=>$this->faker->unique()->safeEmail(),
-            'password'=>bcrypt('123456789'),
-            'phone_confirmed'=>true,
-            'phone'=>$this->faker->unique()->e164PhoneNumber(),
-            'code'=>'1234'
-        ]);
-        $token = $user->createToken('api-token')->plainTextToken;
+        $this->createUserForTest(
+            [
+                'phone_confirmed'=>true,
+                'phone'=>$this->faker->unique()->e164PhoneNumber(),
+                'code'=>'1234'
+            ]);
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer ' . $this->custom_token
         ])->get($this->url['reset_confirmed']);
 
-        $user_after_update = User::where('id','=',$user->id)->first();
+        $user_after_update = User::where('id','=',$this->custom_user->id)->first();
 
         $response->assertStatus($this->data['success']['expected_status'])
             ->assertJsonStructure($this->data['success']['expected_structure']);
@@ -104,17 +101,9 @@ class ApiPhoneControllerTest extends TestCase
 
     public function test_confirm_error_phone_empty()
     {
-        $user = User::create([
-            'name'=>'test',
-            'email'=>$this->faker->unique()->safeEmail(),
-            'password'=>bcrypt('123456'),
-            'phone_confirmed'=>false,
-        ]);
-
-        $token = $user->createToken('api-token')->plainTextToken;
         $response = $this->withHeaders([
             'Accept'=>'application/json',
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer ' . $this->custom_token
         ])->post($this->url['confirm_phone'],$this->data['confirm_error_phone_empty']);
         $response->assertStatus($this->data['confirm_error_phone_empty']['expected_status'])
             ->assertJsonStructure($this->data['confirm_error_phone_empty']['expected_structure']);
@@ -122,17 +111,9 @@ class ApiPhoneControllerTest extends TestCase
 
     public function test_confirm_error_phone_not_valid()
     {
-        $user = User::create([
-            'name'=>'test',
-            'email'=>$this->faker->unique()->safeEmail(),
-            'password'=>bcrypt('123456'),
-            'phone_confirmed'=>false,
-        ]);
-
-        $token = $user->createToken('api-token')->plainTextToken;
         $response = $this->withHeaders([
             'Accept'=>'application/json',
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer ' . $this->custom_token
         ])->post($this->url['confirm_phone'],$this->data['confirm_error_phone_not_valid']);
 
         $response->assertStatus($this->data['confirm_error_phone_not_valid']['expected_status'])
@@ -140,12 +121,7 @@ class ApiPhoneControllerTest extends TestCase
     }
 
     public function test_send_code_succeess(){
-        $user = User::create([
-            'name'=>'test',
-            'email'=>$this->faker->unique()->safeEmail(),
-            'password'=>bcrypt('123456'),
-            'phone_confirmed'=>false,
-        ]);
+
         $this->mock(Sms16Repository::class)
             ->shouldReceive('sendConfirmationTo')
             ->once()
@@ -157,10 +133,10 @@ class ApiPhoneControllerTest extends TestCase
                     ]
             ]);
 
-        $token = $user->createToken('api-token')->plainTextToken;
+
         $response = $this->withHeaders([
             'Accept'=>'application/json',
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer ' . $this->custom_token
         ])->post($this->url['confirm_phone'],$this->data['success_send_code']);
         $response->assertStatus($this->data['success_send_code']['expected_status'])
             ->assertJsonStructure($this->data['success_send_code']['expected_structure']);

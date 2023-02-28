@@ -80,13 +80,9 @@ class ApiConfirmPhoneTest extends TestCase
     public function test_empty_data()
     {
 
-        $user = User::factory()->create();
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url, $this->data['empty_data']);
 
         $response
@@ -96,13 +92,9 @@ class ApiConfirmPhoneTest extends TestCase
 
     public function test_not_valid_code()
     {
-        $user = User::factory()->create();
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url, $this->data['not_valid']);
 
         $response
@@ -153,18 +145,10 @@ class ApiConfirmPhoneTest extends TestCase
     public function test_sms_error_code()
     {
         $phone = $this->faker->unique()->e164PhoneNumber();
-
-        $user = User::create([
-            'name' => 'test',
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('123456789'),
-            'phone_confirmed' => false,
-            'phone' => $phone,
-            'code' => '1234',
-        ]);
+        $this->createUserForTest(['phone'=>$phone,'password'=>'123456789','code'=>'1234']);
 
         $sms_confirmation = SmsConfirmation::create([
-            'user_id' => $user->id,
+            'user_id' => $this->custom_user->id,
             'phone' => $phone,
             'code' => '1234',
             'status' => 'OK',
@@ -176,14 +160,14 @@ class ApiConfirmPhoneTest extends TestCase
 
         $sms_confirmation->save();
 
-        $token = $user->createToken('api-token')->plainTextToken;
+
 
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url, $this->data['error_code']);
 
-        $user_after = User::where('id', '=', $user->id)->first();
+        $user_after = User::where('id', '=', $this->custom_user->id)->first();
 
         $this->assertFalse($user_after->phone_confirmed);
 
@@ -195,18 +179,10 @@ class ApiConfirmPhoneTest extends TestCase
     public function test_sms_success()
     {
         $phone = $this->faker->unique()->e164PhoneNumber();
-
-        $user = User::create([
-            'name' => 'test',
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('123456789'),
-            'phone_confirmed' => false,
-            'phone' => $phone,
-            'code' => '1234',
-        ]);
+        $this->createUserForTest(['phone'=>$phone,'password'=>'123456789','code'=>'1234']);
 
         $sms_confirmation = SmsConfirmation::create([
-            'user_id' => $user->id,
+            'user_id' => $this->custom_user->id,
             'phone' => $phone,
             'code' => '1234',
             'status' => 'OK',
@@ -218,14 +194,13 @@ class ApiConfirmPhoneTest extends TestCase
 
         $sms_confirmation->save();
 
-        $token = $user->createToken('api-token')->plainTextToken;
 
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url, $this->data['success']);
 
-        $user_after = User::where('id', '=', $user->id)->first();
+        $user_after = User::where('id', '=', $this->custom_user->id)->first();
 
         $this->assertTrue($user_after->phone_confirmed);
 

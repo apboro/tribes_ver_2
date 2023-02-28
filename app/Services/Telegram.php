@@ -296,6 +296,11 @@ class Telegram extends Messenger
             ]);
     }
 
+    public function createCommunity($community){
+        $this->addBot($community);
+        $this->addAuthorOnCommunity($community);
+    }
+
     public function invokeCommunityConnect($user, $type)
     {
         /* @var $user User */

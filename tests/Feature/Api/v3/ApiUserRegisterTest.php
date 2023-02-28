@@ -97,8 +97,7 @@ class ApiUserRegisterTest extends TestCase
 
     public function test_register_email_already_exists()
     {
-        $user = User::factory()->create();
-        $this->data['email_already_exists']['email'] = $user->email;
+        $this->data['email_already_exists']['email'] = $this->custom_user->email;
         $response = $this->post($this->url,$this->data['email_already_exists']);
         $response->assertStatus($this->data['email_already_exists']['expected_status'])
             ->assertJsonStructure($this->data['email_already_exists']['expected_structure']);

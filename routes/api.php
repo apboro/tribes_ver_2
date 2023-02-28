@@ -40,6 +40,19 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
 
     Route::get('/profile/assign/telegram', [ApiAuthController::class,'logout'])->name('profile.assign_telegram_account');
 
+
+    Route::get('/projects/{id}', [ApiProjectController::class,'show']);
+    Route::post('/projects', [ApiProjectController::class,'create']);
+    Route::put('/projects/{id}', [ApiProjectController::class,'update']);
+    Route::get('/projects', [ApiProjectController::class,'index']);
+
+    Route::get('/communities', [ApiCommunityController::class,'index']);
+    Route::post('/communities', [ApiCommunityController::class,'store']);
+    Route::get('/communities/{id}', [ApiCommunityController::class,'show']);
+
+    Route::post('/telegram-connections', [ApiTelegramConnectionController::class,'create']);
+    Route::post('/telegram-connections/get-telegram-connection', [ApiTelegramConnectionController::class,'checkStatus']);
+
 });
 
 

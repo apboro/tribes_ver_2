@@ -131,8 +131,7 @@ class ApiResetPasswordTest extends TestCase
 
     public function test_reset_password_error_password_confirmation()
     {
-        $user = User::factory()->create();
-        $this->data['error_password_confirmation']['email'] = $user->email;
+        $this->data['error_password_confirmation']['email'] = $this->custom_user->email;
         $response = $this->post($this->url, $this->data['error_password_confirmation']);
         $response->assertStatus($this->data['error_password_confirmation']['expected_status'])
             ->assertJsonStructure($this->data['empty_data']['expected_structure']);
@@ -148,8 +147,7 @@ class ApiResetPasswordTest extends TestCase
 
     public function test_reset_password_error_invalid_token()
     {
-        $user = User::factory()->create();
-        $this->data['invalid_token']['email'] = $user->email;
+        $this->data['invalid_token']['email'] = $this->custom_user->email;
         $response = $this->post($this->url, $this->data['invalid_token']);
         $response->assertStatus($this->data['invalid_token']['expected_status'])
             ->assertJsonStructure($this->data['invalid_token']['expected_structure']);
@@ -157,20 +155,14 @@ class ApiResetPasswordTest extends TestCase
 
     public function test_reset_password_success()
     {
-        $user = User::create([
-            'name'=>'test',
-            'email'=>$this->faker->unique()->safeEmail(),
-            'password'=>bcrypt('123456789'),
-            'phone_confirmed'=>false
-        ]);
+        $this->createUserForTest(['password'=>$this->data['success']['password']]);
+        $this->data['success']['email'] = $this->custom_user->email;
 
-        $token = Password::broker()->createToken($user);
-        $this->data['success']['email'] = $user->email;
+        $token = Password::broker()->createToken($this->custom_user);
         $this->data['success']['token'] = $token;
-
         $response = $this->post($this->url, $this->data['success']);
 
-        $updated_data = User::where('email','=',$user->email)->first();
+        $updated_data = User::where('email','=',$this->custom_user->email)->first();
 
         $this->assertTrue(Hash::check($this->data['success']['password'], $updated_data->password));
 

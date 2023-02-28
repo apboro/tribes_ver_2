@@ -71,8 +71,8 @@ class ApiUserControllerTest extends TestCase
             ],
         ],
         'change_password_success' => [
-            'password' => '123456',
-            'password_confirmation' => '123456',
+            'password' => 'testpassword123456',
+            'password_confirmation' => 'testpassword123456',
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
@@ -93,18 +93,10 @@ class ApiUserControllerTest extends TestCase
 
     public function test_success()
     {
-        $user = User::create([
-            'name' => 'test',
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('123456789'),
-            'phone_confirmed' => true,
-            'phone',
-        ]);
 
-        $token = $user->createToken('api-token')->plainTextToken;
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->get($this->url['get_user_data']);
 
         $response->assertStatus($this->data['success']['expected_status'])
@@ -123,20 +115,9 @@ class ApiUserControllerTest extends TestCase
 
     public function test_change_password_empty_password_validation()
     {
-
-        $user = User::create([
-            'name' => 'test',
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('123456789'),
-            'phone_confirmed' => true,
-            'phone',
-        ]);
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['change_password']);
 
         $response->assertStatus($this->data['empty_password_validation']['expected_status'])
@@ -145,20 +126,9 @@ class ApiUserControllerTest extends TestCase
 
     public function test_change_password_empty_confirmation_validation()
     {
-
-        $user = User::create([
-            'name' => 'test',
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('123456789'),
-            'phone_confirmed' => true,
-            'phone',
-        ]);
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['change_password'], $this->data['empty_confirmation_validation']);
 
         $response->assertStatus($this->data['empty_confirmation_validation']['expected_status'])
@@ -167,20 +137,9 @@ class ApiUserControllerTest extends TestCase
 
     public function test_change_password_not_validation()
     {
-
-        $user = User::create([
-            'name' => 'test',
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('123456789'),
-            'phone_confirmed' => true,
-            'phone',
-        ]);
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['change_password'], $this->data['error_password_validation']);
 
         $response->assertStatus($this->data['error_password_validation']['expected_status'])
@@ -190,22 +149,12 @@ class ApiUserControllerTest extends TestCase
     public function test_change_password_success()
     {
 
-        $user = User::create([
-            'name' => 'test',
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('123456789'),
-            'phone_confirmed' => true,
-            'phone',
-        ]);
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['change_password'], $this->data['change_password_success']);
 
-        $user_after = User::where('id', '=', $user->id)->first();
+        $user_after = User::where('id', '=', $this->custom_user->id)->first();
 
         $this->assertTrue(Hash::check($this->data['change_password_success']['password'], $user_after->password));
 
