@@ -1,17 +1,16 @@
 <?php
 
 
-use App\Http\Controllers\APIv3\Admin\AdminAuthController;
-use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiCommunityController;
+use App\Http\Controllers\APIv3\ApiFeedBackController;
 use App\Http\Controllers\APIv3\ApiProjectController;
-use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
-use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
-use App\Http\Controllers\APIv3\User\ApiRegisterController;
+use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\User\ApiAuthController;
-
+use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
+use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
+use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +51,8 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
 
     Route::post('/telegram-connections', [ApiTelegramConnectionController::class,'create']);
     Route::post('/telegram-connections/get-telegram-connection', [ApiTelegramConnectionController::class,'checkStatus']);
+
+    Route::post('/feed-back', [ApiFeedBackController::class,'store']);
 
 });
 
