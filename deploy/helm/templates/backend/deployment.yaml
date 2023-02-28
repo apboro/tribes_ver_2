@@ -26,8 +26,6 @@ spec:
       tolerations: {{- include "..tplvalues.render" (dict "value" .Values.backend.tolerations "context" .) | nindent 8 }}
       {{- end }}
       securityContext:
-        runAsUser: 101
-        runAsGroup: 101
         fsGroup: 101
       volumes:
       - name: fpm-socket
