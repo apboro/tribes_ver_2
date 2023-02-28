@@ -25,6 +25,10 @@ spec:
       {{- if .Values.backend.tolerations }}
       tolerations: {{- include "..tplvalues.render" (dict "value" .Values.backend.tolerations "context" .) | nindent 8 }}
       {{- end }}
+      securityContext:
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
       volumes:
       - name: fpm-socket
         emptyDir: {}
@@ -35,10 +39,6 @@ spec:
         - name: proxy
           image: {{ include "..imageName" .Values.backend.image}}
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
-          securityContext:
-            runAsUser: 101
-            runAsGroup: 101
-            fsGroup: 101
           envFrom:
           - configMapRef:
               name: {{ include "..names.fullname" . }}-envs
@@ -88,10 +88,6 @@ spec:
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           args:
           - php-fpm 
-          securityContext:
-            runAsUser: 101
-            runAsGroup: 101
-            fsGroup: 101
           volumeMounts:
           - mountPath: /var/run/php
             name: fpm-socket
