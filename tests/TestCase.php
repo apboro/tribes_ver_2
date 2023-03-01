@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\Models\Community;
 use App\Models\TelegramConnection;
+use App\Models\TelegramUser;
 use App\Models\User;
 use Askoldex\Teletant\Context;
 use Askoldex\Teletant\Entities\Message;
@@ -32,11 +33,11 @@ abstract class TestCase extends BaseTestCase
     /** @var Logger $testHandler */
     protected $logger;
 
-    /** @var User */
-    protected $custom_user;
-
-    /** @var string */
-    protected $custom_token;
+    protected User $custom_user;
+    protected TelegramUser $custom_telegram_user;
+    protected TelegramConnection $custom_telegram_connection;
+    protected Community $custom_community;
+    protected string $custom_token;
 
     protected function setUp(): void
     {
@@ -62,6 +63,9 @@ abstract class TestCase extends BaseTestCase
         $this->logger = $channel->getLogger();
 
         $this->createUserForTest();
+        $this->createTelegramUserForTest();
+        $this->createTelegramConnectionForTest();
+        $this->createCommunityForTest();
     }
 
     /*protected function tearDown(): void
@@ -117,6 +121,53 @@ abstract class TestCase extends BaseTestCase
 
         $this->custom_token = $this->custom_user->createToken('api-token')->plainTextToken;
     }
+
+    public function createTelegramUserForTest(array $parameters = [])
+    {
+//        $this->createUserForTest();
+
+        $this->custom_telegram_user = TelegramUser::create([
+            'user_id' => !empty($parameters['user_id']) ? $parameters['user_id'] : $this->custom_user->id,
+            'telegram_id' => !empty($parameters['telegram_id']) ? $parameters['telegram_id'] : rand(10000000, 90000000),
+            'auth_date' => !empty($parameters['auth_date']) ? $parameters['auth_date'] : rand(1000000, 9000000),
+            'first_name' => !empty($parameters['first_name']) ? $parameters['first_name'] : 'Test TU',
+            'last_name' => !empty($parameters['last_name']) ? $parameters['last_name'] : 'Test TU',
+            'photo_url' => !empty($parameters['photo_url']) ? $parameters['photo_url'] : 'Test TU',
+            'user_name' => !empty($parameters['user_name']) ? $parameters['user_name'] : 'tester',
+        ]);
+    }
+
+    public function createTelegramConnectionForTest(array $parameters = [])
+    {
+
+        $this->custom_telegram_connection = TelegramConnection::create([
+            'user_id' => $this->custom_user->id,
+            'telegram_user_id' => $this->custom_telegram_user->telegram_id,
+            'chat_id' => !empty($parameters['chat_id']) ? $parameters['chat_id'] : "-" . rand(700000000, 799999999),
+            'chat_title' => !empty($parameters['chat_title']) ? $parameters['chat_title'] : $this->faker->text(80),
+            'chat_type' => !empty($parameters['chat_type']) ? $parameters['chat_type'] : 'channel',
+            'isAdministrator' => !empty($parameters['isAdministrator']) ? $parameters['isAdministrator'] : true,
+            'botStatus' => !empty($parameters['botStatus']) ? $parameters['botStatus'] : 'administrator',
+            'isActive' => !empty($parameters['isActive']) ? $parameters['isActive'] : array_rand([true, false]),
+            'hash' => !empty($parameters['hash']) ? $parameters['hash'] : md5('test hash'),
+            'isChannel' => !empty($parameters['isChannel']) ? $parameters['isChannel'] : false,
+            'isGroup' => !empty($parameters['isGroup']) ? $parameters['isGroup'] : true,
+            'status' => !empty($parameters['status']) ? $parameters['status'] : 'init',
+        ]);
+
+    }
+
+    public function createCommunityForTest(array $parameters = [])
+    {
+
+        $this->custom_community = Community::create([
+            'owner' => !empty($parameters['owner']) ? $parameters['owner'] : $this->custom_user->id,
+            'title' => !empty($parameters['title']) ? $parameters['title'] : 'test connection',
+            'connection_id' => !empty($parameters['connection_id']) ? $parameters['connection_id'] : $this->custom_telegram_connection->id,
+        ]);
+
+    }
+
 
     /**
      * @param ?array $data

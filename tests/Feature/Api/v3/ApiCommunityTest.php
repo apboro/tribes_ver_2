@@ -105,7 +105,7 @@ class ApiCommunityTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'data' => [
+                'list' => [
                     [
                         'id',
                         'connection_id',
@@ -146,55 +146,20 @@ class ApiCommunityTest extends TestCase
 
     public function test_show_community_success()
     {
-        $telegramm_connection = TelegramConnection::create([
-            'user_id' => $this->custom_user->id,
-            'telegram_user_id' => rand(700000000, 799999999),
-            'chat_id' => "-" . rand(700000000, 799999999),
-            'chat_title' => $this->faker->text(80),
-            'chat_type' => 'channel',
-            'isAdministrator' => true,
-            'botStatus' => 'administrator',
-            'isActive' => array_rand([true, false]),
-            'isChannel' => true,
-            'isGroup' => false,
-        ]);
-        $community = Community::create([
-            'owner' => $this->custom_user->id,
-            'title' => 'test title',
-            'connection_id' => $telegramm_connection->id,
-        ]);
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->get($this->url['show_community'] . '/' . $community->id);
+        ])->get($this->url['show_community'] . '/' . $this->custom_community->id);
         $response->assertStatus($this->data['show_community_success']['expected_status'])
             ->assertJsonStructure($this->data['show_community_success']['expected_structure']);
     }
 
     public function test_show_community_not_authorize_user()
     {
-        $telegramm_connection = TelegramConnection::create([
-            'user_id' => $this->custom_user->id,
-            'telegram_user_id' => rand(700000000, 799999999),
-            'chat_id' => "-" . rand(700000000, 799999999),
-            'chat_title' => $this->faker->text(80),
-            'chat_type' => 'channel',
-            'isAdministrator' => true,
-            'botStatus' => 'administrator',
-            'isActive' => array_rand([true, false]),
-            'isChannel' => true,
-            'isGroup' => false,
-        ]);
-        $community = Community::create([
-            'owner' => $this->custom_user->id,
-            'title' => 'test title',
-            'connection_id' => $telegramm_connection->id,
-        ]);
-        $this->createUserForTest();
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->get($this->url['show_community'] . '/' . $community->id);
+            'Authorization' => 'Bearer ' . 'fake_token',
+        ])->get($this->url['show_community'] . '/' . $this->custom_community->id);
 
         $response->assertStatus($this->data['show_community_not_auth_user']['expected_status'])
             ->assertJsonStructure($this->data['show_community_not_auth_user']['expected_structure']);
@@ -221,21 +186,7 @@ class ApiCommunityTest extends TestCase
 
     public function test_add_community_not_respond_telegram()
     {
-        $telegramm_connection = TelegramConnection::create([
-            'user_id' => $this->custom_user->id,
-            'telegram_user_id' => rand(700000000, 799999999),
-            'chat_id' => "-" . rand(700000000, 799999999),
-            'chat_title' => $this->faker->text(80),
-            'chat_type' => 'channel',
-            'isAdministrator' => true,
-            'botStatus' => 'administrator',
-            'isActive' => array_rand([true, false]),
-            'isChannel' => true,
-            'isGroup' => false,
-            'hash' => md5('testhash'),
-            'status' => 'init',
-        ]);
-        $this->data['not_respond_telegram']['hash'] = $telegramm_connection->hash;
+        $this->data['not_respond_telegram']['hash'] = $this->custom_telegram_connection->hash;
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
@@ -246,29 +197,16 @@ class ApiCommunityTest extends TestCase
 
     public function test_add_community_success()
     {
-        $this->createUserForTest();
-        $telegramm_connection = TelegramConnection::create([
-            'user_id' => $this->custom_user->id,
-            'telegram_user_id' => rand(700000000, 799999999),
-            'chat_id' => "-" . rand(700000000, 799999999),
-            'chat_title' => $this->faker->text(80),
-            'chat_type' => 'channel',
-            'isAdministrator' => true,
-            'botStatus' => 'administrator',
-            'isActive' => array_rand([true, false]),
-            'isChannel' => true,
-            'isGroup' => false,
-            'hash' => md5('testhash' . time()),
+        $this->createTelegramConnectionForTest([
             'status' => 'connected',
         ]);
-
-        $this->data['add_community_success']['hash'] = $telegramm_connection->hash;
+        $this->data['add_community_success']['hash'] = $this->custom_telegram_connection->hash;
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['create_community'], $this->data['add_community_success']);
 
-        $telegramm_connection_after = TelegramConnection::where('id', '=', $telegramm_connection->id)->first();
+        $telegramm_connection_after = TelegramConnection::where('id', '=', $this->custom_telegram_connection->id)->first();
 
         $this->assertEquals($telegramm_connection_after->status, 'completed');
         $response->assertStatus($this->data['add_community_success']['expected_status'])
@@ -286,34 +224,9 @@ class ApiCommunityTest extends TestCase
 
     public function test_get_list_success()
     {
-        $this->createUserForTest();
-        $telegram_user_id = rand(700000000, 799999999);
-        $telegram_user = TelegramUser::create([
-            'user_id' => $this->custom_user->id,
-            'telegram_id' => $telegram_user_id,
-        ]);
         for ($z = 0; $z < 3; $z++) {
-            $telegramm_connection = TelegramConnection::create([
-                'user_id' => $this->custom_user->id,
-                'telegram_user_id' => $telegram_user_id,
-                'chat_id' => "-" . rand(700000000, 799999999),
-                'chat_title' => $this->faker->text(80),
-                'chat_type' => 'channel',
-                'isAdministrator' => true,
-                'botStatus' => 'administrator',
-                'isActive' => array_rand([true, false]),
-                'isChannel' => true,
-                'isGroup' => false,
-                'hash' => md5('testhash' . time()),
-                'status' => 'connected',
-            ]);
-
-            $community = Community::create([
-                'owner' => $this->custom_user->id,
-                'title' => $telegramm_connection->chat_title,
-                'connection_id' => $telegramm_connection->id,
-                'image' => '',
-            ]);
+            $this->createTelegramConnectionForTest();
+            $this->createCommunityForTest();
         }
 
         $response = $this->withHeaders([
