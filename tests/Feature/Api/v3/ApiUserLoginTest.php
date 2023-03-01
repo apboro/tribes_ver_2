@@ -132,7 +132,7 @@ class ApiUserLoginTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->get('api/v3/user/logout');
+        ])->post('api/v3/user/logout');
 
         $response->assertStatus(200);
     }

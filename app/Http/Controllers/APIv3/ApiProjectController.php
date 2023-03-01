@@ -4,8 +4,9 @@ namespace App\Http\Controllers\APIv3;
 
 use App\Filters\API\ProjectFilter;
 use App\Http\ApiRequests\ApiAddProjectRequest;
-use App\Http\ApiRequests\ApiShowProjectRequest;
-use App\Http\ApiRequests\ApiUpdateProjectRequest;
+use App\Http\ApiRequests\ApiProjectListRequest;
+use App\Http\ApiRequests\ApiProjectShowRequest;
+use App\Http\ApiRequests\ApiProjectUpdateRequest;
 use App\Http\ApiResources\ProjectCollection;
 use App\Http\ApiResources\ProjectResource;
 use App\Http\ApiResponses\ApiResponse;
@@ -13,8 +14,8 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\API\ProjectEditRequest;
 use App\Models\Project;
+use App\Models\User;
 use App\Repositories\Project\ProjectRepositoryContract;
-
 
 use Askoldex\Teletant\Api;
 use Illuminate\Auth\Access\Gate;
@@ -22,69 +23,121 @@ use Illuminate\Support\Facades\Auth;
 
 class ApiProjectController extends Controller
 {
-
     private ProjectRepositoryContract $projectRepository;
 
-    public function __construct(
-        ProjectRepositoryContract $projectRepository
-    )
+    public function __construct(ProjectRepositoryContract $projectRepository)
     {
         $this->projectRepository = $projectRepository;
     }
 
-    public function index(ProjectFilter $filter){
-        $projects = $this->projectRepository->getUserProjectsList(Auth::user()->id, $filter)->keyBy('id');
-        return ApiResponse::common([
-            'data'=>new ProjectCollection($projects),
-        ]);
+    /**
+     * Projects list.
+     *
+     * @param ApiProjectListRequest $request
+     * @param ProjectFilter $filter
+     *
+     * @return ApiResponse
+     */
+    public function index(ApiProjectListRequest $request, ProjectFilter $filter): ApiResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $projects = $this->projectRepository
+            ->getUserProjectsList($user->id, $filter);
+
+        return ApiResponse::common(ProjectCollection::make($projects)->toArray($request));
     }
 
-
-    public function show($id, ApiShowProjectRequest $request): ApiResponse
+    /**
+     * Show project info by ID.
+     *
+     * @param $id
+     * @param ApiProjectShowRequest $request
+     * @param ProjectFilter $filter
+     *
+     * @return ApiResponse
+     */
+    public function show($id, ApiProjectShowRequest $request, ProjectFilter $filter): ApiResponse
     {
-        $project = Project::find($id);
-        if (empty($project)) {
+        /** @var User $user */
+        $user = Auth::user();
+
+        /** @var Project|null $project */
+        $project = Project::query()
+            ->where('id', $id)
+            ->first();
+
+        if ($project === null) {
             return ApiResponse::notFound('validation.project.not_found');
         }
-        if(!Auth::user()->can('view',$project)){
+
+        if (!$user->can('view', $project)) {
             return ApiResponse::unauthorized();
         }
-        return ApiResponse::common(['project' => new ProjectResource($project)]);
-    }
 
-    public function create(ApiAddProjectRequest $request): ApiResponse
-    {
-        $project = $this->projectRepository->create([
-            'user_id' => Auth::user()->id,
-            'title' => $request->get('title'),
-            'communities' => $request->get('communities'),
-        ]);
         return ApiResponse::common(ProjectResource::make($project)->toArray($request));
     }
 
-    public function update(ApiUpdateProjectRequest $request, $id)
+    /**
+     * Create new project and attach communities.
+     *
+     * @param ApiAddProjectRequest $request
+     *
+     * @return ApiResponse
+     */
+    public function create(ApiAddProjectRequest $request): ApiResponse
     {
-        $project_data = Project::where('id', '=', $id)->first();
-        if (empty($project_data)) {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $project = $this->projectRepository->create([
+            'user_id' => $user->id,
+            'title' => $request->get('title'),
+            'communities' => $request->get('communities'),
+        ]);
+
+        return ApiResponse::common(ProjectResource::make($project)->toArray($request));
+    }
+
+    /**
+     * Update project.
+     *
+     * @param ApiProjectUpdateRequest $request
+     * @param $id
+     *
+     * @return ApiResponse
+     */
+    public function update(ApiProjectUpdateRequest $request, $id): ApiResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        /** @var Project $project */
+        $project = Project::query()->where('id', '=', $id)->first();
+
+        if ($project === null) {
             return ApiResponse::notFound('validation.project.not_found');
         }
 
-        if(!Auth::user()->can('view',$project_data)){
+        if (!$user->can('view', $project)) {
             return ApiResponse::unauthorized();
         }
+
         $project = $this->projectRepository->update(
             $id,
             [
                 'title' => $request->input('title'),
                 'communities' => $request->get('communities'),
             ],
-            ['user_id' => Auth::user()->id]
+            ['user_id' => $user->id]
         );
-        if (empty($project)) {
+
+        if ($project === null) {
             return ApiResponse::error('common.project_update_error');
         }
-        return ApiResponse::common(['project' => $project]);
-    }
 
+        return ApiResponse::common($project);
+    }
 
 }
