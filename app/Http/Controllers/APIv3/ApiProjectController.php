@@ -12,13 +12,10 @@ use App\Http\ApiResources\ProjectResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\API\ProjectEditRequest;
 use App\Models\Project;
 use App\Models\User;
 use App\Repositories\Project\ProjectRepositoryContract;
 
-use Askoldex\Teletant\Api;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Auth;
 
 class ApiProjectController extends Controller
@@ -46,7 +43,8 @@ class ApiProjectController extends Controller
         $projects = $this->projectRepository
             ->getUserProjectsList($user->id, $filter);
 
-        return ApiResponse::common(ProjectCollection::make($projects)->toArray($request));
+        return ApiResponse::list()
+            ->items(ProjectCollection::make($projects)->toArray($request));
     }
 
     /**

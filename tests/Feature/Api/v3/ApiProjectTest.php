@@ -176,7 +176,7 @@ class ApiProjectTest extends TestCase
             'expected_structure' => [
                 'message',
                 'payload',
-                'data' => [[
+                'list' => [[
                     'id',
                     'title',
                     'user_id',

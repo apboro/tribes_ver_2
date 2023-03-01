@@ -4,28 +4,16 @@ namespace App\Listeners;
 
 use App\Events\FeedBackCreate;
 use App\Services\SMTP\Mailer;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class FeedBackListener
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * Handle the event.
      *
      * @param  FeedBackCreate  $event
      * @return void
      */
-    public function handle(FeedBackCreate $event)
+    public function handle(FeedBackCreate $event): void
     {
         $v = view('mail.feedback_create')->with(
             [

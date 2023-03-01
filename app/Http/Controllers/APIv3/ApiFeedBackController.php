@@ -40,7 +40,9 @@ class ApiFeedBackController extends Controller
         if ($feed_back === null) {
             return ApiResponse::error('common.feed_back_error');
         }
+
         Event::dispatch(new FeedBackCreate($user, $feed_back));
+
         return ApiResponse::common(['feed_back'=>$feed_back]);
     }
 }

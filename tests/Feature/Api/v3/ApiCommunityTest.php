@@ -105,7 +105,7 @@ class ApiCommunityTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'data' => [
+                'list' => [
                     [
                         'id',
                         'connection_id',

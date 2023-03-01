@@ -2,6 +2,7 @@
 
 namespace App\Http\ApiResources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PaymentCardListResource extends JsonResource
@@ -9,29 +10,29 @@ class PaymentCardListResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param Request $request
+     *
+     * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
+    {
+        return $this->resource['data'];
+    }
+
+    public static function payload(): array
     {
         return [
-        'data'=>$this->resource,
-        'status'=>$this->resource['status'],
-        'customer_key'=>$this->resource['customer_key'],
-        'message'=>$this->resource['message'],
-        'details'=>$this->resource['details'],
-        'redirect' => $this->resource['paymentUrl'],
-        'card_types'=>[
-            '0' => 'write-off',
-            '1' => 'write-on',
-            '2' => 'write-on-off',
-        ],
-        'statuses'=>[
-            'A' => 'active',
-            'I' => 'inactive',
-            'E' => 'expired',
-            'D' => 'deactivated',
-        ]
-    ];
+            'card_types' => [
+                '0' => 'write-off',
+                '1' => 'write-on',
+                '2' => 'write-on-off',
+            ],
+            'statuses' => [
+                'A' => 'active',
+                'I' => 'inactive',
+                'E' => 'expired',
+                'D' => 'deactivated',
+            ],
+        ];
     }
 }

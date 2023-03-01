@@ -182,7 +182,7 @@ class User extends Authenticatable
         $e2c->AddCustomer(env('TINKOFF_PREFIX') . '_user_' . $this->id);
     }
 
-    function getCustomerKey()
+    public function getCustomerKey(): string
     {
         return env('TINKOFF_PREFIX') . '_user_' . $this->id;
     }
