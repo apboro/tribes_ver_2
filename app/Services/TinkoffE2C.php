@@ -94,4 +94,13 @@ class TinkoffE2C
         
         return $r;
     }
+
+    public function checkCustomer($customer)
+    {
+        $this->GetCustomer($customer);
+        if($this->response()['status'] != 'ok'){
+            $this->AddCustomer($customer);
+        }
+        return $this->response()['status'] == 'ok';
+    }
 }
