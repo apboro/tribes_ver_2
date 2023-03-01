@@ -27,7 +27,7 @@ namespace App\Http\ApiRequests;
  *      ),
  *      @OA\Response(response=422, description="Validation Error", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
  *      @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/api_response_unauthorized")),
- *      @OA\Response(response=400, description="Error: Bad Request", @OA\JsonContent(ref="#/components/schemas/api_error_response")),
+ *      @OA\Response(response=400, description="Error: Bad Request", @OA\JsonContent(ref="#/components/schemas/api_response_error")),
  *
  *)
  */

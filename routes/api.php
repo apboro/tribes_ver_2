@@ -6,6 +6,7 @@ use App\Http\Controllers\APIv3\ApiFeedBackController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
+use App\Http\Controllers\APIv3\User\ApiMessengersController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiAuthController;
@@ -41,6 +42,9 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/user/phone/send-confirm-code', [ApiUserPhoneController::class,'sendConfirmCode']);
     Route::post('/user/phone/confirm', [ApiUserPhoneController::class,'confirmPhone']);
 
+    Route::post('/user/telegram/assign', [ApiAssignDetachTelegramController::class,'assignTelegramAccount']);
+    Route::post('/user/telegram/detach', [ApiAssignDetachTelegramController::class,'detachTelegramAccount']);
+    Route::get('/user/telegram/list', [ApiMessengersController::class, 'list']);
     Route::get('/projects', [ApiProjectController::class,'index']);
     Route::post('/projects/create', [ApiProjectController::class,'create']);
     Route::get('/projects/{id}', [ApiProjectController::class,'show']);

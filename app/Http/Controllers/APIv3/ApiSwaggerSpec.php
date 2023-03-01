@@ -16,10 +16,6 @@ use OpenApi\Annotations as OA;
  *         name="User",
  *         description="User endpoints"
  * ),
- * @OA\Tag(
- *         name="Profile",
- *         description="Profile endpoints"
- * ),
  */
 class ApiSwaggerSpec
 {

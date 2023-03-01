@@ -6,11 +6,11 @@ use App\Models\User;
 
 /**
  * @OA\Post(
- *  path="/api/v3/profile/assign/telegram",
+ *  path="/api/v3/user/telegram/assign",
  *  operationId="assign_telegram_account",
  *  summary="Assign Telegram Account",
  *  security={{"sanctum": {} }},
- *  tags={"Profile"},
+ *  tags={"User"},
  *     @OA\RequestBody(
  *         @OA\MediaType(
  *             mediaType="application/json",

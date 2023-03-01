@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *      schema="api_error_response",
+ *      schema="api_response_error",
  *      @OA\Property(property="message", type="string"),
  *      @OA\Property(property="payload", type="array", @OA\Items(), example={}),
  * )

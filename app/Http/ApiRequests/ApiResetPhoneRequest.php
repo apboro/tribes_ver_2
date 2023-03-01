@@ -15,7 +15,7 @@ namespace App\Http\ApiRequests;
  *          @OA\Property(property="payload", type="array", @OA\Items(), example={}))
  *      ),
  *      @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/api_response_unauthorized")),
- *      @OA\Response(response=400, description="Error: Bad Request", @OA\JsonContent(ref="#/components/schemas/api_error_response")),
+ *      @OA\Response(response=400, description="Error: Bad Request", @OA\JsonContent(ref="#/components/schemas/api_response_error")),
  *
  *)
  * */
