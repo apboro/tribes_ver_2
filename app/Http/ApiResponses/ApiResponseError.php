@@ -5,7 +5,15 @@ namespace App\Http\ApiResponses;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Schema(
+ *      schema="standart_response",
+ *      @OA\Property(property="message", type="string"),
+ *      @OA\Property(property="payload", type="array", @OA\Items(), example={}),
+ * )
+ */
 class ApiResponseError extends ApiResponse
 {
     protected int $statusCode = self::CODE_ERROR;

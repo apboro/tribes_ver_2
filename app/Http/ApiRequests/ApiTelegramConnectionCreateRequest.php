@@ -12,21 +12,21 @@ class ApiTelegramConnectionCreateRequest extends ApiRequest
      *
      * @return array
      */
-    public function rules():array
+    public function rules(): array
     {
         return [
-            'platform'=>'required|string',
-            'type'=>'required|string'
+            'platform' => 'required|string',
+            'type' => 'required|string',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'platform.required'=>$this->localizeValidation('platform.required'),
-            'platform.string'=>$this->localizeValidation('platform.string'),
-            'type.required'=>$this->localizeValidation('type.required'),
-            'type.string'=>$this->localizeValidation('type.string')
+            'platform.required' => $this->localizeValidation('platform.required'),
+            'platform.string' => $this->localizeValidation('platform.string'),
+            'type.required' => $this->localizeValidation('type.required'),
+            'type.string' => $this->localizeValidation('type.string'),
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\ApiRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApiUpdateProjectRequest extends ApiRequest
+class ApiProjectUpdateRequest extends ApiRequest
 {
 
     public function all($keys = null)

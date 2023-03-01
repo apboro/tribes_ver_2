@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ApiCommunityAddRequest extends ApiRequest
 {
-
     public function rules():array
     {
         return [

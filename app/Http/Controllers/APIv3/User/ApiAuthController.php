@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiLoginRequest;
+use App\Http\ApiRequests\ApiUserLoginRequest;
+use App\Http\ApiRequests\ApiUserLogoutRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use OpenApi\Annotations as OA;
 
 class ApiAuthController extends Controller
 {
     /**
-     * TODO Swagger annotation
+     * Perform user login.
      *
-     * @param ApiLoginRequest $request
+     * @param ApiUserLoginRequest $request
      *
      * @return ApiResponse
      */
-    public function login(ApiLoginRequest $request): ApiResponse
+    public function login(ApiUserLoginRequest $request): ApiResponse
     {
         /** @var User|null $user */
         $user = User::query()->where('email', $request->input('email'))->first();
@@ -32,11 +32,13 @@ class ApiAuthController extends Controller
     }
 
     /**
-     * TODO Swagger annotation
+     * Perform user logout
+     *
+     * @param ApiUserLogoutRequest $request
      *
      * @return ApiResponse
      */
-    public function logout(): ApiResponse
+    public function logout(ApiUserLogoutRequest $request): ApiResponse
     {
         /** @var User $user */
         $user = Auth::user();

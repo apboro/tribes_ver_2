@@ -5,12 +5,13 @@ use App\Http\Controllers\APIv3\ApiCommunityController;
 use App\Http\Controllers\APIv3\ApiFeedBackController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
-use App\Http\Controllers\APIv3\User\ApiAuthController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
+use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\APIv3\User\ApiRegisterController;
+use App\Http\Controllers\APIv3\User\ApiAuthController;
+
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
-use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,17 +34,17 @@ Route::prefix('api/v3')->group(function () {
 
 Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function () {
     Route::get('/user', [ApiUserController::class,'show']);
-    Route::get('/user/logout', [ApiAuthController::class,'logout']);
+    Route::post('/user/logout', [ApiAuthController::class,'logout']);
     Route::post('/user/password/change', [ApiUserController::class,'passChange']);
 
-    Route::get('/user/phone/reset-confirmed', [ApiUserPhoneController::class,'resetConfirmed']);
+    Route::post('/user/phone/reset-confirmed', [ApiUserPhoneController::class,'resetConfirmed']);
     Route::post('/user/phone/send-confirm-code', [ApiUserPhoneController::class,'sendConfirmCode']);
     Route::post('/user/phone/confirm', [ApiUserPhoneController::class,'confirmPhone']);
 
-    Route::get('/projects/{id}', [ApiProjectController::class,'show']);
-    Route::post('/projects', [ApiProjectController::class,'create']);
-    Route::put('/projects/{id}', [ApiProjectController::class,'update']);
     Route::get('/projects', [ApiProjectController::class,'index']);
+    Route::post('/projects/create', [ApiProjectController::class,'create']);
+    Route::get('/projects/{id}', [ApiProjectController::class,'show']);
+    Route::post('/projects/{id}', [ApiProjectController::class,'update']);
 
     Route::get('/communities', [ApiCommunityController::class,'index']);
     Route::post('/communities', [ApiCommunityController::class,'store']);
