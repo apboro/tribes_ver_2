@@ -9,15 +9,29 @@ namespace App\Http\ApiRequests;
  *  summary="Detach Telegram Account",
  *  security={{"sanctum": {} }},
  *  tags={"User"},
+ *  @OA\RequestBody(
+ *      @OA\JsonContent(
+ *          @OA\Property(property="telegram_id", type="integer"),
+ *          example={"telegram_id": 5826257074}
+ *      )
+ * ),
+ *
  *     @OA\Response(response=200, description="Telegram account detached successfully", @OA\JsonContent(
  *         @OA\Property(property="message", type="string", nullable=true),
  *         @OA\Property(property="payload", type="array", @OA\Items(), example={}))
  *      ),
  *      @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/api_response_unauthorized")),
+ *      @OA\Response(response=500, description="Server Error", @OA\JsonContent(ref="#/components/schemas/api_response_error")),
  *
  *)
  */
-class ApiDetachTelegramRequest
+class ApiDetachTelegramRequest extends ApiRequest
 {
+    public function rules(): array
+    {
+        return [
+            'telegram_id' => 'required|integer',
+        ];
+    }
 
 }

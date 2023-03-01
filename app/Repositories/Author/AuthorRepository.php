@@ -27,9 +27,9 @@ class AuthorRepository implements AuthorRepositoryContract
         return Messenger::$platform[$platformIndex]::storeAccount(Auth::user(), $data);
     }
 
-    public function detachOutsideAccount($platformIndex)
+    public function detachOutsideAccount($telegram_id, $platformIndex)
     {
-        return Messenger::$platform[$platformIndex]::removeAccount(Auth::user());
+        return Messenger::$platform[$platformIndex]::removeAccount($telegram_id);
     }
 
     public function authorizeTelegram($user, $uuid)

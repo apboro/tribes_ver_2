@@ -15,15 +15,17 @@ class ApiAssignDetachTelegramController extends Controller
 
     public function __construct(
         AuthorRepositoryContract $authorRepo
-    ) {
+    )
+    {
         $this->authorRepo = $authorRepo;
     }
+
     public function assignTelegramAccount(ApiAssignTelegramRequest $request)
     {
         if (!$request['id']) {
             return ApiResponse::validationError()->addError('telegram', 'telegram.assign_telegram_no_data');
         }
-        if($this->authorRepo->assignOutsideAccount($request->all(), 'Telegram')){
+        if ($this->authorRepo->assignOutsideAccount($request->all(), 'Telegram')) {
             return ApiResponse::success('telegram.tlg_account_assigned');
         }
 
@@ -32,6 +34,13 @@ class ApiAssignDetachTelegramController extends Controller
 
     public function detachTelegramAccount(ApiDetachTelegramRequest $request)
     {
-        //TODO logic after TZ
+        if (!$request['telegram_id']) {
+            return ApiResponse::validationError()->addError('telegram', 'telegram.required');
+        }
+        if ($this->authorRepo->detachOutsideAccount($request['telegram_id'], 'Telegram')) {
+            return ApiResponse::success('telegram.tlg_account_detached');
+        }
+
+        return ApiResponse::error('telegram.process_account_error');
     }
 }

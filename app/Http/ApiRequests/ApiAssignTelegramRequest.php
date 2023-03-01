@@ -12,15 +12,12 @@ use App\Models\User;
  *  security={{"sanctum": {} }},
  *  tags={"User"},
  *     @OA\RequestBody(
- *         @OA\MediaType(
- *             mediaType="application/json",
- *             @OA\Schema(
+ *          @OA\JsonContent(
  *                 @OA\Property(property="id", type="integer"),
  *                 @OA\Property(property="first_name",type="string"),
  *                 @OA\Property(property="username",type="string"),
  *                 @OA\Property(property="auth_date",type="integer"),
- *                 example={"id": 5826257074, "name": "Jessica Smith", "username": "apboro", "auth_date": 1676970691}
- *             )
+ *                example={"id": 5826257074, "first_name": "Jessica Smith", "username": "apboro", "auth_date": 1676970691}
  *      )
  * ),
  *      @OA\Response(response=200, description="Telegram account assigned successfully", @OA\JsonContent(
