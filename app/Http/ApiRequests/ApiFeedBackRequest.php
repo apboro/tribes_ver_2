@@ -2,11 +2,8 @@
 
 namespace App\Http\ApiRequests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 class ApiFeedBackRequest extends ApiRequest
 {
-
    public function rules():array
     {
         return [

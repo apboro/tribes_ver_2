@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiResetPasswordLinkRequest;
+use App\Http\ApiRequests\ApiUserResetPasswordRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -14,13 +14,13 @@ class ApiResetPasswordController extends Controller
     use ResetsPasswords;
 
     /**
-     * TODO Swagger annotations
+     * Perform password reset.
      *
-     * @param ApiResetPasswordLinkRequest $request
+     * @param ApiUserResetPasswordRequest $request
      *
      * @return ApiResponse
      */
-    public function resetUserPassword(ApiResetPasswordLinkRequest $request): ApiResponse
+    public function resetUserPassword(ApiUserResetPasswordRequest $request): ApiResponse
     {
         /** @var User|null $user */
         $user = User::query()->where('email', '=', $request->input('email'))->first();

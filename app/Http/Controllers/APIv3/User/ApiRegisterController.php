@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\APIv3\User;
 
 use App\Events\ApiUserRegister;
-use App\Http\ApiRequests\ApiRegisterRequest;
+use App\Http\ApiRequests\ApiUserRegisterRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -34,13 +34,13 @@ class ApiRegisterController extends Controller
     }
 
     /**
-     * TODO swagger annotations
+     * Perform user registration.
      *
-     * @param ApiRegisterRequest $request
+     * @param ApiUserRegisterRequest $request
      *
      * @return ApiResponse
      */
-    public function register(ApiRegisterRequest $request): ApiResponse
+    public function register(ApiUserRegisterRequest $request): ApiResponse
     {
         $user = $this->create($request->all());
 

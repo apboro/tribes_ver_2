@@ -5,7 +5,14 @@ namespace App\Http\ApiResponses;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Schema(schema="api_response_not_found",
+ *     @OA\Property(property="message", type="string", nullable=true),
+ *     @OA\Property(property="payload", type="array", @OA\Items(), example={}),
+ * )
+ */
 class ApiResponseNotFound extends ApiResponse
 {
     protected int $statusCode = self::CODE_NOT_FOUND;

@@ -24,27 +24,29 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
     use RefreshDatabase;
+    use WithFaker;
 
-    /**
-     * @var Application
-     */
+    /** @var Application */
     protected $app;
+
     /** @var Logger $testHandler */
     protected $logger;
 
     /** @var User */
     protected $custom_user;
-    protected $custom_token;
 
-use WithFaker;
+    /** @var string */
+    protected $custom_token;
 
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->mock(Context::class)
             ->shouldReceive('reply')
-            ->andReturn( new Message($this->getDataFromFile('telegram/text_message.json')) );
-        Http::fake([ '*' => function ($request, $options) {
+            ->andReturn(new Message($this->getDataFromFile('telegram/text_message.json')));
+
+        Http::fake(['*' => function ($request, $options) {
             /** @var Request $request */
             Log::debug('post http request', [
                 'url' => $request->url(),
@@ -52,8 +54,11 @@ use WithFaker;
             ]);
             return Http::response();
         }]);
+
         $this->app = app();
+
         $channel = Log::channel('testing');
+
         $this->logger = $channel->getLogger();
 
         $this->createUserForTest();
@@ -66,14 +71,14 @@ use WithFaker;
 
     protected function refreshTestDatabase()
     {
-       // if (! RefreshDatabaseState::$migrated) {
-           // $this->artisan('db:wipe --database=knowledge');
-          //  $this->artisan('migrate:fresh', $this->migrateFreshUsing());
+        // if (! RefreshDatabaseState::$migrated) {
+        // $this->artisan('db:wipe --database=knowledge');
+        //  $this->artisan('migrate:fresh', $this->migrateFreshUsing());
 
-          //  $this->app[Kernel::class]->setArtisan(null);
+        //  $this->app[Kernel::class]->setArtisan(null);
 
-         //   RefreshDatabaseState::$migrated = true;
-      //  }
+        //   RefreshDatabaseState::$migrated = true;
+        //  }
 
         //$this->beginDatabaseTransaction();
     }
@@ -96,24 +101,26 @@ use WithFaker;
         return current($handlers);
     }
 
-    public function createUserForTest(array $parameters=[])
+    public function createUserForTest(array $parameters = [])
     {
-        do{
+        do {
             $email = $this->faker->unique()->safeEmail();
-            $is_exists = User::where('email','=',$email)->first();
-        }while($is_exists);
+            $is_exists = User::where('email', '=', $email)->first();
+        } while ($is_exists);
 
         $this->custom_user = User::create([
-            'name'=>(!empty($parameters['name']) ? $parameters['name'] :''),
-            'email'=>$email,
-            'password'=>bcrypt((!empty($parameters['password']) ? $parameters['password'] : 123456)),
-            'phone_confirmed'=>(!empty($parameters['phone_confirmed']) ? $parameters['phone_confirmed'] : false)
+            'name' => (!empty($parameters['name']) ? $parameters['name'] : ''),
+            'email' => $email,
+            'password' => bcrypt((!empty($parameters['password']) ? $parameters['password'] : 123456)),
+            'phone_confirmed' => (!empty($parameters['phone_confirmed']) ? $parameters['phone_confirmed'] : false),
         ]);
-         $this->custom_token = $this->custom_user->createToken('api-token')->plainTextToken;
+
+        $this->custom_token = $this->custom_user->createToken('api-token')->plainTextToken;
     }
 
     /**
      * @param ?array $data
+     *
      * @return array|mixed|string
      */
     protected function prepareDBCommunity(?array $data = [])
@@ -139,7 +146,7 @@ use WithFaker;
         ]);
         $community->generateHash();
         $community->updateQuietly(['hash' => $community->hash]);
-        return array_merge($data,[
+        return array_merge($data, [
             'user' => [
                 'id' => $user->id,
                 'email' => $user->email,

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiChangePassRequest;
+use App\Http\ApiRequests\ApiUserChangePassRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\ApiResources\UserResource;
@@ -28,13 +28,13 @@ class ApiUserController extends Controller
     }
 
     /**
-     * TODO Swagger annotations
+     * Perform logged-in user password change
      *
-     * @param ApiChangePassRequest $request
+     * @param ApiUserChangePassRequest $request
      *
      * @return ApiResponse
      */
-    public function passChange(ApiChangePassRequest $request): ApiResponse
+    public function passChange(ApiUserChangePassRequest $request): ApiResponse
     {
         /** @var User $user */
         $user = Auth::user();

@@ -12,11 +12,27 @@ class UserResource extends JsonResource
     public $resource;
 
     /**
-     * Transform the resource into an array.
-     *
-     * @param Request $request
-     *
-     * @return array
+     * @OA\Schema(
+     *     title="user",
+     *     schema="user",
+     *     description="User resource",
+     *     @OA\Xml(name="user"),
+     *       @OA\Property(
+     *            property="id",
+     *            description="User ID",
+     *            type="integer",
+     *        ),
+     *        @OA\Property(
+     *            property="name",
+     *            description="Имя пользователя",
+     *            type="string",
+     *       ),
+     *        @OA\Property(
+     *            property="email",
+     *            description="Почта пользователя",
+     *            type="string",
+     *       ),
+     *  )
      */
     public function toArray($request): array
     {
