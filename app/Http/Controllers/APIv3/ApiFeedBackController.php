@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\APIv3;
 
+use App\Events\FeedBackCreate;
 use App\Http\ApiRequests\ApiFeedBackRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Feedback;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 
 class ApiFeedBackController extends Controller
 {
