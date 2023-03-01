@@ -42,7 +42,8 @@ class ApiCommunityController extends Controller
     {
         $communities = $this->communityRepo->getList($request);
 
-        return ApiResponse::common(CommunitiesCollection::make($communities)->toArray($request));
+        return ApiResponse::list()
+            ->items(CommunitiesCollection::make($communities)->toArray($request));
     }
 
     /**
