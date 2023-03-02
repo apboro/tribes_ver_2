@@ -34,6 +34,8 @@ spec:
       - name: storage
         persistentVolumeClaim:
           claimName: {{ include "..names.name" . }}-storage
+      securityContext:
+        fsGroup: 101
       containers:
         - name: queue-worker
           image: {{ include "..imageName" .Values.queueWorker.image}}
