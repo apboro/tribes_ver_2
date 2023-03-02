@@ -45,6 +45,16 @@ deploy_dev:
     DEPLOYMENT: dev-tribes
   when: manual
 
+deploy_stage:
+  stage: deploy
+  extends:
+  - .base_template
+  - .commit_versions_template
+  - .common_deploy
+  variables: 
+    DEPLOYMENT: staging-spodial
+  when: manual
+
 deploy_prod:
   stage: deploy
   extends:
@@ -52,5 +62,5 @@ deploy_prod:
   - .commit_versions_template
   - .common_deploy
   variables: 
-    DEPLOYMENT: prod-tribes
+    DEPLOYMENT: prod-spodial
   when: manual
