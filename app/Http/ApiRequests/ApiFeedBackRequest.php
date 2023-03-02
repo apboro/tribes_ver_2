@@ -2,6 +2,30 @@
 
 namespace App\Http\ApiRequests;
 
+/**
+ * @OA\Post(
+ *  path="/api/v3/feed-back",
+ *  operationId="feed-back",
+ *  summary="Send feedback ticket",
+ *  security={{"sanctum": {} }},
+ *  tags={"User"},
+ *      @OA\RequestBody(
+ *          @OA\JsonContent(
+ *               @OA\Property(property="fb_email", type="string"),
+ *               @OA\Property(property="fb_message", type="string"),
+ *               @OA\Property(property="fb_phone", type="string"),
+ *               @OA\Property(property="fb_name", type="string"),
+ *         )
+ *      ),
+ *      @OA\Response(response=200, description="Feedback sent OK", @OA\JsonContent(
+ *          @OA\Property(property="message", type="string", nullable=true),
+ *          @OA\Property(property="payload", type="array", @OA\Items(), example={}))
+ *      ),
+ *      @OA\Response(response=401, description="Unauthorized"),
+ *      @OA\Response(response=400, description="Error: Bad Request"),
+ *
+ *)
+ * */
 class ApiFeedBackRequest extends ApiRequest
 {
    public function rules():array
