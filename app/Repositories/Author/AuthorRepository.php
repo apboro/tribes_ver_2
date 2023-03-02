@@ -91,7 +91,7 @@ class AuthorRepository implements AuthorRepositoryContract
             $user->phone_confirmed = false;
             $user->save();
             ($user->confirmation->first()) ? $user->confirmation->first()->delete() : '';
-            $this->detachOutsideAccount('Telegram');
+//            $this->detachOutsideAccount('Telegram');
             return true;
         } catch (Exception $e) {
             return false;

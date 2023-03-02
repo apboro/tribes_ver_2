@@ -200,12 +200,14 @@ class Telegram extends Messenger
 
     public static function removeAccount($telegram_id)
     {
-        $telegram_account = TelegramUser::where('telegram_id', $telegram_id);
+        $telegram_account = TelegramUser::where('telegram_id', $telegram_id)->first();
         if ($telegram_account) {
             $telegram_account->delete();
+            return true;
+        } else {
+            return false;
         }
 
-        return true;
     }
 
     /**

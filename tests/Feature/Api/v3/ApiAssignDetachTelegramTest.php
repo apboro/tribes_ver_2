@@ -70,5 +70,16 @@ class ApiAssignDetachTelegramTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_detach_telegram_id_doesnt_exist()
+    {
+        $data['telegram_id'] = 1;
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->custom_token,
+        ])->post($this->detach_url, $data);
+
+        $response->assertStatus(400);
+    }
 }
 
