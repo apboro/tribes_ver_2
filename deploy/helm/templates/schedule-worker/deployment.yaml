@@ -31,6 +31,8 @@ spec:
       - name: fpm-config
         configMap: 
           name: {{ include "..names.name" . }}-fpm
+      securityContext:
+        fsGroup: 101
       containers:
         - name: schedule-worker
           image: {{ include "..imageName" .Values.scheduleWorker.image}}
