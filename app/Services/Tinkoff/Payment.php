@@ -15,7 +15,7 @@ use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffApi;
-use phpDocumentor\Reflection\Types\False_;
+
 
 /**
  * todo переименовать в более уникальное название путается с eloquent моделью
@@ -304,6 +304,13 @@ class Payment
             $params['CustomerKey'] = $this->payer->getCustomerKey();
         }
         return $params;
+    }
+
+    public function doPayment($payer, $payFor, $cost){
+        $this->amount($cost * 100);
+        $this->payFor($payFor);
+        $this->payer($payer);
+        return $this->pay();
     }
 
 }

@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\APIv3\ApiCommunityController;
+use App\Http\Controllers\APIv3\ApiCourseController;
 use App\Http\Controllers\APIv3\ApiFeedBackController;
 use App\Http\Controllers\APIv3\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\ApiProjectController;
@@ -31,6 +32,8 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/user/register', [ApiRegisterController::class,'register']);
     Route::post('/user/password/forgot', [ApiForgotPasswordController::class,'sendPasswordResetLink']);
     Route::post('/user/password/reset', [ApiResetPasswordController::class,'resetUserPassword']);
+    Route::post('/courses/pay/{hash}', [ApiCourseController::class,'pay']);
+    Route::get('/courses/show/{hash}', [ApiCourseController::class,'show_for_all']);
 });
 
 Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function () {
@@ -60,8 +63,13 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/payment-cards', [ApiPaymentCardController::class,'store']);
     Route::delete('/payment-cards', [ApiPaymentCardController::class,'delete']);
 
+    Route::get('/courses', [ApiCourseController::class,'index']);
+    Route::get('/courses/{id}', [ApiCourseController::class,'show']);
+    Route::post('/courses', [ApiCourseController::class,'store']);
+    Route::put('/courses/{id}', [ApiCourseController::class,'update']);
 
 });
+
 
 
 
