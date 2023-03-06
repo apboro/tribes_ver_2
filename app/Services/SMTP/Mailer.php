@@ -63,7 +63,7 @@ class Mailer
 //            TelegramLogService::staticSendLogMessage('p.4 Curl exec result ' . json_decode($response). ' '. curl_error($curl));
             $err = curl_error($curl);
 
-                TelegramLogService::staticSendLogMessage(curl_error($curl));
+//                TelegramLogService::staticSendLogMessage(curl_error($curl));
                 curl_close($curl);
 
             return $err;
