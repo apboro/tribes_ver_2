@@ -11,14 +11,18 @@ class Mailer
 {
     public function __construct($from, $html, $subject, $to)
     {
-        $err = $this->send($subject, $from, $html, $to);
+        $err = $this->send(
+            $subject,
+            $from,
+            $html,
+            $to);
 
         //FALLS with Bad Request: group chat was upgraded to a supergroup chat, switch off now
         if ($err) {
-                TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . $err);
+                TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . json_decode($err));
         } else {
                 TelegramLogService::staticSendLogMessage('Успешная отправка SMTP на почту ' . $to . ' с темой ' . $subject);
-                TelegramLogService::staticSendLogMessage('Err:' . $err);
+                TelegramLogService::staticSendLogMessage('Err:' . json_decode($err));
         }
     }
 
