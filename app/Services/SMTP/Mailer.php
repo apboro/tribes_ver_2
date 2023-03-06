@@ -18,6 +18,7 @@ class Mailer
                 TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . $err);
         } else {
                 TelegramLogService::staticSendLogMessage('Успешная отправка SMTP на почту ' . $to . ' с темой ' . $subject);
+                TelegramLogService::staticSendLogMessage('Err:' . $err);
         }
     }
 
@@ -57,10 +58,11 @@ class Mailer
                     'text' => "ТЕСТ"
                 ])
             ));
-//            TelegramLogService::staticSendLogMessage('p.3' . json_encode($curl, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            TelegramLogService::staticSendLogMessage('p.3');
 
             $response = curl_exec($curl);
-            TelegramLogService::staticSendLogMessage('p.4 Curl exec result ' . json_decode($response). ' '. json_encode(curl_error($curl)));
+            TelegramLogService::staticSendLogMessage('p.4');
+            TelegramLogService::staticSendLogMessage('p.5 Curl exec result ' . json_decode($response));
             $err = curl_error($curl);
 
 //                TelegramLogService::staticSendLogMessage(curl_error($curl));
