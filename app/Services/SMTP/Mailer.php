@@ -5,6 +5,7 @@ namespace App\Services\SMTP;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 class Mailer
 {
@@ -29,8 +30,10 @@ class Mailer
      */
     public function send($subject, $from, $html, $to): string
     {
+
         TelegramLogService::staticSendLogMessage('p.1');
         if(env('APP_ENV') !== 'testing') {
+            try {
             TelegramLogService::staticSendLogMessage('p.2');
 
             $curl = curl_init();
@@ -54,16 +57,20 @@ class Mailer
                     'text' => "ТЕСТ"
                 ])
             ));
-            TelegramLogService::staticSendLogMessage('p.3' . json_decode($curl));
+            TelegramLogService::staticSendLogMessage('p.3' . json_encode($curl, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
             $response = curl_exec($curl);
-            TelegramLogService::staticSendLogMessage('p.4 Curl exec result ' . json_decode($response). ' '. json_decode(curl_error($curl)));
+            TelegramLogService::staticSendLogMessage('p.4 Curl exec result ' . json_decode($response). ' '. curl_error($curl));
             $err = curl_error($curl);
 
             curl_close($curl);
             TelegramLogService::staticSendLogMessage('p.5');
 
             return $err;
+        } catch (\Exception $e) {
+                TelegramLogService::staticSendLogMessage('err: ' . $e->getMessage());
+            }
+
         } else {
             Log::debug('send email',[
                 'subject' => $subject, // Обязательно
