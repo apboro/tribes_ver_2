@@ -25,6 +25,8 @@ spec:
       {{- if .Values.backend.tolerations }}
       tolerations: {{- include "..tplvalues.render" (dict "value" .Values.backend.tolerations "context" .) | nindent 8 }}
       {{- end }}
+      securityContext:
+        fsGroup: 101
       volumes:
       - name: fpm-socket
         emptyDir: {}

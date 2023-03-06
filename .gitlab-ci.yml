@@ -19,7 +19,7 @@ stages:
 image: docker-registry.fitdev.ru:15500/docker-io/docker:20.10.14
 
 variables:
-  APP_NAME: tribes
+  APP_NAME: backend
 
 build_image:
   stage: build
@@ -28,10 +28,6 @@ build_image:
   - .docker_build_image_template
   - .build_image_args_template
   when: on_success
-  rules: 
-  - if: $CI_COMMIT_BRANCH == "dev_spodial"
-  - if: $CI_COMMIT_BRANCH == "production"
-  - if: $CI_COMMIT_BRANCH =~ "devops/.*"
   
 push_chart:
   stage: build
@@ -47,10 +43,17 @@ deploy_dev:
   - .common_deploy
   variables: 
     DEPLOYMENT: dev-tribes
-  rules: 
-  - if: $CI_COMMIT_BRANCH == "dev_spodial"
-  - if: $CI_COMMIT_BRANCH == "production"
-  - if: $CI_COMMIT_BRANCH =~ "/devops.*/"
+  when: manual
+
+deploy_stage:
+  stage: deploy
+  extends:
+  - .base_template
+  - .commit_versions_template
+  - .common_deploy
+  variables: 
+    DEPLOYMENT: staging-spodial
+  when: manual
 
 deploy_prod:
   stage: deploy
@@ -59,6 +62,5 @@ deploy_prod:
   - .commit_versions_template
   - .common_deploy
   variables: 
-    DEPLOYMENT: prod-tribes
-  rules: 
-  - if: $CI_COMMIT_BRANCH == "production"
+    DEPLOYMENT: prod-spodial
+  when: manual
