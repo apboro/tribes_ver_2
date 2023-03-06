@@ -143,15 +143,9 @@ config:
     driver: "file"
     lifetime: "120"
   mail:
-    driver: "smtp"
-    host: "smtp-host.example"
-    port: "587"
-    username: "username"
-    password: "password"
-    encryption: "tls"
-    from:
-      address: "no-reply@example.com"
-      name: "Support"
+    url: "smtp-host.example"
+    apiKey: "key"
+    from: "example@example.com"
   s3:
     accessKey: ""
     secretKey: ""
