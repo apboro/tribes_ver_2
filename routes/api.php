@@ -66,8 +66,8 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/payment-cards', [ApiPaymentCardController::class,'store']);
     Route::delete('/payment-cards', [ApiPaymentCardController::class,'delete']);
 
-    Route::get('/subscriptions', [ApiSubscriptionController::class, 'index']);
-
+    Route::get('/subscriptions_list', [ApiSubscriptionController::class, 'index']);
+    Route::post('/subscription', [ApiSubscriptionController::class, 'show']);
 
 });
 

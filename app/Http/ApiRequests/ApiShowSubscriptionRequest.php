@@ -3,14 +3,19 @@
 namespace App\Http\ApiRequests;
 
 /**
- * @OA\Get(path="/api/v3/subscriptions_list",
+ * @OA\Post(path="/api/v3/subscription",
  *     tags={"User"},
- *     summary="Show subscriptions",
- *     operationId="SubscriptionsListInfo",
+ *     summary="Show subscription",
+ *     operationId="SubscriptionInfo",
  *     security={{"sanctum": {} }},
  *
+ *     @OA\RequestBody(
+ *        @OA\JsonContent(
+ *           @OA\Property(property="slug", type="string")
+ *        )
+ *     ),
  *     @OA\Response(response=200, description="Subscription List OK", @OA\JsonContent(
- *            @OA\Property(property="list", type="array",
+ *            @OA\Property(property="data", type="array",
  *                @OA\Items(
  *                    @OA\Schema (ref="#/components/schemas/subscriptionResource"),
  *                ),
@@ -25,7 +30,7 @@ namespace App\Http\ApiRequests;
  *     @OA\Response(response=500, description="Server Error", @OA\JsonContent(ref="#/components/schemas/api_response_server_error")),
  * )
  */
-class ApiListSubscriptionsRequest extends ApiRequest
+class ApiShowSubscriptionRequest extends ApiRequest
 {
 
 }

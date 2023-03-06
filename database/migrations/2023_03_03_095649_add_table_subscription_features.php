@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTableSubscriptionPermissions extends Migration
+class AddTableSubscriptionFeatures extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class AddTableSubscriptionPermissions extends Migration
      */
     public function up()
     {
-        Schema::create('subscription_permissions', function (Blueprint $table){
+        Schema::create('subscription_features', function (Blueprint $table){
            $table->id();
            $table->unsignedBigInteger('subscription_id');
            $table->string('permission');
 
-           $table->foreign('subscription_id')->references('id')->on('subscriptions');
+           $table->foreign('subscription_id')->references('id')->on('subscriptions')
+               ->onDelete('cascade');
         });
     }
 
@@ -29,6 +30,6 @@ class AddTableSubscriptionPermissions extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subscription_permissions');
+        Schema::dropIfExists('subscription_features');
     }
 }

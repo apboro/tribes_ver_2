@@ -26,6 +26,7 @@ class ApiPaymentCardController extends Controller
     }
 
     /**
+     * TODO swaggers for this controller
      * User assigned cards list.
      *
      * @param Request $request

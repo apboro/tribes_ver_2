@@ -2,17 +2,28 @@
 
 namespace App\Http\Controllers\APIv3;
 
+use App\Http\ApiRequests\ApiAssignSubscriptionRequest;
 use App\Http\ApiRequests\ApiListSubscriptionsRequest;
+use App\Http\ApiRequests\ApiShowSubscriptionRequest;
 use App\Http\ApiRequests\ApiStoreSubscriptionRequest;
 use App\Http\ApiRequests\ApiUpdateSubscriptionRequest;
 use App\Http\ApiResources\SubscriptionCollection;
+use App\Http\ApiResources\SubscriptionResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\ApiResponses\ApiResponseList;
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
+use App\Repositories\Subscription\SubscriptionRepository;
 
 class ApiSubscriptionController extends Controller
 {
+
+    private SubscriptionRepository $subscriptionRepository;
+
+    public function __construct(SubscriptionRepository $subscriptionRepository)
+    {
+        $this->subscriptionRepository = $subscriptionRepository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -21,6 +32,14 @@ class ApiSubscriptionController extends Controller
     {
         $subscriptions = Subscription::all();
         return ApiResponse::list()->items(SubscriptionCollection::make($subscriptions)->toArray($request));
+    }
+
+    /**  Show subscription information*/
+    public function show(ApiShowSubscriptionRequest $request)
+    {
+        $subscription = $this->subscriptionRepository->findSubscriptionBySlug($request);
+
+        return ApiResponse::common(SubscriptionResource::make($subscription)->toArray($request));
     }
 
     /**
@@ -40,17 +59,6 @@ class ApiSubscriptionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(ApiStoreSubscriptionRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Subscription  $subscription
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Subscription $subscription)
     {
         //
     }

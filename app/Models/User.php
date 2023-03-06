@@ -279,5 +279,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Payment::class, 'user_id');
     }
+
+    public function subscription()
+    {
+        return $this->hasOne('users_subscriptions', 'user_id', 'id' );
+    }
 }
 
