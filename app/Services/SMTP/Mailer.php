@@ -57,14 +57,14 @@ class Mailer
                     'text' => "ТЕСТ"
                 ])
             ));
-            TelegramLogService::staticSendLogMessage('p.3' . json_encode($curl, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+//            TelegramLogService::staticSendLogMessage('p.3' . json_encode($curl, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
             $response = curl_exec($curl);
-            TelegramLogService::staticSendLogMessage('p.4 Curl exec result ' . json_decode($response). ' '. curl_error($curl));
+//            TelegramLogService::staticSendLogMessage('p.4 Curl exec result ' . json_decode($response). ' '. curl_error($curl));
             $err = curl_error($curl);
 
-            curl_close($curl);
-            TelegramLogService::staticSendLogMessage('p.5');
+                TelegramLogService::staticSendLogMessage(curl_error($curl));
+                curl_close($curl);
 
             return $err;
         } catch (\Exception $e) {
