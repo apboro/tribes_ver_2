@@ -3,27 +3,21 @@
 namespace App\Services\SMTP;
 
 use App\Services\TelegramLogService;
-use App\Services\TelegramMainBotService;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class Mailer
 {
     public function __construct($from, $html, $subject, $to)
     {
-        $err = $this->send($subject,
-            $from,
-            $html,
-            $to);
+        $err = $this->send($subject, $from, $html, $to);
 
         //FALLS with Bad Request: group chat was upgraded to a supergroup chat, switch off now
-//        if ($err) {
-//                TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . json_encode($err));
-//        } else {
-                TelegramLogService::staticSendLogMessage('Успешная отправка SMTP на почту ' . $to . ' с темой ' . $subject);
-                TelegramLogService::staticSendLogMessage('Err:' . $err[1]);
-                TelegramLogService::staticSendLogMessage('Resp:' . $err[2]);
-//        }
+        if ($err) {
+            TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . $err );
+        } else {
+            TelegramLogService::staticSendLogMessage('Успешная отправка SMTP на почту ' . $to . ' с темой ' . $subject);
+
+        }
     }
 
     /**
@@ -31,27 +25,21 @@ class Mailer
      * @param $from
      * @param $html
      * @param $to
-     * @return array
+     * @return string
      */
-    public function send($subject, $from, $html, $to): array
+    public function send($subject, $from, $html, $to): string
     {
-
-        TelegramLogService::staticSendLogMessage('p.1');
         if(env('APP_ENV') !== 'testing') {
-            try {
-            TelegramLogService::staticSendLogMessage('p.2');
-
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.smtp.bz/v1/smtp/send",
+                CURLOPT_URL => env('MAIL_SMTP_URL'),
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_TIMEOUT => 30,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_VERBOSE, true,
                 CURLOPT_HTTPHEADER => array(
-                    "authorization: h0IH0IBP1HNcQZOTaZbqvkquhCtmNN2VMzsM"
+                    "authorization: ".env('MAIL_SMTP_API_KEY'),
                 ),
                 CURLOPT_POSTFIELDS => http_build_query([
                     'subject' => $subject, // Обязательно
@@ -63,24 +51,13 @@ class Mailer
                     'text' => "ТЕСТ"
                 ])
             ));
-            TelegramLogService::staticSendLogMessage('p.3');
-
 
             $response = curl_exec($curl);
-            TelegramLogService::staticSendLogMessage('p.4');
+            $err = curl_error($curl);
 
-//            TelegramLogService::staticSendLogMessage('p.5 Curl exec result ' . $response);
-            $err[1] = curl_error($curl);
-            $err[2] = $response;
-
-//                TelegramLogService::staticSendLogMessage(curl_error($curl));
-                curl_close($curl);
+            curl_close($curl);
 
             return $err;
-        } catch (\Exception $e) {
-                TelegramLogService::staticSendLogMessage('err: ' . $e->getMessage());
-            }
-
         } else {
             Log::debug('send email',[
                 'subject' => $subject, // Обязательно
