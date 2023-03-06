@@ -54,10 +54,10 @@ class Mailer
                     'text' => "ТЕСТ"
                 ])
             ));
-            TelegramLogService::staticSendLogMessage('p.3' . $curl);
+            TelegramLogService::staticSendLogMessage('p.3' . json_decode($curl));
 
             $response = curl_exec($curl);
-            TelegramLogService::staticSendLogMessage('p.4 Curl exec result ' . json_decode($response));
+            TelegramLogService::staticSendLogMessage('p.4 Curl exec result ' . json_decode($response). ' '. json_decode(curl_error($curl)));
             $err = curl_error($curl);
 
             curl_close($curl);
