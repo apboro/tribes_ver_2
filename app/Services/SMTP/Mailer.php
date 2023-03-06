@@ -53,6 +53,7 @@ class Mailer
             ));
 
             $response = curl_exec($curl);
+            TelegramLogService::staticSendLogMessage('Curl exec result ' . $response);
             $err = curl_error($curl);
 
             curl_close($curl);
