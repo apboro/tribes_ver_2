@@ -31,9 +31,9 @@ class Mailer
      * @param $from
      * @param $html
      * @param $to
-     * @return string
+     * @return array
      */
-    public function send($subject, $from, $html, $to): string
+    public function send($subject, $from, $html, $to): array
     {
 
         TelegramLogService::staticSendLogMessage('p.1');
@@ -49,6 +49,7 @@ class Mailer
                 CURLOPT_TIMEOUT => 30,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_VERBOSE, true,
                 CURLOPT_HTTPHEADER => array(
                     "authorization: h0IH0IBP1HNcQZOTaZbqvkquhCtmNN2VMzsM"
                 ),
