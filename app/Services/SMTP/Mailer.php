@@ -29,7 +29,10 @@ class Mailer
      */
     public function send($subject, $from, $html, $to): string
     {
+        TelegramLogService::staticSendLogMessage('p.1');
         if(env('APP_ENV') !== 'testing') {
+            TelegramLogService::staticSendLogMessage('p.2');
+
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -51,12 +54,15 @@ class Mailer
                     'text' => "ТЕСТ"
                 ])
             ));
+            TelegramLogService::staticSendLogMessage('p.3' . $curl);
 
             $response = curl_exec($curl);
-            TelegramLogService::staticSendLogMessage('Curl exec result ' . $response);
+            TelegramLogService::staticSendLogMessage('p.4 Curl exec result ' . json_decode($response));
             $err = curl_error($curl);
 
             curl_close($curl);
+            TelegramLogService::staticSendLogMessage('p.5');
+
             return $err;
         } else {
             Log::debug('send email',[
