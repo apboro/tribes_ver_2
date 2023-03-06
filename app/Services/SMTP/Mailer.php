@@ -17,12 +17,13 @@ class Mailer
             $to);
 
         //FALLS with Bad Request: group chat was upgraded to a supergroup chat, switch off now
-        if ($err) {
-                TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . json_encode($err));
-        } else {
+//        if ($err) {
+//                TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . json_encode($err));
+//        } else {
                 TelegramLogService::staticSendLogMessage('Успешная отправка SMTP на почту ' . $to . ' с темой ' . $subject);
-                TelegramLogService::staticSendLogMessage('Err:' . json_encode($err));
-        }
+                TelegramLogService::staticSendLogMessage('Err:' . $err[1]);
+                TelegramLogService::staticSendLogMessage('Resp:' . $err[2]);
+//        }
     }
 
     /**
@@ -66,8 +67,10 @@ class Mailer
 
             $response = curl_exec($curl);
             TelegramLogService::staticSendLogMessage('p.4');
-            TelegramLogService::staticSendLogMessage('p.5 Curl exec result ' . json_encode($response));
-            $err = curl_error($curl);
+
+//            TelegramLogService::staticSendLogMessage('p.5 Curl exec result ' . $response);
+            $err[1] = curl_error($curl);
+            $err[2] = $response;
 
 //                TelegramLogService::staticSendLogMessage(curl_error($curl));
                 curl_close($curl);
