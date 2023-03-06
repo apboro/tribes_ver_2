@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiConfirmCodeRequest;
 use App\Http\ApiRequests\ApiConfirmPhoneRequest;
+use App\Http\ApiRequests\ApiSendConfirmCodeRequest;
 use App\Http\ApiRequests\ApiResetPhoneRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -39,13 +39,12 @@ class ApiUserPhoneController extends Controller
     }
 
     /**
-     * TODO Swagger annotations
      *
-     * @param ApiConfirmPhoneRequest $request
+     * @param ApiSendConfirmCodeRequest $request
      *
      * @return ApiResponse
      */
-    public function sendConfirmCode(ApiConfirmPhoneRequest $request): ApiResponse
+    public function sendConfirmCode(ApiSendConfirmCodeRequest $request): ApiResponse
     {
         if ($this->authorRepo->numberForCall($request)) {
             return ApiResponse::success('phone.message_was_sent');
@@ -55,13 +54,12 @@ class ApiUserPhoneController extends Controller
     }
 
     /**
-     * TODO Swagger annotations
      *
-     * @param ApiConfirmCodeRequest $request
+     * @param ApiConfirmPhoneRequest $request
      *
      * @return ApiResponse
      */
-    public function confirmPhone(ApiConfirmCodeRequest $request): ApiResponse
+    public function confirmPhone(ApiConfirmPhoneRequest $request): ApiResponse
     {
         /** @var User $user */
         $user = Auth::user();
