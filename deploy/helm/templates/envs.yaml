@@ -20,9 +20,9 @@ data:
   MEMCACHED_HOST: {{ quote .Values.config.memcached.host }}
   REDIS_HOST: {{ quote .Values.config.redis.host }}
   REDIS_PORT: {{ quote .Values.config.redis.port }}
-  MAIL_SMTP_URL: {{ .Values.config.mail.url }} https://api.smtp.bz/v1/smtp/send
-  MAIL_SMTP_API_KEY: {{ .Values.config.mail.apiKey }} h0IH0IBP1HNcQZOTaZbqvkquhCtmNN2VMzsM
-  MAIL_FROM_ADDRESS: {{ .Values.config.mail.from }} no-reply@u.trbs.co
+  MAIL_SMTP_URL: {{ .Values.config.mail.url }}
+  MAIL_SMTP_API_KEY: {{ .Values.config.mail.apiKey }}
+  MAIL_FROM_ADDRESS: {{ .Values.config.mail.from }}
   AWS_DEFAULT_REGION: {{ quote .Values.config.s3.region }}
   AWS_BUCKET: {{ quote .Values.config.s3.bucket }}
   AWS_USE_PATH_STYLE_ENDPOINT: {{ quote .Values.config.s3.pathStyleEndpoint }}
