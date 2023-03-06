@@ -19,6 +19,7 @@ spec:
         app: {{ include "..names.name" . }}
       annotations:
         checksum/container-registry: {{ include (print $.Template.BasePath "/queue-worker/docker-secret.yaml") . | sha256sum }}
+        checksum/envs: {{ include (print $.Template.BasePath "/envs.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
         - name: {{ include "..names.name" . }}-queue-worker-pull-secret
