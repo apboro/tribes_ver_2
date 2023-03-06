@@ -31,6 +31,7 @@ RUN apk --no-cache add php-pgsql postgresql14-dev pcre-dev libjpeg-turbo-dev lib
   && docker-php-ext-install gd \
   && docker-php-ext-install zip \
   && docker-php-ext-install bcmath \
+  && docker-php-ext-install curl \
   && apk del pcre-dev $PHPIZE_DEPS
 
 COPY .docker/docker-entrypoint.sh /
