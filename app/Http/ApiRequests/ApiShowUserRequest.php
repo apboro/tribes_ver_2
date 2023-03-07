@@ -9,12 +9,12 @@ namespace App\Http\ApiRequests;
  *     operationId="UserInfo",
  *     security={{"sanctum": {} }},
  *
- *     @OA\Response(response=200, description="Login success", @OA\JsonContent(
+ *     @OA\Response(response=200, description="User data fetched", @OA\JsonContent(
  *            @OA\Property(property="data", type="array",
  *                @OA\Items(
  *                    @OA\Schema (ref="#/components/schemas/userResource"),
  *                ),
- *                example={"id": 1, "name": "Jessica Smith", "email": "js@mama.com"}
+                    example={}
  *            ),
  *            @OA\Property(property="message", type="string", nullable=true),
  *            @OA\Property(property="payload", type="array", @OA\Items(), example={}))

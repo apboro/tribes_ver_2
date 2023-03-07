@@ -7,6 +7,7 @@ use App\Http\Controllers\APIv3\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
+use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
 use App\Http\Controllers\APIv3\User\ApiMessengersController;
@@ -68,6 +69,7 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
 
     Route::get('/subscriptions_list', [ApiSubscriptionController::class, 'index']);
     Route::post('/subscription', [ApiSubscriptionController::class, 'show']);
+    Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
 
 });
 
