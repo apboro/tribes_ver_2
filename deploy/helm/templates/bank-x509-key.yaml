@@ -1,4 +1,4 @@
-
+{{- if .Values.mode.app }}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -6,3 +6,4 @@ metadata:
 type: Opaque
 data:
   private.key: {{ .Values.config.tinkoff.x509key }}
+{{- end }}
