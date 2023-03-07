@@ -50,7 +50,7 @@ class UserResource extends JsonResource
             'id' => $this->resource->id,
             'name' => $this->resource->name,
             'email' => $this->resource->email,
-            'phone'=>$this->getPhone(),
+            'phone'=>$this->phone,
             'phone_confirmed'=>$this->phone_confirmed,
             'subscription'=>$this->subscription,
         ];
