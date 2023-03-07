@@ -32,6 +32,16 @@ class UserResource extends JsonResource
      *            description="Почта пользователя",
      *            type="string",
      *       ),
+     *       @OA\Property(
+     *            property="phone",
+     *            description="Телефон пользователя",
+     *            type="string",
+     *       ),
+     *       @OA\Property(
+     *            property="phone_confirmed",
+     *            description="Флаг подтверждения телефона",
+     *            type="boolean",
+     *       ),
      *  )
      */
     public function toArray($request): array
@@ -40,6 +50,9 @@ class UserResource extends JsonResource
             'id' => $this->resource->id,
             'name' => $this->resource->name,
             'email' => $this->resource->email,
+            'phone'=>$this->getPhone(),
+            'phone_confirmed'=>$this->phone_confirmed,
+            'subscription'=>$this->subscription,
         ];
     }
 }

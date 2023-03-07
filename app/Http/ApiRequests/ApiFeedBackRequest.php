@@ -25,7 +25,7 @@ namespace App\Http\ApiRequests;
  *      @OA\Response(response=400, description="Error: Bad Request"),
  *
  *)
- * */
+ */
 class ApiFeedBackRequest extends ApiRequest
 {
    public function rules():array
