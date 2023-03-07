@@ -3,3 +3,4 @@ name: spodial-backend
 description: A Helm chart for spodial-backend
 version: 1.1.0
 appVersion: "0.1.0"
+

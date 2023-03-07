@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "..names.name" }}-bank-x509-key
+  name: {{ include "..names.name" . }}-bank-x509-key
 type: Opaque
 data:
   private.key: {{ .Values.config.tinkoff.x509key }}
