@@ -21,7 +21,6 @@ data:
   REDIS_HOST: {{ quote .Values.config.redis.host }}
   REDIS_PORT: {{ quote .Values.config.redis.port }}
   MAIL_SMTP_URL: {{ .Values.config.mail.url }}
-  MAIL_SMTP_API_KEY: {{ .Values.config.mail.apiKey }}
   MAIL_FROM_ADDRESS: {{ .Values.config.mail.from }}
   AWS_DEFAULT_REGION: {{ quote .Values.config.s3.region }}
   AWS_BUCKET: {{ quote .Values.config.s3.bucket }}
@@ -76,8 +75,7 @@ type: Opaque
 data:
   APP_KEY: {{ quote .Values.config.app.key | b64enc  }}
   # REDIS_PASSWORD: {{ quote .Values.config.redis.password | b64enc }}
-  MAIL_USERNAME: {{ quote .Values.config.mail.username | b64enc }}
-  MAIL_PASSWORD: {{ quote .Values.config.mail.password | b64enc }}
+  MAIL_SMTP_API_KEY: {{ .Values.config.mail.apiKey }}
   AWS_ACCESS_KEY_ID: {{ quote .Values.config.s3.accessKey | b64enc }}
   AWS_SECRET_ACCESS_KEY: {{ quote .Values.config.s3.secretKey | b64enc }}
   PUSHER_APP_KEY: {{ quote .Values.config.pusherApp.key | b64enc }}
