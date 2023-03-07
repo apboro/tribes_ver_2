@@ -48,7 +48,7 @@ class ApiPaymentCardController extends Controller
         $response = $this->tinkoff->response();
 
         return ApiResponse::list()
-            ->items(PaymentCardListResource::make($response)->toArray($request))
+            ->items(PaymentCardListResource::make(json_decode($response, true))->toArray($request))
             ->payload(PaymentCardListResource::payload());
     }
 
@@ -95,6 +95,6 @@ class ApiPaymentCardController extends Controller
 
         $response = $this->tinkoff->response();
 
-        return ApiResponse::common(PaymentCardResource::make($response)->toArray($request));
+        return ApiResponse::common(PaymentCardResource::make(json_decode($response, true))->toArray($request));
     }
 }
