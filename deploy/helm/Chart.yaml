@@ -1,6 +1,6 @@
 apiVersion: v2
 name: spodial-backend
 description: A Helm chart for spodial-backend
-version: 0.1.5
+version: 1.0.1
 appVersion: "0.1.0"
 
