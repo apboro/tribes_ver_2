@@ -71,6 +71,7 @@ class ApiPaymentCardController extends Controller
         $this->tinkoff->AddCard($user->getCustomerKey());
         $api_response_result = $this->tinkoff->response();
 return ApiResponse::common($api_response_result);
+    }
 
     
 
