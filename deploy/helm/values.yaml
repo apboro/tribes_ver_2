@@ -180,6 +180,7 @@ config:
     termicalKeyE2E: ""
     secretKeyE2E: ""
     x509serial: ""
+    x509key: ""
   telegram:
     userbot:
       name: "Analytics_Tribes"
