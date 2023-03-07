@@ -6,15 +6,6 @@ use App\Events\SubscriptionMade;
 
 class SubscriptionListener
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * Handle the event.
@@ -24,6 +15,6 @@ class SubscriptionListener
      */
     public function handle(SubscriptionMade $event)
     {
-        //
+
     }
 }

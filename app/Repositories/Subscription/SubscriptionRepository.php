@@ -14,6 +14,7 @@ class SubscriptionRepository
         $subscription = new UserSubscription();
         $subscription->user_id = $user_id;
         $subscription->subscription_id = $subscription_id;
+        $subscription->isRecurrent = true;
         $subscription->save();
     }
 

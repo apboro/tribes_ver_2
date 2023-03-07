@@ -10,6 +10,7 @@ use App\Models\Community;
 use App\Models\Course;
 use App\Models\DonateVariant;
 use App\Models\Payment as P;
+use App\Models\Subscription;
 use App\Models\TariffVariant;
 use App\Models\User;
 use App\Services\TelegramLogService;
@@ -79,13 +80,18 @@ class Payment
             case $payFor instanceof Course:
                 $this->type = 'course';
                 break;
+            case $payFor instanceof Subscription:
+                $this->type = 'subscription';
+                break;
             default:
                 TelegramLogService::staticSendLogMessage("Оплата на свободную сумму");
                 return false;
         }
         $this->payFor = $payFor;
 
-        $this->community();
+        if ($this->type != 'subscription') {
+            $this->community();
+        }
 
         return $this;
     }
@@ -165,7 +171,7 @@ class Payment
         $this->payment->amount = $this->amount;
         $this->payment->from = $this->payer ? $this->payer->name : 'Анонимный пользователь';
         $this->payment->community_id = $this->community ? $this->community->id : null;
-        $this->payment->author = $this->payFor->getAuthor()->id ?? null;
+        $this->payment->author = ($this->type == 'subscription') ? null : $this->payFor->getAuthor()->id;
         $this->payment->add_balance = $this->amount / 100;
         $this->payment->save();
         $this->orderId = $this->payment->id . date("_md_s");
@@ -182,15 +188,18 @@ class Payment
                 'Success' => true,
             ];
         } else {
-            $resp = json_decode($this->tinkoff->initPay($params)); // Шлём запрос в банк
+            if ($this->type == 'subscription')
+            {
+                $resp = json_decode($this->tinkoff->initDirectPay($params)); // Шлём запрос в банк на терминал direct
+            } else {
+                $resp = json_decode($this->tinkoff->initPay($params)); // Шлём запрос в банк на терминал pay
+            }
         }
 
         if(isset($resp->Success) && $resp->Success){
 //            if(isset($resp->SpAccumulationId, $this->payment)){
 //                $this->accumulation($resp->SpAccumulationId);
 //            }
-
-
 
                 $this->payment->OrderId = $this->orderId;
                 $this->payment->paymentId = $resp->PaymentId;
@@ -304,6 +313,16 @@ class Payment
             $params['CustomerKey'] = $this->payer->getCustomerKey();
         }
         return $params;
+    }
+
+    public function doPayment($payer, $payFor, $cost){
+        $this->amount($cost * 100);
+        $this->payFor($payFor);
+        $this->payer($payer);
+        if ($this->type == 'subscription') {
+            $this->recurrent = true;
+        }
+        return $this->pay();
     }
 
 }

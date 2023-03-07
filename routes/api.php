@@ -70,6 +70,7 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::get('/subscriptions_list', [ApiSubscriptionController::class, 'index']);
     Route::post('/subscription', [ApiSubscriptionController::class, 'show']);
     Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
+    Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
 
 });
 

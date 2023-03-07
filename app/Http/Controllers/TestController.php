@@ -50,11 +50,11 @@ class TestController extends Controller
        dd($resp);
     }
 
-    public function test1_2_passed()
+    public function test()
     {
         $params = [
             'NotificationURL' => null,
-            'OrderId' => 6669,
+            'OrderId' => 6229,
             'Amount'  => 500,
             'SuccessURL' => '',
             'DATA'    => [
@@ -64,6 +64,7 @@ class TestController extends Controller
         ];
 
         $resp = json_decode($this->tinkoff->directTerminal->init($params));
+        dd($resp);
         return redirect($resp->PaymentURL);
 
     }

@@ -11,5 +11,10 @@ class Subscription extends Model
 
     protected $guarded = [];
 
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'payable');
+    }
+
 
 }

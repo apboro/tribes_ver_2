@@ -33,6 +33,11 @@ class TinkoffService
         return $this->payTerminal->init($args);
     }
 
+    public function initDirectPay($args)
+    {
+        return $this->directTerminal->init($args);
+    }
+
     public static function checkStatus($data, $payment, $previous_status)
     {
         DB::beginTransaction();
