@@ -70,11 +70,11 @@ class ApiPaymentCardController extends Controller
 
         $this->tinkoff->AddCard($user->getCustomerKey());
         $api_response_result = $this->tinkoff->response();
-
-//        return ApiResponse::common(PaymentCardResource::make($api_response_result)->toArray($request));
-        return ApiResponse::common(PaymentCardResource::make(json_decode($api_response_result, true))->toArray($request));
+return $api_response_result;
+       return ApiResponse::common(PaymentCardResource::make($api_response_result)->toArray($request));
+  /**      return ApiResponse::common(PaymentCardResource::make(json_decode($api_response_result, true))->toArray($request));
     }
-
+*/
     /**
      * Detach user assigned card.
      *
