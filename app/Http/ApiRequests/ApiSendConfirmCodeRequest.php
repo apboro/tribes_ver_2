@@ -16,8 +16,8 @@ namespace App\Http\ApiRequests;
  *             mediaType="application/json",
  *             @OA\Schema(
  *                 @OA\Property(property="phone", type="integer"),
- *                 @OA\Property(property="code",type="integer"),
- *                 example={"phone": 79500521558, "code": "1122"}
+ *                 @OA\Property(property="code",type="string"),
+ *                 example={"phone": 9500521558, "code": "+7"}
  *             )
  *      )
  * ),
