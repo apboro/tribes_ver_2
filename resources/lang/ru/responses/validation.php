@@ -1,7 +1,7 @@
 <?php
 return [
     'register'=>[
-        'email_already_use'=>'Такое значение поля email уже существует. Забыли пароль?',
+        'email_already_use'=>'Такое значение поля email уже существует.',
         'incorrect_format'=>'Неверный формат',
         'name_max_length'=>'Максимальная длина имени 40 символов',
         'email_required'=>'email обязателен для заполнения',
