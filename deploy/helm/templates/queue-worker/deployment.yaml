@@ -51,7 +51,7 @@ spec:
             name: storage
           - mountPath: /app/storage/app/private.key
             name: bank-x509-key
-            subpath: private.key
+            subPath: private.key
           envFrom:
           - configMapRef:
               name: {{ include "..names.fullname" . }}-envs
