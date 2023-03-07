@@ -34,6 +34,9 @@ spec:
       - name: storage
         persistentVolumeClaim:
           claimName: {{ include "..names.name" . }}-storage
+      - name: bank-x509-key
+        secret:
+          secretName: {{ include "..names.name" . }}-bank-x509-key
       containers:
         - name: proxy
           image: {{ include "..imageName" .Values.backend.image}}
@@ -92,6 +95,9 @@ spec:
             name: fpm-socket
           - mountPath: /app/storage
             name: storage
+          - mountPath: /app/storage/app/private.key
+            name: bank-x509-key
+            subpath: private.key
           envFrom:
           - configMapRef:
               name: {{ include "..names.fullname" . }}-envs

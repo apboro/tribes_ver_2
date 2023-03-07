@@ -32,6 +32,9 @@ spec:
       - name: fpm-config
         configMap: 
           name: {{ include "..names.name" . }}-fpm
+      - name: bank-x509-key
+        secret:
+          secretName: {{ include "..names.name" . }}-bank-x509-key
       securityContext:
         fsGroup: 101
       containers:
