@@ -90,6 +90,8 @@ data:
   TINKOFF_SECRET_KEY_E2C: {{ quote .Values.config.tinkoff.secretKeyE2E | b64enc }}
   TINKOFF_TERMINAL_KEY: {{ quote .Values.config.tinkoff.terminalKey | b64enc }}
   TINKOFF_SECRET_KEY: {{ quote .Values.config.tinkoff.secretKey | b64enc }}
+  TINKOFF_TERMINAL_DIRECT: {{ quote .Values.config.tinkoff.terminalDirect | b64enc }}
+  TINKOFF_TERMINAL_DIRECT_SECRET_KEY: {{ quote .Values.config.tinkoff.terminalDirectSecretKey | b64enc }}
   TINKOFF_X509SERIAL: {{ quote .Values.config.tinkoff.x509serial | b64enc }}
   TINKOFF_PREFIX: {{ quote .Values.config.tinkoff.terminalKey | b64enc }}
   TELEGRAM_BOT_TOKEN: {{ quote .Values.config.telegram.bot.token | b64enc }}

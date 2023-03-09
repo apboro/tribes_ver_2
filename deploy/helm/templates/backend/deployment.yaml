@@ -89,7 +89,7 @@ spec:
           image: {{ include "..imageName" .Values.backend.image}}
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           args:
-          - php-fpm 
+          - php-fpm
           volumeMounts:
           - mountPath: /var/run/php
             name: fpm-socket
