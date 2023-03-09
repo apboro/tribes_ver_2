@@ -16,6 +16,7 @@ COPY *.js artisan ${WORKDIR}/
 RUN npm run prod
 
 FROM php:${PHP_VERSION}-fpm-alpine3.15
+USER 101:101
 ARG WORKDIR
 WORKDIR ${WORKDIR}
 
