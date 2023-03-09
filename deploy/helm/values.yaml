@@ -177,6 +177,8 @@ config:
   tinkoff:
     terminalKey: ""
     secretKey: ""
+    terminalDirect: ""
+    terminalDirectSecretKey: ""
     termicalKeyE2E: ""
     secretKeyE2E: ""
     x509serial: ""
