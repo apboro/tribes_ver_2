@@ -66,11 +66,7 @@ class ApiSubscriptionController extends Controller
 
     public function edit(ApiEditSubscriptionRequest $request)
     {
-        $subscription = Subscription::find($request->id);
-        $subscription->description = $request->description;
-        $subscription->save();
 
-        return ApiResponse::success('Subscription edited');
     }
 
     /**
