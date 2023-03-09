@@ -52,6 +52,7 @@ class UserResource extends JsonResource
             'email' => $this->resource->email,
             'phone'=>$this->phone,
             'phone_confirmed'=>$this->phone_confirmed,
+            'telegram_accounts' =>$this->telegramData(),
             'subscription'=>$this->subscription,
         ];
     }
