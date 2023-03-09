@@ -10,7 +10,7 @@ namespace App\Http\ApiRequests;
  *  operationId="phone-send-confirm-code",
  *  summary="Send Confirm Phone Code",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"User Phone"},
  *     @OA\RequestBody(
  *         @OA\MediaType(
  *             mediaType="application/json",

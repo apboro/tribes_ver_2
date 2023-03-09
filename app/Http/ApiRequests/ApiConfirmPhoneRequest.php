@@ -8,7 +8,7 @@ namespace App\Http\ApiRequests;
  *  operationId="confirm-phone",
  *  summary="Confirm Phone",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"User Phone"},
  *     @OA\RequestBody(
  *         @OA\JsonContent(
  *                 @OA\Property(property="phone", type="integer"),

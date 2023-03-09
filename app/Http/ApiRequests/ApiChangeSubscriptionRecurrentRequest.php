@@ -8,7 +8,7 @@ namespace App\Http\ApiRequests;
  *  operationId="subscription_recurrent_change",
  *  summary="Subscription Recurrent Change",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"Subscription"},
   *      @OA\Response(response=200, description="Subscription Recurrent Changed", @OA\JsonContent(
  *          @OA\Property(property="message", type="string", nullable=true),
  *          @OA\Property(property="payload", type="array", @OA\Items(), example={}))

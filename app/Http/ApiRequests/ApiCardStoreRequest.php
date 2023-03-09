@@ -8,7 +8,7 @@ namespace App\Http\ApiRequests;
  *  operationId="payment-card-store",
  *  summary="Store bank card",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"User Cards"},
 
  *      @OA\Response(response=200, description="Cards fetched", @OA\JsonContent(
  *          @OA\Property(property="message", type="string", nullable=true),

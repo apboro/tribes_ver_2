@@ -8,7 +8,7 @@ namespace App\Http\ApiRequests;
  *  operationId="detach_telegram_account",
  *  summary="Detach Telegram Account",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"User Telegram"},
  *  @OA\RequestBody(
  *      @OA\JsonContent(
  *          @OA\Property(property="telegram_id", type="integer"),

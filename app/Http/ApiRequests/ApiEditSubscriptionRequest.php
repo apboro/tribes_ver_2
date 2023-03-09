@@ -8,7 +8,7 @@ namespace App\Http\ApiRequests;
  *  operationId="subscritpion-edit",
  *  summary="Subscription edit",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"Subscription"},
  *      @OA\RequestBody(
  *          @OA\JsonContent(
  *               @OA\Property(property="id", type="integer"),

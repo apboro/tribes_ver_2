@@ -9,7 +9,7 @@ namespace App\Http\ApiRequests;
  *  operationId="subscription_pay",
  *  summary="Pay for Subscription",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"Subscription"},
  *     @OA\RequestBody(
  *          @OA\JsonContent(
  *                 @OA\Property(property="subscriptin_id",type="integer"),

@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
  *     path="/api/v3/user/password/forgot",
  *     operationId="forgot-password",
  *     summary="Send reset link to email",
- *     tags={"User"},
+ *     tags={"Authorizathion"},
  *
  *     @OA\RequestBody(
  *          @OA\JsonContent(

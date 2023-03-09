@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
  *     path="/api/v3/user/register",
  *     operationId="register",
  *     summary="Register user",
- *     tags={"User"},
+ *     tags={"Authorizathion"},
  *
  *     @OA\RequestBody(
  *          @OA\JsonContent(

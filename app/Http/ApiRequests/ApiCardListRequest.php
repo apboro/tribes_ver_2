@@ -9,7 +9,7 @@ namespace App\Http\ApiRequests;
  *  operationId="payment-cards-list",
  *  summary="Get cards list",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"User Cards"},
 
  *      @OA\Response(response=200, description="Cards fetched", @OA\JsonContent(
  *          @OA\Property(property="list", type="array", @OA\Items(), example={}, nullable=true),

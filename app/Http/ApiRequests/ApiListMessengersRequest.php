@@ -5,7 +5,7 @@ namespace App\Http\ApiRequests;
 
 /**
  * @OA\Get(path="/api/v3/user/telegram/list",
- *     tags={"User"},
+ *     tags={"User Telegram"},
  *     summary="Show user telegram accounts",
  *     operationId="UserTelegramInfo",
  *     security={{"sanctum": {} }},

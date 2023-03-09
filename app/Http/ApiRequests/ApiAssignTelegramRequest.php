@@ -10,7 +10,7 @@ use App\Models\User;
  *  operationId="assign_telegram_account",
  *  summary="Assign Telegram Account",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"User Telegram"},
  *     @OA\RequestBody(
  *          @OA\JsonContent(
  *                 @OA\Property(property="id", type="integer"),

@@ -4,7 +4,7 @@ namespace App\Http\ApiRequests;
 
 /**
  * @OA\Get(path="/api/v3/subscriptions_list",
- *     tags={"User"},
+ *     tags={"Subscription"},
  *     summary="Show subscriptions",
  *     operationId="SubscriptionsListInfo",
  *     security={{"sanctum": {} }},

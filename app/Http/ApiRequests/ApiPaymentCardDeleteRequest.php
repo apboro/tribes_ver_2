@@ -9,7 +9,7 @@ namespace App\Http\ApiRequests;
  *  operationId="payment-card-delete",
  *  summary="Delete bank card",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"User Cards"},
  *  @OA\RequestBody(
  *          @OA\JsonContent(
  *                 @OA\Property(property="card_id",type="integer"),

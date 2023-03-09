@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
  *     path="/api/v3/user/password/change",
  *     operationId="change-password",
  *     summary="Change user password",
- *     tags={"User"},
+ *     tags={"Authorizathion"},
  *
  *     @OA\RequestBody(
  *          @OA\JsonContent(

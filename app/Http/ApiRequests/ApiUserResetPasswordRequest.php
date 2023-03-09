@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
  *     path="/api/v3/user/password/reset",
  *     operationId="reset-password",
  *     summary="Reset user password via reset link",
- *     tags={"User"},
+ *     tags={"Authorizathion"},
  *
  *     @OA\RequestBody(
  *          @OA\JsonContent(

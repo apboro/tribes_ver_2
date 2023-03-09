@@ -10,7 +10,7 @@ use OpenApi\Annotations as OA;
  *     operationId="logout",
  *     summary="Logout user",
  *     security={{"sanctum": {} }},
- *     tags={"User"},
+ *     tags={"Authorizathion"},
  *
  *     @OA\Response(response=200, description="Logout success", @OA\JsonContent(ref="#/components/schemas/api_response_success")),
  *

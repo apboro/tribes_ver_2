@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
  *      summary="Login user",
  *      path="/api/v3/user/login",
  *      operationId="login",
- *      tags={"User"},
+ *      tags={"Authorizathion"},
  *
  *      @OA\RequestBody(
  *          @OA\JsonContent(

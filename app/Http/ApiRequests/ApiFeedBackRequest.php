@@ -8,7 +8,7 @@ namespace App\Http\ApiRequests;
  *  operationId="feed-back",
  *  summary="Send feedback ticket",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"Feedback"},
  *      @OA\RequestBody(
  *          @OA\JsonContent(
  *               @OA\Property(property="fb_email", type="string"),

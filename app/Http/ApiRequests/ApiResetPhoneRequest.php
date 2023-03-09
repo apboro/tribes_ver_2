@@ -8,7 +8,7 @@ namespace App\Http\ApiRequests;
  *  operationId="reset-phone",
  *  summary="Reset confirmed phone",
  *  security={{"sanctum": {} }},
- *  tags={"User"},
+ *  tags={"User Phone"},
  *
  *      @OA\Response(response=200, description="Phone reset successfully", @OA\JsonContent(
  *          @OA\Property(property="message", type="string", nullable=true),
