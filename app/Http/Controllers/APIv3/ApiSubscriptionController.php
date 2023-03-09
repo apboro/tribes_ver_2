@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\APIv3;
 
 use App\Http\ApiRequests\ApiAssignSubscriptionRequest;
+use App\Http\ApiRequests\ApiEditSubscriptionRequest;
 use App\Http\ApiRequests\ApiListSubscriptionsRequest;
 use App\Http\ApiRequests\ApiShowSubscriptionRequest;
 use App\Http\ApiRequests\ApiStoreSubscriptionRequest;
@@ -63,15 +64,13 @@ class ApiSubscriptionController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Subscription  $subscription
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Subscription $subscription)
+    public function edit(ApiEditSubscriptionRequest $request)
     {
-        //
+        $subscription = Subscription::find($request->id);
+        $subscription->description = $request->description;
+        $subscription->save();
+
+        return ApiResponse::success('Subscription edited');
     }
 
     /**
