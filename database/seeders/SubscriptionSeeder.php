@@ -17,10 +17,7 @@ class SubscriptionSeeder extends Seeder
         Subscription::create([
             'name' => 'Старт',
             'slug' => 'start',
-            'description' => 'Управление сообществами
-            Создание курсов (LMS)
-            Аналитика сообществ
-            Комиссия с продаж 15%',
+            'description' => '[{"name": "Управление сообществами","description" : null},{"name": "Создание курсов (LMS)","description": null},{"name": "Аналитика сообществ","description": null},{"name": "Комиссия с продаж","description":"15%"}]',
             'is_active' => true,
             'price' => 0,
             'period_days' => 0,
@@ -31,10 +28,7 @@ class SubscriptionSeeder extends Seeder
         Subscription::create([
             'name' => 'Организатор',
             'slug' => 'organizer',
-            'description' => 'Улучшенное управление сообществами
-            Создание курсов (LMS)
-            Расширенная аналитика сообществ
-            Комиссия с продаж 10%',
+            'description' => '[{"name": "Улучшенное управление сообществами","description" : null},{"name": "Создание курсов (LMS)","description": null},{"name": "Расширенная аналитика сообществ","description": null},{"name": "Комиссия с продаж","description": "10%"}]',
             'is_active' => true,
             'price' => 500,
             'period_days' => 30,
@@ -45,10 +39,7 @@ class SubscriptionSeeder extends Seeder
         Subscription::create([
             'name' => 'Инфобизнес',
             'slug' => 'info_business',
-            'description' => 'Улучшенное управление сообществами
-            Улучшенные возможности LMS
-            Улучшенная аналитика вторского контента
-            Комиссия с продаж 8%',
+            'description' => '[{"name": "Улучшенное управление сообществами","description" : null},{"name": "Улучшенные возможности LMS","description": null},{"name": "Улучшенная аналитика авторского контента","description": null},{"name": "Комиссия с продаж","description": "8%"}]',
             'is_active' => true,
             'price' => 1000,
             'period_days' => 30,

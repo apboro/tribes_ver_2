@@ -282,7 +282,10 @@ class Payment
             'NotificationURL' => $this->callbackUrl,
             'OrderId' => $this->orderId,
             'Amount'  => $this->amount,
-            'SuccessURL' => $this->payFor instanceof Course ? $this->payFor->successPageLink() :route('payment.success', $attaches),
+            'SuccessURL' => $this->payFor instanceof Course
+                ? $this->payFor->successPageLink()
+                :
+                route('payment.success', $attaches),
             'DATA'    => [
                 'Email'  => $this->payer ? $this->payer->email : '',
             ],

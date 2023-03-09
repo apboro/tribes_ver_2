@@ -23,7 +23,7 @@ use App\Models\SmsConfirmations;
  * @property string $email
  * @property string $name
  * @property string $password
- *
+ * @property Subscription $subscription
  *
  * @method UserFactory factory()
  */

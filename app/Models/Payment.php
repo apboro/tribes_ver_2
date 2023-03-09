@@ -50,7 +50,7 @@ class Payment extends Model
         'REFUNDED' => 'Возвращен полностью',
     ];
 
-    public static $types = ["payout", "tariff", "donate", "course"];
+    public static $types = ["payout", "tariff", "donate", "course", "subscription"];
 
     public function scopeFilter(Builder $builder, QueryFilter $filters)
     {

@@ -5,6 +5,7 @@ namespace App\Repositories\Subscription;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\UserSubscription;
+use Carbon\Carbon;
 
 
 class SubscriptionRepository
@@ -15,6 +16,8 @@ class SubscriptionRepository
         $subscription->user_id = $user_id;
         $subscription->subscription_id = $subscription_id;
         $subscription->isRecurrent = true;
+        $subscription->isActive = true;
+        $subscription->expiration_date = Carbon::now()->addDays(30);
         $subscription->save();
     }
 
@@ -22,8 +25,6 @@ class SubscriptionRepository
     {
         return Subscription::where('slug', $request['slug'])->get();
     }
-
-
 
 
 }

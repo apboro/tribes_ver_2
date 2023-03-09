@@ -71,6 +71,7 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/subscription', [ApiSubscriptionController::class, 'show']);
     Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
+    Route::get('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
 
 });
 

@@ -52,6 +52,11 @@ class TestController extends Controller
 
     public function test()
     {
+        $this->tinkoff->checkCustomer(User::find(1)->getCustomerKey());
+    }
+
+    public function testPayment()
+    {
         $params = [
             'NotificationURL' => null,
             'OrderId' => 6229,
