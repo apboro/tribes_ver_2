@@ -54,7 +54,7 @@ class ApiUserSubscriptionController extends Controller
             return ApiResponse::notFound('subscription.required');
         }
 
-        $payment = $this->tinkoff_payment->doPayment($user, $subscription, $subscription->price * 100);
+        $payment = $this->tinkoff_payment->doPayment($user, $subscription, $subscription->price);
 
         if ($payment === false) {
             $this->telegramLogService->sendLogMessage(
