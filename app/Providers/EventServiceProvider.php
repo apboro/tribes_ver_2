@@ -6,6 +6,7 @@ use App\Events\ApiUserRegister;
 use App\Events\CreateCommunity;
 use App\Events\FeedBackCreate;
 use App\Events\SubscriptionMade;
+use App\Listeners\AssignStartSubscription;
 use App\Listeners\CreateCommunityListener;
 use App\Listeners\FeedBackListener;
 use App\Listeners\SubscriptionListener;
@@ -26,6 +27,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         ApiUserRegister::class=>[
+            AssignStartSubscription::class,
             UserRegisterSendEmail::class
         ],
         CreateCommunity::class=>[

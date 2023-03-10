@@ -28,7 +28,7 @@ use OpenApi\Annotations as OA;
  *             @OA\Property(property="payload", type="array", @OA\Items(), example={}))
  *      ),
  *
- *      @OA\Response(response=422, description="Validation Error", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
+ *      @OA\Response(response=422, description="Wrong credentials", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
  *
  *      @OA\Response(response=500, description="Server Error", @OA\JsonContent(ref="#/components/schemas/api_response_server_error")),
  * )
@@ -43,8 +43,8 @@ class ApiUserLoginRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
-            'password' => 'required|string',
+            'email' => 'required',
+            'password' => 'required',
         ];
     }
 

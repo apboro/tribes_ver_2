@@ -28,7 +28,7 @@ use OpenApi\Annotations as OA;
  *            @OA\Property(property="payload", type="array", @OA\Items(), example={}))
  *     ),
  *
- *     @OA\Response(response=422, description="Validation error", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
+ *     @OA\Response(response=422, description="Wrong credentials", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
  *
  *     @OA\Response(response=500, description="Server error", @OA\JsonContent(ref="#/components/schemas/api_response_server_error")),
  * )
@@ -59,28 +59,28 @@ class ApiUserRegisterRequest extends ApiRequest
         }
     }
 
-//    public function messages(): array
-//    {
-//        return [
-//            'email.required' => $this->localizeValidation('register.email_required'),
-//            'email.email' => $this->localizeValidation('login.email_incorrect_format'),
-//            'email.unique' => $this->localizeValidation('register.email_already_use'),
-//            'name.string' => $this->localizeValidation('register.incorrect_format'),
-//            'name.max' => $this->localizeValidation('register.name_max_length'),
-//
-//            'mail.required' => $this->localizeValidation('register.email_required'),
-//
-//            'phone.required' => $this->localizeValidation('register.phone_required'),
-//            'phone.integer' => $this->localizeValidation('register.incorrect_format'),
-//            'phone.unique' => $this->localizeValidation('register.phone_already_use'),
-//
-//            'password.required' => $this->localizeValidation('register.password_require'),
-//            'password.string' => $this->localizeValidation('register.incorrect_format'),
-//            'password.min' => $this->localizeValidation('register.password_min_length'),
-//            'password.confirmed' => $this->localizeValidation('register.password_confirm'),
-//        ];
-//    }
-//
+    public function messages(): array
+    {
+        return [
+            'email.required' => $this->localizeValidation('register.email_required'),
+            'email.email' => $this->localizeValidation('login.email_incorrect_format'),
+            'email.unique' => $this->localizeValidation('register.email_already_use'),
+            'name.string' => $this->localizeValidation('register.incorrect_format'),
+            'name.max' => $this->localizeValidation('register.name_max_length'),
+
+            'mail.required' => $this->localizeValidation('register.email_required'),
+
+            'phone.required' => $this->localizeValidation('register.phone_required'),
+            'phone.integer' => $this->localizeValidation('register.incorrect_format'),
+            'phone.unique' => $this->localizeValidation('register.phone_already_use'),
+
+            'password.required' => $this->localizeValidation('register.password_require'),
+            'password.string' => $this->localizeValidation('register.incorrect_format'),
+            'password.min' => $this->localizeValidation('register.password_min_length'),
+            'password.confirmed' => $this->localizeValidation('register.password_confirm'),
+        ];
+    }
+
     public function passedValidation(): void
     {
         $email = $this->request->get('email');
