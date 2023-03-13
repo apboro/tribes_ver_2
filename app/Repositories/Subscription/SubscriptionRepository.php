@@ -12,8 +12,7 @@ class SubscriptionRepository
 {
     public function assignToUser(int $user_id, int $subscription_id)
     {
-        $subscription = new UserSubscription();
-        $subscription->user_id = $user_id;
+        $subscription = UserSubscription::where('user_id', $user_id)->first();
         $subscription->subscription_id = $subscription_id;
         $subscription->isRecurrent = true;
         $subscription->isActive = true;
