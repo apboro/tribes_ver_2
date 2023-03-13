@@ -54,6 +54,7 @@ class ApiCommunityTest extends TestCase
                     'balance',
                     'donate',
                     'type',
+                    'tags'=>[]
                 ],
             ],
         ],
@@ -119,6 +120,7 @@ class ApiCommunityTest extends TestCase
                         'balance',
                         'project_id',
                         'donate',
+                        'tags'=>[]
                     ],
                 ],
             ],
@@ -146,10 +148,12 @@ class ApiCommunityTest extends TestCase
 
     public function test_show_community_success()
     {
+        $this->createCommunityForTest();
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
         ])->get($this->url['show_community'] . '/' . $this->custom_community->id);
+
         $response->assertStatus($this->data['show_community_success']['expected_status'])
             ->assertJsonStructure($this->data['show_community_success']['expected_structure']);
     }

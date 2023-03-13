@@ -2,10 +2,12 @@
 
 
 use App\Http\Controllers\APIv3\ApiCommunityController;
+use App\Http\Controllers\APIv3\ApiCommunityTagController;
 use App\Http\Controllers\APIv3\ApiFeedBackController;
 use App\Http\Controllers\APIv3\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiSubscriptionController;
+use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
@@ -72,6 +74,14 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
     Route::get('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
+
+    Route::get('/tags', [ApiTagController::class,'index']);
+    Route::post('/tags', [ApiTagController::class,'store']);
+    Route::get('/tags/{id}', [ApiTagController::class,'show']);
+    Route::delete('/tags/{id}', [ApiTagController::class,'destroy']);
+
+    Route::post('/community-tags/attach', [ApiCommunityTagController::class,'attachTagToCommunity']);
+    Route::post('/community-tags/detach', [ApiCommunityTagController::class,'detachTagFromCommunity']);
 
 });
 

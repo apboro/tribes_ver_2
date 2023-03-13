@@ -18,5 +18,12 @@ return [
     ],
     'project_update_error'=>'Ошибка обновления проекта',
     'feed_back_error'=>'Ошибка добавления обратной связи',
-    'bank_cant_identify_user'=>'Банк не может идентифицировать пользователя'
+    'bank_cant_identify_user'=>'Банк не может идентифицировать пользователя',
+    'tag_delete_error'=>'Ошибка удаления тега',
+    'tag_delete_success'=>'Тег успешно удален',
+    'community_tag_attach_success'=>'Тег успешно привязан к сообществу',
+    'community_tag_attach_error'=>'Ошибка привязки тега к сообществу',
+    'community_tag_detach_error'=>'Ошибка отвязки тега от сообщества',
+    'community_tag_detach_success'=>'Тег успешно отвязан от сообщества',
+
 ];
