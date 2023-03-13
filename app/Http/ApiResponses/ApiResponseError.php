@@ -28,8 +28,8 @@ class ApiResponseError extends ApiResponse
     public function toResponse($request): JsonResponse
     {
         return response()->json([
+            'code' => $this->statusCode,
             'message' => $this->message ?? null,
-            'payload' => $this->payload ?? [],
         ], $this->statusCode, $this->getHeaders());
     }
 }

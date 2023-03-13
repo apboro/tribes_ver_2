@@ -13,8 +13,6 @@ class ApiMessengersController extends Controller
     public function list(ApiListMessengersRequest $request)
     {
         $telegram_accounts = Auth::user()->telegramData();
-        return ApiResponse::common([
-            'data'=> TelegramAccountResource::collection($telegram_accounts),
-        ]);
+        return ApiResponse::common(TelegramAccountResource::collection($telegram_accounts)->toArray($request));
     }
 }
