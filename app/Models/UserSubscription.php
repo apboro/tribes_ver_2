@@ -18,4 +18,6 @@ class UserSubscription extends Model
     use HasFactory;
 
     protected $table='users_subscriptions';
+
+    protected $guarded =[];
 }
