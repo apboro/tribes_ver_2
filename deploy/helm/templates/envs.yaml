@@ -58,9 +58,10 @@ data:
   TELEGRAM_BOT_KN_NAME: {{ quote .Values.config.telegram.botKn.name }}
   TELEGRAM_BOT_KN_ID: {{ quote .Values.config.telegram.botKn.id }}
   GRAB_TEST_DATA: {{ quote .Values.config.grabTestData }}
+  TINKOFF_TEST: {{ quote .Values.config.tinkoff.test}}
   # USE_TRIAL_PERIOD: {{ quote .Values.config.useTrialPeriod }}
   # FOR_TESTER: {{ quote .Values.config.forTester }}
-  # DEBUG_TINKOFF: {{ quote .Values.config.debugTinkoff }}
+  DEBUG_TINKOFF: {{ quote .Values.config.tinkoff.debug }}
   # TELEGRAM_BOT_KN_TOKEN: {{ quote .Values.config.telegram.botKn.token }}
   # TELEGRAM_BOT_KN_HOOK_ON_FIRST_REQUEST: {{ quote .Values.config.telegram.botKn.hookOnFirstRequest }}
 

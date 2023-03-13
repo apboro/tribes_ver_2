@@ -175,6 +175,8 @@ config:
     secret: ""
     cluster: "mt1"
   tinkoff:
+    test: "false"
+    debug: "false"
     terminalKey: ""
     secretKey: ""
     terminalDirect: ""
