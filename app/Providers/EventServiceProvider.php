@@ -5,10 +5,12 @@ namespace App\Providers;
 use App\Events\ApiUserRegister;
 use App\Events\CreateCommunity;
 use App\Events\FeedBackCreate;
+use App\Events\RemindPassword;
 use App\Events\SubscriptionMade;
 use App\Listeners\AssignStartSubscription;
 use App\Listeners\CreateCommunityListener;
 use App\Listeners\FeedBackListener;
+use App\Listeners\RemindPasswordListener;
 use App\Listeners\SubscriptionListener;
 use App\Listeners\UserRegisterSendEmail;
 use Illuminate\Auth\Events\Registered;
@@ -39,6 +41,10 @@ class EventServiceProvider extends ServiceProvider
         SubscriptionMade::class=>[
             SubscriptionListener::class
         ],
+        RemindPassword::class=>[
+            RemindPasswordListener::class
+        ]
+
     ];
 
     /**

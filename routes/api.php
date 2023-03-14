@@ -11,6 +11,7 @@ use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
+use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
 use App\Http\Controllers\APIv3\User\ApiMessengersController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
@@ -82,6 +83,19 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
 
     Route::post('/community-tags/attach', [ApiCommunityTagController::class,'attachTagToCommunity']);
     Route::post('/community-tags/detach', [ApiCommunityTagController::class,'detachTagFromCommunity']);
+
+});
+
+Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function() {
+    Route::get('/users', [ApiManagerUserController::class,'list'])->name('api.manager.users.list');
+    Route::get('/users/{id}', [ApiManagerUserController::class,'show'])->name('api.manager.users.info');
+    Route::put('/users/{id}', [ApiManagerUserController::class,'editCommission'])->name('api.manager.users.edit_commission');
+    Route::get('/users/block/{id}', [ApiManagerUserController::class,'block'])->name('api.manager.users.block');
+    Route::get('/users/unblock/{id}', [ApiManagerUserController::class,'unBlock'])->name('api.manager.users.unblock');
+    Route::get('/users/make-admin/{id}', [ApiManagerUserController::class,'makeUserAdmin'])->name('api.manager.users.make_admin');
+    Route::get('/users/remove-from-admin/{id}', [ApiManagerUserController::class,'removeUserFromAdmin'])->name('api.manager.users.revoke_admin');
+    Route::get('/users/send-new-password/{id}', [ApiManagerUserController::class,'sendNewPassword'])->name('api.manager.users.send_new_password');
+    Route::get('/export/users', [ApiManagerUserController::class,'export'])->name('api.manager.users.export');
 
 });
 

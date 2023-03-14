@@ -34,11 +34,17 @@ abstract class TestCase extends BaseTestCase
     /** @var Logger $testHandler */
     protected $logger;
 
-    protected User $custom_user;
+    /** @var User */
+    protected $custom_user;
+
+    /** @var string */
+    protected $custom_token;
+
+
     protected TelegramUser $custom_telegram_user;
     protected TelegramConnection $custom_telegram_connection;
     protected Community $custom_community;
-    protected string $custom_token;
+
 
     protected function setUp(): void
     {
@@ -77,7 +83,7 @@ abstract class TestCase extends BaseTestCase
     protected function refreshTestDatabase()
     {
          if (! RefreshDatabaseState::$migrated) {
-         //$this->artisan('db:wipe --database=knowledge');
+        // $this->artisan('db:wipe --database=knowledge');
           $this->artisan('migrate:fresh', $this->migrateFreshUsing());
 
         //  $this->app[Kernel::class]->setArtisan(null);
