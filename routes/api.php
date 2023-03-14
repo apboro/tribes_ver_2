@@ -11,6 +11,9 @@ use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
+use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
+use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
+use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
 use App\Http\Controllers\APIv3\User\ApiMessengersController;
@@ -87,6 +90,7 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function() {
+
     Route::get('/users', [ApiManagerUserController::class,'list'])->name('api.manager.users.list');
     Route::get('/users/{id}', [ApiManagerUserController::class,'show'])->name('api.manager.users.info');
     Route::put('/users/{id}', [ApiManagerUserController::class,'editCommission'])->name('api.manager.users.edit_commission');
@@ -96,6 +100,19 @@ Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(fu
     Route::get('/users/remove-from-admin/{id}', [ApiManagerUserController::class,'removeUserFromAdmin'])->name('api.manager.users.revoke_admin');
     Route::get('/users/send-new-password/{id}', [ApiManagerUserController::class,'sendNewPassword'])->name('api.manager.users.send_new_password');
     Route::get('/export/users', [ApiManagerUserController::class,'export'])->name('api.manager.users.export');
+
+    Route::post('/feed-back/answer', [ApiAdminFeedBackController::class,'answer'])->name('api.manager.feed_back.answer');
+    Route::get('/feed-back/close/{id}', [ApiAdminFeedBackController::class,'close'])->name('api.manager.feed_back.close');
+    Route::get('/feed-back/show/{id}', [ApiAdminFeedBackController::class,'show'])->name('api.manager.feed_back.show');
+    Route::get('/feed-backs', [ApiAdminFeedBackController::class,'list'])->name('api.manager.feed_back.list');
+
+    Route::get('/communities', [ApiAdminCommunityController::class,'list'])->name('api.manager.communities.list');
+    Route::get('/communities/{id}', [ApiAdminCommunityController::class,'show'])->name('api.manager.communities.show');
+    Route::get('/export/communities', [ApiAdminCommunityController::class,'export'])->name('api.manager.communities.export');
+
+    Route::get('/payments', [ApiAdminPaymentController::class,'list'])->name('api.manager.payments.list');
+    Route::get('/payments/customers', [ApiAdminPaymentController::class,'customers'])->name('api.manager.payments.customers');
+
 
 });
 

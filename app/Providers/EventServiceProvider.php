@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use App\Events\ApiUserRegister;
 use App\Events\CreateCommunity;
+use App\Events\FeedBackAnswer;
 use App\Events\FeedBackCreate;
 use App\Events\RemindPassword;
 use App\Events\SubscriptionMade;
 use App\Listeners\AssignStartSubscription;
 use App\Listeners\CreateCommunityListener;
+use App\Listeners\FeedBackAnswerListener;
 use App\Listeners\FeedBackListener;
 use App\Listeners\RemindPasswordListener;
 use App\Listeners\SubscriptionListener;
@@ -43,6 +45,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         RemindPassword::class=>[
             RemindPasswordListener::class
+        ],
+        FeedBackAnswer::class=>[
+            FeedBackAnswerListener::class
         ]
 
     ];
