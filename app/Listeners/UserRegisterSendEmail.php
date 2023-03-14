@@ -3,7 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\ApiUserRegister;
+use App\Jobs\SendEmails;
 use App\Services\SMTP\Mailer;
+use App\Services\TelegramLogService;
 
 class UserRegisterSendEmail
 {
@@ -18,6 +20,6 @@ class UserRegisterSendEmail
     {
         $v = view('mail.registration')->with(['login' => $event->user->email, 'password' => $event->password])->render();
 
-        new Mailer('Сервис ' . env('APP_NAME'), $v, 'Регистрация', $event->user->email);
+        SendEmails::dispatch($event->user->email, 'Регистрация', 'Сервис ' . env('APP_NAME'), $v);
     }
 }

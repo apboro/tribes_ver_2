@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property integer user_id
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean isRecurrent
  * @property boolean isActive
  * @property Carbon expiration_date
+ * @property User user
  */
 class UserSubscription extends Model
 {
@@ -20,4 +22,9 @@ class UserSubscription extends Model
     protected $table='users_subscriptions';
 
     protected $guarded =[];
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }
