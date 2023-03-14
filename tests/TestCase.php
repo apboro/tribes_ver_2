@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Models\Community;
+use App\Models\Models\Tag;
 use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
 use App\Models\User;
@@ -75,14 +76,14 @@ abstract class TestCase extends BaseTestCase
 
     protected function refreshTestDatabase()
     {
-        // if (! RefreshDatabaseState::$migrated) {
-        // $this->artisan('db:wipe --database=knowledge');
-        //  $this->artisan('migrate:fresh', $this->migrateFreshUsing());
+         if (! RefreshDatabaseState::$migrated) {
+         //$this->artisan('db:wipe --database=knowledge');
+          $this->artisan('migrate:fresh', $this->migrateFreshUsing());
 
         //  $this->app[Kernel::class]->setArtisan(null);
 
-        //   RefreshDatabaseState::$migrated = true;
-        //  }
+           RefreshDatabaseState::$migrated = true;
+          }
 
         //$this->beginDatabaseTransaction();
     }
@@ -165,6 +166,13 @@ abstract class TestCase extends BaseTestCase
             'title' => !empty($parameters['title']) ? $parameters['title'] : 'test connection',
             'connection_id' => !empty($parameters['connection_id']) ? $parameters['connection_id'] : $this->custom_telegram_connection->id,
         ]);
+        for($i=0;$i<3;$i++){
+            $tag = Tag::create([
+                'user_id'=>!empty($parameters['owner']) ? $parameters['owner'] : $this->custom_user->id,
+                'name'=>$this->faker->word
+            ]);
+            $this->custom_community->tags()->attach($tag);
+        }
 
     }
 

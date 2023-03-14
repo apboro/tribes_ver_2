@@ -21,7 +21,7 @@ class CommunityRepository implements CommunityRepositoryContract
         $user->save();
         $ty = Auth::user()->telegramMeta()->first();
 
-        $list = Community::owned()->whereHas('connection', function ($q) use ($ty) {
+        $list = Community::owned()->with(['tags'])->whereHas('connection', function ($q) use ($ty) {
             $q->where('telegram_user_id', $ty ? $ty->telegram_id : 1);
         })->paginate(20);
 
