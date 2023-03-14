@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Events\ApiUserRegister;
+use App\Events\BuyCourse;
+use App\Events\BuyCourseListener;
 use App\Events\CreateCommunity;
 use App\Events\FeedBackAnswer;
 use App\Events\FeedBackCreate;
@@ -48,6 +50,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         FeedBackAnswer::class=>[
             FeedBackAnswerListener::class
+        ],
+        BuyCourse::class=>[
+            BuyCourseListener::class
         ]
 
     ];

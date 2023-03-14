@@ -16,7 +16,7 @@ use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffApi;
-use phpDocumentor\Reflection\Types\False_;
+
 
 /**
  * todo переименовать в более уникальное название путается с eloquent моделью
@@ -79,9 +79,6 @@ class Payment
                 break;
             case $payFor instanceof Course:
                 $this->type = 'course';
-                break;
-            case $payFor instanceof Subscription:
-                $this->type = 'subscription';
                 break;
             default:
                 TelegramLogService::staticSendLogMessage("Оплата на свободную сумму");
@@ -327,5 +324,6 @@ class Payment
         }
         return $this->pay();
     }
+
 
 }
