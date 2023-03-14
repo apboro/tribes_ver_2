@@ -25,8 +25,6 @@ class ApiResponseCommon extends ApiResponse
     {
         return response()->json([
             'data' => $this->data ?? [],
-            'message' => $this->message ?? null,
-            'payload' => $this->payload ?? [],
         ], $this->statusCode, $this->getHeaders());
     }
 

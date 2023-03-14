@@ -44,7 +44,7 @@ class ApiUserSubscriptionController extends Controller
 
         $user = Auth::user();
 
-        if ($user->subscription) {
+        if ($user->subscription && $user->subscription->subscription_id != 1) {
             return ApiResponse::error('subscription.already_subscribed');
         }
 

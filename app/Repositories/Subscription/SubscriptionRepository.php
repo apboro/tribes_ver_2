@@ -12,13 +12,16 @@ class SubscriptionRepository
 {
     public function assignToUser(int $user_id, int $subscription_id)
     {
-        $subscription = new UserSubscription();
-        $subscription->user_id = $user_id;
-        $subscription->subscription_id = $subscription_id;
-        $subscription->isRecurrent = true;
-        $subscription->isActive = true;
-        $subscription->expiration_date = Carbon::now()->addDays(30);
-        $subscription->save();
+         UserSubscription::firstOrCreate(
+            ['user_id' => $user_id],
+
+            [
+                'subscription_id' => $subscription_id,
+                'isRecurrent' => true,
+                'isActive' => true,
+                'expiration_date' => Carbon::now()->addDays(30)
+            ]
+        );
     }
 
     public function findSubscriptionBySlug($request)
