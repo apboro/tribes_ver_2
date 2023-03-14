@@ -2,6 +2,29 @@
 
 namespace App\Http\ApiRequests;
 
+
+/**
+ * @OA\Delete(
+ *  path="/api/v3/payment-cards",
+ *  operationId="payment-card-delete",
+ *  summary="Delete bank card",
+ *  security={{"sanctum": {} }},
+ *  tags={"User Cards"},
+ *  @OA\RequestBody(
+ *          @OA\JsonContent(
+ *                 @OA\Property(property="card_id",type="integer"),
+ *                example={"card_id": 2432423424543}
+ *      )
+ * ),
+ *      @OA\Response(response=200, description="Cards fetched", @OA\JsonContent(
+ *          @OA\Property(property="message", type="string", nullable=true),
+ *          @OA\Property(property="payload", type="array", @OA\Items(), example={}))
+ *      ),
+ *      @OA\Response(response=401, description="Unauthorized"),
+ *      @OA\Response(response=400, description="Error: Bad Request"),
+ *
+ *)
+ */
 class ApiPaymentCardDeleteRequest extends ApiRequest
 {
     public function rules(): array

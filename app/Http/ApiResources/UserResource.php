@@ -14,9 +14,9 @@ class UserResource extends JsonResource
     /**
      * @OA\Schema(
      *     title="user",
-     *     schema="user",
+     *     schema="userResource",
      *     description="User resource",
-     *     @OA\Xml(name="user"),
+     *     @OA\Xml(name="userResource"),
      *       @OA\Property(
      *            property="id",
      *            description="User ID",
@@ -32,6 +32,16 @@ class UserResource extends JsonResource
      *            description="Почта пользователя",
      *            type="string",
      *       ),
+     *       @OA\Property(
+     *            property="phone",
+     *            description="Телефон пользователя",
+     *            type="string",
+     *       ),
+     *       @OA\Property(
+     *            property="phone_confirmed",
+     *            description="Флаг подтверждения телефона",
+     *            type="boolean",
+     *       ),
      *  )
      */
     public function toArray($request): array
@@ -40,6 +50,10 @@ class UserResource extends JsonResource
             'id' => $this->resource->id,
             'name' => $this->resource->name,
             'email' => $this->resource->email,
+            'phone'=>$this->phone,
+            'phone_confirmed'=>$this->phone_confirmed,
+            'telegram_accounts' =>$this->telegramData(),
+            'subscription'=>$this->subscription,
         ];
     }
 }

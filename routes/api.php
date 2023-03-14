@@ -2,12 +2,18 @@
 
 
 use App\Http\Controllers\APIv3\ApiCommunityController;
+use App\Http\Controllers\APIv3\ApiCommunityTagController;
 use App\Http\Controllers\APIv3\ApiFeedBackController;
 use App\Http\Controllers\APIv3\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\ApiProjectController;
+use App\Http\Controllers\APIv3\ApiSubscriptionController;
+use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
+use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
+use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
+use App\Http\Controllers\APIv3\User\ApiMessengersController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiAuthController;
@@ -43,6 +49,9 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/user/phone/send-confirm-code', [ApiUserPhoneController::class,'sendConfirmCode']);
     Route::post('/user/phone/confirm', [ApiUserPhoneController::class,'confirmPhone']);
 
+    Route::post('/user/telegram/assign', [ApiAssignDetachTelegramController::class,'assignTelegramAccount']);
+    Route::post('/user/telegram/detach', [ApiAssignDetachTelegramController::class,'detachTelegramAccount']);
+    Route::get('/user/telegram/list', [ApiMessengersController::class, 'list']);
     Route::get('/projects', [ApiProjectController::class,'index']);
     Route::post('/projects/create', [ApiProjectController::class,'create']);
     Route::get('/projects/{id}', [ApiProjectController::class,'show']);
@@ -61,6 +70,19 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/payment-cards', [ApiPaymentCardController::class,'store']);
     Route::delete('/payment-cards', [ApiPaymentCardController::class,'delete']);
 
+    Route::get('/subscriptions_list', [ApiSubscriptionController::class, 'index']);
+    Route::post('/subscription', [ApiSubscriptionController::class, 'show']);
+    Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
+    Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
+    Route::get('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
+
+    Route::get('/tags', [ApiTagController::class,'index']);
+    Route::post('/tags', [ApiTagController::class,'store']);
+    Route::get('/tags/{id}', [ApiTagController::class,'show']);
+    Route::delete('/tags/{id}', [ApiTagController::class,'destroy']);
+
+    Route::post('/community-tags/attach', [ApiCommunityTagController::class,'attachTagToCommunity']);
+    Route::post('/community-tags/detach', [ApiCommunityTagController::class,'detachTagFromCommunity']);
 
 });
 

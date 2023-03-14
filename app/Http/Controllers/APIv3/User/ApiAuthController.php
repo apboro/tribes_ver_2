@@ -25,7 +25,7 @@ class ApiAuthController extends Controller
         $user = User::query()->where('email', $request->input('email'))->first();
 
         if (!$user || !Hash::check($request->input('password'), $user->password)) {
-            return ApiResponse::validationError()->addError('email', 'common.incorrect_login_or_password');
+            return ApiResponse::unauthorized('common.incorrect_login_or_password');
         }
 
         return ApiResponse::common(['token' => $user->createToken('api-token')->plainTextToken]);

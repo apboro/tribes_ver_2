@@ -27,9 +27,9 @@ class AuthorRepository implements AuthorRepositoryContract
         return Messenger::$platform[$platformIndex]::storeAccount(Auth::user(), $data);
     }
 
-    public function detachOutsideAccount($platformIndex)
+    public function detachOutsideAccount($telegram_id, $platformIndex)
     {
-        return Messenger::$platform[$platformIndex]::removeAccount(Auth::user());
+        return Messenger::$platform[$platformIndex]::removeAccount($telegram_id);
     }
 
     public function authorizeTelegram($user, $uuid)
@@ -91,7 +91,7 @@ class AuthorRepository implements AuthorRepositoryContract
             $user->phone_confirmed = false;
             $user->save();
             ($user->confirmation->first()) ? $user->confirmation->first()->delete() : '';
-            $this->detachOutsideAccount('Telegram');
+//            $this->detachOutsideAccount('Telegram');
             return true;
         } catch (Exception $e) {
             return false;

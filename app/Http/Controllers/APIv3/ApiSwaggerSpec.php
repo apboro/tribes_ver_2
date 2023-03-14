@@ -12,14 +12,7 @@ use OpenApi\Annotations as OA;
  * @OA\Server(
  *       url=L5_SWAGGER_CONST_HOST,
  * ),
- * @OA\Tag(
- *         name="User",
- *         description="User endpoints"
- * ),
- * @OA\Tag(
- *         name="Profile",
- *         description="Profile endpoints"
- * ),
+
  */
 class ApiSwaggerSpec
 {

@@ -23,7 +23,7 @@ use App\Models\SmsConfirmations;
  * @property string $email
  * @property string $name
  * @property string $password
- *
+ * @property Subscription $subscription
  *
  * @method UserFactory factory()
  */
@@ -138,7 +138,7 @@ class User extends Authenticatable
 
     function telegramData()
     {
-        return $this->telegramMeta()->first();
+        return $this->telegramMeta()->get();
     }
 
     function hasTelegramAccount()
@@ -153,7 +153,7 @@ class User extends Authenticatable
 
     function telegramMeta()
     {
-        return $this->hasOne(TelegramUser::class, 'user_id', 'id');
+        return $this->hasMany(TelegramUser::class, 'user_id', 'id');
     }
 
     function communities()
@@ -278,6 +278,11 @@ class User extends Authenticatable
     public function payments()
     {
         return $this->hasMany(Payment::class, 'user_id');
+    }
+
+    public function subscription()
+    {
+        return $this->hasOne(UserSubscription::class, 'user_id', 'id' );
     }
 }
 

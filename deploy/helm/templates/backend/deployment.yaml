@@ -19,18 +19,24 @@ spec:
         app: {{ include "..names.name" . }}
       annotations:
         checksum/container-registry: {{ include (print $.Template.BasePath "/backend/docker-secret.yaml") . | sha256sum }}
+        checksum/envs: {{ include (print $.Template.BasePath "/envs.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
         - name: {{ include "..names.name" . }}-backend-pull-secret
       {{- if .Values.backend.tolerations }}
       tolerations: {{- include "..tplvalues.render" (dict "value" .Values.backend.tolerations "context" .) | nindent 8 }}
       {{- end }}
+      securityContext:
+        fsGroup: 101
       volumes:
       - name: fpm-socket
         emptyDir: {}
       - name: storage
         persistentVolumeClaim:
           claimName: {{ include "..names.name" . }}-storage
+      - name: bank-x509-key
+        secret:
+          secretName: {{ include "..names.name" . }}-bank-x509-key
       containers:
         - name: proxy
           image: {{ include "..imageName" .Values.backend.image}}
@@ -83,12 +89,15 @@ spec:
           image: {{ include "..imageName" .Values.backend.image}}
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           args:
-          - php-fpm 
+          - php-fpm
           volumeMounts:
           - mountPath: /var/run/php
             name: fpm-socket
           - mountPath: /app/storage
             name: storage
+          - mountPath: /app/storage/app/private.key
+            name: bank-x509-key
+            subPath: private.key
           envFrom:
           - configMapRef:
               name: {{ include "..names.fullname" . }}-envs

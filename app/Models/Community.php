@@ -6,6 +6,7 @@ use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
 use App\Models\Knowledge\Category;
 use App\Models\Knowledge\Question;
+use App\Models\Models\Tag;
 use App\Services\TelegramMainBotService;
 use Database\Factories\CommunityFactory;
 use Hamcrest\Arrays\IsArray;
@@ -313,5 +314,9 @@ class Community extends Model
         }
 
         return $string;
+    }
+
+    public function tags(){
+        return $this->belongsToMany(Tag::class,'community_tag','community_id','tag_id');
     }
 }

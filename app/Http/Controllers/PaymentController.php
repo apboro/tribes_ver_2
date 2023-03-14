@@ -76,7 +76,8 @@ class PaymentController extends Controller
             ->withAccumulations($accumulations);
     }
 
-    public function successPage(Request $request, $hash, $telegramId = NULL)
+/** Reworked for APIv3
+     public function successPage(Request $request, $hash, $telegramId = NULL)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
 
@@ -101,7 +102,7 @@ class PaymentController extends Controller
             }
             return view('common.donate.success')->withPayment($payment);
         }
-
+*/
 
     public function notify(Request $request)
     {

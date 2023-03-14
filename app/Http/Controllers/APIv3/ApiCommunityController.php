@@ -58,7 +58,7 @@ class ApiCommunityController extends Controller
      */
     public function show(ApiShowCommunityRequest $request, $id): ApiResponse
     {
-        $community = Community::query()->find($id);
+        $community = Community::query()->with(['tags'])->find($id);
 
         /** @var User $user */
         $user = Auth::user();
@@ -70,7 +70,6 @@ class ApiCommunityController extends Controller
         if (!$user->can('view', $community)) {
             return ApiResponse::unauthorized();
         }
-
         return ApiResponse::common(CommunityResource::make($community)->toArray($request));
     }
 

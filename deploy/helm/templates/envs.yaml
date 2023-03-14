@@ -20,12 +20,8 @@ data:
   MEMCACHED_HOST: {{ quote .Values.config.memcached.host }}
   REDIS_HOST: {{ quote .Values.config.redis.host }}
   REDIS_PORT: {{ quote .Values.config.redis.port }}
-  MAIL_DRIVER:  {{ quote .Values.config.mail.driver }}
-  MAIL_HOST: {{ quote .Values.config.mail.host }}
-  MAIL_PORT: {{ quote .Values.config.mail.port }}
-  MAIL_ENCRYPTION: {{ quote .Values.config.mail.encryption }}
-  MAIL_FROM_ADDRESS: {{ quote .Values.config.mail.from.address }}
-  MAIL_FROM_NAME: {{ quote .Values.config.mail.from.name }}
+  MAIL_SMTP_URL: {{ quote .Values.config.mail.url }}
+  MAIL_FROM_ADDRESS: {{ quote .Values.config.mail.from }}
   AWS_DEFAULT_REGION: {{ quote .Values.config.s3.region }}
   AWS_BUCKET: {{ quote .Values.config.s3.bucket }}
   AWS_USE_PATH_STYLE_ENDPOINT: {{ quote .Values.config.s3.pathStyleEndpoint }}
@@ -62,9 +58,10 @@ data:
   TELEGRAM_BOT_KN_NAME: {{ quote .Values.config.telegram.botKn.name }}
   TELEGRAM_BOT_KN_ID: {{ quote .Values.config.telegram.botKn.id }}
   GRAB_TEST_DATA: {{ quote .Values.config.grabTestData }}
+  TINKOFF_TEST: {{ quote .Values.config.tinkoff.test}}
   # USE_TRIAL_PERIOD: {{ quote .Values.config.useTrialPeriod }}
   # FOR_TESTER: {{ quote .Values.config.forTester }}
-  # DEBUG_TINKOFF: {{ quote .Values.config.debugTinkoff }}
+  DEBUG_TINKOFF: {{ quote .Values.config.tinkoff.debug }}
   # TELEGRAM_BOT_KN_TOKEN: {{ quote .Values.config.telegram.botKn.token }}
   # TELEGRAM_BOT_KN_HOOK_ON_FIRST_REQUEST: {{ quote .Values.config.telegram.botKn.hookOnFirstRequest }}
 
@@ -79,8 +76,7 @@ type: Opaque
 data:
   APP_KEY: {{ quote .Values.config.app.key | b64enc  }}
   # REDIS_PASSWORD: {{ quote .Values.config.redis.password | b64enc }}
-  MAIL_USERNAME: {{ quote .Values.config.mail.username | b64enc }}
-  MAIL_PASSWORD: {{ quote .Values.config.mail.password | b64enc }}
+  MAIL_SMTP_API_KEY: {{ quote .Values.config.mail.apiKey | b64enc }}
   AWS_ACCESS_KEY_ID: {{ quote .Values.config.s3.accessKey | b64enc }}
   AWS_SECRET_ACCESS_KEY: {{ quote .Values.config.s3.secretKey | b64enc }}
   PUSHER_APP_KEY: {{ quote .Values.config.pusherApp.key | b64enc }}
@@ -95,5 +91,8 @@ data:
   TINKOFF_SECRET_KEY_E2C: {{ quote .Values.config.tinkoff.secretKeyE2E | b64enc }}
   TINKOFF_TERMINAL_KEY: {{ quote .Values.config.tinkoff.terminalKey | b64enc }}
   TINKOFF_SECRET_KEY: {{ quote .Values.config.tinkoff.secretKey | b64enc }}
+  TINKOFF_TERMINAL_DIRECT: {{ quote .Values.config.tinkoff.terminalDirect | b64enc }}
+  TINKOFF_TERMINAL_DIRECT_SECRET_KEY: {{ quote .Values.config.tinkoff.terminalDirectSecretKey | b64enc }}
   TINKOFF_X509SERIAL: {{ quote .Values.config.tinkoff.x509serial | b64enc }}
+  TINKOFF_PREFIX: {{ quote .Values.config.tinkoff.terminalKey | b64enc }}
   TELEGRAM_BOT_TOKEN: {{ quote .Values.config.telegram.bot.token | b64enc }}

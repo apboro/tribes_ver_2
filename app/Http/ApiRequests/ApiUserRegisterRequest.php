@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
  *     path="/api/v3/user/register",
  *     operationId="register",
  *     summary="Register user",
- *     tags={"User"},
+ *     tags={"Authorizathion"},
  *
  *     @OA\RequestBody(
  *          @OA\JsonContent(
@@ -18,7 +18,7 @@ use OpenApi\Annotations as OA;
  *         )
  *      ),
  *
- *     @OA\Response(response=200, description="Login success", @OA\JsonContent(
+ *     @OA\Response(response=200, description="Registration successful", @OA\JsonContent(
  *            @OA\Property(property="data", type="array",
  *                @OA\Items(
  *                    @OA\Property(property="token", type="string"),
@@ -28,7 +28,7 @@ use OpenApi\Annotations as OA;
  *            @OA\Property(property="payload", type="array", @OA\Items(), example={}))
  *     ),
  *
- *     @OA\Response(response=422, description="Validation error", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
+ *     @OA\Response(response=422, description="Wrong credentials", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
  *
  *     @OA\Response(response=500, description="Server error", @OA\JsonContent(ref="#/components/schemas/api_response_server_error")),
  * )
@@ -43,8 +43,8 @@ class ApiUserRegisterRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|string|max:40',
-            'email' => 'required|email|unique:users',
+            'name' => '',
+            'email' => '',
         ];
     }
 

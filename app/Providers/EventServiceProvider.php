@@ -6,14 +6,16 @@ use App\Events\ApiUserRegister;
 use App\Events\CreateCommunity;
 use App\Events\FeedBackCreate;
 use App\Events\RemindPassword;
+use App\Events\SubscriptionMade;
+use App\Listeners\AssignStartSubscription;
 use App\Listeners\CreateCommunityListener;
 use App\Listeners\FeedBackListener;
 use App\Listeners\RemindPasswordListener;
+use App\Listeners\SubscriptionListener;
 use App\Listeners\UserRegisterSendEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         ApiUserRegister::class=>[
+            AssignStartSubscription::class,
             UserRegisterSendEmail::class
         ],
         CreateCommunity::class=>[
@@ -34,6 +37,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         FeedBackCreate::class=>[
             FeedBackListener::class
+        ],
+        SubscriptionMade::class=>[
+            SubscriptionListener::class
         ],
         RemindPassword::class=>[
             RemindPasswordListener::class

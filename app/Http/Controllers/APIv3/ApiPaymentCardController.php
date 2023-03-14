@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\APIv3;
 
+use App\Http\ApiRequests\ApiCardListRequest;
+use App\Http\ApiRequests\ApiCardStoreRequest;
 use App\Http\ApiRequests\ApiPaymentCardDeleteRequest;
 use App\Http\ApiResources\PaymentCardListResource;
 use App\Http\ApiResources\PaymentCardResource;
@@ -32,7 +34,7 @@ class ApiPaymentCardController extends Controller
      *
      * @return ApiResponse
      */
-    public function index(Request $request): ApiResponse
+    public function index(ApiCardListRequest $request): ApiResponse
     {
         /** @var User $user */
         $user = Auth::user();
@@ -57,7 +59,7 @@ class ApiPaymentCardController extends Controller
      *
      * @return ApiResponse
      */
-    public function store(Request $request): ApiResponse
+    public function store(ApiCardStoreRequest $request): ApiResponse
     {
         /** @var User $user */
         $user = Auth::user();
@@ -71,6 +73,8 @@ class ApiPaymentCardController extends Controller
 
         return ApiResponse::common(PaymentCardResource::make($api_response_result)->toArray($request));
     }
+
+    
 
     /**
      * Detach user assigned card.

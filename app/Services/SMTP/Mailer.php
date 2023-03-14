@@ -3,7 +3,6 @@
 namespace App\Services\SMTP;
 
 use App\Services\TelegramLogService;
-use App\Services\TelegramMainBotService;
 use Illuminate\Support\Facades\Log;
 
 class Mailer
@@ -14,9 +13,10 @@ class Mailer
 
         //FALLS with Bad Request: group chat was upgraded to a supergroup chat, switch off now
         if ($err) {
-                TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . $err);
+            TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . $err );
         } else {
-                TelegramLogService::staticSendLogMessage('Успешная отправка SMTP на почту ' . $to . ' с темой ' . $subject);
+            TelegramLogService::staticSendLogMessage('Успешная отправка SMTP на почту ' . $to . ' с темой ' . $subject);
+
         }
     }
 
@@ -33,13 +33,13 @@ class Mailer
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.smtp.bz/v1/smtp/send",
+                CURLOPT_URL => env('MAIL_SMTP_URL'),
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_TIMEOUT => 30,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => "POST",
                 CURLOPT_HTTPHEADER => array(
-                    "authorization: h0IH0IBP1HNcQZOTaZbqvkquhCtmNN2VMzsM"
+                    "authorization: ".env('MAIL_SMTP_API_KEY'),
                 ),
                 CURLOPT_POSTFIELDS => http_build_query([
                     'subject' => $subject, // Обязательно
@@ -56,6 +56,7 @@ class Mailer
             $err = curl_error($curl);
 
             curl_close($curl);
+
             return $err;
         } else {
             Log::debug('send email',[

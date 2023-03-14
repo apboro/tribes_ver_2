@@ -12,26 +12,15 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->name('main');
 
-//Route::get('/', function () {
-//    return view('auth.login');
-//})->name('main');
-
-Route::post('/test/{state}', function () {
-
-    $testing = \Illuminate\Support\Facades\Session::get('testing');
-    \Illuminate\Support\Facades\Session::put('testing', !$testing);
-    return redirect()->back();
-});
-
 Auth::routes();
 
 Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], function () {
 
-    Route::namespace('App\Http\Controllers')->group(function () {
+    Route::namespace('App\Http\Controllers\APIv3')->group(function () {
         //Payments
         Route::post('/payment/donate/range', 'DonateController@takeRangeDonatePayment')->name('payment.donate.range');
         Route::get('/payment/donate/{hash}', 'DonateController@donatePage')->name('community.donate.form');
-        Route::get('/payment/{hash}/success/{telegramId?}', 'PaymentController@successPage')->name('payment.success');
+        Route::get('/payment/{hash}/success/{telegramId?}', 'ApiPaymentController@successPayment')->name('payment.success');
 
         Route::get('/payments', 'PaymentController@list')->name('payment.list');
         Route::get('/payments/card', 'PaymentController@cardList')->name('payment.card.list');

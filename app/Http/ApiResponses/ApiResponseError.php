@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *      schema="standart_response",
+ *      schema="api_response_error",
  *      @OA\Property(property="message", type="string"),
  *      @OA\Property(property="payload", type="array", @OA\Items(), example={}),
  * )
@@ -28,8 +28,8 @@ class ApiResponseError extends ApiResponse
     public function toResponse($request): JsonResponse
     {
         return response()->json([
+            'code' => $this->statusCode,
             'message' => $this->message ?? null,
-            'payload' => $this->payload ?? [],
         ], $this->statusCode, $this->getHeaders());
     }
 }

@@ -19,6 +19,7 @@ spec:
         app: {{ include "..names.name" . }}
       annotations:
         checksum/container-registry: {{ include (print $.Template.BasePath "/schedule-worker/docker-secret.yaml") . | sha256sum }}
+        checksum/envs: {{ include (print $.Template.BasePath "/envs.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
         - name: {{ include "..names.name" . }}-schedule-worker-pull-secret
@@ -31,6 +32,11 @@ spec:
       - name: fpm-config
         configMap: 
           name: {{ include "..names.name" . }}-fpm
+      - name: bank-x509-key
+        secret:
+          secretName: {{ include "..names.name" . }}-bank-x509-key
+      securityContext:
+        fsGroup: 101
       containers:
         - name: schedule-worker
           image: {{ include "..imageName" .Values.scheduleWorker.image}}

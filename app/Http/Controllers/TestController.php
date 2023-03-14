@@ -10,8 +10,11 @@ use App\Models\Course;
 use App\Models\Payment;
 use App\Models\TariffVariant;
 use App\Models\User;
+use App\Repositories\Tariff\TariffRepository;
+use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
+use App\Services\Tinkoff\TinkoffApi;
 use App\Services\Tinkoff\TinkoffService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -21,15 +24,25 @@ use stdClass;
 class TestController extends Controller
 {
     private TinkoffService $tinkoff;
+    private TariffRepositoryContract $tariffRepository;
+
     protected TelegramMainBotService $telegramService;
-    public function __construct(TelegramMainBotService $telegramService)
+    public function __construct(TelegramMainBotService $telegramService,
+            TariffRepositoryContract  $tariffRepository)
     {
+        $this->tariffRepository = $tariffRepository;
         $this->telegramService = $telegramService;
         $this->tinkoff = new TinkoffService();
     }
 
+    public function testTariff()
+    {
+        $tariffs = $this->tariffRepository->getTariffVariantsByCommunities(['all']);
+        dd($tariffs);
+    }
 
-    public function test()
+
+    public function testTelegramMessage()
     {
        $resp = $this->telegramService->kickUser(config('telegram_bot.bot.botName'),
            '5698914985',
@@ -37,39 +50,162 @@ class TestController extends Controller
        dd($resp);
     }
 
-    public function test_payments()
+    public function test()
+    {
+        $this->tinkoff->checkCustomer(User::find(1)->getCustomerKey());
+    }
+
+    public function testPayment()
+    {
+        $params = [
+            'NotificationURL' => null,
+            'OrderId' => 6229,
+            'Amount'  => 500,
+            'SuccessURL' => '',
+            'DATA'    => [
+                'Email'  => null,
+            ],
+            'CustomerKey' => 'vasya',
+        ];
+
+        $resp = json_decode($this->tinkoff->directTerminal->init($params));
+        dd($resp);
+        return redirect($resp->PaymentURL);
+
+    }
+    public function test3()
     {
 //        $params = [
 //            'NotificationURL' => null,
-//            'OrderId' => 666,
+//            'OrderId' => 66699,
 //            'Amount'  => 500,
-//            'SuccessURL' => null,
+//            'SuccessURL' => '',
 //            'DATA'    => [
 //                'Email'  => null,
 //            ],
 //            'CustomerKey' => 'vasya',
 //        ];
         $params = [
-        'PaymentId' => 2322347606,
-            ];
+            'PaymentId' =>'2442905573',
+        ];
 
-//        dd($params);
-//        $resp = json_decode($this->tinkoff->initPay($params));
+//        $resp = json_decode($this->tinkoff->directTerminal->init($params));
+//        TelegramLogService::staticSendLogMessage(json_encode($resp, JSON_PRETTY_PRINT));
 
+//        return redirect($resp->PaymentURL);
 
-//dd(json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => 2322347606]), true));
-        $state = [];
-        $i = 0;
-        while (!isset($state['Status']) && $i < 5) {
-            $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => 2322347606]), true);
-            if ($state['Status'] == 'AUTHORIZED') break;
-            TelegramLogService::staticSendLogMessage("Proverka posle oplaty: " . json_encode($state));
-            sleep(1);
-            $i++;
-        }
-        dump($state['Status']);
-//        $this->tinkoff->payTerminal->checkOrder(666);
+          $resp = json_decode($this->tinkoff->directTerminal->cancel($params));
+          dd($resp);
     }
+
+    public function test4()
+    {
+//        $params = [
+//            'NotificationURL' => null,
+//            'OrderId' => 666999,
+//            'Amount'  => 500,
+//            'SuccessURL' => '',
+//            'DATA'    => [
+//                'Email'  => null,
+//            ],
+//            'CustomerKey' => 'vasya',
+//        ];
+        $params = [
+            'PaymentId' =>'2443003290',
+        ];
+
+//        $resp = json_decode($this->tinkoff->directTerminal->init($params));
+//        TelegramLogService::staticSendLogMessage(json_encode($resp, JSON_PRETTY_PRINT));
+//
+//        return redirect($resp->PaymentURL);
+
+        $resp = json_decode($this->tinkoff->directTerminal->confirm($params));
+        dd($resp);
+    }
+
+    public function test7()
+    {
+        $params = [
+            'NotificationURL' => null,
+            'OrderId' => 666991,
+            'Amount'  => 500,
+            'SuccessURL' => '',
+            'DATA'    => [
+                'Email'  => null,
+            ],
+            'CustomerKey' => 'vasya',
+        ];
+        $receiptItem = [[
+            'Name'          => 'Оплата за использование системы',
+            'Price'         => 500,
+            'Quantity'      => 1,
+            'Amount'        => 500,
+            'PaymentMethod' => TinkoffApi::$paymentMethod['full_prepayment'],
+            'PaymentObject' => TinkoffApi::$paymentObject['service'],
+            'Tax'           => TinkoffApi::$vats['none']
+        ]];
+
+        $receipt = [
+            'EmailCompany' => 'CoderYooda@gmail.com',
+            'Phone'        => '89524365064', //Auth::user()->phone,
+            'Taxation'     => TinkoffApi::$taxations['osn'],
+            'Items'        => $receiptItem,
+        ];
+        $params['Receipt'] = $receipt;
+
+        $resp = json_decode($this->tinkoff->directTerminal->init($params));
+//        TelegramLogService::staticSendLogMessage(json_encode($resp, JSON_PRETTY_PRINT));
+        dd($resp);
+        return redirect($resp->PaymentURL);
+
+    }
+
+    public function test8()
+    {
+        $params = [
+//            'NotificationURL' => null,
+            'OrderId' => 666992,
+//            'Amount'  => 500,
+//            'SuccessURL' => '',
+//            'DATA'    => [
+//                'Email'  => null,
+//            ],
+//            'CustomerKey' => 'vasya',
+        ];
+//        $receiptItem = [[
+//            'Name'          => 'Оплата за использование системы',
+//            'Price'         => 500,
+//            'Quantity'      => 1,
+//            'Amount'        => 500,
+//            'PaymentMethod' => TinkoffApi::$paymentMethod['full_prepayment'],
+//            'PaymentObject' => TinkoffApi::$paymentObject['service'],
+//            'Tax'           => TinkoffApi::$vats['none']
+//        ]];
+//
+//        $receipt = [
+//            'EmailCompany' => 'CoderYooda@gmail.com',
+//            'Phone'        => '89524365064', //Auth::user()->phone,
+//            'Taxation'     => TinkoffApi::$taxations['osn'],
+//            'Items'        => $receiptItem,
+//        ];
+//        $params['Receipt'] = $receipt;
+
+//        $params = [
+//            'PaymentId' =>'2443003290',
+//        ];
+
+//        $resp = json_decode($this->tinkoff->directTerminal->init($params));
+        $resp = json_decode($this->tinkoff->directTerminal->checkOrder($params));
+//        TelegramLogService::staticSendLogMessage(json_encode($resp, JSON_PRETTY_PRINT));
+        dd($resp);
+//        return redirect($resp->PaymentURL);
+
+    }
+
+
+
+
+
     
     public function CheckCourse()
     {

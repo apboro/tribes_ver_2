@@ -16,8 +16,6 @@ class ApiFeedBackController extends Controller
     /**
      * Add feedback from user.
      *
-     * TODO swagger annotation
-     *
      * @param ApiFeedBackRequest $request
      *
      * @return ApiResponse

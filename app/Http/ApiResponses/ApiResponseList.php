@@ -25,9 +25,7 @@ class ApiResponseList extends ApiResponse
     public function toResponse($request): JsonResponse
     {
         return response()->json([
-            'list' => $this->list ?? [],
-            'payload' => $this->payload,
-            'message' => $this->message,
+            'data' => $this->list ?? [],
         ], $this->statusCode, $this->getHeaders());
     }
 

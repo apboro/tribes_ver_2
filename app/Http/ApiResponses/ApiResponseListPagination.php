@@ -38,8 +38,6 @@ class ApiResponseListPagination extends ApiResponse
                 'total' => $hasPagination ? $this->list->total() : $count,
                 'per_page' => $hasPagination ? $this->list->perPage() : $count,
             ],
-            'payload' => $this->payload,
-            'message' => $this->message,
         ], $this->statusCode, $this->getHeaders());
     }
 
