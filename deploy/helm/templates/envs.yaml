@@ -14,7 +14,7 @@ data:
   BROADCAST_DRIVER: {{ quote .Values.config.broadcast.driver }}
   CACHE_DRIVER: {{ quote .Values.config.cache.driver }}
   FILESYSTEM_DRIVER: {{ quote .Values.config.filesystem.driver }}
-  QUEUE_CONNECTION: {{ quote .Values.config.queue.connection }}
+  QUEUE_CONNECTIONS: {{ quote .Values.config.queue.connection }}
   SESSION_DRIVER: {{ quote .Values.config.session.driver }}
   SESSION_LIFETIME: "{{ .Values.config.session.lifetime }}"
   MEMCACHED_HOST: {{ quote .Values.config.memcached.host }}
