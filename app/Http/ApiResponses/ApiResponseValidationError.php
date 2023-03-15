@@ -35,6 +35,7 @@ class ApiResponseValidationError extends ApiResponse
     {
         return response()->json([
             'code' => $this->statusCode,
+            'errors' => $this->errors ?? [],
             'message' => $this->message ?? null,
         ], $this->statusCode, $this->getHeaders());
     }
