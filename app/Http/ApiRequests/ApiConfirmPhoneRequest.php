@@ -12,8 +12,8 @@ namespace App\Http\ApiRequests;
  *     @OA\RequestBody(
  *         @OA\JsonContent(
  *                 @OA\Property(property="phone", type="integer"),
- *                 @OA\Property(property="code",type="integer"),
- *                 example={"phone": 79500521558, "code": "1122"}
+ *                 @OA\Property(property="sms_code",type="integer"),
+ *                 example={"phone": 79500521558, "sms_code": "1122"}
  *              )
  *      ),
  *      @OA\Response(response=200, description="Phone confirmed successfully", @OA\JsonContent(
@@ -31,6 +31,7 @@ class ApiConfirmPhoneRequest extends ApiRequest
     public function rules():array
     {
         return [
+            'phone' => 'required|integer',
             'sms_code'  => 'required|integer'
         ];
     }
