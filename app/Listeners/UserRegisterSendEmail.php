@@ -6,8 +6,7 @@ use App\Events\ApiUserRegister;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\ApiResponses\ApiResponseError;
 use App\Jobs\SendEmails;
-use App\Services\SMTP\Mailer;
-use App\Services\TelegramLogService;
+use Exception;
 
 class UserRegisterSendEmail
 {
@@ -24,7 +23,7 @@ class UserRegisterSendEmail
 
         try {
             SendEmails::dispatch($event->user->email, 'Регистрация', 'Сервис ' . env('APP_NAME'), $v);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ApiResponse::error($e->getMessage());
         }
     }
