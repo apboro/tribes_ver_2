@@ -19,8 +19,6 @@ class ApiAssignDetachTelegramTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
     ];
@@ -47,7 +45,6 @@ class ApiAssignDetachTelegramTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload',
             ]
         ];
 
@@ -65,7 +62,6 @@ class ApiAssignDetachTelegramTest extends TestCase
         $data['telegram_id'] = $this->custom_telegram_user->telegram_id;
         $data['expected_structure'] = [
             'message',
-            'payload',
         ];
         $response = $this->withHeaders([
             'Accept' => 'application/json',
@@ -81,7 +77,7 @@ class ApiAssignDetachTelegramTest extends TestCase
         $data['telegram_id'] = 1;
         $data['expected_structure'] = [
             'message',
-            'payload',
+
         ];
         $response = $this->withHeaders([
             'Accept' => 'application/json',

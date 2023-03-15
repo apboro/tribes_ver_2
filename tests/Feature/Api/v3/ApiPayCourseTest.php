@@ -31,8 +31,6 @@ class ApiPayCourseTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors',
-                'payload'
             ]
         ],
         'error_email_not_valid' => [
@@ -40,8 +38,6 @@ class ApiPayCourseTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors',
-                'payload'
             ]
         ],
         'error_empty_hash' => [
@@ -54,7 +50,6 @@ class ApiPayCourseTest extends TestCase
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload'
             ]
         ],
         'course_with_zero_cost_exist_user' => [
@@ -62,8 +57,6 @@ class ApiPayCourseTest extends TestCase
             'email' => '',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data'=>[
                     'redirect'
                 ]
@@ -74,11 +67,7 @@ class ApiPayCourseTest extends TestCase
             'email' => '',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
-                'data'=>[
-                    'redirect'
-                ]
+                'message'
             ]
         ],
         'course_payment_error'=>[
@@ -86,10 +75,7 @@ class ApiPayCourseTest extends TestCase
             'email' => '',
             'expected_status' => 400,
             'expected_structure' => [
-                'message',
-                'payload'=>[
-                    'redirect'
-                ],
+                'message'
             ]
         ],
         'course_payment_success'=>[
@@ -97,7 +83,6 @@ class ApiPayCourseTest extends TestCase
             'email' => '',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
                 'data'=>[
                     'redirect'
                 ],
@@ -105,7 +90,7 @@ class ApiPayCourseTest extends TestCase
         ]
 
     ];
-/*
+
     public function test_pay_course_easy_register()
     {
         do {
@@ -212,7 +197,7 @@ class ApiPayCourseTest extends TestCase
         $response->assertStatus($this->data['course_payment_error']['expected_status'])
             ->assertJsonStructure($this->data['course_payment_error']['expected_structure']);
     }
-*/
+
     public function test_pay_course_payment_success()
     {
         $course = Course::create([

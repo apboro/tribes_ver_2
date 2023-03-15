@@ -22,12 +22,13 @@ class ApiResponseServerErrorTest extends TestCase
         $response= new ApiResponseServerError();
         $request = new Request();
         $result = $response->toResponse($request);
+
         $this->assertJson($result->content());
         $this->assertJsonStringEqualsJsonString(
             $result->content(),
             json_encode([
                     'message'=>null,
-                    'payload' =>[]
+                    'code'=>500
                 ]
             ),
         );

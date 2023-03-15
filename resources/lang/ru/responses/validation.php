@@ -96,5 +96,8 @@ return [
         'id_integer'=>'ID должно быть числом',
         'hash_required'=>'Hash медиаресурса обязателен',
         'not_found_for_all'=>'Медиаконтент не найден'
+    ],
+    'date'=>[
+        'incorrect_format'=>'Неверный формат даты'
     ]
 ];

@@ -9,6 +9,7 @@ use App\Models\TelegramUser;
 use App\Models\User;
 use Askoldex\Teletant\Context;
 use Askoldex\Teletant\Entities\Message;
+use Carbon\Carbon;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -156,7 +157,7 @@ abstract class TestCase extends BaseTestCase
             'isAdministrator' => !empty($parameters['isAdministrator']) ? $parameters['isAdministrator'] : true,
             'botStatus' => !empty($parameters['botStatus']) ? $parameters['botStatus'] : 'administrator',
             'isActive' => !empty($parameters['isActive']) ? $parameters['isActive'] : array_rand([true, false]),
-            'hash' => !empty($parameters['hash']) ? $parameters['hash'] : md5('test hash'),
+            'hash' => !empty($parameters['hash']) ? $parameters['hash'] : md5('test hash'.rand(1,1000000)),
             'isChannel' => !empty($parameters['isChannel']) ? $parameters['isChannel'] : false,
             'isGroup' => !empty($parameters['isGroup']) ? $parameters['isGroup'] : true,
             'status' => !empty($parameters['status']) ? $parameters['status'] : 'init',
@@ -171,7 +172,9 @@ abstract class TestCase extends BaseTestCase
             'owner' => !empty($parameters['owner']) ? $parameters['owner'] : $this->custom_user->id,
             'title' => !empty($parameters['title']) ? $parameters['title'] : 'test connection',
             'connection_id' => !empty($parameters['connection_id']) ? $parameters['connection_id'] : $this->custom_telegram_connection->id,
+            'created_at'=>!empty($parameters['created_at']) ? new \DateTime($parameters['created_at']) : Carbon::now()
         ]);
+
         for($i=0;$i<3;$i++){
             $tag = Tag::create([
                 'user_id'=>!empty($parameters['owner']) ? $parameters['owner'] : $this->custom_user->id,

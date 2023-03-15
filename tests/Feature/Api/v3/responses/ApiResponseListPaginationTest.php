@@ -28,8 +28,6 @@ class ApiResponseListPaginationTest extends TestCase
             $result->content(),
             json_encode([
                     'list'=>[1,2,3],
-                    'message'=>null,
-                    'payload' =>[],
                     'pagination'=>[
                         'current_page' =>  1,
                         'last_page' => 1,

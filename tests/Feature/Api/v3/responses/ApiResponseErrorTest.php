@@ -26,7 +26,7 @@ class ApiResponseErrorTest extends TestCase
             $result->content(),
             json_encode([
                     'message'=>null,
-                    'payload' =>[]
+                    'code'=>400
                 ]
             ),
         );

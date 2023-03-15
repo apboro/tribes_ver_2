@@ -24,8 +24,6 @@ class ApiConfirmPhoneTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors' => ['sms_code'],
-                'payload',
             ],
         ],
         'not_valid' => [
@@ -33,8 +31,6 @@ class ApiConfirmPhoneTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors' => ['sms_code'],
-                'payload',
             ],
         ],
         'sms_is_blocked' => [
@@ -42,8 +38,6 @@ class ApiConfirmPhoneTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors' => ['sms_code'],
-                'payload',
             ],
         ],
         'error_code' => [
@@ -51,8 +45,6 @@ class ApiConfirmPhoneTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors' => ['sms_code'],
-                'payload',
             ],
         ],
         'success' => [
@@ -60,7 +52,6 @@ class ApiConfirmPhoneTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
 
@@ -79,7 +70,6 @@ class ApiConfirmPhoneTest extends TestCase
 
     public function test_empty_data()
     {
-
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,

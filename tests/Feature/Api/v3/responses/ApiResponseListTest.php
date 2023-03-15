@@ -26,9 +26,7 @@ class ApiResponseListTest extends TestCase
         $this->assertJsonStringEqualsJsonString(
             $result->content(),
             json_encode([
-                    'list'=>[],
-                    'message'=>null,
-                    'payload' =>[]
+                    'data'=>[],
                 ]
             ),
         );

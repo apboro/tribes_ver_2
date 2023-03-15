@@ -33,23 +33,18 @@ class ApiManagerUserTest extends TestCase
         'not_valid_id' => [
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload'
             ],
         ],
         'user_not_exists'=>[
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload'
             ],
         ],
         'get_user_success'=>[
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data'=>[
                     'id',
                     'name',
@@ -79,17 +74,13 @@ class ApiManagerUserTest extends TestCase
         'update_commission_not_valid_id'=>[
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload'
             ],
         ],
         'update_comission_empty_commission'=>[
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload'
             ],
         ],
         'update_commission_not_valid_commission'=>[
@@ -97,9 +88,7 @@ class ApiManagerUserTest extends TestCase
             'expected_status' => 422,
             'comission'=>'test',
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload'
             ],
         ],
         'user_commission_user_not_exists'=>[
@@ -107,7 +96,6 @@ class ApiManagerUserTest extends TestCase
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload'
             ],
         ],
         'commission_not_exist'=>[
@@ -115,7 +103,7 @@ class ApiManagerUserTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload'
+                
             ],
         ],
         'update_existed_commission'=>[
@@ -123,7 +111,7 @@ class ApiManagerUserTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload'
+                
             ],
         ]
     ];

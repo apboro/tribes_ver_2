@@ -26,9 +26,7 @@ class ApiCommunityTagTest extends TestCase
             'community_id' => '123',
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload',
             ],
         ],
         'error_not_valid_tag_id' => [
@@ -36,9 +34,7 @@ class ApiCommunityTagTest extends TestCase
             'community_id' => '123',
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload',
             ],
         ],
         'error_empty_community_id' => [
@@ -46,9 +42,7 @@ class ApiCommunityTagTest extends TestCase
             'community_id' => '',
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload',
             ],
         ],
         'error_not_valid_community_id' => [
@@ -56,9 +50,7 @@ class ApiCommunityTagTest extends TestCase
             'community_id' => 'test',
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload',
             ],
         ],
         'error_not_attached'=>[
@@ -66,15 +58,12 @@ class ApiCommunityTagTest extends TestCase
             'community_id' => 999999,
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload',
             ],
         ],
         'attach_success'=>[
             'expected_status' => 200,
             'expected_structure' => [
-                'payload',
                 'message',
             ],
         ],

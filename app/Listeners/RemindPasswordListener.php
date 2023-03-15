@@ -29,10 +29,11 @@ class RemindPasswordListener
      */
     public function handle(RemindPassword $event)
     {
-        if ($event->user->telegramMeta) {
+        if (count($event->user->telegramData())>0) {
+            $telegram_user = $event->user->telegramData();
             $this->telegramMainBotService->sendMessageFromBot(
                 config('telegram_bot.bot.botName'),
-                $event->user->telegramMeta->telegram_id,
+                $telegram_user[0]->telegram_id,
                 'Ваш новый пароль: ' . $event->password
             );
         }

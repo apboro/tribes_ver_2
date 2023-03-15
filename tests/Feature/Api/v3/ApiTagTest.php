@@ -28,25 +28,19 @@ class ApiTagTest extends TestCase
             'name' => '',
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload',
             ],
         ],
         'error_not_exists'=>[
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload',
             ],
         ],
         'create_success' => [
             'name' => 'test',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data'=>[
                     'id',
                     'name'
@@ -58,15 +52,11 @@ class ApiTagTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ],
         ],
         'show_tag_success'=>[
             'expected_status' => 200,
             'expected_structure' => [
-                'payload',
-                'message',
                 'data'=>[
                     'id',
                     'name'
@@ -76,9 +66,7 @@ class ApiTagTest extends TestCase
         'show_list_success'=>[
             'expected_status' => 200,
             'expected_structure' => [
-                'payload',
-                'message',
-                'list'=>[[
+                'data'=>[[
                     'id',
                     'name'
                 ]
@@ -88,7 +76,6 @@ class ApiTagTest extends TestCase
         'delete_success'=>[
             'expected_status' => 200,
             'expected_structure' => [
-                'payload',
                 'message',
             ],
         ]

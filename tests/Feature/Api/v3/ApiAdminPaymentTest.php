@@ -36,9 +36,7 @@ class ApiAdminPaymentTest extends TestCase
         'payment_list_success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
-                'list' => [[
+                'data' => [[
                     "order_id",
                     "community",
                     "add_balance",
@@ -54,9 +52,7 @@ class ApiAdminPaymentTest extends TestCase
         'payment_costomers_success'=>[
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
-                'list' => [[
+                'data' => [[
                     "id",
                     "name",
                     ]

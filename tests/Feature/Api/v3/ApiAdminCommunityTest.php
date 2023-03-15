@@ -34,9 +34,8 @@ class ApiAdminCommunityTest extends TestCase
             'message' => 'test',
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
-                'message',
-                'payload'
+                'code',
+                'message'
             ],
         ],
         'community_not_exists' => [
@@ -45,14 +44,12 @@ class ApiAdminCommunityTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload'
+                'code'
             ],
         ],
         'communities_show_success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     "id",
                     "title",
@@ -68,9 +65,7 @@ class ApiAdminCommunityTest extends TestCase
         'communities_list_success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
-                'list' => [[
+                'data' => [[
                     "id",
                     "title",
                     "owner_name",

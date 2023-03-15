@@ -19,8 +19,6 @@ class ApiUserRegisterTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'empty_email'=>[
@@ -29,8 +27,6 @@ class ApiUserRegisterTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'invalid_email'=>[
@@ -39,8 +35,6 @@ class ApiUserRegisterTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'email_already_exists'=>[
@@ -49,8 +43,6 @@ class ApiUserRegisterTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'name_length_error'=>[
@@ -59,8 +51,6 @@ class ApiUserRegisterTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'success'=>[
@@ -72,7 +62,7 @@ class ApiUserRegisterTest extends TestCase
                     'token'
                 ],
                 'message',
-                'payload',
+                
             ]
         ]
     ];

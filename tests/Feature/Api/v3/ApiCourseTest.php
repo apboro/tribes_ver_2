@@ -26,8 +26,6 @@ class ApiCourseTest extends TestCase
         'create_course_success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     'id',
                     'title',
@@ -59,9 +57,7 @@ class ApiCourseTest extends TestCase
         'show_courses_success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
-                'list' => [[
+                'data' => [[
                     "id",
                     "title",
                     "cost",
@@ -80,7 +76,6 @@ class ApiCourseTest extends TestCase
                     "activation_date",
                     "deactivation_date",
                     "publication_date",
-
                 ]
                 ],
             ],
@@ -88,31 +83,25 @@ class ApiCourseTest extends TestCase
         'show_courses_success_empty_set' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
-                'list',
+                'data',
             ],
         ],
         'update_course_id_not_int'=>[
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'update_course_id_not_exists'=>[
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
         'update_course_not_authorize'=>[
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
         'update_course_success'=>[
@@ -130,22 +119,17 @@ class ApiCourseTest extends TestCase
             ],
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
             ],
         ],
         'show_course_for_all_not_exist'=>[
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
         'show_course_for_all_success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     "id",
                     "title",

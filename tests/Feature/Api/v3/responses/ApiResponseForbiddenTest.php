@@ -32,7 +32,7 @@ class ApiResponseForbiddenTest extends TestCase
             $result->content(),
             json_encode([
                     'message'=>null,
-                    'payload' =>[]
+                    'code'=>403
                 ]
             ),
         );

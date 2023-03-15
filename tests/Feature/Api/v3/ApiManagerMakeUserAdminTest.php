@@ -30,30 +30,27 @@ class ApiManagerMakeUserAdminTest extends TestCase
         'not_valid_id' => [
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload'
             ],
         ],
         'user_not_exists'=>[
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload'
+                
             ],
         ],
         'make_user_admin_success'=>[
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload'
+                
             ],
         ],
         'remove_from_admin_user_not_admin'=>[
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload'
             ],
         ]
     ];

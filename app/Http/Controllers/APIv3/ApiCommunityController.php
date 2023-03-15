@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIv3;
 
 use App\Events\CreateCommunity;
 use App\Http\ApiRequests\ApiCommunityAddRequest;
+use App\Http\ApiRequests\ApiCommunityFilterRequest;
 use App\Http\ApiRequests\ApiCommunityListRequest;
 use App\Http\ApiRequests\ApiShowCommunityRequest;
 use App\Http\ApiResources\CommunitiesCollection;
@@ -109,5 +110,14 @@ class ApiCommunityController extends Controller
         $telegram_connection->save();
 
         return ApiResponse::common(CommunityResource::make($community)->toArray($request));
+    }
+
+    public function filter(ApiCommunityFilterRequest $request):ApiResponse
+    {
+
+        $communities = $this->communityRepo->getList($request);
+
+        return ApiResponse::list()
+            ->items(CommunitiesCollection::make($communities)->toArray($request));
     }
 }

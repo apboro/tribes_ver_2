@@ -27,7 +27,6 @@ class ApiPhoneControllerTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload',
             ]
         ],
         'confirm_error_phone_empty' => [
@@ -35,7 +34,6 @@ class ApiPhoneControllerTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors'
             ]
         ],
         'confirm_error_phone_not_valid' => [
@@ -43,7 +41,6 @@ class ApiPhoneControllerTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors'
             ]
         ],
         'success_send_code'=>[
@@ -52,7 +49,6 @@ class ApiPhoneControllerTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload'
             ]
         ]
     ];

@@ -33,23 +33,13 @@ class ApiAdminFeedBackControllerTest extends TestCase
                 'message',
             ],
         ],
-        'not_valid_id' => [
-            'id' => 'test',
-            'message' => 'test',
-            'expected_status' => 422,
-            'expected_structure' => [
-                'errors',
-                'message',
-                'payload'
-            ],
-        ],
         'feed_back_not_exists' => [
             'id' => 9999999,
             'message' => 'test',
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload'
+                'code'
             ],
         ],
         'empty_message' => [
@@ -58,7 +48,7 @@ class ApiAdminFeedBackControllerTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload'
+                'code'
             ],
         ],
         'user_not_exists' => [
@@ -67,7 +57,7 @@ class ApiAdminFeedBackControllerTest extends TestCase
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload'
+                'code'
             ],
         ],
         'answer_success' => [
@@ -76,7 +66,6 @@ class ApiAdminFeedBackControllerTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload'
             ],
         ],
         'close_success' => [
@@ -84,15 +73,13 @@ class ApiAdminFeedBackControllerTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload'
+                'code'
             ],
         ],
         'show_success' => [
             'id' => 123,
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     "id",
                     "name",
@@ -109,9 +96,7 @@ class ApiAdminFeedBackControllerTest extends TestCase
         'list_success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
-                'list' => [[
+                'data' => [[
                     "id",
                     "name",
                     "email",
@@ -241,6 +226,7 @@ class ApiAdminFeedBackControllerTest extends TestCase
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['feed_back_answer'], $this->data['answer_success']);
+
         $feed_back_after = Feedback::where('id', '=', $feed_back->id)->first();
 
         $this->assertNotEquals($feed_back->status, $feed_back_after->status);

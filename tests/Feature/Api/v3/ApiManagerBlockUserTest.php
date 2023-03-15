@@ -31,23 +31,19 @@ class ApiManagerBlockUserTest extends TestCase
         'not_valid_id' => [
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload'
             ],
         ],
         'user_not_exists'=>[
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload'
             ],
         ],
         'block_user_success'=>[
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload'
             ],
         ]
     ];

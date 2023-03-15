@@ -21,13 +21,12 @@ class ApiResponseCommonTest extends TestCase
         $response= new ApiResponseCommon();
         $request = new Request();
         $result = $response->toResponse($request);
+
         $this->assertJson($result->content());
         $this->assertJsonStringEqualsJsonString(
             $result->content(),
             json_encode([
                     'data'=>[],
-                    'message'=>null,
-                    'payload' =>[]
                 ]
             ),
         );

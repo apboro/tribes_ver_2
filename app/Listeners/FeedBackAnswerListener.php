@@ -34,7 +34,7 @@ class FeedBackAnswerListener
         if ($user_telegram = $event->user->telegramData()) {
             $this->telegramService->sendMessageFromBot(
                 config('telegram_bot.bot.botName'),
-                $user_telegram->telegram_id,
+                $user_telegram[0]->telegram_id,
                 'Ответ на Ваше обращение: '. $event->answer
             );
         }

@@ -29,7 +29,6 @@ class ApiManagerUserExportTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ]
     ];

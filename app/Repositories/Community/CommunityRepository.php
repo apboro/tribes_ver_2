@@ -5,6 +5,7 @@ namespace App\Repositories\Community;
 use App\Filters\API\CommunitiesFilter;
 use App\Models\Community;
 use App\Models\TelegramConnection;
+use Carbon\Carbon;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -23,9 +24,28 @@ class CommunityRepository implements CommunityRepositoryContract
 
         $list = Community::owned()->with(['tags'])->whereHas('connection', function ($q) use ($ty) {
             $q->where('telegram_user_id', $ty ? $ty->telegram_id : 1);
-        })->paginate(20);
+        })->orderBy('created_at','DESC');
 
-        return $list;
+        if(!empty($request->input('name'))){
+            $list->where('title','ilike','%'.$request->input('name').'%');
+        }
+        
+        if(!empty($request->input('tag_name'))){
+            $list->whereHas('tags', function ($query) use ($request) {
+                return $query->where('name', 'ilike', '%'.$request->input('tag_name').'%');
+            });
+        }
+
+        if(!empty($request->input('date_from'))){
+            $list->whereDate('created_at','>=',$request->input('date_from'));
+        }
+        if(!empty($request->input('date_to'))){
+            $list->whereDate('created_at','<=',$request->input('date_to'));
+        }
+
+        $res = $list->paginate(20);
+
+        return $res;
     }
 
     public function findCommunityByHash($hash)

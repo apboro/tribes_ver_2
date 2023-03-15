@@ -29,9 +29,7 @@ class ApiManagerUserListTest extends TestCase
         'user_list_success'=>[
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
-                'list'=>[
+                'data'=>[
                     [
                     'id',
                     'name',

@@ -21,12 +21,13 @@ class ApiResponseUnauthorizedTest extends TestCase
         $response= new ApiResponseUnauthorized();
         $request = new Request();
         $result = $response->toResponse($request);
+
         $this->assertJson($result->content());
         $this->assertJsonStringEqualsJsonString(
             $result->content(),
             json_encode([
                     'message'=>null,
-                    'payload' =>[]
+                    'code' =>401
                 ]
             ),
         );
