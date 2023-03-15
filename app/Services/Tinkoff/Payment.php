@@ -272,7 +272,7 @@ class Payment
         ]];
 
         $receipt = [
-            'EmailCompany' => 'CoderYooda@gmail.com',
+            'EmailCompany' => 'manager@spodial.com',
             'Phone'        => '89524365064', //Auth::user()->phone,
             'Taxation'     => TinkoffApi::$taxations['osn'],
             'Items'        => TinkoffApi::balanceAmount(false, $receiptItem, $this->amount),

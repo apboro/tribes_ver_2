@@ -248,7 +248,7 @@ class User extends Authenticatable
 
     public function getPhoneAttribute($phone)
     {
-        return $phone ? '+7 ' . $this->phoneNumber($phone) : '-';
+        return $phone ? '+7 ' . $this->phoneNumber($phone) : null;
     }
 
     public function isAdmin()

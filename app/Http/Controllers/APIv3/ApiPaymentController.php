@@ -46,27 +46,8 @@ class ApiPaymentController extends Controller
     public function successPayment(Request $request, $hash, $telegramId = NULL)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
-//        if ($payment->comment !== 'trial') {
-//            $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => $payment->paymentId]), true);
-//            while ($state['Status'] != 'AUTHORIZED') {
-//                $state = json_decode($this->tinkoff->payTerminal->getState(['PaymentId' => $payment->paymentId]), true);
-//                sleep(1);
-//                if ($state['Status'] == 'REJECTED')
-//                    return ApiResponse::error('subsciption.payment_error');
-//            }
-//        }
 
-//        if ($payment->isTariff()) {
-//            if ($payment->comment !== 'trial') {
-//                $v = view('mail.telegram_invitation')->withPayment($payment)->render();
-//            } else {
-//                $variant = $payment->community->tariff->variants()->find($payment->payable_id);
-//                $v = view('mail.telegram_invitation_trial')->withPayment($payment)->withVariant($variant)->render();
-//            }
-//            SendEmails::dispatch($payment->payer->email, 'Приглашение', 'Сервис Spodial', $v);
-//        }
-        Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable->id));
-        $payment = Payment::find(PseudoCrypt::unhash($hash));
+        Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
 
         return ApiResponse::common([$payment]);
     }
