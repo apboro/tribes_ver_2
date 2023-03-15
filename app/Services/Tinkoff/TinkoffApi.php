@@ -64,9 +64,9 @@ class TinkoffApi
         'vat20' => 'vat20'                                  // НДС 20%
     ];
 
-    public function __construct($terminalKey, $secretKey)
+    public function __construct($terminalKey, $secretKey, $need_test = true)
     {
-        if (env('TINKOFF_TEST')) {
+        if (env('TINKOFF_TEST') && $need_test) {
             $this->api_url = 'https://rest-api-test.tinkoff.ru/v2/';
             $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/v2/';
             $this->terminalKey = env('TINKOFF_TERMINAL_DIRECT');
