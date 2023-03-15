@@ -44,9 +44,8 @@ class ApiRegisterController extends Controller
     {
         $user = $this->create($request->all());
 
-        if (env('TINKOFF_TEST') === false) {
             $user->tinkoffSync();
-        }
+
         return ApiResponse::common(['token' => $user->createToken('api-token')->plainTextToken]);
     }
 }
