@@ -13,7 +13,7 @@ namespace App\Http\ApiRequests;
  *         @OA\JsonContent(
  *                 @OA\Property(property="phone", type="integer"),
  *                 @OA\Property(property="sms_code",type="integer"),
- *                 example={"phone": 79500521558, "sms_code": "1122"}
+ *                 example={"phone": 79500521558, "sms_code": 1122}
  *              )
  *      ),
  *      @OA\Response(response=200, description="Phone confirmed successfully", @OA\JsonContent(
