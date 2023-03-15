@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\ApiUserRegister;
+use App\Http\ApiResponses\ApiResponse;
+use App\Http\ApiResponses\ApiResponseError;
 use App\Jobs\SendEmails;
 use App\Services\SMTP\Mailer;
 use App\Services\TelegramLogService;
@@ -14,12 +16,16 @@ class UserRegisterSendEmail
      *
      * @param ApiUserRegister $event
      *
-     * @return void
+     * @return ApiResponseError
      */
-    public function handle(ApiUserRegister $event): void
+    public function handle(ApiUserRegister $event)
     {
         $v = view('mail.registration')->with(['login' => $event->user->email, 'password' => $event->password])->render();
 
-        SendEmails::dispatch($event->user->email, 'Регистрация', 'Сервис ' . env('APP_NAME'), $v);
+        try {
+            SendEmails::dispatch($event->user->email, 'Регистрация', 'Сервис ' . env('APP_NAME'), $v);
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage());
+        }
     }
 }
