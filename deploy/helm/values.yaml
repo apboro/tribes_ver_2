@@ -121,6 +121,8 @@ migrations:
 
 config:
   tribesCommision: "0"
+  frontend:
+    url: "http://localhost"
   app:
     name: "Tribes"
     env: "local"

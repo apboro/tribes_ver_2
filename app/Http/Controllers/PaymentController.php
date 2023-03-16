@@ -107,6 +107,7 @@ class PaymentController extends Controller
     public function notify(Request $request)
     {
         $data = $request->all();
+        TelegramLogService::staticSendLogMessage("Notify from Tinkoff: " . json_encode($data));
 //        if (empty($data)) {
 //            return response('OK', 200);
 //        }

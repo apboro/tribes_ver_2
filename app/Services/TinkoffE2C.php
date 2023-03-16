@@ -11,8 +11,8 @@ class TinkoffE2C
 
     public function __construct()
     {
-        $this->apiE2C   = new TinkoffApi(env('TINKOFF_TERMINAL_KEY_E2C'), env('TINKOFF_SECRET_KEY_E2C'));
-        $this->api      = new TinkoffApi(env('TINKOFF_TERMINAL_KEY'), env('TINKOFF_SECRET_KEY'));
+        $this->apiE2C   = new TinkoffApi(env('TINKOFF_TERMINAL_KEY_E2C'), env('TINKOFF_SECRET_KEY_E2C'), false);
+        $this->api      = new TinkoffApi(env('TINKOFF_TERMINAL_KEY'), env('TINKOFF_SECRET_KEY'), false);
     }
 
     public function init($params)

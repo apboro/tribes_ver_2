@@ -52,7 +52,36 @@ class TestController extends Controller
 
     public function test()
     {
-        $this->tinkoff->checkCustomer(User::find(1)->getCustomerKey());
+        $f = fopen('./CURLOVERB.txt', 'w');
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('MAIL_SMTP_URL'),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLINFO_HEADER_OUT => true,
+            CURLOPT_VERBOSE => true,
+            CURLOPT_STDERR => $f,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Basic ".base64_encode('api:'.env('MAIL_SMTP_API_KEY')),
+            ),
+            CURLOPT_POSTFIELDS => http_build_query([
+                'subject' => 'Kuku',
+                'from' => 'no_reply@spodial.com', //'Сервис Spodial '.env('MAIL_FROM_ADDRESS'), // Обязательно
+                'html' => 'Pismo',
+                'to' => 'borodachev@gmail.com',
+            ])
+        ));
+        $response = curl_exec($curl);
+        dump(curl_getinfo($curl, CURLINFO_HEADER_OUT ));
+        dump($response);
+
+        $err = curl_error($curl);
+        dump($err);
+        curl_close($curl);
+
     }
 
     public function testPayment()

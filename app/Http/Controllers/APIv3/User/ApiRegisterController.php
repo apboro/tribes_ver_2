@@ -44,8 +44,7 @@ class ApiRegisterController extends Controller
     {
         $user = $this->create($request->all());
 
-        // TODO future refactor.
-        $user->tinkoffSync();
+            $user->tinkoffSync();
 
         return ApiResponse::common(['token' => $user->createToken('api-token')->plainTextToken]);
     }

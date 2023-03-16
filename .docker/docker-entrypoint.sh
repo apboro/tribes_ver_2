@@ -39,7 +39,7 @@ case "$command" in
     nginx -g "daemon off;"
   ;;
   "queue" )
-    php artisan queue:work redis --verbose --tries=3 --timeout=90
+    php artisan queue:work --verbose --tries=3 --timeout=90
   ;;
   "schedule" )
     while [ true ]
