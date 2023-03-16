@@ -4,6 +4,30 @@ namespace App\Http\ApiRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * @OA\Get(path="/api/v3/user/chats/{chatId}",
+ *     tags={"Chats"},
+ *     summary="Show chat with ID",
+ *     operationId="ChatInfoById",
+ *     security={{"sanctum": {} }},
+ *     @OA\Parameter(
+ *         name="chatId",
+ *         in="path",
+ *         description="ID of chat in database",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *             format="int64",
+ *             maximum=10,
+ *             minimum=1
+ *         )
+ *     ),
+ *
+ *     @OA\Response(response=200, description="OK"),
+ * )
+ */
+
 class ApiShowCommunityRequest extends ApiRequest
 {
 

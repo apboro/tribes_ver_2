@@ -4,6 +4,29 @@ namespace App\Http\ApiRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * @OA\Get(path="/api/v3/chats/tags/{tagId}",
+ *     tags={"Chats Tags"},
+ *     summary="Get Tag by tagId",
+ *     operationId="GetTagById",
+ *     security={{"sanctum": {} }},
+ *     @OA\Parameter(
+ *         name="tagId",
+ *         in="path",
+ *         description="ID of tag in database",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *             format="int64",
+ *             maximum=10,
+ *             minimum=1
+ *         )
+ *     ),
+ *
+ *     @OA\Response(response=200, description="OK"),
+ * )
+ */
 class ApiTagShowRequest extends ApiRequest
 {
     public function all($keys = null)

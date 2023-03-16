@@ -4,6 +4,22 @@ namespace App\Http\ApiRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * @OA\Post(path="/api/v3/chats/tags",
+ *     tags={"Chats Tags"},
+ *     summary="Store tag for chats",
+ *     operationId="StoreTagForChats",
+ *     security={{"sanctum": {} }},
+ *     @OA\RequestBody(
+ *          @OA\JsonContent(
+ *              @OA\Property(property="name", type="string", example="Bubbles")
+ *          )
+ *      ),
+ *     @OA\Response(response=200, description="OK"),
+ * )
+ */
+
 class ApiTagStoreRequest extends ApiRequest
 {
     public function rules(): array

@@ -67,8 +67,6 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/user/chats', [ApiCommunityController::class,'store']);
     Route::get('/user/chats/{id}', [ApiCommunityController::class,'show']);
 
-
-
     Route::post('/create_chat/init', [ApiTelegramConnectionController::class,'create']);
     Route::post('/create_chat/check', [ApiTelegramConnectionController::class,'checkStatus']);
 
@@ -88,13 +86,13 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
     Route::get('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
 
-    Route::get('/tags', [ApiTagController::class,'index']);
-    Route::post('/tags', [ApiTagController::class,'store']);
-    Route::get('/tags/{id}', [ApiTagController::class,'show']);
-    Route::delete('/tags/{id}', [ApiTagController::class,'destroy']);
+    Route::get('/chats/tags', [ApiTagController::class,'index']);
+    Route::post('/chats/tags', [ApiTagController::class,'store']);
+    Route::get('/chats/tags/{id}', [ApiTagController::class,'show']);
+    Route::delete('/chats/tags/{id}', [ApiTagController::class,'destroy']);
 
-    Route::post('/community-tags/attach', [ApiCommunityTagController::class,'attachTagToCommunity']);
-    Route::post('/community-tags/detach', [ApiCommunityTagController::class,'detachTagFromCommunity']);
+    Route::post('/chat-tags/attach', [ApiCommunityTagController::class,'attachTagToChat']);
+    Route::post('/chat-tags/detach', [ApiCommunityTagController::class,'detachTagFromChat']);
 
 });
 

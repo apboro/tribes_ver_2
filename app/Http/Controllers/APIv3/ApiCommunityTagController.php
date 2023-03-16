@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ApiCommunityTagController extends Controller
 {
-    public function attachTagToCommunity(ApiAttachTagToCommunityRequest $request):ApiResponse
+    public function attachTagToChat(ApiAttachTagToCommunityRequest $request):ApiResponse
     {
         /** @var User $user */
         $user = Auth::user();
@@ -27,7 +27,7 @@ class ApiCommunityTagController extends Controller
         return ApiResponse::success('common.community_tag_attach_success');
     }
 
-    public function detachTagFromCommunity(ApiDetachTagFromCommunityRequest $request){
+    public function detachTagFromChat(ApiDetachTagFromCommunityRequest $request){
         /** @var User $user */
         $user = Auth::user();
 

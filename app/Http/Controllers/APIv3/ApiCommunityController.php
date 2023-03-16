@@ -60,7 +60,6 @@ class ApiCommunityController extends Controller
     public function show(ApiShowCommunityRequest $request, $id): ApiResponse
     {
         $community = Community::query()->with(['tags'])->find($id);
-
         /** @var User $user */
         $user = Auth::user();
 

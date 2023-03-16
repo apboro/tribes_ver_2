@@ -27,7 +27,7 @@ class PaymentSeeder extends Seeder
                 'name' => 'Test Testov',
                 'email' => 'test-dev@webstyle.top',
             ]);
-        $teleuser = $userTest->telegramMeta ?? TelegramUser::factory()->for($userTest)->create();
+        $teleuser = TelegramUser::factory()->for($userTest)->create();
 
         $userBuyer = User::where('id', 1)->first();
 

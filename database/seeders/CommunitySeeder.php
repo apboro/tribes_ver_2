@@ -24,7 +24,7 @@ class CommunitySeeder extends Seeder
                 'name' => 'Test Testov',
                 'email' => 'test-dev@webstyle.top',
             ]);
-        $teleuser = $userTest->telegramMeta ?? TelegramUser::factory()->for($userTest)->create();
+        $teleuser = TelegramUser::factory()->for($userTest)->create();
 
         $connections = TelegramConnection::factory()
             ->count(10)->botAdmin()->active()

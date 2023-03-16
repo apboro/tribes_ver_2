@@ -14,6 +14,7 @@ class Tag extends Model
         'name',
         'user_id'
     ];
+    protected $hidden=['created_at', 'updated_at'];
 
     public function communities(){
         return $this->belongsToMany(Community::class,'community_tag','tag_id','community_id');

@@ -3,7 +3,23 @@
 namespace App\Http\ApiRequests;
 
 
-
+/**
+ * @OA\Post(
+ *  path="/api/v3/chat-tags/attach",
+ *  operationId="chat-tags-attach",
+ *  summary="Attach tags to chat",
+ *  security={{"sanctum": {} }},
+ *  tags={"Chats Tags"},
+ *     @OA\RequestBody(
+ *          @OA\JsonContent(
+ *                 @OA\Property(property="tag_id",type="integer"),
+ *                 @OA\Property(property="community_id",type="integer"),
+ *                example={"tag_id": 4, "community_id": 1}
+ *      )
+ *   ),
+ *      @OA\Response(response=200, description="Ok")
+ *  )
+ */
 class ApiAttachTagToCommunityRequest extends ApiRequest
 {
 

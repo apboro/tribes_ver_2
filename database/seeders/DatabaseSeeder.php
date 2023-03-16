@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
             TemplateSeeder::class,
             FileSeeder::class,
             CourseSeeder::class,
-
+            SubscriptionSeeder::class,
             TelegramStatisticSeeder::class,
         ],
         [
