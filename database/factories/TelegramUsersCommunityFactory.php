@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Community;
+use App\Models\TelegramUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
 
@@ -15,10 +17,10 @@ class TelegramUsersCommunityFactory extends Factory
     public function definition()
     {
         return [
-            'community_id' => null,
-            'telegram_user_id' => null,
+            'community_id' => Community::all()->random(),
+            'telegram_user_id' => TelegramUser::all()->random(),
             'excluded' => '',
-            'role' => '',
+            'role' => 'participant',
             'accession_date' => Carbon::now()->timestamp,
             'exit_date' => null,
         ];
