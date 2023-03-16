@@ -63,10 +63,10 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::get('/projects/{id}', [ApiProjectController::class,'show']);
     Route::post('/projects/{id}', [ApiProjectController::class,'update']);
 
-    Route::get('/communities', [ApiCommunityController::class,'index']);
-    Route::post('/communities', [ApiCommunityController::class,'store']);
-    Route::get('/communities/{id}', [ApiCommunityController::class,'show']);
-    Route::post('/communities/filter', [ApiCommunityController::class,'filter']);
+    Route::get('/user/chats', [ApiCommunityController::class,'list']);
+    Route::post('/user/chats', [ApiCommunityController::class,'store']);
+    Route::get('/user/chats/{id}', [ApiCommunityController::class,'show']);
+
 
 
     Route::post('/create_chat/init', [ApiTelegramConnectionController::class,'create']);

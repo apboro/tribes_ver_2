@@ -20,11 +20,8 @@ class CommunityRepository implements CommunityRepositoryContract
         $user = User::find(Auth::user()->id);
         $user->role_index = User::$role['author'];
         $user->save();
-        $ty = Auth::user()->telegramMeta()->first();
 
-        $list = Community::owned()->with(['tags'])->whereHas('connection', function ($q) use ($ty) {
-            $q->where('telegram_user_id', $ty ? $ty->telegram_id : 1);
-        })->orderBy('created_at','DESC');
+        $list = Community::owned()->with(['tags'])->orderBy('created_at','DESC');
 
         if(!empty($request->input('name'))){
             $list->where('title','ilike','%'.$request->input('name').'%');

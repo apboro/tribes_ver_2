@@ -97,13 +97,6 @@ class Handler extends ExceptionHandler
             return ApiResponse::unauthorized()->toResponse($request);
         }
 
-        $this->renderable(function (Throwable $e, $request) {
-            if ($request->is('api/*')) {
-                return response()->json([
-                    'message' => $e->getMessage(),
-                ], 400);
-            }
-        });
         return parent::render($request, $e);
 
     }

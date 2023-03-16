@@ -39,7 +39,7 @@ class ApiCommunityController extends Controller
      *
      * @return ApiResponse
      */
-    public function index(ApiCommunityListRequest $request): ApiResponse
+    public function list(ApiCommunityListRequest $request): ApiResponse
     {
         $communities = $this->communityRepo->getList($request);
 
