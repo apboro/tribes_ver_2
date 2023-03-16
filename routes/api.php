@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\APIv3\ApiCommunityController;
 use App\Http\Controllers\APIv3\ApiCommunityTagController;
+use App\Http\Controllers\APIv3\ApiCommunityTelegramUserController;
 use App\Http\Controllers\APIv3\ApiCourseController;
 use App\Http\Controllers\APIv3\ApiFeedBackController;
 use App\Http\Controllers\APIv3\ApiPaymentCardController;
@@ -95,6 +96,11 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
 
     Route::post('/community-tags/attach', [ApiCommunityTagController::class,'attachTagToCommunity']);
     Route::post('/community-tags/detach', [ApiCommunityTagController::class,'detachTagFromCommunity']);
+
+    Route::post('/community-users', [ApiCommunityTelegramUserController::class,'index']);
+    Route::post('/community-users/delete', [ApiCommunityTelegramUserController::class,'deleteUser']);
+    Route::post('/community-users/detach', [ApiCommunityTelegramUserController::class,'detachUser']);
+    Route::post('/community-users/filter', [ApiCommunityTelegramUserController::class,'filter']);
 
 });
 

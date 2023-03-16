@@ -49,5 +49,8 @@ return [
     'bank_cant_identify_user'=>'Банк не может идентифицировать пользователя',
     'course_update_error'=>'Ошибка обновления медиа контента',
     'error_while_pay'=>'При инициализации оплаты тарифа произошла ошибка Payment',
-    'user_create_error'=>'Ошибка при добавлении пользователя'
+    'user_create_error'=>'Ошибка при добавлении пользователя',
+    'telegram_user'=>[
+        'delete_error'=>'Ошибка удаления telegram user'
+    ]
 ];

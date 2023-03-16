@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Community;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Str;
 
@@ -22,7 +23,7 @@ class CommunityFactory extends Factory
     {
         return [
             'connection_id' => null, //$connection->id,
-            'owner' => null, //$userId,
+            'owner' => User::all()->random(), //$userId,
             'title' => $this->faker->text(90),
             'image' => NULL,
             'description' => $this->faker->text(280),

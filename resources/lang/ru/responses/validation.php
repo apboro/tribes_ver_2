@@ -99,5 +99,10 @@ return [
     ],
     'date'=>[
         'incorrect_format'=>'Неверный формат даты'
+    ],
+    'telegram_user'=>[
+        'required_telegram_id'=>'Id telegram обязательно для заполнения',
+        'integer_telegram_id'=>'Id telegram должно быть целым число',
+        'exists_telegram_id'=>'Id telegram не найден в таблице',
     ]
 ];
