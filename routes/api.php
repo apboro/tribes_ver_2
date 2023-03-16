@@ -69,8 +69,8 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/communities/filter', [ApiCommunityController::class,'filter']);
 
 
-    Route::post('/telegram-connections', [ApiTelegramConnectionController::class,'create']);
-    Route::post('/telegram-connections/get-telegram-connection', [ApiTelegramConnectionController::class,'checkStatus']);
+    Route::post('/create_chat/init', [ApiTelegramConnectionController::class,'create']);
+    Route::post('/create_chat/check', [ApiTelegramConnectionController::class,'checkStatus']);
 
     Route::post('/feed-back', [ApiFeedBackController::class,'store']);
 

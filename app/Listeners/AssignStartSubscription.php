@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\ApiUserRegister;
 use App\Models\Subscription;
 use App\Repositories\Subscription\SubscriptionRepository;
+use Exception;
 
 
 class AssignStartSubscription
@@ -19,7 +20,13 @@ class AssignStartSubscription
 
     public function handle(ApiUserRegister $event)
     {
-        $this->subscriptionRepository->assignToUser($event->user->id, Subscription::where('slug', 'start')->first()->id);
+        /** @var Subscription|null $subscription */
+        $subscription = Subscription::query()->where('slug', 'start')->first();
+        try {
+            $this->subscriptionRepository->assignToUser($event->user->id, $subscription->id);
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 
 }

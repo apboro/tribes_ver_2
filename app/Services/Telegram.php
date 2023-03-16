@@ -188,7 +188,7 @@ class Telegram extends Messenger
         $ty->auth_date = isset($data['auth_date']) ? $data['auth_date'] : null;
         $ty->scene = isset($data['scene']) ? $data['scene'] : null;
         $ty->hash = isset($data['hash']) ? $data['hash'] : null;
-        $ty->user_name = isset($data['user_name']) ? $data['user_name'] : null;
+        $ty->user_name = isset($data['username']) ? $data['username'] : null;
         $ty->first_name = isset($data['first_name']) ? $data['first_name'] : null;
         $ty->last_name = isset($data['last_name']) ? $data['last_name'] : null;
         $ty->photo_url = isset($data['photo_url']) ? self::saveUserAvatar($data['photo_url']) : null;
@@ -251,10 +251,7 @@ class Telegram extends Messenger
             $tc->status = 'completed';
             $tc->save();
 
-            $tcl = TelegramConnection::where('id', $tc->id)->with('community')->first();
-
-
-            return response()->json($tcl);
+            return TelegramConnection::where('id', $tc->id)->with('community')->first();
         } else {
             return false;
         }
@@ -303,11 +300,20 @@ class Telegram extends Messenger
         $this->addAuthorOnCommunity($community);
     }
 
-    public function invokeCommunityConnect($user, $type)
+    public function invokeCommunityConnect($user, $type, $telegram_id)
     {
         /* @var $user User */
 
-        $td = $user->telegramData();
+        $user_telegram_accounts = $user->telegramData();
+        $td = null;
+        foreach ($user_telegram_accounts as $telegram_account)
+        {
+            if ($telegram_account->telegram_id == $telegram_id)
+            {
+                $td = $telegram_account;
+            }
+        }
+
 
         if ($td) {
             $hash = self::hash($td->telegram_id, $type);
