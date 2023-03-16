@@ -80,6 +80,9 @@ class Payment
             case $payFor instanceof Course:
                 $this->type = 'course';
                 break;
+            case $payFor instanceof Subscription:
+                $this->type = 'subscription';
+                break;
             default:
                 TelegramLogService::staticSendLogMessage("Оплата на свободную сумму");
                 return false;
@@ -315,7 +318,9 @@ class Payment
         return $params;
     }
 
-    public function doPayment($payer, $payFor, $cost){
+    public function doPayment($payer, $payFor, $cost)
+    {
+
         $this->amount($cost * 100);
         $this->payFor($payFor);
         $this->payer($payer);
