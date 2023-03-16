@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\ActionsController;
 use App\Http\Controllers\APIv3\ApiCommunityController;
 use App\Http\Controllers\APIv3\ApiFeedBackController;
 use App\Http\Controllers\APIv3\ApiPaymentCardController;
@@ -17,6 +18,8 @@ use App\Http\Controllers\APIv3\User\ApiAuthController;
 
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
+use App\Http\Controllers\ConditionController;
+use App\Http\Controllers\DictionariesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -73,6 +76,9 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
     Route::get('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
 
+    Route::get('/dictionaries/get_actions_dictionary', [DictionariesController::class, 'getActionsDictionary']);
+    Route::get('/dictionaries/get_conditions_dictionary', [DictionariesController::class, 'getConditionsDictionary']);
+    Route::post('/conditions/store', [ConditionController::class, 'store']);
 });
 
 
