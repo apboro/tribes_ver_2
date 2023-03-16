@@ -18,12 +18,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *               @OA\Property(property="telegram_id", type="integer", example=154854847),
  *         )
  *      ),
- *
  *     @OA\Response(response=200, description="Connection initialized"),
- *
- *     @OA\Response(response=422, description="Wrong credentials", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
- *
- *     @OA\Response(response=500, description="Server error", @OA\JsonContent(ref="#/components/schemas/api_response_server_error")),
  * )
  */
 class ApiTelegramConnectionCreateRequest extends ApiRequest
