@@ -9,9 +9,9 @@
                 <div class="profile-image">
                     <div class="avatar cursor-default">
                         @if(Auth::user()->hasTelegramAccount())
-                        <img src="{{ ( $ty && $ty[0]->photo_url ) ? $ty[0]->photo_url : '/images/no-user-avatar.svg' }}" alt="" class="avatar-content size-50">
+{{--                        <img src="{{ ( $ty && $ty[0]->photo_url ) ? $ty[0]->photo_url : '/images/no-user-avatar.svg' }}" alt="" class="avatar-content size-50">--}}
                         @else
-                        <img src="/ico/telegram.svg" alt="" class="avatar-content size-50">
+{{--                        <img src="/ico/telegram.svg" alt="" class="avatar-content size-50">--}}
                         @endif
                     </div>
                 </div>
@@ -19,9 +19,9 @@
 
             <h3
                 class="community-item__title"
-                title="{{ $ty ? $ty[0]->publicName() : null }}"
+{{--                title="{{ $ty ? $ty[0]->publicName() : null }}"--}}
             >
-                {{ $ty ? $ty[0]->publicName() : null }}
+{{--                {{ $ty ? $ty[0]->publicName() : null }}--}}
             </h3>
         </div>
 
