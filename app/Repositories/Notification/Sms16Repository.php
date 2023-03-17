@@ -44,7 +44,7 @@ class Sms16Repository implements NotificationRepositoryContract
 
             return 'Что-то пошло не так, пожалуйста обратитесь в службу поддержки.';
         }
-        if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] == 0) {
+        if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] === "0") {
 
             $sms_confirmation = SmsConfirmation::firstOrNew(['user_id' => $user->id]);
 
