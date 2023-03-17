@@ -44,7 +44,7 @@ class TelegramStatisticSeeder extends Seeder
                 $connectionsChannel->first()->id
             ])->get();
             foreach ($communities as $community) {
-                $community->followers()->attach(TelegramUser::factory()->count(rand(1,2))->create(),[
+                $community->followers()->attach(TelegramUser::factory()->count(rand(1,6))->create(),[
                     'accession_date' => $eachDate,
                     'exit_date' => null
                 ]);

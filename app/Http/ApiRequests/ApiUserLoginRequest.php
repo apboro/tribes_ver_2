@@ -13,7 +13,7 @@ use OpenApi\Annotations as OA;
  *
  *      @OA\RequestBody(
  *          @OA\JsonContent(
- *               @OA\Property(property="email", type="string"),
+ *               @OA\Property(property="email", type="string", example="test-dev@webstyle.top"),
  *               @OA\Property(property="password", type="string"),
  *         )
  *      ),

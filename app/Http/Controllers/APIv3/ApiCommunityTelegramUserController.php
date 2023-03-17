@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\APIv3;
 
 use App\Http\ApiRequests\ApiCommunityTelegramUserDeleteRequest;
+use App\Http\ApiRequests\ApiCommunityTelegramUserDetachAllRequest;
 use App\Http\ApiRequests\ApiCommunityTelegramUserDetachRequest;
 use App\Http\ApiRequests\ApiCommunityTelegramUserListRequest;
 use App\Http\ApiRequests\ApiTelegramUserFilterRequest;
@@ -13,31 +14,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\TelegramUser;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 
 class ApiCommunityTelegramUserController extends Controller
 {
-    /**
-     * @param ApiCommunityTelegramUserListRequest $request
-     * @return ApiResponse
-     */
     public function index(ApiCommunityTelegramUserListRequest $request):ApiResponse
     {
-        $telegram_users = TelegramUser::with(['communities'])->paginate(25);
-        return ApiResponse::list()->items(ApiCommunityTelegramUserCollection::make($telegram_users)->toArray($request));
-    }
-
-    /**
-     * @param ApiCommunityTelegramUserDeleteRequest $request
-     * @return ApiResponse
-     */
-    public function deleteUser(ApiCommunityTelegramUserDeleteRequest $request):ApiResponse
-    {
-        /** @var TelegramUser $telegram_user */
-        $telegram_user = TelegramUser::where('telegram_id','=',$request->input('telegram_id'))->first();
-        if(!$telegram_user->delete()){
-            ApiResponse::error('common.telegram_user.delete_error');
-        }
-        return ApiResponse::success();
+        /** @var LengthAwarePaginator $telegram_users */
+        $telegram_users = TelegramUser::with(['communities'])
+            ->whereHas('communities', function($query) { $query->where('owner', Auth::user()->id); })
+            ->paginate(25);
+        return ApiResponse::listPagination()->items(new ApiCommunityTelegramUserCollection($telegram_users));
     }
 
 
@@ -56,6 +44,21 @@ class ApiCommunityTelegramUserController extends Controller
         $telegram_user->communities()->detach($community);
         return ApiResponse::success();
     }
+
+    public function detachFromAllCommunities(ApiCommunityTelegramUserDetachAllRequest $request):ApiResponse
+    {
+        /** @var TelegramUser $telegram_user */
+        $telegram_user = TelegramUser::where('telegram_id','=',$request->input('telegram_id'))->first();
+
+        /** @var Community $community */
+        $communities = Community::where('id', Auth::user()->id)->get();
+        foreach ($communities as $community)
+        {
+            $telegram_user->communities()->detach($community);
+        }
+        return ApiResponse::success();
+    }
+
 
     /**
      * @param ApiTelegramUserFilterRequest $request
@@ -103,9 +106,7 @@ class ApiCommunityTelegramUserController extends Controller
 
         $telegram_users = $query->paginate(20);
 
-        return ApiResponse::list()
-            ->items(ApiCommunityTelegramUserCollection::make($telegram_users)
-                ->toArray($request));
+        return ApiResponse::listPagination()->items(new ApiCommunityTelegramUserCollection($telegram_users));
 
     }
 }

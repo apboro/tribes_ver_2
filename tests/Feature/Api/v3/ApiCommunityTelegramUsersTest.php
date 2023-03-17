@@ -12,9 +12,9 @@ class ApiCommunityTelegramUsersTest extends TestCase
     use RefreshDatabase;
 
     private $url = [
-        'get_list' => 'api/v3/community-users',
-        'delete_telegram_user' => 'api/v3/community-users/delete',
-        'detach_telegram_user' => 'api/v3/community-users/detach',
+        'get_list' => 'api/v3/user/community-users',
+        'delete_telegram_user' => 'api/v3/user/community-users/delete',
+        'detach_telegram_user' => 'api/v3/user/community-users/detach',
     ];
 
     private $data = [

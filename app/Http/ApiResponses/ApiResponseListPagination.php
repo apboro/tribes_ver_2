@@ -7,13 +7,16 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Pagination\AbstractCursorPaginator;
+use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 
 class ApiResponseListPagination extends ApiResponse
 {
     protected int $statusCode = self::CODE_OK;
 
-    /** @var array|Collection|Arrayable|LengthAwarePaginator  */
+    /** @var array|Collection|Arrayable|LengthAwarePaginator|ResourceCollection  */
     protected $list;
 
     /**
@@ -25,18 +28,23 @@ class ApiResponseListPagination extends ApiResponse
      */
     public function toResponse($request): JsonResponse
     {
-        $hasPagination = $this->list instanceof LengthAwarePaginator;
+        $isResource = $this->list instanceof ResourceCollection;
+        $hasPagination = $this->list instanceof LengthAwarePaginator ||
+            $isResource && ($this->list->resource instanceof AbstractPaginator || $this->list->resource instanceof AbstractCursorPaginator);
+
         $count = method_exists($this->list, 'count') ? $this->list->count() : count($this->list);
 
+        $list = $isResource ? $this->list->resource : $this->list;
+
         return response()->json([
-            'list' => method_exists($this->list, 'items') ? $this->list->items() : $this->list,
+            'data' => method_exists($list, 'items') ? $list->items() : $list,
             'pagination' => [
-                'current_page' => $hasPagination ? $this->list->currentPage() : 1,
-                'last_page' => $hasPagination ? $this->list->lastPage() : 1,
-                'from' => $hasPagination ? $this->list->firstItem() : 1,
-                'to' => $hasPagination ? $this->list->lastItem() : $count,
-                'total' => $hasPagination ? $this->list->total() : $count,
-                'per_page' => $hasPagination ? $this->list->perPage() : $count,
+                'current_page' => $hasPagination ? $list->currentPage() : 1,
+                'last_page' => $hasPagination ? $list->lastPage() : 1,
+                'from' => $hasPagination ? $list->firstItem() : 1,
+                'to' => $hasPagination ? $list->lastItem() : $count,
+                'total' => $hasPagination ? $list->total() : $count,
+                'per_page' => $hasPagination ? $list->perPage() : $count,
             ],
         ], $this->statusCode, $this->getHeaders());
     }
@@ -44,7 +52,7 @@ class ApiResponseListPagination extends ApiResponse
     /**
      * List items.
      *
-     * @param array|Collection|Arrayable|LengthAwarePaginator $list
+     * @param array|Collection|Arrayable|LengthAwarePaginator|ResourceCollection $list
      *
      * @return ApiResponseListPagination
      */

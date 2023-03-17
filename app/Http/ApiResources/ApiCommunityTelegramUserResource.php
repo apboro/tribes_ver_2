@@ -24,7 +24,7 @@ class ApiCommunityTelegramUserResource extends JsonResource
             'last_name'=>$this->resource->last_name,
             'user_name'=>$this->resource->user_name,
             'accession_date'=>$this->resource->accession_date,
-            'communities'=>$this->resource->communities()
+            'communities'=>CommunityResource::collection($this->resource->communities)
         ];
     }
 }

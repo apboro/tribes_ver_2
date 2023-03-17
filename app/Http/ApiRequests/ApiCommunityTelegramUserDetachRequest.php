@@ -4,6 +4,23 @@ namespace App\Http\ApiRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * @OA\Post(
+ *  path="/api/v3/user/community-users/detach",
+ *  operationId="community-users-detach",
+ *  summary="Detach user from community",
+ *  security={{"sanctum": {} }},
+ *  tags={"Chats Users"},
+ *   @OA\RequestBody(
+ *     @OA\JsonContent(
+ *       @OA\Property(property="telegram_id", type="integer", example=345),
+ *       @OA\Property(property="community_id", type="integer", example=2),
+ *     )
+ *   ),
+ *      @OA\Response(response=200, description="OK")
+ *)
+ */
 class ApiCommunityTelegramUserDetachRequest extends ApiRequest
 {
 
