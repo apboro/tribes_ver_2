@@ -68,12 +68,20 @@ class ApiCommunityTelegramUserController extends Controller
     public function filter(ApiTelegramUserFilterRequest $request):ApiResponse
     {
 
-        $query = TelegramUser::addSelect('telegram_users_community.accession_date')
+        $query = TelegramUser::select('telegram_users.*')->
+            addSelect('communities.*')->
+        addSelect('telegram_users_community.accession_date')
             ->leftJoin(
                 'telegram_users_community',
                 'telegram_users_community.telegram_user_id',
                 '=',
                 'telegram_users.telegram_id')
+            ->leftJoin(
+                'communities',
+                'communities.id',
+                '=',
+                'telegram_users_community.community_id'
+            )
             ->with(['communities'])->newQuery();
         if(!empty($request->input('accession_date_from'))){
             $query->whereHas('communities',function($query) use ($request){

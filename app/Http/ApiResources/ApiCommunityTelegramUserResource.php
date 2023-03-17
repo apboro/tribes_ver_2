@@ -18,13 +18,17 @@ class ApiCommunityTelegramUserResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'telegram_id' => $this->resource->telegram_id,
             'name'=>$this->resource->first_name,
             'last_name'=>$this->resource->last_name,
             'user_name'=>$this->resource->user_name,
             'accession_date'=>$this->resource->accession_date,
-            'communities'=>CommunityResource::collection($this->resource->communities)
+            'communities'=>$this->whenLoaded(
+                'communities',
+                $this->resource->communities()->pluck('title')
+            )
         ];
     }
 }
