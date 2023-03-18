@@ -11,7 +11,7 @@ use Tests\TestCase;
 class ApiTelegramUsersFilterTest extends TestCase
 {
     private $url = [
-        'filter_telegram_users' => 'api/v3/community-users/filter',
+        'filter_telegram_users' => 'api/v3/user/community-users/filter',
     ];
 
     private $data = [

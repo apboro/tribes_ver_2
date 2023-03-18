@@ -27,6 +27,7 @@ class ApiResponseValidationErrorTest extends TestCase
         $this->assertJsonStringEqualsJsonString(
             $result->content(),
             json_encode([
+                    'errors'=>[],
                     'message'=>null,
                     'code' =>422
                 ]

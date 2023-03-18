@@ -13,8 +13,8 @@ class ApiCommunityTelegramUsersTest extends TestCase
 
     private $url = [
         'get_list' => 'api/v3/user/community-users',
-        'delete_telegram_user' => 'api/v3/user/community-users/delete',
-        'detach_telegram_user' => 'api/v3/user/community-users/detach',
+        'delete_telegram_user' => 'api/v3/user/community-users/detach',
+        'detach_telegram_user' => 'api/v3/user/community-users/detach_all',
     ];
 
     private $data = [
