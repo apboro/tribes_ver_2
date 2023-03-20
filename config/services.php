@@ -20,8 +20,10 @@ return [
     ],
 
     'sms16' => [
-        'token' => env('SMS16_RU_CODE', '65ee35ac84b951da3b08464730f15c05ed0e0acd'),
-        'login' => env('SMS16_LOGIN', 'spodial')
+//        'token' => env('SMS16_RU_CODE', '65ee35ac84b951da3b08464730f15c05ed0e0acd'),
+//        'login' => env('SMS16_LOGIN', 'spodial')
+        'token' => env('SMS16_RU_CODE', '266180dfebdd504d9c6175179b8eb1a69e5c9861'),
+        'login' => env('SMS16_LOGIN', 'fitbelgorod')
     ],
 
     'mailgun' => [

@@ -22,13 +22,14 @@ class ApiResponseValidationErrorTest extends TestCase
         $response= new ApiResponseValidationError();
         $request = new Request();
         $result = $response->toResponse($request);
+
         $this->assertJson($result->content());
         $this->assertJsonStringEqualsJsonString(
             $result->content(),
             json_encode([
                     'errors'=>[],
                     'message'=>null,
-                    'payload' =>[]
+                    'code' =>422
                 ]
             ),
         );

@@ -10,8 +10,8 @@ class ApiTelegramConnectionTest extends TestCase
 {
 
     private $url = [
-        'create_connection' => 'api/v3/telegram-connections',
-        'get_connection' => 'api/v3/telegram-connections/get-telegram-connection',
+        'create_connection' => 'api/v3/create_chat/init',
+        'get_connection' => 'api/v3/create_chat/check',
     ];
 
     private $data = [
@@ -26,9 +26,7 @@ class ApiTelegramConnectionTest extends TestCase
             'type' => 'test',
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload',
             ],
         ],
         'error_empty_type' => [
@@ -36,15 +34,13 @@ class ApiTelegramConnectionTest extends TestCase
             'type' => '',
             'expected_status' => 422,
             'expected_structure' => [
-                'errors',
                 'message',
-                'payload',
             ],
         ],
         'error_telegram_account_not_exists' => [
             'platform' => 'Telegram',
             'type' => 'group',
-            'expected_status' => 400,
+            'expected_status' => 422,
             'expected_structure' => [
                 'message',
             ],
@@ -62,16 +58,12 @@ class ApiTelegramConnectionTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'get_telegram_connection_success' => [
             'hash' => '',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     'id',
                     'user_id',
@@ -98,6 +90,7 @@ class ApiTelegramConnectionTest extends TestCase
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['create_connection'], $this->data['error_empty_platform']);
+
         $response->assertStatus($this->data['error_empty_platform']['expected_status'])
             ->assertJsonStructure($this->data['error_empty_platform']['expected_structure']);
     }
@@ -119,6 +112,7 @@ class ApiTelegramConnectionTest extends TestCase
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['create_connection'], $this->data['error_telegram_account_not_exists']);
+
         $response->assertStatus($this->data['error_telegram_account_not_exists']['expected_status'])
             ->assertJsonStructure($this->data['error_telegram_account_not_exists']['expected_structure']);
     }

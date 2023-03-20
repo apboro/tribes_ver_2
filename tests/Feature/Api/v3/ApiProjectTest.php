@@ -27,8 +27,6 @@ class ApiProjectTest extends TestCase
         'empty_data' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     'id',
                     'title',
@@ -41,8 +39,6 @@ class ApiProjectTest extends TestCase
             'title' => 'test',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     'id',
                     'title',
@@ -56,16 +52,12 @@ class ApiProjectTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'show_project' => [
             'id' => 0,
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     'id',
                     'title',
@@ -79,8 +71,6 @@ class ApiProjectTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'show_project_not_found' => [
@@ -88,7 +78,6 @@ class ApiProjectTest extends TestCase
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
         'update_empty_id' => [
@@ -96,8 +85,6 @@ class ApiProjectTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'update_not_valid_id' => [
@@ -105,8 +92,6 @@ class ApiProjectTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'update_empty_title' => [
@@ -115,8 +100,6 @@ class ApiProjectTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'update_not_valid_title' => [
@@ -125,8 +108,6 @@ class ApiProjectTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'update_project_not_exist' => [
@@ -135,7 +116,6 @@ class ApiProjectTest extends TestCase
             'expected_status' => 404,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
         'update_success' => [
@@ -143,8 +123,6 @@ class ApiProjectTest extends TestCase
             'title' => 'new_title_test',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     'id',
                     'title',
@@ -160,23 +138,19 @@ class ApiProjectTest extends TestCase
             'expected_status' => 401,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
         'show_user_projects' => [
             'expected_status' => 401,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
 
         'show_user_projects_success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
-                'list' => [[
+                'data' => [[
                     'id',
                     'title',
                     'user_id',

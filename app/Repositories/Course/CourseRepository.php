@@ -2,11 +2,11 @@
 
 namespace App\Repositories\Course;
 
+use App\Http\ApiRequests\ApiCourseUpdateRequest;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Repositories\Lesson\LessonRepositoryContract;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -73,5 +73,27 @@ class CourseRepository implements CourseRepositoryContract
                 }
             }
         });
+    }
+
+    /**
+     * @param Course $course
+     * @param ApiCourseUpdateRequest $request
+     * @param array $data
+     * @return Course
+     */
+
+    public function update(
+        Course $course,
+        ApiCourseUpdateRequest $request,
+        array $data
+    ){
+        $course->fill($data);
+        if(!$course->save()){
+            return null;
+        }
+
+        $this->syncLessons($request, $course);
+
+        return $course;
     }
 }

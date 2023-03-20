@@ -23,8 +23,9 @@ class CommunityResource extends JsonResource
             "updated_at" => $this->resource->updated_at,
             "hash" => $this->resource->hash,
             "balance" => $this->resource->balance,
-            "donate" => $this->resource->donate,
+//            "donate" => $this->resource->donate,
             "type" => $this->resource->connection->chat_type,
+            "tags"=>$this->resource->tags,
         ];
     }
 }

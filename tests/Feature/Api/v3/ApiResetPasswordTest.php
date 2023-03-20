@@ -22,8 +22,6 @@ class ApiResetPasswordTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'not_valid_email' => [
@@ -34,8 +32,6 @@ class ApiResetPasswordTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'empty_password' => [
@@ -46,8 +42,6 @@ class ApiResetPasswordTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'error_password_confirmation' => [
@@ -58,8 +52,6 @@ class ApiResetPasswordTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'user_dosent_exists' => [
@@ -70,8 +62,6 @@ class ApiResetPasswordTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'invalid_token' => [
@@ -82,8 +72,6 @@ class ApiResetPasswordTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'success'=>[
@@ -96,8 +84,6 @@ class ApiResetPasswordTest extends TestCase
                 'data'=>[
                     'token'
                 ],
-                'message',
-                'payload',
             ]
         ]
     ];

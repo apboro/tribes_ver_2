@@ -52,7 +52,6 @@ class FreshMultiDB extends Command
         }
 
         Artisan::call('db:wipe --database=main');
-        Artisan::call('db:wipe --database=knowledge');
         $this->output->writeln('<fire>База очищена</fire>');
         Artisan::call('migrate:fresh');
         $this->output->writeln('<fire>Миграции накачены</fire>');

@@ -95,6 +95,7 @@ abstract class ApiRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator): void
     {
+       // dump($validator->errors()->toArray());
         throw new ValidationException(
             $validator,
             ApiResponse::validationError(

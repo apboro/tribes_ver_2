@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIv3;
 
 use App\Events\CreateCommunity;
 use App\Http\ApiRequests\ApiCommunityAddRequest;
+use App\Http\ApiRequests\ApiCommunityFilterRequest;
 use App\Http\ApiRequests\ApiCommunityListRequest;
 use App\Http\ApiRequests\ApiShowCommunityRequest;
 use App\Http\ApiResources\CommunitiesCollection;
@@ -38,7 +39,7 @@ class ApiCommunityController extends Controller
      *
      * @return ApiResponse
      */
-    public function index(ApiCommunityListRequest $request): ApiResponse
+    public function list(ApiCommunityListRequest $request): ApiResponse
     {
         $communities = $this->communityRepo->getList($request);
 
@@ -58,8 +59,7 @@ class ApiCommunityController extends Controller
      */
     public function show(ApiShowCommunityRequest $request, $id): ApiResponse
     {
-        $community = Community::query()->find($id);
-
+        $community = Community::query()->with(['tags'])->find($id);
         /** @var User $user */
         $user = Auth::user();
 
@@ -70,7 +70,6 @@ class ApiCommunityController extends Controller
         if (!$user->can('view', $community)) {
             return ApiResponse::unauthorized();
         }
-
         return ApiResponse::common(CommunityResource::make($community)->toArray($request));
     }
 
@@ -110,5 +109,14 @@ class ApiCommunityController extends Controller
         $telegram_connection->save();
 
         return ApiResponse::common(CommunityResource::make($community)->toArray($request));
+    }
+
+    public function filter(ApiCommunityFilterRequest $request):ApiResponse
+    {
+
+        $communities = $this->communityRepo->getList($request);
+
+        return ApiResponse::list()
+            ->items(CommunitiesCollection::make($communities)->toArray($request));
     }
 }

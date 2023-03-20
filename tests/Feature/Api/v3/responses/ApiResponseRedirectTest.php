@@ -21,12 +21,13 @@ class ApiResponseRedirectTest extends TestCase
         $response= new ApiResponseRedirect();
         $request = new Request();
         $result = $response->toResponse($request);
+
         $this->assertJson($result->content());
         $this->assertJsonStringEqualsJsonString(
             $result->content(),
             json_encode([
+                    'code'=>301,
                     'message'=>null,
-                    'payload' =>[]
                 ]
             ),
         );

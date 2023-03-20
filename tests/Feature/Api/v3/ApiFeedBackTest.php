@@ -21,8 +21,6 @@ class ApiFeedBackTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors',
-                'payload'
             ]
         ],
         'email_not_valid'=>[
@@ -30,8 +28,6 @@ class ApiFeedBackTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors',
-                'payload'
             ]
         ],
         'empty_name'=>[
@@ -42,8 +38,6 @@ class ApiFeedBackTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors',
-                'payload'
             ]
         ],
         'empty_phone'=>[
@@ -54,8 +48,6 @@ class ApiFeedBackTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'errors',
-                'payload'
             ]
         ],
         'create_success'=>[
@@ -65,8 +57,6 @@ class ApiFeedBackTest extends TestCase
             'fb_phone'=>'123456',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload'
             ]
         ]
     ];

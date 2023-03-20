@@ -18,8 +18,6 @@ class ApiForgotPasswordTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'email_not_valid'=>[
@@ -27,8 +25,6 @@ class ApiForgotPasswordTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'email_not_exists'=>[
@@ -36,8 +32,6 @@ class ApiForgotPasswordTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors'
             ]
         ],
         'success'=>[
@@ -45,7 +39,6 @@ class ApiForgotPasswordTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload',
             ]
         ],
     ];

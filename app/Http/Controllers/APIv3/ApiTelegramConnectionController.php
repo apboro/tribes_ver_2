@@ -9,7 +9,9 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\TelegramConnection;
 use App\Services\Abs\Messenger;
+use App\Services\Telegram;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ApiTelegramConnectionController extends Controller
@@ -28,7 +30,7 @@ class ApiTelegramConnectionController extends Controller
     {
         $service = app()->make(Messenger::$platform[$request->input('platform')]);
 
-        $result = $service->invokeCommunityConnect(Auth::user(), $request->input('type'));
+        $result = $service->invokeCommunityConnect(Auth::user(), $request->input('type'), $request->input('telegram_id'));
 
         if ($result['original']['status'] === 'error') {
             return ApiResponse::error('validation.telegram_account_not_connected');
@@ -48,12 +50,15 @@ class ApiTelegramConnectionController extends Controller
      */
     public function checkStatus(ApiTelegramConnectionSearchRequest $request): ApiResponse
     {
-        $telegram_connection = TelegramConnection::query()->where('hash', '=', $request->get('hash'))->first();
+        /* @var  $service Telegram */
 
-        if (empty($telegram_connection)) {
-            return ApiResponse::notFound('validation.telegram_connection_not_exists');
-        }
+        $service = app()->make(Messenger::$platform[$request['platform']]);
 
-        return ApiResponse::common(TelegramResource::make($telegram_connection)->toArray($request));
+        $hash = $request['hash'];
+
+        $result = $service->checkCommunityConnect($hash);
+
+        return ApiResponse::common($result);
+
     }
 }

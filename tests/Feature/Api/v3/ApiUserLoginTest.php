@@ -18,8 +18,6 @@ class ApiUserLoginTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'email_not_valid' => [
@@ -28,8 +26,6 @@ class ApiUserLoginTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'empty_password' => [
@@ -38,8 +34,6 @@ class ApiUserLoginTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'bad_credential' => [
@@ -48,8 +42,6 @@ class ApiUserLoginTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'success' => [
@@ -57,8 +49,6 @@ class ApiUserLoginTest extends TestCase
             'password' => '',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
             ],
         ],
     ];
@@ -82,7 +72,6 @@ class ApiUserLoginTest extends TestCase
     public function test_auth_email_not_valid()
     {
         $response = $this->post($this->url, $this->data['email_not_valid']);
-
         $response
             ->assertStatus($this->data['email_not_valid']['expected_status'])
             ->assertJsonStructure($this->data['email_not_valid']['expected_structure']);

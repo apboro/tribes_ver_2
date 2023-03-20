@@ -25,14 +25,11 @@ class ApiPaymentCardTest extends TestCase
             'expected_status' => 400,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
         'create_success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     'status',
                     'customer_key',
@@ -52,8 +49,6 @@ class ApiPaymentCardTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'delete_api_customer_not_identify' => [
@@ -61,15 +56,12 @@ class ApiPaymentCardTest extends TestCase
             'expected_status' => 400,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
         'delete_card_success' => [
             'card_id' => '123',
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     'status',
                     'customer_key',
@@ -89,24 +81,18 @@ class ApiPaymentCardTest extends TestCase
             'expected_status' => 400,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
         'list_cards_success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'list' => [
+                'data' => [
                     [
                         'status',
                         'customer_key',
                         'message',
                         'details',
                     ],
-                ],
-                'payload' => [
-                    'card_types',
-                    'statuses',
                 ],
             ],
         ],

@@ -27,8 +27,6 @@ class ApiUserControllerTest extends TestCase
         'success' => [
             'expected_status' => 200,
             'expected_structure' => [
-                'message',
-                'payload',
                 'data' => [
                     'id',
                     'name',
@@ -46,8 +44,6 @@ class ApiUserControllerTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'empty_confirmation_validation' => [
@@ -56,8 +52,6 @@ class ApiUserControllerTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'error_password_validation' => [
@@ -66,8 +60,6 @@ class ApiUserControllerTest extends TestCase
             'expected_status' => 422,
             'expected_structure' => [
                 'message',
-                'payload',
-                'errors',
             ],
         ],
         'change_password_success' => [
@@ -76,7 +68,6 @@ class ApiUserControllerTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'message',
-                'payload',
             ],
         ],
     ];

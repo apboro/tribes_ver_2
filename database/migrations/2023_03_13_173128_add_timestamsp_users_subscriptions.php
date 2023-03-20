@@ -14,7 +14,7 @@ class AddTimestamspUsersSubscriptions extends Migration
         public function up()
     {
         Schema::table('users_subscriptions', function(Blueprint $table){
-            $table->timestamps();
+            //$table->timestamps();
         });
     }
 
