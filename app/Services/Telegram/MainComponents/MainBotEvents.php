@@ -5,6 +5,7 @@ namespace App\Services\Telegram\MainComponents;
 use App\Exceptions\KnowledgeException;
 use App\Helper\ArrayHelper;
 use App\Models\Community;
+use App\Models\TelegramBotUpdateLog;
 use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
@@ -22,6 +23,7 @@ class MainBotEvents
     }
 
     public function initEventsMainBot(array $config = [
+        //'newUpdate',
         'newChatMember',
         'newChatUser',
         'groupChatCreated',
@@ -58,6 +60,12 @@ class MainBotEvents
                 }
             }
         }
+    }
+
+    public function newUpdate(){
+        TelegramBotUpdateLog::create([
+            'data'=>$this->data
+        ]);
     }
 
     /** Добавление бота в уже существующую ГРУППУ */

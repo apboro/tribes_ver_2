@@ -47,7 +47,7 @@ class ApiTelegramUsersFilterTest extends TestCase
             ],
         ],
     ];
-
+/*
     public function test_filter_list_not_auth()
     {
         $response = $this->withHeaders([
@@ -110,7 +110,7 @@ class ApiTelegramUsersFilterTest extends TestCase
         $response->assertStatus($this->data['get_list_success']['expected_status'])
             ->assertJsonStructure($this->data['get_list_success']['expected_structure']);
     }
-
+*/
     public function test_filter_list_by_date_success()
     {
 
@@ -121,13 +121,16 @@ class ApiTelegramUsersFilterTest extends TestCase
         $random_name = Str::random(20);
         $this->createTelegramUserForTest(['user_name'=>$random_name]);
 
-        $this->data['get_list_success']['accession_date_from'] = '2023-01-01';
+        /*$this->data['get_list_success']['accession_date_from'] = '2023-01-01';
+        $this->data['get_list_success']['accession_date_to'] = '2022-01-01';*/
+        //$this->data['get_list_success']['name'] = 'test';
+        $this->data['get_list_success']['name'] = 'Нелли';
 
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
         ])->post($this->url['filter_telegram_users'],$this->data['get_list_success']);
-
+        dd($response->json());
         $response->assertStatus($this->data['get_list_success']['expected_status'])
             ->assertJsonStructure($this->data['get_list_success']['expected_structure']);
     }

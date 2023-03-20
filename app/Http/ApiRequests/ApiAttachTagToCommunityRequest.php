@@ -3,6 +3,8 @@
 namespace App\Http\ApiRequests;
 
 
+use OpenApi\Annotations as OA;
+
 /**
  * @OA\Post(
  *  path="/api/v3/chat-tags/attach",

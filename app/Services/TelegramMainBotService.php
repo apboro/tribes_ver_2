@@ -67,8 +67,8 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             $this->getCommandsForBot($nameBot)->initCommand();
             // Для локальной разработки - метод polling раскоментить, метод listen закоментить. Запустить php artisan teelgram:bot:run. 
             // Если локально используется бот к которому прокинут хук, его необходимо отключить.
-            // $this->botCollect->getBotByName($nameBot)->polling();   
-            $this->botCollect->getBotByName($nameBot)->listen($data);
+             $this->botCollect->getBotByName($nameBot)->polling();
+            //$this->botCollect->getBotByName($nameBot)->listen($data);
         } catch (Exception | TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }

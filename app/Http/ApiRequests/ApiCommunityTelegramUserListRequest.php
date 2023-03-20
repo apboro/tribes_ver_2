@@ -2,6 +2,8 @@
 
 namespace App\Http\ApiRequests;
 
+use OpenApi\Annotations as OA;
+
 /**
  * @OA\Get(
  *  path="/api/v3/user/community-users",
@@ -22,6 +24,8 @@ namespace App\Http\ApiRequests;
  *
  *)
  */
+
+
 class ApiCommunityTelegramUserListRequest extends ApiRequest
 {
 

@@ -1,9 +1,7 @@
 <?php
 
 namespace App\Http\ApiRequests;
-
-use Illuminate\Foundation\Http\FormRequest;
-
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\Post(
