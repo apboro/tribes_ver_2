@@ -11,10 +11,10 @@ use Tests\TestCase;
 class ApiTagTest extends TestCase
 {
     private $url = [
-        'create_tag' => 'api/v3/tags',
-        'show_tag' => 'api/v3/tags',
-        'delete_tag' => 'api/v3/tags',
-        'list_tag'=>'api/v3/tags',
+        'create_tag' => 'api/v3/chats/tags',
+        'show_tag' => 'api/v3/chats/tags',
+        'delete_tag' => 'api/v3/chats/tags',
+        'list_tag'=>'api/v3/chats/tags',
     ];
 
     private $data = [

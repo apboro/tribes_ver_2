@@ -13,9 +13,9 @@ use Tests\TestCase;
 class ApiCommunityTest extends TestCase
 {
     private $url = [
-        'show_community' => 'api/v3/communities',
-        'create_community' => 'api/v3/communities',
-        'get_list' => 'api/v3/communities',
+        'show_community' => 'api/v3/user/chats',
+        'create_community' => 'api/v3/user/chats',
+        'get_list' => 'api/v3/user/chats',
         'filter'=>'api/v3/communities/filter',
     ];
 

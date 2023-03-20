@@ -10,8 +10,8 @@ class ApiTelegramConnectionTest extends TestCase
 {
 
     private $url = [
-        'create_connection' => 'api/v3/telegram-connections',
-        'get_connection' => 'api/v3/telegram-connections/get-telegram-connection',
+        'create_connection' => 'api/v3/create_chat/init',
+        'get_connection' => 'api/v3/create_chat/check',
     ];
 
     private $data = [
@@ -40,7 +40,7 @@ class ApiTelegramConnectionTest extends TestCase
         'error_telegram_account_not_exists' => [
             'platform' => 'Telegram',
             'type' => 'group',
-            'expected_status' => 400,
+            'expected_status' => 422,
             'expected_structure' => [
                 'message',
             ],

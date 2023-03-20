@@ -61,8 +61,6 @@ class ApiUserRegisterTest extends TestCase
                 'data'=>[
                     'token'
                 ],
-                'message',
-                
             ]
         ]
     ];
@@ -107,6 +105,7 @@ class ApiUserRegisterTest extends TestCase
     {
         $this->data['success']['email'] = $this->faker->unique()->safeEmail();
         $response = $this->post($this->url,$this->data['success']);
+
         $response->assertStatus($this->data['success']['expected_status'])
             ->assertJsonStructure($this->data['success']['expected_structure']);
     }

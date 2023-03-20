@@ -10,8 +10,8 @@ use Tests\TestCase;
 class ApiCommunityTagTest extends TestCase
 {
     private $url = [
-        'attach_tag' => 'api/v3/chats-tags/attach',
-        'detach_tag' => 'api/v3/chats-tags/detach',
+        'attach_tag' => 'api/v3/chat-tags/attach',
+        'detach_tag' => 'api/v3/chat-tags/detach',
     ];
 
     private $data = [
