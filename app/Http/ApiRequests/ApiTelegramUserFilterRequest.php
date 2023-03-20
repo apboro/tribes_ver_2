@@ -12,14 +12,42 @@ use Illuminate\Foundation\Http\FormRequest;
  *  summary="Filter community users",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Users"},
- *   @OA\RequestBody(
- *     @OA\JsonContent(
- *       @OA\Property(property="name", type="string", example="Alex"),
- *       @OA\Property(property="accession_date_from", type="string", example="2023-01-01"),
- *       @OA\Property(property="accession_date_to", type="string", example="2023-01-01"),
- *       @OA\Property(property="community_id", type="integer", example=2),
- *     )
- *   ),
+ *     @OA\Parameter(
+ *         name="name",
+ *         in="query",
+ *         description="Telegram User Name",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string",
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="accession_date_from",
+ *         in="query",
+ *         description="Telegram User Date accession from",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string",
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="accession_date_to",
+ *         in="query",
+ *         description="Telegram User Date accession to",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="community_id",
+ *         in="query",
+ *         description="Community ID",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
  *      @OA\Response(response=200, description="OK")
  *)
  */
