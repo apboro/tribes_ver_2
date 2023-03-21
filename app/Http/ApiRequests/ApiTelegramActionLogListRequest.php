@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Get(
- *  path="/api/v3/user/bot-action-log",
+ *  path="/api/v3/user/bot/action-log",
  *  operationId="bot-action-list",
  *  summary="Get paginated list of bot action in community owned by auth user",
  *  security={{"sanctum": {} }},

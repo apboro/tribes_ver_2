@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Community;
 use App\Models\TelegramBotActionTypes;
+use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,10 +18,10 @@ class TelegramBotActionLogFactory extends Factory
     public function definition()
     {
         return [
-            'action_type_id'=>$this->faker->randomElement(TelegramBotActionTypes::all())->id,
-            'community_id'=>$this->faker->randomElement(Community::all())->id,
-            'telegram_user_id'=>$this->faker->randomElement(TelegramUser::all())->id,
-            'action_done'=>$this->faker->word
+            'action'=>'test action',
+            'event'=>'test event',
+            'chat_id'=>$this->faker->randomElement(TelegramConnection::all())->chat_id,
+            'telegram_id'=>$this->faker->randomElement(TelegramUser::all())->telegram_id,
         ];
     }
 }

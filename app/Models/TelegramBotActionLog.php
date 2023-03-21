@@ -11,19 +11,16 @@ class TelegramBotActionLog extends Model
     protected $fillable = [
         'chat_id',
         'telegram_id',
-        'action_done',
-        'type'
+        'action',
+        'event',
     ];
 
-    public function actionType(){
-        return $this->belongsTo(TelegramBotActionTypes::class, 'action_type_id', 'id');
-    }
 
-    public function community(){
-        return $this->belongsTo(Community::class, 'community_id', 'id');
+    public function telegramConnections(){
+        return $this->belongsTo(TelegramConnection::class, 'chat_id', 'chat_id');
     }
 
     public function telegramUser(){
-        return $this->belongsTo(TelegramUser::class, 'telegram_user_id', 'id');
+        return $this->belongsTo(TelegramUser::class, 'telegram_id', 'telegram_id');
     }
 }

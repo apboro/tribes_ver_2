@@ -13,8 +13,8 @@ use Tests\TestCase;
 class ApiTelegramBotActionsTest extends TestCase
 {
     private $url = [
-        'bot_log' => 'api/v3/user/bot-action-log',
-        'bot_log_filter' => 'api/v3/user/bot-action-log/filter',
+        'bot_log' => 'api/v3/user/bot/action-log',
+        'bot_log_filter' => 'api/v3/user/bot/action-log/filter',
     ];
 
     private $data = [
@@ -31,7 +31,8 @@ class ApiTelegramBotActionsTest extends TestCase
                     [
                         "telegram_user",
                         "community",
-                        "action_type",
+                        "event",
+                        "action",
                         "done_date",
                         "community_tags"
                     ]
@@ -59,8 +60,6 @@ class ApiTelegramBotActionsTest extends TestCase
 
     public function test_telegram_action_log_success()
     {
-        $seeder_instance = new TelegramBotActionTypeSeeder();
-        $seeder_instance->run();
 
         $seeder_instance = new TelegramBotActionLogSeeder();
         $seeder_instance->run();
@@ -69,6 +68,7 @@ class ApiTelegramBotActionsTest extends TestCase
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
         ])->get($this->url['bot_log'], $this->data['get_list_success']);
+
         $response->assertStatus($this->data['get_list_success']['expected_status'])
             ->assertJsonStructure($this->data['get_list_success']['expected_structure']);
     }
@@ -83,8 +83,6 @@ class ApiTelegramBotActionsTest extends TestCase
     }
 
     public function test_telegram_action_log_filter_success(){
-        $seeder_instance = new TelegramBotActionTypeSeeder();
-        $seeder_instance->run();
 
         $seeder_instance = new TelegramBotActionLogSeeder();
         $seeder_instance->run();
@@ -171,8 +169,7 @@ class ApiTelegramBotActionsTest extends TestCase
 
     public function test_telegram_action_log_community_id_success(){
 
-        $seeder_instance = new TelegramBotActionTypeSeeder();
-        $seeder_instance->run();
+
 
         $seeder_instance = new TelegramBotActionLogSeeder();
         $seeder_instance->run();
@@ -187,5 +184,19 @@ class ApiTelegramBotActionsTest extends TestCase
             ->assertJsonStructure($this->data['get_list_success']['expected_structure']);
     }
 
+    public function test_telegram_action_log_filter_action(){
+
+        $seeder_instance = new TelegramBotActionLogSeeder();
+        $seeder_instance->run();
+        $community = Community::where('owner','=',$this->custom_user->id)->first();
+        $this->data['get_list_success']['event'] = '1234';
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->custom_token,
+        ])->post($this->url['bot_log_filter'],$this->data['get_list_success']);
+
+        $response->assertStatus($this->data['get_list_success']['expected_status'])
+            ->assertJsonStructure($this->data['get_list_success']['expected_structure']);
+    }
 
 }

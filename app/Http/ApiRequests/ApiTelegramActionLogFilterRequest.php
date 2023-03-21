@@ -6,28 +6,77 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Post(
- *  path="/api/v3/user/bot-action-log/filter",
+ *  path="/api/v3/user/bot/action-log/filter",
  *  operationId="bot-action-list-filter",
  *  summary="Get paginated filtered list of bot action in community owned by auth user",
  *  security={{"sanctum": {} }},
  *  tags={"Bot actions list"},
- *   @OA\RequestBody(
- *     @OA\JsonContent(
- *       @OA\Property(property="action_date_from", type="string", example="2023-01-01"),
- *       @OA\Property(property="action_date_to", type="string", example="2023-12-01"),
- *       @OA\Property(property="tags", type="array", @OA\Items(
- *               type="number",
- *               description="The tag ID",
- *               @OA\Schema(type="number"),
- *               example="1"
+ *     @OA\Parameter(
+ *         name="name",
+ *         in="query",
+ *         description="Telegram User Name",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string",
+ *             example="Аким"
  *         )
- *       ),
- *       @OA\Property(property="community_id", type="integer", example="2"),
- *     )
- *   ),
+ *     ),
+ *    @OA\Parameter(
+ *         name="event",
+ *         in="query",
+ *         description="Event Name",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string",
+ *             example="newChatUser"
+ *         )
+ *     ),
+ *  @OA\Parameter(
+ *         name="community_id",
+ *         in="query",
+ *         description="Community ID",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *             example="10"
+ *         )
+ *     ),
+ *  @OA\Parameter(
+ *         name="action_date_from",
+ *         in="query",
+ *         description="Start date of action to search",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="date",
+ *             example="2022-01-01"
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="action_date_to",
+ *         in="query",
+ *         description="End date of action to search",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="date",
+ *             example="2023-12-01"
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="tags",
+ *         in="query",
+ *         description="List of tags ids",
+ *         required=false,
+ *         @OA\Schema(
+ *            type="array",
+ *              @OA\Items(type="integer"),
+ *              example={1,2}
+ *         )
+ *     ),
  *   @OA\Response(response=200, description="OK")
  *)
  */
+
+
 
 class ApiTelegramActionLogFilterRequest extends ApiRequest
 {
@@ -36,6 +85,7 @@ class ApiTelegramActionLogFilterRequest extends ApiRequest
     {
         return [
             'tags'=>'array',
+            'event'=>'string',
             'action_date_from'=>'date_format:Y-m-d',
             'action_date_to'=>'date_format:Y-m-d',
             'community_id'=>'integer|min:1|exists:communities,id'

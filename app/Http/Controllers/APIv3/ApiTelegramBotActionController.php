@@ -20,27 +20,35 @@ class ApiTelegramBotActionController extends Controller
     public function list(ApiTelegramActionLogListRequest $request): ApiResponse
     {
         $list = TelegramBotActionLog::with([
-            'community',
+            'telegramConnections.community',
             'telegramUser',
-            'actionType',
-            'community.tags'])->
-        whereHas('community', function ($query) {
+            'telegramConnections.community.tags'])->
+        whereHas('telegramConnections.community', function ($query) {
             $query->where('owner', Auth::user()->id);
         })->paginate(25);
         return ApiResponse::list()->items(ApiTelegramBotActionLogCollection::make($list)->toArray($request));
     }
 
 
+    /**
+     * @param ApiTelegramActionLogFilterRequest $request
+     * @return ApiResponse
+     */
     public function filter(ApiTelegramActionLogFilterRequest $request): ApiResponse
     {
         $query = TelegramBotActionLog::with([
-            'community',
+            'telegramConnections.community',
             'telegramUser',
-            'actionType',
-            'community.tags'])->
-        whereHas('community', function ($query) {
+            'telegramConnections.community.tags'
+        ])->
+        whereHas('telegramConnections.community', function ($query) {
             $query->where('owner', Auth::user()->id);
         });
+
+        if(!empty($request->input('event'))){
+            $query->where('event','ilike','%'.$request->input('event').'%');
+        }
+
         if(!empty($request->input('action_date_from'))){
             $query->whereDate('created_at','>=',$request->input('action_date_from'));
         }
@@ -50,13 +58,13 @@ class ApiTelegramBotActionController extends Controller
         }
 
         if(!empty($request->input('community_id'))){
-            $query->whereHas('community',function($query) use ($request){
+            $query->whereHas('telegramConnections.community',function($query) use ($request){
                 $query->where('id','=',$request->input('community_id'));
             });
         }
 
         if(!empty($request->input('tags'))){
-            $query->whereHas('community.tags',function($query) use ($request){
+            $query->whereHas('telegramConnections.community.tags',function($query) use ($request){
                 $query->whereIn('id',$request->input('tags'));
             });
         }

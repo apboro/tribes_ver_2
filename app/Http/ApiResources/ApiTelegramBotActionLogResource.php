@@ -21,11 +21,11 @@ class ApiTelegramBotActionLogResource extends JsonResource
     {
         return [
             'telegram_user'=>$this->resource->telegramUser->user_name,
-            'action_type'=>$this->resource->actionType->name,
-            'bot_action'=>$this->resource->action_done,
+            'event'=>$this->resource->event,
+            'action'=>$this->resource->action,
             'done_date'=>$this->resource->created_at->toDateTimeString(),
-            'community'=>$this->resource->community->title,
-            'community_tags'=>ApiTagResourse::collection($this->resource->community->tags)->toArray($request)
+            'community'=>$this->resource->telegramConnections->community->title,
+            'community_tags'=>ApiTagResourse::collection($this->resource->telegramConnections->community->tags)->toArray($request)
 
         ];
     }

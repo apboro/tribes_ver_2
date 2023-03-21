@@ -16,10 +16,10 @@ class CreateTelegramBotActionLogsTable extends Migration
         Schema::create('telegram_bot_action_logs', function (Blueprint $table) {
 
             $table->id();
-            $table->string('type')->nullable();
-            $table->bigInteger('chat_id')->nullable();
+            $table->string('event')->nullable();
+            $table->string('action')->nullable();
+            $table->string('chat_id')->nullable();
             $table->bigInteger('telegram_id')->nullable();
-            $table->text('action_done')->nullable();
             $table->timestamps();
 
         });

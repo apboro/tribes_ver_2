@@ -115,7 +115,7 @@ class MainBotEvents
                         if (!empty($member->username) || !empty($member->first_name)) {
                             Log::channel('telegram_bot_action_log')->
                                 log('info','',[
-                                    'action'=>TelegramBotActionHandler::EVENT_NEW_CHAT_USER,
+                                    'event'=>TelegramBotActionHandler::EVENT_NEW_CHAT_USER,
                                     'telegram_id'=>$member->id,
                                     'chat_id'=>$chatId
                                 ]);
@@ -163,7 +163,7 @@ class MainBotEvents
                     );
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
-                        'action'=>TelegramBotActionHandler::EVENT_GROUP_CHAT_CREATED,
+                        'event'=>TelegramBotActionHandler::EVENT_GROUP_CHAT_CREATED,
                         'chat_id'=>$chatId
                     ]);
                 }
@@ -193,7 +193,7 @@ class MainBotEvents
                     );
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
-                        'action'=>TelegramBotActionHandler::EVENT_CHANNEL_CHAT_CREATED,
+                        'event'=>TelegramBotActionHandler::EVENT_CHANNEL_CHAT_CREATED,
                         'chat_id'=>$chatId
                     ]);
                 }
@@ -221,7 +221,7 @@ class MainBotEvents
                     );
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
-                        'action'=>TelegramBotActionHandler::EVENT_CHECK_MEMBER,
+                        'event'=>TelegramBotActionHandler::EVENT_CHECK_MEMBER,
                         'chat_id'=>$chatId
                     ]);
                 }
@@ -256,7 +256,7 @@ class MainBotEvents
                 );
                 Log::channel('telegram_bot_action_log')->
                 log('info','',[
-                    'action'=>TelegramBotActionHandler::EVENT_NEW_CHAT_PHOTO,
+                    'event'=>TelegramBotActionHandler::EVENT_NEW_CHAT_PHOTO,
                     'chat_id'=>$chatId
                 ]);
             }
@@ -277,7 +277,7 @@ class MainBotEvents
                     Telegram::deleteCommunity($this->data->my_chat_member->chat->id);
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
-                        'action'=>TelegramBotActionHandler::EVENT_DELETE_CHAT,
+                        'event'=>TelegramBotActionHandler::EVENT_DELETE_CHAT,
                         'chat_id'=>$this->data->my_chat_member->chat->id
                     ]);
                 }
@@ -298,7 +298,7 @@ class MainBotEvents
                     $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
-                        'action'=>TelegramBotActionHandler::EVENT_DELETE_USER,
+                        'event'=>TelegramBotActionHandler::EVENT_DELETE_USER,
                         'telegram_id'=>$this->data->message->left_chat_member->id,
                         'chat_id'=>$this->data->message->chat->id
                     ]);
@@ -324,7 +324,7 @@ class MainBotEvents
                 Log::channel('telegram_bot_action_log')
                     ->
                 log('info','',[
-                    'action'=>TelegramBotActionHandler::EVENT_NEW_CHAT_TITLE,
+                    'event'=>TelegramBotActionHandler::EVENT_NEW_CHAT_TITLE,
                     'chat_id'=>$community->chat->id
                 ]);
                 Telegram::newTitle(
