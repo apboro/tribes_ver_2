@@ -6,6 +6,7 @@ use App\Filters\API\QuestionsFilter;
 use App\Helper\ArrayHelper;
 use App\Helper\PseudoCrypt;
 use App\Jobs\SendTeleMessageToChatFromBot;
+use App\Logging\TelegramBotActionHandler;
 use App\Models\Community;
 use App\Models\Donate;
 use App\Models\Knowledge\Category;
@@ -114,6 +115,7 @@ class MainBotCommands
         try {
             $this->createMenu();
             $this->bot->onText('/start {paymentId?}', function (Context $ctx) {
+                $this->save_log(TelegramBotActionHandler::START_BOT,$ctx);
                 $users = TelegramUser::where('user_id', '!=', NULL)->where('telegram_id', $ctx->getUserID())->get();
 
                 if ($users->first()) {
@@ -142,6 +144,7 @@ class MainBotCommands
         try {
             $this->bot->onCommand('start' . $this->bot->botFullName, function (Context $ctx) {
                 $ctx->reply('Здравствуйте, ' . $ctx->getFirstName() . "!");
+                $this->save_log(TelegramBotActionHandler::START_ON_GROUP,$ctx);
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -154,6 +157,7 @@ class MainBotCommands
             $this->bot->onCommand('myid', function (Context $ctx) {
                 if ($ctx->getChatType() != 'channel') {
                     $ctx->reply($ctx->getUserID());
+                    $this->save_log(TelegramBotActionHandler::GET_TELEGRAM_USER_ID,$ctx);
                 }
             });
         } catch (\Exception $e) {
@@ -165,6 +169,7 @@ class MainBotCommands
     {
         $this->bot->onCommand('chatid', function (Context $ctx) {
             $ctx->reply($ctx->getChatID());
+            $this->save_log(TelegramBotActionHandler::GET_CHAT_ID,$ctx);
         });
     }
 
@@ -172,6 +177,7 @@ class MainBotCommands
     {
         $this->bot->onCommand('type', function (Context $ctx) {
             $ctx->reply($ctx->getChatType());
+            $this->save_log(TelegramBotActionHandler::GET_CHAT_TYPE,$ctx);
         });
     }
 
@@ -187,6 +193,7 @@ class MainBotCommands
 
                 $this->bot->getExtentionApi()->setMyCommands(['commands' => $commands]);
                 $ctx->reply('Команды зарегистрированы.');
+                $this->save_log(TelegramBotActionHandler::SET_COMMAND,$ctx);
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -199,6 +206,7 @@ class MainBotCommands
             $this->bot->onCommand('tariff', function (Context $ctx) {
                 if (str_split($ctx->getChatID(), 1)[0] !== '-') {
                     $ctx->reply('Доступные тарифы находятся в разделе "Мои подписки".');
+                    $this->save_log(TelegramBotActionHandler::TARIFF_ON_USER,$ctx);
                 }
             });
         } catch (\Exception $e) {
@@ -215,6 +223,7 @@ class MainBotCommands
                     [$text, $menu] = $this->tariffButton($community);
                     $ctx->replyHTML($text, $menu);
                 } else $ctx->replyHTML('Тарифов нет.');
+                $this->save_log(TelegramBotActionHandler::TARIFF_ON_CHAT,$ctx);
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -390,6 +399,7 @@ class MainBotCommands
                 $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
                 $link = $community->getPublicKnowledgeLink();
                 $ctx->reply('Ссылка на Базу Знаний по сообществу: '. $link);
+                $this->save_log(TelegramBotActionHandler::HELP_ON_CHAT,$ctx);
             });
             } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -408,6 +418,7 @@ class MainBotCommands
                     }
                     $ctx->reply('Выберите сообщество', $menu);
                 } else $ctx->reply('У вас нет подписок');
+                $this->save_log(TelegramBotActionHandler::HELP_ON_BOT,$ctx);
             });
             } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -453,6 +464,7 @@ class MainBotCommands
                         $description = ($donate->description !== NULL) ? $donate->description : '';
                         $text = $description . $image;
                         $ctx->replyHTML($text, $menu);
+                        $this->save_log(TelegramBotActionHandler::DONATE_ON_CHAT,$ctx);
                     } else $ctx->reply('В сообществе не определен донат с указанным индексом');
                 } else $ctx->reply('Сообщество не подключено.');
             });
@@ -476,6 +488,7 @@ class MainBotCommands
                         }
                         $ctx->reply('Выберите сообщество, которому желаете оказать материальную помощ.', $menu);
                         $ctx->enter('donate');
+                        $this->save_log(TelegramBotActionHandler::DONATE_ON_USER,$ctx);
                     } else
                         $ctx->reply('Вы не состоите в сообществе.');
                 }
@@ -490,6 +503,7 @@ class MainBotCommands
         try {
             $this->bot->onHears('🔍Найти подписку', function (Context $ctx) {
                 $ctx->reply('Пожалуйста введите идентификатор платежа. Пример: payment-1111');
+                $this->save_log(TelegramBotActionHandler::SUBSCRIPTION_SEARCH,$ctx);
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -546,6 +560,7 @@ class MainBotCommands
                     $ctx->reply('Подписка найдена', $menu);
                     $this->access();
                 }
+                $this->save_log(TelegramBotActionHandler::SET_TARIFF_FOR_USER_BY_PAID_ID,$ctx);
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -569,6 +584,7 @@ class MainBotCommands
                     $ctx->reply('Выберите сообщество, которому желаете оказать материальную помощ.', $menu);
                     $ctx->enter('donate');
                 } else $ctx->reply('Выбранное сообщество не принимает донаты.');
+                $this->save_log(TelegramBotActionHandler::MATERIAL_AID,$ctx);
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -582,6 +598,7 @@ class MainBotCommands
                 $menu = Menux::Create('links')->inline();
                 $menu->row()->uBtn('Перейти в личный кабинет', route('main'));
                 $ctx->reply('Для того чтобы перейти в личный кабинет перейдите по ссылке', $menu);
+                $this->save_log(TelegramBotActionHandler::PERSONAL_AREA,$ctx);
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -595,6 +612,7 @@ class MainBotCommands
                 $menu = Menux::Create('links')->inline();
                 $menu->row()->uBtn('Помощь', route('faq.index'));
                 $ctx->reply('Для того чтобы получить помощь перейдите по ссылке', $menu);
+                $this->save_log(TelegramBotActionHandler::FAQ,$ctx);
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -613,6 +631,7 @@ class MainBotCommands
                     }
                     $ctx->reply('Выберите подписку', $menu);
                 } else $ctx->reply('У вас нет подписок');
+                $this->save_log(TelegramBotActionHandler::MY_SUBSCRIPTION,$ctx);
             });
             $this->subscription();
         } catch (\Exception $e) {
@@ -674,6 +693,7 @@ class MainBotCommands
                         "</a>" . " \n";
                 }
                 $ctx->replyHTML($context);
+                $this->save_log(TelegramBotActionHandler::KNOWLEDGE_SEARCH,$ctx);
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -813,6 +833,7 @@ class MainBotCommands
                     ],
                 ]);
                 $ctx->reply("Вопрос ответ сохранен в сообщество: {$community->title}");
+                $this->save_log(TelegramBotActionHandler::SAVE_FORWARD_MESSAGE_IN_BOT_CHAT_AS_QA,$ctx);
                 Cache::forget($key);
             });
         } catch (\Exception $e) {
@@ -846,6 +867,7 @@ class MainBotCommands
                     } else {
                         $ctx->reply('Подписка отменена.');
                     }
+                    $this->save_log(TelegramBotActionHandler::UNSUBSCRIBE,$ctx);
                 }
             });
         } catch (\Exception $e) {
@@ -862,6 +884,7 @@ class MainBotCommands
 
                 $invite = $this->createAndSaveInviteLink($connection);
                 $ctx->replyHTML('Ссылка: <a href="' . $invite . '">' . $connection->chat_title . '</a>');
+                $this->save_log(TelegramBotActionHandler::ACCESS,$ctx);
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -894,6 +917,7 @@ class MainBotCommands
                                 }
                             }
                             $ctx->replyHTML($text, $menu);
+                            $this->save_log(TelegramBotActionHandler::EXTEND,$ctx);
                         } else ($ctx->reply('Тарифы не установлены для сообщества'));
                     }
                 } else ($ctx->reply('Сообщество подключено неправильно'));
@@ -1176,5 +1200,14 @@ class MainBotCommands
             $text .= $command . ' - ' . $description . "\n";
         }
         return $text;
+    }
+
+    public function save_log(string $name,Context $context){
+        Log::channel('telegram_bot_action_log')->
+        log('info','',[
+            'action'=>$name,
+            'telegram_id'=>$context->getUserID(),
+            'chat_id'=>$context->getChatID(),
+        ]);
     }
 }

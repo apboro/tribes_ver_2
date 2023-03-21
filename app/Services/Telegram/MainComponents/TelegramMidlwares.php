@@ -8,6 +8,7 @@ use Askoldex\Teletant\Context;
 use Askoldex\Teletant\States\Stage;
 use App\Models\TelegramUser;
 use App\Services\Telegram;
+use Illuminate\Support\Facades\Log;
 
 class TelegramMidlwares
 {

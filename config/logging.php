@@ -140,6 +140,12 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'permission' => 0666,
         ],
+
+        'telegram_bot_action_log'=>[
+            'driver' => 'custom',
+            'via' => App\Logging\TelegramBotActionLogger::class,
+            'handler'=>App\Logging\TelegramBotActionHandler::class
+        ]
     ],
 
 ];

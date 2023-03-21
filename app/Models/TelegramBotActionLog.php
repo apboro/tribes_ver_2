@@ -9,10 +9,10 @@ class TelegramBotActionLog extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'action_type_id',
-        'community_id',
-        'telegram_user_id',
-        'action_done'
+        'chat_id',
+        'telegram_id',
+        'action_done',
+        'type'
     ];
 
     public function actionType(){

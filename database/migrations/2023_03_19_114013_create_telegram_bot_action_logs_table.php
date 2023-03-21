@@ -16,15 +16,11 @@ class CreateTelegramBotActionLogsTable extends Migration
         Schema::create('telegram_bot_action_logs', function (Blueprint $table) {
 
             $table->id();
-            $table->bigInteger('action_type_id');
-            $table->bigInteger('community_id')->unsigned();
-            $table->bigInteger('telegram_user_id')->unsigned();
-            $table->string('action_done');
+            $table->string('type')->nullable();
+            $table->bigInteger('chat_id')->nullable();
+            $table->bigInteger('telegram_id')->nullable();
+            $table->text('action_done')->nullable();
             $table->timestamps();
-
-            $table->foreign('community_id')->references('id')->on('communities')->onDelete('cascade');
-            $table->foreign('action_type_id')->references('id')->on('telegram_bot_action_types')->onDelete('cascade');
-            $table->foreign('telegram_user_id')->references('id')->on('telegram_users')->onDelete('cascade');
 
         });
     }
