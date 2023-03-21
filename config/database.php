@@ -49,6 +49,12 @@ return [
             'schema' => env('DB_SCHEMA_MAIN', 'public'),
             'sslmode' => 'prefer',
         ],
+        'testing' => [
+            'driver' => 'sqlite',
+            'database' => storage_path('database.sqlite'),
+            'prefix' => '',
+        ],
+
 
     ],
 

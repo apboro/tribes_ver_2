@@ -52,7 +52,6 @@ class TestController extends Controller
 
     public function test()
     {
-        $f = fopen('./CURLOVERB.txt', 'w');
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => env('MAIL_SMTP_URL'),
@@ -62,7 +61,6 @@ class TestController extends Controller
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLINFO_HEADER_OUT => true,
             CURLOPT_VERBOSE => true,
-            CURLOPT_STDERR => $f,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTPHEADER => array(
                 "Authorization: Basic ".base64_encode('api:'.env('MAIL_SMTP_API_KEY')),

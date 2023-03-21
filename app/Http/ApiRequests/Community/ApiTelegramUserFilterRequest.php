@@ -6,8 +6,8 @@ use App\Http\ApiRequests\ApiRequest;
 
 
 /**
- * @OA\Post(
- *  path="/api/v3/user/community-users/filter",
+ * @OA\Get(
+ *  path="/api/v3/user/community-users",
  *  operationId="community-users-filter",
  *  summary="Filter community users",
  *  security={{"sanctum": {} }},

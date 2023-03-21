@@ -96,10 +96,10 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
 
     Route::post('/chat-tags/attach', [ApiCommunityTagController::class,'attachTagToChat']);
 
-    Route::get('/user/community-users', [ApiCommunityTelegramUserController::class,'index']);
+    Route::get('/user/community-users', [ApiCommunityTelegramUserController::class,'filter']);
     Route::post('/user/community-users/detach', [ApiCommunityTelegramUserController::class,'detachUser']);
     Route::post('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class,'detachFromAllCommunities']);
-    Route::post('/user/community-users/filter', [ApiCommunityTelegramUserController::class,'filter']);
+
 
     Route::get('/dictionaries/get_actions_dictionary', [ApiDictionariesController::class, 'getActionsDictionary']);
     Route::get('/dictionaries/get_conditions_dictionary', [ApiDictionariesController::class, 'getConditionsDictionary']);

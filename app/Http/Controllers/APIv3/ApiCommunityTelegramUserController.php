@@ -4,7 +4,6 @@ namespace App\Http\Controllers\APIv3;
 
 use App\Http\ApiRequests\Community\ApiCommunityTelegramUserDetachAllRequest;
 use App\Http\ApiRequests\Community\ApiCommunityTelegramUserDetachRequest;
-use App\Http\ApiRequests\Community\ApiCommunityTelegramUserListRequest;
 use App\Http\ApiRequests\Community\ApiTelegramUserFilterRequest;
 use App\Http\ApiResources\ApiCommunityTelegramUserCollection;
 use App\Http\ApiResponses\ApiResponse;
@@ -16,15 +15,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ApiCommunityTelegramUserController extends Controller
 {
-    public function index(ApiCommunityTelegramUserListRequest $request):ApiResponse
-    {
-        /** @var LengthAwarePaginator $telegram_users */
-        $telegram_users = TelegramUser::with(['communities'])
-            ->whereHas('communities', function($query) { $query->where('owner', Auth::user()->id); })
-            ->paginate(25);
-        return ApiResponse::listPagination()->items(new ApiCommunityTelegramUserCollection($telegram_users));
-    }
-
 
     /**
      * @param ApiCommunityTelegramUserDetachRequest $request

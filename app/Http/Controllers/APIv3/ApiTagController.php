@@ -5,7 +5,6 @@ namespace App\Http\Controllers\APIv3;
 use App\Http\ApiRequests\Community\ApiTagDeleteRequest;
 use App\Http\ApiRequests\Community\ApiTagShowListRequest;
 use App\Http\ApiRequests\Community\ApiTagShowRequest;
-use App\Http\ApiRequests\Community\ApiTagStoreRequest;
 use App\Http\ApiResources\ApiTagCollection;
 use App\Http\ApiResources\ApiTagResourse;
 use App\Http\ApiResponses\ApiResponse;
