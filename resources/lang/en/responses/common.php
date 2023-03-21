@@ -25,5 +25,8 @@ return [
         'send_is_blocked'=>'Отправка заблокирована',
         'code_error'=>'Неверный код',
         'success'=>'Номер успешно подтверждён',
-    ]
+    ],
+    'deleted'=>'Resource deleted',
+    'added'=>'Successfully added',
+    'not_found'=>'Resource not found',
 ];

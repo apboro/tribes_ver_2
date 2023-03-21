@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\APIv3;
 
-use App\Http\ApiRequests\ApiAttachTagToCommunityRequest;
-use App\Http\ApiRequests\ApiDetachTagFromCommunityRequest;
+use App\Http\ApiRequests\Community\ApiAttachTagToCommunityRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Community;
@@ -15,32 +14,24 @@ class ApiCommunityTagController extends Controller
 {
     public function attachTagToChat(ApiAttachTagToCommunityRequest $request):ApiResponse
     {
-        /** @var User $user */
-        $user = Auth::user();
-        /** @var Tag $tag */
-        $tag = Tag::where('id','=',$request->input('tag_id'))->
-                    where('user_id','=',$user->id)->
-                    first();
-        /** @var Community $community */
-        $community = Community::where('id','=',$request->input('community_id'))->first();
-        $community->tags()->attach($tag);
-        return ApiResponse::success('common.community_tag_attach_success');
-    }
-
-    public function detachTagFromChat(ApiDetachTagFromCommunityRequest $request){
-        /** @var User $user */
         $user = Auth::user();
 
-        /** @var Tag $tag */
-        $tag = Tag::where('id','=',$request->input('tag_id'))->
-                    where('user_id','=',$user->id)->
-                    first();
-
-        /** @var Community $community */
-        $community = Community::where('id','=',$request->input('community_id'))->first();
-        if(!$community->tags()->detach($tag)){
-            return ApiResponse::error('common.community_tag_detach_error');
+        foreach ($request->input('tags') as $input_tag)
+        {
+            $tags[] = Tag::firstOrCreate(['name' => $input_tag, 'user_id' => $user->id]);
         }
-        return ApiResponse::success('common.community_tag_detach_success');
+
+        $community = Community::owned()->where('id',$request->input('community_id'))->first();
+
+        if ($community) {
+            $community->tags()->sync([]);
+            foreach ($tags as $tag)
+                $community->tags()->attach($tag);
+            return ApiResponse::success('common.community_tag_attach_success');
+        }
+
+        return ApiResponse::error('common.not_found');
+
     }
+
 }

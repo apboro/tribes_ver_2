@@ -52,5 +52,8 @@ return [
     'user_create_error'=>'Ошибка при добавлении пользователя',
     'telegram_user'=>[
         'delete_error'=>'Ошибка удаления telegram user'
-    ]
+    ],
+    'deleted'=>'Ресурс удалён',
+    'added'=>'Добавление прошло успешно',
+    'not_found'=>'Ресурс не найден',
 ];
