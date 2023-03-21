@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiUserLoginRequest;
-use App\Http\ApiRequests\ApiUserLogoutRequest;
+use App\Http\ApiRequests\Authentication\ApiUserLoginRequest;
+use App\Http\ApiRequests\Authentication\ApiUserLogoutRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;

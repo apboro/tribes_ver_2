@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiUserForgotPasswordLinkRequest;
+use App\Http\ApiRequests\Authentication\ApiUserForgotPasswordLinkRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;

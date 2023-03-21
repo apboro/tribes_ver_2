@@ -11,8 +11,10 @@ use Carbon\Carbon;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
@@ -24,6 +26,7 @@ use App\Models\SmsConfirmations;
  * @property string $name
  * @property string $password
  * @property Subscription $subscription
+ * @property HasMany $actions
  *
  * @method UserFactory factory()
  */
@@ -283,6 +286,11 @@ class User extends Authenticatable
     public function subscription()
     {
         return $this->hasOne(UserSubscription::class, 'user_id', 'id' );
+    }
+
+    public function actions(): HasMany
+    {
+        return $this->hasMany(Action::class, 'user_id', 'id');
     }
 }
 

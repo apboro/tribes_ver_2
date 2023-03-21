@@ -17,8 +17,9 @@ class CreateConditionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('type_id');
             $table->unsignedBigInteger('user_id');
-            $table->integer('group_id')->nullable();
+            $table->string('group_uuid')->index();
             $table->string('parameter')->nullable();
+            $table->string('prefix')->nullable()->default(null);
             $table->timestamps();
 
             $table->foreign('type_id')->on('conditions_types_dictionary')

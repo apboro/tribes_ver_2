@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiShowUserRequest;
-use App\Http\ApiRequests\ApiUserChangePassRequest;
+use App\Http\ApiRequests\Profile\ApiShowUserRequest;
+use App\Http\ApiRequests\Profile\ApiUserChangePassRequest;
+use App\Http\ApiResources\UserResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\ApiResources\UserResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ApiUserController extends Controller

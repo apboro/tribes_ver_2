@@ -15,11 +15,11 @@ class CreateConditionActionsTable extends Migration
     {
         Schema::create('conditions_actions', function (Blueprint $table) {
             $table->id();
-            $table->integer('condition_id')->nullable();
-            $table->integer('action_id')->nullable();
-            $table->integer('chat_id')->nullable();
-            $table->integer('group_id')->nullable();
+            $table->string('group_uuid')->index();
+            $table->unsignedBigInteger('community_id');
             $table->timestamps();
+
+            $table->foreign('community_id')->on('communities')->references('id');
         });
     }
 

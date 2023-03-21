@@ -25,7 +25,8 @@ class CommunityResource extends JsonResource
             "balance" => $this->resource->balance,
 //            "donate" => $this->resource->donate,
             "type" => $this->resource->connection->chat_type,
-            "tags"=>$this->resource->tags,
+            "tags"=>$this->resource->tags->makeHidden('pivot'),
+            "rules"=>$this->resource->communityRules->makeHidden('pivot'),
         ];
     }
 }

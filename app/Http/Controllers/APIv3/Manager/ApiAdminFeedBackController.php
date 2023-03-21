@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\APIv3\Manager;
 
 use App\Events\FeedBackAnswer;
-use App\Http\ApiRequests\ApiManagerFeedBackAnswerRequest;
-use App\Http\ApiRequests\ApiManagerFeedBackCloseRequest;
-use App\Http\ApiRequests\ApiManagerFeedBackListRequest;
-use App\Http\ApiRequests\ApiManagerFeedBackShowRequest;
+use App\Http\ApiRequests\Admin\ApiManagerFeedBackAnswerRequest;
+use App\Http\ApiRequests\Admin\ApiManagerFeedBackCloseRequest;
+use App\Http\ApiRequests\Admin\ApiManagerFeedBackListRequest;
+use App\Http\ApiRequests\Admin\ApiManagerFeedBackShowRequest;
 use App\Http\ApiResources\FeedBackCollection;
 use App\Http\ApiResources\FeedBackResource;
 use App\Http\ApiResponses\ApiResponse;

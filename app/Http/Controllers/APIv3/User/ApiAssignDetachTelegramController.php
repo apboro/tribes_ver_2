@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiAssignTelegramRequest;
-use App\Http\ApiRequests\ApiDetachTelegramRequest;
+use App\Http\ApiRequests\Profile\ApiAssignTelegramRequest;
+use App\Http\ApiRequests\Profile\ApiDetachTelegramRequest;
 use App\Http\ApiResponses\ApiResponse;
-use App\Http\ApiResponses\ApiResponseSuccess;
-use App\Repositories\Author\AuthorRepositoryContract;
 use App\Http\Controllers\Controller;
+use App\Repositories\Author\AuthorRepositoryContract;
 
 class ApiAssignDetachTelegramController extends Controller
 {

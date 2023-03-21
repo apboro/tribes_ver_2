@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\APIv3;
 
 use App\Http\ApiRequests\ApiAssignSubscriptionRequest;
-use App\Http\ApiRequests\ApiEditSubscriptionRequest;
-use App\Http\ApiRequests\ApiListSubscriptionsRequest;
-use App\Http\ApiRequests\ApiShowSubscriptionRequest;
-use App\Http\ApiRequests\ApiStoreSubscriptionRequest;
-use App\Http\ApiRequests\ApiUpdateSubscriptionRequest;
+use App\Http\ApiRequests\Subscription\ApiEditSubscriptionRequest;
+use App\Http\ApiRequests\Subscription\ApiListSubscriptionsRequest;
+use App\Http\ApiRequests\Subscription\ApiShowSubscriptionRequest;
+use App\Http\ApiRequests\Subscription\ApiStoreSubscriptionRequest;
+use App\Http\ApiRequests\Subscription\ApiUpdateSubscriptionRequest;
 use App\Http\ApiResources\SubscriptionCollection;
 use App\Http\ApiResources\SubscriptionResource;
 use App\Http\ApiResponses\ApiResponse;
@@ -56,7 +56,7 @@ class ApiSubscriptionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\ApiRequests\ApiStoreSubscriptionRequest  $request
+     * @param  \App\Http\ApiRequests\Subscription\ApiStoreSubscriptionRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(ApiStoreSubscriptionRequest $request)
@@ -72,7 +72,7 @@ class ApiSubscriptionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\ApiRequests\ApiUpdateSubscriptionRequest  $request
+     * @param  \App\Http\ApiRequests\Subscription\ApiUpdateSubscriptionRequest  $request
      * @param  \App\Models\Subscription  $subscription
      * @return \Illuminate\Http\Response
      */

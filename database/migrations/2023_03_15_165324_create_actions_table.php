@@ -17,8 +17,8 @@ class CreateActionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('type_id');
             $table->unsignedBigInteger('user_id');
-            $table->integer('group_id');
-            $table->string('parameter');
+            $table->string('group_uuid');
+            $table->string('parameter')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->on('users')

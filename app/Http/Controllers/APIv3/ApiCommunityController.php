@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\APIv3;
 
 use App\Events\CreateCommunity;
-use App\Http\ApiRequests\ApiCommunityAddRequest;
-use App\Http\ApiRequests\ApiCommunityFilterRequest;
-use App\Http\ApiRequests\ApiCommunityListRequest;
-use App\Http\ApiRequests\ApiShowCommunityRequest;
+use App\Http\ApiRequests\Community\ApiCommunityAddRequest;
+use App\Http\ApiRequests\Community\ApiCommunityFilterRequest;
+use App\Http\ApiRequests\Community\ApiCommunityListRequest;
+use App\Http\ApiRequests\Community\ApiShowCommunityRequest;
 use App\Http\ApiResources\CommunitiesCollection;
 use App\Http\ApiResources\CommunityResource;
 use App\Http\ApiResponses\ApiResponse;
