@@ -5,8 +5,8 @@ namespace App\Http\ApiRequests\Community;
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Post(
- *  path="/api/v3/user/community-users/filter",
+ * @OA\Get(
+ *  path="/api/v3/user/community-users",
  *  operationId="community-users-filter",
  *  summary="Filter community users",
  *  security={{"sanctum": {} }},
@@ -18,6 +18,7 @@ use App\Http\ApiRequests\ApiRequest;
  *         required=false,
  *         @OA\Schema(
  *             type="string",
+ *             example="Аким"
  *         )
  *     ),
  *     @OA\Parameter(
@@ -27,6 +28,7 @@ use App\Http\ApiRequests\ApiRequest;
  *         required=false,
  *         @OA\Schema(
  *             type="string",
+ *             example="2023-01-01"
  *         )
  *     ),
  *     @OA\Parameter(
@@ -36,6 +38,7 @@ use App\Http\ApiRequests\ApiRequest;
  *         required=false,
  *         @OA\Schema(
  *             type="string",
+ *             example="2023-01-01"
  *         )
  *     ),
  *    @OA\Parameter(
@@ -45,6 +48,7 @@ use App\Http\ApiRequests\ApiRequest;
  *         required=false,
  *         @OA\Schema(
  *             type="integer",
+ *             example="12"
  *         )
  *     ),
  *      @OA\Response(response=200, description="OK")

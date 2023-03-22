@@ -30,22 +30,6 @@ class ApiCommunityController extends Controller
         $this->tariffRepository = $tariffRepository;
     }
 
-    /**
-     * Communities list.
-     *
-     * TODO swagger annotations
-     *
-     * @param ApiCommunityListRequest $request
-     *
-     * @return ApiResponse
-     */
-    public function list(ApiCommunityListRequest $request): ApiResponse
-    {
-        $communities = $this->communityRepo->getList($request);
-
-        return ApiResponse::list()
-            ->items(CommunitiesCollection::make($communities)->toArray($request));
-    }
 
     /**
      * Show community info.
