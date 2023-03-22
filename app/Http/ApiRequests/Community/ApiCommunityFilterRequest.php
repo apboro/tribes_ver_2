@@ -12,6 +12,16 @@ use App\Http\ApiRequests\ApiRequest;
  *  summary="Filter communities of auth user",
  *  security={{"sanctum": {} }},
  *  tags={"Chats"},
+ *    @OA\Parameter(
+ *         name="name",
+ *         in="query",
+ *         description="Community name",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string",
+ *             example="Bubbles"
+ *         )
+ *     ),
  *     @OA\Parameter(
  *         name="tag_name",
  *         in="query",
@@ -51,6 +61,7 @@ class ApiCommunityFilterRequest extends ApiRequest
     public function rules():array
     {
         return [
+            'name'=>'string',
             'tag_name'=>'string',
             'date_from'=>'date_format:Y-m-d',
             'date_to'=>'date_format:Y-m-d'
