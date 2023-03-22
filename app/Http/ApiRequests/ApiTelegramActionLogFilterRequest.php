@@ -3,7 +3,7 @@
 namespace App\Http\ApiRequests;
 
 /**
- * @OA\Post(
+ * @OA\Get(
  *  path="/api/v3/user/bot/action-log/filter",
  *  operationId="bot-action-list-filter",
  *  summary="Get paginated filtered list of bot action in community owned by auth user",
@@ -60,7 +60,7 @@ namespace App\Http\ApiRequests;
  *         )
  *     ),
  *    @OA\Parameter(
- *         name="tags",
+ *         name="tags[]",
  *         in="query",
  *         description="List of tags ids",
  *         required=false,
@@ -74,11 +74,8 @@ namespace App\Http\ApiRequests;
  *)
  */
 
-
-
 class ApiTelegramActionLogFilterRequest extends ApiRequest
 {
-
     public function rules():array
     {
         return [
