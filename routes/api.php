@@ -10,6 +10,7 @@ use App\Http\Controllers\APIv3\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\ApiTagController;
+use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
@@ -99,6 +100,10 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/user/community-users/detach', [ApiCommunityTelegramUserController::class,'detachUser']);
     Route::post('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class,'detachFromAllCommunities']);
     Route::post('/user/community-users/filter', [ApiCommunityTelegramUserController::class,'filter']);
+
+    Route::get('/user/bot/action-log', [ApiTelegramBotActionController::class,'list']);
+    Route::post('/user/bot/action-log/filter', [ApiTelegramBotActionController::class,'filter']);
+
 
 });
 

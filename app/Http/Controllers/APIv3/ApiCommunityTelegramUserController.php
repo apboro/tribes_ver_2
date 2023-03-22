@@ -70,7 +70,7 @@ class ApiCommunityTelegramUserController extends Controller
 
         $query = TelegramUser::select('telegram_users.*')->
             addSelect('communities.*')->
-        addSelect('telegram_users_community.accession_date')
+            addSelect('telegram_users_community.accession_date')
             ->leftJoin(
                 'telegram_users_community',
                 'telegram_users_community.telegram_user_id',
@@ -82,6 +82,7 @@ class ApiCommunityTelegramUserController extends Controller
                 '=',
                 'telegram_users_community.community_id'
             )
+            ->whereHas('communities', function($query) { $query->where('owner', Auth::user()->id); })
             ->with(['communities'])->newQuery();
         if(!empty($request->input('accession_date_from'))){
             $query->whereHas('communities',function($query) use ($request){

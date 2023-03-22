@@ -2,11 +2,13 @@
 
 namespace App\Services\Telegram\MainComponents;
 
+use App\Models\TelegramBotUpdateLog;
 use App\Services\TelegramLogService;
 use Askoldex\Teletant\Context;
 use Askoldex\Teletant\States\Stage;
 use App\Models\TelegramUser;
 use App\Services\Telegram;
+use Illuminate\Support\Facades\Log;
 
 class TelegramMidlwares
 {
@@ -27,6 +29,12 @@ class TelegramMidlwares
                     $user = $ctx->getContainer()->get(TelegramUser::class);
                     $storage = new Storage($user);
                     $ctx->setStorage($storage);
+                    $next($ctx);
+                },
+                function (Context $ctx, callable $next) {
+                    TelegramBotUpdateLog::create([
+                        'data'=>json_encode($ctx->update()->export())
+                    ]);
                     $next($ctx);
                 },
                 $this->bootStage()->middleware()

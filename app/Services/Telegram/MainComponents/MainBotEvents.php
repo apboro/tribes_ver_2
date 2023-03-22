@@ -4,11 +4,14 @@ namespace App\Services\Telegram\MainComponents;
 
 use App\Exceptions\KnowledgeException;
 use App\Helper\ArrayHelper;
+use App\Logging\TelegramBotActionHandler;
 use App\Models\Community;
+use App\Models\TelegramBotUpdateLog;
 use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class MainBotEvents
 {
@@ -68,6 +71,7 @@ class MainBotEvents
             if (isset($this->data->message->new_chat_member->id)) {
                 $chatId = $this->data->message->chat->id;
                 $this->bot->logger()->debug('новый пользователь в группе', ArrayHelper::toArray($this->data->message->new_chat_member));
+
                 if ($this->data->message->new_chat_member->id == $this->bot->botId) {
                     $this->bot->logger()->debug('Добавление бота в уже существующую ГРУППУ', ArrayHelper::toArray($this->data->message->chat));
                     Telegram::botEnterGroupEvent(
@@ -77,6 +81,13 @@ class MainBotEvents
                         $this->data->message->chat->title,
                         $this->getPhoto($chatId)
                     );
+                    Log::channel('telegram_bot_action_log')
+                        ->
+                        log('info','',[
+                            'action'=>TelegramBotActionHandler::EVENT_NEW_CHAT_MEMBER,
+                            'telegram_id'=>$this->data->message->new_chat_member->id,
+                            'chat_id'=>$chatId
+                        ]);
                 }
             }
         } catch (Exception $e) {
@@ -102,6 +113,12 @@ class MainBotEvents
 
                         $member = $this->data->message->new_chat_member;
                         if (!empty($member->username) || !empty($member->first_name)) {
+                            Log::channel('telegram_bot_action_log')->
+                                log('info','',[
+                                    'event'=>TelegramBotActionHandler::EVENT_NEW_CHAT_USER,
+                                    'telegram_id'=>$member->id,
+                                    'chat_id'=>$chatId
+                                ]);
 
                             $userName = !empty($member->username) ? $member->username : '';
                             $firstName = !empty($member->first_name) ? $member->first_name : '';
@@ -144,6 +161,11 @@ class MainBotEvents
                         $this->data->message->chat->title,
                         $this->getPhoto($chatId)
                     );
+                    Log::channel('telegram_bot_action_log')->
+                    log('info','',[
+                        'event'=>TelegramBotActionHandler::EVENT_GROUP_CHAT_CREATED,
+                        'chat_id'=>$chatId
+                    ]);
                 }
             }
         } catch (Exception $e) {
@@ -169,6 +191,11 @@ class MainBotEvents
                         $this->data->my_chat_member->chat->title,
                         $this->getPhoto($chatId)
                     );
+                    Log::channel('telegram_bot_action_log')->
+                    log('info','',[
+                        'event'=>TelegramBotActionHandler::EVENT_CHANNEL_CHAT_CREATED,
+                        'chat_id'=>$chatId
+                    ]);
                 }
             }
         } catch (Exception $e) {
@@ -192,6 +219,11 @@ class MainBotEvents
                         $this->data->my_chat_member->new_chat_member->status,
                         $chatId
                     );
+                    Log::channel('telegram_bot_action_log')->
+                    log('info','',[
+                        'event'=>TelegramBotActionHandler::EVENT_CHECK_MEMBER,
+                        'chat_id'=>$chatId
+                    ]);
                 }
             }
         } catch (Exception $e) {
@@ -222,6 +254,11 @@ class MainBotEvents
                     $chatId,
                     $uriPhoto
                 );
+                Log::channel('telegram_bot_action_log')->
+                log('info','',[
+                    'event'=>TelegramBotActionHandler::EVENT_NEW_CHAT_PHOTO,
+                    'chat_id'=>$chatId
+                ]);
             }
         } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -238,6 +275,11 @@ class MainBotEvents
                     $this->data->my_chat_member->new_chat_member->status == 'left'
                 ) {
                     Telegram::deleteCommunity($this->data->my_chat_member->chat->id);
+                    Log::channel('telegram_bot_action_log')->
+                    log('info','',[
+                        'event'=>TelegramBotActionHandler::EVENT_DELETE_CHAT,
+                        'chat_id'=>$this->data->my_chat_member->chat->id
+                    ]);
                 }
             }
         } catch (Exception $e) {
@@ -254,6 +296,12 @@ class MainBotEvents
                     $telegram = new Telegram(app(TariffRepositoryContract::class));
                     $this->bot->logger()->debug('Delete user with:', [$this->data->message->chat->id, $this->data->message->left_chat_member->id]);
                     $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
+                    Log::channel('telegram_bot_action_log')->
+                    log('info','',[
+                        'event'=>TelegramBotActionHandler::EVENT_DELETE_USER,
+                        'telegram_id'=>$this->data->message->left_chat_member->id,
+                        'chat_id'=>$this->data->message->chat->id
+                    ]);
                 }
             }
         } catch (Exception $e) {
@@ -273,6 +321,12 @@ class MainBotEvents
                 $community = NULL;
             }
             if ($community) {
+                Log::channel('telegram_bot_action_log')
+                    ->
+                log('info','',[
+                    'event'=>TelegramBotActionHandler::EVENT_NEW_CHAT_TITLE,
+                    'chat_id'=>$community->chat->id
+                ]);
                 Telegram::newTitle(
                     $community->chat->id,
                     $community->new_chat_title
@@ -370,4 +424,6 @@ class MainBotEvents
             call_user_func($callable, $data);
         }
     }
+
+
 }
