@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\APIv3;
 
-use App\Http\ApiRequests\ApiTagDeleteRequest;
-use App\Http\ApiRequests\ApiTagShowListRequest;
-use App\Http\ApiRequests\ApiTagShowRequest;
-use App\Http\ApiRequests\ApiTagStoreRequest;
+use App\Http\ApiRequests\Community\ApiTagDeleteRequest;
+use App\Http\ApiRequests\Community\ApiTagShowListRequest;
+use App\Http\ApiRequests\Community\ApiTagShowRequest;
 use App\Http\ApiResources\ApiTagCollection;
 use App\Http\ApiResources\ApiTagResourse;
 use App\Http\ApiResponses\ApiResponse;
@@ -27,20 +26,6 @@ class ApiTagController extends Controller
         $user = Auth::user();
         $tag = Tag::where('user_id','=',$user->id)->get();
         return ApiResponse::list()->items(ApiTagCollection::make($tag)->toArray($request));
-    }
-
-
-    /**
-     * @param ApiTagStoreRequest $request
-     * @return ApiResponse
-     */
-    public function store(ApiTagStoreRequest $request):ApiResponse
-    {
-        $tag = Tag::create([
-            'name'=>$request->input('name'),
-            'user_id'=>Auth::user()->id
-        ]);
-        return ApiResponse::common(ApiTagResourse::make($tag)->toArray($request));
     }
 
 

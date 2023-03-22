@@ -2,32 +2,19 @@
 
 namespace App\Http\Controllers\APIv3;
 
-use App\Http\ApiRequests\ApiCommunityTelegramUserDeleteRequest;
-use App\Http\ApiRequests\ApiCommunityTelegramUserDetachAllRequest;
-use App\Http\ApiRequests\ApiCommunityTelegramUserDetachRequest;
-use App\Http\ApiRequests\ApiCommunityTelegramUserListRequest;
-use App\Http\ApiRequests\ApiTelegramUserFilterRequest;
+use App\Http\ApiRequests\Community\ApiCommunityTelegramUserDetachAllRequest;
+use App\Http\ApiRequests\Community\ApiCommunityTelegramUserDetachRequest;
+use App\Http\ApiRequests\Community\ApiTelegramUserFilterRequest;
 use App\Http\ApiResources\ApiCommunityTelegramUserCollection;
 use App\Http\ApiResponses\ApiResponse;
-use App\Http\ApiResponses\ApiResponseSuccess;
 use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\TelegramUser;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 class ApiCommunityTelegramUserController extends Controller
 {
-    public function index(ApiCommunityTelegramUserListRequest $request):ApiResponse
-    {
-        /** @var LengthAwarePaginator $telegram_users */
-        $telegram_users = TelegramUser::with(['communities'])
-            ->whereHas('communities', function($query) { $query->where('owner', Auth::user()->id); })
-            ->paginate(25);
-        return ApiResponse::listPagination()->items(new ApiCommunityTelegramUserCollection($telegram_users));
-    }
-
 
     /**
      * @param ApiCommunityTelegramUserDetachRequest $request

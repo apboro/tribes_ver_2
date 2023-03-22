@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\APIv3;
 
 use App\Events\FeedBackCreate;
-use App\Http\ApiRequests\ApiFeedBackRequest;
+use App\Http\ApiRequests\Profile\ApiFeedBackRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Feedback;

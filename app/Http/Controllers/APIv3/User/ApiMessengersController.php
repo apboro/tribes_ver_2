@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiListMessengersRequest;
+use App\Http\ApiRequests\Profile\ApiListMessengersRequest;
 use App\Http\ApiResources\TelegramAccountResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;

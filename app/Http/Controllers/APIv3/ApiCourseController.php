@@ -4,16 +4,15 @@ namespace App\Http\Controllers\APIv3;
 
 use App\Events\ApiUserRegister;
 use App\Events\BuyCourse;
-
-use App\Http\ApiRequests\ApiCoursePayRequest;
-use App\Http\ApiRequests\ApiCourseShowForAllRequest;
-use App\Http\ApiRequests\ApiCourseShowRequest;
-use App\Http\ApiRequests\ApiCourseStoreRequest;
-use App\Http\ApiRequests\ApiCourseUpdateRequest;
+use App\Http\ApiRequests\Course\ApiCoursePayRequest;
+use App\Http\ApiRequests\Course\ApiCourseShowForAllRequest;
+use App\Http\ApiRequests\Course\ApiCourseShowRequest;
+use App\Http\ApiRequests\Course\ApiCourseStoreRequest;
+use App\Http\ApiRequests\Course\ApiCourseUpdateRequest;
 use App\Http\ApiResources\CourseCollection;
+use App\Http\ApiResources\CourseResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\ApiResources\CourseResource;
 use App\Models\Course;
 use App\Models\User;
 use App\Repositories\Course\CourseRepository;

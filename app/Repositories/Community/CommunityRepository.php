@@ -21,7 +21,7 @@ class CommunityRepository implements CommunityRepositoryContract
         $user->role_index = User::$role['author'];
         $user->save();
 
-        $list = Community::owned()->with(['tags'])->orderBy('created_at','DESC');
+        $list = Community::owned()->with(['tags', 'communityRules'])->orderBy('created_at','DESC');
 
         if(!empty($request->input('name'))){
             $list->where('title','ilike','%'.$request->input('name').'%');
@@ -39,6 +39,7 @@ class CommunityRepository implements CommunityRepositoryContract
         if(!empty($request->input('date_to'))){
             $list->whereDate('created_at','<=',$request->input('date_to'));
         }
+
 
         $res = $list->paginate(20);
 

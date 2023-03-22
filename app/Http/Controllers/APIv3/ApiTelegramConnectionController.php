@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers\APIv3;
 
-use App\Http\ApiRequests\ApiTelegramConnectionCreateRequest;
-use App\Http\ApiRequests\ApiTelegramConnectionSearchRequest;
-use App\Http\ApiResources\TelegramResource;
+use App\Http\ApiRequests\Community\ApiTelegramConnectionCreateRequest;
+use App\Http\ApiRequests\Community\ApiTelegramConnectionSearchRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Models\TelegramConnection;
 use App\Services\Abs\Messenger;
 use App\Services\Telegram;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ApiTelegramConnectionController extends Controller

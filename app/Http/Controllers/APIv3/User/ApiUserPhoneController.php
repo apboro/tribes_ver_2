@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiConfirmPhoneRequest;
-use App\Http\ApiRequests\ApiSendConfirmCodeRequest;
-use App\Http\ApiRequests\ApiResetPhoneRequest;
+use App\Http\ApiRequests\Profile\ApiConfirmPhoneRequest;
+use App\Http\ApiRequests\Profile\ApiResetPhoneRequest;
+use App\Http\ApiRequests\Profile\ApiSendConfirmCodeRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;

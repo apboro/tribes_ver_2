@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\APIv3;
 
-use App\Http\ApiRequests\ApiCardListRequest;
-use App\Http\ApiRequests\ApiCardStoreRequest;
-use App\Http\ApiRequests\ApiPaymentCardDeleteRequest;
+use App\Http\ApiRequests\Profile\ApiCardListRequest;
+use App\Http\ApiRequests\Profile\ApiCardStoreRequest;
+use App\Http\ApiRequests\Profile\ApiPaymentCardDeleteRequest;
 use App\Http\ApiResources\PaymentCardListResource;
 use App\Http\ApiResources\PaymentCardResource;
 use App\Http\ApiResponses\ApiResponse;

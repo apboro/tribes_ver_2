@@ -319,4 +319,10 @@ class Community extends Model
     public function tags(){
         return $this->belongsToMany(Tag::class,'community_tag','community_id','tag_id');
     }
+
+    public function communityRules()
+    {
+        return $this->belongsToMany(Condition::class,'conditions_actions','community_id','group_uuid', 'id', 'group_uuid')->distinct();
+    }
+
 }

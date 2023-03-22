@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Course;
 
-use App\Http\ApiRequests\ApiCourseUpdateRequest;
+use App\Http\ApiRequests\Course\ApiCourseUpdateRequest;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Repositories\Lesson\LessonRepositoryContract;

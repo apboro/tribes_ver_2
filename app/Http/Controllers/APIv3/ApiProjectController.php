@@ -3,19 +3,17 @@
 namespace App\Http\Controllers\APIv3;
 
 use App\Filters\API\ProjectFilter;
-use App\Http\ApiRequests\ApiAddProjectRequest;
-use App\Http\ApiRequests\ApiProjectListRequest;
-use App\Http\ApiRequests\ApiProjectShowRequest;
-use App\Http\ApiRequests\ApiProjectUpdateRequest;
+use App\Http\ApiRequests\Project\ApiAddProjectRequest;
+use App\Http\ApiRequests\Project\ApiProjectListRequest;
+use App\Http\ApiRequests\Project\ApiProjectShowRequest;
+use App\Http\ApiRequests\Project\ApiProjectUpdateRequest;
 use App\Http\ApiResources\ProjectCollection;
 use App\Http\ApiResources\ProjectResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
-
 use App\Models\Project;
 use App\Models\User;
 use App\Repositories\Project\ProjectRepositoryContract;
-
 use Illuminate\Support\Facades\Auth;
 
 class ApiProjectController extends Controller

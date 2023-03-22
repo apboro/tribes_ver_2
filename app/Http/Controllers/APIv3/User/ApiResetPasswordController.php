@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\User;
 
-use App\Http\ApiRequests\ApiUserResetPasswordRequest;
+use App\Http\ApiRequests\Profile\ApiUserResetPasswordRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;

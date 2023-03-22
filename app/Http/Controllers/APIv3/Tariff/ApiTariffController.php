@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\APIv3\Tariff;
 
-use App\Helper\ArrayHelper;
-use App\Http\ApiRequests\ApiTariffsRequest;
-use App\Http\ApiResponses\ApiResponse;
+use App\Http\ApiRequests\Community\ApiTariffsRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Project\ProjectRequest;
 use App\Repositories\Tariff\TariffRepositoryContract;
 
 class ApiTariffController extends Controller

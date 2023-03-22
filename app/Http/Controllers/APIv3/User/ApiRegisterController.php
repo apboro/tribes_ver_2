@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\APIv3\User;
 
 use App\Events\ApiUserRegister;
-use App\Http\ApiRequests\ApiUserRegisterRequest;
+use App\Http\ApiRequests\Authentication\ApiUserRegisterRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;

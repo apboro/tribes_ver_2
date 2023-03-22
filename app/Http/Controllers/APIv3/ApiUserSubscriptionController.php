@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\APIv3;
 
-use App\Http\ApiRequests\ApiChangeSubscriptionRecurrentRequest;
-use App\Http\ApiRequests\ApiSubscriptionPayRequest;
+use App\Http\ApiRequests\Subscription\ApiChangeSubscriptionRecurrentRequest;
+use App\Http\ApiRequests\Subscription\ApiSubscriptionPayRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\ApiResponses\ApiResponseCommon;
 use App\Http\ApiResponses\ApiResponseError;

@@ -1,10 +1,14 @@
 <?php
 
 
+use App\Http\Controllers\APIv3\ApiActionsController;
 use App\Http\Controllers\APIv3\ApiCommunityController;
 use App\Http\Controllers\APIv3\ApiCommunityTagController;
 use App\Http\Controllers\APIv3\ApiCommunityTelegramUserController;
+use App\Http\Controllers\APIv3\ApiConditionActionController;
+use App\Http\Controllers\APIv3\ApiConditionController;
 use App\Http\Controllers\APIv3\ApiCourseController;
+use App\Http\Controllers\APIv3\ApiDictionariesController;
 use App\Http\Controllers\APIv3\ApiFeedBackController;
 use App\Http\Controllers\APIv3\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\ApiProjectController;
@@ -13,19 +17,18 @@ use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
-use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
+use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
+use App\Http\Controllers\APIv3\User\ApiAuthController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
 use App\Http\Controllers\APIv3\User\ApiMessengersController;
-use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\APIv3\User\ApiRegisterController;
-use App\Http\Controllers\APIv3\User\ApiAuthController;
-
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
+use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -89,22 +92,29 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::get('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
 
     Route::get('/chats/tags', [ApiTagController::class,'index']);
-    Route::post('/chats/tags', [ApiTagController::class,'store']);
     Route::get('/chats/tags/{id}', [ApiTagController::class,'show']);
     Route::delete('/chats/tags/{id}', [ApiTagController::class,'destroy']);
 
     Route::post('/chat-tags/attach', [ApiCommunityTagController::class,'attachTagToChat']);
-    Route::post('/chat-tags/detach', [ApiCommunityTagController::class,'detachTagFromChat']);
 
-    Route::get('/user/community-users', [ApiCommunityTelegramUserController::class,'index']);
+    Route::get('/user/community-users', [ApiCommunityTelegramUserController::class,'filter']);
     Route::post('/user/community-users/detach', [ApiCommunityTelegramUserController::class,'detachUser']);
     Route::post('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class,'detachFromAllCommunities']);
-    Route::post('/user/community-users/filter', [ApiCommunityTelegramUserController::class,'filter']);
 
     Route::get('/user/bot/action-log', [ApiTelegramBotActionController::class,'list']);
     Route::post('/user/bot/action-log/filter', [ApiTelegramBotActionController::class,'filter']);
 
 
+
+    Route::get('/dictionaries/get_actions_dictionary', [ApiDictionariesController::class, 'getActionsDictionary']);
+    Route::get('/dictionaries/get_conditions_dictionary', [ApiDictionariesController::class, 'getConditionsDictionary']);
+    Route::post('/conditions/store', [ApiConditionController::class, 'store']);
+    Route::get('/conditions/getList', [ApiConditionController::class, 'getList']);
+    Route::delete('/conditions/delete', [ApiConditionController::class, 'delete']);
+    Route::post('/actions/store', [ApiActionsController::class, 'store']);
+    Route::get('/actions-conditions/getList', [ApiConditionActionController::class, 'getList']);
+    Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
+    Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function() {
@@ -150,8 +160,8 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers')->group(func
 Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(function () {
     Route::post('/payment/addCard', 'PaymentController@addCard')->name('api.payment.card.add'); // Имя Роута было Занято. Добавил в начало 'api'.
     Route::post('/payment/removeCard', 'PaymentController@removeCard')->name('payment.card.remove');
-    Route::post('/payment/cardList', 'PaymentController@cardList')->name('api.payment.card.list'); // Имя Роута было Занято. Добавил в начало 'api'. 
-    Route::post('/payment/init', 'PaymentController@init')->name('api.payment.init'); // Имя Роута было Занято. Добавил в начало 'api'. 
+    Route::post('/payment/cardList', 'PaymentController@cardList')->name('api.payment.card.list'); // Имя Роута было Занято. Добавил в начало 'api'.
+    Route::post('/payment/init', 'PaymentController@init')->name('api.payment.init'); // Имя Роута было Занято. Добавил в начало 'api'.
     Route::post('/payment/payout', 'PaymentController@payout')->name('api.payment.payout');
 });
 

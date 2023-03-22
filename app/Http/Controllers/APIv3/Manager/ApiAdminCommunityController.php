@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\APIv3\Manager;
 
 use App\Exceptions\StatisticException;
-use App\Http\ApiRequests\ApiAdminCommunityExportRequest;
-use App\Http\ApiRequests\ApiAdminCommunityListRequest;
-use App\Http\ApiRequests\ApiAdminCommunityShowRequest;
+use App\Http\ApiRequests\Admin\ApiAdminCommunityExportRequest;
+use App\Http\ApiRequests\Admin\ApiAdminCommunityListRequest;
+use App\Http\ApiRequests\Admin\ApiAdminCommunityShowRequest;
 use App\Http\ApiResources\AdminCommunityCollection;
 use App\Http\ApiResources\AdminCommunityResource;
 use App\Http\ApiResponses\ApiResponse;
