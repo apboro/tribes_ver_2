@@ -102,7 +102,7 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class,'detachFromAllCommunities']);
 
     Route::get('/user/bot/action-log', [ApiTelegramBotActionController::class,'list']);
-    Route::post('/user/bot/action-log/filter', [ApiTelegramBotActionController::class,'filter']);
+    Route::get('/user/bot/action-log/filter', [ApiTelegramBotActionController::class,'filter']);
 
 
 
