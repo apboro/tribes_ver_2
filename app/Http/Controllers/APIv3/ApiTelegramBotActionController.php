@@ -13,24 +13,6 @@ use Illuminate\Support\Facades\Auth;
 class ApiTelegramBotActionController extends Controller
 {
     /**
-     * @param ApiTelegramActionLogListRequest $request
-     * @return ApiResponse
-     */
-
-    public function list(ApiTelegramActionLogListRequest $request): ApiResponse
-    {
-        $list = TelegramBotActionLog::with([
-            'telegramConnections.community',
-            'telegramUser',
-            'telegramConnections.community.tags'])->
-        whereHas('telegramConnections.community', function ($query) {
-            $query->where('owner', Auth::user()->id);
-        })->paginate(25);
-        return ApiResponse::list()->items(ApiTelegramBotActionLogCollection::make($list)->toArray($request));
-    }
-
-
-    /**
      * @param ApiTelegramActionLogFilterRequest $request
      * @return ApiResponse
      */
