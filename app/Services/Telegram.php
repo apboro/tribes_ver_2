@@ -142,12 +142,13 @@ class Telegram extends Messenger
     public static function deleteCommunity($chat_id)
     {
         try {
+            /** @var TelegramConnection $connection */
             $connection = TelegramConnection::where('chat_id', $chat_id)->first();
             if ($connection) {
                 $connection->botStatus = 'kicked';
                 $connection->save();
             }
-
+            $connection->community()->delete();
             return true;
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
