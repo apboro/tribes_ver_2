@@ -51,6 +51,8 @@ spec:
           volumeMounts:
           - mountPath: /var/run/php
             name: fpm-socket
+          - mountPath: /app/storage
+            name: storage
           ports:
           - name: http
             containerPort: {{ .Values.backend.service.port }}
