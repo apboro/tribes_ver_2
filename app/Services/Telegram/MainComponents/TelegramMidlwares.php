@@ -31,12 +31,6 @@ class TelegramMidlwares
                     $ctx->setStorage($storage);
                     $next($ctx);
                 },
-                function (Context $ctx, callable $next) {
-                    TelegramBotUpdateLog::create([
-                        'data'=>json_encode($ctx->update()->export())
-                    ]);
-                    $next($ctx);
-                },
                 $this->bootStage()->middleware()
             ]);
         } catch (\Exception $e) {
