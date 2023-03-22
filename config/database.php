@@ -50,9 +50,18 @@ return [
             'sslmode' => 'prefer',
         ],
         'testing' => [
-            'driver' => 'sqlite',
-            'database' => storage_path('database.sqlite'),
+            'driver' => env('DB_DRIVER', 'pgsql'),
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_MAIN', '127.0.0.1'),
+            'port' => env('DB_PORT_MAIN', '5432'),
+            'database' => 'testing',
+            'username' => 'testing',
+            'password' => 'testing',
+            'charset' => 'utf8',
             'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => env('DB_SCHEMA_MAIN', 'public'),
+            'sslmode' => 'prefer',
         ],
 
 
