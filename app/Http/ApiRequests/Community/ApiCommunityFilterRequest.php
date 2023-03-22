@@ -23,13 +23,14 @@ use App\Http\ApiRequests\ApiRequest;
  *         )
  *     ),
  *     @OA\Parameter(
- *         name="tag_name",
+ *         name="tags_names[]",
  *         in="query",
- *         description="Community tag name",
+ *         description="Community tags names",
  *         required=false,
  *         @OA\Schema(
- *             type="string",
- *             example="Bubbles"
+ *             type="array",
+ *             @OA\Items(type="string"),
+ *             example={"Bubbles", "Ponies", "Pies"}
  *         )
  *     ),
  *     @OA\Parameter(
@@ -43,7 +44,7 @@ use App\Http\ApiRequests\ApiRequest;
  *         )
  *     ),
  *     @OA\Parameter(
- *         name="accession_date_to",
+ *         name="date_to",
  *         in="query",
  *         description="Communities with date of add to Spodial to",
  *         required=false,
@@ -62,7 +63,7 @@ class ApiCommunityFilterRequest extends ApiRequest
     {
         return [
             'name'=>'string',
-            'tag_name'=>'string',
+            'tags_names'=>'',
             'date_from'=>'date_format:Y-m-d',
             'date_to'=>'date_format:Y-m-d'
         ];

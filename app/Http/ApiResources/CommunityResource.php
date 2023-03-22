@@ -2,10 +2,14 @@
 
 namespace App\Http\ApiResources;
 
+use App\Models\Community;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CommunityResource extends JsonResource
 {
+
+    /**  @var Community */
+    public $resource;
     /**
      * Transform the resource into an array.
      *

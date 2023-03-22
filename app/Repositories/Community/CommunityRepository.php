@@ -17,27 +17,30 @@ class CommunityRepository implements CommunityRepositoryContract
 
     public function getList($request)
     {
+
         $user = User::find(Auth::user()->id);
         $user->role_index = User::$role['author'];
         $user->save();
 
-        $list = Community::owned()->with(['tags', 'communityRules'])->orderBy('created_at','DESC');
+        $list = Community::owned()->with(['tags', 'communityRules'])->without('donate')->orderBy('created_at', 'DESC');
 
-        if(!empty($request->input('name'))){
-            $list->where('title','ilike','%'.$request->input('name').'%');
-        }
-        
-        if(!empty($request->input('tag_name'))){
-            $list->whereHas('tags', function ($query) use ($request) {
-                return $query->where('name', 'ilike', '%'.$request->input('tag_name').'%');
-            });
+        if (!empty($request->input('name'))) {
+            $list->where('title', 'ilike', '%' . $request->input('name') . '%');
         }
 
-        if(!empty($request->input('date_from'))){
-            $list->whereDate('created_at','>=',$request->input('date_from'));
+        if ($request->input('tags_names') !== null) {
+            if (!empty(array_filter($request->input('tags_names')))) {
+                $list->whereHas('tags', function ($query) use ($request) {
+                    return $query->whereIn('name', $request->input('tags_names'));
+                });
+            }
         }
-        if(!empty($request->input('date_to'))){
-            $list->whereDate('created_at','<=',$request->input('date_to'));
+
+        if (!empty($request->input('date_from'))) {
+            $list->whereDate('created_at', '>=', $request->input('date_from'));
+        }
+        if (!empty($request->input('date_to'))) {
+            $list->whereDate('created_at', '<=', $request->input('date_to'));
         }
 
 
@@ -85,7 +88,7 @@ class CommunityRepository implements CommunityRepositoryContract
 
     public function getAllCommunity()
     {
-        $community =  Community::with('communityOwner', 'connection')->orderBy('created_at', 'desc');
+        $community = Community::with('communityOwner', 'connection')->orderBy('created_at', 'desc');
         return $community->paginate(50);
     }
 

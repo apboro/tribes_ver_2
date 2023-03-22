@@ -5,7 +5,6 @@ namespace App\Http\Controllers\APIv3;
 use App\Events\CreateCommunity;
 use App\Http\ApiRequests\Community\ApiCommunityAddRequest;
 use App\Http\ApiRequests\Community\ApiCommunityFilterRequest;
-use App\Http\ApiRequests\Community\ApiCommunityListRequest;
 use App\Http\ApiRequests\Community\ApiShowCommunityRequest;
 use App\Http\ApiResources\CommunitiesCollection;
 use App\Http\ApiResources\CommunityResource;
@@ -100,7 +99,6 @@ class ApiCommunityController extends Controller
 
         $communities = $this->communityRepo->getList($request);
 
-        return ApiResponse::list()
-            ->items(CommunitiesCollection::make($communities)->toArray($request));
+        return ApiResponse::listPagination()->items(new CommunitiesCollection($communities));
     }
 }
