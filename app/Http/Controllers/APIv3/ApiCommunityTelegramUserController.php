@@ -10,7 +10,6 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\TelegramUser;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 class ApiCommunityTelegramUserController extends Controller

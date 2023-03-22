@@ -2,8 +2,6 @@
 
 namespace App\Http\ApiRequests;
 
-use OpenApi\Annotations as OA;
-
 /**
  * @OA\Post(
  *  path="/api/v3/user/bot/action-log/filter",

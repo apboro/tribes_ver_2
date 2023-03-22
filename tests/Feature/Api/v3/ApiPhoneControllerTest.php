@@ -84,7 +84,7 @@ class ApiPhoneControllerTest extends TestCase
 
         $this->assertFalse($user_after_update->phone_confirmed);
         $this->assertNull($user_after_update->code);
-        $this->assertEquals('-',$user_after_update->phone);
+        $this->assertEquals(null, $user_after_update->phone);
     }
 
 

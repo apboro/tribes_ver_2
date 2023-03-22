@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\ApiRequests;
-use OpenApi\Annotations as OA;
+namespace App\Http\ApiRequests\Community;
+
+use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\Post(
