@@ -9,7 +9,7 @@ use App\Http\ApiRequests\ApiRequest;
  *      summary="Login user",
  *      path="/api/v3/user/login",
  *      operationId="login",
- *      tags={"Authorizathion"},
+ *      tags={"Authorization"},
  *
  *      @OA\RequestBody(
  *          @OA\JsonContent(

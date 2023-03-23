@@ -9,7 +9,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     path="/api/v3/user/password/reset",
  *     operationId="reset-password",
  *     summary="Reset user password via reset link",
- *     tags={"Authorizathion"},
+ *     tags={"Authorization"},
  *
  *     @OA\RequestBody(
  *          @OA\JsonContent(

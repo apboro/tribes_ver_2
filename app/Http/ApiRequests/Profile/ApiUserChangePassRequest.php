@@ -9,7 +9,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     path="/api/v3/user/password/change",
  *     operationId="change-password",
  *     summary="Change user password",
- *     tags={"Authorizathion"},
+ *     tags={"Authorization"},
  *
  *     @OA\RequestBody(
  *          @OA\JsonContent(

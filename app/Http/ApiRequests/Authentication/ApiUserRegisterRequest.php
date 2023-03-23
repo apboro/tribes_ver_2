@@ -9,7 +9,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     path="/api/v3/user/register",
  *     operationId="register",
  *     summary="Register user",
- *     tags={"Authorizathion"},
+ *     tags={"Authorization"},
  *
  *     @OA\RequestBody(
  *          @OA\JsonContent(

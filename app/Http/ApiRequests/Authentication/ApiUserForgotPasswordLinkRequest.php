@@ -9,7 +9,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     path="/api/v3/user/password/forgot",
  *     operationId="forgot-password",
  *     summary="Send reset link to email",
- *     tags={"Authorizathion"},
+ *     tags={"Authorization"},
  *
  *     @OA\RequestBody(
  *          @OA\JsonContent(

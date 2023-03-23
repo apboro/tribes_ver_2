@@ -39,15 +39,15 @@ class ApiTelegramBotActionController extends Controller
             $query->whereDate('created_at','<=',$request->input('action_date_to'));
         }
 
-        if(!empty($request->input('community_id'))){
+        if(!empty($request->input('community_title'))){
             $query->whereHas('telegramConnections.community',function($query) use ($request){
-                $query->where('id','=',$request->input('community_id'));
+                $query->whereIn('title',$request->input('community_title'));
             });
         }
 
         if(!empty($request->input('tags'))){
             $query->whereHas('telegramConnections.community.tags',function($query) use ($request){
-                $query->whereIn('id',$request->input('tags'));
+                $query->whereIn('tags.name',$request->input('tags_names'));
             });
         }
 

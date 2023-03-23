@@ -10,9 +10,9 @@ namespace App\Http\ApiRequests;
  *  security={{"sanctum": {} }},
  *  tags={"Bot actions list"},
  *     @OA\Parameter(
- *         name="name",
+ *         name="user_name",
  *         in="query",
- *         description="Telegram User Name",
+ *         description="Filter by first_name or last_name or user_name",
  *         required=false,
  *         @OA\Schema(
  *             type="string",
@@ -30,13 +30,14 @@ namespace App\Http\ApiRequests;
  *         )
  *     ),
  *  @OA\Parameter(
- *         name="community_id",
+ *         name="community_title[]",
  *         in="query",
  *         description="Community ID",
  *         required=false,
  *         @OA\Schema(
- *             type="integer",
- *             example="10"
+ *             type="array",
+ *              @OA\Items(type="string"),
+ *             example={"Sherlock","Holms"}
  *         )
  *     ),
  *  @OA\Parameter(
@@ -60,14 +61,14 @@ namespace App\Http\ApiRequests;
  *         )
  *     ),
  *    @OA\Parameter(
- *         name="tags[]",
+ *         name="tags_names[]",
  *         in="query",
- *         description="List of tags ids",
+ *         description="List of tags names",
  *         required=false,
  *         @OA\Schema(
  *            type="array",
- *              @OA\Items(type="integer"),
- *              example={1,2}
+ *              @OA\Items(type="string"),
+ *              example={"Crow","Sparrow"}
  *         )
  *     ),
  *   @OA\Response(response=200, description="OK")
@@ -79,11 +80,12 @@ class ApiTelegramActionLogFilterRequest extends ApiRequest
     public function rules():array
     {
         return [
+            'user_name' =>'string',
             'tags'=>'array',
             'event'=>'string',
             'action_date_from'=>'date_format:Y-m-d',
             'action_date_to'=>'date_format:Y-m-d',
-            'community_id'=>'integer|min:1|exists:communities,id'
+            'community_title'=>'array'
         ];
     }
 
