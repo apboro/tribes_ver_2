@@ -43,7 +43,7 @@ class ApiUserResetPasswordRequest extends ApiRequest
     {
         return [
             'email' => 'required|email',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed|min:8',
             'token' => 'required',
         ];
     }
