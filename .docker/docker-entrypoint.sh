@@ -36,6 +36,7 @@ case "$command" in
     conf_target="/etc/nginx/http.d"
     [ ! -e "$conf_source/$conf_file" ] && echo "No configuration file found for $command mode" && exit 1
     ln "$conf_source/$conf_file" "$conf_target/$conf_file"
+    php artisan storage:link
     nginx -g "daemon off;"
   ;;
   "queue" )
