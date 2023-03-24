@@ -13,7 +13,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     security={{"sanctum": {} }},
  *     @OA\Parameter(
  *         name="chatId",
- *         in="query",
+ *         in="path",
  *         description="ID of chat in database",
  *         required=true,
  *         @OA\Schema(
