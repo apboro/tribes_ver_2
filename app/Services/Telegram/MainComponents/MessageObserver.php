@@ -4,25 +4,24 @@ namespace App\Services\Telegram\MainComponents;
 
 use App\Exceptions\TelegramException;
 use App\Helper\ArrayHelper;
+use App\Repositories\Community\CommunityRulesRepositoryContract;
 use App\Repositories\Telegram\DTO\MessageDTO;
-use App\Repositories\Telegram\TeleMessageRepositoryContract;
+use App\Services\TelegramLogService;
 use Illuminate\Log\Logger;
 use Throwable;
 
 class MessageObserver
 {
 
-
-    private TeleMessageRepositoryContract $messageRepository;
     private Logger $logger;
+    private CommunityRulesRepositoryContract $rulesRepository;
 
     public function __construct(
-        TeleMessageRepositoryContract $messageRepository,
-        Logger                        $logger
+        CommunityRulesRepositoryContract $rulesRepository,
+        Logger                           $logger
     )
     {
-
-        $this->messageRepository = $messageRepository;
+        $this->rulesRepository = $rulesRepository;
         $this->logger = $logger;
     }
 
@@ -38,13 +37,11 @@ class MessageObserver
             $dto->telegram_date = ArrayHelper::getValue($data,'message.date');
             $dto->text = ArrayHelper::getValue($data,'message.text');
 
-            $this->messageRepository->saveMessageForChat($dto);
+            $this->rulesRepository->checkRules($dto);
 
         } catch (Throwable $exception)
         {
-            new TelegramException($exception->getMessage(),[
-                'data' => $data,
-            ],$exception->getPrevious());
+            TelegramLogService::staticSendLogMessage($exception);
         }
 
     }

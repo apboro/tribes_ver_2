@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\Community\CommunityRulesRepository;
+use App\Repositories\Community\CommunityRulesRepositoryContract;
 use App\Repositories\File\FileRepositoryContract;
 use App\Repositories\Project\ProjectRepository;
 use App\Repositories\Project\ProjectRepositoryContract;
@@ -138,6 +140,10 @@ class AccessServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Repositories\Statistic\TeleMessageStatisticRepositoryContract::class,
             \App\Repositories\Statistic\TeleMessageStatisticRepository::class
+        );
+        $this->app->bind(
+            CommunityRulesRepositoryContract::class,
+            CommunityRulesRepository::class
         );
 
         $this->bindSearchClient();

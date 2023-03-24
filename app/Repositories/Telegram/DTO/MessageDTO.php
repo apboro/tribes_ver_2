@@ -2,14 +2,17 @@
 
 namespace App\Repositories\Telegram\DTO;
 
+use Carbon\Carbon;
+
 class MessageDTO
 {
-    public $message_id;
-    public $telegram_user_id;
-    public $group_chat_id;
-    public $post_id;
-    public $chat_type;
+    public int $message_id;
+    public int $telegram_user_id;
+    public int $group_chat_id;
+    public int $post_id;
+    public string $chat_type;
+    public int $chat_id;
     public $parrent_message_id;
-    public $text;
+    public string $text;
     public $telegram_date;
 }
