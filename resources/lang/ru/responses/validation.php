@@ -102,6 +102,7 @@ return [
         'incorrect_format'=>'Неверный формат даты'
     ],
     'telegram_user'=>[
+        'unique'=> 'Данный телегерам аккаунт уже привязан к другому пользователю',
         'required_telegram_id'=>'Id telegram обязательно для заполнения',
         'integer_telegram_id'=>'Id telegram должно быть целым число',
         'exists_telegram_id'=>'Id telegram не найден в таблице',

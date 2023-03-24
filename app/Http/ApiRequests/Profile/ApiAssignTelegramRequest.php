@@ -26,6 +26,7 @@ use App\Http\ApiRequests\ApiRequest;
  *      ),
  *      @OA\Response(response=422, description="Validation Error", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
  *      @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/api_response_unauthorized")),
+ *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *
  *)
  */
@@ -45,6 +46,7 @@ class ApiAssignTelegramRequest extends ApiRequest
     public function messages(): array
     {
         return [
+            'id.unique'=>$this->localizeValidation('telegram_user.unique'),
         ];
     }
 
