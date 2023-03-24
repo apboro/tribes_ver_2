@@ -12,13 +12,23 @@ use App\Http\ApiRequests\ApiRequest;
  *  security={{"sanctum": {} }},
  *  tags={"Chats Users"},
  *     @OA\Parameter(
+ *         name="user_name",
+ *         in="query",
+ *         description="Telegram User user_name",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string",
+ *             example="big_daddy18"
+ *         )
+ *     ),
+ *     @OA\Parameter(
  *         name="name",
  *         in="query",
  *         description="Telegram User Name",
  *         required=false,
  *         @OA\Schema(
  *             type="string",
- *             example="Аким"
+ *             example="Иван Воронин"
  *         )
  *     ),
  *     @OA\Parameter(
@@ -61,6 +71,7 @@ class ApiTelegramUserFilterRequest extends ApiRequest
     {
         return [
             'name'=>'string',
+            'user_name'=>'string',
             'accession_date_from'=>'date_format:Y-m-d|nullable',
             'accession_date_to'=>'date_format:Y-m-d|nullable',
             'community_id'=>'integer|min:0'

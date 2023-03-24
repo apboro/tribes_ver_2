@@ -21,10 +21,10 @@ class ApiTagController extends Controller
      * @return ApiResponse
      */
 
-    public function index(ApiTagShowListRequest $request):ApiResponse
+    public function index(ApiTagShowListRequest $request): ApiResponse
     {
         $user = Auth::user();
-        $tag = Tag::where('user_id','=',$user->id)->get();
+        $tag = Tag::where('user_id', '=', $user->id)->get();
         return ApiResponse::list()->items(ApiTagCollection::make($tag)->toArray($request));
     }
 
@@ -34,13 +34,16 @@ class ApiTagController extends Controller
      * @param int $id
      * @return ApiResponse
      */
-    public function show(ApiTagShowRequest $request, int $id):ApiResponse
+    public function show(ApiTagShowRequest $request, int $id): ApiResponse
     {
 
         /** @var User $user */
         $user = Auth::user();
-        $tag = Tag::where('id','=',$id)->where('user_id','=',$user->id)->first();
-        return ApiResponse::common(ApiTagResourse::make($tag)->toArray($request));
+        $tag = Tag::where('id', '=', $id)->where('user_id', '=', $user->id)->first();
+        if ($tag) {
+            return ApiResponse::common(ApiTagResourse::make($tag)->toArray($request));
+        }
+        return ApiResponse::error('common.not_found');
     }
 
     /**
@@ -48,13 +51,17 @@ class ApiTagController extends Controller
      * @param int $id
      * @return ApiResponse
      */
-    public function destroy(ApiTagDeleteRequest $request, int $id):ApiResponse
+    public function destroy(ApiTagDeleteRequest $request, int $id): ApiResponse
     {
         $user = Auth::user();
-        $tag = Tag::where('id','=',$id)->where('user_id','=',$user->id)->first();
-        if(!$tag->delete()){
-            return ApiResponse::error('common.tag_delete_error');
+        $tag = Tag::where('id', '=', $id)->where('user_id', '=', $user->id)->first();
+
+        if ($tag) {
+            $tag->delete();
+            return ApiResponse::success('common.tag_delete_success');
+
         }
-        return ApiResponse::success('common.tag_delete_success');
+        return ApiResponse::error('common.tag_delete_error');
+
     }
 }
