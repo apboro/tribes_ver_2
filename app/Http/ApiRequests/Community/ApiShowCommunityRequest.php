@@ -13,14 +13,12 @@ use App\Http\ApiRequests\ApiRequest;
  *     security={{"sanctum": {} }},
  *     @OA\Parameter(
  *         name="chatId",
- *         in="path",
+ *         in="query",
  *         description="ID of chat in database",
  *         required=true,
  *         @OA\Schema(
  *             type="integer",
  *             format="int64",
- *             maximum=10,
- *             minimum=1
  *         )
  *     ),
  *
@@ -42,7 +40,7 @@ class ApiShowCommunityRequest extends ApiRequest
     public function rules():array
     {
         return [
-            'id' => 'required|integer|min:1|exists:communities',
+            'id' => 'required|integer|exists:communities',
         ];
     }
 }

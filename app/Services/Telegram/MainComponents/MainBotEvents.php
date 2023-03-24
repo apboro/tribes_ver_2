@@ -164,7 +164,8 @@ class MainBotEvents
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
                         'event'=>TelegramBotActionHandler::EVENT_GROUP_CHAT_CREATED,
-                        'chat_id'=>$chatId
+                        'chat_id'=>$chatId,
+                        'telegram_id'=>$this->data->message->from->id
                     ]);
                 }
             }
@@ -222,7 +223,8 @@ class MainBotEvents
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
                         'event'=>TelegramBotActionHandler::EVENT_CHECK_MEMBER,
-                        'chat_id'=>$chatId
+                        'chat_id'=>$chatId,
+                        'telegram_id'=>$this->data->my_chat_member->from->id
                     ]);
                 }
             }
