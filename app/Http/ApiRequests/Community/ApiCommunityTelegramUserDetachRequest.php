@@ -3,6 +3,7 @@
 namespace App\Http\ApiRequests\Community;
 
 use App\Http\ApiRequests\ApiRequest;
+use OpenApi\Annotations as OA;
 
 
 /**
@@ -12,13 +13,24 @@ use App\Http\ApiRequests\ApiRequest;
  *  summary="Detach user from community",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Users"},
- *   @OA\RequestBody(
- *     @OA\JsonContent(
- *       @OA\Property(property="telegram_id", type="integer", example=345),
- *       @OA\Property(property="community_id", type="integer", example=2),
- *     )
- *   ),
- *      @OA\Response(response=200, description="OK")
+ *     @OA\RequestBody(
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 @OA\Property(
+ *                          property="telegram_id",
+ *                          type="integer",
+ *                          example=123
+ *                 ),
+ *                 @OA\Property(
+ *                          property="community_id",
+ *                          type="integer",
+ *                          example=2
+ *                 ),
+ *             ),
+ *         )
+ *     ),
+ *   @OA\Response(response=200, description="OK")
  *)
  */
 class ApiCommunityTelegramUserDetachRequest extends ApiRequest
