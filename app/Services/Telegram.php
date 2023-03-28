@@ -204,6 +204,10 @@ class Telegram extends Messenger
     {
         $telegram_account = TelegramUser::where('telegram_id', $telegram_id)->first();
         if ($telegram_account) {
+            $connections = $telegram_account->user->connections()->where('telegram_user_id', $telegram_id)->get();
+            foreach ($connections as $connection){
+                $connection->community->update(['is_active' => false]);
+            }
             $telegram_account->delete();
             return true;
         } else {

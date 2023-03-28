@@ -55,6 +55,11 @@ class Community extends Model
         return $query->where('owner', '=', Auth::user()->id);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
     /**
      *   self::filter($filters)
      */

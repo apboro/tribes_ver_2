@@ -9,7 +9,7 @@ class SubscriptionResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     /**
@@ -53,6 +53,14 @@ class SubscriptionResource extends JsonResource
 
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            "user_subscription_id" => $this->resource->id,
+            "user_id" => $this->resource->user_id,
+            "subscription_id" => $this->resource->subscription_id,
+            "created_at" => $this->resource->created_at,
+            "updated_at" => $this->resource->updated_at,
+            "isRecurrent" => $this->resource->isRecurrent,
+            "isActive" => $this->resource->isActive,
+        ];
     }
 }

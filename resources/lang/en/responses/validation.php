@@ -31,5 +31,8 @@ return [
     ],
     'project'=>[
         'string'=>'Неверный формат названия проекта',
+    ],
+    'telegram_user'=>[
+        'unique'=> 'This account already taken',
     ]
 ];
