@@ -10,10 +10,19 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\TelegramUser;
+use App\Services\TelegramMainBotService;
 use Illuminate\Support\Facades\Auth;
 
 class ApiCommunityTelegramUserController extends Controller
 {
+
+    private TelegramMainBotService $telegramMainBotService;
+
+    public function __construct(TelegramMainBotService $telegramMainBotService)
+    {
+
+        $this->telegramMainBotService = $telegramMainBotService;
+    }
 
     /**
      * @param ApiCommunityTelegramUserDetachRequest $request
@@ -28,7 +37,11 @@ class ApiCommunityTelegramUserController extends Controller
         $community = Community::where('id', '=', $request->input('community_id'))->first();
 
         $telegram_user->communities()->detach($community);
-
+        $this->telegramMainBotService->kickUser(
+            config('telegram_bot.bot.botName'),
+            $telegram_user->telegram_id,
+            $community->connection->chat_id
+        );
         return ApiResponse::success();
     }
 
@@ -47,6 +60,14 @@ class ApiCommunityTelegramUserController extends Controller
             $query->where('telegram_id', '=', $request->input('telegram_id'));
         })->where('owner', '=', Auth::user()->id)->get();
 
+        foreach($communities as $community){
+            $this->telegramMainBotService->kickUser(
+                config('telegram_bot.bot.botName'),
+                $telegram_user->telegram_id,
+                $community->connection->chat_id
+            );
+        }
+
         $telegram_user->communities()->detach($communities);
 
         return ApiResponse::success();
@@ -60,7 +81,7 @@ class ApiCommunityTelegramUserController extends Controller
     public function filter(ApiTelegramUserFilterRequest $request): ApiResponse
     {
 
-        $query = TelegramUser::with(['communities'])
+        $query = TelegramUser::with(['communities','userList'])
             ->whereHas('communities', function ($query) {
                 $query->where('owner', Auth::user()->id);
             })
