@@ -179,7 +179,7 @@ class ApiCourseController extends Controller
         }
 
         $course->increment('clicks');
-        $password = Str::random(6);
+        $password = Str::random(8);
         $email = $request->input('email');
 
 

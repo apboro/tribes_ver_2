@@ -22,7 +22,7 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
-        $password = Str::random(6);
+        $password = Str::random(8);
         $user = User::create([
             'name' => isset($data['name']) ? $data['name'] : 'No name yet',
             'email' => strtolower($data['email']),

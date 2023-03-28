@@ -194,7 +194,7 @@ class ApiManagerUserController extends Controller
             return ApiResponse::notFound('validation.manager.user_not_found');
         }
 
-        $password = Str::random(6);
+        $password = Str::random(8);
         $user->password = Hash::make($password);
 
         if(!$user->save()){

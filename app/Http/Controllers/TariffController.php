@@ -65,7 +65,7 @@ class TariffController extends Controller
         $telegramId = ($request['telegram_user_id']) ? $request['telegram_user_id'] : NULL;
 
         ### Регистрация плательщика #####
-        $password = Str::random(6);
+        $password = Str::random(8);
 
         /** @var User $user */
         $email = strtolower($request['email']);

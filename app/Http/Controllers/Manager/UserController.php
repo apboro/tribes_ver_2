@@ -171,7 +171,7 @@ class UserController extends Controller
     public function sendNewPassword(Request $request)
     {
         $user = User::find($request->id);
-        $password = Str::random(6);
+        $password = Str::random(8);
         $user->password = Hash::make($password);
         $user->save();
         if ($user->telegramMeta) {
