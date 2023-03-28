@@ -144,11 +144,12 @@ class Telegram extends Messenger
         try {
             /** @var TelegramConnection $connection */
             $connection = TelegramConnection::where('chat_id', $chat_id)->first();
-            if ($connection) {
-                $connection->botStatus = 'kicked';
-                $connection->save();
-            }
-            $connection->community()->delete();
+//            if ($connection) {
+//                $connection->botStatus = 'kicked';
+//                $connection->save();
+//            }
+//            $connection->community()->delete();
+            $connection->delete();
             return true;
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -203,6 +204,10 @@ class Telegram extends Messenger
     {
         $telegram_account = TelegramUser::where('telegram_id', $telegram_id)->first();
         if ($telegram_account) {
+            $connections = $telegram_account->user->connections()->where('telegram_user_id', $telegram_id)->get();
+            foreach ($connections as $connection){
+                $connection->community->update(['is_active' => false]);
+            }
             $telegram_account->delete();
             return true;
         } else {

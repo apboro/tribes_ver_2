@@ -12,6 +12,7 @@ use App\Models\Community;
 use App\Models\TelegramUser;
 use App\Services\TelegramMainBotService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ApiCommunityTelegramUserController extends Controller
 {
@@ -107,11 +108,18 @@ class ApiCommunityTelegramUserController extends Controller
             });
         }
 
+        if (!empty($request->input('user_name'))) {
+            $query->where(function ($query) use ($request) {
+                $query->where('user_name', 'ilike', '%' . $request->input('user_name') . '%');
+            });
+        }
+
         if (!empty($request->input('name'))) {
             $query->where(function ($query) use ($request) {
                 $query->where('first_name', 'ilike', '%' . $request->input('name') . '%')
                     ->orWhere('last_name', 'ilike', '%' . $request->input('name') . '%')
-                    ->orWhere('user_name', 'ilike', '%' . $request->input('name') . '%');
+                    ->orWhere(DB::raw("CONCAT('first_name', ' ', 'last_name')"), 'ilike', "%" . $request->input('name') . "%");
+
             });
         }
 

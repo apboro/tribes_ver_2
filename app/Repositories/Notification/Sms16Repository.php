@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Notification;
 
+use App\Http\ApiResponses\ApiResponse;
 use App\Models\SmsConfirmations as SmsConfirmation;
 use App\Services\SMS16 as SmsService;
 use App\Services\TelegramLogService;
@@ -42,7 +43,7 @@ class Sms16Repository implements NotificationRepositoryContract
         if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] == 'phone_code_user') {
             TelegramLogService::staticSendLogMessage('Предположительно на sms16.ru закончились деньги. ' . 'Ответ сервиса: ' .$sms[0][$phone]['error']);
 
-            return 'Что-то пошло не так, пожалуйста обратитесь в службу поддержки.';
+            return ApiResponse::error('phone.message_sent_error');
         }
         if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] === "0") {
 

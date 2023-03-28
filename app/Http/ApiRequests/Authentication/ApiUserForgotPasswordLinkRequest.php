@@ -22,6 +22,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     @OA\Response(response=422, description="Validation or sending error", @OA\JsonContent(ref="#/components/schemas/api_response_validation_error")),
  *
  *     @OA\Response(response=500, description="Server error", @OA\JsonContent(ref="#/components/schemas/api_response_server_error")),
+ *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  * )
  */
 class ApiUserForgotPasswordLinkRequest extends ApiRequest

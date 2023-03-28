@@ -91,7 +91,7 @@ class CourseController extends Controller
         ### Регистрация плательщика #####
         $email = strtolower($request['email']);
 
-        $password = Str::random(6);
+        $password = Str::random(8);
 
         $user = User::where('email', $email)->first();
 

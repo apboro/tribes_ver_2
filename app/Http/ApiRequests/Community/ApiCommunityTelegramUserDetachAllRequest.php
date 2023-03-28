@@ -3,7 +3,6 @@
 namespace App\Http\ApiRequests\Community;
 
 use App\Http\ApiRequests\ApiRequest;
-use OpenApi\Annotations as OA;
 
 /**
  * @OA\Post(
@@ -24,8 +23,9 @@ use OpenApi\Annotations as OA;
  *             ),
  *         )
  *     ),
- *   @OA\Response(response=200, description="OK")
- *)
+ *   @OA\Response(response=200, description="OK"),
+ *      @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
+ *     )
  */
 class ApiCommunityTelegramUserDetachAllRequest extends ApiRequest
 {

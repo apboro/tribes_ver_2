@@ -39,15 +39,14 @@ class ExtentionApi extends Api implements ExtentionApiInterface
                 ]
             ];
             Http::post(env('TELEGRAM_BASE_URL') . '/bot' . $this->token . '/sendMessage', $params);
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::channel('telegram-bot-log')
-                ->alert('Error from '. get_called_class(). ' text: '. $e->getMessage(). PHP_EOL);
+                ->alert('Error from ' . get_called_class() . ' text: ' . $e->getMessage() . PHP_EOL);
         }
     }
 
     /**
-     * Пригласительная ссылка с лимитом 
+     * Пригласительная ссылка с лимитом
      * @param int $chatId
      * @param int $member_limit
      *
@@ -55,8 +54,8 @@ class ExtentionApi extends Api implements ExtentionApiInterface
     public function createAdditionalLink(int $chatId, int $member_limit = 1)
     {
         $params = [
-            'chat_id'        => $chatId,
-            'member_limit'   => $member_limit
+            'chat_id' => $chatId,
+            'member_limit' => $member_limit
         ];
         $query = Http::post(env('TELEGRAM_BASE_URL') . '/bot' . $this->token . '/createChatInviteLink', $params);
         return $query;
@@ -82,7 +81,7 @@ class ExtentionApi extends Api implements ExtentionApiInterface
             'message_id' => $messageId
         ];
         return $this->forwardMessage($params);
-    } 
+    }
 
     /**
      * Банит пользователя
@@ -94,8 +93,25 @@ class ExtentionApi extends Api implements ExtentionApiInterface
     public function kickUser(int $userId, int $chatId)
     {
         return $this->invokeAction('banChatMember', [
-            'chat_id'        => $chatId,
-            'user_id'        => $userId
+            'chat_id' => $chatId,
+            'user_id' => $userId
+        ]);
+    }
+
+    /**
+     * Mute user
+     *
+     * @param int $userId
+     * @param int $chatId
+     * @return object
+     */
+    public function muteUser(int $userId, int $chatId, int $time)
+    {
+        return $this->invokeAction('restrictChatMember', [
+            'chat_id' => $chatId,
+            'user_id' => $userId,
+            'permissions' => json_encode(array('can_send_messages' => false, 'can_invite_users' => false)),
+            'until_date' => time() + $time
         ]);
     }
 
@@ -109,15 +125,15 @@ class ExtentionApi extends Api implements ExtentionApiInterface
     public function unKickUser(int $userId, int $chatId)
     {
         $params = [
-            'chat_id'        => $chatId,
-            'user_id'        => $userId,
+            'chat_id' => $chatId,
+            'user_id' => $userId,
             'only_if_banned' => true
         ];
 
         return $this->unbanChatMember($params);
     }
 
-     /**
+    /**
      * Создаёт пригласительную ссылку
      *
      * @param integer $chatId
@@ -138,7 +154,7 @@ class ExtentionApi extends Api implements ExtentionApiInterface
      * @param integer $chatId
      * @return int
      */
-    public function getChatCount(int $chatId) 
+    public function getChatCount(int $chatId)
     {
         return $this->invokeAction('getChatMemberCount', [
             'chat_id' => $chatId
@@ -151,7 +167,7 @@ class ExtentionApi extends Api implements ExtentionApiInterface
      * @param integer $chatId
      * @return array
      */
-    public function getChatAdministratorsList(int $chatId) 
+    public function getChatAdministratorsList(int $chatId)
     {
         return $this->invokeAction('getChatAdministrators', [
             'chat_id' => $chatId
@@ -174,5 +190,15 @@ class ExtentionApi extends Api implements ExtentionApiInterface
             'limit' => $limit
         ];
         return $this->getUserProfilePhotos($params);
+    }
+
+    public function deleteUserMessage(int $messageId, int $chatId)
+    {
+        $params = [
+            'chat_id' => $chatId,
+            'message_id' => $messageId,
+        ];
+        return $this->invokeAction('deleteMessage', $params);
+
     }
 }

@@ -22,7 +22,7 @@ class CommunityRepository implements CommunityRepositoryContract
         $user->role_index = User::$role['author'];
         $user->save();
 
-        $list = Community::owned()->with(['tags', 'communityRules'])->without('donate')->orderBy('created_at', 'DESC');
+        $list = Community::owned()->active()->with(['tags', 'communityRules'])->without('donate')->orderBy('created_at', 'DESC');
 
         if (!empty($request->input('name'))) {
             $list->where('title', 'ilike', '%' . $request->input('name') . '%');

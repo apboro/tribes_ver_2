@@ -11,9 +11,9 @@ use App\Http\ApiRequests\ApiRequest;
  *  summary="Get actions dictionary",
  *  security={{"sanctum": {} }},
  *  tags={"Dictionaries"},
- *      @OA\Response(response=200, description="OK")
- *    )
- *)
+ *      @OA\Response(response=200, description="OK"),
+ *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
+ * )
  */
 
 class ApiGetActionsDictRequest extends ApiRequest

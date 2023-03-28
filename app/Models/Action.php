@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\TelegramMainBotService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +17,7 @@ class Action extends Model
 
     protected $hidden=['created_at', 'updated_at'];
 
+
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
@@ -25,5 +27,6 @@ class Action extends Model
     {
         return $this->belongsTo(Condition::class, 'group_uuid', 'group_uuid');
     }
+
 
 }

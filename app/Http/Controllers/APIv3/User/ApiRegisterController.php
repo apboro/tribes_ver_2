@@ -18,7 +18,7 @@ class ApiRegisterController extends Controller
 
     protected function create(array $data): User
     {
-        $password = Str::random(6);
+        $password = Str::random(8);
 
         /** @var User $user */
         $user = User::query()->create([

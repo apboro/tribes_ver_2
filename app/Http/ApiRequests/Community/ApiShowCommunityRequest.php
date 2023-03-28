@@ -19,12 +19,11 @@ use App\Http\ApiRequests\ApiRequest;
  *         @OA\Schema(
  *             type="integer",
  *             format="int64",
- *             maximum=10,
- *             minimum=1
  *         )
  *     ),
  *
  *     @OA\Response(response=200, description="OK"),
+ *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  * )
  */
 
@@ -42,7 +41,7 @@ class ApiShowCommunityRequest extends ApiRequest
     public function rules():array
     {
         return [
-            'id' => 'required|integer|min:1|exists:communities',
+            'id' => 'required|integer|exists:communities',
         ];
     }
 }

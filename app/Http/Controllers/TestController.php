@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\ApiResponses\ApiResponse;
 use App\Jobs\SendEmails;
 use App\Models\Accumulation;
+use App\Models\ActionsDictionary;
 use App\Models\Community;
+use App\Models\ConditionsDictionary;
 use App\Models\Course;
 use App\Models\Payment;
 use App\Models\TariffVariant;
@@ -51,6 +54,13 @@ class TestController extends Controller
     }
 
     public function test()
+    {
+        $dictA = ActionsDictionary::all();
+        $dictC = ConditionsDictionary::all();
+        return ApiResponse::common(['c'=>$dictC, 'a'=>$dictA]);
+    }
+
+    public function testSMTPMail()
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(

@@ -19,8 +19,6 @@ use App\Http\ApiRequests\ApiRequest;
  *         @OA\Schema(
  *             type="integer",
  *             format="int64",
- *             maximum=10,
- *             minimum=1
  *         )
  *     ),
  *

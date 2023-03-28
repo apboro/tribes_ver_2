@@ -18,7 +18,8 @@ use App\Http\ApiRequests\ApiRequest;
  *                 @OA\Property(property="community_id",type="integer", example=1),
  *      )
  *   ),
- *      @OA\Response(response=200, description="Ok")
+ *      @OA\Response(response=200, description="Ok"),
+ *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *  )
  */
 class ApiAttachTagToCommunityRequest extends ApiRequest

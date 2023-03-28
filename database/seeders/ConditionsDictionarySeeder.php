@@ -22,7 +22,9 @@ class ConditionsDictionarySeeder extends Seeder
                   ['message','message_length','equivalent'],
                   ['username', 'rtl_symbols'],
                   ['username', 'too_long_first_name'],
-                  ['username', 'too_long_second_name']
+                  ['username', 'too_long_second_name'],
+                  ['message','message_type','is_url'],
+                  ['message','message_type','contain_url'],
                 ];
 
         foreach ($type as $record)

@@ -45,6 +45,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
 
     public function run(string $nameBot, string $data)
     {
+
         try {
             $object = json_decode($data, false) ?: null;
             if (!isset($object->channel_post)) {
@@ -52,19 +53,22 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             }
             $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
             $events->initEventsMainBot();
-            $events->initEventsMainBot([[
-                'isNewReplay' => [app('knowledgeObserver'), 'handleAuthorReply'],
-                'isNewTextMessage' => [app('knowledgeObserver'), 'detectUserQuestion'],
-                'isNewForwardMessageInBotChat' => [app('knowledgeObserver'),'detectForwardMessageBotQuestion', ['botName' => $nameBot]
-                ],
-            ]]);
+
+            $events->initEventsMainBot([
+                [
+                    'isNewReplay' => [app('knowledgeObserver'), 'handleAuthorReply'],
+                    'isNewTextMessage' => [app('knowledgeObserver'), 'detectUserQuestion'],
+                    'isNewForwardMessageInBotChat' => [app('knowledgeObserver'), 'detectForwardMessageBotQuestion', ['botName' => $nameBot]],
+                ]
+            ]);
+
             $events->initEventsMainBot([[
                 'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
             ]]);
             $this->getCommandsForBot($nameBot)->initCommand();
             // Для локальной разработки - метод polling раскоментить, метод listen закоментить. Запустить php artisan teelgram:bot:run. 
             // Если локально используется бот к которому прокинут хук, его необходимо отключить.
-             //$this->botCollect->getBotByName($nameBot)->polling();
+            //$this->botCollect->getBotByName($nameBot)->polling();
             $this->botCollect->getBotByName($nameBot)->listen($data);
         } catch (Exception | TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
@@ -151,5 +155,14 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         );
 
         return $service->getChatAdministratorsList($botName, $chatId);
+    }
+
+    public function muteUser(string $botName, int $userId, int $chatId, int $time)
+    {
+        $this->getApiCommandsForBot($botName)->muteUser($userId, $chatId, $time);
+    }
+    public function deleteUserMessage(string $botName, int $message_id, int $chatId)
+    {
+        $this->getApiCommandsForBot($botName)->deleteUserMessage($message_id, $chatId);
     }
 }

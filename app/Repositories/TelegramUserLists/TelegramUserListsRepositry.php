@@ -5,6 +5,7 @@ namespace App\Repositories\TelegramUserLists;
 use App\Http\ApiRequests\ApiRequest;
 use App\Models\Community;
 use App\Models\TelegramUserList;
+use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,14 +44,18 @@ class TelegramUserListsRepositry
         }
         if($type === self::TYPE_BLACK_LIST){
             foreach($request->input('community_ids') as $community_id){
-                /** @var Community $community */
-                $community = Community::where('id',$community_id)->first();
-                $community_telegram_chat_id = $community->connection->chat_id;
-                $this->telegramMainBotService->kickUser(
-                    config('telegram_bot.bot.botName'),
-                    $request->input('telegram_id'),
-                    $community_telegram_chat_id
-                );
+                try {
+                    /** @var Community $community */
+                    $community = Community::where('id', $community_id)->first();
+                    $community_telegram_chat_id = $community->connection->chat_id;
+                    $this->telegramMainBotService->kickUser(
+                        config('telegram_bot.bot.botName'),
+                        $request->input('telegram_id'),
+                        $community_telegram_chat_id
+                    );
+                } catch (\Exception $e){
+                    TelegramLogService::staticSendLogMessage('Black list error'. $e);
+                }
             }
         }
     }
