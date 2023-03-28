@@ -23,7 +23,7 @@ use App\Http\ApiRequests\ApiRequest;
  *             ),
  *         )
  *     ),
- *   @OA\Response(response=200, description="OK")
+ *   @OA\Response(response=200, description="OK"),
  *      @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *     )
  */
