@@ -8,12 +8,14 @@ use App\Events\BuyCourseListener;
 use App\Events\CreateCommunity;
 use App\Events\FeedBackAnswer;
 use App\Events\FeedBackCreate;
+use App\Events\NewChatUserJoin;
 use App\Events\RemindPassword;
 use App\Events\SubscriptionMade;
 use App\Listeners\AssignStartSubscription;
 use App\Listeners\CreateCommunityListener;
 use App\Listeners\FeedBackAnswerListener;
 use App\Listeners\FeedBackListener;
+use App\Listeners\NewChatUserBlackListCheck;
 use App\Listeners\RemindPasswordListener;
 use App\Listeners\SubscriptionListener;
 use App\Listeners\UserRegisterSendEmail;
@@ -53,6 +55,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         BuyCourse::class=>[
             BuyCourseListener::class
+        ],
+        NewChatUserJoin::class=>[
+            NewChatUserBlackListCheck::class
         ]
 
     ];

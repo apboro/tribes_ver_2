@@ -11,14 +11,21 @@ use App\Http\ApiRequests\ApiRequest;
  *  summary="Detach user from all communities of user",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Users"},
- *   @OA\RequestBody(
- *     @OA\JsonContent(
- *       @OA\Property(property="telegram_id", type="integer", example=345),
+ *     @OA\RequestBody(
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 @OA\Property(
+ *                          property="telegram_id",
+ *                          type="integer",
+ *                          example=123
+ *                 ),
+ *             ),
+ *         )
+ *     ),
+ *   @OA\Response(response=200, description="OK")
+ *      @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *     )
- *   ),
- *      @OA\Response(response=200, description="OK"),
- *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
- *)
  */
 class ApiCommunityTelegramUserDetachAllRequest extends ApiRequest
 {

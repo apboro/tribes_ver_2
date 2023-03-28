@@ -29,8 +29,14 @@ class ApiCommunityTelegramUserController extends Controller
         $community = Community::where('id', '=', $request->input('community_id'))->first();
 
         $telegram_user->communities()->detach($community);
+
         return ApiResponse::success();
     }
+
+    /**
+     * @param ApiCommunityTelegramUserDetachAllRequest $request
+     * @return ApiResponse
+     */
 
     public function detachFromAllCommunities(ApiCommunityTelegramUserDetachAllRequest $request): ApiResponse
     {
@@ -38,13 +44,14 @@ class ApiCommunityTelegramUserController extends Controller
         $telegram_user = TelegramUser::where('telegram_id', '=', $request->input('telegram_id'))->first();
 
         /** @var Community $community */
-        $communities = Community::where('id', Auth::user()->id)->get();
-        foreach ($communities as $community) {
-            $telegram_user->communities()->detach($community);
-        }
+        $communities = Community::with(['followers'])->whereHas('followers', function ($query) use ($request) {
+            $query->where('telegram_id', '=', $request->input('telegram_id'));
+        })->where('owner', '=', Auth::user()->id)->get();
+
+        $telegram_user->communities()->detach($communities);
+
         return ApiResponse::success();
     }
-
 
     /**
      * @param ApiTelegramUserFilterRequest $request
@@ -54,24 +61,11 @@ class ApiCommunityTelegramUserController extends Controller
     public function filter(ApiTelegramUserFilterRequest $request): ApiResponse
     {
 
-        $query = TelegramUser::select('telegram_users.*')->
-        addSelect('communities.*')->
-        addSelect('telegram_users_community.accession_date')
-            ->leftJoin(
-                'telegram_users_community',
-                'telegram_users_community.telegram_user_id',
-                '=',
-                'telegram_users.telegram_id')
-            ->leftJoin(
-                'communities',
-                'communities.id',
-                '=',
-                'telegram_users_community.community_id'
-            )
+        $query = TelegramUser::with(['communities'])
             ->whereHas('communities', function ($query) {
                 $query->where('owner', Auth::user()->id);
             })
-            ->with(['communities'])->newQuery();
+            ->newQuery();
         if (!empty($request->input('accession_date_from'))) {
             $query->whereHas('communities', function ($query) use ($request) {
                 $query->where('telegram_users_community.accession_date', '>=', strtotime($request->input('accession_date_from')));
