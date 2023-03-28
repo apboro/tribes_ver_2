@@ -292,5 +292,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Action::class, 'user_id', 'id');
     }
+
+    public function connections(): HasMany
+    {
+        return $this->hasMany(TelegramConnection::class, 'user_id', 'id');
+    }
 }
 

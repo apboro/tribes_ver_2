@@ -156,4 +156,13 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
 
         return $service->getChatAdministratorsList($botName, $chatId);
     }
+
+    public function muteUser(string $botName, int $userId, int $chatId, int $time)
+    {
+        $this->getApiCommandsForBot($botName)->muteUser($userId, $chatId, $time);
+    }
+    public function deleteUserMessage(string $botName, int $message_id, int $chatId)
+    {
+        $this->getApiCommandsForBot($botName)->deleteUserMessage($message_id, $chatId);
+    }
 }

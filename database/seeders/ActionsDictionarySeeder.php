@@ -16,11 +16,12 @@ class ActionsDictionarySeeder extends Seeder
     public function run()
     {
         $actions = [
-            ['delete'],
+            ['send_message_in_chat_from_bot'],
+            ['delete_message'],
             ['send_message_in_pm_from_bot'],
-            ['kick'],
-            ['ban'],
-            ['mute']
+            ['kick_user'],
+            ['ban_user'],
+            ['mute_user']
         ];
 
         foreach ($actions as $action)

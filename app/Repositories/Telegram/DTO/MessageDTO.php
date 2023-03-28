@@ -15,4 +15,20 @@ class MessageDTO
     public $parrent_message_id;
     public string $text;
     public $telegram_date;
+    /**
+     * @var mixed
+     */
+    public $telegram_user_first_name;
+    /**
+     * @var mixed
+     */
+    public $telegram_user_username;
+    /**
+     * @var mixed
+     */
+    public $telegram_user_last_name;
+    /**
+     * @var mixed
+     */
+    public $message_entities;
 }
