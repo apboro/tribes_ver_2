@@ -12,7 +12,8 @@ use App\Http\ApiRequests\ApiRequest;
  *  summary="Get users actions and conditions",
  *  security={{"sanctum": {} }},
  *  tags={"ActionsConditions"},
- *  @OA\Response(response=200, description="OK")
+ *  @OA\Response(response=200, description="OK"),
+ *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *  )
  */
 

@@ -53,7 +53,8 @@ use App\Http\ApiRequests\ApiRequest;
  *             example="2023-01-01"
  *         )
  *     ),
- *      @OA\Response(response=200, description="OK")
+ *      @OA\Response(response=200, description="OK"),
+ *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *)
  */
 class ApiCommunityFilterRequest extends ApiRequest

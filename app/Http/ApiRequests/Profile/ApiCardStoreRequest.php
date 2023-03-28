@@ -18,6 +18,7 @@ use App\Http\ApiRequests\ApiRequest;
  *      ),
  *      @OA\Response(response=401, description="Unauthorized"),
  *      @OA\Response(response=400, description="Error: Bad Request"),
+ *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *
  *)
  */

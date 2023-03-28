@@ -19,7 +19,8 @@ use App\Http\ApiRequests\ApiRequest;
  *          @OA\Property(property="group_uuid", type="string", example="3299d7881-6a94-cd8b-4f0df15c0-2ecf5a"),
  *      )
  *  ),
- *  @OA\Response(response=200, description="OK")
+ *  @OA\Response(response=200, description="OK"),
+ *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *  )
  */
 
