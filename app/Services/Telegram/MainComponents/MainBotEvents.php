@@ -2,15 +2,20 @@
 
 namespace App\Services\Telegram\MainComponents;
 
+use App\Events\NewChatUserJoin;
 use App\Exceptions\KnowledgeException;
 use App\Helper\ArrayHelper;
 use App\Logging\TelegramBotActionHandler;
 use App\Models\Community;
 use App\Models\TelegramBotUpdateLog;
+use App\Models\TelegramUserList;
 use App\Repositories\Tariff\TariffRepositoryContract;
+use App\Repositories\TelegramUserLists\TelegramUserListsRepositry;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
+use App\Services\TelegramMainBotService;
 use Exception;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 
 class MainBotEvents
@@ -18,7 +23,9 @@ class MainBotEvents
     protected MainBot $bot;
     protected ?object $data;
 
+
     public function __construct(MainBot $bot, ?object $data)
+
     {
         $this->bot = $bot;
         $this->data = $data;
@@ -102,12 +109,13 @@ class MainBotEvents
             if (isset($this->data->message->new_chat_member->id)) {
                 if ($this->data->message->new_chat_member->id !== $this->bot->botId) {
                     $chatId = $this->data->message->chat->id;
+                    $new_member_id = $this->data->message->new_chat_member->id;
+
                     $community = Community::whereHas('connection', function ($q) use ($chatId) {
                         $q->where('chat_id', $chatId);
                     })->select(['id'])->first();
 
                     if ($community) {
-
 
                         $image = !empty($community->tariff->getWelcomeImage()->url) ? '<a href="' . route('main') . $community->tariff->getWelcomeImage()->url . '">&#160</a>' : '';
 
@@ -139,6 +147,7 @@ class MainBotEvents
                                 $this->bot->getExtentionApi()->sendMess($chatId, $text);
                             }
                         }
+                        Event::dispatch(new NewChatUserJoin($chatId, $new_member_id));
                     }
                 }
             }
