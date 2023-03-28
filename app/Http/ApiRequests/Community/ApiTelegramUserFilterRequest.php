@@ -3,9 +3,10 @@
 namespace App\Http\ApiRequests\Community;
 
 use App\Http\ApiRequests\ApiRequest;
+use OpenApi\Annotations as OA;
 
 /**
- * @OA\Get(
+ * @OA\POST(
  *  path="/api/v3/user/community-users",
  *  operationId="community-users-filter",
  *  summary="Filter community users",
