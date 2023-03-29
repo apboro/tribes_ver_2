@@ -2,18 +2,17 @@
 
 namespace App\Http\ApiRequests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Annotations as OA;
 
-class ApiWhiteListFilterRequest extends ApiRequest
+class ApiBanListFilterRequest extends ApiRequest
 {
     /**
      * @OA\Post(
-     *  path="/api/v3/user/white-list",
-     *  operationId="white-list-filter",
-     *  summary="Filter white list of telegram user",
+     *  path="/api/v3/user/ban-list",
+     *  operationId="ban-list-filter",
+     *  summary="Filter ban list of telegram user",
      *  security={{"sanctum": {} }},
-     *  tags={"White list"},
+     *  tags={"Ban list"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
@@ -38,7 +37,6 @@ class ApiWhiteListFilterRequest extends ApiRequest
         return [
             'community_id'=>'integer|exists:communities,id',
             'telegram_name'=>'string',
-            'is_spammer'=>'integer'
         ];
     }
 

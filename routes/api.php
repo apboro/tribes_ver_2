@@ -16,7 +16,9 @@ use App\Http\Controllers\APIv3\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
+use App\Http\Controllers\APIv3\ApiTelegramUserBanListController;
 use App\Http\Controllers\APIv3\ApiTelegramUserBlackListController;
+use App\Http\Controllers\APIv3\ApiTelegramUserMuteListController;
 use App\Http\Controllers\APIv3\ApiTelegramUserWhiteListController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
@@ -99,7 +101,7 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
 
     Route::post('/chat-tags/attach', [ApiCommunityTagController::class,'attachTagToChat']);
 
-    Route::get('/user/community-users', [ApiCommunityTelegramUserController::class,'filter']);
+    Route::post('/user/community-users', [ApiCommunityTelegramUserController::class,'filter']);
     Route::post('/user/community-users/detach', [ApiCommunityTelegramUserController::class,'detachUser']);
     Route::post('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class,'detachFromAllCommunities']);
 
@@ -116,13 +118,23 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 
-    Route::post('/user/black-list', [ApiTelegramUserBlackListController::class,'store']);
+    Route::post('/user/black-list', [ApiTelegramUserBlackListController::class,'filter']);
+    Route::post('/user/black-list/add', [ApiTelegramUserBlackListController::class,'store']);
     Route::post('/user/black-list/delete', [ApiTelegramUserBlackListController::class,'detach']);
-    Route::post('/user/black-list/filter', [ApiTelegramUserBlackListController::class,'filter']);
 
-    Route::post('/user/white-list', [ApiTelegramUserWhiteListController::class,'store']);
+    Route::post('/user/white-list', [ApiTelegramUserWhiteListController::class,'filter']);
+    Route::post('/user/white-list/add', [ApiTelegramUserWhiteListController::class,'store']);
     Route::post('/user/white-list/delete', [ApiTelegramUserWhiteListController::class,'detach']);
-    Route::post('/user/white-list/filter', [ApiTelegramUserWhiteListController::class,'filter']);
+
+    Route::post('/user/mute-list', [ApiTelegramUserMuteListController::class,'filter']);
+    Route::post('/user/mute-list/add', [ApiTelegramUserMuteListController::class,'store']);
+    Route::post('/user/mute-list/delete', [ApiTelegramUserMuteListController::class,'detach']);
+
+
+    Route::post('/user/ban-list', [ApiTelegramUserBanListController::class,'filter']);
+    Route::post('/user/ban-list/delete', [ApiTelegramUserBanListController::class,'detach']);
+    Route::post('/user/ban-list/add', [ApiTelegramUserBanListController::class,'store']);
+
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function() {

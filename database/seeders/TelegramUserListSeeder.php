@@ -25,9 +25,11 @@ class TelegramUserListSeeder extends Seeder
         $communities = Community::all();
         for($i=0;$i<3000;$i++)
         {
+            $current_telegram_user_list = $this->faker->randomElement($telegram_list);
             DB::table('list_community_telegram_user')->insertOrIgnore([
-                'telegram_id' => $this->faker->randomElement($telegram_list)->telegram_id,
-                'community_id' => $this->faker->randomElement($communities)->id
+                'telegram_id' => $current_telegram_user_list->telegram_id,
+                'community_id' => $this->faker->randomElement($communities)->id,
+                'type'=>$current_telegram_user_list->type
             ]);
         }
 

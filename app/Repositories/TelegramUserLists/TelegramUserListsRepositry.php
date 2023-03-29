@@ -10,6 +10,8 @@ class TelegramUserListsRepositry
 {
     const TYPE_BLACK_LIST = 1;
     const TYPE_WHITE_LIST = 2;
+    const TYPE_BAN_LIST = 4;
+    const TYPE_MUTE_LIST = 3;
     const SPAMMER = 1;
     public function add(ApiRequest $request, int $type=self::TYPE_BLACK_LIST):void
     {

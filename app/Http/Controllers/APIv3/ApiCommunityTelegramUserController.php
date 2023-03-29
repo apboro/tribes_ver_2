@@ -60,7 +60,7 @@ class ApiCommunityTelegramUserController extends Controller
     public function filter(ApiTelegramUserFilterRequest $request): ApiResponse
     {
 
-        $query = TelegramUser::with(['communities'])
+        $query = TelegramUser::with(['communities','userList'])
             ->whereHas('communities', function ($query) {
                 $query->where('owner', Auth::user()->id);
             })
@@ -82,7 +82,11 @@ class ApiCommunityTelegramUserController extends Controller
         if (!empty($request->input('community_id'))) {
             $query->whereHas('communities', function ($query) use ($request) {
                 $query->where('telegram_users_community.community_id', '=', $request->input('community_id'));
-
+            });
+        }
+        if(!empty($request->input('list_type'))){
+            $query->whereHas('userList', function ($query) use ($request) {
+                $query->where('type', '=', $request->input('list_type'));
             });
         }
 

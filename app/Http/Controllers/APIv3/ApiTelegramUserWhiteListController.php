@@ -24,7 +24,7 @@ class ApiTelegramUserWhiteListController extends Controller
     }
 
     /**
-     * @param ApiBlackListStoreRequest $request
+     * @param ApiWhiteListStoreRequest $request
      * @return ApiResponse
      */
     public function store(ApiWhiteListStoreRequest $request):ApiResponse
@@ -52,6 +52,7 @@ class ApiTelegramUserWhiteListController extends Controller
     {
         /** @var TelegramUserList $telegram_list */
         $telegram_list = $this->telegramUserListsRepositry->filter($request,TelegramUserListsRepositry::TYPE_WHITE_LIST);
-        return ApiResponse::list()->items(ApiListCollection::make($telegram_list)->toArray($request));
+        return ApiResponse::list()->items(ApiListCollection::make($telegram_list)
+            ->additional(['type'=>TelegramUserListsRepositry::TYPE_WHITE_LIST])->toArray($request));
     }
 }

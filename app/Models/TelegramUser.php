@@ -100,4 +100,12 @@ class TelegramUser extends Model
     {
         return $this->communities()->wherePivot('community_id',$communityId)->wherePivotNotNull('exit_date')->exists();
     }
+
+    public function userList(){
+        return $this->hasMany(
+            TelegramUserList::class,
+            'telegram_id',
+            'telegram_id'
+        );
+    }
 }

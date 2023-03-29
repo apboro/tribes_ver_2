@@ -2,18 +2,17 @@
 
 namespace App\Http\ApiRequests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Annotations as OA;
 
-class ApiWhiteListStoreRequest extends ApiRequest
+class ApiBanListDeleteRequest extends ApiRequest
 {
     /**
-     * @OA\Post(
-     *  path="/api/v3/user/white-list/add",
-     *  operationId="white-list-add",
-     *  summary="Add telegram user to white list",
+     * @OA\POST(
+     *  path="/api/v3/user/ban-list/delete",
+     *  operationId="delete-from-ban-list",
+     *  summary="Delete telegram user-community connection from ban list",
      *  security={{"sanctum": {} }},
-     *  tags={"White list"},
+     *  tags={"Ban list"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
@@ -32,8 +31,8 @@ class ApiWhiteListStoreRequest extends ApiRequest
      *                          property="community_ids[]",
      *                          type="array",
      *                          @OA\Items(
-     *                         type="integer",
-     *                  ),
+     *                              type="integer",
+     *                          ),
      *                 ),
      *             ),
      *         )
@@ -41,13 +40,13 @@ class ApiWhiteListStoreRequest extends ApiRequest
      *   @OA\Response(response=200, description="OK")
      *)
      */
+
     public function rules():array
     {
         return [
-            'telegram_id'=>'required|integer|exists:telegram_users,telegram_id',
+            'telegram_id'=>'required|integer|exists:telegram_users,telegram_id|exists:telegram_user_lists,telegram_id',
             'community_ids'=>'required|array',
             'community_ids.*' => 'integer|exists:communities,id',
-            'is_spammer'=>'integer'
         ];
     }
 

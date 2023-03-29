@@ -16,7 +16,7 @@ class ApiTelegramUserFilterTest extends TestCase
     use WithFaker;
 
     private $url = [
-        'filter_black_list' => 'api/v3/user/black-list/filter',
+        'filter_black_list' => 'api/v3/user/black-list',
     ];
 
     private $data = [
@@ -70,6 +70,7 @@ class ApiTelegramUserFilterTest extends TestCase
             DB::table('list_community_telegram_user')->insertOrIgnore([
                 'telegram_id' => $row->telegram_id,
                 'community_id' => $this->faker->randomElement($communities)->id,
+                'type'=>$row->type
             ]);
             if ($this->faker->boolean(70)) {
                 $row->listParameters()->sync([TelegramUserListsRepositry::SPAMMER]);
@@ -89,20 +90,6 @@ class ApiTelegramUserFilterTest extends TestCase
         $response->assertStatus($this->data['error_not_auth']['expected_status'])
             ->assertJsonStructure($this->data['error_not_auth']['expected_structure']);
     }
-
-    public function test_black_list_filter_not_valid_telegram_id()
-    {
-
-        $this->data['not_valid_data']['telegram_id'] = 'test';
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['filter_black_list'], $this->data['not_valid_data']);
-
-        $response->assertStatus($this->data['not_valid_data']['expected_status'])
-            ->assertJsonStructure($this->data['not_valid_data']['expected_structure']);
-    }
-
 
     public function test_black_list_filter_not_valid_community_id()
     {

@@ -11,12 +11,12 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class ApiTelegramUserWhiteListFilterTest extends TestCase
+class ApiTelegramUserBanListFilterTest extends TestCase
 {
     use WithFaker;
 
     private $url = [
-        'filter_white_list' => 'api/v3/user/white-list',
+        'filter_ban_list' => 'api/v3/user/ban-list',
     ];
 
     private $data = [
@@ -63,7 +63,7 @@ class ApiTelegramUserWhiteListFilterTest extends TestCase
 
         $communities = [];
         for ($i = 0; $i < 10; $i++) {
-            $this->createCommunityForTest();
+            $this->createCommunityForTest(['title'=>'test '.$i]);
             $communities[] = $this->custom_community;
         }
         foreach ($telegram_black_list as $row) {
@@ -79,25 +79,25 @@ class ApiTelegramUserWhiteListFilterTest extends TestCase
 
     }
 
-    public function test_white_list_filter_not_auth()
+    public function test_ban_list_filter_not_auth()
     {
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-        ])->post($this->url['filter_white_list']);
+        ])->post($this->url['filter_ban_list']);
 
         $response->assertStatus($this->data['error_not_auth']['expected_status'])
             ->assertJsonStructure($this->data['error_not_auth']['expected_structure']);
     }
 
 
-    public function test_white_list_filter_not_valid_community_id()
+    public function test_ban_list_filter_not_valid_community_id()
     {
 
         $this->data['not_valid_data']['community_id'] = 'test';
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['filter_white_list'], $this->data['not_valid_data']);
+        ])->post($this->url['filter_ban_list'], $this->data['not_valid_data']);
 
         $response->assertStatus($this->data['not_valid_data']['expected_status'])
             ->assertJsonStructure($this->data['not_valid_data']['expected_structure']);
@@ -105,7 +105,7 @@ class ApiTelegramUserWhiteListFilterTest extends TestCase
 
 
 
-    public function test_white_list_filter_user_name_success()
+    public function test_ban_list_filter_user_name_success()
     {
 
         $this->data['filter_success']['telegram_name'] = 'test';
@@ -113,13 +113,13 @@ class ApiTelegramUserWhiteListFilterTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['filter_white_list'], $this->data['filter_success']);
+        ])->post($this->url['filter_ban_list'], $this->data['filter_success']);
 
         $response->assertStatus($this->data['filter_success']['expected_status'])
             ->assertJsonStructure($this->data['filter_success']['expected_structure']);
     }
 
-    public function test_white_list_filter_community_id()
+    public function test_ban_list_filter_community_id()
     {
         $this->setUp();
         $this->data['filter_success']['community_id'] = $this->custom_community->id;
@@ -127,7 +127,7 @@ class ApiTelegramUserWhiteListFilterTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['filter_white_list'], $this->data['filter_success']);
+        ])->post($this->url['filter_ban_list'], $this->data['filter_success']);
 
         $response->assertStatus($this->data['filter_success']['expected_status'])
             ->assertJsonStructure($this->data['filter_success']['expected_structure']);
