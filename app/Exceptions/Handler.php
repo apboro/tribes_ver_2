@@ -3,8 +3,10 @@
 namespace App\Exceptions;
 
 use App\Http\ApiResponses\ApiResponse;
+use App\Http\ApiResponses\ApiResponseServerError;
 use App\Services\TelegramLogService;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -93,8 +95,17 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        if($e instanceof ApiUnauthorizedException) {
+        if ($e instanceof ApiUnauthorizedException) {
             return ApiResponse::unauthorized()->toResponse($request);
+        }
+        if (!(get_class($e) == "Illuminate\Validation\ValidationException")){
+            $this->renderable(function (Throwable $e, $request) {
+                if ($request->is('api/*')) {
+                    return response()->json([
+                        'message' => $e->getMessage(),
+                    ], 500);
+                }
+            });
         }
 
         return parent::render($request, $e);
