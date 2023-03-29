@@ -17,7 +17,7 @@ class TelegramUserListFactory extends Factory
     {
         return [
             'telegram_id'=>TelegramUser::all()->random()->telegram_id,
-            'type'=>$this->faker->boolean() ? 1:2,
+            'type'=>$this->faker->numberBetween(1,4) ,
         ];
     }
 }

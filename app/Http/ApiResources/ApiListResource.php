@@ -3,6 +3,7 @@
 namespace App\Http\ApiResources;
 
 use App\Models\TelegramUserList;
+use App\Repositories\TelegramUserLists\TelegramUserListsRepositry;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiListResource extends JsonResource
@@ -27,7 +28,7 @@ class ApiListResource extends JsonResource
             'block_date'=>$this->resource->created_at,
             'communities'=>$this->whenLoaded(
                 'communities',
-                $this->resource->communities()->pluck('title')
+                $this->resource->communities()->where('type','=',$this->resource->type)->pluck('title')
             ),
             'parameter'=>$this->whenLoaded(
                 'listParameters',

@@ -28,6 +28,10 @@ class ApiCommunityTelegramUserResource extends JsonResource
             'communities'=>$this->whenLoaded(
                 'communities',
                 $this->resource->communities()->pluck('title')
+            ),
+            'user_list'=>$this->whenLoaded(
+                'userList',
+                $this->resource->userList()->pluck('type')
             )
         ];
     }

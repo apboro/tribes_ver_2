@@ -5,15 +5,15 @@ namespace App\Http\ApiRequests;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Annotations as OA;
 
-class ApiWhiteListFilterRequest extends ApiRequest
+class ApiMuteListFilterRequest extends ApiRequest
 {
     /**
      * @OA\Post(
-     *  path="/api/v3/user/white-list",
-     *  operationId="white-list-filter",
-     *  summary="Filter white list of telegram user",
+     *  path="/api/v3/user/mute-list",
+     *  operationId="mute-list-filter",
+     *  summary="Filter mute list of telegram user",
      *  security={{"sanctum": {} }},
-     *  tags={"White list"},
+     *  tags={"Mute list"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",

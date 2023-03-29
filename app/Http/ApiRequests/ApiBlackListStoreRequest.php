@@ -9,7 +9,7 @@ class ApiBlackListStoreRequest extends ApiRequest
 {
     /**
      * @OA\Post(
-     *  path="/api/v3/user/black-list",
+     *  path="/api/v3/user/black-list/add",
      *  operationId="black-list-add",
      *  summary="Add telegram user to black list",
      *  security={{"sanctum": {} }},

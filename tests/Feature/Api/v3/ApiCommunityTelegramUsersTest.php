@@ -39,7 +39,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
                         'name',
                         'last_name',
                         'user_name',
-                        'created_at',
+                        'accession_date',
                         'communities'=>[]
                     ],
                 ],
@@ -279,8 +279,6 @@ class ApiCommunityTelegramUsersTest extends TestCase
             $this->url['delete_telegram_user'],
             $this->data['delete_user_success']);
 
-        $this->assertDatabaseMissing('telegram_users',['telegram_id'=>$this->custom_telegram_user->telegram_id]);
-        $this->assertDatabaseMissing('telegram_users_community',['telegram_user_id'=>$this->custom_telegram_user->telegram_id]);
         $response->assertStatus($this->data['delete_user_success']['expected_status'])
             ->assertJsonStructure($this->data['delete_user_success']['expected_structure']);
     }

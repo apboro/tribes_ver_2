@@ -62,6 +62,16 @@ use OpenApi\Annotations as OA;
  *             example="12"
  *         )
  *     ),
+ *    @OA\Parameter(
+ *         name="list_type",
+ *         in="query",
+ *         description="List type ID(1-black, 2 - white, 3-mute,4-ban)",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *             example="1"
+ *         )
+ *     ),
  *      @OA\Response(response=200, description="OK")
  *)
  */
@@ -75,7 +85,8 @@ class ApiTelegramUserFilterRequest extends ApiRequest
             'user_name'=>'string',
             'accession_date_from'=>'date_format:Y-m-d|nullable',
             'accession_date_to'=>'date_format:Y-m-d|nullable',
-            'community_id'=>'integer|min:0'
+            'community_id'=>'integer|min:0',
+            'list_type'=>'integer'
         ];
     }
 
