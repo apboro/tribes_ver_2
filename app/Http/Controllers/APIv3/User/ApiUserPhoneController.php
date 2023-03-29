@@ -6,6 +6,7 @@ use App\Http\ApiRequests\Profile\ApiConfirmPhoneRequest;
 use App\Http\ApiRequests\Profile\ApiResetPhoneRequest;
 use App\Http\ApiRequests\Profile\ApiSendConfirmCodeRequest;
 use App\Http\ApiResponses\ApiResponse;
+use App\Http\ApiResponses\ApiResponseServerError;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Repositories\Author\AuthorRepositoryContract;
@@ -50,7 +51,7 @@ class ApiUserPhoneController extends Controller
             return ApiResponse::success('phone.message_was_sent');
         }
 
-        return ApiResponse::error('phone.message_sent_error');
+        return new ApiResponseServerError();
     }
 
     /**

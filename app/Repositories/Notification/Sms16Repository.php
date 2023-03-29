@@ -43,7 +43,7 @@ class Sms16Repository implements NotificationRepositoryContract
         if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] == 'phone_code_user') {
             TelegramLogService::staticSendLogMessage('Предположительно на sms16.ru закончились деньги. ' . 'Ответ сервиса: ' .$sms[0][$phone]['error']);
 
-            return ApiResponse::error('phone.message_sent_error');
+            return false;
         }
         if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] === "0") {
 
