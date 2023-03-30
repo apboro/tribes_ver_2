@@ -4,6 +4,7 @@ namespace App\Http\ApiRequests\Community;
 
 
 use App\Http\ApiRequests\ApiRequest;
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\Post(
@@ -13,11 +14,19 @@ use App\Http\ApiRequests\ApiRequest;
  *  security={{"sanctum": {} }},
  *  tags={"Chats Tags"},
  *     @OA\RequestBody(
- *          @OA\JsonContent(
- *                 @OA\Property(property="tags",type="array", @OA\Items(type="string"), example={"tag1", "tag2", "tag3"}),
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             encoding={
+ *                  "tags[]": {
+ *                      "explode": true,
+ *                  },
+ *              },
+ *             @OA\Schema(
+ *                 @OA\Property(property="tags[]",type="array", @OA\Items(type="string")),
  *                 @OA\Property(property="community_id",type="integer", example=1),
- *      )
- *   ),
+ *             ),
+ *         )
+ *     ),
  *      @OA\Response(response=200, description="Ok"),
  *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *  )
@@ -28,7 +37,8 @@ class ApiAttachTagToCommunityRequest extends ApiRequest
     public function rules():array
     {
         return [
-            'tags'=>'array',
+            'tags'=>'required|array',
+            'tags.*'=>'required|string|max:50',
             'community_id'=>'required|integer|exists:communities,id'
         ];
     }
