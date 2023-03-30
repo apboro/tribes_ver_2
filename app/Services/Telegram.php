@@ -144,12 +144,11 @@ class Telegram extends Messenger
         try {
             /** @var TelegramConnection $connection */
             $connection = TelegramConnection::where('chat_id', $chat_id)->first();
-//            if ($connection) {
-//                $connection->botStatus = 'kicked';
-//                $connection->save();
-//            }
-//            $connection->community()->delete();
-            $connection->delete();
+            if ($connection) {
+                $connection->delete();
+                /*$connection->botStatus = 'kicked';
+                $connection->save();*/
+            }
             return true;
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());

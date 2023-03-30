@@ -285,12 +285,12 @@ class MainBotEvents
                     $this->data->my_chat_member->new_chat_member->user->id == $this->bot->botId and
                     $this->data->my_chat_member->new_chat_member->status == 'left'
                 ) {
-                    Telegram::deleteCommunity($this->data->my_chat_member->chat->id);
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
                         'event'=>TelegramBotActionHandler::EVENT_DELETE_CHAT,
                         'chat_id'=>$this->data->my_chat_member->chat->id
                     ]);
+                    Telegram::deleteCommunity($this->data->my_chat_member->chat->id);
                 }
             }
         } catch (Exception $e) {
