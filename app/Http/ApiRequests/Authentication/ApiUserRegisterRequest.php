@@ -3,6 +3,7 @@
 namespace App\Http\ApiRequests\Authentication;
 
 use App\Http\ApiRequests\ApiRequest;
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\Post(
@@ -10,14 +11,15 @@ use App\Http\ApiRequests\ApiRequest;
  *     operationId="register",
  *     summary="Register user",
  *     tags={"Authorization"},
- *
  *     @OA\RequestBody(
- *          @OA\JsonContent(
- *               @OA\Property(property="email", type="string"),
- *               @OA\Property(property="name", type="string"),
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 @OA\Property(property="email", type="string", example="test-dev@webstyle.top"),
+ *                 @OA\Property(property="name", type="string"),
+ *             ),
  *         )
- *      ),
- *
+ *     ),
  *     @OA\Response(response=200, description="Registration successful", @OA\JsonContent(
  *            @OA\Property(property="data", type="array",
  *                @OA\Items(
@@ -44,7 +46,7 @@ class ApiUserRegisterRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'name' => 'max:150',
         ];
     }

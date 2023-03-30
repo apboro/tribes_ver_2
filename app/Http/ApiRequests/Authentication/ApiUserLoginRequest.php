@@ -3,6 +3,7 @@
 namespace App\Http\ApiRequests\Authentication;
 
 use App\Http\ApiRequests\ApiRequest;
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\Post(
@@ -10,13 +11,15 @@ use App\Http\ApiRequests\ApiRequest;
  *      path="/api/v3/user/login",
  *      operationId="login",
  *      tags={"Authorization"},
- *
- *      @OA\RequestBody(
- *          @OA\JsonContent(
- *               @OA\Property(property="email", type="string", example="test-dev@webstyle.top"),
- *               @OA\Property(property="password", type="string"),
+ *     @OA\RequestBody(
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 @OA\Property(property="email", type="string", example="test-dev@webstyle.top"),
+ *                 @OA\Property(property="password", type="string"),
+ *             ),
  *         )
- *      ),
+ *     ),
  *
  *      @OA\Response(response=200, description="Login success", @OA\JsonContent(
  *             @OA\Property(property="data", type="array",

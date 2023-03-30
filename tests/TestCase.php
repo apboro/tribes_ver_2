@@ -122,7 +122,7 @@ abstract class TestCase extends BaseTestCase
 
         $this->custom_user = User::create([
             'name' => (!empty($parameters['name']) ? $parameters['name'] : ''),
-            'email' => $email,
+            'email' => (!empty($parameters['email']) ? $parameters['email'] : $email),
             'password' => bcrypt((!empty($parameters['password']) ? $parameters['password'] : 123456)),
             'phone_confirmed' => (!empty($parameters['phone_confirmed']) ? $parameters['phone_confirmed'] : false),
         ]);
