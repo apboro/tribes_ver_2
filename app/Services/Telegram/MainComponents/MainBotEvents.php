@@ -92,6 +92,7 @@ class MainBotEvents
                         ->
                         log('info','',[
                             'action'=>TelegramBotActionHandler::EVENT_NEW_CHAT_MEMBER,
+                            'event'=>TelegramBotActionHandler::EVENT_NEW_CHAT_MEMBER,
                             'telegram_id'=>$this->data->message->new_chat_member->id,
                             'chat_id'=>$chatId
                         ]);
