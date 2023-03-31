@@ -12,11 +12,13 @@ use App\Http\ApiRequests\ApiRequest;
  *  security={{"sanctum": {} }},
  *  tags={"User Phone"},
  *     @OA\RequestBody(
- *         @OA\JsonContent(
- *                 @OA\Property(property="phone", type="integer"),
- *                 @OA\Property(property="sms_code",type="integer"),
- *                 example={"phone": 79500521558, "sms_code": 1122}
- *              )
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 @OA\Property(property="phone", type="integer", example=79500168570),
+ *                 @OA\Property(property="sms_code",type="integer", example=4356),
+ *                 ),
+ *             ),
  *      ),
  *      @OA\Response(response=200, description="Phone confirmed successfully", @OA\JsonContent(
  *          @OA\Property(property="message", type="string", nullable=true),
