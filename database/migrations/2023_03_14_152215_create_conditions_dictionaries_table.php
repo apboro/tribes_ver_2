@@ -14,7 +14,7 @@ class CreateConditionsDictionariesTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('conditions_types_dictionary');
+//        Schema::dropIfExists('conditions_types_dictionary');
         Schema::create('conditions_types_dictionary', function (Blueprint $table) {
             $table->id();
             $table->string('entity');
