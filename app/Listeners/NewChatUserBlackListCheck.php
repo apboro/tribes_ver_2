@@ -36,7 +36,7 @@ class NewChatUserBlackListCheck
             $q->where('community_id', $event->chat_id)->
             where('type',TelegramUserListsRepositry::TYPE_BLACK_LIST)->
             where('telegram_id',$event->telegram_user_id);
-        })->get();
+        })->first();
         if($telegram_list !== null){
             $this->telegramMainBotService->kickUser(
                 config('telegram_bot.bot.botName'),
