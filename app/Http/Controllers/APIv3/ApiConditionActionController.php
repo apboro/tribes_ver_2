@@ -33,7 +33,7 @@ class ApiConditionActionController extends Controller
            'group_uuid'=>$request->group_uuid,
            'condition_id' => $request->condition_id,
            'group_prefix' => $request->group_prefix,
-           'parent_group_id' => $request->parent_group_id,
+           'parent_group_uuid' => $request->parent_group_id,
         ]);
         return ApiResponse::success('common.added');
     }

@@ -24,9 +24,9 @@ use App\Http\ApiRequests\ApiRequest;
  *          @OA\Schema(
  *          @OA\Property(property="community_ids[]", type="array", @OA\Items(type="integer")),
  *          @OA\Property(property="group_uuid", description="", type="string", example="3299d7881-6a94-cd8b-4f0df15c0-2ecf5a"),
- *          @OA\Property(property="condition_id", type="string", example="34"),
- *          @OA\Property(property="group_prefix", type="string", example="and"),
- *          @OA\Property(property="parent_group_id", description="Передаем id ", type="string", example="6"),
+ *          @OA\Property(property="condition_id", type="integer", example="34"),
+ *          @OA\Property(property="group_prefix", description="Может принимать null, and, or", type="string", example="and"),
+ *          @OA\Property(property="parent_group_uuid", description="Если это первая группа правил передаем null, если последующая передаем uuid первой группы", type="string", example="3299d7881-6a94-cd8b-4f0df15c0-2ecf5"),
  *      )
  *    )
  *  ),
@@ -45,7 +45,7 @@ class ApiAssignRulesToCommunityRequest extends ApiRequest
           'community_id'=>'required|array',
           'condition_id'=>'required|integer',
           'group_prefix'=>'string',
-          'parent_group_id'=>'integer',
+          'parent_group_uuid'=>'string',
         ];
     }
 

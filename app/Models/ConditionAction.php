@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * @property mixed $condition_id
  * @property mixed $id
+ * @property mixed $group_uuid
  */
 class ConditionAction extends Model
 {
