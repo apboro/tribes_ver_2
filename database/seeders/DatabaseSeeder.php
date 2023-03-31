@@ -87,8 +87,6 @@ class DatabaseSeeder extends Seeder
             FileSeeder::class,
             CourseSeeder::class,
             SubscriptionSeeder::class,
-            ActionsDictionarySeeder::class,
-            ConditionsDictionarySeeder::class,
             TelegramStatisticSeeder::class,
             TelegramBotActionLogSeeder::class,
             TelegramUserListSeeder::class

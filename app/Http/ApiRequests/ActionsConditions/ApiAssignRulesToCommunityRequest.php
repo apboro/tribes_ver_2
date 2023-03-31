@@ -20,8 +20,9 @@ use App\Http\ApiRequests\ApiRequest;
  *                  "community_ids[]": {
  *                      "explode": true,
  *             },
+ *          },
  *          @OA\Schema(
- *          @OA\Property(property="community_ids[]",type="array", @OA\Items(type="integer",),
+ *          @OA\Property(property="community_ids[]", type="array", @OA\Items(type="integer")),
  *          @OA\Property(property="group_uuid", description="", type="string", example="3299d7881-6a94-cd8b-4f0df15c0-2ecf5a"),
  *          @OA\Property(property="condition_id", type="string", example="34"),
  *          @OA\Property(property="group_prefix", type="string", example="and"),

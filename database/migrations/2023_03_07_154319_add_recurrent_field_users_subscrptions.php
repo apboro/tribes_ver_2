@@ -14,7 +14,7 @@ class AddRecurrentFieldUsersSubscrptions extends Migration
     public function up()
     {
       Schema::table('users_subscriptions', function(Blueprint $table) {
-          $table->boolean('isRecurrent');
+          $table->boolean('isRecurrent')->default(true);
       });
     }
 

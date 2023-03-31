@@ -55,9 +55,7 @@ class TestController extends Controller
 
     public function test()
     {
-        $dictA = ActionsDictionary::all();
-        $dictC = ConditionsDictionary::all();
-        return ApiResponse::common(['c'=>$dictC, 'a'=>$dictA]);
+phpinfo();
     }
 
     public function testSMTPMail()
