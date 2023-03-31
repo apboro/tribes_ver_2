@@ -60,6 +60,6 @@ class ApiTelegramBotActionController extends Controller
         }
 
         $result = $query->paginate(25);
-        return ApiResponse::list()->items(ApiTelegramBotActionLogCollection::make($result)->toArray($request));
+        return ApiResponse::listPagination()->items(new ApiTelegramBotActionLogCollection($result));
     }
 }
