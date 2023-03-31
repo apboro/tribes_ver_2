@@ -27,6 +27,7 @@ class ApiConditionController extends Controller
             'group_uuid'=>$request->group_uuid ?? Str::uuid(),
             'prefix'=>$request->prefix ?? null,
             'parameter'=>$request->get('parameter') ?? null,
+            'parent_id' => $request->get('parent_id') ?? null,
         ]);
         return ApiResponse::common($condition);
     }

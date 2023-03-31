@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property mixed $condition_id
+ * @property mixed $id
+ */
 class ConditionAction extends Model
 {
     use HasFactory;
@@ -17,4 +21,5 @@ class ConditionAction extends Model
     {
         return $this->hasOne(Action::class,'group_uuid','group_uuid');
     }
+
 }

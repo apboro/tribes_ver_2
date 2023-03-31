@@ -11,4 +11,5 @@ class ConditionsDictionary extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
     protected $table='conditions_types_dictionary';
+    public $timestamps=false;
 }

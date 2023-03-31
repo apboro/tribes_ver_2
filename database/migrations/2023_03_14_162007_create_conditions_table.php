@@ -20,7 +20,7 @@ class CreateConditionsTable extends Migration
             $table->string('group_uuid')->index();
             $table->string('parameter')->nullable();
             $table->string('prefix')->nullable()->default(null);
-            $table->timestamps();
+            $table->string('parent_id')->nullable()->default(null);
 
             $table->foreign('type_id')->on('conditions_types_dictionary')
                 ->references('id')

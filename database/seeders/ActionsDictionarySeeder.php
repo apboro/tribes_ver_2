@@ -19,9 +19,12 @@ class ActionsDictionarySeeder extends Seeder
             ['send_message_in_chat_from_bot'],
             ['delete_message'],
             ['send_message_in_pm_from_bot'],
-            ['kick_user'],
             ['ban_user'],
-            ['mute_user']
+            ['mute_user'],
+            ['increase_reputation'],
+            ['decrease_reputation'],
+            ['add_warning'],
+            ['delete_warning'],
         ];
 
         foreach ($actions as $action)

@@ -19,7 +19,6 @@ class CreateActionsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('group_uuid');
             $table->string('parameter')->nullable();
-            $table->timestamps();
 
             $table->foreign('user_id')->on('users')
                 ->references('id')

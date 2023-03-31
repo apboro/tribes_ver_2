@@ -12,15 +12,19 @@ use App\Http\ApiRequests\ApiRequest;
  *  security={{"sanctum": {} }},
  *  tags={"ActionsConditions"},
  *     @OA\RequestBody(
- *      @OA\JsonContent(
- *          @OA\Property(property="type_id", type="integer", example=1),
- *          @OA\Property(property="user_id", type="integer", example=4),
- *          @OA\Property(property="group_uuid", type="string", example="3299d7881-6a94-cd8b-4f0df15c0-2ecf5a"),
- *          @OA\Property(property="prefix", description="Can be null || 'and' || 'or'", type="string", example="and"),
- *          @OA\Property(property="parameter", type="string", example="privet")
- *      )
- *  ),
- *  @OA\Response(response=200, description="OK"),
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                  @OA\Property(property="type_id", description="Тип condition из condition_dictionary", type="integer", example=1),
+ *                  @OA\Property(property="user_id", type="integer", example=4),
+ *                  @OA\Property(property="group_uuid", description="Для первого condition в группе передаем null. Сгенерируется group_uuid. Для следующих передаем group_uuid и parent_id родителя", type="string", example="3299d7881-6a94-cd8b-4f0df15c0-2ecf5a"),
+ *                  @OA\Property(property="prefix", description="Передаем null для первого условия в группе для следующих 'and' или 'or'", type="string", example="and"),
+ *                  @OA\Property(property="parent_id", description="Для первого condition в группе передаем null, для последующих id родителя", type="integer", example=5),
+ *                  @OA\Property(property="parameter", type="string", example="Hello"),
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=200, description="OK"),
  *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *  )
  */
@@ -33,7 +37,8 @@ class ApiStoreConditionRequest extends ApiRequest
             'user_id' => 'required|integer|exists:users,id',
             'group_uuid' => 'string|nullable',
             'prefix' => 'string|nullable',
-            'parameter' => ''
+            'parameter' => '',
+            'parent_id'=>'integer|nullable'
         ];
     }
 

@@ -11,4 +11,5 @@ class ActionsDictionary extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
     protected $table = 'actions_dictionary';
+    public $timestamps = false;
 }

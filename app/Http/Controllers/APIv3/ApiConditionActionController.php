@@ -27,9 +27,13 @@ class ApiConditionActionController extends Controller
 
     public function assignToCommunity(ApiAssignRulesToCommunityRequest $request)
     {
+
         ConditionAction::create([
            'community_id'=>$request->community_id,
-           'group_uuid'=>$request->group_uuid
+           'group_uuid'=>$request->group_uuid,
+           'condition_id' => $request->condition_id,
+           'group_prefix' => $request->group_prefix,
+           'parent_group_id' => $request->parent_group_id,
         ]);
         return ApiResponse::success('common.added');
     }

@@ -2,9 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConditionsDictionariesTable extends Migration
+class CreateActionsDictionariesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +14,15 @@ class CreateConditionsDictionariesTable extends Migration
      */
     public function up()
     {
-        Schema::create('conditions_types_dictionary', function (Blueprint $table) {
+        Schema::dropIfExists('actions_dictionary');
+
+        Schema::create('actions_dictionary', function (Blueprint $table) {
             $table->id();
-            $table->string('type1');
-            $table->string('type2')->nullable();
-            $table->string('type3')->nullable();
-            $table->timestamps();
+            $table->string('type');
         });
+
+        Artisan::call('db:seed ActionsDictionarySeeder');
+
     }
 
     /**
@@ -29,6 +32,6 @@ class CreateConditionsDictionariesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('conditions_types_dictionary');
+        Schema::dropIfExists('actions_dictionary');
     }
 }

@@ -42,7 +42,7 @@ class MessageObserver
             $dto->message_entities = ArrayHelper::getValue($data,'message.entities');
 
             $this->logger->debug('Message DTO ready', [$dto]);
-            $this->rulesRepository->checkRules($dto);
+            $this->rulesRepository->handleRules($dto);
 
         } catch (Throwable $exception)
         {
