@@ -51,8 +51,9 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/user/register', [ApiRegisterController::class,'register']);
     Route::post('/user/password/forgot', [ApiForgotPasswordController::class,'sendPasswordResetLink']);
     Route::post('/user/password/reset', [ApiResetPasswordController::class,'resetUserPassword']);
-    Route::post('/courses/pay/{hash}', [ApiCourseController::class,'pay']);
+    Route::post('/courses/pay', [ApiCourseController::class,'pay']);
     Route::get('/courses/show/{hash}', [ApiCourseController::class,'show_for_all']);
+    Route::get('/courses/crypto/{id}', [ApiCourseController::class,'pseudoCryptCreate']);
 });
 
 Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function () {
@@ -145,7 +146,7 @@ Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(fu
     Route::get('/users/block/{id}', [ApiManagerUserController::class,'block'])->name('api.manager.users.block');
     Route::get('/users/unblock/{id}', [ApiManagerUserController::class,'unBlock'])->name('api.manager.users.unblock');
     Route::get('/users/make-admin/{id}', [ApiManagerUserController::class,'makeUserAdmin'])->name('api.manager.users.make_admin');
-    Route::get('/users/remove-from-admin/{id}', [ApiManagerUserController::class,'removeUserFromAdmin'])->name('api.manager.users.revoke_admin');
+    Route::get('/users/revoke-admin/{id}', [ApiManagerUserController::class,'removeUserFromAdmin'])->name('api.manager.users.revoke_admin');
     Route::get('/users/send-new-password/{id}', [ApiManagerUserController::class,'sendNewPassword'])->name('api.manager.users.send_new_password');
     Route::get('/export/users', [ApiManagerUserController::class,'export'])->name('api.manager.users.export');
 

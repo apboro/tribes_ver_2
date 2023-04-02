@@ -87,7 +87,9 @@ class CourseRepository implements CourseRepositoryContract
         ApiCourseUpdateRequest $request,
         array $data
     ){
+
         $course->fill($data);
+
         if(!$course->save()){
             return null;
         }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\APIv3;
 
 use App\Events\ApiUserRegister;
 use App\Events\BuyCourse;
+use App\Helper\PseudoCrypt;
+use App\Http\ApiRequests\Course\ApiCourseListRequest;
 use App\Http\ApiRequests\Course\ApiCoursePayRequest;
 use App\Http\ApiRequests\Course\ApiCourseShowForAllRequest;
 use App\Http\ApiRequests\Course\ApiCourseShowRequest;
@@ -18,7 +20,6 @@ use App\Models\User;
 use App\Repositories\Course\CourseRepository;
 use App\Services\TelegramLogService;
 use App\Services\Tinkoff\Payment;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
@@ -62,11 +63,11 @@ class ApiCourseController extends Controller
     /**
      * Show list of courses
      *
-     * @param Request $request
+     * @param ApiCourseListRequest $request
      * @return ApiResponse
      */
 
-    public function index(Request $request): ApiResponse
+    public function index(ApiCourseListRequest $request): ApiResponse
     {
         /** @var Course $courses */
         $courses = Course::where('owner', Auth::user()->id)
@@ -85,7 +86,7 @@ class ApiCourseController extends Controller
      * @return ApiResponse
      */
 
-    public function store(Request $request): ApiResponse
+    public function store(ApiCourseStoreRequest $request): ApiResponse
     {
         /** @var Course $courses */
         $course = Course::create([
@@ -137,20 +138,20 @@ class ApiCourseController extends Controller
             $course,
             $request,
             [
-                'title' => $request->input('course_meta.title'),
-                'cost' => $request->input('course_meta.cost'),
-                'access_days' => $request->input('course_meta.access_days'),
-                'isPublished' => $request->input('course_meta.isPublished'),
-                'isActive' => $request->input('course_meta.isActive'),
-                'isEthernal' => $request->input('course_meta.isEthernal'),
-                'payment_title' => $request->input('course_meta.payment_title'),
-                'payment_description' => $request->input('course_meta.payment_description'),
-                'preview' => $request->input('course_meta.preview'),
-                'thanks_text' => $request->input('course_meta.thanks_text'),
-                'activation_date' => $request->input('course_meta.activation_date'),
-                'deactivation_date' => $request->input('course_meta.deactivation_date'),
-                'publication_date' => $request->input('course_meta.publication_date'),
-                'shipping_noty' => $request->input('course_meta.shipping_noty'),
+                'title' => $request->input('title'),
+                'cost' => $request->input('cost'),
+                'access_days' => $request->input('access_days'),
+                'isPublished' => $request->boolean('is_published'),
+                'isActive' => $request->boolean('is_active'),
+                'isEthernal' => $request->boolean('is_ethernal'),
+                'payment_title' => $request->input('payment_title'),
+                'payment_description' => $request->input('payment_description'),
+                'preview' => $request->input('preview'),
+                'thanks_text' => $request->input('thanks_text'),
+                'activation_date' => $request->input('activation_date'),
+                'deactivation_date' => $request->input('deactivation_date'),
+                'publication_date' => $request->input('publication_date'),
+                'shipping_noty' => $request->input('shipping_noty'),
                 'owner' => $user->id
             ]
         );
@@ -170,9 +171,10 @@ class ApiCourseController extends Controller
 
     public function pay(ApiCoursePayRequest $request): ApiResponse
     {
-        /** @var Course $course */
+        $id = (int) PseudoCrypt::unhash($request->get('hash'));
 
-        $course = Course::where('id', '=', $request->input('id'))->first();
+        /** @var Course $course */
+        $course = Course::where('id', '=', $id)->first();
 
         if ($course === null) {
             return ApiResponse::notFound('validation.course.not_found');
@@ -270,6 +272,13 @@ class ApiCourseController extends Controller
         }
 
         return ApiResponse::common(CourseResource::make($course)->toArray($request));
+    }
+
+    /**
+     Метод создан для тестирования
+     */
+    public function pseudoCryptCreate($id){
+       dd(PseudoCrypt::hash($id)) ;
     }
 
 }
