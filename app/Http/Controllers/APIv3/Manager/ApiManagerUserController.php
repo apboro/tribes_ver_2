@@ -9,7 +9,9 @@ use App\Http\ApiRequests\Admin\ApiUserManagerBlockRequest;
 use App\Http\ApiRequests\Admin\ApiUserManagerComissionRequest;
 use App\Http\ApiRequests\Admin\ApiUserManagerExportRequest;
 use App\Http\ApiRequests\Admin\ApiUserManagerMakeAdminRequest;
+use App\Http\ApiRequests\Admin\ApiUserManagerRevokeAdminRequest;
 use App\Http\ApiRequests\Admin\ApiUserManagerSendPasswordRequest;
+use App\Http\ApiRequests\Admin\ApiUserManagerUnBlockRequest;
 use App\Http\ApiRequests\Profile\ApiUserListManagerRequest;
 use App\Http\ApiResources\UserForManagerCollection;
 use App\Http\ApiResources\UserForManagerResource;
@@ -109,11 +111,11 @@ class ApiManagerUserController extends Controller
 
 
     /**
-     * @param ApiUserManagerBlockRequest $request
+     * @param ApiUserManagerUnBlockRequest $request
      * @param int $id
      * @return ApiResponse
      */
-    public function unBlock(ApiUserManagerBlockRequest $request, int $id):ApiResponse
+    public function unBlock(ApiUserManagerUnBlockRequest $request, int $id):ApiResponse
     {
         /** @var User $user */
         $user = User::where('id','=',$id)->first();
@@ -159,7 +161,7 @@ class ApiManagerUserController extends Controller
      * @param int $id
      * @return ApiResponseError|ApiResponseNotFound|ApiResponseSuccess
      */
-    public function removeUserFromAdmin(ApiUserManagerMakeAdminRequest $request, int $id){
+    public function removeUserFromAdmin(ApiUserManagerRevokeAdminRequest $request, int $id){
         /** @var User $user */
         $user = User::where('id','=',$id)->first();
 
@@ -168,15 +170,12 @@ class ApiManagerUserController extends Controller
         }
 
         /** @var Administrator $user_admin */
-        $user_admin = Administrator::where('user_id','=',$id)->first();
+        $user_admin = Administrator::where('user_id','=',$id)->delete();
 
         if($user_admin === null){
             return ApiResponse::notFound('validation.admin.admin_user_not_found');
         }
 
-        if(!$user_admin->delete()){
-            return ApiResponse::error('common.admin.make_admin_error');
-        }
         return ApiResponse::success('common.admin.make_admin_success');
     }
 

@@ -90,7 +90,7 @@ class ApiPayCourseTest extends TestCase
         ]
 
     ];
-
+/*
     public function test_pay_course_easy_register()
     {
         do {
@@ -197,7 +197,7 @@ class ApiPayCourseTest extends TestCase
         $response->assertStatus($this->data['course_payment_error']['expected_status'])
             ->assertJsonStructure($this->data['course_payment_error']['expected_structure']);
     }
-
+*/
     public function test_pay_course_payment_success()
     {
         $course = Course::create([

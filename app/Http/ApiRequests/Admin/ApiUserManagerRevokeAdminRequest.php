@@ -6,10 +6,10 @@ use App\Http\ApiRequests\ApiRequest;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Get(path="/api/v3/manager/users/make-admin/{id}",
+ * @OA\Get(path="/api/v3/manager/users/revoke-admin/{id}",
  *     tags={"Admin users"},
- *     summary="Promote user to admin",
- *     operationId="admin-users-make-admin",
+ *     summary="Remove user from admin",
+ *     operationId="admin-users-remove-admin",
  *     security={{"sanctum": {} }},
  *     @OA\Parameter(
  *         name="id",
@@ -26,7 +26,7 @@ use OpenApi\Annotations as OA;
  *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  * )
  */
-class ApiUserManagerMakeAdminRequest extends ApiRequest
+class ApiUserManagerRevokeAdminRequest extends ApiRequest
 {
     public function all($keys = null)
     {

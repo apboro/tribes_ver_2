@@ -105,18 +105,16 @@ class ApiCourseTest extends TestCase
             ],
         ],
         'update_course_success'=>[
-            'course_meta'=>[
                 'title' => 'testNew',
                 'cost' => 1000,
                 'access_days' =>200,
-                'isPublished' => true,
-                'isActive' => true,
-                'isEthernal'=>true,
+                'is_published' => true,
+                'is_active' => true,
+                'is_ethernal'=>true,
                 'shipping_noty'=>true,
                 'payment_title' => 'testPaymentTitle',
                 'payment_description' => 'paymentDescription',
                 'thanks_text' =>'thanksText',
-            ],
             'expected_status' => 200,
             'expected_structure' => [
             ],
@@ -277,14 +275,14 @@ class ApiCourseTest extends TestCase
             ->assertJsonStructure($this->data['update_course_success']['expected_structure']);
         $after_update = Course::where('id','=',$course->id)->first();
 
-        $this->assertEquals($this->data['update_course_success']['course_meta']['title'],$after_update->title);
-        $this->assertEquals($this->data['update_course_success']['course_meta']['access_days'],$after_update->access_days);
-        $this->assertEquals($this->data['update_course_success']['course_meta']['payment_title'],$after_update->payment_title);
-        $this->assertEquals($this->data['update_course_success']['course_meta']['payment_description'],$after_update->payment_description);
-        $this->assertEquals($this->data['update_course_success']['course_meta']['thanks_text'],$after_update->thanks_text);
-        $this->assertEquals($this->data['update_course_success']['course_meta']['isPublished'],$after_update->isPublished);
-        $this->assertEquals($this->data['update_course_success']['course_meta']['isPublished'],$after_update->isActive);
-        $this->assertEquals($this->data['update_course_success']['course_meta']['cost'],$after_update->cost);
+        $this->assertEquals($this->data['update_course_success']['title'],$after_update->title);
+        $this->assertEquals($this->data['update_course_success']['access_days'],$after_update->access_days);
+        $this->assertEquals($this->data['update_course_success']['payment_title'],$after_update->payment_title);
+        $this->assertEquals($this->data['update_course_success']['payment_description'],$after_update->payment_description);
+        $this->assertEquals($this->data['update_course_success']['thanks_text'],$after_update->thanks_text);
+        $this->assertEquals($this->data['update_course_success']['isPublished'],$after_update->isPublished);
+        $this->assertEquals($this->data['update_course_success']['isPublished'],$after_update->isActive);
+        $this->assertEquals($this->data['update_course_success']['cost'],$after_update->cost);
 
     }
 
