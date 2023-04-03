@@ -180,7 +180,7 @@ class Telegram extends Messenger
     public static function storeAccount($user = null, $data)
     {
         //$data['id'] = $data['telegram_id'];
-
+        /** @var TelegramUser $ty */
         $ty = TelegramUser::firstOrCreate([
             'telegram_id' => isset($data['telegram_id']) ? $data['telegram_id'] : null,
         ]);
@@ -196,6 +196,8 @@ class Telegram extends Messenger
 
         $ty->save();
 
+        self::toggleCommunityActivity($ty, true);
+
         return $ty;
     }
 
@@ -203,22 +205,26 @@ class Telegram extends Messenger
     {
         $telegram_account = TelegramUser::where('telegram_id', $telegram_id)->where('user_id', Auth::user()->id)->first();
         if ($telegram_account) {
-            $connections = $telegram_account->user->connections()->where('telegram_user_id', $telegram_id)->get();
-            if ($connections->isNotEmpty()) {
-                foreach ($connections as $connection) {
-                    $community = $connection->community;
-                    if ($community) {
-                        $community->update(['is_active' => false]);
-                    }
-                }
-            }
+            self::toggleCommunityActivity($telegram_account, false);
             $telegram_account->delete();
             return true;
 
         } else {
             return false;
         }
+    }
 
+    public static function toggleCommunityActivity(TelegramUser  $telegramUser, bool $is_active): void
+    {
+        $connections = $telegramUser->user->connections()->where('telegram_user_id', $telegramUser->telegram_id)->get();
+        if ($connections->isNotEmpty()) {
+            foreach ($connections as $connection) {
+                $community = $connection->community;
+                if ($community) {
+                    $community->update(['is_active' => $is_active]);
+                }
+            }
+        }
     }
 
     /**

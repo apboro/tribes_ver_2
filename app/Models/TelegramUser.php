@@ -15,6 +15,9 @@ use function PHPUnit\Framework\returnSelf;
 
 /**
  * @method TelegramUserFactory factory()
+ * @property mixed $user
+ * @property mixed $id
+ * @property mixed $telegram_id
  */
 class TelegramUser extends Model
 {
