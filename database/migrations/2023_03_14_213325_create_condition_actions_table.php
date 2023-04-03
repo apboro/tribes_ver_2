@@ -19,7 +19,7 @@ class CreateConditionActionsTable extends Migration
             $table->string('group_uuid')->index();
             $table->unsignedBigInteger('community_id');
             $table->string('group_prefix')->nullable();
-            $table->integer('parent_group_id')->nullable()->default(null);
+            $table->string('parent_group_uuid')->nullable()->default(null);
 
             $table->foreign('community_id')->on('communities')->references('id');
             $table->foreign('condition_id')->on('conditions')->references('id');

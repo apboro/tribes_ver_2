@@ -13,14 +13,14 @@ use App\Http\ApiRequests\ApiRequest;
  *  tags={"ActionsConditions"},
  *     @OA\RequestBody(
  *         @OA\MediaType(
- *             mediaType="multipart/form-data",
+ *             mediaType="application/json",
  *             @OA\Schema(
  *                  @OA\Property(property="type_id", description="Тип condition из condition_dictionary", type="integer", example=1),
- *                  @OA\Property(property="user_id", type="integer", example=4),
+ *                  @OA\Property(property="user_id", description="ID владельца аккаунта", type="integer", example=4),
  *                  @OA\Property(property="group_uuid", description="Для первого condition в группе передаем null. Сгенерируется group_uuid. Для следующих передаем group_uuid и parent_id родителя", type="string", example="3299d7881-6a94-cd8b-4f0df15c0-2ecf5a"),
- *                  @OA\Property(property="prefix", description="Передаем null для первого условия в группе для следующих 'and' или 'or'", type="string", example="and"),
- *                  @OA\Property(property="parent_id", description="Для первого condition в группе передаем null, для последующих id родителя", type="integer", example=5),
- *                  @OA\Property(property="parameter", type="string", example="Hello"),
+ *                  @OA\Property(property="prefix", description="Передаем null для первого условия в группе для следующих 'and' или 'or'", nullable=true, type="string", example="and"),
+ *                  @OA\Property(property="parent_id", description="Для первого condition в группе передаем null, для последующих id родителя", type="integer", nullable=true, example=5),
+ *                  @OA\Property(property="parameter", type="string", nullable=true, example="Hello"),
  *             )
  *         )
  *     ),
@@ -38,7 +38,7 @@ class ApiStoreConditionRequest extends ApiRequest
             'group_uuid' => 'string|nullable',
             'prefix' => 'string|nullable',
             'parameter' => '',
-            'parent_id'=>'integer|nullable'
+            'parent_id'=>'integer|nullable|exists:conditions,id'
         ];
     }
 
