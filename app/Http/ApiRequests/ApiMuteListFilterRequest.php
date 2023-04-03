@@ -16,7 +16,7 @@ class ApiMuteListFilterRequest extends ApiRequest
      *  tags={"Mute list"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
+     *             mediaType="application/json",
      *             @OA\Schema(
      *                 @OA\Property(
      *                          property="community_id",

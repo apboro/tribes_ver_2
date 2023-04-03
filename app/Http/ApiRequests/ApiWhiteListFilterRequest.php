@@ -16,7 +16,7 @@ class ApiWhiteListFilterRequest extends ApiRequest
      *  tags={"White list"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
+     *             mediaType="application/json",
      *             @OA\Schema(
      *                 @OA\Property(
      *                          property="community_id",

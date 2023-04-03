@@ -32,7 +32,7 @@ class ApiSubscriptionController extends Controller
     public function index(ApiListSubscriptionsRequest $request): ApiResponseList
     {
         $subscriptions = Subscription::all();
-        return ApiResponse::list()->items(SubscriptionCollection::make($subscriptions)->toArray($request));
+        return ApiResponse::list()->items($subscriptions);
     }
 
     /**  Show subscription information*/

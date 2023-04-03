@@ -25,13 +25,19 @@ class ApiCommunityTagController extends Controller
 
         if ($community) {
             $community->tags()->sync([]);
-            foreach ($tags as $tag)
+            foreach ($tags as $tag) {
                 $community->tags()->attach($tag);
+            }
+
+            $unusedTags = Tag::doesntHave('communities')->get();
+            foreach ($unusedTags as $tag) {
+                $tag->delete();
+            }
+
             return ApiResponse::success('common.community_tag_attach_success');
         }
 
         return ApiResponse::error('common.not_found');
-
     }
 
 }

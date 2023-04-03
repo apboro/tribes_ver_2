@@ -15,7 +15,7 @@ use OpenApi\Annotations as OA;
  *  tags={"Chats Tags"},
  *     @OA\RequestBody(
  *         @OA\MediaType(
- *             mediaType="multipart/form-data",
+ *             mediaType="application/json",
  *             encoding={
  *                  "tags[]": {
  *                      "explode": true,

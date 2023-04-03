@@ -46,7 +46,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             $this->logger->debug('rules are ', [$rules]);
             foreach ($rules as $rule) {
                 $result = $this->checkRule($rule, $dto);
-                if ($result && $rule->parent_group_id === null){
+                if ($result && $rule->parent_group_uuid === null){
                     $this->actionRunner($dto, $rule->action);
                 }
             }
@@ -62,7 +62,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
     public function checkRule(ConditionAction $rule, MessageDTO $data): bool
     {
         $result = false;
-        $complexRule = ConditionAction::where('parent_group_id', $rule->id)->get();
+        $complexRule = ConditionAction::where('parent_group_uuid', $rule->group_uuid)->get();
         if ($complexRule->isEmpty()) {
             $this->logger->debug('simple rule is ', [$rule]);
             $result = $this->checkCondition($rule, $data);

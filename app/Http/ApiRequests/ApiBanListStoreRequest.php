@@ -15,7 +15,7 @@ class ApiBanListStoreRequest extends ApiRequest
      *  tags={"Ban list"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
+     *             mediaType="application/json",
      *             encoding={
      *                  "community_ids[]": {
      *                      "explode": true,

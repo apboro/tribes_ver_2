@@ -14,7 +14,7 @@ class CreateActionsDictionariesTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('actions_dictionary');
+//        Schema::dropIfExists('actions_dictionary');
 
         Schema::create('actions_dictionary', function (Blueprint $table) {
             $table->id();

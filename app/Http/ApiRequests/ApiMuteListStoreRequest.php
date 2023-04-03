@@ -16,7 +16,7 @@ class ApiMuteListStoreRequest extends ApiRequest
      *  tags={"Mute list"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
+     *             mediaType="application/json",
      *             encoding={
      *                  "community_ids[]": {
      *                      "explode": true,

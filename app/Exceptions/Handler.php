@@ -102,7 +102,7 @@ class Handler extends ExceptionHandler
             $this->renderable(function (Throwable $e, $request) {
                 if ($request->is('api/*')) {
                     return response()->json([
-                        'message' => $e->getMessage(). 'File: '.$e->getFile() .' Line: '.$e->getLine(),
+                        'message' => $e->getMessage(). ' File: '.$e->getFile() .' Line: '.$e->getLine(),
                     ], 500);
                 }
             });

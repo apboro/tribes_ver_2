@@ -62,7 +62,6 @@ class TelegramUserListsRepositry
     
     public function detach(ApiRequest $request):void
     {
-
         /** @var TelegramUserList $telegram_list */
         $telegram_list = TelegramUserList::where('telegram_id','=',$request->input('telegram_id'))->first();
 
@@ -75,6 +74,20 @@ class TelegramUserListsRepositry
 
         if($telegram_list->communities_count === 0){
             $telegram_list->delete();
+        }
+        foreach($request->input('community_ids') as $community_id) {
+            try {
+                /** @var Community $community */
+                $community = Community::where('id', $community_id)->first();
+                $community_telegram_chat_id = $community->connection->chat_id;
+                $this->telegramMainBotService->unKickUser(
+                    config('telegram_bot.bot.botName'),
+                    $request->input('telegram_id'),
+                    $community_telegram_chat_id
+                );
+            } catch (\Exception $e){
+                TelegramLogService::staticSendLogMessage('Black list error'. $e);
+            }
         }
     }
 
