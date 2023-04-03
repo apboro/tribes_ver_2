@@ -33,6 +33,7 @@ use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
+use App\Http\Controllers\UserRulesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -117,6 +118,8 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::get('/actions-conditions/getList', [ApiConditionActionController::class, 'getList']);
     Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
+
+    Route::post('/user-rules/store',[UserRulesController::class, 'store']);
 
     Route::post('/user/black-list', [ApiTelegramUserBlackListController::class,'filter']);
     Route::post('/user/black-list/add', [ApiTelegramUserBlackListController::class,'store']);
