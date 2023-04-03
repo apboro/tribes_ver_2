@@ -291,7 +291,7 @@ class MainBotEvents
                         'event'=>TelegramBotActionHandler::EVENT_DELETE_CHAT,
                         'chat_id'=>$this->data->my_chat_member->chat->id
                     ]);
-                    Telegram::deleteCommunity($this->data->my_chat_member->chat->id);
+                    Telegram::deactivateCommunity($this->data->my_chat_member->chat->id);
                 }
             }
         } catch (Exception $e) {

@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method TelegramConnectionFactory factory()
  * @property mixed $id
  * @property int $telegram_user_id
+ * @property mixed|string $botStatus
+ * @property mixed $community
  */
 class TelegramConnection extends Model
 {
