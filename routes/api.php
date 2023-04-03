@@ -120,6 +120,7 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 
     Route::post('/user-rules/store',[UserRulesController::class, 'store']);
+    Route::get('/user-rules/get',[UserRulesController::class, 'get']);
 
     Route::post('/user/black-list', [ApiTelegramUserBlackListController::class,'filter']);
     Route::post('/user/black-list/add', [ApiTelegramUserBlackListController::class,'store']);
