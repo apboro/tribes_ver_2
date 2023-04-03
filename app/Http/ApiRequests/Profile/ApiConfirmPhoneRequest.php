@@ -13,7 +13,7 @@ use App\Http\ApiRequests\ApiRequest;
  *  tags={"User Phone"},
  *     @OA\RequestBody(
  *         @OA\MediaType(
- *             mediaType="multipart/form-data",
+ *             mediaType="application/json",
  *             @OA\Schema(
  *                 @OA\Property(property="phone", type="integer", example=79500168570),
  *                 @OA\Property(property="sms_code",type="integer", example=4356),

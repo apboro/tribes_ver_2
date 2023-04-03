@@ -17,6 +17,7 @@ class ConditionAction extends Model
 
     protected $guarded=[];
     protected $table='conditions_actions';
+    public $timestamps=false;
 
     public function action(): HasOne
     {

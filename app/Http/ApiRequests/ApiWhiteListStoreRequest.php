@@ -16,7 +16,7 @@ class ApiWhiteListStoreRequest extends ApiRequest
      *  tags={"White list"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
+     *             mediaType="application/json",
      *             encoding={
      *                  "community_ids[]": {
      *                      "explode": true,

@@ -13,7 +13,7 @@ use OpenApi\Annotations as OA;
  *     tags={"Authorization"},
  *     @OA\RequestBody(
  *         @OA\MediaType(
- *             mediaType="multipart/form-data",
+ *             mediaType="application/json",
  *             @OA\Schema(
  *                 @OA\Property(property="email", type="string", example="test-dev@webstyle.top"),
  *                 @OA\Property(property="name", type="string"),

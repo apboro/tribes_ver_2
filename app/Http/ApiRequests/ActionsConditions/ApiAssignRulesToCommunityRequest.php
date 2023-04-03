@@ -15,16 +15,11 @@ use App\Http\ApiRequests\ApiRequest;
  *  tags={"ActionsConditions"},
  *     @OA\RequestBody(
  *      @OA\MediaType(
- *             mediaType="multipart/form-data",
- *            encoding={
- *                  "community_ids[]": {
- *                      "explode": true,
- *             },
- *          },
+ *             mediaType="application/json",
  *          @OA\Schema(
- *          @OA\Property(property="community_ids[]", type="array", @OA\Items(type="integer")),
- *          @OA\Property(property="group_uuid", description="", type="string", example="3299d7881-6a94-cd8b-4f0df15c0-2ecf5a"),
- *          @OA\Property(property="condition_id", type="integer", example="34"),
+ *          @OA\Property(property="community_id", type="integer"),
+ *          @OA\Property(property="group_uuid", description="Передаем group_uuid первого condition в певой группе правил", type="string", example="3299d7881-6a94-cd8b-4f0df15c0-2ecf5a"),
+ *          @OA\Property(property="condition_id", type="integer", example=34),
  *          @OA\Property(property="group_prefix", description="Может принимать null, and, or", type="string", example="and"),
  *          @OA\Property(property="parent_group_uuid", description="Если это первая группа правил передаем null, если последующая передаем uuid первой группы", type="string", example="3299d7881-6a94-cd8b-4f0df15c0-2ecf5"),
  *      )
@@ -42,8 +37,8 @@ class ApiAssignRulesToCommunityRequest extends ApiRequest
     {
         return [
           'group_uuid'=>'required|string',
-          'community_id'=>'required|array',
-          'condition_id'=>'required|integer',
+          'community_id'=>'required|integer|exists:communities,id',
+          'condition_id'=>'required|integer|exists:conditions,id',
           'group_prefix'=>'string',
           'parent_group_uuid'=>'string',
         ];

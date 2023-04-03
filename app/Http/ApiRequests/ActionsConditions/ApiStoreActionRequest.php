@@ -13,7 +13,7 @@ use App\Http\ApiRequests\ApiRequest;
  *  tags={"ActionsConditions"},
  *     @OA\RequestBody(
  *      @OA\MediaType(
- *             mediaType="multipart/form-data",
+ *             mediaType="application/json",
  *             @OA\Schema(
  *          @OA\Property(property="type_id", description="Тип action из action_dictionary", type="integer", example=1),
  *          @OA\Property(property="user_id", type="integer", example=4),
