@@ -6,7 +6,7 @@ use App\Http\ApiRequests\ApiRequest;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\POST(
+ * @OA\GET(
  *  path="/api/v3/user/community-users",
  *  operationId="community-users-filter",
  *  summary="Filter community users",
@@ -62,31 +62,26 @@ use OpenApi\Annotations as OA;
  *             example="12"
  *         )
  *     ),
- *    @OA\Parameter(
- *         name="list_type",
- *         in="query",
- *         description="List type ID(1-black, 2 - white, 3-mute,4-ban)",
- *         required=false,
- *         @OA\Schema(
- *             type="integer",
- *             example="1"
- *         )
- *     ),
  *      @OA\Response(response=200, description="OK")
  *)
  */
 class ApiTelegramUserFilterRequest extends ApiRequest
 {
 
-    public function rules():array
+    public function rules(): array
     {
         return [
-            'name'=>'string',
-            'user_name'=>'string',
-            'accession_date_from'=>'date_format:Y-m-d|nullable',
-            'accession_date_to'=>'date_format:Y-m-d|nullable',
-            'community_id'=>'integer|min:0',
-            'list_type'=>'integer'
+            'name' => 'string',
+            'user_name' => 'string',
+            'accession_date_from' => 'date_format:Y-m-d|nullable',
+            'accession_date_to' => 'date_format:Y-m-d|nullable',
+            'community_id' => 'integer|min:0',
+            'banned' => 'boolean',
+            'muted' => 'boolean',
+            'whitelisted' => 'boolean',
+            'blacklisted' => 'boolean',
+            'is_spammer' => 'integer'
+
         ];
     }
 

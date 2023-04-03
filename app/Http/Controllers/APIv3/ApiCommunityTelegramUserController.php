@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3;
 
+use App\Http\ApiRequests\ApiCommunityUserListAddRequest;
 use App\Http\ApiRequests\Community\ApiCommunityTelegramUserDetachAllRequest;
 use App\Http\ApiRequests\Community\ApiCommunityTelegramUserDetachRequest;
 use App\Http\ApiRequests\Community\ApiTelegramUserFilterRequest;
@@ -10,6 +11,7 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\TelegramUser;
+use App\Repositories\TelegramUserLists\TelegramUserListsRepositry;
 use App\Services\TelegramMainBotService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,11 +20,16 @@ class ApiCommunityTelegramUserController extends Controller
 {
 
     private TelegramMainBotService $telegramMainBotService;
+    private TelegramUserListsRepositry $telegramUserListsRepositry;
 
-    public function __construct(TelegramMainBotService $telegramMainBotService)
+    public function __construct(
+        TelegramMainBotService     $telegramMainBotService,
+        TelegramUserListsRepositry $telegramUserListsRepositry
+    )
     {
 
         $this->telegramMainBotService = $telegramMainBotService;
+        $this->telegramUserListsRepositry = $telegramUserListsRepositry;
     }
 
     /**
@@ -61,7 +68,7 @@ class ApiCommunityTelegramUserController extends Controller
             $query->where('telegram_id', '=', $request->input('telegram_id'));
         })->where('owner', '=', Auth::user()->id)->get();
 
-        foreach($communities as $community){
+        foreach ($communities as $community) {
             $this->telegramMainBotService->kickUser(
                 config('telegram_bot.bot.botName'),
                 $telegram_user->telegram_id,
@@ -82,7 +89,7 @@ class ApiCommunityTelegramUserController extends Controller
     public function filter(ApiTelegramUserFilterRequest $request): ApiResponse
     {
 
-        $query = TelegramUser::with(['communities','userList'])
+        $query = TelegramUser::with(['communities', 'userList'])
             ->whereHas('communities', function ($query) {
                 $query->where('owner', Auth::user()->id);
             })
@@ -106,11 +113,7 @@ class ApiCommunityTelegramUserController extends Controller
                 $query->where('telegram_users_community.community_id', '=', $request->input('community_id'));
             });
         }
-        if(!empty($request->input('list_type'))){
-            $query->whereHas('userList', function ($query) use ($request) {
-                $query->where('type', '=', $request->input('list_type'));
-            });
-        }
+
 
         if (!empty($request->input('user_name'))) {
             $query->where(function ($query) use ($request) {
@@ -127,9 +130,56 @@ class ApiCommunityTelegramUserController extends Controller
             });
         }
 
+        if ($request->boolean('banned')) {
+            $query->whereHas('userList', function ($query) {
+                $query->where('type', '=', TelegramUserListsRepositry::TYPE_BAN_LIST);
+            });
+        }
+
+        if ($request->boolean('muted')) {
+            $query->whereHas('userList', function ($query) {
+                $query->where('type', '=', TelegramUserListsRepositry::TYPE_MUTE_LIST);
+            });
+        }
+
+        if ($request->boolean('whitelisted')) {
+            $query->whereHas('userList', function ($query) {
+                $query->where('type', '=', TelegramUserListsRepositry::TYPE_WHITE_LIST);
+            });
+        }
+
+        if ($request->boolean('blacklisted')) {
+            $query->whereHas('userList', function ($query) {
+                $query->where('type', '=', TelegramUserListsRepositry::TYPE_BLACK_LIST);
+            });
+        }
+
         $telegram_users = $query->paginate(20);
 
         return ApiResponse::listPagination()->items(new ApiCommunityTelegramUserCollection($telegram_users));
 
+    }
+
+    public function addToList(ApiCommunityUserListAddRequest $request, int $id)
+    {
+        $this->telegramUserListsRepositry->detach($request, $id);
+
+        if ($request->boolean('banned')) {
+            $this->telegramUserListsRepositry->add($request, $id, TelegramUserListsRepositry::TYPE_BAN_LIST);
+        }
+
+        if ($request->boolean('muted')) {
+            $this->telegramUserListsRepositry->add($request, $id, TelegramUserListsRepositry::TYPE_MUTE_LIST);
+        }
+
+        if ($request->boolean('whitelisted')) {
+            $this->telegramUserListsRepositry->add($request, $id, TelegramUserListsRepositry::TYPE_WHITE_LIST);
+        }
+
+        if ($request->boolean('blacklisted')) {
+            $this->telegramUserListsRepositry->add($request, $id, TelegramUserListsRepositry::TYPE_BLACK_LIST);
+        }
+
+        return ApiResponse::success();
     }
 }

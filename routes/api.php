@@ -16,10 +16,6 @@ use App\Http\Controllers\APIv3\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
-use App\Http\Controllers\APIv3\ApiTelegramUserBanListController;
-use App\Http\Controllers\APIv3\ApiTelegramUserBlackListController;
-use App\Http\Controllers\APIv3\ApiTelegramUserMuteListController;
-use App\Http\Controllers\APIv3\ApiTelegramUserWhiteListController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
@@ -47,67 +43,68 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::prefix('api/v3')->group(function () {
-    Route::post('/user/login', [ApiAuthController::class,'login']);
-    Route::post('/user/register', [ApiRegisterController::class,'register']);
-    Route::post('/user/password/forgot', [ApiForgotPasswordController::class,'sendPasswordResetLink']);
-    Route::post('/user/password/reset', [ApiResetPasswordController::class,'resetUserPassword']);
-    Route::post('/courses/pay', [ApiCourseController::class,'pay']);
-    Route::get('/courses/show/{hash}', [ApiCourseController::class,'show_for_all']);
-    Route::get('/courses/crypto/{id}', [ApiCourseController::class,'pseudoCryptCreate']);
+    Route::post('/user/login', [ApiAuthController::class, 'login']);
+    Route::post('/user/register', [ApiRegisterController::class, 'register']);
+    Route::post('/user/password/forgot', [ApiForgotPasswordController::class, 'sendPasswordResetLink']);
+    Route::post('/user/password/reset', [ApiResetPasswordController::class, 'resetUserPassword']);
+    Route::post('/courses/pay', [ApiCourseController::class, 'pay']);
+    Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
+    Route::get('/courses/crypto/{id}', [ApiCourseController::class, 'pseudoCryptCreate']);
 });
 
-Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function () {
-    Route::get('/user', [ApiUserController::class,'show']);
-    Route::post('/user/logout', [ApiAuthController::class,'logout']);
-    Route::post('/user/password/change', [ApiUserController::class,'passChange']);
+Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
+    Route::get('/user', [ApiUserController::class, 'show']);
+    Route::post('/user/logout', [ApiAuthController::class, 'logout']);
+    Route::post('/user/password/change', [ApiUserController::class, 'passChange']);
 
-    Route::post('/user/phone/reset-confirmed', [ApiUserPhoneController::class,'resetConfirmed']);
-    Route::post('/user/phone/send-confirm-code', [ApiUserPhoneController::class,'sendConfirmCode']);
-    Route::post('/user/phone/confirm', [ApiUserPhoneController::class,'confirmPhone']);
+    Route::post('/user/phone/reset-confirmed', [ApiUserPhoneController::class, 'resetConfirmed']);
+    Route::post('/user/phone/send-confirm-code', [ApiUserPhoneController::class, 'sendConfirmCode']);
+    Route::post('/user/phone/confirm', [ApiUserPhoneController::class, 'confirmPhone']);
 
-    Route::post('/user/telegram/assign', [ApiAssignDetachTelegramController::class,'assignTelegramAccount']);
-    Route::post('/user/telegram/detach', [ApiAssignDetachTelegramController::class,'detachTelegramAccount']);
+    Route::post('/user/telegram/assign', [ApiAssignDetachTelegramController::class, 'assignTelegramAccount']);
+    Route::post('/user/telegram/detach', [ApiAssignDetachTelegramController::class, 'detachTelegramAccount']);
     Route::get('/user/telegram/list', [ApiMessengersController::class, 'list']);
-    Route::get('/projects', [ApiProjectController::class,'index']);
-    Route::post('/projects/create', [ApiProjectController::class,'create']);
-    Route::get('/projects/{id}', [ApiProjectController::class,'show']);
-    Route::post('/projects/{id}', [ApiProjectController::class,'update']);
+    Route::get('/projects', [ApiProjectController::class, 'index']);
+    Route::post('/projects/create', [ApiProjectController::class, 'create']);
+    Route::get('/projects/{id}', [ApiProjectController::class, 'show']);
+    Route::post('/projects/{id}', [ApiProjectController::class, 'update']);
 
-    Route::get('/user/chats', [ApiCommunityController::class,'filter']);
-    Route::post('/user/chats', [ApiCommunityController::class,'store']);
-    Route::get('/user/chats/{id}', [ApiCommunityController::class,'show']);
+    Route::get('/user/chats', [ApiCommunityController::class, 'filter']);
+    Route::post('/user/chats', [ApiCommunityController::class, 'store']);
+    Route::get('/user/chats/{id}', [ApiCommunityController::class, 'show']);
 
-    Route::post('/create_chat/init', [ApiTelegramConnectionController::class,'create']);
-    Route::post('/create_chat/check', [ApiTelegramConnectionController::class,'checkStatus']);
+    Route::post('/create_chat/init', [ApiTelegramConnectionController::class, 'create']);
+    Route::post('/create_chat/check', [ApiTelegramConnectionController::class, 'checkStatus']);
 
-    Route::post('/feed-back', [ApiFeedBackController::class,'store']);
+    Route::post('/feed-back', [ApiFeedBackController::class, 'store']);
 
-    Route::get('/payment-cards', [ApiPaymentCardController::class,'index']);
-    Route::post('/payment-cards', [ApiPaymentCardController::class,'store']);
-    Route::delete('/payment-cards', [ApiPaymentCardController::class,'delete']);
+    Route::get('/payment-cards', [ApiPaymentCardController::class, 'index']);
+    Route::post('/payment-cards', [ApiPaymentCardController::class, 'store']);
+    Route::delete('/payment-cards', [ApiPaymentCardController::class, 'delete']);
 
-    Route::get('/courses', [ApiCourseController::class,'index']);
-    Route::get('/courses/{id}', [ApiCourseController::class,'show']);
-    Route::post('/courses', [ApiCourseController::class,'store']);
-    Route::put('/courses/{id}', [ApiCourseController::class,'update']);
+    Route::get('/courses', [ApiCourseController::class, 'index']);
+    Route::get('/courses/{id}', [ApiCourseController::class, 'show']);
+    Route::post('/courses', [ApiCourseController::class, 'store']);
+    Route::put('/courses/{id}', [ApiCourseController::class, 'update']);
     Route::get('/subscriptions_list', [ApiSubscriptionController::class, 'index']);
     Route::post('/subscription', [ApiSubscriptionController::class, 'show']);
     Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
     Route::get('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
 
-    Route::get('/chats/tags', [ApiTagController::class,'index']);
-    Route::get('/chats/tags/{id}', [ApiTagController::class,'show']);
-    Route::delete('/chats/tags/{id}', [ApiTagController::class,'destroy']);
+    Route::get('/chats/tags', [ApiTagController::class, 'index']);
+    Route::get('/chats/tags/{id}', [ApiTagController::class, 'show']);
+    Route::delete('/chats/tags/{id}', [ApiTagController::class, 'destroy']);
 
-    Route::post('/chat-tags/attach', [ApiCommunityTagController::class,'attachTagToChat']);
+    Route::post('/chat-tags/attach', [ApiCommunityTagController::class, 'attachTagToChat']);
 
-    Route::post('/user/community-users', [ApiCommunityTelegramUserController::class,'filter']);
-    Route::post('/user/community-users/detach', [ApiCommunityTelegramUserController::class,'detachUser']);
-    Route::post('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class,'detachFromAllCommunities']);
+    Route::post('/user/community-users', [ApiCommunityTelegramUserController::class, 'filter']);
+    Route::post('/user/community-users/detach', [ApiCommunityTelegramUserController::class, 'detachUser']);
+    Route::post('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class, 'detachFromAllCommunities']);
+    Route::put('/user/community-users/{id}', [ApiCommunityTelegramUserController::class, 'addToList']);
 
-    Route::get('/user/bot/action-log', [ApiTelegramBotActionController::class,'list']);
-    Route::get('/user/bot/action-log/filter', [ApiTelegramBotActionController::class,'filter']);
+    Route::get('/user/bot/action-log', [ApiTelegramBotActionController::class, 'list']);
+    Route::get('/user/bot/action-log/filter', [ApiTelegramBotActionController::class, 'filter']);
 
     Route::get('/dictionaries/get_actions_dictionary', [ApiDictionariesController::class, 'getActionsDictionary']);
     Route::get('/dictionaries/get_conditions_dictionary', [ApiDictionariesController::class, 'getConditionsDictionary']);
@@ -119,53 +116,34 @@ Route::prefix('api/v3')->middleware(['api','auth_v3:sanctum'])->group(function (
     Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 
-    Route::post('/user/black-list', [ApiTelegramUserBlackListController::class,'filter']);
-    Route::post('/user/black-list/add', [ApiTelegramUserBlackListController::class,'store']);
-    Route::post('/user/black-list/delete', [ApiTelegramUserBlackListController::class,'detach']);
-
-    Route::post('/user/white-list', [ApiTelegramUserWhiteListController::class,'filter']);
-    Route::post('/user/white-list/add', [ApiTelegramUserWhiteListController::class,'store']);
-    Route::post('/user/white-list/delete', [ApiTelegramUserWhiteListController::class,'detach']);
-
-    Route::post('/user/mute-list', [ApiTelegramUserMuteListController::class,'filter']);
-    Route::post('/user/mute-list/add', [ApiTelegramUserMuteListController::class,'store']);
-    Route::post('/user/mute-list/delete', [ApiTelegramUserMuteListController::class,'detach']);
-
-
-    Route::post('/user/ban-list', [ApiTelegramUserBanListController::class,'filter']);
-    Route::post('/user/ban-list/delete', [ApiTelegramUserBanListController::class,'detach']);
-    Route::post('/user/ban-list/add', [ApiTelegramUserBanListController::class,'store']);
-
 });
 
-Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function() {
+Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {
 
-    Route::get('/users', [ApiManagerUserController::class,'list'])->name('api.manager.users.list');
-    Route::get('/users/{id}', [ApiManagerUserController::class,'show'])->name('api.manager.users.info');
-    Route::put('/users/{id}', [ApiManagerUserController::class,'editCommission'])->name('api.manager.users.edit_commission');
-    Route::get('/users/block/{id}', [ApiManagerUserController::class,'block'])->name('api.manager.users.block');
-    Route::get('/users/unblock/{id}', [ApiManagerUserController::class,'unBlock'])->name('api.manager.users.unblock');
-    Route::get('/users/make-admin/{id}', [ApiManagerUserController::class,'makeUserAdmin'])->name('api.manager.users.make_admin');
-    Route::get('/users/revoke-admin/{id}', [ApiManagerUserController::class,'removeUserFromAdmin'])->name('api.manager.users.revoke_admin');
-    Route::get('/users/send-new-password/{id}', [ApiManagerUserController::class,'sendNewPassword'])->name('api.manager.users.send_new_password');
-    Route::get('/export/users', [ApiManagerUserController::class,'export'])->name('api.manager.users.export');
+    Route::get('/users', [ApiManagerUserController::class, 'list'])->name('api.manager.users.list');
+    Route::get('/users/{id}', [ApiManagerUserController::class, 'show'])->name('api.manager.users.info');
+    Route::put('/users/{id}', [ApiManagerUserController::class, 'editCommission'])->name('api.manager.users.edit_commission');
+    Route::get('/users/block/{id}', [ApiManagerUserController::class, 'block'])->name('api.manager.users.block');
+    Route::get('/users/unblock/{id}', [ApiManagerUserController::class, 'unBlock'])->name('api.manager.users.unblock');
+    Route::get('/users/make-admin/{id}', [ApiManagerUserController::class, 'makeUserAdmin'])->name('api.manager.users.make_admin');
+    Route::get('/users/revoke-admin/{id}', [ApiManagerUserController::class, 'removeUserFromAdmin'])->name('api.manager.users.revoke_admin');
+    Route::get('/users/send-new-password/{id}', [ApiManagerUserController::class, 'sendNewPassword'])->name('api.manager.users.send_new_password');
+    Route::get('/export/users', [ApiManagerUserController::class, 'export'])->name('api.manager.users.export');
 
-    Route::post('/feed-back/answer', [ApiAdminFeedBackController::class,'answer'])->name('api.manager.feed_back.answer');
-    Route::get('/feed-back/close/{id}', [ApiAdminFeedBackController::class,'close'])->name('api.manager.feed_back.close');
-    Route::get('/feed-back/show/{id}', [ApiAdminFeedBackController::class,'show'])->name('api.manager.feed_back.show');
-    Route::get('/feed-backs', [ApiAdminFeedBackController::class,'list'])->name('api.manager.feed_back.list');
+    Route::post('/feed-back/answer', [ApiAdminFeedBackController::class, 'answer'])->name('api.manager.feed_back.answer');
+    Route::get('/feed-back/close/{id}', [ApiAdminFeedBackController::class, 'close'])->name('api.manager.feed_back.close');
+    Route::get('/feed-back/show/{id}', [ApiAdminFeedBackController::class, 'show'])->name('api.manager.feed_back.show');
+    Route::get('/feed-backs', [ApiAdminFeedBackController::class, 'list'])->name('api.manager.feed_back.list');
 
-    Route::get('/communities', [ApiAdminCommunityController::class,'list'])->name('api.manager.communities.list');
-    Route::get('/communities/{id}', [ApiAdminCommunityController::class,'show'])->name('api.manager.communities.show');
-    Route::get('/export/communities', [ApiAdminCommunityController::class,'export'])->name('api.manager.communities.export');
+    Route::get('/communities', [ApiAdminCommunityController::class, 'list'])->name('api.manager.communities.list');
+    Route::get('/communities/{id}', [ApiAdminCommunityController::class, 'show'])->name('api.manager.communities.show');
+    Route::get('/export/communities', [ApiAdminCommunityController::class, 'export'])->name('api.manager.communities.export');
 
-    Route::get('/payments', [ApiAdminPaymentController::class,'list'])->name('api.manager.payments.list');
-    Route::get('/payments/customers', [ApiAdminPaymentController::class,'customers'])->name('api.manager.payments.customers');
+    Route::get('/payments', [ApiAdminPaymentController::class, 'list'])->name('api.manager.payments.list');
+    Route::get('/payments/customers', [ApiAdminPaymentController::class, 'customers'])->name('api.manager.payments.customers');
 
 
 });
-
-
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
