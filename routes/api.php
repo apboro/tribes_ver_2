@@ -98,7 +98,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/chat-tags/attach', [ApiCommunityTagController::class, 'attachTagToChat']);
 
-    Route::post('/user/community-users', [ApiCommunityTelegramUserController::class, 'filter']);
+    Route::get('/user/community-users', [ApiCommunityTelegramUserController::class, 'filter']);
     Route::post('/user/community-users/detach', [ApiCommunityTelegramUserController::class, 'detachUser']);
     Route::post('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class, 'detachFromAllCommunities']);
     Route::put('/user/community-users/{id}', [ApiCommunityTelegramUserController::class, 'addToList']);

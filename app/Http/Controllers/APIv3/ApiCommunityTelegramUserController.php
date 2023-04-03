@@ -130,27 +130,23 @@ class ApiCommunityTelegramUserController extends Controller
             });
         }
 
-        if ($request->boolean('banned')) {
-            $query->whereHas('userList', function ($query) {
-                $query->where('type', '=', TelegramUserListsRepositry::TYPE_BAN_LIST);
-            });
-        }
-
-        if ($request->boolean('muted')) {
-            $query->whereHas('userList', function ($query) {
-                $query->where('type', '=', TelegramUserListsRepositry::TYPE_MUTE_LIST);
-            });
-        }
-
-        if ($request->boolean('whitelisted')) {
-            $query->whereHas('userList', function ($query) {
-                $query->where('type', '=', TelegramUserListsRepositry::TYPE_WHITE_LIST);
-            });
-        }
-
-        if ($request->boolean('blacklisted')) {
-            $query->whereHas('userList', function ($query) {
-                $query->where('type', '=', TelegramUserListsRepositry::TYPE_BLACK_LIST);
+        if (
+            $request->boolean('banned') ||
+            $request->boolean('muted') ||
+            $request->boolean('whitelisted') ||
+            $request->boolean('blacklisted')
+        ) {
+            $arr_to_search = [
+                $request->boolean('banned') ? TelegramUserListsRepositry::TYPE_BAN_LIST : 0,
+                $request->boolean('muted') ? TelegramUserListsRepositry::TYPE_MUTE_LIST : 0,
+                $request->boolean('whitelisted') ? TelegramUserListsRepositry::TYPE_WHITE_LIST : 0,
+                $request->boolean('blacklisted') ? TelegramUserListsRepositry::TYPE_BLACK_LIST : 0,
+            ];
+            $query->whereHas('userList', function ($query) use ($request, $arr_to_search) {
+                $query->whereIn('type', $arr_to_search);
+                if (!empty($request->input('community_id'))) {
+                    $query->where('community_id', '=', $request->input('community_id'));
+                }
             });
         }
 

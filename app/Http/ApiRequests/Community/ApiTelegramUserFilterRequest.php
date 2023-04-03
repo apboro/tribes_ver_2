@@ -62,6 +62,46 @@ use OpenApi\Annotations as OA;
  *             example="12"
  *         )
  *     ),
+ *    @OA\Parameter(
+ *         name="banned",
+ *         in="query",
+ *         description="Banned list",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="boolean",
+ *             example="false"
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="blacklisted",
+ *         in="query",
+ *         description="Black list",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="boolean",
+ *             example="false"
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="whitelisted",
+ *         in="query",
+ *         description="White list",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="boolean",
+ *             example="false"
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="muted",
+ *         in="query",
+ *         description="Mute list",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="boolean",
+ *             example="false"
+ *         )
+ *     ),
  *      @OA\Response(response=200, description="OK")
  *)
  */
@@ -76,10 +116,10 @@ class ApiTelegramUserFilterRequest extends ApiRequest
             'accession_date_from' => 'date_format:Y-m-d|nullable',
             'accession_date_to' => 'date_format:Y-m-d|nullable',
             'community_id' => 'integer|min:0',
-            'banned' => 'boolean',
-            'muted' => 'boolean',
-            'whitelisted' => 'boolean',
-            'blacklisted' => 'boolean',
+            'banned' => 'string',
+            'muted' => 'string',
+            'whitelisted' => 'string',
+            'blacklisted' => 'string',
             'is_spammer' => 'integer'
 
         ];
