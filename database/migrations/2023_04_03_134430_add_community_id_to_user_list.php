@@ -14,11 +14,12 @@ class AddCommunityIdToUserList extends Migration
     public function up()
     {
         Schema::table('telegram_user_lists', function (Blueprint $table) {
-            $table->unsignedBigInteger('community_id');
+            $table->unsignedBigInteger('community_id')->nullable()->default(null);
             $table->foreign('community_id')->references('id')
                 ->on('communities')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+
         });
     }
 
