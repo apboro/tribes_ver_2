@@ -11,10 +11,11 @@ class ApiCommunityTelegramUserResource extends JsonResource
     /** @var TelegramUser */
 
     public $resource;
+
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
@@ -22,18 +23,20 @@ class ApiCommunityTelegramUserResource extends JsonResource
 
         return [
             'telegram_id' => $this->resource->telegram_id,
-            'name'=>$this->resource->first_name,
-            'last_name'=>$this->resource->last_name,
-            'user_name'=>$this->resource->user_name,
-            'accession_date'=>$this->resource->accession_date,
-            'communities'=>$this->whenLoaded(
+            'name' => $this->resource->first_name,
+            'last_name' => $this->resource->last_name,
+            'user_name' => $this->resource->user_name,
+            'accession_date' => $this->resource->accession_date,
+            'communities' => $this->whenLoaded(
                 'communities', function () {
-                return $this->resource->communities()->where('owner',  Auth::user()->id)->pluck('title');
+                return $this->resource->communities()->where('owner', Auth::user()->id)->pluck('title');
             }
             ),
-            'user_list'=>$this->whenLoaded(
+            'user_list' => $this->whenLoaded(
                 'userList',
-                $this->resource->userList()->pluck('type')
+                function () {
+                    return $this->resource->userList()->pluck('title', 'type');
+                }
             )
         ];
     }
