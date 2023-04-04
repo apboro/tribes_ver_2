@@ -140,10 +140,8 @@ class ApiTelegramUserFilterRequest extends ApiRequest
             'muted' => 'string',
             'whitelisted' => 'string',
             'blacklisted' => 'string',
-            'is_spammer' => 'integer'
-
+            'is_spammer' => 'bool'
         ];
     }
-
 
 }
