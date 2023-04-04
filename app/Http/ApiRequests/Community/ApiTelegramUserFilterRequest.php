@@ -63,13 +63,43 @@ use OpenApi\Annotations as OA;
  *         )
  *     ),
  *    @OA\Parameter(
- *         name="list_type",
+ *         name="banned",
  *         in="query",
- *         description="List type ID(1-black, 2 - white, 3-mute,4-ban)",
+ *         description="Banned list",
  *         required=false,
  *         @OA\Schema(
- *             type="integer",
- *             example="1"
+ *             type="boolean",
+ *             example="false"
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="blacklisted",
+ *         in="query",
+ *         description="Black list",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="boolean",
+ *             example="false"
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="whitelisted",
+ *         in="query",
+ *         description="White list",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="boolean",
+ *             example="false"
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="muted",
+ *         in="query",
+ *         description="Mute list",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="boolean",
+ *             example="false"
  *         )
  *     ),
  *      @OA\Response(response=200, description="OK")
@@ -78,15 +108,20 @@ use OpenApi\Annotations as OA;
 class ApiTelegramUserFilterRequest extends ApiRequest
 {
 
-    public function rules():array
+    public function rules(): array
     {
         return [
-            'name'=>'string',
-            'user_name'=>'string',
-            'accession_date_from'=>'date_format:Y-m-d|nullable',
-            'accession_date_to'=>'date_format:Y-m-d|nullable',
-            'community_id'=>'integer|min:0',
-            'list_type'=>'integer'
+            'name' => 'string',
+            'user_name' => 'string',
+            'accession_date_from' => 'date_format:Y-m-d|nullable',
+            'accession_date_to' => 'date_format:Y-m-d|nullable',
+            'community_id' => 'integer|min:0',
+            'banned' => 'string',
+            'muted' => 'string',
+            'whitelisted' => 'string',
+            'blacklisted' => 'string',
+            'is_spammer' => 'integer'
+
         ];
     }
 
