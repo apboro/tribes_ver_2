@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed $telegram_id
  * @property mixed $user
  * @property mixed $id
+ * @property mixed $auth_date
  */
 class TelegramUser extends Model
 {
