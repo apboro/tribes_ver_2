@@ -5,6 +5,7 @@ namespace App\Models\Models;
 use App\Models\Community;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Tag extends Model
 {
@@ -18,5 +19,10 @@ class Tag extends Model
 
     public function communities(){
         return $this->belongsToMany(Community::class,'community_tag','tag_id','community_id');
+    }
+
+    public function scopeOwned($query)
+    {
+        return $query->where('user_id', '=', Auth::user()->id);
     }
 }

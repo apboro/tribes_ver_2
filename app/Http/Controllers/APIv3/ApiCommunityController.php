@@ -96,7 +96,6 @@ class ApiCommunityController extends Controller
 
     public function filter(ApiCommunityFilterRequest $request):ApiResponse
     {
-
         $communities = $this->communityRepo->getList($request);
 
         return ApiResponse::listPagination()->items(new CommunitiesCollection($communities));

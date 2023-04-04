@@ -37,7 +37,7 @@ class ApiAttachTagToCommunityRequest extends ApiRequest
     public function rules():array
     {
         return [
-            'tags'=>'required|array',
+            'tags'=>'array',
             'tags.*'=>'required|string|max:50',
             'community_id'=>'required|integer|exists:communities,id'
         ];

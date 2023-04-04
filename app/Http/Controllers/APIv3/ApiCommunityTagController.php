@@ -12,32 +12,38 @@ use Illuminate\Support\Facades\Auth;
 
 class ApiCommunityTagController extends Controller
 {
-    public function attachTagToChat(ApiAttachTagToCommunityRequest $request):ApiResponse
+    public function attachTagToChat(ApiAttachTagToCommunityRequest $request): ApiResponse
     {
         $user = Auth::user();
-
-        foreach ($request->input('tags') as $input_tag)
-        {
+        $tags = null;
+        foreach ($request->input('tags') as $input_tag) {
             $tags[] = Tag::firstOrCreate(['name' => $input_tag, 'user_id' => $user->id]);
         }
 
-        $community = Community::owned()->where('id',$request->input('community_id'))->first();
+        $community = Community::owned()->where('id', $request->input('community_id'))->first();
 
-        if ($community) {
+        if ($community)
+        {
             $community->tags()->sync([]);
-            foreach ($tags as $tag) {
-                $community->tags()->attach($tag);
+            if ($tags) {
+                foreach ($tags as $tag) {
+                    $community->tags()->attach($tag);
+                }
             }
-
-            $unusedTags = Tag::doesntHave('communities')->get();
-            foreach ($unusedTags as $tag) {
-                $tag->delete();
-            }
+            $this->removeUnusedTags();
 
             return ApiResponse::success('common.community_tag_attach_success');
         }
 
         return ApiResponse::error('common.not_found');
+    }
+
+    public function removeUnusedTags()
+    {
+        $unusedTags = Tag::doesntHave('communities')->get();
+        foreach ($unusedTags as $tag) {
+            $tag->delete();
+        }
     }
 
 }
