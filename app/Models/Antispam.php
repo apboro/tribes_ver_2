@@ -18,4 +18,11 @@ class Antispam extends Model
         'ban_user_contain_forward',
         'work_period'
     ];
+
+    public function communities()
+    {
+        return $this->hasMany(
+            Community::class
+        );
+    }
 }
