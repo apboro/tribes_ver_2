@@ -44,7 +44,7 @@ class CommunityRepository implements CommunityRepositoryContract
         }
 
 
-        $res = $list->paginate(20);
+        $res = $list->paginate($request->per_page, ['*'],'page',$request->page);
 
         return $res;
     }

@@ -10,6 +10,26 @@ namespace App\Http\ApiRequests;
  *  security={{"sanctum": {} }},
  *  tags={"Bot actions list"},
  *     @OA\Parameter(
+ *         name="per_page",
+ *         in="query",
+ *         description="Records per page",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *             example=20
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="page",
+ *         in="query",
+ *         description="Page number",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *             example=3
+ *         )
+ *     ),
+ *     @OA\Parameter(
  *         name="user_name",
  *         in="query",
  *         description="Filter by first_name or last_name or user_name",
