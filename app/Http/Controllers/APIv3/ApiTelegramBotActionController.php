@@ -59,7 +59,7 @@ class ApiTelegramBotActionController extends Controller
             });
         }
 
-        $result = $query->paginate(25);
+        $result = $query->paginate($request->per_page, ['*'],'page',$request->page);
         return ApiResponse::listPagination()->items(new ApiTelegramBotActionLogCollection($result));
     }
 }

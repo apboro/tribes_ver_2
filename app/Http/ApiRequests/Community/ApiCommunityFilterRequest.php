@@ -12,6 +12,26 @@ use App\Http\ApiRequests\ApiRequest;
  *  summary="Filter communities of auth user",
  *  security={{"sanctum": {} }},
  *  tags={"Chats"},
+ *     @OA\Parameter(
+ *         name="per_page",
+ *         in="query",
+ *         description="Records per page",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *             example=20
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="page",
+ *         in="query",
+ *         description="Page number",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *             example=3
+ *         )
+ *     ),
  *    @OA\Parameter(
  *         name="name",
  *         in="query",

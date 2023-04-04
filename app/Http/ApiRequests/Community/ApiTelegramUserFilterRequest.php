@@ -12,6 +12,26 @@ use OpenApi\Annotations as OA;
  *  summary="Filter community users",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Users"},
+ *   @OA\Parameter(
+ *         name="per_page",
+ *         in="query",
+ *         description="Records per page",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *             example=20
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="page",
+ *         in="query",
+ *         description="Page number",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *             example=3
+ *         )
+ *     ),
  *     @OA\Parameter(
  *         name="user_name",
  *         in="query",

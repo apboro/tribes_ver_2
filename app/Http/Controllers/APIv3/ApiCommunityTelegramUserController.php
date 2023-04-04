@@ -150,7 +150,7 @@ class ApiCommunityTelegramUserController extends Controller
             });
         }
 
-        $telegram_users = $query->paginate(20);
+        $telegram_users = $query->paginate($request->per_page, ['*'],'page',$request->page);
 
         return ApiResponse::listPagination()->items(new ApiCommunityTelegramUserCollection($telegram_users));
 
