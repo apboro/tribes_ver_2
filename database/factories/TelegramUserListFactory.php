@@ -16,8 +16,9 @@ class TelegramUserListFactory extends Factory
     public function definition()
     {
         return [
-            'telegram_id'=>TelegramUser::all()->random()->telegram_id,
-            'type'=>$this->faker->numberBetween(1,4) ,
+            'telegram_id' => TelegramUser::all()->random()->telegram_id,
+            'community_id' => Community::all()->random()->id,
+            'type' => $this->faker->numberBetween(1, 4),
         ];
     }
 }

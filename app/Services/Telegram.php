@@ -139,15 +139,18 @@ class Telegram extends Messenger
         }
     }
 
-    public static function deleteCommunity($chat_id)
+    public static function deactivateCommunity($chat_id)
     {
         try {
             /** @var TelegramConnection $connection */
             $connection = TelegramConnection::where('chat_id', $chat_id)->first();
             if ($connection) {
-                $connection->delete();
-                /*$connection->botStatus = 'kicked';
-                $connection->save();*/
+                $community = $connection->community;
+                if ($community) {
+                    $community->update(['is_active' => false]);
+                }
+                $connection->botStatus = 'kicked';
+                $connection->save();
             }
             return true;
         } catch (\Exception $e) {

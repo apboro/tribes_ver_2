@@ -10,18 +10,17 @@ use App\Models\User;
 use Askoldex\Teletant\Context;
 use Askoldex\Teletant\Entities\Message;
 use Carbon\Carbon;
-use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Client\Request;
-use Monolog\Logger;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Monolog\Handler\TestHandler;
+use Monolog\Logger;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -83,14 +82,17 @@ abstract class TestCase extends BaseTestCase
 
     protected function refreshTestDatabase()
     {
-         if (! RefreshDatabaseState::$migrated) {
-        // $this->artisan('db:wipe --database=knowledge');
-          $this->artisan('migrate:fresh', $this->migrateFreshUsing());
 
-        //  $this->app[Kernel::class]->setArtisan(null);
 
-           RefreshDatabaseState::$migrated = true;
-          }
+        if (!RefreshDatabaseState::$migrated) {
+            // $this->artisan('db:wipe --database=knowledge');
+
+            $this->artisan('migrate:fresh', $this->migrateFreshUsing());
+
+            //$this->app[Kernel::class]->setArtisan(null);
+
+            RefreshDatabaseState::$migrated = true;
+        }
 
         //$this->beginDatabaseTransaction();
     }
@@ -157,7 +159,7 @@ abstract class TestCase extends BaseTestCase
             'isAdministrator' => !empty($parameters['isAdministrator']) ? $parameters['isAdministrator'] : true,
             'botStatus' => !empty($parameters['botStatus']) ? $parameters['botStatus'] : 'administrator',
             'isActive' => !empty($parameters['isActive']) ? $parameters['isActive'] : array_rand([true, false]),
-            'hash' => !empty($parameters['hash']) ? $parameters['hash'] : md5('test hash'.rand(1,1000000)),
+            'hash' => !empty($parameters['hash']) ? $parameters['hash'] : md5('test hash' . rand(1, 1000000)),
             'isChannel' => !empty($parameters['isChannel']) ? $parameters['isChannel'] : false,
             'isGroup' => !empty($parameters['isGroup']) ? $parameters['isGroup'] : true,
             'status' => !empty($parameters['status']) ? $parameters['status'] : 'init',
@@ -172,13 +174,13 @@ abstract class TestCase extends BaseTestCase
             'owner' => !empty($parameters['owner']) ? $parameters['owner'] : $this->custom_user->id,
             'title' => !empty($parameters['title']) ? $parameters['title'] : 'test connection',
             'connection_id' => !empty($parameters['connection_id']) ? $parameters['connection_id'] : $this->custom_telegram_connection->id,
-            'created_at'=>!empty($parameters['created_at']) ? new \DateTime($parameters['created_at']) : Carbon::now()
+            'created_at' => !empty($parameters['created_at']) ? new \DateTime($parameters['created_at']) : Carbon::now()
         ]);
 
-        for($i=0;$i<3;$i++){
+        for ($i = 0; $i < 3; $i++) {
             $tag = Tag::create([
-                'user_id'=>!empty($parameters['owner']) ? $parameters['owner'] : $this->custom_user->id,
-                'name'=>$this->faker->word
+                'user_id' => !empty($parameters['owner']) ? $parameters['owner'] : $this->custom_user->id,
+                'name' => $this->faker->word
             ]);
             $this->custom_community->tags()->attach($tag);
         }

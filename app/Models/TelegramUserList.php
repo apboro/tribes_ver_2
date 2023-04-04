@@ -8,22 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class TelegramUserList extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'telegram_id',
+        'community_id',
         'type'
     ];
 
-    public function communities(){
-        return $this->belongsToMany(
+    public function communities()
+    {
+        return $this->belongsTo(
             Community::class,
-            'list_community_telegram_user',
-            'telegram_id',
-            'community_id',
-            'telegram_id'
+            'community_id'
         );
     }
 
-    public function telegramUser(){
+    public function telegramUser()
+    {
         return $this->belongsTo(
             TelegramUser::class,
             'telegram_id',
@@ -31,7 +32,8 @@ class TelegramUserList extends Model
         );
     }
 
-    public function listParameters(){
+    public function listParameters()
+    {
         return $this->belongsToMany(
             ListParameter::class,
             'telegram_user_list_parameters',
