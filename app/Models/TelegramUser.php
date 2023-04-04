@@ -2,16 +2,12 @@
 
 namespace App\Models;
 
-use Database\Factories\TelegramUserFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\Community;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filters\QueryFilter;
 use danog\MadelineProto\stats;
-
-use function PHPUnit\Framework\returnSelf;
+use Database\Factories\TelegramUserFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @method TelegramUserFactory factory()
@@ -30,7 +26,7 @@ class TelegramUser extends Model
     protected $table = 'telegram_users';
 
     protected $connection = 'main';
-    protected $hidden=['id', 'scene', 'scene_for_donate'];
+    protected $hidden = ['id', 'scene', 'scene_for_donate'];
 
     function user()
     {
@@ -104,14 +100,18 @@ class TelegramUser extends Model
 
     public function hasLeaveCommunity($communityId)
     {
-        return $this->communities()->wherePivot('community_id',$communityId)->wherePivotNotNull('exit_date')->exists();
+        return $this->communities()->wherePivot('community_id', $communityId)->wherePivotNotNull('exit_date')->exists();
     }
 
-    public function userList(){
+    public function userList()
+    {
         return $this->hasMany(
             TelegramUserList::class,
             'telegram_id',
             'telegram_id'
-        );
+        )->leftJoin('communities',
+            'communities.id', '=',
+            'telegram_user_lists.community_id')->
+        select('telegram_user_lists.*', 'communities.title');
     }
 }
