@@ -22,8 +22,6 @@ class CommunityRepository implements CommunityRepositoryContract
         $user->role_index = User::$role['author'];
         $user->save();
 
-        $tagsNames = explode(",", $request->input('tags_names')[0]);
-
         $list = Community::owned()->active()->with(['tags', 'communityRules'])->without('donate')->orderBy('created_at', 'DESC');
 
         if (!empty($request->input('name'))) {
@@ -31,6 +29,7 @@ class CommunityRepository implements CommunityRepositoryContract
         }
 
         if ($request->input('tags_names') !== null) {
+            $tagsNames = explode(",", $request->input('tags_names')[0]);
             if (!empty(array_filter($request->input('tags_names')))) {
                 $list->whereHas('tags', function ($query) use ($request, $tagsNames) {
                     return $query->whereIn('name', $tagsNames);
