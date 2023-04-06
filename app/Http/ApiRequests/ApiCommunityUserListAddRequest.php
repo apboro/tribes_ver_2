@@ -2,26 +2,25 @@
 
 namespace App\Http\ApiRequests;
 
-use OpenApi\Annotations as OA;
 
 /**
- * @OA\Put(
- *  path="/api/v3/user/community-users/{userId}",
+ * @OA\Post(
+ *  path="/api/v3/user/community-users/add_to_list",
  *  operationId="community-user-list-add",
  *  summary="Add user to list (black, mute, ban, white)",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Users"},
- *     @OA\Parameter(name="userId",in="path",description="ID of user in database",required=true,@OA\Schema(type="integer",format="int64")),
  *     @OA\RequestBody(
  *         @OA\MediaType(
  *            mediaType="application/json",
  *             @OA\Schema(
- *                 @OA\Property(property="community_ids",type="array",@OA\Items(type="integer")),
+ *                 @OA\Property(property="telegram_id", type="integer"),
+ *                 @OA\Property(property="community_ids", type="array", @OA\Items(type="integer")),
  *                 @OA\Property(property="banned", type="boolean", example="false"),
  *                 @OA\Property(property="muted", type="boolean", example="false"),
  *                 @OA\Property(property="whitelisted", type="boolean", example="false"),
  *                 @OA\Property(property="blacklisted", type="boolean", example="false"),
- *                 @OA\Property(property="is_spammer", type="boolean", example="false"),
+ *                 @OA\Property(property="is_spammer", type="integer", example=1),
  *             ),
  *         )
  *     ),
