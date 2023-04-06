@@ -29,13 +29,6 @@ namespace App\Http\ApiRequests;
  */
 class ApiCommunityUserListAddRequest extends ApiRequest
 {
-    public function all($keys = null)
-    {
-        $data = parent::all();
-        $data['telegram_id'] = $this->route('id');
-        return $data;
-    }
-
 
     public function rules(): array
     {

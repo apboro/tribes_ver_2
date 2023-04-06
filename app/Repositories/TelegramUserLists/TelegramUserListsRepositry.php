@@ -60,6 +60,21 @@ class TelegramUserListsRepositry
                     TelegramLogService::staticSendLogMessage('Black/ban list error' . $e);
                 }
             }
+            if ($type === self::TYPE_MUTE_LIST) {
+                try {
+                    /** @var Community $community */
+                    $community = Community::where('id', $community_id)->first();
+                    $community_telegram_chat_id = $community->connection->chat_id;
+                    $this->telegramMainBotService->muteUser(
+                        config('telegram_bot.bot.botName'),
+                        $telegram_id,
+                        $community_telegram_chat_id,
+                        36000000
+                    );
+                } catch (\Exception $e) {
+                    TelegramLogService::staticSendLogMessage('Mute list error' . $e);
+                }
+            }
 
         }
 
