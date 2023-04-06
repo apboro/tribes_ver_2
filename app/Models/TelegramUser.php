@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed $user
  * @property mixed $id
  * @property mixed $auth_date
+ * @property mixed|null $user_id
+ * @property mixed|null $scene
+ * @property mixed|null $hash
+ * @property mixed|string|null $photo_url
  */
 class TelegramUser extends Model
 {
