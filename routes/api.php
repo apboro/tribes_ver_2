@@ -101,8 +101,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/user/community-users', [ApiCommunityTelegramUserController::class, 'filter']);
     Route::post('/user/community-users/detach', [ApiCommunityTelegramUserController::class, 'detachUser']);
     Route::post('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class, 'detachFromAllCommunities']);
-    Route::post('/user/community-users/add_to_list', [ApiCommunityTelegramUserController::class, 'addToList']);
-    Route::post('/user/community-users/remove_from_list', [ApiCommunityTelegramUserController::class, 'removeFromList']);
+    Route::put('/user/community-users/add_to_list', [ApiCommunityTelegramUserController::class, 'addToList']);
+    Route::delete('/user/community-users/remove_from_list', [ApiCommunityTelegramUserController::class, 'removeFromList']);
 
     Route::get('/user/bot/action-log', [ApiTelegramBotActionController::class, 'list']);
     Route::get('/user/bot/action-log/filter', [ApiTelegramBotActionController::class, 'filter']);

@@ -4,7 +4,7 @@ namespace App\Http\ApiRequests;
 
 
 /**
- * @OA\Post(
+ * @OA\Put(
  *  path="/api/v3/user/community-users/add_to_list",
  *  operationId="community-user-list-add",
  *  summary="Add user to list (black, mute, ban, white)",

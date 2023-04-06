@@ -3,7 +3,7 @@
 namespace App\Http\ApiRequests;
 
 /**
- * @OA\Post(
+ * @OA\Delete(
  *  path="/api/v3/user/community-users/remove_from_list",
  *  operationId="community-user-list-remove",
  *  summary="Remove user from list (black, mute, ban, white)",
@@ -28,5 +28,30 @@ namespace App\Http\ApiRequests;
  */
 class ApiCommunityUserListRemoveRequest extends ApiRequest
 {
+
+    public function rules(): array
+    {
+        return [
+            'telegram_id' => 'required|integer|exists:telegram_users,telegram_id',
+            'community_ids' => 'required|array',
+            'community_ids.*' => 'integer|exists:communities,id',
+            'banned' => 'boolean',
+            'muted' => 'boolean',
+            'whitelisted' => 'boolean',
+            'blacklisted' => 'boolean',
+            'is_spammer' => 'integer'
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'telegram_id.required' => $this->localizeValidation('telegram_user.required_telegram_id'),
+            'telegram_id.integer' => $this->localizeValidation('telegram_user.integer_telegram_id'),
+            'telegram_id.exists' => $this->localizeValidation('telegram_user.exists_telegram_id'),
+            'community_ids.required' => $this->localizeValidation('community.id_required'),
+            'community_ids.array' => $this->localizeValidation('community.array'),
+        ];
+    }
 
 }
