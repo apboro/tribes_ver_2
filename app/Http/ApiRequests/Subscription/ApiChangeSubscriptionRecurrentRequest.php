@@ -5,7 +5,7 @@ namespace App\Http\ApiRequests\Subscription;
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Get(
+ * @OA\Patch(
  *  path="/api/v3/subscription/recurrent",
  *  operationId="subscription_recurrent_change",
  *  summary="Subscription Recurrent Change",

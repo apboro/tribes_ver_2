@@ -90,7 +90,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/subscription', [ApiSubscriptionController::class, 'show']);
     Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
-    Route::get('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
+    Route::patch('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
 
     Route::get('/chats/tags', [ApiTagController::class, 'index']);
     Route::get('/chats/tags/{id}', [ApiTagController::class, 'show']);

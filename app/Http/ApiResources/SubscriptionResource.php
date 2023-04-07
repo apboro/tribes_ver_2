@@ -61,6 +61,7 @@ class SubscriptionResource extends JsonResource
             "updated_at" => $this->resource->updated_at,
             "isRecurrent" => $this->resource->isRecurrent,
             "isActive" => $this->resource->isActive,
+            "expiration_date" =>$this->resource->expiration_date,
         ];
     }
 }
