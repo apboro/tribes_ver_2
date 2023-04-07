@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 
 /**
- * @OA\Post(
+ * @OA\Delete(
  *  path="/api/v3/user/community-users/detach",
  *  operationId="community-users-detach",
  *  summary="Detach user from community",

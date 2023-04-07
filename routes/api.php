@@ -62,7 +62,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/user/phone/confirm', [ApiUserPhoneController::class, 'confirmPhone']);
 
     Route::post('/user/telegram/assign', [ApiAssignDetachTelegramController::class, 'assignTelegramAccount']);
-    Route::post('/user/telegram/detach', [ApiAssignDetachTelegramController::class, 'detachTelegramAccount']);
+    Route::delete('/user/telegram/detach', [ApiAssignDetachTelegramController::class, 'detachTelegramAccount']);
     Route::get('/user/telegram/list', [ApiMessengersController::class, 'list']);
     Route::get('/projects', [ApiProjectController::class, 'index']);
     Route::post('/projects/create', [ApiProjectController::class, 'create']);
@@ -99,8 +99,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/chat-tags/attach', [ApiCommunityTagController::class, 'attachTagToChat']);
 
     Route::get('/user/community-users', [ApiCommunityTelegramUserController::class, 'filter']);
-    Route::post('/user/community-users/detach', [ApiCommunityTelegramUserController::class, 'detachUser']);
-    Route::post('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class, 'detachFromAllCommunities']);
+    Route::delete('/user/community-users/detach', [ApiCommunityTelegramUserController::class, 'detachUser']);
+    Route::delete('/user/community-users/detach_all', [ApiCommunityTelegramUserController::class, 'detachFromAllCommunities']);
     Route::put('/user/community-users/add_to_list', [ApiCommunityTelegramUserController::class, 'addToList']);
     Route::delete('/user/community-users/remove_from_list', [ApiCommunityTelegramUserController::class, 'removeFromList']);
 

@@ -5,7 +5,7 @@ namespace App\Http\ApiRequests\Community;
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Post(
+ * @OA\Delete(
  *  path="/api/v3/user/community-users/detach_all",
  *  operationId="community-users-detach_all",
  *  summary="Detach user from all communities of user",
