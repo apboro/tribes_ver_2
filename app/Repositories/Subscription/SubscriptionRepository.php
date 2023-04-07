@@ -14,7 +14,7 @@ class SubscriptionRepository
 {
     public function assignToUser(int $user_id, int $subscription_id)
     {
-        $userSubscription = UserSubscription::where('user_id', $user_id)->first();
+        $userSubscription = UserSubscription::firstOrNew(['user_id' => $user_id]);
         $userSubscription->subscription_id = $subscription_id;
         $userSubscription->expiration_date = Carbon::now()->addDays(30);
         $userSubscription->save();
