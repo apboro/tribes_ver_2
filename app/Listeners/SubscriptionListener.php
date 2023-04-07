@@ -26,11 +26,11 @@ class SubscriptionListener
      */
     public function handle(SubscriptionMade $event)
     {
-        $this->botService->sendMessageFromBot(
-            config('telegram_bot.bot.botName'),
-            472966552,
-            'From handle event'
-        );
+//        $this->botService->sendMessageFromBot(
+//            config('telegram_bot.bot.botName'),
+//            472966552,
+//            'From handle event'
+//        );
         new Mailer('Spod', 'From handle event', 'debug', 'borodachev@gmail.com');
 
         $this->subscriptionRepository->assignToUser($event->user->id, $event->subscription->id);

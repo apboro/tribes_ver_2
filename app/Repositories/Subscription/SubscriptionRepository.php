@@ -16,11 +16,11 @@ class SubscriptionRepository
 
     public function assignToUser(int $user_id, int $subscription_id)
     {
-        $this->botService->sendMessageFromBot(
-            config('telegram_bot.bot.botName'),
-            472966552,
-            'From assign to user'
-        );
+//        $this->botService->sendMessageFromBot(
+//            config('telegram_bot.bot.botName'),
+//            472966552,
+//            'From assign to user'
+//        );
         new Mailer('Spod', 'From assign to user', 'debug', 'borodachev@gmail.com');
 
          $userSubscription = UserSubscription::firstOrCreate(
