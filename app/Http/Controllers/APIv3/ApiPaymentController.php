@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\SendEmails;
 use App\Models\Payment;
 use App\Repositories\Payment\PaymentRepository;
+use App\Services\SMTP\Mailer;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffService;
@@ -46,7 +47,12 @@ class ApiPaymentController extends Controller
     public function successPayment(Request $request, $hash, $telegramId = NULL)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
-
+        $this->botService->sendMessageFromBot(
+            config('telegram_bot.bot.botName'),
+            472966552,
+            'Payment found'
+        );
+        new Mailer('Spod', 'Found payment', 'debug', 'borodachev@gmail.com');
         Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
 
         return ApiResponse::common([$payment]);
