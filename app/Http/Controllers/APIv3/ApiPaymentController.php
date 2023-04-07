@@ -47,13 +47,9 @@ class ApiPaymentController extends Controller
     public function successPayment(Request $request, $hash, $telegramId = NULL)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
-        $this->botService->sendMessageFromBot(
-            config('telegram_bot.bot.botName'),
-            472966552,
-            'Payment found'
-        );
-        new Mailer('Spod', 'Found payment', 'debug', 'borodachev@gmail.com');
-        Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
+        if ($payment->status === 'CONFIRMED') {
+            Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
+        }
 
         return ApiResponse::common([$payment]);
     }
