@@ -23,17 +23,10 @@ class SubscriptionRepository
 //        );
         new Mailer('Spod', 'From assign to user', 'debug', 'borodachev@gmail.com');
 
-         $userSubscription = UserSubscription::firstOrCreate(
-            ['user_id' => $user_id],
-
-            [
-                'subscription_id' => $subscription_id,
-                'isRecurrent' => true,
-                'isActive' => true,
-                'expiration_date' => Carbon::now()->addDays(30)
-            ]
-        );
-         $userSubscription->save();
+        $userSubscription = UserSubscription::where('user_id', $user_id)->first();
+        $userSubscription->subscription_id = $subscription_id;
+        $userSubscription->expiration_date = Carbon::now()->addDays(30);
+        $userSubscription->save();
         new Mailer('Spod', 'Must be assigned', 'debug', 'borodachev@gmail.com');
 
     }
