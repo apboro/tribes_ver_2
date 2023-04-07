@@ -29,7 +29,7 @@ class ApiFeedBackController extends Controller
         $feed_back = Feedback::create([
             'user_id' => $user->id,
             'email' => $request->input('fb_email'),
-            'phone' => $request->input('fb_phone'),
+            'phone' => $request->input('fb_phone') ?? null,
             'name' => $request->input('fb_name'),
             'text' => $request->input('fb_message'),
             'status' => 'Новый',
