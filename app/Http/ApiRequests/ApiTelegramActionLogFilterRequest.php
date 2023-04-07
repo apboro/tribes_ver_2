@@ -102,7 +102,7 @@ class ApiTelegramActionLogFilterRequest extends ApiRequest
     {
         return [
             'user_name' =>'string',
-            'tags'=>'array',
+            'tags_names'=>'array',
             'event'=>'string',
             'action_date_from'=>'date_format:Y-m-d',
             'action_date_to'=>'date_format:Y-m-d',

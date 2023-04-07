@@ -45,9 +45,9 @@ class ApiTelegramBotActionController extends Controller
             });
         }
 
-        if(!empty($request->input('tags'))){
+        if(!empty($request->input('tags_names'))){
             $query->whereHas('telegramConnections.community.tags',function($query) use ($request){
-                $query->whereIn('tags.name',$request->input('tags_names'));
+                $query->whereIn('tags.name', $request->input('tags_names'));
             });
         }
 
