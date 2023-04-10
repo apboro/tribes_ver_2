@@ -18,7 +18,8 @@ class ApiTelegramBotActionController extends Controller
      */
     public function filter(ApiTelegramActionLogFilterRequest $request): ApiResponse
     {
-        $query = TelegramBotActionLog::with([
+
+        $list = TelegramBotActionLog::with([
             'telegramConnections.community',
             'telegramUser',
             'telegramConnections.community.tags'
@@ -27,39 +28,43 @@ class ApiTelegramBotActionController extends Controller
             $query->where('owner', Auth::user()->id);
         });
 
-        if(!empty($request->input('event'))){
-            $query->where('event','ilike','%'.$request->input('event').'%');
+        if (!empty($request->input('event'))) {
+            $list->where('event', 'ilike', '%' . $request->input('event') . '%');
         }
 
-        if(!empty($request->input('action_date_from'))){
-            $query->whereDate('created_at','>=',$request->input('action_date_from'));
+        if (!empty($request->input('action_date_from'))) {
+            $list->whereDate('created_at', '>=', $request->input('action_date_from'));
         }
 
-        if(!empty($request->input('action_date_to'))){
-            $query->whereDate('created_at','<=',$request->input('action_date_to'));
+        if (!empty($request->input('action_date_to'))) {
+            $list->whereDate('created_at', '<=', $request->input('action_date_to'));
         }
 
-        if(!empty($request->input('community_title'))){
-            $query->whereHas('telegramConnections.community',function($query) use ($request){
-                $query->whereIn('title',$request->input('community_title'));
+        if (!empty($request->input('community_title'))) {
+            $list->whereHas('telegramConnections.community', function ($query) use ($request) {
+                $query->whereIn('title', $request->input('community_title'));
+            });
+        }
+        if ($request->input('tag_names') !== null) {
+            if (!empty(array_filter($request->input('tag_names')))) {
+                $tagsNames = explode(",", $request->input('tag_names')[0]);
+//                return ApiResponse::common($tagsNames);//($request->input('tag_names'));
+                $list->whereHas('telegramConnections.community.tags', function ($query) use ($tagsNames) {
+//                return ApiResponse::common('privet');//($request->input('tag_names'));
+                     return $query->whereIn('tags.name', $tagsNames);
+                });
+            }
+        }
+
+        if (!empty($request->input('user_name'))) {
+            $list->whereHas('telegramUser', function ($query) use ($request) {
+                $query->where('first_name', 'ilike', '%' . $request->input('user_name') . '%')
+                    ->orWhere('last_name', 'ilike', '%' . $request->input('user_name') . '%')
+                    ->orWhere('user_name', 'ilike', '%' . $request->input('user_name') . '%');
             });
         }
 
-        if(!empty($request->input('tags_names'))){
-            $query->whereHas('telegramConnections.community.tags',function($query) use ($request){
-                $query->whereIn('tags.name', $request->input('tags_names'));
-            });
-        }
-
-        if(!empty($request->input('user_name'))){
-            $query->whereHas('telegramUser',function($query) use ($request){
-                $query->where('first_name','ilike','%'.$request->input('user_name').'%')
-                    ->orWhere('last_name','ilike','%'.$request->input('user_name').'%')
-                    ->orWhere('user_name','ilike','%'.$request->input('user_name').'%');
-            });
-        }
-
-        $result = $query->paginate($request->per_page, ['*'],'page',$request->page);
+        $result = $list->paginate($request->per_page, ['*'], 'page', $request->page);
         return ApiResponse::listPagination()->items(new ApiTelegramBotActionLogCollection($result));
     }
 }

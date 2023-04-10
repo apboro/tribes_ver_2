@@ -81,7 +81,7 @@ namespace App\Http\ApiRequests;
  *         )
  *     ),
  *    @OA\Parameter(
- *         name="tags_names[]",
+ *         name="tag_names[]",
  *         in="query",
  *         description="List of tags names",
  *         required=false,
@@ -102,7 +102,7 @@ class ApiTelegramActionLogFilterRequest extends ApiRequest
     {
         return [
             'user_name' =>'string',
-            'tags_names'=>'array',
+            'tag_names'=>'array',
             'event'=>'string',
             'action_date_from'=>'date_format:Y-m-d',
             'action_date_to'=>'date_format:Y-m-d',
