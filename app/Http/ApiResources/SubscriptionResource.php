@@ -2,6 +2,7 @@
 
 namespace App\Http\ApiResources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SubscriptionResource extends JsonResource
@@ -57,11 +58,11 @@ class SubscriptionResource extends JsonResource
             "user_subscription_id" => $this->resource->id,
             "user_id" => $this->resource->user_id,
             "subscription_id" => $this->resource->subscription_id,
-            "created_at" => $this->resource->created_at,
-            "updated_at" => $this->resource->updated_at,
+            "created_at" => $this->resource->created_at->timestamp,
+            "updated_at" => $this->resource->updated_at->timestamp,
             "isRecurrent" => $this->resource->isRecurrent,
             "isActive" => $this->resource->isActive,
-            "expiration_date" =>$this->resource->expiration_date,
+            "expiration_date" =>Carbon::parse($this->resource->expiration_date)->timestamp,
         ];
     }
 }

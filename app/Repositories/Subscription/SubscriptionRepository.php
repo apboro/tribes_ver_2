@@ -16,7 +16,7 @@ class SubscriptionRepository
     {
         $userSubscription = UserSubscription::firstOrNew(['user_id' => $user_id]);
         $userSubscription->subscription_id = $subscription_id;
-        $userSubscription->expiration_date = Carbon::now()->addDays(30);
+        $userSubscription->expiration_date = Carbon::now()->addMonth()->timestamp;
         $userSubscription->save();
     }
 

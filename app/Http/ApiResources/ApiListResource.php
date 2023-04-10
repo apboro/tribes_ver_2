@@ -25,7 +25,7 @@ class ApiListResource extends JsonResource
             'user_name'=>$this->resource->telegramUser->user_name,
             'first_name'=>$this->resource->telegramUser->first_name,
             'last_name'=>$this->resource->telegramUser->last_name,
-            'block_date'=>$this->resource->created_at,
+            'block_date'=>$this->resource->created_at->timestamp,
             'communities'=>$this->whenLoaded(
                 'communities',
                 $this->resource->communities()->where('type','=',$this->resource->type)->pluck('title')

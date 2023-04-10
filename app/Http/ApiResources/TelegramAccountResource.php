@@ -42,9 +42,14 @@ class TelegramAccountResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            "id" => $this->resource->id,
-            "name" => $this->resource->publicName(),
-            "image" => $this->resource->photo_url,
+        "user_id" => $this->resource->id,
+        "telegram_id" => $this->resource->telegram_id,
+        "auth_date" => $this->resource->auth_date,
+        "first_name" => $this->resource->first_name,
+        "last_name" => $this->resource->last_name,
+        "photo_url" => $this->resource->photo_url,
+        "created_at" => $this->resource->created_at->timestamp,
+        "user_name" => $this->resource->username,
         ];
     }
 }

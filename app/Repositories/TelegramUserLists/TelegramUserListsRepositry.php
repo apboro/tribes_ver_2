@@ -69,7 +69,7 @@ class TelegramUserListsRepositry
                         config('telegram_bot.bot.botName'),
                         $telegram_id,
                         $community_telegram_chat_id,
-                        36000000
+                        60
                     );
                 } catch (\Exception $e) {
                     TelegramLogService::staticSendLogMessage('Mute list error' . $e);

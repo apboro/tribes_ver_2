@@ -29,7 +29,7 @@ class AdminCommunityResource extends JsonResource
             'owner_name' => $this->resource->communityOwner->name ?? null,
             'owner_id' => $this->resource->communityOwner->id ?? null ,
             'telegram' => $this->resource->connection->chat_type ?? null,
-            'created_at' => $this->resource -> created_at,
+            'created_at' => $this->resource -> created_at->timestamp,
             'followers' => $this->resource->followers_count,
             'balance' => $this->resource->balance,
             'chat_invite_link' => $this->resource->connection->chat_invite_link ?? null,
