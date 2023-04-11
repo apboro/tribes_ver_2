@@ -24,8 +24,8 @@ class UserForManagerResource extends JsonResource
             'role_index'=>$this->resource->role_index,
             'commission'=>$this->resource->commission,
             'payins'=>$this->resource->payins,
-            'created_at'=>$this->resource->created_at,
-            'updated_at'=>$this->resource->updated_at,
+            'created_at'=>$this->resource->created_at->timestamp,
+            'updated_at'=>$this->resource->updated_atv,
         ];
     }
 }

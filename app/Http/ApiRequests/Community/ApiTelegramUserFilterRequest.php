@@ -85,7 +85,7 @@ use OpenApi\Annotations as OA;
  *    @OA\Parameter(
  *         name="banned",
  *         in="query",
- *         description="Banned list",
+ *         description="Banned list, type = 4",
  *         required=false,
  *         @OA\Schema(
  *             type="boolean",
@@ -95,7 +95,7 @@ use OpenApi\Annotations as OA;
  *    @OA\Parameter(
  *         name="blacklisted",
  *         in="query",
- *         description="Black list",
+ *         description="Black list, type = 1 ",
  *         required=false,
  *         @OA\Schema(
  *             type="boolean",
@@ -105,7 +105,7 @@ use OpenApi\Annotations as OA;
  *    @OA\Parameter(
  *         name="whitelisted",
  *         in="query",
- *         description="White list",
+ *         description="White list, type = 2",
  *         required=false,
  *         @OA\Schema(
  *             type="boolean",
@@ -115,7 +115,7 @@ use OpenApi\Annotations as OA;
  *    @OA\Parameter(
  *         name="muted",
  *         in="query",
- *         description="Mute list",
+ *         description="Mute list, type = 3",
  *         required=false,
  *         @OA\Schema(
  *             type="boolean",
@@ -140,7 +140,7 @@ class ApiTelegramUserFilterRequest extends ApiRequest
             'muted' => 'string',
             'whitelisted' => 'string',
             'blacklisted' => 'string',
-            'is_spammer' => 'bool'
+            'is_spammer' => 'integer'
         ];
     }
 

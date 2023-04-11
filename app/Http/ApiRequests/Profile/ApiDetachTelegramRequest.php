@@ -5,7 +5,7 @@ namespace App\Http\ApiRequests\Profile;
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Post(
+ * @OA\Delete(
  *  path="/api/v3/user/telegram/detach",
  *  operationId="detach_telegram_account",
  *  summary="Detach Telegram Account",

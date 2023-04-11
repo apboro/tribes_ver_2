@@ -31,7 +31,7 @@ class FeedBackResource extends JsonResource
             'status'=>$this->resource->status,
             'user_id' => $this->resource->user_id,
             'manager_id'=>$this->resource->manager_user_id,
-            'created_at' => $this->resource->created_at,
+            'created_at' => $this->resource->created_at->timestamp,
         ];
     }
 }

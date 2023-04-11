@@ -4,6 +4,8 @@ namespace App\Listeners;
 
 use App\Events\SubscriptionMade;
 use App\Repositories\Subscription\SubscriptionRepository;
+use App\Services\SMTP\Mailer;
+use App\Services\TelegramMainBotService;
 
 class SubscriptionListener
 {

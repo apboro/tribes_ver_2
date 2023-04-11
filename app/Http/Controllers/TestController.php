@@ -13,6 +13,7 @@ use App\Models\Course;
 use App\Models\Payment;
 use App\Models\TariffVariant;
 use App\Models\User;
+use App\Models\UserRule;
 use App\Repositories\Tariff\TariffRepository;
 use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\TelegramLogService;
@@ -55,7 +56,15 @@ class TestController extends Controller
 
     public function test()
     {
-phpinfo();
+        $rules = UserRule::query()->where('community_id', 1)->get();
+        foreach ($rules as $rule)
+        {
+            dd($rule->rules);
+           foreach ($rule->rules['children'] as $condition){
+                dump($condition['type']);
+                dump($condition['action']);
+            }
+        }
     }
 
     public function testSMTPMail()

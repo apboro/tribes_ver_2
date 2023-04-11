@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $telegram_user_id
  * @property mixed|string $botStatus
  * @property mixed $community
+ * @property mixed $chat_id
  */
 class TelegramConnection extends Model
 {

@@ -29,9 +29,10 @@ class CommunityRepository implements CommunityRepositoryContract
         }
 
         if ($request->input('tags_names') !== null) {
+            $tagsNames = explode(",", $request->input('tags_names')[0]);
             if (!empty(array_filter($request->input('tags_names')))) {
-                $list->whereHas('tags', function ($query) use ($request) {
-                    return $query->whereIn('name', $request->input('tags_names'));
+                $list->whereHas('tags', function ($query) use ($request, $tagsNames) {
+                    return $query->whereIn('name', $tagsNames);
                 });
             }
         }

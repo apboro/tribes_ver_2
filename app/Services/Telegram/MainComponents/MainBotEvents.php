@@ -8,6 +8,7 @@ use App\Helper\ArrayHelper;
 use App\Logging\TelegramBotActionHandler;
 use App\Models\Community;
 use App\Models\TelegramBotUpdateLog;
+use App\Models\TelegramConnection;
 use App\Models\TelegramUserList;
 use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Repositories\TelegramUserLists\TelegramUserListsRepositry;
@@ -32,6 +33,7 @@ class MainBotEvents
     }
 
     public function initEventsMainBot(array $config = [
+        'migrateToSuperGroup',
         'newChatMember',
         'newChatUser',
         'groupChatCreated',
@@ -70,10 +72,26 @@ class MainBotEvents
         }
     }
 
+
+    public function migrateToSuperGroup()
+    {
+        try{
+            if (isset($this->data->message->migrate_to_chat_id)){
+                $oldChatId = $this->data->message->chat->id;
+                $newChatId = $this->data->message->migrate_to_chat_id;
+                $this->bot->logger()->debug('превращение в супергруппу c id: ', ArrayHelper::toArray($this->data->message->migrate_to_chat_id));
+                $connection = TelegramConnection::query()->where('chat_id', $oldChatId)->first();
+                $connection->chat_id = $newChatId;
+                $connection->save();
+            }
+        } catch (Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+
+    }
     /** Добавление бота в уже существующую ГРУППУ */
     protected function newChatMember()
     {
-
         try {
             if (isset($this->data->message->new_chat_member->id)) {
                 $chatId = $this->data->message->chat->id;

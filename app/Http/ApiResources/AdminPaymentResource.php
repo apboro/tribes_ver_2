@@ -28,7 +28,7 @@ class AdminPaymentResource extends JsonResource
             'add_balance' => $this->resource->add_balance ?? null,
             'from' => $this->resource->from ?? null,
             'status' => $this->resource->status,
-            'created_at' => $this->resource->created_at,
+            'created_at' => $this->resource->created_at->timestamp,
             'user_id' => $this->resource->user_id,
             'type' => $this->resource->type ?? null,
         ];

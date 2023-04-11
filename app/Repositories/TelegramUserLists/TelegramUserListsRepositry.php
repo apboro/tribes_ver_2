@@ -46,7 +46,7 @@ class TelegramUserListsRepositry
                 ]);
             }
             $telegram_list->save();
-            if ($type === self::TYPE_BLACK_LIST) {
+            if ($type === self::TYPE_BLACK_LIST || $type === self::TYPE_BAN_LIST) {
                 try {
                     /** @var Community $community */
                     $community = Community::where('id', $community_id)->first();
@@ -57,7 +57,22 @@ class TelegramUserListsRepositry
                         $community_telegram_chat_id
                     );
                 } catch (\Exception $e) {
-                    TelegramLogService::staticSendLogMessage('Black list error' . $e);
+                    TelegramLogService::staticSendLogMessage('Black/ban list error' . $e);
+                }
+            }
+            if ($type === self::TYPE_MUTE_LIST) {
+                try {
+                    /** @var Community $community */
+                    $community = Community::where('id', $community_id)->first();
+                    $community_telegram_chat_id = $community->connection->chat_id;
+                    $this->telegramMainBotService->muteUser(
+                        config('telegram_bot.bot.botName'),
+                        $telegram_id,
+                        $community_telegram_chat_id,
+                        60
+                    );
+                } catch (\Exception $e) {
+                    TelegramLogService::staticSendLogMessage('Mute list error' . $e);
                 }
             }
 
@@ -69,15 +84,51 @@ class TelegramUserListsRepositry
 
     }
 
+    public function remove(ApiRequest $request, int $telegram_id, int $type = self::TYPE_BLACK_LIST): void
+    {
+        /** @var TelegramUserList $telegram_list */
+        foreach ($request->input('community_ids') as $community_id) {
+            $telegram_list = TelegramUserList::query()
+                ->where('telegram_id', $telegram_id)
+                ->where('community_id', $community_id)
+                ->where('type', $type)
+                ->first();
+
+            if ($type === self::TYPE_BLACK_LIST || $type === self::TYPE_BAN_LIST) {
+                try {
+                    /** @var Community $community */
+                    $community = Community::where('id', $community_id)->first();
+                    $community_telegram_chat_id = $community->connection->chat_id;
+                    $this->telegramMainBotService->unKickUser(
+                        config('telegram_bot.bot.botName'),
+                        $telegram_id,
+                        $community_telegram_chat_id
+                    );
+                } catch (\Exception $e) {
+                    TelegramLogService::staticSendLogMessage('Black/ban list error' . $e);
+                }
+            }
+
+        }
+        if (!$request->input('is_spammer')) {
+            $telegram_list->listParameters()->sync([]);
+        }
+
+        if ($telegram_list != null) {
+            $telegram_list->delete();
+        }
+
+    }
+
     public function detach(ApiRequest $request, int $telegram_id): void
     {
 
         foreach ($request->input('community_ids') as $community_id) {
             /** @var TelegramUserList $telegram_list */
-            TelegramUserList::
-            where('telegram_id', '=', $telegram_id)->
-            where('community_id', '=', $community_id)->
-            delete();
+            TelegramUserList::query()
+                ->where('telegram_id', '=', $telegram_id)
+                ->where('community_id', '=', $community_id)
+                ->delete();
         }
 
     }

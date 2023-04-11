@@ -2,12 +2,11 @@
 
 namespace App\Http\ApiRequests;
 
-
 /**
- * @OA\Put(
- *  path="/api/v3/user/community-users/add_to_list",
- *  operationId="community-user-list-add",
- *  summary="Add user to list (black, mute, ban, white)",
+ * @OA\Delete(
+ *  path="/api/v3/user/community-users/remove_from_list",
+ *  operationId="community-user-list-remove",
+ *  summary="Remove user from list (black, mute, ban, white)",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Users"},
  *     @OA\RequestBody(
@@ -27,7 +26,7 @@ namespace App\Http\ApiRequests;
  *   @OA\Response(response=200, description="OK",@OA\JsonContent())
  *)
  */
-class ApiCommunityUserListAddRequest extends ApiRequest
+class ApiCommunityUserListRemoveRequest extends ApiRequest
 {
 
     public function rules(): array

@@ -84,7 +84,7 @@ class ApiCommunityFilterRequest extends ApiRequest
     {
         return [
             'name'=>'string',
-            'tags_names'=>'',
+            'tags_names'=>'array',
             'date_from'=>'date_format:Y-m-d',
             'date_to'=>'date_format:Y-m-d'
         ];

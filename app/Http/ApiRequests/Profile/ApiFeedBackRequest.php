@@ -37,7 +37,7 @@ class ApiFeedBackRequest extends ApiRequest
         return [
             'fb_email' => 'required|email',
             'fb_message' => 'required',
-            'fb_phone'=> 'required',
+            'fb_phone'=> '',
             'fb_name'=> 'required'
         ];
     }
@@ -48,7 +48,6 @@ class ApiFeedBackRequest extends ApiRequest
             'fb_email.required' => $this->localizeValidation('register.email_required'),
             'fb_email.email' => $this->localizeValidation('login.email_incorrect_format'),
             'fb_message.required' => $this->localizeValidation('feed_back.text_required'),
-            'fb_phone.required'=> $this->localizeValidation('phone.required'),
             'fb_name.required'=> $this->localizeValidation('name.required'),
         ];
     }

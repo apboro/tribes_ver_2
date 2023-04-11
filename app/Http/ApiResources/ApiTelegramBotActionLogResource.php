@@ -23,7 +23,7 @@ class ApiTelegramBotActionLogResource extends JsonResource
             'telegram_user'=>$this->resource->telegramUser ? $this->resource->telegramUser->user_name : null,
             'event'=>$this->resource->event,
             'action'=>$this->resource->action,
-            'done_date'=>$this->resource->created_at->toDateTimeString(),
+            'done_date'=>$this->resource->created_at->timestamp,
             'community'=>$this->resource->telegramConnections->community->title,
             'community_tags'=>ApiTagResourse::collection($this->resource->telegramConnections->community->tags)->toArray($request)
         ];

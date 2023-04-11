@@ -6,6 +6,7 @@ namespace App\Repositories\Community;
 use App\Models\Community;
 use App\Models\Condition;
 use App\Models\ConditionAction;
+use App\Models\UserRule;
 use App\Repositories\Telegram\DTO\MessageDTO;
 use App\Services\TelegramLogService;
 use App\Repositories\Community\CommunityRepositoryContract;
@@ -36,6 +37,16 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         $this->botService = $botService;
     }
 
+    public function parseRule()
+    {
+        $rules = $this->getCommunityRules();
+        foreach ($rules as $rule)
+        {
+
+
+        }
+    }
+
     public function handleRules($dto)
     {
         $this->community = $this->communityRepository->getCommunityByChatId($dto->chat_id);
@@ -56,7 +67,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
     public function getCommunityRules($community_id)
     {
-        return ConditionAction::where('community_id', $community_id)->get();
+            return UserRule::query()->where('community_id', $community_id)->get();
+//        return ConditionAction::where('community_id', $community_id)->get();
     }
 
     public function checkRule(ConditionAction $rule, MessageDTO $data): bool

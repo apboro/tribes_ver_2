@@ -182,24 +182,23 @@ class Telegram extends Messenger
 
     public static function storeAccount($user = null, $data)
     {
-        //$data['id'] = $data['telegram_id'];
         /** @var TelegramUser $ty */
-        $ty = TelegramUser::firstOrCreate([
-            'telegram_id' => isset($data['telegram_id']) ? $data['telegram_id'] : null,
-        ]);
+            $ty = TelegramUser::firstOrNew([
+                'telegram_id' => $data['telegram_id'],
+            ]);
 
-        $ty->user_id = $user ? $user->id : null;
-        $ty->auth_date = isset($data['auth_date']) ? $data['auth_date'] : null;
-        $ty->scene = isset($data['scene']) ? $data['scene'] : null;
-        $ty->hash = isset($data['hash']) ? $data['hash'] : null;
-        $ty->user_name = isset($data['username']) ? $data['username'] : null;
-        $ty->first_name = isset($data['first_name']) ? $data['first_name'] : null;
-        $ty->last_name = isset($data['last_name']) ? $data['last_name'] : null;
-        $ty->photo_url = isset($data['photo_url']) ? self::saveUserAvatar($data['photo_url']) : null;
+            $ty->user_id = $user ? $user->id : null;
+            $ty->auth_date = $data['auth_date'] ?? null;
+            $ty->scene = $data['scene'] ?? null;
+            $ty->hash = $data['hash'] ?? null;
+            $ty->user_name = $data['username'] ?? null;
+            $ty->first_name = $data['first_name'] ?? null;
+            $ty->last_name = $data['last_name'] ?? null;
+            $ty->photo_url = isset($data['photo_url']) ? self::saveUserAvatar($data['photo_url']) : null;
 
-        $ty->save();
+            $ty->save();
 
-        self::toggleCommunityActivity($ty, true);
+            self::toggleCommunityActivity($ty, true);
 
         return $ty;
     }
@@ -471,9 +470,13 @@ class Telegram extends Messenger
         if ($photo_url === '/images/no-image.svg') {
             return $photo_url;
         } else {
-            $path = $dir . '/' . $hash . '.jpg';
-            $photo_url ? file_put_contents($path, file_get_contents($photo_url) ?? null) : null;
-            return '/storage/image/avatar/' . $hash . '.jpg';
+            try {
+                $path = $dir . '/' . $hash . '.jpg';
+                $photo_url ? file_put_contents($path, file_get_contents($photo_url) ?? null) : null;
+                return '/storage/image/avatar/' . $hash . '.jpg';
+            } catch (Exception $e){
+                return null;
+            }
         }
     }
 }
