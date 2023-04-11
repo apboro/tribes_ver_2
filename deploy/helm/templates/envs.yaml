@@ -8,7 +8,7 @@ data:
   APP_ENV: {{ quote .Values.config.app.env }}
   APP_DEBUG: {{ quote .Values.config.app.debug }}
   APP_URL: {{ quote .Values.config.app.url }}
-  SUBSCRIPTION_PERIOD: {{ quote .Values.config.app.subsctiptionPeriod }}
+  SUBSCRIPTION_PERIOD: {{ quote .Values.config.app.subscriptionPeriod }}
   FRONTEND_URL: {{ quote .Values.config.frontend.url }}
   LOG_CHANNEL: {{ quote .Values.config.log.channel }}
   LOG_DEPRECATIONS_CHANNEL: {{ quote .Values.config.log.deprecationsChannel }}
