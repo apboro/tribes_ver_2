@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTableUsersSubscriptions extends Migration
+class expirAddTableUsersSubscriptions extends Migration
 {
     /**
      * Run the migrations.

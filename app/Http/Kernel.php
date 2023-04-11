@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ApiRateLimit;
 use App\Http\Middleware\checkBlocked;
 use App\Http\Middleware\Developer;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -44,7 +45,7 @@ class Kernel extends HttpKernel
         ],
         'api' => [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            'throttle:api',
+            ApiRateLimit::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];

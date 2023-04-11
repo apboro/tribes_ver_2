@@ -30,7 +30,6 @@ class Community extends Model
 
     protected $table = 'communities';
 
-    protected $with = ['donate'];
     /**
      * @var mixed
      */

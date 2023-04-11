@@ -60,7 +60,7 @@ class CheckSubscription extends Command
         $subscriptions = UserSubscription::all();
         foreach ($subscriptions as $subscription)
         {
-            if ($subscription->expiration_date > Carbon::now()
+            if (Carbon::createFromTimestamp($subscription->expiration_date) > Carbon::now()
                 && $subscription->isRecurrent)
             {
                 $p = new Pay();
