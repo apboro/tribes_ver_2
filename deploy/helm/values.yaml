@@ -129,6 +129,7 @@ config:
     key: "base64:key"
     debug: "true"
     url: "http://localhost"
+    subsctiptionPeriod: 30
   log:
     channel: "stack"
     deprecationsChannel: "null"
