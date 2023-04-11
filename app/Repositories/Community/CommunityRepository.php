@@ -6,11 +6,10 @@ use App\Filters\API\CommunitiesFilter;
 use App\Models\Community;
 use App\Models\TelegramConnection;
 use Carbon\Carbon;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Support\Facades\Http;
+
 
 class CommunityRepository implements CommunityRepositoryContract
 {
@@ -23,6 +22,10 @@ class CommunityRepository implements CommunityRepositoryContract
         $user->save();
 
         $list = Community::owned()->active()->with(['tags', 'communityRules', 'connection'])->without('donate')->orderBy('created_at', 'DESC');
+
+        $list->whereHas('connection', function ($q){
+            $q->where('botStatus', 'administrator');
+        });
 
         if (!empty($request->input('name'))) {
             $list->where('title', 'ilike', '%' . $request->input('name') . '%');
