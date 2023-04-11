@@ -22,7 +22,7 @@ class ApiRateLimit extends ThrottleRequests
     public function handle($request, Closure $next, $maxAttempts = null, $decayMinutes = 1, $prefix = '')
     {
         if($maxAttempts === null) {
-            $maxAttempts = env('APP_RATE_LIMIT');
+            $maxAttempts = env('APP_RATE_LIMIT', 60);
         }
         if (is_string($maxAttempts)
             && func_num_args() === 3
