@@ -22,7 +22,7 @@ class CommunityRepository implements CommunityRepositoryContract
         $user->role_index = User::$role['author'];
         $user->save();
 
-        $list = Community::owned()->active()->with(['tags', 'communityRules'])->without('donate')->orderBy('created_at', 'DESC');
+        $list = Community::owned()->active()->with(['tags', 'communityRules', 'connection'])->without('donate')->orderBy('created_at', 'DESC');
 
         if (!empty($request->input('name'))) {
             $list->where('title', 'ilike', '%' . $request->input('name') . '%');
@@ -38,12 +38,17 @@ class CommunityRepository implements CommunityRepositoryContract
         }
 
         if (!empty($request->input('date_from'))) {
-            $list->whereDate('created_at', '>=', $request->input('date_from'));
+            $list->whereDate('created_at', '>=', Carbon::createFromTimestamp($request->input('date_from')));
         }
         if (!empty($request->input('date_to'))) {
-            $list->whereDate('created_at', '<=', $request->input('date_to'));
+            $list->whereDate('created_at', '<=', Carbon::createFromTimestamp($request->input('date_to')));
         }
 
+        if (!empty($request->input('telegram_id'))) {
+            $list->whereHas('connection', function($q) use ($request){
+                $q->where('telegram_user_id', $request->input('telegram_id'));
+            });
+        }
 
         $res = $list->paginate($request->per_page, ['*'],'page',$request->page);
 

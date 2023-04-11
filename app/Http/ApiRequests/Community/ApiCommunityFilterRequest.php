@@ -19,7 +19,6 @@ use App\Http\ApiRequests\ApiRequest;
  *         required=false,
  *         @OA\Schema(
  *             type="integer",
- *             example=20
  *         )
  *     ),
  *     @OA\Parameter(
@@ -29,7 +28,15 @@ use App\Http\ApiRequests\ApiRequest;
  *         required=false,
  *         @OA\Schema(
  *             type="integer",
- *             example=3
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="telegram_id",
+ *         in="query",
+ *         description="Telegram id of Spodial User",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
  *         )
  *     ),
  *    @OA\Parameter(
@@ -39,7 +46,6 @@ use App\Http\ApiRequests\ApiRequest;
  *         required=false,
  *         @OA\Schema(
  *             type="string",
- *             example="Bubbles"
  *         )
  *     ),
  *     @OA\Parameter(
@@ -50,7 +56,6 @@ use App\Http\ApiRequests\ApiRequest;
  *         @OA\Schema(
  *             type="array",
  *             @OA\Items(type="string"),
- *             example={"Bubbles", "Ponies", "Pies"}
  *         )
  *     ),
  *     @OA\Parameter(
@@ -59,8 +64,7 @@ use App\Http\ApiRequests\ApiRequest;
  *         description="Communities with date of add to Spodial from",
  *         required=false,
  *         @OA\Schema(
- *             type="string",
- *             example="2023-01-01"
+ *             type="integer",
  *         )
  *     ),
  *     @OA\Parameter(
@@ -69,8 +73,7 @@ use App\Http\ApiRequests\ApiRequest;
  *         description="Communities with date of add to Spodial to",
  *         required=false,
  *         @OA\Schema(
- *             type="string",
- *             example="2023-01-01"
+ *             type="integer",
  *         )
  *     ),
  *      @OA\Response(response=200, description="OK"),
@@ -85,8 +88,8 @@ class ApiCommunityFilterRequest extends ApiRequest
         return [
             'name'=>'string',
             'tags_names'=>'array',
-            'date_from'=>'date_format:Y-m-d',
-            'date_to'=>'date_format:Y-m-d'
+            'date_from'=>'date_format:U',
+            'date_to'=>'date_format:U'
         ];
     }
 
