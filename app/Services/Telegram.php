@@ -145,16 +145,13 @@ class Telegram extends Messenger
         try {
             /** @var TelegramConnection $connection */
             $connection = TelegramConnection::where('chat_id', $chat_id)->first();
-            Log::debug('deactivateCommunity start', compact('chat_id', 'connection'));
             if ($connection) {
                 $community = $connection->community;
                 if ($community) {
-                    Log::debug('deactivateCommunity middle', compact('community'));
                     $community->update(['is_active' => false]);
                 }
                 $connection->botStatus = 'kicked';
                 $connection->save();
-                Log::debug('deactivateCommunity end', compact('connection', 'community'));
             }
             return true;
         } catch (\Exception $e) {
@@ -376,7 +373,7 @@ class Telegram extends Messenger
 
             $hash = self::hash($userId, $chatType);
 
-            $tc = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
+            $tc = TelegramConnection::whereHash($hash)->whereStatus('init')->orWhere('botStatus', 'kicked')->first();
             Log::debug('поиск группы $hash init', compact('chatId', 'hash'));
             if ($tc) {
                 $tc->chat_id = $chatId;
