@@ -239,6 +239,7 @@ class Telegram extends Messenger
     {
         $tc = TelegramConnection::whereHash($hash)
             ->where('user_id', Auth::user()->id)
+            ->where('botStatus', 'administrator')
             ->whereStatus('connected')
             ->first();
 
