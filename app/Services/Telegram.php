@@ -395,13 +395,13 @@ class Telegram extends Messenger
                     $telegramConnectionNew->isChannel = $isChannel;
                     $telegramConnectionNew->isGroup = !$isChannel;
 
-                    $telegramConnectionNew->photo_url = $photo_url ?? null;
+                    $telegramConnectionNew->photo_url = $photo_url;
                     $telegramConnectionNew->save();
                     Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chat_id', 'chatTitle', 'chatType'));
                 }
             }
         } catch (\Exception $e) {
-            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            Log::error($e);
         }
     }
 
