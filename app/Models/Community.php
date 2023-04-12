@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
  * @property mixed $id
  * @property TelegramConnection $connection
  * @property string $title
+ * @property mixed|true $is_active
  */
 class Community extends Model
 {

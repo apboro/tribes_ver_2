@@ -237,39 +237,40 @@ class Telegram extends Messenger
     {
         $tc = TelegramConnection::whereHash($hash)
             ->whereStatus('connected')
+            ->orWhere('botStatus', 'administrator')
             ->first();
 
-        /*if (config('app.debug')) {
-            Artisan::call('telegram:' . 'group' . ':connect');
-            Artisan::call('telegram:' . 'channel' . ':connect');
-        }*/
-
         if ($tc) {
-
             /* @var $community Community */
-            $community = Community::create([
+            $community = Community::firstOrCreate(['connection_id' => $tc->id],
+                [
                 'owner' => Auth::user()->id,
                 'title' => $tc->chat_title,
-                'connection_id' => $tc->id,
                 'image' => self::saveCommunityPhoto($tc->photo_url, $tc->chat_id)
             ]);
-            //todo refactoring создание тарифа должно происходить через репозиторий TariffRepository
-            $tariff = new Tariff();
-            $this->tariffRepository->generateLink($tariff);
-            $baseAttributes = Tariff::baseData();
-            $baseAttributes['inline_link'] = $tariff->inline_link;
-            $community->tariff()->create($baseAttributes);
-            $community->statistic()->create([
-                'community_id' => $community->id
-            ]);
-            $this->addBot($community);
-            $this->addAuthorOnCommunity($community);
+            if ($community->wasRecentlyCreated) {
+                //todo refactoring создание тарифа должно происходить через репозиторий TariffRepository
+                $tariff = new Tariff();
+                $this->tariffRepository->generateLink($tariff);
+                $baseAttributes = Tariff::baseData();
+                $baseAttributes['inline_link'] = $tariff->inline_link;
+                $community->tariff()->create($baseAttributes);
+                $community->is_active = true;
+                $community->statistic()->create([
+                    'community_id' => $community->id
+                ]);
+                $this->addBot($community);
+                $this->addAuthorOnCommunity($community);
 
-            $community->generateHash();
-            $community->save();
+                $community->generateHash();
+                $community->save();
+                $tc->status = 'completed';
+                $tc->save();
+            } else {
+                $community->is_active = true;
+                $community->save();
+            }
 
-            $tc->status = 'completed';
-            $tc->save();
 
             return TelegramConnection::where('id', $tc->id)->with('community')->first();
         } else {
@@ -399,6 +400,7 @@ class Telegram extends Messenger
         $tc = TelegramConnection::where('telegram_user_id', $telegram_user_id)
             ->where('chat_id', $chat_id)
             ->whereStatus('init')
+            ->orWhere('botStatus', 'kicked')
             ->first();
 
         if ($tc) {
