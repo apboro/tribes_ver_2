@@ -407,14 +407,18 @@ class Telegram extends Messenger
 
     public static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id)
     {
-        $telegramConnection = TelegramConnection::where('chat_id', $chat_id)
-            ->where('telegram_user_id', $telegram_user_id)
-            ->first();
-        Log::debug('botGetPermissionsEvent', compact('telegramConnection'));
-        if ($telegramConnection) {
-            $telegramConnection->botStatus = $status;
-            $telegramConnection->status = 'connected';
-            $telegramConnection->save();
+        try {
+            $telegramConnection = TelegramConnection::where('chat_id', $chat_id)
+                ->where('telegram_user_id', $telegram_user_id)
+                ->first();
+            Log::debug('botGetPermissionsEvent', compact('telegramConnection'));
+            if ($telegramConnection) {
+                $telegramConnection->botStatus = $status;
+                $telegramConnection->status = 'connected';
+                $telegramConnection->save();
+            }
+        } catch (Exception $e) {
+            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
