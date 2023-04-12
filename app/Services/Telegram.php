@@ -381,7 +381,7 @@ class Telegram extends Messenger
 
             $telegramConnectionNew = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
             if ($telegramConnectionExists){
-                if (!$telegramConnectionNew) {
+                if ($telegramConnectionNew) {
                     $telegramConnectionNew->delete();
                 }
                 Log::debug('Бот добавлен в имеющуюся в БД группу', compact('chat_id', 'chatTitle', 'chatType'));
