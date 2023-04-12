@@ -200,7 +200,7 @@ class Telegram extends Messenger
 
             $ty->save();
 
-            self::toggleCommunityActivity($ty, true);
+            self::toggleCommunityActivity($ty, true, 'completed');
 
         return $ty;
     }
@@ -209,7 +209,7 @@ class Telegram extends Messenger
     {
         $telegram_account = TelegramUser::where('telegram_id', $telegram_id)->where('user_id', Auth::user()->id)->first();
         if ($telegram_account) {
-            self::toggleCommunityActivity($telegram_account, false);
+            self::toggleCommunityActivity($telegram_account, false, 'connected');
             $telegram_account->delete();
             return true;
 
@@ -218,14 +218,15 @@ class Telegram extends Messenger
         }
     }
 
-    public static function toggleCommunityActivity(TelegramUser  $telegramUser, bool $is_active): void
+    public static function toggleCommunityActivity(TelegramUser $telegramUser, bool $community_is_active, string $connection_status): void
     {
         $connections = $telegramUser->user->connections()->where('telegram_user_id', $telegramUser->telegram_id)->get();
         if ($connections->isNotEmpty()) {
             foreach ($connections as $connection) {
+                $connection->status = $connection_status;
                 $community = $connection->community;
                 if ($community) {
-                    $community->update(['is_active' => $is_active]);
+                    $community->update(['is_active' => $community_is_active]);
                 }
             }
         }
@@ -252,7 +253,6 @@ class Telegram extends Messenger
                 'image' => self::saveCommunityPhoto($tc->photo_url, $tc->chat_id)
             ]);
             if ($community->wasRecentlyCreated) {
-                //todo refactoring создание тарифа должно происходить через репозиторий TariffRepository
                 $tariff = new Tariff();
                 $this->tariffRepository->generateLink($tariff);
                 $baseAttributes = Tariff::baseData();
@@ -273,7 +273,6 @@ class Telegram extends Messenger
                 $community->is_active = true;
                 $community->save();
             }
-
 
             return TelegramConnection::where('id', $tc->id)->with('community')->first();
         } else {
@@ -338,17 +337,15 @@ class Telegram extends Messenger
             }
         }
 
-
         if ($td) {
-            $hash = self::hash($td->telegram_id, $type);
+            $hash = self::hash(Auth::user()->id . $td->telegram_id, time());
 
             $tc = TelegramConnection::firstOrCreate([
                 'user_id' => Auth::user()->id,
                 'telegram_user_id' => $td->telegram_id,
-                'hash' => $hash,
                 'chat_type' => $type ?? 'errorType',
                 'status' => 'init'
-            ]);
+            ], ['hash' => $hash]);
 
             return [
                 'original' => [
@@ -367,7 +364,7 @@ class Telegram extends Messenger
     }
 
 
-    public static function botEnterGroupEvent($userId, $chatId, $chatType, $chatTitle, $photo_url = null)
+    public static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chatTitle, $photo_url = null)
     {
 
         try {
@@ -375,24 +372,32 @@ class Telegram extends Messenger
 
             $chatType = $isChannel ? 'channel' : 'group';
 
-            $hash = self::hash($userId, $chatType);
+            $hash = self::hash($telegram_user_id, $chatType);
 
-            $tc = TelegramConnection::whereHash($hash)->whereStatus('init')->orWhere('botStatus', 'kicked')->first();
-            Log::debug('поиск группы $hash init', compact('chatId', 'hash'));
-            if ($tc) {
-                if (!$tc->chat_id){
-                    $tc->chat_id = $chatId;
+            $telegramConnectionExists = TelegramConnection::query()
+                ->where('chat_id', $chat_id)
+                ->where($telegram_user_id, $telegram_user_id)
+                ->first();
+
+            $telegramConnectionNew = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
+            if ($telegramConnectionExists){
+                $telegramConnectionNew->delete();
+                Log::debug('Бот добавлен в имеющуюся в БД группу', compact('chat_id', 'chatTitle', 'chatType'));
+            } else {
+                Log::debug('поиск группы $hash init', compact('chat_id', 'hash'));
+                if ($telegramConnectionNew) {
+                    $telegramConnectionNew->chat_id = $chat_id;
+                    $telegramConnectionNew->chat_title = $chatTitle;
+                    $telegramConnectionNew->chat_type = $chatType;
+
+                    $telegramConnectionNew->isAdministrator = false;
+                    $telegramConnectionNew->isChannel = $isChannel;
+                    $telegramConnectionNew->isGroup = !$isChannel;
+
+                    $telegramConnectionNew->photo_url = $photo_url ?? null;
+                    $telegramConnectionNew->save();
+                    Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chat_id', 'chatTitle', 'chatType'));
                 }
-                $tc->chat_title = $chatTitle;
-                $tc->chat_type = $chatType;
-
-                $tc->isAdministrator = false;
-                $tc->isChannel = $isChannel;
-                $tc->isGroup = !$isChannel;
-
-                $tc->photo_url = $photo_url ?? null;
-                $tc->save();
-                Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chatId', 'chatTitle', 'chatType'));
             }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -401,16 +406,14 @@ class Telegram extends Messenger
 
     public static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id)
     {
-        $tc = TelegramConnection::where('telegram_user_id', $telegram_user_id)
-            ->where('chat_id', $chat_id)
-            ->whereStatus('init')
-            ->orWhere('botStatus', 'kicked')
+        $telegramConnection = TelegramConnection::where('chat_id', $chat_id)
+            ->where($telegram_user_id, $telegram_user_id)
             ->first();
 
-        if ($tc) {
-            $tc->botStatus = $status;
-            $tc->status = 'connected';
-            $tc->save();
+        if ($telegramConnection) {
+            $telegramConnection->botStatus = $status;
+            $telegramConnection->status = 'connected';
+            $telegramConnection->save();
         }
     }
 

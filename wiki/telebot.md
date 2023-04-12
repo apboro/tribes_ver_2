@@ -73,7 +73,7 @@ action методы - реагируют на нажатия кнопок.
 ## События которые обрабатывает бот
 
 1. /** Добавление бота в уже существующую ГРУППУ */
-    protected function newChatMember()
+    protected function botAddedToGroup()
 
 2. /** Новый пользователь */
     protected function newChatUser()

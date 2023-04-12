@@ -34,7 +34,7 @@ class MainBotEvents
 
     public function initEventsMainBot(array $config = [
         'migrateToSuperGroup',
-        'newChatMember',
+        'botAddedToGroup',
         'newChatUser',
         'groupChatCreated',
         'chanelChatCreated',
@@ -90,13 +90,11 @@ class MainBotEvents
 
     }
     /** Добавление бота в уже существующую ГРУППУ */
-    protected function newChatMember()
+    protected function botAddedToGroup()
     {
         try {
             if (isset($this->data->message->new_chat_member->id)) {
                 $chatId = $this->data->message->chat->id;
-                $this->bot->logger()->debug('новый пользователь в группе', ArrayHelper::toArray($this->data->message->new_chat_member));
-
                 if ($this->data->message->new_chat_member->id == $this->bot->botId) {
                     $this->bot->logger()->debug('Добавление бота в уже существующую ГРУППУ', ArrayHelper::toArray($this->data->message->chat));
                     Telegram::botEnterGroupEvent(

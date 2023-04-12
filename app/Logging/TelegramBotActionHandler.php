@@ -37,7 +37,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
     const SET_TARIFF_FOR_USER_BY_PAID_ID = 'setTariffForUserByPayId';
     const KNOWLEDGE_SEARCH = 'knowledgeSearch';
     const SAVE_FORWARD_MESSAGE = 'saveForwardMessageInBotChatAsQA';
-    const EVENT_NEW_CHAT_MEMBER = 'newChatMember';
+    const EVENT_NEW_CHAT_MEMBER = 'botAddedToGroup';
     const EVENT_NEW_CHAT_USER = 'newChatUser';
     const EVENT_GROUP_CHAT_CREATED = 'groupChatCreated';
     const EVENT_CHANNEL_CHAT_CREATED = 'chanelChatCreated';
