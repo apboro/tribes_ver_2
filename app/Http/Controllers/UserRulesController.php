@@ -14,11 +14,13 @@ class UserRulesController extends Controller
 {
     public function store(ApiUserRulesStoreRequest $request)
     {
-        $rule = new UserRule();
-        $rule->rules = $request->input('rules');
-        $rule->user_id=Auth::user()->id;
-
-        $rule->save();
+        foreach ($request->input('communities_ids') as $community_id) {
+            $rule = new UserRule();
+            $rule->rules = $request->input('rules');
+            $rule->user_id = Auth::user()->id;
+            $rule->community_id = $community_id;
+            $rule->save();
+        }
 
         return ApiResponse::success('rules.saved_successfully');
     }

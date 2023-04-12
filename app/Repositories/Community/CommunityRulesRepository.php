@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
 class CommunityRulesRepository implements CommunityRulesRepositoryContract
 {
 
+    private MessageDTO $messageDTO;
     private Community $community;
     private Logger $logger;
     private CommunityRepositoryContract $communityRepository;
@@ -39,32 +40,35 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
     public function parseRule(): void
     {
-        $rules = $this->getCommunityRules();
+        $rules = $this->getCommunityRules($this->community->id);
+        $result = false;
         foreach ($rules as $rule) {
-//            dd($rule);
             foreach ($rule->rules['children'] as $condition) {
                 if ($condition['subject'] === 'message_content')
                     if ($condition['action'] === 'matches_partially')
-                        if ($condition['value'] === "link") $this->actionRunner($data = null, $rule['callback']);
+                        if ($condition['value'] === "link")
+                            $result = $this->conditionMatcher(10, $rule_parameter = null, $this->messageDTO);
             }
+            if ($result) $this->actionRunner(10, 1, $this->messageDTO);
         }
     }
 
     public function handleRules($dto)
     {
         $this->community = $this->communityRepository->getCommunityByChatId($dto->chat_id);
+        $this->messageDTO = $dto;
 
-        $rules = $this->getCommunityRules($this->community->id);
+        $this->parseRule();
 
-        if ($rules->isNotEmpty()) {
-            $this->logger->debug('rules are ', [$rules]);
-            foreach ($rules as $rule) {
-                $result = $this->checkRule($rule, $dto);
-                if ($result && $rule->parent_group_uuid === null) {
-                    $this->actionRunner($dto, $rule->action);
-                }
-            }
-        }
+//        if ($rules->isNotEmpty()) {
+//            $this->logger->debug('rules are ', [$rules]);
+//            foreach ($rules as $rule) {
+//                $result = $this->checkRule($rule, $dto);
+//                if ($result && $rule->parent_group_uuid === null) {
+//                    $this->actionRunner($dto, $rule->action);
+//                }
+//            }
+//        }
 //        TelegramLogService::staticSendLogMessage('We got rules! We now in community->' . $this->community->title);
     }
 
@@ -127,13 +131,13 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
      * @param Condition $rule
      * @var MessageDTO $data
      */
-    public function conditionMatcher(Condition $rule, MessageDTO $data)
+    public function conditionMatcher(int $rule_id, $rule_parameter, MessageDTO $data)
     {
-        $this->logger->debug('checking condition ID' . $rule->id, ['rules' => $rule, 'data' => $data]);
-        switch ($rule->type_id) {
+        $this->logger->debug('checking condition ID' . $rule_id, ['rules' => $rule_id, 'data' => $data]);
+        switch ($rule_id) {
             //message	message_contain	full_congruence
             case 1:
-                if ($rule->parameter === $data->text) {
+                if ($rule_parameter === $data->text) {
                     $this->logger->debug('type rule 1 true');
                     return true;//$this->actionRunner($data, $rule->action);
                 }
@@ -141,27 +145,27 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             //message	message_contain	part_congruence
             case 2:
 
-                if (Str::contains($data->text, $rule->parameter)) {
+                if (Str::contains($data->text, $rule_parameter)) {
                     $this->logger->debug('type rule 2 true');
                     return true; //$this->actionRunner($data, $rule->action);
                 }
                 break;
             //message	message_length	more_than
             case 3:
-                if (Str::length($data->text) > $rule->parameter) {
+                if (Str::length($data->text) > $rule_parameter) {
                     $this->logger->debug('type rule 3 true');
                     return true; //$this->actionRunner($data, $rule->action);
                 }
                 break;
             //message	message_length	less_than
             case 4:
-                if (Str::length($data->text) < $rule->parameter) {
+                if (Str::length($data->text) < $rule_parameter) {
                     return true; //$this->actionRunner($data, $rule->action);
                 }
                 break;
             //message	message_length	equivalent
             case 5:
-                if (Str::length($data->text) == $rule->parameter) {
+                if (Str::length($data->text) == $rule_parameter) {
                     return true; //$this->actionRunner($data, $rule->action);
                 }
                 break;
@@ -174,13 +178,13 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 break;
             //username	too_long_first_name
             case 7:
-                if (Str::length($data->telegram_user_first_name) > $rule->parameter) {
+                if (Str::length($data->telegram_user_first_name) > $rule_parameter) {
                     return true; //$this->actionRunner($data, $rule->action);
                 }
                 break;
             //username	too_long_second_name
             case 8:
-                if (Str::length($data->telegram_user_last_name) > $rule->parameter) {
+                if (Str::length($data->telegram_user_last_name) > $rule_parameter) {
                     return true; //$this->actionRunner($data, $rule->action);
                 }
                 break;
@@ -208,17 +212,17 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         return false;
     }
 
-    public function actionRunner($data, $action)
+    public function actionRunner($action_id, $action_parameter, $messageDTO)
     {
-        $this->logger->debug('rules are ', ['data' => $data, 'act_type' => $action]);
-        switch ($action->type_id) {
+        $this->logger->debug('rules are ', ['data' => $messageDTO, 'act_type' => $action_id]);
+        switch ($action_id) {
             //send message in chat from bot
             case 1:
                 $this->logger->debug('Action >> sending mess');
                 $this->botService->sendMessageFromBot(
                     config('telegram_bot.bot.botName'),
-                    $data->chat_id,
-                    $action->parameter,
+                    $messageDTO->chat_id,
+                    $action_parameter,
                 );
                 break;
             //send_message_in_pm_from_bot
@@ -226,8 +230,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 $this->logger->debug('Action >> sending mess PM');
                 $this->botService->sendMessageFromBot(
                     config('telegram_bot.bot.botName'),
-                    $data->telegram_user_id,
-                    $action->parameter,
+                    $messageDTO->telegram_user_id,
+                    $action_parameter,
                 );
                 break;
             //delete_message
@@ -235,8 +239,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 $this->logger->debug('Action >> deleting message');
                 $this->botService->deleteUserMessage(
                     config('telegram_bot.bot.botName'),
-                    $data->message_id,
-                    $data->chat_id,
+                    $messageDTO->message_id,
+                    $messageDTO->chat_id,
                 );
                 break;
             //ban_user
@@ -244,8 +248,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 $this->logger->debug('Action >> kicking user');
                 $this->botService->kickUser(
                     config('telegram_bot.bot.botName'),
-                    $data->telegram_user_id,
-                    $data->chat_id,
+                    $messageDTO->telegram_user_id,
+                    $messageDTO->chat_id,
                 );
                 break;
             //mute_user
@@ -253,9 +257,9 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 $this->logger->debug('Action >> restrict chat member');
                 $this->botService->muteUser(
                     config('telegram_bot.bot.botName'),
-                    $data->telegram_user_id,
-                    $data->chat_id,
-                    $action->parameter,
+                    $messageDTO->telegram_user_id,
+                    $messageDTO->chat_id,
+                    $action_parameter,
                 );
         }
     }
