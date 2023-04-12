@@ -151,6 +151,7 @@ class Telegram extends Messenger
                     $community->update(['is_active' => false]);
                 }
                 $connection->botStatus = 'kicked';
+                $connection->status = 'connected';
                 $connection->save();
             }
             return true;
@@ -236,9 +237,11 @@ class Telegram extends Messenger
     public function checkCommunityConnect($hash)
     {
         $tc = TelegramConnection::whereHash($hash)
+            ->where('user_id', Auth::user()->id)
             ->whereStatus('connected')
-            ->orWhere('botStatus', 'administrator')
             ->first();
+
+        Log::debug('checkCommunityConnect', compact('tc'));
 
         if ($tc) {
             /* @var $community Community */
@@ -398,7 +401,6 @@ class Telegram extends Messenger
 
     public static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id)
     {
-
         $tc = TelegramConnection::where('telegram_user_id', $telegram_user_id)
             ->where('chat_id', $chat_id)
             ->whereStatus('init')
