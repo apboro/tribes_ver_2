@@ -339,7 +339,7 @@ class Telegram extends Messenger
         }
 
         if ($td) {
-            $hash = self::hash(Auth::user()->id . $td->telegram_id, time());
+            $hash = self::hash($td->telegram_id, $type);
 
             $tc = TelegramConnection::firstOrCreate([
                 'user_id' => Auth::user()->id,
