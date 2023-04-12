@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helper\ArrayHelper;
 use App\Models\Community;
 
 use App\Models\Payment;
@@ -144,13 +145,16 @@ class Telegram extends Messenger
         try {
             /** @var TelegramConnection $connection */
             $connection = TelegramConnection::where('chat_id', $chat_id)->first();
+            Log::debug('deactivateCommunity start', compact('chat_id', 'connection'));
             if ($connection) {
                 $community = $connection->community;
                 if ($community) {
+                    Log::debug('deactivateCommunity middle', compact('community'));
                     $community->update(['is_active' => false]);
                 }
                 $connection->botStatus = 'kicked';
                 $connection->save();
+                Log::debug('deactivateCommunity end', compact('connection', 'community'));
             }
             return true;
         } catch (\Exception $e) {

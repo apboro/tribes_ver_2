@@ -301,9 +301,11 @@ class MainBotEvents
         try {
             if (isset($this->data->my_chat_member)) {
                 if (
-                    $this->data->my_chat_member->new_chat_member->user->id == $this->bot->botId and
-                    $this->data->my_chat_member->new_chat_member->status == 'kicked'
+                    $this->data->my_chat_member->new_chat_member->user->id == $this->bot->botId &&
+                    ($this->data->my_chat_member->new_chat_member->status == 'left' ||
+                    $this->data->my_chat_member->new_chat_member->status == 'kicked')
                 ) {
+                    $this->bot->logger()->debug('bot kicked, delete chat', ArrayHelper::toArray($this->data->message->new_chat_member));
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
                         'event'=>TelegramBotActionHandler::EVENT_DELETE_CHAT,
