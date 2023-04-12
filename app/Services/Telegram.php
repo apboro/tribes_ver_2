@@ -377,7 +377,7 @@ class Telegram extends Messenger
 
             $telegramConnectionExists = TelegramConnection::query()
                 ->where('chat_id', $chat_id)
-                ->where($telegram_user_id, $telegram_user_id)
+                ->where('telegram_user_id', $telegram_user_id)
                 ->first();
 
             $telegramConnectionNew = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
