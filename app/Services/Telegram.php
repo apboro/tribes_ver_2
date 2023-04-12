@@ -408,7 +408,7 @@ class Telegram extends Messenger
     public static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id)
     {
         $telegramConnection = TelegramConnection::where('chat_id', $chat_id)
-            ->where($telegram_user_id, $telegram_user_id)
+            ->where('telegram_user_id', $telegram_user_id)
             ->first();
         Log::debug('botGetPermissionsEvent', compact('telegramConnection'));
         if ($telegramConnection) {
