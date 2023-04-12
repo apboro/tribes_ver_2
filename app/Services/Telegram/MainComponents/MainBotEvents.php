@@ -302,7 +302,7 @@ class MainBotEvents
             if (isset($this->data->my_chat_member)) {
                 if (
                     $this->data->my_chat_member->new_chat_member->user->id == $this->bot->botId and
-                    $this->data->my_chat_member->new_chat_member->status == 'left'
+                    $this->data->my_chat_member->new_chat_member->status == 'kicked'
                 ) {
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
