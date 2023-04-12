@@ -377,7 +377,9 @@ class Telegram extends Messenger
             $tc = TelegramConnection::whereHash($hash)->whereStatus('init')->orWhere('botStatus', 'kicked')->first();
             Log::debug('поиск группы $hash init', compact('chatId', 'hash'));
             if ($tc) {
-                $tc->chat_id = $chatId;
+                if (!$tc->chat_id){
+                    $tc->chat_id = $chatId;
+                }
                 $tc->chat_title = $chatTitle;
                 $tc->chat_type = $chatType;
 
