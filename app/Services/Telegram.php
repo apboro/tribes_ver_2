@@ -367,7 +367,6 @@ class Telegram extends Messenger
 
     public static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chatTitle, $photo_url = null)
     {
-
         try {
             $isChannel = strpos($chatType, 'channel') !== false;
 
@@ -382,7 +381,9 @@ class Telegram extends Messenger
 
             $telegramConnectionNew = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
             if ($telegramConnectionExists){
-                $telegramConnectionNew->delete();
+                if (!$telegramConnectionNew) {
+                    $telegramConnectionNew->delete();
+                }
                 Log::debug('Бот добавлен в имеющуюся в БД группу', compact('chat_id', 'chatTitle', 'chatType'));
             } else {
                 Log::debug('поиск группы $hash init', compact('chat_id', 'hash'));
