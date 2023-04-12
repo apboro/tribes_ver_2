@@ -41,7 +41,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
     const EVENT_NEW_CHAT_USER = 'newChatUser';
     const EVENT_GROUP_CHAT_CREATED = 'groupChatCreated';
     const EVENT_CHANNEL_CHAT_CREATED = 'chanelChatCreated';
-    const EVENT_CHECK_MEMBER = 'checkMember';
+    const EVENT_CHECK_MEMBER = 'makeBotAdmin';
     const EVENT_NEW_CHAT_PHOTO = 'newChatPhoto';
     const EVENT_DELETE_CHAT = 'deleteChat';
     const EVENT_NEW_CHAT_TITLE = 'newChatTitle';

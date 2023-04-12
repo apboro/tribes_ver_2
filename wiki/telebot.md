@@ -85,7 +85,7 @@ action методы - реагируют на нажатия кнопок.
     protected function chanelChatCreated()
 
 5. /** Событие назначения бота администратором в ГРУППЕ */
-    protected function checkMember()
+    protected function makeBotAdmin()
 
 6. /** Событие изменения или добавления фотографии группы или канала*/
     protected function newChatPhoto()
