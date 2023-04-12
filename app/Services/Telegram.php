@@ -265,15 +265,13 @@ class Telegram extends Messenger
                 ]);
                 $this->addBot($community);
                 $this->addAuthorOnCommunity($community);
-
                 $community->generateHash();
-                $community->save();
-                $tc->status = 'completed';
-                $tc->save();
             } else {
                 $community->is_active = true;
-                $community->save();
             }
+            $community->save();
+            $tc->status = 'completed';
+            $tc->save();
 
             return TelegramConnection::where('id', $tc->id)->with('community')->first();
         } else {
