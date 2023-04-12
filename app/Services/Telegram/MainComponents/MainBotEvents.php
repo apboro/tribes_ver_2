@@ -102,7 +102,7 @@ class MainBotEvents
                         $chatId,
                         $this->data->message->chat->type,
                         $this->data->message->chat->title,
-                        $this->getPhoto($chatId)
+//                        $this->getPhoto($chatId)
                     );
                     Log::channel('telegram_bot_action_log')
                         ->
@@ -185,7 +185,7 @@ class MainBotEvents
                         $chatId,
                         $this->data->message->chat->type,
                         $this->data->message->chat->title,
-                        $this->getPhoto($chatId)
+                       // $this->getPhoto($chatId)
                     );
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
@@ -216,7 +216,7 @@ class MainBotEvents
                         $chatId,
                         $this->data->my_chat_member->chat->type,
                         $this->data->my_chat_member->chat->title,
-                        $this->getPhoto($chatId)
+//                        $this->getPhoto($chatId)
                     );
                     Log::channel('telegram_bot_action_log')->
                     log('info','',[
