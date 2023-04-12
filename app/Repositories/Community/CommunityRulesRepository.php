@@ -37,13 +37,16 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         $this->botService = $botService;
     }
 
-    public function parseRule()
+    public function parseRule(): void
     {
         $rules = $this->getCommunityRules();
-        foreach ($rules as $rule)
-        {
-
-
+        foreach ($rules as $rule) {
+//            dd($rule);
+            foreach ($rule->rules['children'] as $condition) {
+                if ($condition['subject'] === 'message_content')
+                    if ($condition['action'] === 'matches_partially')
+                        if ($condition['value'] === "link") $this->actionRunner($data = null, $rule['callback']);
+            }
         }
     }
 
@@ -57,7 +60,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             $this->logger->debug('rules are ', [$rules]);
             foreach ($rules as $rule) {
                 $result = $this->checkRule($rule, $dto);
-                if ($result && $rule->parent_group_uuid === null){
+                if ($result && $rule->parent_group_uuid === null) {
                     $this->actionRunner($dto, $rule->action);
                 }
             }
@@ -67,7 +70,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
     public function getCommunityRules($community_id)
     {
-            return UserRule::query()->where('community_id', $community_id)->get();
+        return UserRule::query()->where('community_id', $community_id)->get();
 //        return ConditionAction::where('community_id', $community_id)->get();
     }
 

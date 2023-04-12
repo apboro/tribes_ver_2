@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\APIv3;
 
-use App\Http\ApiRequests\ActionsConditions\ApiGetActionsDictRequest;
+use App\Http\ApiRequests\ActionsConditions\ApiGetRulesDictRequest;
 use App\Http\ApiRequests\ActionsConditions\ApiGetConditionsDictRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -12,13 +12,17 @@ use Conditions\ApiGetConditionsRequest;
 
 class ApiDictionariesController extends Controller
 {
-    public function getActionsDictionary(ApiGetActionsDictRequest $request)
+    public function getRulesDictionary(ApiGetRulesDictRequest $request)
     {
-        return ApiResponse::common(ActionsDictionary::all());
-    }
-
-    public function getConditionsDictionary(ApiGetConditionsDictRequest $request)
-    {
-        return ApiResponse::common(ConditionsDictionary::all());
+        $rules = ConditionsDictionary::all()->map(function($rule){
+            return[
+                'type_id' => $rule->id,
+                'subject'=>$rule->entity,
+                'check' =>$rule->to_check,
+                'value' =>$rule->detail,
+            ];
+        });
+        $actions = ActionsDictionary::all();
+        return ApiResponse::common(['rules'=>$rules, 'actions'=>$actions]);
     }
 }

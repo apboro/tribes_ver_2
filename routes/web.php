@@ -16,18 +16,19 @@ Auth::routes();
 
 Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], function () {
 
-    Route::namespace('App\Http\Controllers\APIv3')->group(function () {
+    Route::namespace('App\Http\Controllers')->group(function () {
         //Payments
         Route::post('/payment/donate/range', 'DonateController@takeRangeDonatePayment')->name('payment.donate.range');
         Route::get('/payment/donate/{hash}', 'DonateController@donatePage')->name('community.donate.form');
-        Route::get('/payment/{hash}/success/{telegramId?}', 'ApiPaymentController@successPayment')->name('payment.success');
-
         Route::get('/payments', 'PaymentController@list')->name('payment.list');
         Route::get('/payments/card', 'PaymentController@cardList')->name('payment.card.list');
         Route::get('/payments/card/add', 'PaymentController@cardAdd')->name('payment.card.add');
         Route::get('/payments/income', 'PaymentController@incomeList')->name('payment.income.list');
         Route::get('/payments/outcome', 'PaymentController@outcomeList')->name('payment.outcome.list');
     });
+
+    Route::get('/payment/{hash}/success/{telegramId?}', 'App\Http\Controllers\APIv3\ApiPaymentController@successPayment')->name('payment.success');
+
 
 
     //TINKOFF API

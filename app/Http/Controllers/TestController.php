@@ -23,6 +23,7 @@ use App\Services\Tinkoff\TinkoffService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 use stdClass;
 
 class TestController extends Controller
@@ -56,13 +57,15 @@ class TestController extends Controller
 
     public function test()
     {
+        $dict = ConditionsDictionary::all();
         $rules = UserRule::query()->where('community_id', 1)->get();
         foreach ($rules as $rule)
         {
-            dd($rule->rules);
+//            dd($rule);
            foreach ($rule->rules['children'] as $condition){
-                dump($condition['type']);
-                dump($condition['action']);
+                if($condition['subject'] === 'message_content')
+                    if ($condition['action'] === 'matches_partially')
+                        if($condition['value'] === "link") $this->$rule['callback'];
             }
         }
     }

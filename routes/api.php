@@ -107,8 +107,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/user/bot/action-log', [ApiTelegramBotActionController::class, 'list']);
     Route::get('/user/bot/action-log/filter', [ApiTelegramBotActionController::class, 'filter']);
 
-    Route::get('/dictionaries/get_actions_dictionary', [ApiDictionariesController::class, 'getActionsDictionary']);
-    Route::get('/dictionaries/get_conditions_dictionary', [ApiDictionariesController::class, 'getConditionsDictionary']);
+    Route::get('/rules-dict', [ApiDictionariesController::class, 'getRulesDictionary']);
     Route::post('/conditions/store', [ApiConditionController::class, 'store']);
     Route::get('/conditions/getList', [ApiConditionController::class, 'getList']);
     Route::delete('/conditions/delete', [ApiConditionController::class, 'delete']);
@@ -117,8 +116,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 
-    Route::post('/user-rules/store',[UserRulesController::class, 'store']);
-    Route::get('/user-rules/get',[UserRulesController::class, 'get']);
+    Route::post('/user-community-rules/store',[UserRulesController::class, 'store']);
+    Route::get('/user-community-rules/get',[UserRulesController::class, 'get']);
 
 });
 
@@ -160,7 +159,7 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers')->group(func
     Route::post('/session/flush', 'Controller@sessionFlush')->name('api.session.flush');
 });
 
-Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(function () {
+Route::middleware('auth:sanctum')->namespace('App\Http\Controllers')->group(function () {
     Route::post('/payment/addCard', 'PaymentController@addCard')->name('api.payment.card.add'); // Имя Роута было Занято. Добавил в начало 'api'.
     Route::post('/payment/removeCard', 'PaymentController@removeCard')->name('payment.card.remove');
     Route::post('/payment/cardList', 'PaymentController@cardList')->name('api.payment.card.list'); // Имя Роута было Занято. Добавил в начало 'api'.
