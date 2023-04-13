@@ -151,9 +151,10 @@ class ApiCommunityTelegramUserController extends Controller
             });
         }
 
-        $telegram_users = $query->paginate($request->per_page, ['*'],'page',$request->page);
+        $count = $query->count();
+        $telegram_users = $query->skip($request->offset-1)->take($request->limit)->orderBy('id')->get();
 
-        return ApiResponse::listPagination()->items(new ApiCommunityTelegramUserCollection($telegram_users));
+        return ApiResponse::listPagination(['Items-count'=>$count])->items(new ApiCommunityTelegramUserCollection($telegram_users));
 
     }
 

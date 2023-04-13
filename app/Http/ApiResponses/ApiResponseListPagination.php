@@ -32,19 +32,13 @@ class ApiResponseListPagination extends ApiResponse
         $hasPagination = $this->list instanceof LengthAwarePaginator ||
             $isResource && ($this->list->resource instanceof AbstractPaginator || $this->list->resource instanceof AbstractCursorPaginator);
 
-        $count = method_exists($this->list, 'count') ? $this->list->count() : count($this->list);
-
         $list = $isResource ? $this->list->resource : $this->list;
 
         return response()->json([
             'data' => method_exists($list, 'items') ? $list->items() : $list,
             'pagination' => [
-                'current_page' => $hasPagination ? $list->currentPage() : 1,
-                'last_page' => $hasPagination ? $list->lastPage() : 1,
-                'from' => $hasPagination ? $list->firstItem() : 1,
-                'to' => $hasPagination ? $list->lastItem() : $count,
-                'total' => $hasPagination ? $list->total() : $count,
-                'per_page' => $hasPagination ? $list->perPage() : $count,
+                'offset' => $hasPagination ? $list->offset() : (int)$request->offset,
+                'limit' => $hasPagination ? $list->limit() : (int)$request->limit,
             ],
         ], $this->statusCode, $this->getHeaders());
     }

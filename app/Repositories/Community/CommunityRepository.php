@@ -53,10 +53,11 @@ class CommunityRepository implements CommunityRepositoryContract
                 $q->where('telegram_user_id', $request->input('telegram_id'));
             });
         }
-
-        $res = $list->paginate($request->per_page, ['*'],'page',$request->page);
-
-        return $res;
+        $count = $list->count();
+        return [
+            'list' => $list->skip($request->offset-1)->take($request->limit)->orderBy('id')->get(),
+            'count' => $count,
+            ];
     }
 
     public function findCommunityByHash($hash)

@@ -12,24 +12,22 @@ use OpenApi\Annotations as OA;
  *  summary="Filter community users",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Users"},
- *   @OA\Parameter(
- *         name="per_page",
+ *    @OA\Parameter(
+ *         name="offset",
  *         in="query",
- *         description="Records per page",
+ *         description="Begin records from number {offset}",
  *         required=false,
  *         @OA\Schema(
  *             type="integer",
- *             example=20
  *         )
  *     ),
  *     @OA\Parameter(
- *         name="page",
+ *         name="limit",
  *         in="query",
- *         description="Page number",
+ *         description="Total records to display",
  *         required=false,
  *         @OA\Schema(
  *             type="integer",
- *             example=3
  *         )
  *     ),
  *     @OA\Parameter(
@@ -39,7 +37,6 @@ use OpenApi\Annotations as OA;
  *         required=false,
  *         @OA\Schema(
  *             type="string",
- *             example="big_daddy18"
  *         )
  *     ),
  *     @OA\Parameter(
@@ -49,7 +46,6 @@ use OpenApi\Annotations as OA;
  *         required=false,
  *         @OA\Schema(
  *             type="string",
- *             example="Иван Воронин"
  *         )
  *     ),
  *     @OA\Parameter(
@@ -59,7 +55,6 @@ use OpenApi\Annotations as OA;
  *         required=false,
  *         @OA\Schema(
  *             type="string",
- *             example="2023-01-01"
  *         )
  *     ),
  *     @OA\Parameter(
@@ -69,7 +64,6 @@ use OpenApi\Annotations as OA;
  *         required=false,
  *         @OA\Schema(
  *             type="string",
- *             example="2023-01-01"
  *         )
  *     ),
  *    @OA\Parameter(
@@ -79,7 +73,6 @@ use OpenApi\Annotations as OA;
  *         required=false,
  *         @OA\Schema(
  *             type="integer",
- *             example="12"
  *         )
  *     ),
  *    @OA\Parameter(

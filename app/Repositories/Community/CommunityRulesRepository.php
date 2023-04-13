@@ -215,8 +215,6 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
                         $this->logger->debug('conditionChecker item', $item);
 
-//                            $item = json_decode($item, 1);
-
                             if ($item['offset'] != 0 && ($item['type'] == "url" || $item['type'] == "text_link")) {
                                 return true; //$this->actionRunner($data, $rule->action);
                         }

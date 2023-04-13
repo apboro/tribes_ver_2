@@ -42,7 +42,7 @@ class ApiTelegramBotActionController extends Controller
 
         if (!empty($request->input('community_title'))) {
             $list->whereHas('telegramConnections.community', function ($query) use ($request) {
-                $query->whereIn('title', $request->input('community_title'));
+                $query->where('title', 'ilike', '%'. $request->input('community_title') . '%');
             });
         }
         if ($request->input('tag_names') !== null) {
@@ -64,7 +64,9 @@ class ApiTelegramBotActionController extends Controller
             });
         }
 
-        $result = $list->paginate($request->per_page, ['*'], 'page', $request->page);
-        return ApiResponse::listPagination()->items(new ApiTelegramBotActionLogCollection($result));
+        $count = $list->count();
+        $result = $list->skip($request->offset-1)->take($request->limit)->orderBy('id')->get();
+
+        return ApiResponse::listPagination(['Items-count'=>$count])->items(new ApiTelegramBotActionLogCollection($result));
     }
 }

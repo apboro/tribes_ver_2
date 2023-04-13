@@ -13,18 +13,18 @@ use App\Http\ApiRequests\ApiRequest;
  *  security={{"sanctum": {} }},
  *  tags={"Chats"},
  *     @OA\Parameter(
- *         name="per_page",
+ *         name="offset",
  *         in="query",
- *         description="Records per page",
+ *         description="Begin records from number {offset}",
  *         required=false,
  *         @OA\Schema(
  *             type="integer",
  *         )
  *     ),
  *     @OA\Parameter(
- *         name="page",
+ *         name="limit",
  *         in="query",
- *         description="Page number",
+ *         description="Total records to display",
  *         required=false,
  *         @OA\Schema(
  *             type="integer",

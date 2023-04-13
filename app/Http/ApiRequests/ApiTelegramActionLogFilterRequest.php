@@ -10,23 +10,21 @@ namespace App\Http\ApiRequests;
  *  security={{"sanctum": {} }},
  *  tags={"Bot actions list"},
  *     @OA\Parameter(
- *         name="per_page",
+ *         name="offset",
  *         in="query",
- *         description="Records per page",
+ *         description="Begin records from number {offset}",
  *         required=false,
  *         @OA\Schema(
  *             type="integer",
- *             example=20
  *         )
  *     ),
  *     @OA\Parameter(
- *         name="page",
+ *         name="limit",
  *         in="query",
- *         description="Page number",
+ *         description="Total records to display",
  *         required=false,
  *         @OA\Schema(
  *             type="integer",
- *             example=3
  *         )
  *     ),
  *     @OA\Parameter(
@@ -36,7 +34,6 @@ namespace App\Http\ApiRequests;
  *         required=false,
  *         @OA\Schema(
  *             type="string",
- *             example="Аким"
  *         )
  *     ),
  *    @OA\Parameter(
@@ -46,18 +43,15 @@ namespace App\Http\ApiRequests;
  *         required=false,
  *         @OA\Schema(
  *             type="string",
- *             example="newChatUser"
  *         )
  *     ),
  *  @OA\Parameter(
- *         name="community_title[]",
+ *         name="community_title",
  *         in="query",
- *         description="Community ID",
+ *         description="Community Title",
  *         required=false,
  *         @OA\Schema(
- *             type="array",
- *              @OA\Items(type="string"),
- *             example={"Sherlock","Holms"}
+ *              type="string",
  *         )
  *     ),
  *  @OA\Parameter(
@@ -67,7 +61,6 @@ namespace App\Http\ApiRequests;
  *         required=false,
  *         @OA\Schema(
  *             type="date",
- *             example="2022-01-01"
  *         )
  *     ),
  *    @OA\Parameter(
@@ -77,7 +70,6 @@ namespace App\Http\ApiRequests;
  *         required=false,
  *         @OA\Schema(
  *             type="date",
- *             example="2023-12-01"
  *         )
  *     ),
  *    @OA\Parameter(
@@ -88,7 +80,6 @@ namespace App\Http\ApiRequests;
  *         @OA\Schema(
  *            type="array",
  *              @OA\Items(type="string"),
- *              example={"Crow","Sparrow"}
  *         )
  *     ),
  *   @OA\Response(response=200, description="OK"),
@@ -106,7 +97,7 @@ class ApiTelegramActionLogFilterRequest extends ApiRequest
             'event'=>'string',
             'action_date_from'=>'date_format:Y-m-d',
             'action_date_to'=>'date_format:Y-m-d',
-            'community_title'=>'array'
+            'community_title'=>'string'
         ];
     }
 

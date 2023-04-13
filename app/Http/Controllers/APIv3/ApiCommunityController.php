@@ -98,6 +98,6 @@ class ApiCommunityController extends Controller
     {
         $communities = $this->communityRepo->getList($request);
 
-        return ApiResponse::listPagination()->items((new CommunitiesCollection($communities))->toArray($request));
+        return ApiResponse::listPagination(['Items-count'=>$communities['count']])->items((new CommunitiesCollection($communities['list']))->toArray($request));
     }
 }
