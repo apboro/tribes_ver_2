@@ -210,6 +210,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             case 10:
                 if ($data->message_entities) {
                     foreach ($data->message_entities as $item) {
+                        $this->logger->debug('actionRunner', [$item]);
                         if ($item->offset != 0 && $item->type == "url") {
                             return true; //$this->actionRunner($data, $rule->action);
                         }
