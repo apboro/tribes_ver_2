@@ -46,7 +46,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         foreach ($rules as $rule) {
             foreach ($rule->rules['children'] as $condition) {
                 if ($condition['subject'] === 'message_content')
-                    if ($condition['action'] === 'matches_partially')
+                    if ($condition['action'] === 'substr')
                         if ($condition['value'] === "link")
                             $result = $this->conditionMatcher(10, $rule_parameter = null, $this->messageDTO);
             }
