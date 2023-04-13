@@ -52,7 +52,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             }
             $this->logger->debug('parseRule result', [$result]);
 
-            if ($result) $this->actionRunner(10, 1, $this->messageDTO);
+            if ($result) $this->actionRunner(3, 1, $this->messageDTO);
         }
     }
 
