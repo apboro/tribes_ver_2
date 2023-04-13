@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 
 class CommunityRepository implements CommunityRepositoryContract
@@ -83,6 +84,7 @@ class CommunityRepository implements CommunityRepositoryContract
 
     public function getCommunityByChatId($chatId): ?Community
     {
+        Log::debug('parseRule', [$chatId]);
         return Community::whereHas('connection', function ($q) use ($chatId) {
             $q->where('chat_id', $chatId);
         })->first();

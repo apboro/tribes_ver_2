@@ -58,10 +58,15 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
     public function handleRules($dto)
     {
-        $this->community = $this->communityRepository->getCommunityByChatId($dto->chat_id);
-        $this->messageDTO = $dto;
+        try {
+            $this->logger->debug('parseRule', [$dto]);
+            $this->community = $this->communityRepository->getCommunityByChatId($dto->chat_id);
+            $this->messageDTO = $dto;
 
-        $this->parseRule();
+            $this->parseRule();
+        } catch (\Exception $e) {
+            $this->logger->error($e);
+        }
 
 //        if ($rules->isNotEmpty()) {
 //            $this->logger->debug('rules are ', [$rules]);
