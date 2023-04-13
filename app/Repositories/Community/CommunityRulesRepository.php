@@ -209,10 +209,14 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             //'message','message_type','contain_url'
             case 10:
                 if ($data->message_entities) {
+                    $this->logger->debug('conditionChecker entities', [$data->message_entities]);
                     foreach ($data->message_entities as $item) {
-                        $this->logger->debug('actionRunner', [$item]);
-                        if ($item->offset != 0 && $item->type == "url") {
-                            return true; //$this->actionRunner($data, $rule->action);
+                        $this->logger->debug('conditionChecker item', [$item]);
+                        foreach ($item as $entity) {
+                            $this->logger->debug('conditionChecker', [$entity]);
+                            if ($entity->offset != 0 && $entity->type == "url") {
+                                return true; //$this->actionRunner($data, $rule->action);
+                            }
                         }
                     }
                 }
