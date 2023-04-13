@@ -41,6 +41,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
     public function parseRule(): void
     {
         $rules = $this->getCommunityRules($this->community->id);
+        $this->logger->debug('parseRule', [$rules]);
         $result = false;
         foreach ($rules as $rule) {
             foreach ($rule->rules['children'] as $condition) {
@@ -49,6 +50,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                         if ($condition['value'] === "link")
                             $result = $this->conditionMatcher(10, $rule_parameter = null, $this->messageDTO);
             }
+            $this->logger->debug('parseRule result', [$result]);
+
             if ($result) $this->actionRunner(10, 1, $this->messageDTO);
         }
     }
