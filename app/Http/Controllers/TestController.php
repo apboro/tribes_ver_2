@@ -32,8 +32,9 @@ class TestController extends Controller
     private TariffRepositoryContract $tariffRepository;
 
     protected TelegramMainBotService $telegramService;
-    public function __construct(TelegramMainBotService $telegramService,
-            TariffRepositoryContract  $tariffRepository)
+
+    public function __construct(TelegramMainBotService   $telegramService,
+                                TariffRepositoryContract $tariffRepository)
     {
         $this->tariffRepository = $tariffRepository;
         $this->telegramService = $telegramService;
@@ -49,23 +50,69 @@ class TestController extends Controller
 
     public function testTelegramMessage()
     {
-       $resp = $this->telegramService->kickUser(config('telegram_bot.bot.botName'),
-           '5698914985',
-           '-1001600527246');
-       dd($resp);
+        $resp = $this->telegramService->kickUser(config('telegram_bot.bot.botName'),
+            '5698914985',
+            '-1001600527246');
+        dd($resp);
     }
 
     public function test()
     {
+//        for ($i = 51; $i <= 63; $i++) {
+//            Community::create([
+//                    'connection_id'=> $i
+//                ]
+//            );
+//        }
+    }
+
+    public function testBotRule()
+    {
+        $d = json_decode('{
+"update_id": 157362649,
+"message": {
+"message_id": 59,
+"from": {
+"id": 472966552,
+"is_bot": false,
+"first_name": "Александр",
+"username": "bf3310",
+"language_code": "en"
+},
+"chat": {
+"id": -1001838883322,
+"title": "tbs-925",
+"username": "gffghgfvcd",
+"type": "supergroup"
+},
+"date": 1681369732,
+"text": "https://link.ru",
+"entities": [
+{
+"offset": 0,
+"length": 15,
+"type": "url"
+}
+]
+}
+}
+');
+//        dd($d->message->entities);
+        foreach ($d->message->entities as $item) {
+//            $this->logger->debug('actionRunner', [$item]);
+            dd($item->offset, $item->type);
+            if ($item->offset != 0 && ($item->type == "url" || $item->type == "text_link")) {
+                return true; //$this->actionRunner($data, $rule->action);
+            }
+        }
         $dict = ConditionsDictionary::all();
         $rules = UserRule::query()->where('community_id', 1)->get();
-        foreach ($rules as $rule)
-        {
+        foreach ($rules as $rule) {
 //            dd($rule);
-           foreach ($rule->rules['children'] as $condition){
-                if($condition['subject'] === 'message_content')
+            foreach ($rule->rules['children'] as $condition) {
+                if ($condition['subject'] === 'message_content')
                     if ($condition['action'] === 'matches_partially')
-                        if($condition['value'] === "link") $this->$rule['callback'];
+                        if ($condition['value'] === "link") $this->$rule['callback'];
             }
         }
     }
@@ -83,7 +130,7 @@ class TestController extends Controller
             CURLOPT_VERBOSE => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTPHEADER => array(
-                "Authorization: Basic ".base64_encode('api:'.env('MAIL_SMTP_API_KEY')),
+                "Authorization: Basic " . base64_encode('api:' . env('MAIL_SMTP_API_KEY')),
             ),
             CURLOPT_POSTFIELDS => http_build_query([
                 'subject' => 'Kuku',
@@ -93,7 +140,7 @@ class TestController extends Controller
             ])
         ));
         $response = curl_exec($curl);
-        dump(curl_getinfo($curl, CURLINFO_HEADER_OUT ));
+        dump(curl_getinfo($curl, CURLINFO_HEADER_OUT));
         dump($response);
 
         $err = curl_error($curl);
@@ -107,10 +154,10 @@ class TestController extends Controller
         $params = [
             'NotificationURL' => null,
             'OrderId' => 6229,
-            'Amount'  => 500,
+            'Amount' => 500,
             'SuccessURL' => '',
-            'DATA'    => [
-                'Email'  => null,
+            'DATA' => [
+                'Email' => null,
             ],
             'CustomerKey' => 'vasya',
         ];
@@ -120,6 +167,7 @@ class TestController extends Controller
         return redirect($resp->PaymentURL);
 
     }
+
     public function test3()
     {
 //        $params = [
@@ -133,7 +181,7 @@ class TestController extends Controller
 //            'CustomerKey' => 'vasya',
 //        ];
         $params = [
-            'PaymentId' =>'2442905573',
+            'PaymentId' => '2442905573',
         ];
 
 //        $resp = json_decode($this->tinkoff->directTerminal->init($params));
@@ -141,8 +189,8 @@ class TestController extends Controller
 
 //        return redirect($resp->PaymentURL);
 
-          $resp = json_decode($this->tinkoff->directTerminal->cancel($params));
-          dd($resp);
+        $resp = json_decode($this->tinkoff->directTerminal->cancel($params));
+        dd($resp);
     }
 
     public function test4()
@@ -158,7 +206,7 @@ class TestController extends Controller
 //            'CustomerKey' => 'vasya',
 //        ];
         $params = [
-            'PaymentId' =>'2443003290',
+            'PaymentId' => '2443003290',
         ];
 
 //        $resp = json_decode($this->tinkoff->directTerminal->init($params));
@@ -175,28 +223,28 @@ class TestController extends Controller
         $params = [
             'NotificationURL' => null,
             'OrderId' => 666991,
-            'Amount'  => 500,
+            'Amount' => 500,
             'SuccessURL' => '',
-            'DATA'    => [
-                'Email'  => null,
+            'DATA' => [
+                'Email' => null,
             ],
             'CustomerKey' => 'vasya',
         ];
         $receiptItem = [[
-            'Name'          => 'Оплата за использование системы',
-            'Price'         => 500,
-            'Quantity'      => 1,
-            'Amount'        => 500,
+            'Name' => 'Оплата за использование системы',
+            'Price' => 500,
+            'Quantity' => 1,
+            'Amount' => 500,
             'PaymentMethod' => TinkoffApi::$paymentMethod['full_prepayment'],
             'PaymentObject' => TinkoffApi::$paymentObject['service'],
-            'Tax'           => TinkoffApi::$vats['none']
+            'Tax' => TinkoffApi::$vats['none']
         ]];
 
         $receipt = [
             'EmailCompany' => 'CoderYooda@gmail.com',
-            'Phone'        => '89524365064', //Auth::user()->phone,
-            'Taxation'     => TinkoffApi::$taxations['osn'],
-            'Items'        => $receiptItem,
+            'Phone' => '89524365064', //Auth::user()->phone,
+            'Taxation' => TinkoffApi::$taxations['osn'],
+            'Items' => $receiptItem,
         ];
         $params['Receipt'] = $receipt;
 
@@ -250,68 +298,59 @@ class TestController extends Controller
     }
 
 
-
-
-
-    
     public function CheckCourse()
     {
-        $courses = Course::with('buyers')->where('id',119)->whereNotNull('activation_date')->get();
-        foreach ($courses as $course){
+        $courses = Course::with('buyers')->where('id', 119)->whereNotNull('activation_date')->get();
+        foreach ($courses as $course) {
             $activationDate = $course->activation_date ? Carbon::parse($course->activation_date) : null;
-            $publicationDate = $course->publication_date ? Carbon::parse($course->publication_date) : null ;
+            $publicationDate = $course->publication_date ? Carbon::parse($course->publication_date) : null;
             $deactivationDate = $course->deactivation_date ? Carbon::parse($course->deactivation_date) : null;
 
             $courseName = $course->title;
             $checkout_time = Carbon::now()->setSeconds(0)->toDateTimeString();
 
             //ACTIVATE COURSE
-            $mailBody='Курс доступен!';
+            $mailBody = 'Курс доступен!';
             $activation_time = $activationDate->toDateTimeString();
 
-            if ($activationDate && $activation_time == $checkout_time)
-            {
+            if ($activationDate && $activation_time == $checkout_time) {
 
                 $course->isActive = true;
                 $course->save();
                 dd($courseName, $activation_time, $checkout_time, $course->isActive);
                 $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
-                SendEmails::dispatch($course->buyers, 'Курс активирован!','Cервис Spodial', $view);
+                SendEmails::dispatch($course->buyers, 'Курс активирован!', 'Cервис Spodial', $view);
             }
 
             $mailBody = 'Курс будет доступен через 24 часа!';
             $activation_time_minus_24hrs = $activationDate->subDay()->toDateTimeString();
-            if ($activationDate && $activation_time_minus_24hrs === $checkout_time)
-            {
+            if ($activationDate && $activation_time_minus_24hrs === $checkout_time) {
                 $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
-                SendEmails::dispatch($course->buyers, 'Курс скоро будет доступен','Cервис Spodial', $view);
+                SendEmails::dispatch($course->buyers, 'Курс скоро будет доступен', 'Cервис Spodial', $view);
             }
 
             //DEACTIVATE COURSE
             $mailBody = 'Курс деактивирован!';
             $deactivation_time = $deactivationDate->toDateTimeString();
-            if ($deactivationDate && $deactivation_time === $checkout_time)
-            {
+            if ($deactivationDate && $deactivation_time === $checkout_time) {
                 $course->isActive = false;
                 $course->save();
                 $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
-                SendEmails::dispatch($course->buyers, 'Курс деактивирован','Cервис Spodial', $view);
+                SendEmails::dispatch($course->buyers, 'Курс деактивирован', 'Cервис Spodial', $view);
             }
 
             $mailBody = 'Курс будет отключен через 24 часа!';
             $deactivation_time_minus_24hrs = $deactivationDate->subDay()->toDateTimeString();
-            if ($deactivationDate && $deactivation_time_minus_24hrs === $checkout_time)
-            {
+            if ($deactivationDate && $deactivation_time_minus_24hrs === $checkout_time) {
                 $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
-                SendEmails::dispatch($course->buyers, 'Курс скоро будет деактивирован','Cервис Spodial', $view);
+                SendEmails::dispatch($course->buyers, 'Курс скоро будет деактивирован', 'Cервис Spodial', $view);
             }
 
             //PUBLIC COURSE
             $publication_time = $publicationDate->toDateTimeString();
-            if ($publicationDate && $publication_time === $checkout_time)
-            {
+            if ($publicationDate && $publication_time === $checkout_time) {
                 $view = view('mail.course_activation', compact('courseName', 'mailBody'))->render();
-                SendEmails::dispatch($course->buyers, 'Курс деактивирован','Cервис Spodial', $view);
+                SendEmails::dispatch($course->buyers, 'Курс деактивирован', 'Cервис Spodial', $view);
             }
 
         }
@@ -337,20 +376,20 @@ class TestController extends Controller
     public function sendMessageToTelegramChat()
     {
 
-        $variant= TariffVariant::find(222);
+        $variant = TariffVariant::find(222);
         $community = Community::find(484);
         $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y H:i') ?? '';
         $communityTitle = strip_tags($community->title);
-        $variantPeriod = $variant->period. ' ' .trans_choice('plurals.days', $variant->period, [], 'ru');
+        $variantPeriod = $variant->period . ' ' . trans_choice('plurals.days', $variant->period, [], 'ru');
 //        dd("Made payment on $communityTitle with $variantPeriod");
         TelegramLogService::staticSendLogMessage("Made payment on $communityTitle with $variantPeriod $tariffEndDate");
         exit();
 
-        $msg1= "Участник Vasya присоединился к сообществу $communityTitle на Пробный период продолжительностью $variantPeriod
+        $msg1 = "Участник Vasya присоединился к сообществу $communityTitle на Пробный период продолжительностью $variantPeriod
             \n действует до $tariffEndDate г.";
 
         $msg2 = "Пробный период в сообществе $communityTitle подходит к концу." . "\n" .
-            "Срок окончания пробного периода: $tariffEndDate."."\n".
+            "Срок окончания пробного периода: $tariffEndDate." . "\n" .
             "Для продления доступа Вы можете оплатить тариф: <a href='http://ya.ru'>Ссылка</a>";
 
         $this->telegramService->sendMessageFromBot(
@@ -367,7 +406,7 @@ class TestController extends Controller
         foreach ($p as $item) {
             if ($item->status === 'CONFIRMED') {
                 $a = Accumulation::where('SpAccumulationId', $item->SpAccumulationId)->first();
-                if (empty($a)){
+                if (empty($a)) {
                     dd('a is empty');
                     $a->user_id = $item->user_id;
                     $a->SpAccumulationId = $item->SpAccumulationId;
@@ -383,6 +422,6 @@ class TestController extends Controller
         }
 
     }
-    
+
 
 }

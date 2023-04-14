@@ -6,7 +6,7 @@ use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\Post(
- *  path="/api/v3/conditions/store",
+ *  path="/api/v3/conditions",
  *  operationId="store_user_condition",
  *  summary="Store user condition",
  *  security={{"sanctum": {} }},

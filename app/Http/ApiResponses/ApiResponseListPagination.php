@@ -36,10 +36,6 @@ class ApiResponseListPagination extends ApiResponse
 
         return response()->json([
             'data' => method_exists($list, 'items') ? $list->items() : $list,
-            'pagination' => [
-                'offset' => $hasPagination ? $list->offset() : (int)$request->offset,
-                'limit' => $hasPagination ? $list->limit() : (int)$request->limit,
-            ],
         ], $this->statusCode, $this->getHeaders());
     }
 

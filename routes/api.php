@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\ApiResources\ApiRulesDictionary;
 use App\Http\Controllers\APIv3\ApiActionsController;
 use App\Http\Controllers\APIv3\ApiCommunityController;
 use App\Http\Controllers\APIv3\ApiCommunityTagController;
@@ -107,8 +108,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/user/bot/action-log', [ApiTelegramBotActionController::class, 'list']);
     Route::get('/user/bot/action-log/filter', [ApiTelegramBotActionController::class, 'filter']);
 
-    Route::get('/rules-dict', [ApiDictionariesController::class, 'getRulesDictionary']);
-    Route::post('/conditions/store', [ApiConditionController::class, 'store']);
+    Route::get('/rules-dict', [ApiRulesDictionary::class, 'get']);
+    Route::post('/conditions', [ApiConditionController::class, 'store']);
     Route::get('/conditions/getList', [ApiConditionController::class, 'getList']);
     Route::delete('/conditions/delete', [ApiConditionController::class, 'delete']);
     Route::post('/actions/store', [ApiActionsController::class, 'store']);
