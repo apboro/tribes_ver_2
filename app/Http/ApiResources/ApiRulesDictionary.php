@@ -15,14 +15,6 @@ class ApiRulesDictionary
                 'label' => 'Текст сообщения',
             ],
             [
-                'name' => 'message_type',
-                'label' => 'Тип сообщения',
-            ],
-            [
-                'name' => 'message_content',
-                'label' => 'Содержание сообщения',
-            ],
-            [
                 'name' => 'username',
                 'label' => 'Username пользователя',
             ],
@@ -50,7 +42,22 @@ class ApiRulesDictionary
             [
                 'name' => 'equal_to',
                 'label' => 'совпадает',
-                'allowedSubjects' => ['message_text'],
+                'allowedSubjects' => ['message_text', 'reputation'],
+            ],
+            [
+                'name' => 'less_than',
+                'label' => 'меньше чем',
+                'allowedSubjects' => ['message_text', 'username', 'first_name', 'last_name', 'reputation'],
+            ],
+            [
+                'name' => 'more_than',
+                'label' => 'больше чем',
+                'allowedSubjects' => ['message_text', 'username', 'first_name', 'last_name', 'reputation'],
+            ],
+            [
+                'name' => 'format',
+                'label' => 'формат',
+                'allowedSubjects' => ['username', 'first_name', 'last_name'],
             ],
         ];
 
@@ -65,7 +72,37 @@ class ApiRulesDictionary
                 'name' => 'length',
                 'label' => 'длина',
                 'allowedSubjects' => ['message_text', 'username', 'first_name', 'last_name'],
-                'allowedActions' => ['contain', 'equal_to'],
+                'allowedActions' => ['equal_to', 'less_than', 'more_than'],
+            ],
+            [
+                'name' => 'rtl_format',
+                'label' => 'арабская вязь',
+                'allowedSubjects' => ['username', 'first_name', 'last_name'],
+                'allowedActions' => ['format'],
+            ],
+            [
+                'name' => 'link',
+                'label' => 'ссылку',
+                'allowedSubjects' => ['message_text'],
+                'allowedActions' => ['contain'],
+            ],
+            [
+                'name' => 'bot_command',
+                'label' => 'команду боту',
+                'allowedSubjects' => ['message_text'],
+                'allowedActions' => ['contain'],
+            ],
+            [
+                'name' => 'channel_message',
+                'label' => 'сообщение от имени канала',
+                'allowedSubjects' => ['message_text'],
+                'allowedActions' => ['contain'],
+            ],
+            [
+                'name' => 'telegram_system_message',
+                'label' => 'системное сообщение Telegram',
+                'allowedSubjects' => ['message_text'],
+                'allowedActions' => ['contain'],
             ],
         ];
         $callbacks = [
