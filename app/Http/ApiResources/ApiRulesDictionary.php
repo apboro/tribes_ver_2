@@ -15,16 +15,32 @@ class ApiRulesDictionary
                 'label' => 'Текст сообщения',
             ],
             [
+                'name' => 'message_length',
+                'label' => 'Длина сообщения',
+            ],
+            [
                 'name' => 'username',
                 'label' => 'Username пользователя',
+            ],
+            [
+                'name' => 'username_length',
+                'label' => 'Длина username пользователя',
             ],
             [
                 'name' => 'first_name',
                 'label' => 'Имя пользователя',
             ],
             [
+                'name' => 'first_name_length',
+                'label' => 'Длина имени пользователя',
+            ],
+            [
                 'name' => 'last_name',
                 'label' => 'Фамилия пользователя',
+            ],
+            [
+                'name' => 'last_name_length',
+                'label' => 'Длина фамилия пользователя',
             ],
             [
                 'name' => 'reputation',
@@ -47,12 +63,12 @@ class ApiRulesDictionary
             [
                 'name' => 'less_than',
                 'label' => 'меньше чем',
-                'allowedSubjects' => ['message_text', 'username', 'first_name', 'last_name', 'reputation'],
+                'allowedSubjects' => ['message_length', 'username_length', 'first_name_length', 'last_name_length', 'reputation'],
             ],
             [
                 'name' => 'more_than',
                 'label' => 'больше чем',
-                'allowedSubjects' => ['message_text', 'username', 'first_name', 'last_name', 'reputation'],
+                'allowedSubjects' => ['message_length', 'username_length', 'first_name_length', 'last_name_length', 'reputation'],
             ],
             [
                 'name' => 'format',
@@ -62,18 +78,18 @@ class ApiRulesDictionary
         ];
 
         $values = [
-            [
-                'name' => 'text',
-                'label' => 'текст',
-                'allowedSubjects' => ['message_text'],
-                'allowedActions' => ['contain', 'equal_to'],
-            ],
-            [
-                'name' => 'length',
-                'label' => 'длина',
-                'allowedSubjects' => ['message_text', 'username', 'first_name', 'last_name'],
-                'allowedActions' => ['equal_to', 'less_than', 'more_than'],
-            ],
+//            [
+//                'name' => 'text',
+//                'label' => 'ввести вручную',
+//                'allowedSubjects' => ['message_text'],
+//                'allowedActions' => ['contain', 'equal_to'],
+//            ],
+//            [
+//                'name' => 'length',
+//                'label' => 'ввести вручную',
+//                'allowedSubjects' => ['message_text','message_length', 'username_length', 'first_name_length', 'last_name_length', 'reputation'],
+//                'allowedActions' => ['equal_to', 'less_than', 'more_than'],
+//            ],
             [
                 'name' => 'rtl_format',
                 'label' => 'арабская вязь',
@@ -103,6 +119,13 @@ class ApiRulesDictionary
                 'label' => 'системное сообщение Telegram',
                 'allowedSubjects' => ['message_text'],
                 'allowedActions' => ['contain'],
+            ],
+            [
+                'name' => 'custom',
+                'value' =>'',
+                'label' => 'введите значение',
+                'allowedSubjects' => ['message_text','message_length', 'username_length', 'first_name_length', 'last_name_length', 'reputation'],
+                'allowedActions' => ['contain', 'less_than', 'more_than', 'equal_to'],
             ],
         ];
         $callbacks = [

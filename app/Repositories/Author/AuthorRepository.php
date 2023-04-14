@@ -24,7 +24,7 @@ class AuthorRepository implements AuthorRepositoryContract
     public function assignOutsideAccount($data, $platformIndex)
     {
         $data['telegram_id'] = $data['id'];
-        return Messenger::$platform[$platformIndex]::storeAccount(Auth::user(), $data);
+        return Messenger::$platform[$platformIndex]::storeAccount($data);
     }
 
     public function detachOutsideAccount($telegram_id, $platformIndex)
