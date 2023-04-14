@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\ApiResources\TelegramAccountCollection;
 
+/**
+ * @property mixed $phone_confirmed
+ */
 class UserResource extends JsonResource
 {
     /** @var User */
@@ -51,7 +54,7 @@ class UserResource extends JsonResource
             'id' => $this->resource->id,
             'name' => $this->resource->name,
             'email' => $this->resource->email,
-            'phone'=>$this->phone ?? null,
+            'phone'=>$this->phone_confirmed ? $this->resource->phone : null,
             'phone_confirmed'=>$this->phone_confirmed,
             'telegram_accounts' =>new TelegramAccountCollection($this->resource->telegramData()),
             'subscription'=>new SubscriptionResource($this->subscription),

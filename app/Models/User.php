@@ -27,6 +27,7 @@ use App\Models\SmsConfirmations;
  * @property string $password
  * @property Subscription $subscription
  * @property HasMany $actions
+ * @property mixed $phone
  *
  * @method UserFactory factory()
  */
