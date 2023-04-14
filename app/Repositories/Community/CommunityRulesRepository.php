@@ -3,6 +3,7 @@
 namespace App\Repositories\Community;
 
 
+use App\Http\ApiResources\ApiRulesDictionary;
 use App\Models\Community;
 use App\Models\Condition;
 use App\Models\ConditionAction;
@@ -45,14 +46,15 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         $result = false;
         foreach ($rules as $rule) {
             foreach ($rule->rules['children'] as $condition) {
-                if ($condition['subject'] === 'message_content')
-                    if ($condition['action'] === 'substr')
-                        if ($condition['value'] === "link")
-                            $result = $this->conditionMatcher(10, $rule_parameter = null, $this->messageDTO);
+                $rule = $condition['subject'].'-'.$condition['action'].'-'.$condition['value'];
+                if ($condition['value'] === 'custom') {
+                    $rule_parameter = $condition['value']['value'];
+                }
+                    $result = $this->conditionMatcher($rule, $rule_parameter, $this->messageDTO);
             }
             $this->logger->debug('parseRule result', [$result]);
 
-            if ($result) $this->actionRunner(3, 1, $this->messageDTO);
+            if ($result) $this->actionRunner($rule['callback']['name'], $rule['callback']['value'], $this->messageDTO);
         }
     }
 
@@ -67,170 +69,138 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         } catch (\Exception $e) {
             $this->logger->error($e);
         }
-
-//        if ($rules->isNotEmpty()) {
-//            $this->logger->debug('rules are ', [$rules]);
-//            foreach ($rules as $rule) {
-//                $result = $this->checkRule($rule, $dto);
-//                if ($result && $rule->parent_group_uuid === null) {
-//                    $this->actionRunner($dto, $rule->action);
-//                }
-//            }
-//        }
-//        TelegramLogService::staticSendLogMessage('We got rules! We now in community->' . $this->community->title);
     }
 
     public function getCommunityRules($community_id)
     {
         return UserRule::query()->where('community_id', $community_id)->get();
-//        return ConditionAction::where('community_id', $community_id)->get();
     }
 
-    public function checkRule(ConditionAction $rule, MessageDTO $data): bool
+    public function conditionMatcher(string $rule, $rule_parameter, MessageDTO $data)
     {
-        $result = false;
-        $complexRule = ConditionAction::where('parent_group_uuid', $rule->group_uuid)->get();
-        if ($complexRule->isEmpty()) {
-            $this->logger->debug('simple rule is ', [$rule]);
-            $result = $this->checkCondition($rule, $data);
-        } else {
-            $complexRule->prepend($rule);
-            $this->logger->debug('complexRule is ', [$complexRule]);
-            foreach ($complexRule as $rule) {
-                $result = $this->checkCondition($rule, $data);
-                if ($result === false && $rule->group_prefix == 'and') {
-                    return false;
-                }
-                if ($result === false && $rule->group_prefix == 'or') {
-                    return true;
-                }
-            }
-        }
-        return $result;
-    }
-
-    public function checkCondition(ConditionAction $rule, MessageDTO $data): bool
-    {
-        $condition = Condition::find($rule->condition_id);
-        $complexCondition = Condition::where('parent_id', $rule->condition_id)->get();
-        $result = false;
-        //if simple
-        if ($complexCondition->isEmpty()) {
-            // check self
-            $result = $this->conditionMatcher($condition, $data);
-        } else {
-            $complexCondition->prepend($condition);
-            $this->logger->debug('subConditions are ', [$complexCondition]);
-            // else check subconditions
-            foreach ($complexCondition as $condition) {
-                $result = $this->conditionMatcher($condition, $data);
-                if ($result === false && $condition->prefix == 'and') {
-                    return false;
-                }
-                if ($result === false && $condition->prefix == 'or') {
-                    return true;
-                }
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * @param Condition $rule
-     * @var MessageDTO $data
-     */
-    public function conditionMatcher(int $rule_id, $rule_parameter, MessageDTO $data)
-    {
-        $this->logger->debug('checking condition ID' . $rule_id, ['rules' => $rule_id, 'data' => $data]);
-        switch ($rule_id) {
-            //message	message_contain	full_congruence
-            case 1:
+        $this->logger->debug('checking condition ID' . $rule, ['rules' => $rule, 'data' => $data]);
+        switch ($rule) {
+            case 'message_text-equal_to-custom':
                 if ($rule_parameter === $data->text) {
                     $this->logger->debug('type rule 1 true');
-                    return true;//$this->actionRunner($data, $rule->action);
+                    return true;
                 }
                 break;
-            //message	message_contain	part_congruence
-            case 2:
-
+            case 'message_text-contain-custom':
                 if (Str::contains($data->text, $rule_parameter)) {
                     $this->logger->debug('type rule 2 true');
-                    return true; //$this->actionRunner($data, $rule->action);
+                    return true;
                 }
                 break;
-            //message	message_length	more_than
-            case 3:
+            case 'message_length-more_than-custom':
                 if (Str::length($data->text) > $rule_parameter) {
                     $this->logger->debug('type rule 3 true');
-                    return true; //$this->actionRunner($data, $rule->action);
+                    return true;
                 }
                 break;
-            //message	message_length	less_than
-            case 4:
+            case 'message_length-less_than-custom':
                 if (Str::length($data->text) < $rule_parameter) {
-                    return true; //$this->actionRunner($data, $rule->action);
+                    return true;
                 }
                 break;
-            //message	message_length	equivalent
-            case 5:
+            case 'message_length-equal_to-custom':
                 if (Str::length($data->text) == $rule_parameter) {
-                    return true; //$this->actionRunner($data, $rule->action);
+                    return true;
                 }
                 break;
-            //username	rtl_symbols
-            case 6:
+            case 'username-format-rtl_format':
                 $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
-                if (preg_match($rtl_symbols_pattern, $data->telegram_user_first_name) || preg_match($rtl_symbols_pattern, $data->telegram_user_username)) {
-                    return true; //$this->actionRunner($data, $rule->action);
+                if (preg_match($rtl_symbols_pattern, $data->telegram_user_username)) {
+                    return true;
                 }
                 break;
-            //username	too_long_first_name
-            case 7:
+            case 'first_name-format-rtl_format':
+                $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
+                if (preg_match($rtl_symbols_pattern, $data->telegram_user_first_name))  {
+                    return true;
+                }
+                break;
+            case 'last_name-format-rtl_format':
+                $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
+                if (preg_match($rtl_symbols_pattern, $data->telegram_user_last_name))  {
+                    return true;
+                }
+                break;
+            case 'first_name_length-less_than-custom':
+                if (Str::length($data->telegram_user_first_name) < $rule_parameter) {
+                    return true;
+                }
+                break;
+            case 'first_name_length-more_than-custom':
                 if (Str::length($data->telegram_user_first_name) > $rule_parameter) {
-                    return true; //$this->actionRunner($data, $rule->action);
+                    return true;
                 }
                 break;
-            //username	too_long_second_name
-            case 8:
+            case 'first_name_length-equal_to-custom':
+                if (Str::length($data->telegram_user_first_name) == $rule_parameter) {
+                    return true;
+                }
+                break;
+            case 'last_name_length-less_than-custom':
+                if (Str::length($data->telegram_user_last_name) < $rule_parameter) {
+                    return true;
+                }
+                break;
+            case 'last_name_length-more_than-custom':
                 if (Str::length($data->telegram_user_last_name) > $rule_parameter) {
-                    return true; //$this->actionRunner($data, $rule->action);
+                    return true;
                 }
                 break;
-            //'message','message_type','is_url'
-            case 9:
-                if ($data->message_entities) {
-                    foreach ($data->message_entities as $item) {
-                        if ($item->offset == 0 && $item->type == "url") {
-                            return true; //$this->actionRunner($data, $rule->action);
-                        }
-                    }
+            case 'last_name_length-equal_to-custom':
+                if (Str::length($data->telegram_user_last_name) == $rule_parameter) {
+                    return true;
                 }
                 break;
-            //'message','message_type','contain_url'
-            case 10:
+            case 'username_length-less_than-custom':
+                if (Str::length($data->telegram_user_username) < $rule_parameter) {
+                    return true;
+                }
+                break;
+            case 'username_length-more_than-custom':
+                if (Str::length($data->telegram_user_username) > $rule_parameter) {
+                    return true;
+                }
+                break;
+            case 'username_length-equal_to-custom':
+                if (Str::length($data->telegram_user_username) == $rule_parameter) {
+                    return true;
+                }
+                break;
+            case 'message_text-contain-link':
                 if ($data->message_entities) {
                     $this->logger->debug('conditionChecker entities', $data->message_entities);
-
                     foreach ($data->message_entities as $item) {
-
                         $this->logger->debug('conditionChecker item', $item);
-
                             if ($item['type'] == "url" || $item['type'] == "text_link") {
-                                return true; //$this->actionRunner($data, $rule->action);
+                                return true;
                         }
                     }
                 }
                 break;
+            case'message_text-contain-bot_command':
+                //todo 1
+                break;
+            case 'message_text-contain-channel_message':
+                //todo 2
+                break;
+            case 'message_text-contain-telegram_system_message':
+                //todo 3
+                break;
+
         }
         return false;
     }
 
-    public function actionRunner($action_id, $action_parameter, $messageDTO)
+    public function actionRunner(string $action, MessageDTO $messageDTO, $action_parameter = null )
     {
-        $this->logger->debug('rules are ', ['data' => $messageDTO, 'act_type' => $action_id]);
-        switch ($action_id) {
-            //send message in chat from bot
-            case 1:
+        $this->logger->debug('rules are ', ['data' => $messageDTO, 'act_type' => $action]);
+        switch ($action) {
+            case 'send_message_in_chat_from_bot':
                 $this->logger->debug('Action >> sending mess');
                 $this->botService->sendMessageFromBot(
                     config('telegram_bot.bot.botName'),
@@ -238,8 +208,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $action_parameter,
                 );
                 break;
-            //send_message_in_pm_from_bot
-            case 2:
+            case 'send_message_in_pm_from_bot':
                 $this->logger->debug('Action >> sending mess PM');
                 $this->botService->sendMessageFromBot(
                     config('telegram_bot.bot.botName'),
@@ -247,8 +216,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $action_parameter,
                 );
                 break;
-            //delete_message
-            case 3:
+            case 'delete_message':
                 $this->logger->debug('Action >> deleting message');
                 $this->botService->deleteUserMessage(
                     config('telegram_bot.bot.botName'),
@@ -256,8 +224,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $messageDTO->chat_id,
                 );
                 break;
-            //ban_user
-            case 4:
+            case 'ban_user':
                 $this->logger->debug('Action >> kicking user');
                 $this->botService->kickUser(
                     config('telegram_bot.bot.botName'),
@@ -265,8 +232,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $messageDTO->chat_id,
                 );
                 break;
-            //mute_user
-            case 5:
+            case 'mute_user':
                 $this->logger->debug('Action >> restrict chat member');
                 $this->botService->muteUser(
                     config('telegram_bot.bot.botName'),
@@ -274,6 +240,19 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $messageDTO->chat_id,
                     $action_parameter,
                 );
+                break;
+            case 'increase_reputation':
+                //todo 1
+                break;
+            case 'decrease_reputation':
+                //todo 2
+                break;
+            case 'add_warning':
+                //todo 3
+                break;
+            case 'delete_warning':
+                 //todo 4
+                break;
         }
     }
 
