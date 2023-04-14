@@ -17,6 +17,7 @@ use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
+use App\Http\Controllers\APIv3\CommunityRuleController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
@@ -44,12 +45,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::prefix('api/v3')->group(function () {
-    Route::post('/user/login', [ApiAuthController::class,'login']);
-    Route::post('/user/register', [ApiRegisterController::class,'register']);
-    Route::post('/user/password/forgot', [ApiForgotPasswordController::class,'sendPasswordResetLink']);
-    Route::post('/user/password/reset', [ApiResetPasswordController::class,'resetUserPassword']);
-    Route::post('/courses/pay/{hash}', [ApiCourseController::class,'pay']);
-    Route::get('/courses/show/{hash}', [ApiCourseController::class,'show_for_all']);
+    Route::post('/user/login', [ApiAuthController::class, 'login']);
+    Route::post('/user/register', [ApiRegisterController::class, 'register']);
+    Route::post('/user/password/forgot', [ApiForgotPasswordController::class, 'sendPasswordResetLink']);
+    Route::post('/user/password/reset', [ApiResetPasswordController::class, 'resetUserPassword']);
+    Route::post('/courses/pay/{hash}', [ApiCourseController::class, 'pay']);
+    Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
@@ -117,8 +118,14 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 
-    Route::post('/user-rules/store',[UserRulesController::class, 'store']);
-    Route::get('/user-rules/get',[UserRulesController::class, 'get']);
+    Route::post('/user-rules/store', [UserRulesController::class, 'store']);
+    Route::get('/user-rules/get', [UserRulesController::class, 'get']);
+
+
+    Route::post('/chats/rules', [CommunityRuleController::class, 'store'])->name('chats.rules.store');
+    Route::get('/chats/rules', [CommunityRuleController::class, 'list'])->name('chats.rules.list');
+    Route::post('/chats/rules/edit/{id}', [CommunityRuleController::class, 'update'])->name('chats.rules.update');
+    Route::get('/chats/rules/{id}', [CommunityRuleController::class, 'show'])->name('chats.rules.show');
 
 });
 

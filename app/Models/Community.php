@@ -9,9 +9,7 @@ use App\Models\Knowledge\Question;
 use App\Models\Models\Tag;
 use App\Services\TelegramMainBotService;
 use Database\Factories\CommunityFactory;
-use Hamcrest\Arrays\IsArray;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -298,6 +296,7 @@ class Community extends Model
         $hash = PseudoCrypt::hash($this->id);
         return route('knowledge.public', compact('hash'));
     }
+
     /**
      *   Взять ссылку на справку "Как это работает"
      */
@@ -320,13 +319,19 @@ class Community extends Model
         return $string;
     }
 
-    public function tags(){
-        return $this->belongsToMany(Tag::class,'community_tag','community_id','tag_id');
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'community_tag', 'community_id', 'tag_id');
     }
 
     public function communityRules()
     {
-        return $this->belongsToMany(Condition::class,'conditions_actions','community_id','group_uuid', 'id', 'group_uuid')->distinct();
+        return $this->belongsToMany(Condition::class, 'conditions_actions', 'community_id', 'group_uuid', 'id', 'group_uuid')->distinct();
+    }
+
+    public function communityRule()
+    {
+        return $this->belongsTo(CommunityRule::class);
     }
 
 }
