@@ -25,13 +25,13 @@
         "nyholm/psr7": "^1.5",
         "phpoffice/phpspreadsheet": "^1.24",
         "team-reflex/discord-php": "^7.0",
-        "laravel/telescope": "^4.10"
+        "laravel/telescope": "^4.10",
+        "fakerphp/faker": "^1.9.1"
     },
 
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
         "facade/ignition": "^2.5",
-        "fakerphp/faker": "^1.9.1",
         "laravel/dusk": "^6.24",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
