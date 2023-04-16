@@ -4,12 +4,12 @@
 use App\Http\ApiResources\ApiRulesDictionary;
 use App\Http\Controllers\APIv3\ApiActionsController;
 use App\Http\Controllers\APIv3\ApiCommunityController;
+use App\Http\Controllers\APIv3\ApiCommunityReputationRulesController;
 use App\Http\Controllers\APIv3\ApiCommunityTagController;
 use App\Http\Controllers\APIv3\ApiCommunityTelegramUserController;
 use App\Http\Controllers\APIv3\ApiConditionActionController;
 use App\Http\Controllers\APIv3\ApiConditionController;
 use App\Http\Controllers\APIv3\ApiCourseController;
-use App\Http\Controllers\APIv3\ApiDictionariesController;
 use App\Http\Controllers\APIv3\ApiFeedBackController;
 use App\Http\Controllers\APIv3\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\ApiProjectController;
@@ -45,12 +45,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::prefix('api/v3')->group(function () {
-    Route::post('/user/login', [ApiAuthController::class,'login']);
-    Route::post('/user/register', [ApiRegisterController::class,'register']);
-    Route::post('/user/password/forgot', [ApiForgotPasswordController::class,'sendPasswordResetLink']);
-    Route::post('/user/password/reset', [ApiResetPasswordController::class,'resetUserPassword']);
-    Route::post('/courses/pay/{hash}', [ApiCourseController::class,'pay']);
-    Route::get('/courses/show/{hash}', [ApiCourseController::class,'show_for_all']);
+    Route::post('/user/login', [ApiAuthController::class, 'login']);
+    Route::post('/user/register', [ApiRegisterController::class, 'register']);
+    Route::post('/user/password/forgot', [ApiForgotPasswordController::class, 'sendPasswordResetLink']);
+    Route::post('/user/password/reset', [ApiResetPasswordController::class, 'resetUserPassword']);
+    Route::post('/courses/pay/{hash}', [ApiCourseController::class, 'pay']);
+    Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
@@ -117,8 +117,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 
-    Route::post('/user-community-rules/store',[UserRulesController::class, 'store']);
-    Route::get('/user-community-rules/get',[UserRulesController::class, 'get']);
+    Route::post('/user-community-rules/store', [UserRulesController::class, 'store']);
+    Route::get('/user-community-rules/get', [UserRulesController::class, 'get']);
 
 });
 
@@ -146,7 +146,10 @@ Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(fu
     Route::get('/payments', [ApiAdminPaymentController::class, 'list'])->name('api.manager.payments.list');
     Route::get('/payments/customers', [ApiAdminPaymentController::class, 'customers'])->name('api.manager.payments.customers');
 
-
+    Route::post('/chats/rate', [ApiCommunityReputationRulesController::class, 'store'])->name('chats.reputation.store');
+    Route::get('/chats/rate', [ApiCommunityReputationRulesController::class, 'list'])->name('chats.reputation.list');
+    Route::put('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
+    Route::get('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
 });
 
 

@@ -108,5 +108,8 @@ return [
         'integer_telegram_id'=>'Id telegram должно быть целым число',
         'exists_telegram_id'=>'Id telegram не найден в таблице',
         'is_spammer'=>'Индикатор is_spammer должен быть числом'
-    ]
+    ],
+    'id_required'=>'ID обязательное поле',
+    'id_integer'=>'ID должно быть числом',
+    'id_exists' =>'ID не найдено'
 ];
