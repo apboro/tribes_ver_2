@@ -1,0 +1,117 @@
+<?php
+
+namespace App\Http\Controllers\APIv3;
+
+use App\Http\ApiRequests\ApiAntispamEditRequest;
+use App\Http\ApiRequests\ApiAntispamShowRequest;
+use App\Http\ApiRequests\ApiAntispamStoreRequest;
+use App\Http\ApiResources\ApiAntispamCollection;
+use App\Http\ApiResources\ApiAntispamResource;
+use App\Http\ApiResponses\ApiResponse;
+use App\Http\Controllers\Controller;
+use App\Models\Antispam;
+use App\Models\Community;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+
+class ApiAntispamController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return ApiResponse
+     */
+    public function list(): ApiResponse
+    {
+        $antispam = Antispam::where('owner', Auth::user()->id)->paginate(25);
+        return ApiResponse::listPagination()->items(new ApiAntispamCollection($antispam));
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param ApiAntispamStoreRequest $request
+     * @return ApiResponse
+     */
+    public function store(ApiAntispamStoreRequest $request): ApiResponse
+    {
+        /** @var Antispam $antispam */
+        $antispam = Antispam::create([
+            'owner' => Auth::user()->id,
+            'name' => $request->input('name'),
+            'del_message_with_link' => $request->boolean('del_message_with_link'),
+            'ban_user_contain_link' => $request->boolean('ban_user_contain_link'),
+            'del_message_with_forward' => $request->boolean('del_message_with_forward'),
+            'ban_user_contain_forward' => $request->boolean('ban_user_contain_forward'),
+            'work_period' => $request->input('work_period')
+        ]);
+        if ($antispam === null) {
+            return ApiResponse::error(trans('responses/common.antispam.add_error'));
+        }
+
+        if (!empty($request->input('community_ids'))) {
+            /** @var Community $communities */
+            foreach ($request->input('community_ids') as $row) {
+                $community = Community::where('owner', Auth::user()->id)->where('id', $row)->first();
+                $community->communityAntispamRule()->associate($antispam)->save();
+            }
+
+        }
+        return ApiResponse::success();
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param ApiAntispamShowRequest $request
+     * @param $id
+     * @return ApiResponse
+     */
+    public function show(ApiAntispamShowRequest $request, $id): ApiResponse
+    {
+        $antispam = Antispam::where('owner', Auth::user()->id)->where('id', $id)->first();
+
+        if ($antispam === null) {
+            return ApiResponse::notFound(trans('responses/common.not_found'));
+        }
+        return ApiResponse::list()->items(ApiAntispamResource::make($antispam)->toArray($request));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param ApiAntispamEditRequest $request
+     * @param int $id
+     * @return Response
+     */
+    public function edit(ApiAntispamEditRequest $request, int $id): ApiResponse
+    {
+        $antispam = Antispam::where('owner', Auth::user()->id)->where('id', $id)->first();
+
+        if ($antispam === null) {
+            return ApiResponse::notFound(trans('responses/common.not_found'));
+        }
+        $antispam->fill([
+            'owner' => Auth::user()->id,
+            'name' => $request->input('name'),
+            'del_message_with_link' => $request->boolean('del_message_with_link'),
+            'ban_user_contain_link' => $request->boolean('ban_user_contain_link'),
+            'del_message_with_forward' => $request->boolean('del_message_with_forward'),
+            'ban_user_contain_forward' => $request->boolean('ban_user_contain_forward'),
+            'work_period' => $request->input('work_period')
+        ]);
+        $antispam->save();
+        if (!empty($request->input('community_ids'))) {
+            Community::where('owner', Auth::user()->id)->where('antispam_id', $id)->update(['antispam_id' => null]);
+
+            /** @var Community $community */
+            foreach ($request->input('community_ids') as $row) {
+                $community = Community::where('owner', Auth::user()->id)->where('id', $row)->first();
+                $community->communityAntispamRule()->associate($antispam)->save();
+            }
+
+        }
+        return ApiResponse::success();
+    }
+}

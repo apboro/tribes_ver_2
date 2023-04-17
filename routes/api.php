@@ -3,6 +3,7 @@
 
 use App\Http\ApiResources\ApiRulesDictionary;
 use App\Http\Controllers\APIv3\ApiActionsController;
+use App\Http\Controllers\APIv3\ApiAntispamController;
 use App\Http\Controllers\APIv3\ApiCommunityController;
 use App\Http\Controllers\APIv3\ApiCommunityTagController;
 use App\Http\Controllers\APIv3\ApiCommunityTelegramUserController;
@@ -45,12 +46,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::prefix('api/v3')->group(function () {
-    Route::post('/user/login', [ApiAuthController::class,'login']);
-    Route::post('/user/register', [ApiRegisterController::class,'register']);
-    Route::post('/user/password/forgot', [ApiForgotPasswordController::class,'sendPasswordResetLink']);
-    Route::post('/user/password/reset', [ApiResetPasswordController::class,'resetUserPassword']);
-    Route::post('/courses/pay/{hash}', [ApiCourseController::class,'pay']);
-    Route::get('/courses/show/{hash}', [ApiCourseController::class,'show_for_all']);
+    Route::post('/user/login', [ApiAuthController::class, 'login']);
+    Route::post('/user/register', [ApiRegisterController::class, 'register']);
+    Route::post('/user/password/forgot', [ApiForgotPasswordController::class, 'sendPasswordResetLink']);
+    Route::post('/user/password/reset', [ApiResetPasswordController::class, 'resetUserPassword']);
+    Route::post('/courses/pay/{hash}', [ApiCourseController::class, 'pay']);
+    Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
@@ -119,6 +120,11 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/user-community-rules/store',[UserRulesController::class, 'store']);
     Route::get('/user-community-rules/get',[UserRulesController::class, 'get']);
+
+    Route::post('/antispam', [ApiAntispamController::class, 'store']);
+    Route::put('/antispam/{id}', [ApiAntispamController::class, 'edit']);
+    Route::get('/antispam', [ApiAntispamController::class, 'list']);
+    Route::get('/antispam/{id}', [ApiAntispamController::class, 'show']);
 
 });
 
