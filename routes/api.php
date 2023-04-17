@@ -19,6 +19,7 @@ use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
+use App\Http\Controllers\APIv3\CommunityRuleController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
@@ -125,6 +126,12 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::put('/antispam/{id}', [ApiAntispamController::class, 'edit']);
     Route::get('/antispam', [ApiAntispamController::class, 'list']);
     Route::get('/antispam/{id}', [ApiAntispamController::class, 'show']);
+
+
+    Route::post('/chats/rules', [CommunityRuleController::class, 'store'])->name('chats.rules.store');
+    Route::get('/chats/rules', [CommunityRuleController::class, 'list'])->name('chats.rules.list');
+    Route::post('/chats/rules/edit/{id}', [CommunityRuleController::class, 'update'])->name('chats.rules.update');
+    Route::get('/chats/rules/{id}', [CommunityRuleController::class, 'show'])->name('chats.rules.show');
 
 });
 

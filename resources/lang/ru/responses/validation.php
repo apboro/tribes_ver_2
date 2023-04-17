@@ -117,5 +117,10 @@ return [
         'del_message_with_forward_boolean' => 'Удаление сообщения должно иметь логический тип',
         'ban_user_contain_forward_boolean' => 'Бан пользователя должно иметь логический тип',
         'work_period_integer' => 'Срок действия антиспам правил должен быть целым числом'
+    ],
+    'chat_rule'=>[
+        'id_required'=>'ID обязательное поле',
+        'id_integer'=>'ID должно быть числом',
+        'id_exists'=>'Id не найдено'
     ]
 ];
