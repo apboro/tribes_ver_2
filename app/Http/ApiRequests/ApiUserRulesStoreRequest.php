@@ -5,7 +5,7 @@ namespace App\Http\ApiRequests;
 
 /**
  * @OA\POST(
- * path="/api/v3/user-community-rules/store",
+ * path="/api/v3/user-community-rules",
  * operationId="Store_user_community_rules",
  * summary= "Store user rules for communities IDs",
  * security= {{"sanctum": {} }},

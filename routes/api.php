@@ -118,8 +118,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 
-    Route::post('/user-community-rules/store',[UserRulesController::class, 'store']);
-    Route::get('/user-community-rules/get',[UserRulesController::class, 'get']);
+    Route::post('/user-community-rules',[UserRulesController::class, 'store']);
+    Route::get('/user-community-rules',[UserRulesController::class, 'get']);
 
     Route::post('/antispam', [ApiAntispamController::class, 'store']);
     Route::put('/antispam/{id}', [ApiAntispamController::class, 'edit']);
