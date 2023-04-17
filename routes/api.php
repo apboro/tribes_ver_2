@@ -133,6 +133,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/chats/rules/edit/{id}', [CommunityRuleController::class, 'update'])->name('chats.rules.update');
     Route::get('/chats/rules/{id}', [CommunityRuleController::class, 'show'])->name('chats.rules.show');
 
+    Route::get('/chats/rules-template', [ApiRulesTemplateController::class, 'getTemplate']);
+
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {
