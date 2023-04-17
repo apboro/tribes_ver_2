@@ -135,7 +135,7 @@ class Telegram extends Messenger
                     }
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -155,7 +155,7 @@ class Telegram extends Messenger
                 $connection->save();
             }
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -163,6 +163,7 @@ class Telegram extends Messenger
     public function deleteUser($chat_id, $t_user_id)
     {
         try {
+            Log::info('deleteUser', compact('chat_id','t_user_id'));
             $community = null;
             $connection = TelegramConnection::where('chat_id', $chat_id)->first();
             if ($connection)
@@ -170,14 +171,14 @@ class Telegram extends Messenger
             $ty = TelegramUser::where('telegram_id', $t_user_id)->first() ?? null;
             if ($community && $ty) {
                 $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
-                if ($variantForThisCommunity)
+                if ($variantForThisCommunity) {
                     //ставить exit_date в состояние false, не удалять подписку пользователя
                     //$ty->tariffVariant()->detach($variantForThisCommunity->id);
-
+                }
                 if ($ty->getCommunityById($community->id))
                     $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time()]);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -185,22 +186,22 @@ class Telegram extends Messenger
     public static function storeAccount($user = null, $data)
     {
         /** @var TelegramUser $ty */
-            $ty = TelegramUser::firstOrNew([
-                'telegram_id' => $data['telegram_id'],
-            ]);
+        $ty = TelegramUser::firstOrNew([
+            'telegram_id' => $data['telegram_id'],
+        ]);
 
-            $ty->user_id = $user ? $user->id : null;
-            $ty->auth_date = $data['auth_date'] ?? null;
-            $ty->scene = $data['scene'] ?? null;
-            $ty->hash = $data['hash'] ?? null;
-            $ty->user_name = $data['username'] ?? null;
-            $ty->first_name = $data['first_name'] ?? null;
-            $ty->last_name = $data['last_name'] ?? null;
-            $ty->photo_url = isset($data['photo_url']) ? self::saveUserAvatar($data['photo_url']) : null;
+        $ty->user_id = $user ? $user->id : null;
+        $ty->auth_date = $data['auth_date'] ?? null;
+        $ty->scene = $data['scene'] ?? null;
+        $ty->hash = $data['hash'] ?? null;
+        $ty->user_name = $data['username'] ?? null;
+        $ty->first_name = $data['first_name'] ?? null;
+        $ty->last_name = $data['last_name'] ?? null;
+        $ty->photo_url = isset($data['photo_url']) ? self::saveUserAvatar($data['photo_url']) : null;
 
-            $ty->save();
+        $ty->save();
 
-            self::toggleCommunityActivity($ty, true, 'completed');
+        self::toggleCommunityActivity($ty, true, 'completed');
 
         return $ty;
     }
@@ -249,10 +250,10 @@ class Telegram extends Messenger
             /* @var $community Community */
             $community = Community::firstOrCreate(['connection_id' => $tc->id],
                 [
-                'owner' => Auth::user()->id,
-                'title' => $tc->chat_title,
-                'image' => self::saveCommunityPhoto($tc->photo_url, $tc->chat_id)
-            ]);
+                    'owner' => Auth::user()->id,
+                    'title' => $tc->chat_title,
+                    'image' => self::saveCommunityPhoto($tc->photo_url, $tc->chat_id)
+                ]);
             if ($community->wasRecentlyCreated) {
                 $tariff = new Tariff();
                 $this->tariffRepository->generateLink($tariff);
@@ -292,7 +293,7 @@ class Telegram extends Messenger
                 'telegram_id' => config('telegram_bot.bot.botId'),
                 'auth_date' => time(),
                 'first_name' => config('telegram_bot.bot.botName'),
-                'user_name' =>  config('telegram_bot.bot.botFullName'),
+                'user_name' => config('telegram_bot.bot.botFullName'),
             ]);
         }
 
@@ -317,7 +318,8 @@ class Telegram extends Messenger
             ]);
     }
 
-    public function createCommunity($community){
+    public function createCommunity($community)
+    {
         $this->addBot($community);
         $this->addAuthorOnCommunity($community);
     }
@@ -328,10 +330,8 @@ class Telegram extends Messenger
 
         $user_telegram_accounts = $user->telegramData();
         $td = null;
-        foreach ($user_telegram_accounts as $telegram_account)
-        {
-            if ($telegram_account->telegram_id == $telegram_id)
-            {
+        foreach ($user_telegram_accounts as $telegram_account) {
+            if ($telegram_account->telegram_id == $telegram_id) {
                 $td = $telegram_account;
             }
         }
@@ -378,7 +378,7 @@ class Telegram extends Messenger
                 ->first();
 
             $telegramConnectionNew = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
-            if ($telegramConnectionExists){
+            if ($telegramConnectionExists) {
                 if ($telegramConnectionNew) {
                     $telegramConnectionNew->delete();
                 }
@@ -399,7 +399,7 @@ class Telegram extends Messenger
                     Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chat_id', 'chatTitle', 'chatType'));
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error($e);
         }
     }
@@ -488,7 +488,7 @@ class Telegram extends Messenger
                 $path = $dir . '/' . $hash . '.jpg';
                 $photo_url ? file_put_contents($path, file_get_contents($photo_url) ?? null) : null;
                 return '/storage/image/avatar/' . $hash . '.jpg';
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 return null;
             }
         }
