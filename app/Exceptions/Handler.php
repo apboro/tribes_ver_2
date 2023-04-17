@@ -98,7 +98,8 @@ class Handler extends ExceptionHandler
         if ($e instanceof ApiUnauthorizedException) {
             return ApiResponse::unauthorized()->toResponse($request);
         }
-        if (!(get_class($e) == "Illuminate\Validation\ValidationException")){
+        if (!(get_class($e) == "Illuminate\Validation\ValidationException")
+            && !(get_class($e) == "Illuminate\Auth\AuthenticationException")){
             $this->renderable(function (Throwable $e, $request) {
                 if ($request->is('api/*')) {
                     return response()->json([

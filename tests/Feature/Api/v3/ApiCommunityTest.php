@@ -48,11 +48,12 @@ class ApiCommunityTest extends TestCase
                     'title',
                     'image',
                     'description',
-                    'hash',
+                    'created_at',
+                    'updated_at',
                     'balance',
-                    'donate',
                     'type',
-                    'tags'=>[]
+                    'tags'=>[],
+                    'rules'=>[],
                 ],
             ],
         ],
@@ -100,17 +101,12 @@ class ApiCommunityTest extends TestCase
                 'data' => [
                     [
                         'id',
-                        'connection_id',
-                        'owner',
                         'title',
                         'image',
                         'description',
                         'created_at',
                         'updated_at',
-                        'hash',
                         'balance',
-                        'project_id',
-                        'donate',
                         'tags'=>[]
                     ],
                 ],
@@ -145,7 +141,6 @@ class ApiCommunityTest extends TestCase
                     [
                         'id',
                         'connection_id',
-                        'owner',
                         'title',
                         'image',
                         'description',
@@ -269,7 +264,7 @@ class ApiCommunityTest extends TestCase
 
     public function test_get_list_success()
     {
-        for ($z = 0; $z < 3; $z++) {
+        for ($x = 0; $x < 3; $x++) {
             $this->createTelegramConnectionForTest();
             $this->createCommunityForTest();
         }

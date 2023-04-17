@@ -31,7 +31,7 @@ class TelegramUsersCommunitySeeder extends Seeder
     {
         $faker = Faker::create();
         $communities_count = 5;
-        $telegram_user_count =  500;
+        $telegram_user_count =  15;
         $telegram_users = TelegramUser::factory()->count($telegram_user_count)->create();
         $communities = Community::factory()->count($communities_count)->create(['owner'=>$this->user_id]);
 

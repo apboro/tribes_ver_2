@@ -2,6 +2,7 @@
 
 
 use App\Http\ApiResources\ApiRulesDictionary;
+use App\Http\Controllers\ApiRulesTemplateController;
 use App\Http\Controllers\APIv3\ApiActionsController;
 use App\Http\Controllers\APIv3\ApiAntispamController;
 use App\Http\Controllers\APIv3\ApiCommunityController;

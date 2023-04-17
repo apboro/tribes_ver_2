@@ -14,6 +14,6 @@ class TelegramBotActionLogSeeder extends Seeder
      */
     public function run()
     {
-        TelegramBotActionLog::factory()->count(1000)->create();
+        TelegramBotActionLog::factory()->count(100)->create();
     }
 }

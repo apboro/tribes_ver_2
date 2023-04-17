@@ -335,4 +335,9 @@ class Community extends Model
         return $this->belongsTo(Antispam::class, 'antispam_id', 'id');
     }
 
+    public function communityRule()
+    {
+        return $this->belongsTo(CommunityRule::class);
+    }
+
 }

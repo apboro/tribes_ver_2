@@ -137,7 +137,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
 
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-        ])->post($this->url['detach_telegram_user']);
+        ])->delete($this->url['detach_telegram_user']);
 
         $response->assertStatus($this->data['error_not_auth']['expected_status'])
             ->assertJsonStructure($this->data['error_not_auth']['expected_structure']);
@@ -150,7 +150,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post(
+        ])->delete(
             $this->url['detach_telegram_user'],
             $this->data['detach_user_empty_telegram_user_id']);
 
@@ -164,7 +164,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post(
+        ])->delete(
             $this->url['detach_telegram_user'],
             $this->data['detach_user_empty_community_id']);
 
@@ -179,7 +179,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post(
+        ])->delete(
             $this->url['detach_telegram_user'],
             $this->data['detach_user_not_valid_telegram_user_id']);
 
@@ -193,7 +193,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post(
+        ])->delete(
             $this->url['detach_telegram_user'],
             $this->data['detach_user_not_valid_community_id']);
 
@@ -217,7 +217,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post(
+        ])->delete(
             $this->url['detach_telegram_user'],
             $this->data['detach_user_success']);
 
@@ -231,7 +231,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
 
-        ])->post(
+        ])->delete(
             $this->url['delete_telegram_user'],
             $this->data['error_not_auth']);
 
@@ -246,7 +246,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post(
+        ])->delete(
             $this->url['delete_telegram_user'],
             $this->data['delete_user_empty_telegram_user_id']);
 
@@ -260,7 +260,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post(
+        ])->delete(
             $this->url['delete_telegram_user'],
             $this->data['delete_user_not_valid_telegram_user_id']);
 
@@ -286,7 +286,7 @@ class ApiCommunityTelegramUsersTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post(
+        ])->delete(
             $this->url['delete_telegram_user'],
             $this->data['delete_user_success']);
 

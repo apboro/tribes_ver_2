@@ -14,6 +14,6 @@ class TelegramUsersSeeder extends Seeder
      */
     public function run()
     {
-        TelegramUser::factory()->count(150)->create();
+        TelegramUser::factory()->count(10)->create();
     }
 }

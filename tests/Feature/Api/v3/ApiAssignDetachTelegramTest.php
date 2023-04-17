@@ -66,7 +66,7 @@ class ApiAssignDetachTelegramTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->detach_url, $data);
+        ])->delete($this->detach_url, $data);
 
         $response->assertStatus(200)
             ->assertJsonStructure($data['expected_structure']);
@@ -82,7 +82,7 @@ class ApiAssignDetachTelegramTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->detach_url, $data);
+        ])->delete($this->detach_url, $data);
 
         $response->assertStatus(400)
             ->assertJsonStructure($data['expected_structure']);

@@ -62,6 +62,8 @@ class ApiCommunityTagTest extends TestCase
             ],
         ],
         'attach_success'=>[
+            'tags' => ['test', 'daleniti'],
+            'community_id' => 1,
             'expected_status' => 200,
             'expected_structure' => [
                 'message',

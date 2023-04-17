@@ -215,7 +215,7 @@ class ApiCommunityRulesTest extends TestCase
     {
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-        ])->patch($this->url . "/123");
+        ])->post($this->url . "/edit/123");
 
         $response->assertStatus($this->data['error_not_auth']['expected_status'])
             ->assertJsonStructure($this->data['error_not_auth']['expected_structure']);
@@ -252,7 +252,7 @@ class ApiCommunityRulesTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->patch($this->url . "/" . $community_rule->id, $edit_array);
+        ])->post($this->url . "/edit/" . $community_rule->id, $edit_array);
 
         $response->assertStatus($this->data['show_success']['expected_status'])
             ->assertJsonStructure($this->data['show_success']['expected_structure']);
