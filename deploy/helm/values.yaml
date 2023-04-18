@@ -121,6 +121,7 @@ migrations:
 
 config:
   tribesCommision: "0"
+  apiRateLimit: "off"
   frontend:
     url: "http://localhost"
   app:
