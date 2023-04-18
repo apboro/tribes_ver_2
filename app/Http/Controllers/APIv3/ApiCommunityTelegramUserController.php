@@ -161,6 +161,11 @@ class ApiCommunityTelegramUserController extends Controller
 
     public function addToList(ApiCommunityUserListAddRequest $request)
     {
+        $user = TelegramUser::where('telegram_id', $request->telegram_id)->first();
+        $badList = collect($request->only(['banned', 'blacklisted', 'muted']))->contains(true);
+        if ($user && $user->UserList->contains('type', 2) && $badList){
+            return ApiResponse::error('chats_rules.attempt_to_ban_white_rabbit');
+        }
 
         if ($request->boolean('banned')) {
             $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BAN_LIST);

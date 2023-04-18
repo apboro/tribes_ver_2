@@ -108,14 +108,12 @@ class TelegramUserListsRepositry
                     TelegramLogService::staticSendLogMessage('Black/ban list error' . $e);
                 }
             }
-
+            if ($telegram_list != null) {
+                $telegram_list->delete();
+            }
         }
         if (!$request->input('is_spammer')) {
             $telegram_list->listParameters()->sync([]);
-        }
-
-        if ($telegram_list != null) {
-            $telegram_list->delete();
         }
 
     }
