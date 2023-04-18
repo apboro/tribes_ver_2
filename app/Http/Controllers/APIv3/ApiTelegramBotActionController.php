@@ -48,11 +48,9 @@ class ApiTelegramBotActionController extends Controller
         if ($request->input('tag_names') !== null) {
             if (!empty(array_filter($request->input('tag_names')))) {
                 $tagsNames = explode(",", $request->input('tag_names')[0]);
-//                return ApiResponse::common($tagsNames);//($request->input('tag_names'));
                 $list->whereHas('telegramConnections.community.tags', function ($query) use ($tagsNames) {
-//                return ApiResponse::common('privet');//($request->input('tag_names'));
-                     return $query->whereIn('tags.name', $tagsNames);
-                });
+                     $query->whereIn('tags.name', $tagsNames);
+                }, '=', count($tagsNames));
             }
         }
 
