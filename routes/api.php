@@ -120,6 +120,11 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/user-community-rules/store', [UserRulesController::class, 'store']);
     Route::get('/user-community-rules/get', [UserRulesController::class, 'get']);
 
+    Route::post('/chats/rate', [ApiCommunityReputationRulesController::class, 'store'])->name('chats.reputation.store');
+    Route::get('/chats/rate', [ApiCommunityReputationRulesController::class, 'list'])->name('chats.reputation.list');
+    Route::put('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
+    Route::get('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
+
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -146,10 +151,7 @@ Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(fu
     Route::get('/payments', [ApiAdminPaymentController::class, 'list'])->name('api.manager.payments.list');
     Route::get('/payments/customers', [ApiAdminPaymentController::class, 'customers'])->name('api.manager.payments.customers');
 
-    Route::post('/chats/rate', [ApiCommunityReputationRulesController::class, 'store'])->name('chats.reputation.store');
-    Route::get('/chats/rate', [ApiCommunityReputationRulesController::class, 'list'])->name('chats.reputation.list');
-    Route::put('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
-    Route::get('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
+
 });
 
 

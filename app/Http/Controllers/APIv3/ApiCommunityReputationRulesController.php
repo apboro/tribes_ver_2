@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\APIv3;
 
+use App\Http\ApiRequests\ApiCommunityReputationRuleEditRequest;
 use App\Http\ApiRequests\ApiCommunityReputationRuleListRequest;
 use App\Http\ApiRequests\ApiCommunityReputationRuleShowRequest;
 use App\Http\ApiRequests\ApiCommunityReputationRuleStoreRequest;
+use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiResources\ApiCommunityReputationRuleCollection;
 use App\Http\ApiResources\ApiCommunityReputationRuleResource;
 use App\Http\ApiResponses\ApiResponse;
@@ -50,11 +52,14 @@ class ApiCommunityReputationRulesController extends Controller
      */
     public function store(ApiCommunityReputationRuleStoreRequest $request): ApiResponse
     {
+
         $community_reputation = $this->communityReputationRepository->add($request);
         if($community_reputation === null){
             return ApiResponse::error(trans('responses/common.add_error'));
         }
-        return ApiResponse::common(ApiCommunityReputationRuleResource::make($community_reputation)->toArray($request));
+        return ApiResponse::common(
+            ApiCommunityReputationRuleResource::make($community_reputation)->toArray($request)
+        );
     }
 
     /**
@@ -77,13 +82,19 @@ class ApiCommunityReputationRulesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param ApiCommunityReputationRuleEditRequest $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return ApiResponse
      */
-    public function update(Request $request, $id)
+    public function update(ApiCommunityReputationRuleEditRequest $request, int $id):ApiResponse
     {
-        //
+        $community_reputation = $this->communityReputationRepository->edit($request,$id);
+        if($community_reputation === null){
+            return ApiResponse::error(trans('responses/common.add_error'));
+        }
+        return ApiResponse::common(
+            ApiCommunityReputationRuleResource::make($community_reputation)->toArray($request)
+        );
     }
 
 }

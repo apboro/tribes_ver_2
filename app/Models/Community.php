@@ -330,4 +330,9 @@ class Community extends Model
         return $this->belongsToMany(Condition::class,'conditions_actions','community_id','group_uuid', 'id', 'group_uuid')->distinct();
     }
 
+    public function communityReputationRule()
+    {
+        return $this->belongsTo(CommunityReputationRules::class, 'reputation_rules_id', 'id');
+    }
+
 }

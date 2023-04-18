@@ -22,6 +22,7 @@ class ApiCommunityReputationRuleResource extends JsonResource
     {
         return [
             'id'=>$this->resource->id,
+            'name'=>$this->resource->name,
             'who_can_rate'=>$this->resource->who_can_rate,
             'rate_period'=>$this->resource->rate_period,
             'rate_member_period'=>$this->resource->rate_member_period,
@@ -42,7 +43,10 @@ class ApiCommunityReputationRuleResource extends JsonResource
 
             'count_for_new' => $this->resource->count_for_new,
             'start_count_for_new' => $this->resource->start_count_for_new,
-            'count_reaction' => $this->resource->count_reaction
+            'count_reaction' => $this->resource->count_reaction,
+            'keywords_up'=>$this->resource->reputationUpWords,
+            'keywords_down'=>$this->resource->reputationDownWords,
+            'communities'=>$this->resource->communities
         ];
     }
 }

@@ -3,28 +3,17 @@
 namespace App\Http\ApiRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Annotations as OA;
 
-class ApiCommunityReputationRuleListRequest extends FormRequest
+/**
+ * @OA\Get(path="/api/v3/chats/rate",
+ *     tags={"Chats Reputation"},
+ *     summary="Show list of chat reputation",
+ *     operationId="chats-show-list-chat-repuataion",
+ *     security={{"sanctum": {} }},
+ *     @OA\Response(response=200, description="OK"),
+ * )
+ */
+class ApiCommunityReputationRuleListRequest extends ApiRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            //
-        ];
-    }
 }
