@@ -12,14 +12,17 @@ use Database\Factories\CommunityFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Auth;
 
-/** @method CommunityFactory factory()
+/**
+ * @method CommunityFactory factory()
  * @property mixed $owner
  * @property mixed $id
  * @property TelegramConnection $connection
  * @property string $title
  * @property mixed|true $is_active
+ * @property BelongsToMany $tags
  */
 class Community extends Model
 {
@@ -320,7 +323,7 @@ class Community extends Model
         return $string;
     }
 
-    public function tags()
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'community_tag', 'community_id', 'tag_id');
     }

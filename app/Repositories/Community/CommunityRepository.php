@@ -6,6 +6,7 @@ use App\Filters\API\CommunitiesFilter;
 use App\Models\Community;
 use App\Models\TelegramConnection;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -35,9 +36,9 @@ class CommunityRepository implements CommunityRepositoryContract
         if ($request->input('tags_names') !== null) {
             $tagsNames = explode(",", $request->input('tags_names')[0]);
             if (!empty(array_filter($request->input('tags_names')))) {
-                $list->whereHas('tags', function ($query) use ($request, $tagsNames) {
-                    return $query->whereIn('name', $tagsNames);
-                });
+                $list->whereHas('tags', function ($query) use ($tagsNames) {
+                            $query->whereIn('name', $tagsNames);
+                },'=', count($tagsNames));
             }
         }
 
