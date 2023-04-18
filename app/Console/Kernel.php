@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('calculate:utility')->everyFiveMinutes()->timezone('Europe/Moscow');
 //        $schedule->command('check:new_subs')->hourly()->timezone('Europe/Moscow');
 //        $schedule->command('userBot:setWebhook')->everyFiveMinutes()->timezone('Europe/Moscow');
+        $schedule->command('telescope:prune --hours=12')->dailyAt('23:59')->timezone('Europe/Moscow');
     }
 
     /**
