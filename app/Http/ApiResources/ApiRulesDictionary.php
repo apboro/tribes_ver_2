@@ -122,29 +122,38 @@ class ApiRulesDictionary
             ],
             [
                 'name' => 'custom',
-                'value' =>'',
+                'value' => '',
                 'label' => 'введите значение',
-                'allowedSubjects' => ['message_text','message_length', 'username_length', 'first_name_length', 'last_name_length', 'reputation'],
+                'allowedSubjects' => ['message_text', 'message_length', 'username_length', 'first_name_length', 'last_name_length', 'reputation'],
                 'allowedActions' => ['contain', 'less_than', 'more_than', 'equal_to'],
             ],
         ];
         $callbacks = [
-            'send_message_in_chat_from_bot',
-            'delete_message',
-            'send_message_in_pm_from_bot',
-            'ban_user',
-            'mute_user',
-            'increase_reputation',
-            'decrease_reputation',
-            'add_warning',
-            'delete_warning'
+            ['name' => 'send_message_in_chat_from_bot',
+                'label' => 'Отправить сообщение в общий чат',],
+            ['name' => 'delete_message',
+                'label' => 'Удалить сообщение',],
+            ['name' => 'send_message_in_pm_from_bot',
+                'label' => 'Отправить сообщение от бота пользователю',],
+            ['name' => 'ban_user',
+                'label' => 'Забанить пользователя',],
+            ['name' => 'mute_user',
+                'label' => 'Замьютить пользователя',],
+            ['name' => 'increase_reputation',
+                'label' => 'Увеличить репутацию',],
+            ['name' => 'decrease_reputation',
+                'label' => 'Уменьшить репутацию',],
+            ['name' => 'add_warning',
+                'label' => 'Добавить предупреждение',],
+            ['name' => 'delete_warning',
+                'label' => 'убрать перудпреждение',]
         ];
 
         return response()->json([
-           'subjects' => $subjects,
-           'actions' => $actions,
-           'values' => $values,
-           'callbacks' => $callbacks,
+            'subjects' => $subjects,
+            'actions' => $actions,
+            'values' => $values,
+            'callbacks' => $callbacks,
         ]);
     }
 
