@@ -93,7 +93,9 @@ class ApiCommunityTelegramUserController extends Controller
         $query = TelegramUser::with(['communities', 'userList'])
             ->whereHas('communities', function ($query) {
                 $query->where('owner', Auth::user()->id)
-                ->whereNull('telegram_users_community.exit_date');
+                    ->whereNull('telegram_users_community.exit_date')
+                    ->where('is_active',true)
+                ;
             })
             ->newQuery();
         if (!empty($request->input('accession_date_from'))) {
