@@ -12,7 +12,7 @@ namespace App\Http\ApiRequests;
  * tags= {"Chats IF-THEN"},
  *     @OA\RequestBody(
  *        @OA\JsonContent(
- *          @OA\Property(property="rules", type="string"),
+ *          @OA\Property(property="rules", type="object"),
  *          @OA\Property(property="communities_ids", type="array", @OA\Items(type="integer"))
  *        )
  *     ),

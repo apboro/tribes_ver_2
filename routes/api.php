@@ -11,8 +11,9 @@ use App\Http\Controllers\APIv3\ApiCommunityTelegramUserController;
 use App\Http\Controllers\APIv3\ApiConditionActionController;
 use App\Http\Controllers\APIv3\ApiConditionController;
 use App\Http\Controllers\APIv3\ApiCourseController;
-use App\Http\Controllers\APIv3\ApiDictionariesController;
 use App\Http\Controllers\APIv3\ApiFeedBackController;
+use App\Http\Controllers\APIv3\ApiGreetingMessageController;
+use App\Http\Controllers\APIv3\ApiOnboardingController;
 use App\Http\Controllers\APIv3\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiSubscriptionController;
@@ -135,6 +136,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/chats/rules/{id}', [CommunityRuleController::class, 'show'])->name('chats.rules.show');
 
     Route::get('/chats/rules-template', [ApiRulesTemplateController::class, 'getTemplate']);
+
+    Route::post('/onboarding',[ApiOnboardingController::class, 'store']);
 
 });
 
