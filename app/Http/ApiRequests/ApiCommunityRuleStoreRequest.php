@@ -10,7 +10,7 @@ use OpenApi\Annotations as OA;
  *  operationId="chat-rules-add",
  *  summary="Add chat rules",
  *  security={{"sanctum": {} }},
- *  tags={"Chats Rules"},
+ *  tags={"Chats Moderation"},
  *     @OA\RequestBody(
  *         @OA\MediaType(
  *             mediaType="multipart/form-data",

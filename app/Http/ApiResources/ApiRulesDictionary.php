@@ -9,6 +9,10 @@ class ApiRulesDictionary
 
     public function get(ApiGetRulesDictRequest $request)
     {
+        $name = [
+            'name' => 'if-then rule',
+            'label' => "Правило Если-То",
+        ];
         $subjects = [
             [
                 'name' => 'message_text',
@@ -150,6 +154,7 @@ class ApiRulesDictionary
         ];
 
         return response()->json([
+            'name' => $name,
             'subjects' => $subjects,
             'actions' => $actions,
             'values' => $values,

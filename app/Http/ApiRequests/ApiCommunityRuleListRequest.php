@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Get(path="/api/v3/chats/rules",
- *     tags={"Chats Rules"},
+ *     tags={"Chats Moderation"},
  *     summary="Show list if chat rules",
  *     operationId="chat-rules-list",
  *     security={{"sanctum": {} }},

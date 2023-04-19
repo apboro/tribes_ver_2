@@ -9,7 +9,7 @@ namespace App\Http\ApiRequests;
  * operationId="Get_user_rules",
  * summary= "Get user rules",
  * security= {{"sanctum": {} }},
- * tags= {"User Rules"},
+ * tags= {"Chats IF-THEN"},
  *
  *      @OA\Response(response=200, description="OK"),
  * )

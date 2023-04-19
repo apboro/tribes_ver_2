@@ -9,7 +9,7 @@ namespace App\Http\ApiRequests;
  * operationId="Store_user_community_rules",
  * summary= "Store user rules for communities IDs",
  * security= {{"sanctum": {} }},
- * tags= {"User Rules"},
+ * tags= {"Chats IF-THEN"},
  *     @OA\RequestBody(
  *        @OA\JsonContent(
  *          @OA\Property(property="rules", type="string"),

@@ -10,7 +10,7 @@ use OpenApi\Annotations as OA;
  *  operationId="chat-rules-edit",
  *  summary="Edit chat rules",
  *  security={{"sanctum": {} }},
- *  tags={"Chats Rules"},
+ *  tags={"Chats Moderation"},
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
