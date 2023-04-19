@@ -4,6 +4,7 @@ namespace App\Repositories\TelegramUserLists;
 
 use App\Http\ApiRequests\ApiRequest;
 use App\Models\Community;
+use App\Models\TelegramUser;
 use App\Models\TelegramUserList;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
@@ -56,6 +57,8 @@ class TelegramUserListsRepositry
                         $telegram_id,
                         $community_telegram_chat_id
                     );
+                    $ty = TelegramUser::where('telegram_id', $telegram_id)->first();
+                    $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time()]);
                 } catch (\Exception $e) {
                     TelegramLogService::staticSendLogMessage('Black/ban list error' . $e);
                 }
