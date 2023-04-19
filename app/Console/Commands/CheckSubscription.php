@@ -9,6 +9,7 @@ use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\Payment as Pay;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CheckSubscription extends Command
 {
@@ -71,6 +72,7 @@ class CheckSubscription extends Command
                 $payment = $p->pay();
 
                 if ($payment){
+                    Log::info('Payment for subscription '.$subscription->id.' success');
                     $this->telegramService->sendMessageFromBot(
                         config('telegram_bot.bot.botName'),
                         $subscription->user->telegramMeta[0]->telegram_id,

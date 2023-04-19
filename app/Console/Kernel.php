@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('send:donate')->everyMinute()->timezone('Europe/Moscow');
         $schedule->command('check:tariff')->everyMinute()->timezone('Europe/Moscow')->appendOutputTo(storage_path('logs/checktariff.log'));
         $schedule->command('check:course')->everyMinute()->timezone('Europe/Moscow');
+        $schedule->command('check:subscription')->everyMinute()->timezone('Europe/Moscow')->appendOutputTo(storage_path('logs/checksubscription.log'));
         env('USE_TRIAL_PERIOD', true) ?
             $schedule->command('check:trial')->everyMinute()->timezone('Europe/Moscow')
             : null;
