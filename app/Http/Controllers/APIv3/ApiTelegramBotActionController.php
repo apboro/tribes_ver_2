@@ -63,7 +63,7 @@ class ApiTelegramBotActionController extends Controller
         }
 
         $count = $list->count();
-        $result = $list->skip($request->offset-1)->take($request->limit)->orderBy('id')->get();
+        $result = $list->skip($request->offset)->take($request->limit)->orderBy('id')->get();
 
         return ApiResponse::listPagination(['Access-Control-Expose-Headers'=>'Items-Count', 'Items-Count'=>$count])->items(new ApiTelegramBotActionLogCollection($result));
     }

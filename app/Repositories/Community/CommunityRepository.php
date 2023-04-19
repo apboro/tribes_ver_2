@@ -56,7 +56,7 @@ class CommunityRepository implements CommunityRepositoryContract
         }
         $count = $list->count();
         return [
-            'list' => $list->skip($request->offset-1)->take($request->limit)->orderBy('id')->get(),
+            'list' => $list->skip($request->offset)->take($request->limit)->orderBy('id')->get(),
             'count' => $count,
             ];
     }
