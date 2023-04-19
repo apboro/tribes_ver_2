@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Storage;
 
 class CommunityRuleRepository
 {
+    const TYPE_IMAGE_CONTENT = 'content_image';
+    const TYPE_IMAGE_WARNING = 'warning_image';
+    const TYPE_IMAGE_COMPLAINT = 'user_complaint_image';
     public function add(ApiRequest $request)
     {
 
@@ -30,14 +33,33 @@ class CommunityRuleRepository
         if (!empty($request->input('restricted_words'))) {
             $this->addRestrictedWords($request, $community_rule);
         }
+         $this->uploadImages($request,$community_rule);
 
-        if (!empty($request->file('warning_image'))) {
-            $this->uploadFile($request, $community_rule);
-        }
+
         if (!empty($request->input('community_ids'))) {
             $this->attachCommunities($request, $community_rule);
         }
         return $community_rule;
+    }
+
+    /**
+     * @param ApiRequest $request
+     * @param CommunityRule $community_rule
+     * @return void
+     */
+    public function uploadImages(
+        ApiRequest $request,
+        CommunityRule $community_rule
+    ){
+        if (!empty($request->file('warning_image'))) {
+            $this->uploadFile($request, $community_rule,self::TYPE_IMAGE_WARNING);
+        }
+        if (!empty($request->file('content_image'))) {
+            $this->uploadFile($request, $community_rule,self::TYPE_IMAGE_CONTENT);
+        }
+        if (!empty($request->file('user_complaint_image'))) {
+            $this->uploadFile($request, $community_rule,self::TYPE_IMAGE_COMPLAINT);
+        }
     }
 
     public function addRestrictedWords(
@@ -53,16 +75,24 @@ class CommunityRuleRepository
         }
     }
 
+    /**
+     * @param ApiRequest $request
+     * @param CommunityRule $community_rule
+     * @param string $type
+     * @return void
+     */
     public function uploadFile(
         ApiRequest    $request,
-        CommunityRule $community_rule)
+        CommunityRule $community_rule,
+        string $type
+    )
     {
-        $file = $request->file('warning_image');
+        $file = $request->file($type);
         $upload_folder = 'public/hello_message_images';
         $extension = $file->getClientOriginalExtension();
-        $filename = md5($file->getClientOriginalName() . time()) . '.' . $extension;
+        $filename = md5(rand(1,1000000).$file->getClientOriginalName() . time()) . '.' . $extension;
         Storage::putFileAs($upload_folder, $file, $filename);
-        $community_rule->warning_image_path = 'storage/hello_message_images/' . $filename;
+        $community_rule->{$type."_path"} = 'storage/hello_message_images/' . $filename;
         $community_rule->save();
     }
 
@@ -71,7 +101,13 @@ class CommunityRuleRepository
         CommunityRule $community_rule
     )
     {
-
+        if(!empty($community_rule->communities)){
+            /** @var Community $community */
+            foreach($community_rule->communities as $community){
+                $community->communityRule()->disassociate();
+                $community->save();
+            }
+        }
         foreach ($request->input('community_ids') as $community_id) {
             /** @var Community $community */
             $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
@@ -97,12 +133,13 @@ class CommunityRuleRepository
         $community_rule->save();
         $this->removeRestrictedWords($community_rule);
         $this->addRestrictedWords($request, $community_rule);
-        if (!empty($request->file('warning_image'))) {
-            $this->uploadFile($request, $community_rule);
-        }
+        $this->uploadImages($request,$community_rule);
         if (!empty($request->input('community_ids'))) {
             $this->attachCommunities($request, $community_rule);
         }
+        $community_rule->load('communities');
+        return $community_rule;
+
     }
 
     public function removeRestrictedWords(CommunityRule $community_rule): void

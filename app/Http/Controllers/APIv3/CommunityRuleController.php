@@ -89,7 +89,7 @@ class CommunityRuleController extends Controller
         if ($community_rule == null) {
             return ApiResponse::notFound(trans('responses/common.not_found'));
         }
-        $this->communityRuleRepository->updateCommunityRule($community_rule, $request);
+        $community_rule = $this->communityRuleRepository->updateCommunityRule($community_rule, $request);
         return ApiResponse::common(
             ApiCommunityRuleResource::make($community_rule)->toArray($request)
         );
