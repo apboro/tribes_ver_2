@@ -54,7 +54,7 @@ backend:
 queueWorker:
   image:
     registry: registry.fabit.ru
-    repository: tribes/tribes
+    repository: tribes/spodial_backend
     tag: latest
     pullPolicy: IfNotPresent
     credentials:
@@ -67,7 +67,7 @@ queueWorker:
 scheduleWorker:
   image:
     registry: registry.fabit.ru
-    repository: tribes/tribes
+    repository: tribes/spodial_backend
     tag: latest
     pullPolicy: IfNotPresent
     credentials:
@@ -79,7 +79,7 @@ scheduleWorker:
 static:
   image:
     registry: registry.fabit.ru
-    repository: kzrf/backend
+    repository: tribes/spodial_backend
     tag: latest
     pullPolicy: IfNotPresent
     credentials:
