@@ -20,7 +20,9 @@ class ApiTelegramBotActionLogResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'telegram_user'=>($this->resource->telegramUser) ? $this->resource->telegramUser->user_name ? stristr($this->resource->telegramUser->user_name, 'bot')
+            'telegram_user'=>($this->resource->telegramUser)
+                ? $this->resource->telegramUser->user_name
+                ? stristr($this->resource->telegramUser->user_name, env('TELEGRAM_BOT_NAME'))
                 ? $this->resource->telegramUser->user_name : '@'.$this->resource->telegramUser->user_name : null : null,
             'event'=>$this->resource->event,
             'action'=>$this->resource->action,
