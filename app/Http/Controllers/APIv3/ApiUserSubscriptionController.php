@@ -44,15 +44,7 @@ class ApiUserSubscriptionController extends Controller
 
         $user = Auth::user();
 
-        if ($user->subscription && $user->subscription->subscription_id != 1) {
-            return ApiResponse::error('subscription.already_subscribed');
-        }
-
         $subscription = Subscription::find($request->input('subscription_id'));
-
-        if ($subscription === null) {
-            return ApiResponse::notFound('subscription.required');
-        }
 
         $payment = $this->tinkoff_payment->doPayment($user, $subscription, $subscription->price);
 

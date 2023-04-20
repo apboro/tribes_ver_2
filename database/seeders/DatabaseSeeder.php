@@ -11,6 +11,7 @@ use App\Models\Community;
 use App\Models\Payment;
 use App\Models\Statistic;
 use App\Models\TelegramConnection;
+use App\Models\UserSubscription;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -95,6 +96,16 @@ class DatabaseSeeder extends Seeder
             'user' => $user,
             'userTest' => $userTest,
         ]);
+
+        UserSubscription::create([
+            'user_id'=>$userTest->id,
+            'subscription_id' => 1,
+            'created_at'=>now(),
+            'isRecurrent' => true,
+            'isActive' =>true,
+            'expiration_date'=>now()->addDays(30)->timestamp,
+        ]);
+
 
     }
 

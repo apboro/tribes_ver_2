@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 /** @method PaymentFactory factory()
  * @property Community $community
  * @property int $amount
+ * @property mixed $paymentUrl
  */
 class Payment extends Model
 {

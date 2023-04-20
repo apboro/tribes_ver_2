@@ -14,7 +14,7 @@ use App\Http\ApiRequests\ApiRequest;
  *  tags={"Subscription"},
  *     @OA\RequestBody(
  *          @OA\JsonContent(
- *                 @OA\Property(property="subscriptin_id",type="integer"),
+ *                 @OA\Property(property="subscription_id",type="integer"),
  *                example={"subscription_id": 2}
  *           )
  *      ),
