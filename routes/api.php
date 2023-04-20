@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiRulesTemplateController;
 use App\Http\Controllers\APIv3\ApiActionsController;
 use App\Http\Controllers\APIv3\ApiAntispamController;
 use App\Http\Controllers\APIv3\ApiCommunityController;
+use App\Http\Controllers\APIv3\ApiCommunityReputationRulesController;
 use App\Http\Controllers\APIv3\ApiCommunityTagController;
 use App\Http\Controllers\APIv3\ApiCommunityTelegramUserController;
 use App\Http\Controllers\APIv3\ApiConditionActionController;
@@ -134,11 +135,16 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/chats/rules', [CommunityRuleController::class, 'list'])->name('chats.rules.list');
     Route::post('/chats/rules/edit/{id}', [CommunityRuleController::class, 'update'])->name('chats.rules.update');
     Route::get('/chats/rules/{id}', [CommunityRuleController::class, 'show'])->name('chats.rules.show');
-
     Route::get('/chats/rules-template', [ApiRulesTemplateController::class, 'getTemplate']);
 
     Route::post('/onboarding',[ApiOnboardingController::class, 'store']);
     Route::get('/onboarding',[ApiOnboardingController::class, 'get']);
+
+    Route::get('/chats/rate-template', [ApiCommunityReputationRulesController::class, 'getTemplate'])->name('chats.reputation.template');
+    Route::post('/chats/rate', [ApiCommunityReputationRulesController::class, 'store'])->name('chats.reputation.store');
+    Route::get('/chats/rate', [ApiCommunityReputationRulesController::class, 'list'])->name('chats.reputation.list');
+    Route::put('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
+    Route::get('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
 
 });
 

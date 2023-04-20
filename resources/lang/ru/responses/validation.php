@@ -102,13 +102,6 @@ return [
     'date' => [
         'incorrect_format' => 'Неверный формат даты'
     ],
-    'telegram_user' => [
-        'unique' => 'Данный телегерам аккаунт уже привязан к другому пользователю',
-        'required_telegram_id' => 'Id telegram обязательно для заполнения',
-        'integer_telegram_id' => 'Id telegram должно быть целым число',
-        'exists_telegram_id' => 'Id telegram не найден в таблице',
-        'is_spammer' => 'Индикатор is_spammer должен быть числом'
-    ],
     'antispam' => [
         'name_string' => 'Название антиспам правила должно быть строкой',
         'name_max_length' => 'Название антиспам правила должно быть не более 120 символов',
@@ -122,5 +115,15 @@ return [
         'id_required'=>'ID обязательное поле',
         'id_integer'=>'ID должно быть числом',
         'id_exists'=>'Id не найдено'
-    ]
+    ],
+    'telegram_user'=>[
+        'unique'=> 'Данный телегерам аккаунт уже привязан к другому пользователю',
+        'required_telegram_id'=>'Id telegram обязательно для заполнения',
+        'integer_telegram_id'=>'Id telegram должно быть целым число',
+        'exists_telegram_id'=>'Id telegram не найден в таблице',
+        'is_spammer'=>'Индикатор is_spammer должен быть числом'
+    ],
+    'id_required'=>'ID обязательное поле',
+    'id_integer'=>'ID должно быть числом',
+    'id_exists' =>'ID не найдено'
 ];

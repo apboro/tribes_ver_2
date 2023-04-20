@@ -343,4 +343,9 @@ class Community extends Model
         return $this->belongsTo(CommunityRule::class);
     }
 
+    public function communityReputationRule()
+    {
+        return $this->belongsTo(CommunityReputationRules::class, 'reputation_rules_id', 'id');
+    }
+
 }
