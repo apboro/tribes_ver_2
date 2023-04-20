@@ -6,6 +6,7 @@ use App\Http\ApiRequests\ApiCommunityReputationRuleEditRequest;
 use App\Http\ApiRequests\ApiCommunityReputationRuleListRequest;
 use App\Http\ApiRequests\ApiCommunityReputationRuleShowRequest;
 use App\Http\ApiRequests\ApiCommunityReputationRuleStoreRequest;
+use App\Http\ApiRequests\ApiCommunityReputationTemplateRequest;
 use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiResources\ApiCommunityReputationRuleCollection;
 use App\Http\ApiResources\ApiCommunityReputationRuleResource;
@@ -27,6 +28,19 @@ class ApiCommunityReputationRulesController extends Controller
     public function __construct(CommunityReputationRepository $communityReputationRepository)
     {
         $this->communityReputationRepository = $communityReputationRepository;
+    }
+
+
+    public function getTemplate(ApiCommunityReputationTemplateRequest $request):ApiResponse
+    {
+        return ApiResponse::common([
+            'keywords_up' => trans('responses/chat_reputation.keywords_up'),
+            'keywords_down' => trans('responses/chat_reputation.keywords_down'),
+            'notify_content_user' => trans('responses/chat_reputation.notify_content_user'),
+            'text_public_rate_in_chat' => trans('responses/chat_reputation.text_public_rate_in_chat'),
+            'ranks' => trans('responses/chat_reputation.ranks'),
+            'notify_about_reset_reputation' => trans('responses/chat_reputation.notify_about_reset_reputation'),
+        ]);
     }
 
 

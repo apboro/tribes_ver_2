@@ -8,6 +8,7 @@ use Tests\TestCase;
 class ApiCommunityReputationRulesTest extends TestCase
 {
     private $url ='api/v3/chats/rate';
+    private $template_url = 'api/v3/chats/rate-template';
 
     private $data = [
         'error_not_auth' => [
@@ -80,6 +81,10 @@ class ApiCommunityReputationRulesTest extends TestCase
                     'count_reaction',
                 ]
             ]
+        ],
+        'success_template'=>[
+            'expected_status' => 200,
+            'expected_structure' => [],
         ]
     ];
 
@@ -390,5 +395,15 @@ class ApiCommunityReputationRulesTest extends TestCase
 
         $response->assertStatus($this->data['success_list']['expected_status'])
             ->assertJsonStructure($this->data['success_list']['expected_structure']);
+    }
+
+    public function test_reputation_get_remplate(){
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->custom_token
+        ])->get($this->template_url);
+
+        $response->assertStatus($this->data['success_template']['expected_status'])
+            ->assertJsonStructure($this->data['success_template']['expected_structure']);
     }
 }

@@ -120,6 +120,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/user-community-rules/store', [UserRulesController::class, 'store']);
     Route::get('/user-community-rules/get', [UserRulesController::class, 'get']);
 
+    Route::get('/chats/rate-template', [ApiCommunityReputationRulesController::class, 'getTemplate'])->name('chats.reputation.template');
     Route::post('/chats/rate', [ApiCommunityReputationRulesController::class, 'store'])->name('chats.reputation.store');
     Route::get('/chats/rate', [ApiCommunityReputationRulesController::class, 'list'])->name('chats.reputation.list');
     Route::put('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
