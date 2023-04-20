@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\APIv3;
 
+use App\Http\ApiRequests\ApiGetOnboardingRequest;
 use App\Http\ApiRequests\ApiStoreOnboardingRequest;
+use App\Http\ApiResources\ApiOnboardingResource;
+use App\Http\ApiResources\ApiOnboardingsCollection;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\GreetingMessage;
@@ -16,7 +19,7 @@ class ApiOnboardingController extends Controller
     {
         $user_id = Auth::user()->id;
 
-        $path = Storage::disk('public')->putFile('greeting_images', $request->file('image'));
+        $path = $request->file('image') ? Storage::disk('public')->putFile('greeting_images', $request->file('image')) : null;
         $message = new GreetingMessage();
         $message->text = $request->input('greeting_message_text');
         $message->image = $path;
@@ -35,5 +38,12 @@ class ApiOnboardingController extends Controller
         }
 
         return ApiResponse::success('Правила сохранены');
+    }
+
+    public function get(ApiGetOnboardingRequest $request): ApiResponse
+    {
+        $onboardings = Onboarding::where('user_id', Auth::user()->id)->get();
+//        return response($onboardings);
+        return ApiResponse::list()->items(ApiOnboardingsCollection::make($onboardings)->toArray($request));
     }
 }

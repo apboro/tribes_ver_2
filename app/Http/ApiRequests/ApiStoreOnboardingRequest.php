@@ -39,7 +39,7 @@ class ApiStoreOnboardingRequest extends ApiRequest
             'rules'=>'json|required',
             'title' =>'required|string',
             'greeting_message_text' => 'required|string|max:4000',
-            'image' => 'image|mimetypes:image/jpeg,image/png,image/gif,image/svg',
+            'image' => 'image|nullable',
             'community_ids' => 'array',
             'community_ids.*' => 'integer|exists:communities,id',
         ];

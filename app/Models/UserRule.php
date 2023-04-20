@@ -18,7 +18,7 @@ class UserRule extends Model
 
     protected $guarded=[];
 
-    protected $casts =['rules'=>'json'];
+//    protected $casts =['rules'=>'json'];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at', 'id'];
 }

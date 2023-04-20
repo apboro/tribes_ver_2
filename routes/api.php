@@ -138,6 +138,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/chats/rules-template', [ApiRulesTemplateController::class, 'getTemplate']);
 
     Route::post('/onboarding',[ApiOnboardingController::class, 'store']);
+    Route::get('/onboarding',[ApiOnboardingController::class, 'get']);
 
 });
 
