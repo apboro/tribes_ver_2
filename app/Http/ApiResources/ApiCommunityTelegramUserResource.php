@@ -30,7 +30,9 @@ class ApiCommunityTelegramUserResource extends JsonResource
             'accession_date' => $this->resource->auth_date,
             'communities' => $this->whenLoaded(
                 'communities', function () {
-                return $this->resource->communities()->where('owner', Auth::user()->id)->pluck('title');
+                return $this->resource->communities()->where('owner', Auth::user()->id)
+                    ->where('is_active', true)
+                    ->pluck('title');
             }
             ),
             'user_list' => $this->whenLoaded(
