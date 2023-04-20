@@ -88,11 +88,11 @@ class CommunityRuleRepository
     )
     {
         $file = $request->file($type);
-        $upload_folder = 'public/hello_message_images';
+        $upload_folder = 'public/moderation_images';
         $extension = $file->getClientOriginalExtension();
         $filename = md5(rand(1,1000000).$file->getClientOriginalName() . time()) . '.' . $extension;
         Storage::putFileAs($upload_folder, $file, $filename);
-        $community_rule->{$type."_path"} = 'storage/hello_message_images/' . $filename;
+        $community_rule->{$type."_path"} = 'storage/moderation_images/' . $filename;
         $community_rule->save();
     }
 

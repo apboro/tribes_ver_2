@@ -19,6 +19,7 @@ class CreateOnboardingsTable extends Migration
             $table->string('title');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('greeting_message_id')->constrained('greeting_messages')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('question_image')->nullable();
             $table->timestamps();
         });
     }

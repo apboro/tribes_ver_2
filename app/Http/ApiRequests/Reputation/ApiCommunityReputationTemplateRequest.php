@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\ApiRequests;
+namespace App\Http\ApiRequests\Reputation;
 
-use Illuminate\Foundation\Http\FormRequest;
-use OpenApi\Annotations as OA;
+use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\Get(path="/api/v3/chats/rate-template",

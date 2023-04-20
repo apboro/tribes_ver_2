@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers\APIv3;
 
-use App\Http\ApiRequests\ApiCommunityReputationRuleEditRequest;
-use App\Http\ApiRequests\ApiCommunityReputationRuleListRequest;
-use App\Http\ApiRequests\ApiCommunityReputationRuleShowRequest;
-use App\Http\ApiRequests\ApiCommunityReputationRuleStoreRequest;
-use App\Http\ApiRequests\ApiCommunityReputationTemplateRequest;
-use App\Http\ApiRequests\ApiRequest;
+use App\Http\ApiRequests\Reputation\ApiCommunityReputationRuleEditRequest;
+use App\Http\ApiRequests\Reputation\ApiCommunityReputationRuleListRequest;
+use App\Http\ApiRequests\Reputation\ApiCommunityReputationRuleShowRequest;
+use App\Http\ApiRequests\Reputation\ApiCommunityReputationRuleStoreRequest;
+use App\Http\ApiRequests\Reputation\ApiCommunityReputationTemplateRequest;
 use App\Http\ApiResources\ApiCommunityReputationRuleCollection;
 use App\Http\ApiResources\ApiCommunityReputationRuleResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\CommunityReputationRules;
 use App\Repositories\Community\CommunityReputationRepository;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class ApiCommunityReputationRulesController extends Controller

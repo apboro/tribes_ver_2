@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Http\ApiRequests;
+namespace App\Http\ApiRequests\Antispam;
 
-use OpenApi\Annotations as OA;
+use App\Http\ApiRequests\ApiRequest;
+
 
 /**
- * @OA\Put(
- *  path="/api/v3/antispam/{id}",
- *  operationId="antispam-edit",
- *  summary="Edit antispam",
+ * @OA\Post(
+ *  path="/api/v3/antispam",
+ *  operationId="antispam-add",
+ *  summary="Add antispam",
  *  security={{"sanctum": {} }},
- *  tags={"Antispam"},
- *     @OA\Parameter(name="id",in="path",required=true,@OA\Schema(type="integer",format="int64")),
+ *  tags={"Chats Antispam"},
  *     @OA\RequestBody(
- *         @OA\MediaType(mediaType="application/json",encoding={
+ *         @OA\MediaType(
+ *             mediaType="application/json",
+ *             encoding={
  *                  "community_ids[]": {
  *                      "explode": true,
  *                  },
@@ -26,24 +28,14 @@ use OpenApi\Annotations as OA;
  *                 @OA\Property(property="ban_user_contain_forward",type="boolean",example="false"),
  *                 @OA\Property(property="work_period",type="integer",example="10"),
  *                 @OA\Property(property="community_ids[]",type="array",@OA\Items(type="integer")),
- *         ))
+ *     )
+ *         )
  *     ),
  *   @OA\Response(response=200, description="OK")
  *)
  */
-class ApiAntispamEditRequest extends ApiRequest
+class ApiAntispamStoreRequest extends ApiRequest
 {
-
-    public function all($keys = null)
-    {
-        $data = parent::all();
-        $data['id'] = $this->route('id');
-
-        return $data;
-
-    }
-
-
     public function prepareForValidation(): void
     {
         if (!$this->request->get('del_message_with_link') && $this->request->get('ban_user_contain_link')) {
@@ -57,7 +49,6 @@ class ApiAntispamEditRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|min:1|exists:antispams,id',
             'name' => 'required|string|max:120',
             'del_message_with_link' => 'boolean',
             'ban_user_contain_link' => 'boolean',

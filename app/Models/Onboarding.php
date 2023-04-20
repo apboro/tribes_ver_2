@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property bool|mixed $title
  * @property mixed $id
  * @property mixed $greeting_message_id
+ * @property false|mixed|string|null $question_image
  */
 class Onboarding extends Model
 {

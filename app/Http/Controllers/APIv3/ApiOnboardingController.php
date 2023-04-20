@@ -19,10 +19,11 @@ class ApiOnboardingController extends Controller
     {
         $user_id = Auth::user()->id;
 
-        $path = $request->file('image') ? Storage::disk('public')->putFile('greeting_images', $request->file('image')) : null;
+        $greetingImagePath = $request->file('greeting_image') ? Storage::disk('public')->putFile('greeting_images', $request->file('greeting_image')) : null;
+        $questionImagePath = $request->file('question_image') ? Storage::disk('public')->putFile('question_images', $request->file('question_image')) : null;
         $message = new GreetingMessage();
         $message->text = $request->input('greeting_message_text');
-        $message->image = $path;
+        $message->image = $greetingImagePath;
         $message->user_id = $user_id;
         $message->save();
 
@@ -31,6 +32,7 @@ class ApiOnboardingController extends Controller
         $onboarding->user_id = $user_id;
         $onboarding->title = $request->input('title');
         $onboarding->greeting_message_id = $message->id;
+        $onboarding->question_image = $questionImagePath;
         $onboarding->save();
 
         foreach ($request->input('communities_ids') as $community_id) {
@@ -43,7 +45,7 @@ class ApiOnboardingController extends Controller
     public function get(ApiGetOnboardingRequest $request): ApiResponse
     {
         $onboardings = Onboarding::where('user_id', Auth::user()->id)->get();
-//        return response($onboardings);
+
         return ApiResponse::list()->items(ApiOnboardingsCollection::make($onboardings)->toArray($request));
     }
 }

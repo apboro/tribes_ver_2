@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\APIv3;
 
-use App\Http\ApiRequests\ApiCommunityRuleEditRequest;
-use App\Http\ApiRequests\ApiCommunityRuleListRequest;
-use App\Http\ApiRequests\ApiCommunityRuleShowRequest;
-use App\Http\ApiRequests\ApiCommunityRuleStoreRequest;
+use App\Http\ApiRequests\Moderation\ApiCommunityRuleEditRequest;
+use App\Http\ApiRequests\Moderation\ApiCommunityRuleListRequest;
+use App\Http\ApiRequests\Moderation\ApiCommunityRuleShowRequest;
+use App\Http\ApiRequests\Moderation\ApiCommunityRuleStoreRequest;
 use App\Http\ApiResources\ApiCommunityRuleCollection;
 use App\Http\ApiResources\ApiCommunityRuleResource;
 use App\Http\ApiResponses\ApiResponse;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\ApiRequests;
+namespace App\Http\ApiRequests\Moderation;
 
-use OpenApi\Annotations as OA;
+use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\POST(

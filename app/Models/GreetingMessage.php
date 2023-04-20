@@ -15,6 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class GreetingMessage extends Model
 {
     use HasFactory;
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at', 'id'];
 
 }

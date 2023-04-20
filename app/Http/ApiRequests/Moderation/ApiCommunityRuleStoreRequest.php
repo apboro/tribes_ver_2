@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\ApiRequests;
+namespace App\Http\ApiRequests\Moderation;
 
-use OpenApi\Annotations as OA;
+use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\Post(
@@ -48,12 +48,12 @@ class ApiCommunityRuleStoreRequest extends ApiRequest
         return [
             'name' => 'required|string|max:120',
             'content' => 'required|string',
-            'content_image'=>'image|mimetypes:image/jpeg,image/png',
+            'content_image'=>'image|nullable',
             'restricted_words' => 'required|array',
             'max_violation_times' => 'integer',
             'warning' => 'required|string',
-            'warning_image' => 'image|mimetypes:image/jpeg,image/png',
-            'user_complaint_image'=>'image|mimetypes:image/jpeg,image/png',
+            'warning_image' => 'image|nullable',
+            'user_complaint_image'=>'image|nullable',
             'community_ids' => 'array',
             'community_ids.*' => 'integer|exists:communities,id',
             'action' => 'required|integer',

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\APIv3;
 
-use App\Http\ApiRequests\ApiAntispamEditRequest;
-use App\Http\ApiRequests\ApiAntispamShowRequest;
-use App\Http\ApiRequests\ApiAntispamStoreRequest;
+use App\Http\ApiRequests\Antispam\ApiAntispamEditRequest;
+use App\Http\ApiRequests\Antispam\ApiAntispamShowRequest;
+use App\Http\ApiRequests\Antispam\ApiAntispamStoreRequest;
 use App\Http\ApiResources\ApiAntispamCollection;
 use App\Http\ApiResources\ApiAntispamResource;
 use App\Http\ApiResponses\ApiResponse;

@@ -8,7 +8,7 @@ namespace App\Http\ApiRequests;
  * operationId="Store_onboarding",
  * summary= "Store onboarding",
  * security= {{"sanctum": {} }},
- * tags= {"Onboarding"},
+ * tags= {"Chats Onboarding"},
  *     @OA\RequestBody(
  *         @OA\MediaType(
  *             mediaType="multipart/form-data",
@@ -21,7 +21,8 @@ namespace App\Http\ApiRequests;
  *              @OA\Property(property="rules", type="object"),
  *              @OA\Property(property="title", type="string"),
  *              @OA\Property(property="greeting_message_text",type="string"),
- *              @OA\Property(property="image", type="file", format="binary"),
+ *              @OA\Property(property="greeting_image", type="file", format="binary"),
+ *              @OA\Property(property="question_image", type="file", format="binary"),
  *              @OA\Property(property="communities_ids[]",type="array",@OA\Items(type="integer"))
  *         )
  *      )
@@ -39,7 +40,8 @@ class ApiStoreOnboardingRequest extends ApiRequest
             'rules'=>'json|required',
             'title' =>'required|string',
             'greeting_message_text' => 'required|string|max:4000',
-            'image' => 'image|nullable',
+            'greeting_image' => 'image|nullable',
+            'question_image' => 'image|nullable',
             'community_ids' => 'array',
             'community_ids.*' => 'integer|exists:communities,id',
         ];

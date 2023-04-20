@@ -1,23 +1,16 @@
 <?php
 
-namespace App\Http\ApiRequests;
+namespace App\Http\ApiRequests\Reputation;
 
-use Illuminate\Foundation\Http\FormRequest;
-use OpenApi\Annotations as OA;
+use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Put(
- *  path="/api/v3/chats/rate/{id}",
- *  operationId="chats-reputation-rule-edit",
- *  summary="Edit reputation rules",
+ * @OA\Post(
+ *  path="/api/v3/chats/rate",
+ *  operationId="chats-reputation-rule-add",
+ *  summary="Add reputation rules",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Reputation"},
- *     @OA\Parameter(name="id",in="path",description="ID of chat reputation in database",required=true,
- *         @OA\Schema(
- *             type="integer",
- *             format="int64",
- *         )
- *     ),
  *     @OA\RequestBody(
  *         description="
  *          who_can_rate - enum from [all, owner, owner_and_admin]
@@ -58,20 +51,12 @@ use OpenApi\Annotations as OA;
  *   @OA\Response(response=200, description="OK")
  *)
  */
-class ApiCommunityReputationRuleEditRequest extends ApiRequest
+class ApiCommunityReputationRuleStoreRequest extends ApiRequest
 {
-    public function all($keys = null)
-    {
-        $data = parent::all();
-        $data['id'] = $this->route('id');
-
-        return $data;
-    }
 
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:community_reputation_rules,id',
             'name' => 'required|string|max:120',
             'who_can_rate' => 'required|in:all,owner,owner_and_admin',
 
@@ -104,16 +89,6 @@ class ApiCommunityReputationRuleEditRequest extends ApiRequest
         ];
     }
 
-
-    public function messages(): array
-    {
-        return [
-            'id.required' => $this->localizeValidation('id_required'),
-            'id.integer' => $this->localizeValidation('id_integer'),
-            'id.exists' => $this->localizeValidation('id_exists'),
-        ];
-    }
-
     public function passedValidation(): void
     {
         if(!$this->boolean('public_rate_in_chat')){
@@ -134,4 +109,5 @@ class ApiCommunityReputationRuleEditRequest extends ApiRequest
             $this->request->set('start_count_for_new',null);
         }
     }
+
 }
