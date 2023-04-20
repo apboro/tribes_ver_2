@@ -34,7 +34,7 @@ class ApiSubscriptionPayRequest extends ApiRequest
     public function rules():array
     {
         return [
-            'subscription_id' => 'required|integer',
+            'subscription_id' => 'required|integer|exists:subscriptions,id',
         ];
     }
 
