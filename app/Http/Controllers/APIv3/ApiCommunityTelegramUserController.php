@@ -94,7 +94,7 @@ class ApiCommunityTelegramUserController extends Controller
             ->whereHas('communities', function ($query) {
                 $query->where('owner', Auth::user()->id)
                     ->whereNull('telegram_users_community.exit_date')
-                    ->where('is_active',true)
+                    ->where('is_active', true)
                 ;
             })
             ->newQuery();
