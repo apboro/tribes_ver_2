@@ -126,12 +126,12 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/user-community-rules',[UserRulesController::class, 'get']);
     Route::put('/user-community-rules',[UserRulesController::class, 'update']);
     Route::delete('/user-community-rules',[UserRulesController::class, 'delete']);
+    Route::get('/all_user_rules', [UserRulesController::class, 'getAllRules']);
 
     Route::post('/antispam', [ApiAntispamController::class, 'store']);
     Route::put('/antispam/{id}', [ApiAntispamController::class, 'edit']);
     Route::get('/antispam', [ApiAntispamController::class, 'list']);
     Route::get('/antispam/{id}', [ApiAntispamController::class, 'show']);
-
 
     Route::post('/chats/rules', [CommunityRuleController::class, 'store'])->name('chats.rules.store');
     Route::get('/chats/rules', [CommunityRuleController::class, 'list'])->name('chats.rules.list');
@@ -147,6 +147,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/chats/rate', [ApiCommunityReputationRulesController::class, 'list'])->name('chats.reputation.list');
     Route::put('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
     Route::get('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
+
 
 });
 
