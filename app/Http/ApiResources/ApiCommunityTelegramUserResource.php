@@ -37,7 +37,7 @@ class ApiCommunityTelegramUserResource extends JsonResource
             'user_list' => $this->whenLoaded(
                 'userList',
                 function () {
-                    return $this->resource->userList()->pluck('title', 'type');
+                    return $this->resource->userList;
                 }
             )
         ];

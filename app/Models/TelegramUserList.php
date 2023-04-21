@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TelegramUserList extends Model
 {
     use HasFactory;
+    protected $hidden = ['created_at', 'updated_at', 'telegram_id', 'id'];
 
     protected $fillable = [
         'telegram_id',

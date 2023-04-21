@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed|null $scene
  * @property mixed|null $hash
  * @property mixed|string|null $photo_url
+ * @property mixed $userList
  */
 class TelegramUser extends Model
 {
@@ -116,11 +117,12 @@ class TelegramUser extends Model
             TelegramUserList::class,
             'telegram_id',
             'telegram_id'
-        )->leftJoin('communities',
-            function($join) {
-                $join->on('communities.id', '=', 'telegram_user_lists.community_id')
-                    ->where('communities.is_active', '=', 1);
-            })
-            ->select('telegram_user_lists.*', 'communities.title');
+        );
+//            ->leftJoin('communities',
+//            function($join) {
+//                $join->on('communities.id', '=', 'telegram_user_lists.community_id')
+//                    ->where('communities.is_active', '=', 1);
+//            })
+//            ->select('telegram_user_lists.*', 'communities.title');
     }
 }
