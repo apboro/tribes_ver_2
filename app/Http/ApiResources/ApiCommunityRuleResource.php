@@ -25,14 +25,17 @@ class ApiCommunityRuleResource extends JsonResource
             'user_id' => $this->resource->user_id,
             'name' => $this->resource->name,
             'content' => $this->resource->content,
-            'content_image'=>$this->resource->content_image_path,
+            'content_image' => $this->resource->content_image_path,
             'warning' => $this->resource->warning,
             'max_violation_times' => $this->resource->max_violation_times,
             'action' => $this->resource->action,
             'warning_file' => $this->resource->warning_image_path,
-            'user_complaint_image'=>$this->resource->user_complaint_image_path,
+            'user_complaint_image' => $this->resource->user_complaint_image_path,
             'communities' => $this->resource->communities,
-            'restricted_words' => $this->resource->restrictedWords
+            'restricted_words' => $this->resource->restrictedWords,
+            'complaint_text' => $this->resource->complaint_text,
+            'quiet_on_restricted_words' => $this->resource->quiet_on_restricted_words,
+            'quiet_on_complaint' => $this->resource->quiet_on_complaint,
         ];
     }
 
