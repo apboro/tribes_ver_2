@@ -22,8 +22,7 @@ class ApiTelegramBotActionLogResource extends JsonResource
         return [
             'telegram_user'=>($this->resource->telegramUser)
                 ? $this->resource->telegramUser->user_name
-                ? stristr($this->resource->telegramUser->user_name, env('TELEGRAM_BOT_NAME'))
-                ? $this->resource->telegramUser->user_name : '@'.$this->resource->telegramUser->user_name : null : null,
+                ? '@'.$this->resource->telegramUser->user_name : null : null,
             'event'=>$this->resource->event,
             'action'=>$this->resource->action,
             'done_date'=>$this->resource->created_at->timestamp,
