@@ -117,8 +117,10 @@ class TelegramUser extends Model
             'telegram_id',
             'telegram_id'
         )->leftJoin('communities',
-            'communities.id', '=',
-            'telegram_user_lists.community_id')->where('communities.is_active', true)
+            function($join) {
+                $join->on('communities.id', '=', 'telegram_user_lists.community_id')
+                    ->where('communities.is_active', '=', 1);
+            })
             ->select('telegram_user_lists.*', 'communities.title');
     }
 }
