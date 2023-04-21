@@ -31,7 +31,10 @@ use App\Http\ApiRequests\ApiRequest;
  *                 @OA\Property(property="warning",type="string",example="test warning"),
  *                 @OA\Property(property="warning_image",type="file", format="binary"),
  *                 @OA\Property(property="user_complaint_image",type="file", format="binary"),
- *                 @OA\Property(property="action",type="integer",example="1"), *
+ *                 @OA\Property(property="action",type="integer",example="1"),
+ *                 @OA\Property(property="complaint_text",type="string"),
+ *                 @OA\Property(property="quiet_on_restricted_words",type="boolean"),
+ *                 @OA\Property(property="quiet_on_complaint",type="boolean"),
  *                 @OA\Property(property="community_ids[]",type="array",@OA\Items(type="integer"))
  *
  *             ),
@@ -57,6 +60,9 @@ class ApiCommunityRuleStoreRequest extends ApiRequest
             'community_ids' => 'array',
             'community_ids.*' => 'integer|exists:communities,id',
             'action' => 'required|integer',
+            'complaint_text' => 'string|max:1500',
+            'quiet_on_restricted_words' => 'boolean',
+            'quiet_on_complaint' => 'boolean'
         ];
     }
 

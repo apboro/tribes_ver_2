@@ -14,6 +14,7 @@ class CommunityRuleRepository
     const TYPE_IMAGE_CONTENT = 'content_image';
     const TYPE_IMAGE_WARNING = 'warning_image';
     const TYPE_IMAGE_COMPLAINT = 'user_complaint_image';
+
     public function add(ApiRequest $request)
     {
 
@@ -25,6 +26,9 @@ class CommunityRuleRepository
             'warning' => $request->input('warning'),
             'max_violation_times' => $request->input('max_violation_times'),
             'action' => $request->input('action'),
+            'complaint_text' => $request->input('complaint_text'),
+            'quiet_on_restricted_words' => $request->input('quiet_on_restricted_words'),
+            'quiet_on_complaint' => $request->input('quiet_on_complaint'),
         ]);
 
         if ($community_rule == null) {
@@ -33,7 +37,7 @@ class CommunityRuleRepository
         if (!empty($request->input('restricted_words'))) {
             $this->addRestrictedWords($request, $community_rule);
         }
-         $this->uploadImages($request,$community_rule);
+        $this->uploadImages($request, $community_rule);
 
 
         if (!empty($request->input('community_ids'))) {
@@ -48,17 +52,18 @@ class CommunityRuleRepository
      * @return void
      */
     public function uploadImages(
-        ApiRequest $request,
+        ApiRequest    $request,
         CommunityRule $community_rule
-    ){
+    )
+    {
         if (!empty($request->file('warning_image'))) {
-            $this->uploadFile($request, $community_rule,self::TYPE_IMAGE_WARNING);
+            $this->uploadFile($request, $community_rule, self::TYPE_IMAGE_WARNING);
         }
         if (!empty($request->file('content_image'))) {
-            $this->uploadFile($request, $community_rule,self::TYPE_IMAGE_CONTENT);
+            $this->uploadFile($request, $community_rule, self::TYPE_IMAGE_CONTENT);
         }
         if (!empty($request->file('user_complaint_image'))) {
-            $this->uploadFile($request, $community_rule,self::TYPE_IMAGE_COMPLAINT);
+            $this->uploadFile($request, $community_rule, self::TYPE_IMAGE_COMPLAINT);
         }
     }
 
@@ -84,15 +89,15 @@ class CommunityRuleRepository
     public function uploadFile(
         ApiRequest    $request,
         CommunityRule $community_rule,
-        string $type
+        string        $type
     )
     {
         $file = $request->file($type);
         $upload_folder = 'public/moderation_images';
         $extension = $file->getClientOriginalExtension();
-        $filename = md5(rand(1,1000000).$file->getClientOriginalName() . time()) . '.' . $extension;
+        $filename = md5(rand(1, 1000000) . $file->getClientOriginalName() . time()) . '.' . $extension;
         Storage::putFileAs($upload_folder, $file, $filename);
-        $community_rule->{$type."_path"} = 'storage/moderation_images/' . $filename;
+        $community_rule->{$type . "_path"} = 'storage/moderation_images/' . $filename;
         $community_rule->save();
     }
 
@@ -101,9 +106,9 @@ class CommunityRuleRepository
         CommunityRule $community_rule
     )
     {
-        if(!empty($community_rule->communities)){
+        if (!empty($community_rule->communities)) {
             /** @var Community $community */
-            foreach($community_rule->communities as $community){
+            foreach ($community_rule->communities as $community) {
                 $community->communityRule()->disassociate();
                 $community->save();
             }
@@ -129,11 +134,14 @@ class CommunityRuleRepository
             'warning' => $request->input('warning'),
             'max_violation_times' => $request->input('max_violation_times'),
             'action' => $request->input('action'),
+            'complaint_text' => $request->input('complaint_text'),
+            'quiet_on_restricted_words' => $request->input('quiet_on_restricted_words'),
+            'quiet_on_complaint' => $request->input('quiet_on_complaint'),
         ]);
         $community_rule->save();
         $this->removeRestrictedWords($community_rule);
         $this->addRestrictedWords($request, $community_rule);
-        $this->uploadImages($request,$community_rule);
+        $this->uploadImages($request, $community_rule);
         if (!empty($request->input('community_ids'))) {
             $this->attachCommunities($request, $community_rule);
         }
