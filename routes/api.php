@@ -124,6 +124,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/user-community-rules',[UserRulesController::class, 'store']);
     Route::get('/user-community-rules',[UserRulesController::class, 'get']);
+    Route::put('/user-community-rules',[UserRulesController::class, 'update']);
+    Route::delete('/user-community-rules',[UserRulesController::class, 'delete']);
 
     Route::post('/antispam', [ApiAntispamController::class, 'store']);
     Route::put('/antispam/{id}', [ApiAntispamController::class, 'edit']);

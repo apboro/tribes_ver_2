@@ -26,14 +26,21 @@ class ApiCommunityTelegramUserResource extends JsonResource
             'name' => $this->resource->first_name,
             'last_name' => $this->resource->last_name,
             'user_name' => $this->resource->user_name ? '@'.$this->resource->user_name : null,
-            'accession_date' => $this->resource->auth_date,
             'communities' => $this->whenLoaded(
                 'communities', function () {
                 return $this->resource->communities()->where('owner', Auth::user()->id)
                     ->where('is_active', true)
-                    ->pluck('title');
-            }
-            ),
+                    ->get()
+                    ->map(function ($community) {
+                        $accessionDate = $community->pivot->accession_date;
+                        return [
+                            'id' => $community->id,
+                            'title' => $community->title,
+                            'accession_date' => $accessionDate,
+                            'chat_tags' => $community->tags
+                        ];
+                    });
+            }),
             'user_list' => $this->whenLoaded(
                 'userList',
                 function () {
