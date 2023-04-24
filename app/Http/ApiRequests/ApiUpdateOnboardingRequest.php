@@ -3,10 +3,10 @@
 namespace App\Http\ApiRequests;
 
 /**
- * @OA\Post(
+ * @OA\Put(
  * path="/api/v3/onboarding",
- * operationId="Store_onboarding",
- * summary= "Store onboarding",
+ * operationId="Update_onboarding",
+ * summary= "Update onboarding",
  * security= {{"sanctum": {} }},
  * tags= {"Chats Onboarding"},
  *     @OA\RequestBody(
@@ -18,6 +18,7 @@ namespace App\Http\ApiRequests;
  *                  }
  *            },
  *          @OA\Schema(
+ *              @OA\Property(property="onboarding_id", type="integer"),
  *              @OA\Property(property="rules", type="object"),
  *              @OA\Property(property="title", type="string"),
  *              @OA\Property(property="greeting_message_text",type="string"),
@@ -31,12 +32,13 @@ namespace App\Http\ApiRequests;
  * )
  */
 
-class ApiStoreOnboardingRequest extends ApiRequest
+class ApiUpdateOnboardingRequest extends ApiRequest
 {
 
     public function rules(): array
     {
         return [
+            'onboarding_id' => 'required|exists:onboardings,id',
             'rules'=>'json|required',
             'title' =>'required|string',
             'greeting_image' => 'image|nullable',

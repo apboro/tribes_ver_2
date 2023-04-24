@@ -15,7 +15,7 @@ class AddReputationIdToCommunity extends Migration
     {
         Schema::table('communities', function (Blueprint $table) {
             $table->bigInteger('reputation_rules_id')->nullable();
-            $table->foreign('reputation_rules_id')->on('community_reputation_rules')->references('id');
+            $table->foreign('reputation_rules_id')->on('community_reputation_rules')->references('id')->nullOnDelete();
         });
     }
 

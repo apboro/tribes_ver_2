@@ -141,6 +141,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/onboarding',[ApiOnboardingController::class, 'store']);
     Route::get('/onboarding',[ApiOnboardingController::class, 'get']);
+    Route::put('/onboarding',[ApiOnboardingController::class, 'update']);
+    Route::delete('/onboarding',[ApiOnboardingController::class, 'destroy']);
 
     Route::get('/chats/rate-template', [ApiCommunityReputationRulesController::class, 'getTemplate'])->name('chats.reputation.template');
     Route::post('/chats/rate', [ApiCommunityReputationRulesController::class, 'store'])->name('chats.reputation.store');
