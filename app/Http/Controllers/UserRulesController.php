@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 
-use App\Http\ApiRequests\ApeGetAllRulesRequest;
+use App\Http\ApiRequests\ApiGetAllRulesRequest;
 use App\Http\ApiRequests\ApiUserRulesDeleteRequest;
 use App\Http\ApiRequests\ApiUserRulesGetRequest;
 use App\Http\ApiRequests\ApiUserRulesStoreRequest;
@@ -57,7 +57,7 @@ class UserRulesController extends Controller
         return ApiResponse::success('Правило удалено');
     }
 
-    public function getAllRules(ApeGetAllRulesRequest $request)
+    public function getAllRules(ApiGetAllRulesRequest $request)
     {
         $user = Auth::user();
 

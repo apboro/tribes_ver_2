@@ -51,19 +51,46 @@ class ApiCommunityRuleStoreRequest extends ApiRequest
         return [
             'name' => 'required|string|max:120',
             'content' => 'required|string',
-            'content_image'=>'image|nullable',
+            'content_image' => 'image|nullable',
             'restricted_words' => 'required|array',
-            'max_violation_times' => 'integer',
+            'max_violation_times' => 'required|integer',
             'warning' => 'required|string',
             'warning_image' => 'image|nullable',
-            'user_complaint_image'=>'image|nullable',
+            'user_complaint_image' => 'image|nullable',
             'community_ids' => 'array',
             'community_ids.*' => 'integer|exists:communities,id',
             'action' => 'required|integer',
             'complaint_text' => 'string|max:1500',
-            'quiet_on_restricted_words' => 'boolean',
-            'quiet_on_complaint' => 'boolean'
+            'quiet_on_restricted_words' => 'required|boolean',
+            'quiet_on_complaint' => 'required|boolean'
         ];
+    }
+
+    /**
+     * Prepare inputs for validation.
+     *
+     * @return void
+     */
+    public function prepareForValidation(): void
+    {
+        $this->merge([
+            'quiet_on_restricted_words' => $this->toBoolean($this->quiet_on_restricted_words)
+        ]);
+        $this->merge([
+            'quiet_on_complaint' => $this->toBoolean($this->quiet_on_complaint)
+        ]);
+    }
+
+
+    /**
+     * Convert to boolean
+     *
+     * @param $booleable
+     * @return boolean
+     */
+    private function toBoolean($booleable)
+    {
+        return filter_var($booleable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 
     public function messages(): array

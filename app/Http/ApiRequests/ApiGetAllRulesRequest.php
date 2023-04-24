@@ -12,7 +12,7 @@ namespace App\Http\ApiRequests;
  *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  * )
  */
-class ApeGetAllRulesRequest extends ApiRequest
+class ApiGetAllRulesRequest extends ApiRequest
 {
 
 }

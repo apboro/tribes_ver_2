@@ -36,7 +36,10 @@ class ApiCommunityRulesTest extends TestCase
                     "action",
                     "warning_file",
                     "communities",
-                    "restricted_words"
+                    "restricted_words",
+                    "complaint_text",
+                    "quiet_on_restricted_words",
+                    "quiet_on_complaint",
                 ],
             ],
         ],
@@ -188,13 +191,16 @@ class ApiCommunityRulesTest extends TestCase
             'warning' => 'test',
             'max_violation_times' => 1,
             'action' => '1',
+            'compliant_text' => 'test',
             'restricted_words' => [
                 'test1',
                 'test2'
             ],
             'community_ids' => [
                 $this->custom_community->id
-            ]
+            ],
+            'quiet_on_restricted_words' => 1,
+            'quiet_on_compliant' => 1,
         ];
 
         $response = $this->withHeaders([
