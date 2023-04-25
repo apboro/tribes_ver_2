@@ -21,14 +21,14 @@ class RankRuleRepository
 
     public function add(ApiRankRuleStoreRequest $request)
     {
-        $rankNames = $request->get('rank_names');
+        $ranks = $request->get('ranks');
 
         $rankIds = [];
 
-        foreach ($rankNames as $rankName) {
+        foreach ($ranks as $rank) {
             $rank = Rank::query()->create([
-                'name'=> $rankName,
-                'reputation_value_to_achieve' => $request->get('reputation_value_to_achieve'),
+                'name'=> $rank['name'],
+                'reputation_value_to_achieve' => $rank['reputation_value_to_achieve'],
             ]);
 
             $rankIds[] = $rank->id;
