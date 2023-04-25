@@ -32,9 +32,9 @@ use App\Http\ApiRequests\ApiRequest;
  *                 @OA\Property(property="reputation_value_to_achieve",type="integer"),
  *
  *                 @OA\Property(property="period_until_reset",type="string"),
- *                 @OA\Property(property="rank_change_in_chat",type="string"),
+ *                 @OA\Property(property="rank_change_in_chat",type="boolean"),
  *                 @OA\Property(property="rank_change_message",type="string"),
- *                 @OA\Property(property="first_rank_in_chat",type="string"),
+ *                 @OA\Property(property="first_rank_in_chat",type="boolean"),
  *                 @OA\Property(property="first_rank_message",type="string"),
  *                 ),
  *             ),
@@ -59,10 +59,10 @@ class ApiRankRuleUpdateRequest extends ApiRequest
             'rank_ids'                    => ['required','array'],
             'reputation_value_to_achieve' => ['required','integer'],
             'period_until_reset'          => ['required','string'],
-            'rank_change_in_chat'         => ['sometimes','nullable','in:вкл,выкл'],
-            'rank_change_message'         => ['sometimes','nullable'],
-            'first_rank_in_chat'          => ['sometimes','nullable','in:вкл,выкл'],
-            'first_rank_message'          => ['sometimes','nullable'],
+            'rank_change_in_chat'         => ['required','boolean'],
+            'rank_change_message'         => ['nullable'],
+            'first_rank_in_chat'          => ['required','boolean'],
+            'first_rank_message'          => ['nullable'],
         ];
     }
 }

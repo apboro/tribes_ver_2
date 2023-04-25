@@ -17,11 +17,11 @@ class CreateTelegramUserRankRuleTable extends Migration
             $table->id();
             $table->unsignedBigInteger('telegram_user_id');
             $table->unsignedBigInteger('community_id')->nullable();
-            $table->unsignedBigInteger('rank_rule_id')->nullable();
+            $table->unsignedBigInteger('rank_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('rank_rule_id')
-                ->references('id')->on('rank_rules');
+            $table->foreign('rank_id')
+                ->references('id')->on('ranks');
             $table->foreign('community_id')
                 ->references('id')->on('communities');
             $table->foreign('telegram_user_id')

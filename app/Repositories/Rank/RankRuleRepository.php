@@ -10,12 +10,13 @@ use App\Models\Rank;
 use App\Models\RankRule;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class RankRuleRepository
 {
     public function list(): Collection
     {
-        return RankRule::all();
+        return RankRule::query()->where('user_id', Auth::user()->id)->get();
     }
 
     public function add(ApiRankRuleStoreRequest $request)
@@ -35,6 +36,7 @@ class RankRuleRepository
 
         $rankRule = RankRule::query()->create([
             'name' => $request->get('rule_name'),
+            'user_id' => Auth::user()->id,
             'rank_ids' => $rankIds,
             'period_until_reset' => Carbon::parse($request->get('period_until_reset')),
             'rank_change_in_chat' => $request->get('rank_change_in_chat'),
@@ -53,7 +55,10 @@ class RankRuleRepository
     public function edit(ApiRankRuleUpdateRequest $request, int $id)
     {
         /** @var RankRule $rankRule */
-        $rankRule = RankRule::query()->where('id', $id)->first();
+        $rankRule = RankRule::query()
+            ->where('user_id', Auth::user()->id)
+            ->where('id', $id)
+            ->first();
 
         if (!$rankRule) {
             return false;
@@ -80,7 +85,7 @@ class RankRuleRepository
 
     public function show(int $id)
     {
-        $rankRule = RankRule::query()->where('id', $id)->first();
+        $rankRule = RankRule::query()->where('user_id', Auth::user()->id)->where('id', $id)->first();
 
         if (!$rankRule) {
             return false;

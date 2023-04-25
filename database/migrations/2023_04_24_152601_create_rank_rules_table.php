@@ -15,12 +15,13 @@ class CreateRankRulesTable extends Migration
     {
         Schema::create('rank_rules', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->jsonb('rank_ids');
             $table->string('name', 120);
             $table->dateTime('period_until_reset')->default(null)->nullable();
-            $table->enum('rank_change_in_chat', ['вкл','выкл'])->nullable();
+            $table->boolean('rank_change_in_chat')->default(false);
             $table->text('rank_change_message')->nullable();
-            $table->enum('first_rank_in_chat', ['вкл','выкл'])->nullable();
+            $table->boolean('first_rank_in_chat')->default(false);
             $table->text('first_rank_message')->nullable();
             $table->timestamps();
         });

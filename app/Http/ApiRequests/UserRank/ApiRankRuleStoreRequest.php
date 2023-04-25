@@ -25,9 +25,9 @@ use App\Http\ApiRequests\ApiRequest;
  *                 @OA\Property(property="reputation_value_to_achieve",type="integer"),
  *
  *                 @OA\Property(property="period_until_reset",type="string"),
- *                 @OA\Property(property="rank_change_in_chat",type="string"),
+ *                 @OA\Property(property="rank_change_in_chat",type="boolean"),
  *                 @OA\Property(property="rank_change_message",type="string"),
- *                 @OA\Property(property="first_rank_in_chat",type="string"),
+ *                 @OA\Property(property="first_rank_in_chat",type="boolean"),
  *                 @OA\Property(property="first_rank_message",type="string"),
  *                 ),
  *             ),
@@ -39,17 +39,30 @@ class ApiRankRuleStoreRequest extends ApiRequest
 {
     public function rules(): array
     {
-        $enum = ['вкл','выкл'];
-
         return [
-            'rule_name'                   => ['required','string','max:120'],
-            'rank_names'                  => ['required','array'],
-            'reputation_value_to_achieve' => ['required','integer'],
-            'period_until_reset'          => ['required','string'],
-            'rank_change_in_chat'         => ['sometimes','nullable','in:вкл,выкл'],
-            'rank_change_message'         => ['sometimes','nullable'],
-            'first_rank_in_chat'          => ['sometimes','nullable','in:вкл,выкл'],
-            'first_rank_message'          => ['sometimes','nullable'],
+            'rule_name'                   => ['required', 'string', 'max:120'],
+            'rank_names'                  => ['required', 'array'],
+            'reputation_value_to_achieve' => ['required', 'integer'],
+            'period_until_reset'          => ['required', 'string'],
+            'rank_change_in_chat'         => ['required','boolean'],
+            'rank_change_message'         => ['nullable'],
+            'first_rank_in_chat'          => ['required','boolean'],
+            'first_rank_message'          => ['nullable'],
         ];
+    }
+
+    public function prepareForValidation(): void
+    {
+        $this->merge(['rank_change_in_chat' => $this->toBoolean($this->rank_change_in_chat)]);
+        $this->merge(['first_rank_in_chat' => $this->toBoolean($this->first_rank_message)]);
+    }
+
+    /**
+     * Convert to boolean *
+     * @param $booleable * @return boolean
+     */
+    private function toBoolean($booleable)
+    {
+        return filter_var($booleable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 }
