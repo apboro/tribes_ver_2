@@ -28,8 +28,11 @@ use App\Http\ApiRequests\ApiRequest;
  *             mediaType="application/json",
  *             @OA\Schema(
  *                 @OA\Property(property="rule_name",type="string"),
- *                 @OA\Property(property="rank_ids",type="array", @OA\Items(type="integer")),
- *                 @OA\Property(property="reputation_value_to_achieve",type="integer"),
+ *                 @OA\Property(property="ranks",type="array", @OA\Items(
+ *                        @OA\Property(property="id",type="integer")
+ *                        @OA\Property(property="name",type="string"),
+ *                        @OA\Property(property="reputation_value_to_achieve",type="integer")
+ *                 )),
  *
  *                 @OA\Property(property="period_until_reset",type="string"),
  *                 @OA\Property(property="rank_change_in_chat",type="boolean"),
@@ -56,8 +59,7 @@ class ApiRankRuleUpdateRequest extends ApiRequest
     {
         return [
             'rule_name'                   => ['required','string','max:120'],
-            'rank_ids'                    => ['required','array'],
-            'reputation_value_to_achieve' => ['required','integer'],
+            'ranks'                       => ['required','array'],
             'period_until_reset'          => ['required','string'],
             'rank_change_in_chat'         => ['required','boolean'],
             'rank_change_message'         => ['nullable'],

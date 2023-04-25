@@ -66,8 +66,13 @@ class RankRuleRepository
 
         $rankIds = [];
 
-        foreach ($request->get('rank_ids') as $rankId) {
-            $rankIds[] = (int) $rankId;
+        foreach ($request->get('ranks') as $rank) {
+            Rank::query()->where('id', $rank['id'])->update([
+                'name' => $rank['name'],
+                'reputation_value_to_achieve' => $rank['reputation_value_to_achieve']
+            ]);
+
+            $rankIds[] = $rank['id'];
         }
 
         $rankRule->update([
