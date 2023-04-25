@@ -25,6 +25,7 @@ class ActionsDictionarySeeder extends Seeder
             ['decrease_reputation'],
             ['add_warning'],
             ['delete_warning'],
+            ['kick']
         ];
 
         foreach ($actions as $action)

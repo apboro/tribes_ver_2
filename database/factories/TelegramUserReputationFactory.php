@@ -1,0 +1,25 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Community;
+use App\Models\TelegramUser;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class TelegramUserReputationFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'telegram_user_id' => TelegramUser::all()->random()->telegram_id,
+            'community_id' => Community::all()->random(),
+            'messages_count' => rand(0,999),
+            'reputation_count' => rand(0,999)
+        ];
+    }
+}

@@ -6,6 +6,7 @@ use App\Models\Administrator;
 use App\Models\Knowledge\Question;
 use App\Models\SmsConfirmations;
 use App\Models\TelegramUser;
+use App\Models\TelegramUserReputation;
 use App\Models\User;
 use App\Models\Community;
 use App\Models\Payment;
@@ -90,7 +91,8 @@ class DatabaseSeeder extends Seeder
             SubscriptionSeeder::class,
 //            TelegramStatisticSeeder::class,
             TelegramBotActionLogSeeder::class,
-            TelegramUserListSeeder::class
+            TelegramUserListSeeder::class,
+            TelegramUserReputation::class,
         ],
         [
             'user' => $user,

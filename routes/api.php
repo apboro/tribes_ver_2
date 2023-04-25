@@ -35,6 +35,7 @@ use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
+use App\Http\Controllers\TelegramUserReputationController;
 use App\Http\Controllers\UserRulesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -150,7 +151,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::put('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
     Route::get('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
 
-
+    Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {
