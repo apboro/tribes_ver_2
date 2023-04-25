@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\ApiRequests\ApiGetTelegramUsersReputationRequest;
 use App\Http\ApiResources\TelegramUserReputationResource;
 use App\Http\ApiResponses\ApiResponse;
-use App\Http\Requests\StoreTelegramUserReputationRequest;
-use App\Http\Requests\UpdateTelegramUserReputationRequest;
 use App\Models\TelegramUserReputation;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,10 +39,7 @@ class TelegramUserReputationController extends Controller
      * @param  \App\Http\Requests\StoreTelegramUserReputationRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTelegramUserReputationRequest $request)
-    {
-        //
-    }
+
 
     /**
      * Display the specified resource.
@@ -75,10 +70,7 @@ class TelegramUserReputationController extends Controller
      * @param  \App\Models\TelegramUserReputation  $telegramUserReputation
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTelegramUserReputationRequest $request, TelegramUserReputation $telegramUserReputation)
-    {
-        //
-    }
+
 
     /**
      * Remove the specified resource from storage.
