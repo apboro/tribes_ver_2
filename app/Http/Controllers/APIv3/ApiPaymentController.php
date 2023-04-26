@@ -51,7 +51,7 @@ class ApiPaymentController extends Controller
             Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
         }
 
-        return ApiResponse::common([$payment]);
+        return ApiResponse::common(['success_redirect_url' => env('APP_URL').'/subscriptions?payment_result=success']);
     }
 
 }
