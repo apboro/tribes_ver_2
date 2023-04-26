@@ -29,7 +29,7 @@ use App\Http\ApiRequests\ApiRequest;
  *             @OA\Schema(
  *                 @OA\Property(property="rule_name",type="string"),
  *                 @OA\Property(property="ranks",type="array", @OA\Items(
- *                        @OA\Property(property="id",type="integer")
+ *                        @OA\Property(property="id",type="integer"),
  *                        @OA\Property(property="name",type="string"),
  *                        @OA\Property(property="reputation_value_to_achieve",type="integer")
  *                 )),
