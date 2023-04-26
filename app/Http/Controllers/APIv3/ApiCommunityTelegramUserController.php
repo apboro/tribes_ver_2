@@ -163,50 +163,53 @@ class ApiCommunityTelegramUserController extends Controller
 
     public function addToList(ApiCommunityUserListAddRequest $request)
     {
-        $user = TelegramUser::where('telegram_id', $request->telegram_id)->first();
-        $badList = collect($request->only(['banned', 'blacklisted', 'muted']))->contains(true);
-        if ($user && $user->UserList->contains('type', 2) && $badList){
-            return ApiResponse::error('chats_rules.attempt_to_ban_white_rabbit');
-        }
-
+        $result = false;
         if ($request->boolean('banned')) {
-            $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BAN_LIST);
+            $result = $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BAN_LIST);
         }
 
         if ($request->boolean('muted')) {
-            $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_MUTE_LIST);
+            $result = $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_MUTE_LIST);
         }
 
         if ($request->boolean('whitelisted')) {
-            $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_WHITE_LIST);
+            $result = $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_WHITE_LIST);
         }
 
         if ($request->boolean('blacklisted')) {
-            $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BLACK_LIST);
+            $result =  $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BLACK_LIST);
         }
 
-        return ApiResponse::success();
+        if ($result) {
+            return ApiResponse::success('Пользователь добавлен в список');
+        } else {
+            return ApiResponse::error('Пользователь уже в списке');
+        }
     }
 
     public function removeFromList(ApiCommunityUserListRemoveRequest $request)
     {
-
+        $result = false;
         if ($request->boolean('banned')) {
-            $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BAN_LIST);
+            $result = $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BAN_LIST);
         }
 
         if ($request->boolean('muted')) {
-            $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_MUTE_LIST);
+            $result = $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_MUTE_LIST);
         }
 
         if ($request->boolean('whitelisted')) {
-            $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_WHITE_LIST);
+            $result = $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_WHITE_LIST);
         }
 
         if ($request->boolean('blacklisted')) {
-            $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BLACK_LIST);
+            $result = $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BLACK_LIST);
         }
 
-        return ApiResponse::success();
+        if ($result){
+            return ApiResponse::success('common.success');
+        } else {
+            return ApiResponse::error('common.not_found');
+        }
     }
 }
