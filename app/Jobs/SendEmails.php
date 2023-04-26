@@ -46,7 +46,7 @@ class SendEmails implements ShouldQueue
         try {
             if (is_iterable($this->recipients)) {
                 foreach ($this->recipients as $recipient) {
-                    new Mailer($this->from, $this->view, $this->subject, $recipient->email);
+                    new Mailer($this->from, $this->view, $this->subject, $recipient->email ?? $recipient);
                 }
             } else {
                 new Mailer($this->from, $this->view, $this->subject, $this->recipients);

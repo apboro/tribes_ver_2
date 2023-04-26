@@ -12,9 +12,9 @@ class Mailer
         $err = $this->send($subject, $from, $html, $to);
 
         if ($err) {
-            TelegramLogService::staticSendLogMessage('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . $err);
+            Log::error('Ошибка отправки SMTP на почту ' . $to . ' с темой ' . $subject . ' Ответ сервера: ' . $err);
         } else {
-            TelegramLogService::staticSendLogMessage('Успешная отправка SMTP на почту ' . $to . ' с темой ' . $subject);
+            Log::info('Успешная отправка SMTP на почту ' . $to . ' с темой ' . $subject);
         }
     }
 
@@ -42,14 +42,13 @@ class Mailer
                 ),
                 CURLOPT_POSTFIELDS => http_build_query([
                         'subject' => $subject, // Обязательно
-                        'from' => 'Сервис Spodial <'.env('MAIL_FROM_ADDRESS').'>', // Обязательно
+                        'from' => $from . '<'.env('MAIL_FROM_ADDRESS').'>'?? 'Сервис Spodial <'.env('MAIL_FROM_ADDRESS').'>', // Обязательно
                         'html' => $html, // Обязательно
                         'to' => $to, // Обязательно
                 ])
             ));
 
             $response = curl_exec($curl);
-            TelegramLogService::staticSendLogMessage('SMTP Server response: ' .$response);
 
             $err = curl_error($curl);
 

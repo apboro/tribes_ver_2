@@ -37,6 +37,7 @@ use App\Http\Controllers\APIv3\User\ApiUserController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\TelegramUserReputationController;
 use App\Http\Controllers\UserRulesController;
+use App\Services\SMTP\MailSender;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +58,7 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/user/password/reset', [ApiResetPasswordController::class, 'resetUserPassword']);
     Route::post('/courses/pay/{hash}', [ApiCourseController::class, 'pay']);
     Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
+    Route::post('/send_demo_email', [MailSender::class,'sendDemoEmail']);
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
