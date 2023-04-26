@@ -39,9 +39,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         $this->botService = $botService;
     }
 
-    public function parseRule(): void
+    public function parseRule($rules): void
     {
-        $rules = $this->getCommunityRules($this->community->id);
         $this->logger->debug('parseRule', [$rules]);
         $result = false;
         foreach ($rules as $rule) {
@@ -64,8 +63,10 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             $this->logger->debug('parseRule', [$dto]);
             $this->community = $this->communityRepository->getCommunityByChatId($dto->chat_id);
             $this->messageDTO = $dto;
-
-            $this->parseRule();
+            $rules = $this->getCommunityRules($this->community->id);
+            if ($rules->isNotEmpty()) {
+                $this->parseRule($rules);
+            }
         } catch (\Exception $e) {
             $this->logger->error($e);
         }
