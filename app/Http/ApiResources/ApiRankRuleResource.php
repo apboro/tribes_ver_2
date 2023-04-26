@@ -22,7 +22,7 @@ class ApiRankRuleResource extends JsonResource
         return [
             'id'                          => $this->resource->id,
             'name'                        => $this->resource->name,
-            'rank_ids'                    => $this->resource->rank_ids,
+            'ranks'                       => $this->resource->getRanks($this->resource->id),
             'user_id'                     => $this->resource->user_id,
             'period_until_reset'          => $this->resource->period_until_reset,
             'rank_change_in_chat'         => $this->resource->rank_change_in_chat,

@@ -21,23 +21,11 @@ class RankRuleRepository
 
     public function add(ApiRankRuleStoreRequest $request)
     {
-        $ranks = $request->get('ranks');
-
-        $rankIds = [];
-
-        foreach ($ranks as $rank) {
-            $rank = Rank::query()->create([
-                'name'=> $rank['name'],
-                'reputation_value_to_achieve' => $rank['reputation_value_to_achieve'],
-            ]);
-
-            $rankIds[] = $rank->id;
-        }
-
+        /** @var RankRule $rankRule */
         $rankRule = RankRule::query()->create([
             'name' => $request->get('rule_name'),
             'user_id' => Auth::user()->id,
-            'rank_ids' => $rankIds,
+            'rank_ids' => [],
             'period_until_reset' => Carbon::parse($request->get('period_until_reset')),
             'rank_change_in_chat' => $request->get('rank_change_in_chat'),
             'rank_change_message' => $request->get('rank_change_message'),
@@ -48,6 +36,24 @@ class RankRuleRepository
         if (!$rankRule) {
             return false;
         }
+
+        $ranks = $request->get('ranks');
+
+        $rankIds = [];
+
+        foreach ($ranks as $rank) {
+            $rank = Rank::query()->create([
+                'rank_rule_id' => $rankRule->id,
+                'name'=> $rank['name'],
+                'reputation_value_to_achieve' => $rank['reputation_value_to_achieve'],
+            ]);
+
+            $rankIds[] = $rank->id;
+        }
+
+        $rankRule->update([
+            'rank_ids' => $rankIds
+        ]);
 
         return $rankRule;
     }
@@ -75,6 +81,8 @@ class RankRuleRepository
             $rankIds[] = $rank['id'];
         }
 
+        Rank::query()->where('rank_rule_id', $rankRule->id)->whereNotIn('id', $rankIds)->delete();
+
         $rankRule->update([
             'name' => $request->get('rule_name'),
             'rank_ids' => $rankIds,
@@ -90,7 +98,7 @@ class RankRuleRepository
 
     public function show(int $id)
     {
-        $rankRule = RankRule::query()->where('user_id', Auth::user()->id)->where('id', $id)->first();
+        $rankRule = RankRule::query()->where('user_id', Auth::user()->id)->where('id', $id)->with('ranks')->first();
 
         if (!$rankRule) {
             return false;

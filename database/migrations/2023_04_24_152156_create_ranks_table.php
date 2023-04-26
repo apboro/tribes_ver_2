@@ -15,6 +15,7 @@ class CreateRanksTable extends Migration
     {
         Schema::create('ranks', function (Blueprint $table) {
             $table->id();
+            $table->integer('rank_rule_id');
             $table->string('name', 120);
             $table->integer('reputation_value_to_achieve');
             $table->timestamps();
