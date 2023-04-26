@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Events\SubscriptionMade;
 use App\Jobs\SendEmails;
+use App\Models\Subscription;
 use App\Models\UserSubscription;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
@@ -58,28 +60,28 @@ class CheckSubscription extends Command
      */
     public function handle()
     {
-        $subscriptions = UserSubscription::all();
-        foreach ($subscriptions as $subscription)
+        $userSubscriptions = UserSubscription::all();
+        foreach ($userSubscriptions as $userSubscription)
         {
-            if (Carbon::createFromTimestamp($subscription->expiration_date) > Carbon::now()
-                && $subscription->isRecurrent)
+            if (Carbon::createFromTimestamp($userSubscription->expiration_date) > Carbon::now())
             {
-                $p = new Pay();
-                $p->amount($subscription->price * 100)
-                    ->charged(true)
-                    ->payFor($subscription)
-                    ->payer($subscription->user);
-                $payment = $p->pay();
+                if ($userSubscription->isRecurrent) {
+                    $p = new Pay();
+                    $p->amount($userSubscription->subscription->price * 100)
+                        ->charged(true)
+                        ->payFor($userSubscription->subscription)
+                        ->payer($userSubscription->user);
+                    $payment = $p->pay();
 
-                if ($payment){
-                    Log::info('Payment for subscription '.$subscription->id.' success');
-                    $this->telegramService->sendMessageFromBot(
-                        config('telegram_bot.bot.botName'),
-                        $subscription->user->telegramMeta[0]->telegram_id,
-                        'Оплата подписки'
-                    );
+                    if ($payment) {
+                        Log::info('Payment for subscription ' . $userSubscription->id . ' success');
+                        SubscriptionMade::dispatch($userSubscription->user, $userSubscription->subscription);
+                    } else {
+                        SubscriptionMade::dispatch($userSubscription->user, Subscription::find(1));
+                    }
+                } else {
+                    SubscriptionMade::dispatch($userSubscription->user, Subscription::find(1));
                 }
-
             }
         }
 
