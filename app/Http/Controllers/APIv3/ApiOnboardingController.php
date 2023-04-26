@@ -26,8 +26,8 @@ class ApiOnboardingController extends Controller
         $onboarding->rules = $request->input('rules');
         $onboarding->user_id = $user_id;
         $onboarding->title = $request->input('title');
-        $onboarding->greeting_image = $greetingImagePath;
-        $onboarding->question_image = $questionImagePath;
+        $onboarding->greeting_image = 'storage/'.$greetingImagePath;
+        $onboarding->question_image = 'storage/'.$questionImagePath;
         $onboarding->save();
 
         foreach ($request->input('communities_ids') as $community_id) {

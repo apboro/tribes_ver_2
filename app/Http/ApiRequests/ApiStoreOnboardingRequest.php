@@ -20,7 +20,6 @@ namespace App\Http\ApiRequests;
  *          @OA\Schema(
  *              @OA\Property(property="rules", type="object"),
  *              @OA\Property(property="title", type="string"),
- *              @OA\Property(property="greeting_message_text",type="string"),
  *              @OA\Property(property="greeting_image", type="file", format="binary"),
  *              @OA\Property(property="question_image", type="file", format="binary"),
  *              @OA\Property(property="communities_ids[]",type="array",@OA\Items(type="integer"))
