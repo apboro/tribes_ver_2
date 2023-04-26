@@ -92,7 +92,7 @@ class DatabaseSeeder extends Seeder
 //            TelegramStatisticSeeder::class,
             TelegramBotActionLogSeeder::class,
             TelegramUserListSeeder::class,
-            TelegramUserReputation::class,
+            TelegramUserReputationSeeder::class,
         ],
         [
             'user' => $user,
