@@ -128,6 +128,12 @@ class MainBotEvents
                     $chatId = $this->data->message->chat->id;
                     $new_member_id = $this->data->message->new_chat_member->id;
 
+                    Log::channel('telegram_bot_action_log')->
+                    log('info','',[
+                        'event'=>TelegramBotActionHandler::EVENT_NEW_CHAT_USER,
+                        'telegram_id'=>$new_member_id,
+                        'chat_id'=>$chatId
+                    ]);
                     $community = Community::whereHas('connection', function ($q) use ($chatId) {
                         $q->where('chat_id', $chatId);
                     })->select(['id'])->first();
@@ -138,12 +144,6 @@ class MainBotEvents
 
                         $member = $this->data->message->new_chat_member;
                         if (!empty($member->username) || !empty($member->first_name)) {
-                            Log::channel('telegram_bot_action_log')->
-                                log('info','',[
-                                    'event'=>TelegramBotActionHandler::EVENT_NEW_CHAT_USER,
-                                    'telegram_id'=>$member->id,
-                                    'chat_id'=>$chatId
-                                ]);
 
                             $userName = !empty($member->username) ? $member->username : '';
                             $firstName = !empty($member->first_name) ? $member->first_name : '';
