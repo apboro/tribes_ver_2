@@ -17,6 +17,7 @@ class ApiOnboardingResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->resource->id,
             'rules' => $this->resource->rules,
             'title' => $this->resource->title,
             'question_image' => $this->resource->question_image,
