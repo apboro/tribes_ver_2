@@ -110,10 +110,10 @@ class User extends Authenticatable
         return $this->phone_confirmed;
     }
 
-    public function getFormattedPhone()
-    {
-        return $this->phone;
-    }
+//    public function getFormattedPhone()
+//    {
+//        return $this->phone;
+//    }
 
     public function getOwnCommunities()
     {
@@ -250,10 +250,10 @@ class User extends Authenticatable
         return "(" . substr($phone, 0, 3) . ") " . substr($phone, 3, 3) . " " . substr($phone, 6);
     }
 
-    public function getPhoneAttribute($phone)
-    {
-        return $phone ? '+7 ' . $this->phoneNumber($phone) : null;
-    }
+//    public function getPhoneAttribute($phone)
+//    {
+//        return $phone ? '+7 ' . $this->phoneNumber($phone) : null;
+//    }
 
     public function isAdmin()
     {

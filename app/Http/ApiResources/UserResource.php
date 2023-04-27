@@ -54,7 +54,7 @@ class UserResource extends JsonResource
             'id' => $this->resource->id,
             'name' => $this->resource->name,
             'email' => $this->resource->email,
-            'phone'=>$this->phone_confirmed ? $this->resource->phone : null,
+            'phone'=>$this->phone_confirmed ? '+7 ' . $this->resource->phoneNumber($this->resource->phone)  : null,
             'phone_confirmed'=>$this->phone_confirmed,
             'telegram_accounts' =>new TelegramAccountCollection($this->resource->telegramData()),
             'subscription'=>new SubscriptionResource($this->subscription),
