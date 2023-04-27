@@ -17,19 +17,29 @@ class Sms16Repository implements NotificationRepositoryContract
 
     public function tryActivateAccount($user, $code)
     {
+
         if(!$user)
             return false;
 
         $sms = SmsConfirmation::where('user_id', $user->id)->first();
         if($sms){
+            $chars = ['+', '(', ')', '-'];
             $sms->attempt();
 
-            if($sms->code != null && $sms->code == (int)$code){
+            $phone = str_replace($chars, '', $user->code . $user->phone);
+
+            if($sms->phone == $phone && $sms->code != null && $sms->code == (int)$code){
                 $sms->confirm();
+            } else {
+                $user->phone = null;
+                $user->code = null;
+                $user->phone_confirmed = null;
+                $user->save();
             }
 
             return $sms;
         } else {
+
             return false;
         }
     }
