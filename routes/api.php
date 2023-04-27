@@ -21,6 +21,7 @@ use App\Http\Controllers\APIv3\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
+use App\Http\Controllers\APIv3\ApiRankRuleController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\CommunityRuleController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
@@ -152,6 +153,11 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/chats/rate', [ApiCommunityReputationRulesController::class, 'list'])->name('chats.reputation.list');
     Route::put('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
     Route::get('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
+
+    Route::post('/chats/rank', [ApiRankRuleController::class, 'store'])->name('chats.rank.store');
+    Route::get('/chats/rank', [ApiRankRuleController::class, 'list'])->name('chats.rank.list');
+    Route::put('/chats/rank/{id}', [ApiRankRuleController::class, 'update'])->name('chats.rank.update');
+    Route::get('/chats/rank/{id}', [ApiRankRuleController::class, 'show'])->name('chats.rank.show');
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
 });

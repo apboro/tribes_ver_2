@@ -65,7 +65,7 @@ class ApiCommunityReputationRulesController extends Controller
     {
 
         $community_reputation = $this->communityReputationRepository->add($request);
-        if($community_reputation === null){
+        if($community_reputation == null){
             return ApiResponse::error(trans('responses/common.add_error'));
         }
         return ApiResponse::common(
@@ -100,7 +100,7 @@ class ApiCommunityReputationRulesController extends Controller
     public function update(ApiCommunityReputationRuleEditRequest $request, int $id):ApiResponse
     {
         $community_reputation = $this->communityReputationRepository->edit($request,$id);
-        if($community_reputation === null){
+        if($community_reputation == null){
             return ApiResponse::error(trans('responses/common.add_error'));
         }
         return ApiResponse::common(
