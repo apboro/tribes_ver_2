@@ -20,10 +20,6 @@ use App\Http\ApiRequests\ApiRequest;
  *         )
  *     ),
  *     @OA\RequestBody(
- *         description="
- *          rank_change_in_chat - enum from [вкл,выкл]
- *          first_rank_in_chat - enum from [вкл,выкл]
- *          rank_ids - must be real id in table ranks",
  *         @OA\MediaType(
  *             mediaType="application/json",
  *             @OA\Schema(
@@ -34,7 +30,7 @@ use App\Http\ApiRequests\ApiRequest;
  *                        @OA\Property(property="reputation_value_to_achieve",type="integer")
  *                 )),
  *
- *                 @OA\Property(property="period_until_reset",type="string"),
+ *                 @OA\Property(property="period_until_reset",type="integer"),
  *                 @OA\Property(property="rank_change_in_chat",type="boolean"),
  *                 @OA\Property(property="rank_change_message",type="string"),
  *                 @OA\Property(property="first_rank_in_chat",type="boolean"),
@@ -60,7 +56,7 @@ class ApiRankRuleUpdateRequest extends ApiRequest
         return [
             'rule_name'                   => ['required','string','max:120'],
             'ranks'                       => ['required','array'],
-            'period_until_reset'          => ['required','string'],
+            'period_until_reset'          => ['required','integer'],
             'rank_change_in_chat'         => ['required','boolean'],
             'rank_change_message'         => ['nullable'],
             'first_rank_in_chat'          => ['required','boolean'],

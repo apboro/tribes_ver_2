@@ -26,7 +26,7 @@ class RankRuleRepository
             'name' => $request->get('rule_name'),
             'user_id' => Auth::user()->id,
             'rank_ids' => [],
-            'period_until_reset' => Carbon::parse($request->get('period_until_reset')),
+            'period_until_reset' => Carbon::now()->addSeconds($request->get('period_until_reset'))->format('Y-m-d H:i'),
             'rank_change_in_chat' => $request->get('rank_change_in_chat'),
             'rank_change_message' => $request->get('rank_change_message'),
             'first_rank_in_chat' => $request->get('first_rank_in_chat'),
@@ -86,7 +86,7 @@ class RankRuleRepository
         $rankRule->update([
             'name' => $request->get('rule_name'),
             'rank_ids' => $rankIds,
-            'period_until_reset' => Carbon::parse($request->get('period_until_reset')),
+            'period_until_reset' => Carbon::now()->addSeconds($request->get('period_until_reset'))->format('Y-m-d H:i'),
             'rank_change_in_chat' => $request->get('rank_change_in_chat'),
             'rank_change_message' => $request->get('rank_change_message'),
             'first_rank_in_chat' => $request->get('first_rank_in_chat'),

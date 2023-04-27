@@ -5,6 +5,7 @@ namespace App\Http\ApiResources;
 
 
 use App\Models\RankRule;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiRankRuleResource extends JsonResource
@@ -24,7 +25,7 @@ class ApiRankRuleResource extends JsonResource
             'name'                        => $this->resource->name,
             'ranks'                       => $this->resource->getRanks($this->resource->id),
             'user_id'                     => $this->resource->user_id,
-            'period_until_reset'          => $this->resource->period_until_reset,
+            'period_until_reset'          => Carbon::parse($this->resource->period_until_reset)->timestamp,
             'rank_change_in_chat'         => $this->resource->rank_change_in_chat,
             'rank_change_message'         => $this->resource->rank_change_message,
             'first_rank_in_chat'          => $this->resource->first_rank_in_chat,
