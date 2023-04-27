@@ -42,12 +42,6 @@ class AuthorRepository implements AuthorRepositoryContract
 
         $user = User::find(Auth::user()->id);
 
-        $usedByPhone = User::where('phone', str_replace($chars, '', $request['phone']))->first();
-        if($usedByPhone){
-            $usedByPhone->phone = null;
-            $usedByPhone->save();
-        }
-
         $user->code = str_replace($chars, '', $request['code']);
         $user->phone = str_replace($chars, '', $request['phone']);
         $user->save();
