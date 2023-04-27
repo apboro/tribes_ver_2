@@ -282,7 +282,7 @@ class Payment
             'NotificationURL' => $this->callbackUrl,
             'OrderId' => $this->orderId,
             'Amount'  => $this->amount,
-            'FailURL' => env('APP_URL').'/subscriptions?payment_result=fail',
+            'FailURL' => env('FRONTEND_URL').'/subscriptions?payment_result=fail',
             'SuccessURL' => $this->payFor instanceof Course
                 ? $this->payFor->successPageLink()
                 :
