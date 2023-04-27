@@ -5,6 +5,7 @@ namespace App\Http\Controllers\APIv3;
 use App\Events\SubscriptionMade;
 use App\Helper\PseudoCrypt;
 use App\Http\ApiResponses\ApiResponse;
+use App\Http\ApiResponses\ApiResponseRedirect;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendEmails;
 use App\Models\Payment;
@@ -36,14 +37,7 @@ class ApiPaymentController extends Controller
         $this->tinkoff = new TinkoffService();
     }
 
-    /**
-     * TODO Tests
-     *
-     * @param Request $request
-     * @param $hash
-     * @param $telegramId
-     * @return \App\Http\ApiResponses\ApiResponseCommon|\App\Http\ApiResponses\ApiResponseError
-     */
+    //TODO Tests
     public function successPayment(Request $request, $hash, $telegramId = NULL)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
@@ -51,7 +45,7 @@ class ApiPaymentController extends Controller
             Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
         }
 
-        return ApiResponse::common(['success_redirect_url' => env('FRONTEND_URL').'/subscriptions?payment_result=success']);
+        return redirect(env('FRONTEND_URL').'/app/subscriptions?payment_result=success');
     }
 
 }
