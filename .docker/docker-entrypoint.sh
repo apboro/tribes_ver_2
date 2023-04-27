@@ -25,6 +25,7 @@ case "$command" in
   "php-fpm" )
     php artisan config:cache
     php artisan route:cache
+    php artisan storage:link
     php-fpm -R -c /etc/php7/php.ini
   ;;
   "frontend" | "proxy" )
