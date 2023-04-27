@@ -33,7 +33,7 @@ class Sms16Repository implements NotificationRepositoryContract
             } else {
                 $user->phone = null;
                 $user->code = null;
-                $user->phone_confirmed = null;
+                $user->phone_confirmed = false;
                 $user->save();
             }
 
