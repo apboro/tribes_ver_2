@@ -74,7 +74,7 @@ class CommunityRuleRepository
     {
         foreach ($request->input('restricted_words') as $word) {
             RestrictedWord::create([
-                'community_rule_id' => $community_rule->id,
+                'moderation_rule_uuid' => $community_rule->id,
                 'word' => $word
             ]);
         }
@@ -152,7 +152,7 @@ class CommunityRuleRepository
 
     public function removeRestrictedWords(CommunityRule $community_rule): void
     {
-        RestrictedWord::where('community_rule_id', $community_rule->id)->delete();
+        RestrictedWord::where('moderation_rule_uuid', $community_rule->id)->delete();
     }
 
 }

@@ -58,6 +58,8 @@ class TestController extends Controller
 
     public function test()
     {
+//        dd('q');
+        return redirect(env('FRONTEND_URL').'/app/subscriptions?payment_result=success');
 //        for ($i = 51; $i <= 63; $i++) {
 //            Community::create([
 //                    'connection_id'=> $i

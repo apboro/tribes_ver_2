@@ -61,26 +61,39 @@ class UserRulesController extends Controller
     {
         $user = Auth::user();
 
-        $onboardings = Onboarding::where('user_id', $user->id)->get();
-        $ifThenRules = UserRule::where('user_id', $user->id)->get();
-        $antispamRules = Antispam::where('owner', $user->id)->get();
-        $moderationRules = CommunityRule::where('user_id', $user->id)->get();
+        $onboardings = Onboarding::query()
+            ->where('user_id', $user->id)
+            ->when($request->has('rule_title'), function ($query) use ($request) {
+                $query->where('title', 'like', '%' . $request->input('rule_title') .'%');
+            })
+            ->selectRaw('*, \'onboarding_rule\' AS type')
+            ->get();
 
-        $countAll = $onboardings->count() + $ifThenRules->count() + $antispamRules->count()+ $moderationRules->count();
-        $rules = [
-            [   'onboardings' => $onboardings,
-                'count' => $onboardings->count(),
-            ],
-            [   'ifThenRules' => $ifThenRules,
-                'count' => $ifThenRules->count()
-            ],
-            [   'antispamRules' => $antispamRules,
-                'count' => $antispamRules->count()],
+        $ifThenRules = UserRule::where('user_id', $user->id)
+            ->when($request->has('rule_title'), function ($query) use ($request) {
+                $query->whereRaw('rules->>\'title\' like ?', ['%' . $request->input('rule_title') . '%']);
+                    })
+            ->selectRaw('*, \'if_then_rule\' AS type')
+            ->get();
 
-            [   'moderationRules' => $moderationRules,
-                'count' => $moderationRules->count()]
-        ];
-        return ApiResponse::common(['rules'=>$rules, 'count_all'=>$countAll]);
+        $antispamRules = Antispam::where('owner', $user->id)
+            ->when($request->has('rule_title'), function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->input('rule_title') .'%');
+            })
+            ->selectRaw('*, \'antispam_rule\' AS type')
+            ->get();
+
+        $moderationRules = CommunityRule::where('user_id', $user->id)
+            ->when($request->has('rule_title'), function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->input('rule_title') .'%');
+            })
+            ->selectRaw('*, \'moderation_rule\' AS type')
+            ->get();
+
+        $counts = ['onboardings_count' => $onboardings->count(), 'if-thens_count' => $ifThenRules->count(), 'antispams_count' =>$antispamRules->count(), "moderations_count" => $moderationRules->count()];
+        $rules = $onboardings->concat($ifThenRules)->concat($antispamRules)->concat($moderationRules);
+
+        return ApiResponse::common(['rules'=>$rules, 'counts'=>$counts]);
     }
 
 
