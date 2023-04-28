@@ -90,10 +90,12 @@ class UserRulesController extends Controller
             ->selectRaw('*, \'moderation_rule\' AS type')
             ->get();
 
-        $counts = ['onboardings_count' => $onboardings->count(), 'if-thens_count' => $ifThenRules->count(), 'antispams_count' =>$antispamRules->count(), "moderations_count" => $moderationRules->count()];
+        $countAll = $onboardings->count() + $ifThenRules->count() + $antispamRules->count()+ $moderationRules->count();
+
+        $counts = ['all' => $countAll, 'onboardings_count' => $onboardings->count(), 'if-thens_count' => $ifThenRules->count(), 'antispams_count' =>$antispamRules->count(), "moderations_count" => $moderationRules->count()];
         $rules = $onboardings->concat($ifThenRules)->concat($antispamRules)->concat($moderationRules);
 
-        return ApiResponse::common(['rules'=>$rules, 'counts'=>$counts]);
+        return ApiResponse::common(['rules'=>$rules->skip($request->offset)->take($request->limit), 'counts'=>$counts]);
     }
 
 
