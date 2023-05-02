@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
 use App\Models\Knowledge\Category;
+use App\Models\Knowledge\Knowledge;
 use App\Models\Knowledge\Question;
 use App\Models\Models\Tag;
 use App\Services\TelegramMainBotService;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -20,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
  * @property mixed $owner
  * @property mixed $id
  * @property TelegramConnection $connection
+ * @property int $knowledge_id
  * @property string $title
  * @property mixed|true $is_active
  * @property BelongsToMany $tags
@@ -348,4 +351,8 @@ class Community extends Model
         return $this->belongsTo(CommunityReputationRules::class, 'reputation_rules_id', 'id');
     }
 
+    public function knowledge(): HasOne
+    {
+        return $this->hasOne(Knowledge::class, 'id', 'knowledge_id');
+    }
 }
