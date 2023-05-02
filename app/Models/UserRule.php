@@ -14,11 +14,20 @@ class UserRule extends Model
 {
     use HasFactory;
 
-    protected $table = 'user_community_rules';
+    protected $table = 'if_then_rules';
 
     protected $guarded=[];
 
-//    protected $casts =['rules'=>'json'];
-
     protected $hidden = ['created_at', 'updated_at'];
+
+    protected $appends = ['type'];
+    protected $primaryKey = 'uuid';
+    protected $casts = [
+        'uuid' => 'string'
+    ];
+
+    public function getTypeAttribute()
+    {
+        return 'if_then_rule';
+    }
 }

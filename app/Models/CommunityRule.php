@@ -13,6 +13,16 @@ class CommunityRule extends Model
     protected $table = 'moderation_rules';
     protected $hidden = ['created_at', 'updated_at'];
     protected $guarded = [];
+    protected $appends = ['type'];
+    protected $primaryKey = 'uuid';
+    protected $casts = [
+        'uuid' => 'string'
+    ];
+
+    public function getTypeAttribute()
+    {
+        return 'moderation_rule';
+    }
 
     public function communities(): HasMany
     {

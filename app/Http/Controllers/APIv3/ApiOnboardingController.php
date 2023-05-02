@@ -9,6 +9,7 @@ use App\Http\ApiRequests\ApiUpdateOnboardingRequest;
 use App\Http\ApiResources\ApiOnboardingsCollection;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Models\Community;
 use App\Models\Onboarding;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -29,9 +30,12 @@ class ApiOnboardingController extends Controller
         $onboarding->greeting_image = $greetingImagePath ? 'storage/'.$greetingImagePath : null;
         $onboarding->question_image = $questionImagePath ? 'storage/'.$questionImagePath : null;
         $onboarding->save();
-
         foreach ($request->input('communities_ids') as $community_id) {
-            $onboarding->communities()->attach($community_id);
+            $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
+            if ($community !== null) {
+                $community->onboarding_uuid = $onboarding->uuid;
+                $community->save();
+            }
         }
 
         return ApiResponse::success('common.added');
@@ -57,7 +61,11 @@ class ApiOnboardingController extends Controller
         $onboarding->save();
 
         foreach ($request->input('communities_ids') as $community_id) {
-            $onboarding->communities()->attach($community_id);
+            $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
+            if ($community !== null) {
+                $community->onboarding_uuid = $onboarding->uuid;
+                $community->save();
+            }
         }
 
         return ApiResponse::success('common.updated');

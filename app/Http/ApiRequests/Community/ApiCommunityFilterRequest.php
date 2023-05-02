@@ -30,6 +30,16 @@ use App\Http\ApiRequests\ApiRequest;
  *             type="integer",
  *         )
  *     ),
+ *     @OA\Parameter(
+ *         name="rule_ids[]",
+ *         in="query",
+ *         description="Filter by rule_ids",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="array",
+ *             @OA\Items(type="string"),
+ *         )
+ *     ),
  *    @OA\Parameter(
  *         name="telegram_id",
  *         in="query",

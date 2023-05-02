@@ -19,16 +19,23 @@ class Onboarding extends Model
 {
 //    protected $casts = ['rules'=>'json'];
     protected $hidden = ['created_at', 'updated_at'];
+    protected $appends = ['type'];
+    protected $primaryKey = 'uuid';
+    protected $casts = [
+        'uuid' => 'string'
+    ];
+
+
     use HasFactory;
 
-    public function communities(): BelongsToMany
+    public function getTypeAttribute()
     {
-        return $this->belongsToMany(Community::class, 'communities_onboardings', 'onboarding_id', 'community_id');
+        return 'onboarding_rule';
     }
 
-    public function greeting()
+    public function communities()
     {
-        return $this->hasOne(GreetingMessage::class, 'id','greeting_message_id');
+        return $this->hasMany(Community::class, 'onboarding_uuid', 'uuid');
     }
 
 }

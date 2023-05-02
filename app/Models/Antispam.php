@@ -18,6 +18,16 @@ class Antispam extends Model
         'ban_user_contain_forward',
         'work_period'
     ];
+    protected $appends = ['type'];
+    protected $primaryKey = 'uuid';
+    protected $casts = [
+        'uuid' => 'string'
+    ];
+
+    public function getTypeAttribute()
+    {
+        return 'antispam_rule';
+    }
 
     public function communities()
     {

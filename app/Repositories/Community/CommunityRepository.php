@@ -23,9 +23,9 @@ class CommunityRepository implements CommunityRepositoryContract
         $user->role_index = User::$role['author'];
         $user->save();
 
-        $list = Community::owned()->active()->with(['tags', 'communityRules', 'connection'])->without('donate')->orderBy('created_at', 'DESC');
+        $list = Community::owned()->active()->with(['tags', 'connection'])->without('donate')->orderBy('created_at', 'DESC');
 
-        $list->whereHas('connection', function ($q){
+        $list->whereHas('connection', function ($q) {
             $q->where('botStatus', 'administrator');
         });
 
@@ -37,20 +37,34 @@ class CommunityRepository implements CommunityRepositoryContract
             $tagsNames = explode(",", $request->input('tags_names')[0]);
             if (!empty(array_filter($request->input('tags_names')))) {
                 $list->whereHas('tags', function ($query) use ($tagsNames) {
-                        $query->whereIn('name', $tagsNames);
-                },'=', count($tagsNames));
+                    $query->whereIn('name', $tagsNames);
+                }, '=', count($tagsNames));
             }
+        }
+
+        if ($request->has('rules_uuids')) {
+            $uuids_arr = $request->input('rules_uuids');
+            $list->whereHas('moderationRule', function ($q) use ($uuids_arr) {
+                $q->whereIn('uuid', $uuids_arr);
+            })->orWhereHas('onboardingRule', function ($q) use ($uuids_arr) {
+                $q->whereIn('uuid', $uuids_arr);
+            })->orWhereHas('communityAntispamRule', function ($q) use ($uuids_arr) {
+                $q->whereIn('uuid', $uuids_arr);
+            })->orWhereHas('IfThenRule', function ($q) use ($uuids_arr) {
+                $q->whereIn('uuid', $uuids_arr);
+            });
         }
 
         if (!empty($request->input('date_from'))) {
             $list->whereDate('created_at', '>=', Carbon::createFromTimestamp($request->input('date_from')));
         }
+
         if (!empty($request->input('date_to'))) {
             $list->whereDate('created_at', '<=', Carbon::createFromTimestamp($request->input('date_to')));
         }
 
         if (!empty($request->input('telegram_id'))) {
-            $list->whereHas('connection', function($q) use ($request){
+            $list->whereHas('connection', function ($q) use ($request) {
                 $q->where('telegram_user_id', $request->input('telegram_id'));
             });
         }
@@ -58,15 +72,17 @@ class CommunityRepository implements CommunityRepositoryContract
         return [
             'list' => $list->skip($request->offset)->take($request->limit)->orderBy('id')->get(),
             'count' => $count,
-            ];
+        ];
     }
 
-    public function findCommunityByHash($hash)
+    public
+    function findCommunityByHash($hash)
     {
         return Community::whereHash($hash)->first();
     }
 
-    public function create($connection)
+    public
+    function create($connection)
     {
         $community = Community::create([
             'title' => $connection->chat_title,
@@ -76,7 +92,8 @@ class CommunityRepository implements CommunityRepositoryContract
         return $community;
     }
 
-    public function update()
+    public
+    function update()
     {
         dd(1);
 //        $this->donateRepo->storeDonateVariant();
@@ -84,7 +101,8 @@ class CommunityRepository implements CommunityRepositoryContract
 //        return $community;
     }
 
-    public function getCommunityByChatId($chatId): ?Community
+    public
+    function getCommunityByChatId($chatId): ?Community
     {
         Log::debug('parseRule', [$chatId]);
         return Community::whereHas('connection', function ($q) use ($chatId) {
@@ -92,35 +110,41 @@ class CommunityRepository implements CommunityRepositoryContract
         })->first();
     }
 
-    public function getCommunitiesForMemberByTeleUserId($userTelegramId): Collection
+    public
+    function getCommunitiesForMemberByTeleUserId($userTelegramId): Collection
     {
         return Community::whereHas('followers', function ($query) use ($userTelegramId) {
             $query->where('telegram_id', $userTelegramId);
         })->get();
     }
 
-    public function getAllCommunity()
+    public
+    function getAllCommunity()
     {
         $community = Community::with('communityOwner', 'connection')->orderBy('created_at', 'desc');
         return $community->paginate(50);
     }
 
-    public function getCommunityById($id): ?Community
+    public
+    function getCommunityById($id): ?Community
     {
         return Community::find($id);
     }
 
-    public function getCommunitiesForOwner(int $ownerId, ?CommunitiesFilter $filters = null): Collection
+    public
+    function getCommunitiesForOwner(int $ownerId, ?CommunitiesFilter $filters = null): Collection
     {
         return Community::filter($filters)->where('owner', $ownerId)->get();
     }
 
-    public function getUsersCommunities($userId): Collection
+    public
+    function getUsersCommunities($userId): Collection
     {
         return Community::where('owner', $userId)->get();
     }
 
-    public function isChatBelongsToTeleUserId(int $chatId, int $teleUserId): bool
+    public
+    function isChatBelongsToTeleUserId(int $chatId, int $teleUserId): bool
     {
         return TelegramConnection::query()->where([
             'chat_id' => $chatId,
@@ -128,13 +152,15 @@ class CommunityRepository implements CommunityRepositoryContract
         ])->exists();
     }
 
-    public function getOwnerIdByChatId(int $chatId): ?int
+    public
+    function getOwnerIdByChatId(int $chatId): ?int
     {
         $tConnect = TelegramConnection::where('chat_id', $chatId)->with('community')->first();
         return $tConnect->community->id ?? null;
     }
 
-    public function getCommunitiesForOwnerByTeleUserId(int $userTelegramId): Collection
+    public
+    function getCommunitiesForOwnerByTeleUserId(int $userTelegramId): Collection
     {
         return Community::whereHas('connection', function ($query) use ($userTelegramId) {
             $query->where('telegram_user_id', $userTelegramId);

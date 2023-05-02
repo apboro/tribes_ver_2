@@ -109,7 +109,7 @@ class CommunityRuleRepository
         if (!empty($community_rule->communities)) {
             /** @var Community $community */
             foreach ($community_rule->communities as $community) {
-                $community->communityRule()->disassociate();
+                $community->moderationRule()->disassociate();
                 $community->save();
             }
         }
@@ -117,7 +117,7 @@ class CommunityRuleRepository
             /** @var Community $community */
             $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
             if ($community !== null) {
-                $community->communityRule()->associate($community_rule);
+                $community->moderationRule()->associate($community_rule);
                 $community->save();
             }
         }

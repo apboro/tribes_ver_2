@@ -23,6 +23,10 @@ use Illuminate\Support\Facades\Auth;
  * @property string $title
  * @property mixed|true $is_active
  * @property BelongsToMany $tags
+ * @property mixed $communityAntispamRule
+ * @property mixed $ifThenRule
+ * @property mixed $moderationRule
+ * @property mixed $onboardingRule
  */
 class Community extends Model
 {
@@ -328,24 +332,40 @@ class Community extends Model
         return $this->belongsToMany(Tag::class, 'community_tag', 'community_id', 'tag_id');
     }
 
-    public function communityRules()
-    {
-        return $this->belongsToMany(Condition::class, 'conditions_actions', 'community_id', 'group_uuid', 'id', 'group_uuid')->distinct();
-    }
 
     public function communityAntispamRule()
     {
-        return $this->belongsTo(Antispam::class, 'antispam_id', 'id');
+        return $this->hasOne(Antispam::class, 'uuid', 'antispam_uuid');
     }
 
-    public function communityRule()
+    public function moderationRule()
     {
-        return $this->belongsTo(CommunityRule::class);
+        return $this->hasOne(CommunityRule::class, 'uuid', 'moderation_rule_uuid');
     }
 
     public function communityReputationRule()
     {
-        return $this->belongsTo(CommunityReputationRules::class, 'reputation_rules_id', 'id');
+        return $this->hasOne(CommunityReputationRules::class, 'id', 'reputation_rules_id');
+    }
+
+    public function ifThenRule()
+    {
+        return $this->hasOne(UserRule::class, 'uuid', 'if_then_uuid');
+    }
+
+    public function onboardingRule()
+    {
+        return $this->hasOne(Onboarding::class, 'uuid', 'onboarding_uuid');
+    }
+
+    public function getCommunityRules(): array
+    {
+        return array_filter([
+            $this->communityAntispamRule,
+            $this->ifThenRule,
+            $this->moderationRule,
+            $this->onboardingRule
+        ]);
     }
 
 }

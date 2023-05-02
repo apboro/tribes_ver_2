@@ -24,18 +24,6 @@ class CommunityResource extends JsonResource
      */
     public function toArray($request)
     {
-        $user = Auth::user();
-
-        $onboardings = Onboarding::where('user_id', $user->id)->get();
-        $ifThenRules = UserRule::where('user_id', $user->id)->get();
-        $antispamRules = Antispam::where('owner', $user->id)->get();
-        $moderationRules = CommunityRule::where('user_id', $user->id)->get();
-        $rules = [
-            ['onboardings' => $onboardings],
-            ['ifThenRules' => $ifThenRules],
-            ['antispamRules' => $antispamRules],
-            ['moderationRules' => $moderationRules]
-            ];
         return [
             "id" => $this->resource->id,
             "title" => $this->resource->title,
@@ -46,7 +34,7 @@ class CommunityResource extends JsonResource
             "balance" => $this->resource->balance,
             "type" => $this->resource->connection->chat_type,
             "tags" => $this->resource->tags->makeHidden('pivot'),
-            "rules" => $rules,
+            "rules" => $this->resource->getCommunityRules(),
         ];
     }
 }
