@@ -25,13 +25,11 @@ class Knowledge extends Model
     use HasFactory;
 
     protected $fillable = [
-       'community_ids',
-       'owner_id',
-       'name',
-       'question_ids',
-       'status',
-       'question_in_chat_lifetime',
-        'is_link_publish',
+        'uri_hash',
+        'community_ids',
+        'owner_id',
+        'name',
+        'question_ids',
     ];
 
     protected $casts = [
@@ -49,7 +47,8 @@ class Knowledge extends Model
         return $this->belongsToMany(Community::class);
     }
 
-    public function getQuestionsWithAnswers(int $knowledgeId) {
+    public function getQuestionsWithAnswers(int $knowledgeId)
+    {
         return Question::query()->where('knowledge_id', $knowledgeId)->with('answer')->get();
     }
 }

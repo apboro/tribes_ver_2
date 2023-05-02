@@ -10,6 +10,7 @@ use App\Http\ApiRequests\Knowledge\ApiKnowledgeUpdateRequest;
 use App\Models\Community;
 use App\Models\Knowledge\Knowledge;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ApiKnowledgeRepository
 {
@@ -28,10 +29,8 @@ class ApiKnowledgeRepository
         $knowledge = Knowledge::query()->create([
             'owner_id' => Auth::user()->id,
             'name' => $request->get('knowledge_name'),
-            'status' => $request->get('knowledge_status'),
-            'question_in_chat_lifetime' => $request->get('question_in_chat_lifetime'),
-            'is_link_publish' => $request->get('is_link_publish'),
-            ]);
+            'uri_hash' => Str::uuid(),
+        ]);
 
         if (!$knowledge) {
             return false;
@@ -67,11 +66,9 @@ class ApiKnowledgeRepository
         }
 
         $knowledge->update([
-                'name' => $request->get('knowledge_name'),
-                'status' => $request->get('knowledge_status'),
-                'question_in_chat_lifetime' => $request->get('question_in_chat_lifetime'),
-                'is_link_publish' => $request->get('is_link_publish'),
-            ]);
+            'name' => $request->get('knowledge_name'),
+            'uri_hash' => Str::uuid(),
+        ]);
 
 
         return $knowledge;

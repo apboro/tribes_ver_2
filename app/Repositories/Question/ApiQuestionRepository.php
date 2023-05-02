@@ -34,7 +34,6 @@ class ApiQuestionRepository
             'context' => $request->get('question_text'),
             'answer_id' => $answer->id,
             'author_id' => Auth::user()->id,
-            'uri_hash' => Str::uuid(),
             'c_enquiry' => 0,
         ]);
 

@@ -17,11 +17,8 @@ class CreateKnowledgeTable extends Migration
             $table->id();
             $table->integer('owner_id');
             $table->string('name');
-            $table->enum('status', ['draft','published']);
-            $table->integer('question_in_chat_lifetime')->nullable()->default(null);
-            $table->boolean('is_link_publish')->default(false);
+            $table->string('uri_hash')->unique();
             $table->timestamps();
-
             $table->foreign('owner_id')
                 ->references('id')->on('users');
         });

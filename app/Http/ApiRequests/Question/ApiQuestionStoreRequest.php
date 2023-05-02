@@ -16,7 +16,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     @OA\RequestBody(
  *         description="
  *          question_status - enum from [draft,draft_auto,published]
- *          overlap - enum from [full,part]",
+ *          overlap (установить требование к строгости совпадения вопроса в записи с задаваемым в чате) - enum from [full,part]",
  *         @OA\MediaType(
  *             mediaType="application/json",
  *             @OA\Schema(

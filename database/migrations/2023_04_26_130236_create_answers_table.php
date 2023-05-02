@@ -13,6 +13,7 @@ class CreateAnswersTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('answers');
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
             $table->text('context');

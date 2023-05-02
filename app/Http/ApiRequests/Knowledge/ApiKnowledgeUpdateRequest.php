@@ -24,15 +24,10 @@ use App\Http\ApiRequests\ApiRequest;
  *         )
  *     ),
  *     @OA\RequestBody(
- *         description="
- *          knowledge_status - enum from [draft,published]",
  *         @OA\MediaType(
  *             mediaType="application/json",
  *             @OA\Schema(
  *                 @OA\Property(property="knowledge_name",type="string"),
- *                 @OA\Property(property="knowledge_status",type="string"),
- *                 @OA\Property(property="question_in_chat_lifetime",type="integer"),
- *                 @OA\Property(property="is_link_publish",type="boolean"),
  *                 ),
  *             ),
  *         ),
@@ -53,9 +48,6 @@ class ApiKnowledgeUpdateRequest extends ApiRequest
     {
         return [
             'knowledge_name' => ['required','string'],
-            'knowledge_status' => ['required','string','in:draft,published'],
-            'question_in_chat_lifetime' => ['sometimes','nullable','integer'],
-            'is_link_publish' => ['sometimes','nullable','boolean'],
         ];
     }
 }

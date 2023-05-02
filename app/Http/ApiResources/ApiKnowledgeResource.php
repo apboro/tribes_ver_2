@@ -22,8 +22,7 @@ class ApiKnowledgeResource extends JsonResource
         return [
             'id'                        => $this->resource->id,
             'name'                      => $this->resource->name,
-            'status'                    => $this->resource->status,
-            'question_in_chat_lifetime' => $this->resource->question_in_chat_lifetime,
+            'uri_hash'                  => $this->resource->uri_hash,
             'updated_at'                => $this->resource->updated_at,
             'questions_count'           => $this->questions->count()
         ];
