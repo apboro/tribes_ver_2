@@ -26,11 +26,11 @@ class CommunityRule extends Model
 
     public function communities(): HasMany
     {
-        return $this->hasMany(Community::class);
+        return $this->hasMany(Community::class, 'moderation_rule_uuid', 'uuid');
     }
 
     public function restrictedWords(): HasMany
     {
-        return $this->hasMany(RestrictedWord::class);
+        return $this->hasMany(RestrictedWord::class, 'moderation_rule_uuid', 'uuid');
     }
 }

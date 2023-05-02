@@ -74,7 +74,7 @@ class CommunityRuleRepository
     {
         foreach ($request->input('restricted_words') as $word) {
             RestrictedWord::create([
-                'moderation_rule_uuid' => $community_rule->id,
+                'moderation_rule_uuid' => $community_rule->uuid,
                 'word' => $word
             ]);
         }
@@ -109,7 +109,7 @@ class CommunityRuleRepository
         if (!empty($community_rule->communities)) {
             /** @var Community $community */
             foreach ($community_rule->communities as $community) {
-                $community->moderationRule()->disassociate();
+                $community->moderation_rule_uuid = null;
                 $community->save();
             }
         }
@@ -117,7 +117,7 @@ class CommunityRuleRepository
             /** @var Community $community */
             $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
             if ($community !== null) {
-                $community->moderationRule()->associate($community_rule);
+                $community->moderation_rule_uuid = $community_rule->uuid;
                 $community->save();
             }
         }
@@ -152,7 +152,7 @@ class CommunityRuleRepository
 
     public function removeRestrictedWords(CommunityRule $community_rule): void
     {
-        RestrictedWord::where('moderation_rule_uuid', $community_rule->id)->delete();
+        RestrictedWord::where('moderation_rule_uuid', $community_rule->uuid)->delete();
     }
 
 }
