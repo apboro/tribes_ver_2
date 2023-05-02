@@ -18,6 +18,7 @@ use App\Http\Controllers\APIv3\ApiKnowledgeController;
 use App\Http\Controllers\APIv3\ApiOnboardingController;
 use App\Http\Controllers\APIv3\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\ApiProjectController;
+use App\Http\Controllers\APIv3\ApiQuestionCategoryController;
 use App\Http\Controllers\APIv3\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
@@ -162,6 +163,12 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/question/{id}', [ApiQuestionController::class, 'show']);
     Route::put('/question/{id}', [ApiQuestionController::class, 'update']);
     Route::delete('/question/{id}', [ApiQuestionController::class, 'delete']);
+
+    Route::get('/question-category', [ApiQuestionCategoryController::class, 'list']);
+    Route::post('/question-category', [ApiQuestionCategoryController::class, 'store']);
+    Route::get('/question-category/{id}', [ApiQuestionCategoryController::class, 'show']);
+    Route::put('/question-category/{id}', [ApiQuestionCategoryController::class, 'update']);
+    Route::delete('/question-category/{id}', [ApiQuestionCategoryController::class, 'delete']);
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {

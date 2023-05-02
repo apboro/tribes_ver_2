@@ -4,6 +4,7 @@ namespace App\Models\Knowledge;
 
 use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
+use App\Models\QuestionCategory;
 use App\Traits\Searchable;
 use Carbon\Carbon;
 use Database\Factories\Knowledge\QuestionFactory;
@@ -93,5 +94,10 @@ class Question extends Model
     public function knowledge(): BelongsTo
     {
         return $this->belongsTo(Knowledge::class, 'knowledge_id', 'id');
+    }
+
+    public function questionCategory(): HasOne
+    {
+        return $this->hasOne(QuestionCategory::class, 'id', 'category_id');
     }
 }

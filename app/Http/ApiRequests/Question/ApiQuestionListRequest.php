@@ -9,8 +9,8 @@ use App\Http\ApiRequests\ApiRequest;
 /**
  * @OA\Get (
  *  path="/api/v3/question/list/{id}",
- *  operationId="question-list",
- *  summary="List of questions by knowledge id",
+ *  operationId="questions-list",
+ *  summary="List of questions by knowledge ID",
  *  security={{"sanctum": {} }},
  *  tags={"Question"},
  *    @OA\Parameter(

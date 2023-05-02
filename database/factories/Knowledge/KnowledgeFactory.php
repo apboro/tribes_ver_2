@@ -20,9 +20,7 @@ class KnowledgeFactory extends Factory
         return [
             'owner_id' => User::all()->random()->id,
             'name' => $this->faker->word,
-            'status' => 'draft',
-            'is_link_publish' => true,
-            'question_in_chat_lifetime' => rand(1, 10),
+            'uri_hash' => $this->faker->uuid,
         ];
     }
 }

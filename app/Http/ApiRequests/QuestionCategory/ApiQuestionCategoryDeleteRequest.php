@@ -1,22 +1,22 @@
 <?php
 
 
-namespace App\Http\ApiRequests\Question;
+namespace App\Http\ApiRequests\QuestionCategory;
 
 
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Get(
- *  path="/api/v3/question/{id}",
- *  operationId="question-show",
- *  summary="Show the specified question",
+ * @OA\Delete(
+ *  path="/api/v3/question-category/{id}",
+ *  operationId="Question-category-delete",
+ *  summary="Delete the specified question category",
  *  security={{"sanctum": {} }},
- *  tags={"Question"},
+ *  tags={"Question Category"},
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
- *         description="Question ID",
+ *         description="Question category ID",
  *         required=true,
  *         @OA\Schema(
  *             type="integer",
@@ -26,7 +26,7 @@ use App\Http\ApiRequests\ApiRequest;
  *   @OA\Response(response=200, description="OK")
  *)
  */
-class ApiQuestionShowRequest extends ApiRequest
+class ApiQuestionCategoryDeleteRequest extends ApiRequest
 {
     public function all($keys = null): array
     {

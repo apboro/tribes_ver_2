@@ -16,7 +16,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
- *         description="ID of related knowledge in database",
+ *         description="Question ID",
  *         required=true,
  *         @OA\Schema(
  *             type="integer",
