@@ -20,6 +20,7 @@ class Onboarding extends Model
 //    protected $casts = ['rules'=>'json'];
     protected $hidden = ['created_at', 'updated_at'];
     protected $appends = ['type'];
+    protected $keyType = 'string';
     protected $primaryKey = 'uuid';
     protected $casts = [
         'uuid' => 'string'

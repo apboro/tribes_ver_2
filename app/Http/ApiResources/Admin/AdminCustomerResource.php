@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\ApiResources;
+namespace App\Http\ApiResources\Admin;
 
 use App\Models\Payment;
 use Illuminate\Contracts\Support\Arrayable;

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\ApiResources;
+namespace App\Http\ApiResources\Rules;
 
+use App\Http\ApiResources\CommunitiesCollection;
 use App\Models\Antispam;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,7 +25,8 @@ class ApiAntispamResource extends JsonResource
             'ban_user_contain_link' => $this->resource->ban_user_contain_link,
             'del_message_with_forward' => $this->resource->del_message_with_forward,
             'ban_user_contain_forward' => $this->resource->ban_user_contain_forward,
-            'work_period' => $this->resource->work_period
+            'work_period' => $this->resource->work_period,
+            'communities' => (new CommunitiesCollection($this->resource->communities)),
         ];
     }
 }

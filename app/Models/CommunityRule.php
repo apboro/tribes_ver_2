@@ -15,6 +15,8 @@ class CommunityRule extends Model
     protected $guarded = [];
     protected $appends = ['type'];
     protected $primaryKey = 'uuid';
+    protected $keyType = 'string';
+
     protected $casts = [
         'uuid' => 'string'
     ];

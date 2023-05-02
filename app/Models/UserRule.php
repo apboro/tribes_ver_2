@@ -22,6 +22,8 @@ class UserRule extends Model
 
     protected $appends = ['type'];
     protected $primaryKey = 'uuid';
+    protected $keyType = 'string';
+
     protected $casts = [
         'uuid' => 'string'
     ];
@@ -29,5 +31,10 @@ class UserRule extends Model
     public function getTypeAttribute()
     {
         return 'if_then_rule';
+    }
+
+    public function communities()
+    {
+        return $this->hasMany(Community::class, 'if_then_uuid', 'uuid');
     }
 }

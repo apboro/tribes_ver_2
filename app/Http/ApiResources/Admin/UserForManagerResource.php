@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\ApiResources;
+namespace App\Http\ApiResources\Admin;
 
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;

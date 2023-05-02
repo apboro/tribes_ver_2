@@ -72,32 +72,44 @@ class UserRulesController extends Controller
         $user = Auth::user();
 
         $onboardings = Onboarding::query()
+            ->with('communities')
             ->where('user_id', $user->id)
             ->when($request->has('rule_title'), function ($query) use ($request) {
                 $query->where('title', 'like', '%' . $request->input('rule_title') . '%');
             })
-            ->selectRaw('*, \'onboarding_rule\' AS type')
+            ->when($request->has('rule_uuid'), function ($query) use ($request) {
+                $query->where('uuid', $request->input('rule_uuid'));
+            })
             ->get();
 
         $ifThenRules = UserRule::where('user_id', $user->id)
+            ->with('communities')
             ->when($request->has('rule_title'), function ($query) use ($request) {
                 $query->whereRaw('rules->>\'title\' like ?', ['%' . $request->input('rule_title') . '%']);
             })
-            ->selectRaw('*, \'if_then_rule\' AS type')
+            ->when($request->has('rule_uuid'), function ($query) use ($request) {
+                $query->where('uuid', $request->input('rule_uuid'));
+            })
             ->get();
 
         $antispamRules = Antispam::where('owner', $user->id)
+            ->with('communities')
             ->when($request->has('rule_title'), function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->input('rule_title') . '%');
             })
-            ->selectRaw('*, \'antispam_rule\' AS type')
+            ->when($request->has('rule_uuid'), function ($query) use ($request) {
+                $query->where('uuid', $request->input('rule_uuid'));
+            })
             ->get();
 
         $moderationRules = CommunityRule::where('user_id', $user->id)
+            ->with('communities')
             ->when($request->has('rule_title'), function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->input('rule_title') . '%');
             })
-            ->selectRaw('*, \'moderation_rule\' AS type')
+            ->when($request->has('rule_uuid'), function ($query) use ($request) {
+                $query->where('uuid', $request->input('rule_uuid'));
+            })
             ->get();
 
         $countAll = $onboardings->count() + $ifThenRules->count() + $antispamRules->count() + $moderationRules->count();

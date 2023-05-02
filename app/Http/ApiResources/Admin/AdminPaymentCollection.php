@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\ApiResources;
+namespace App\Http\ApiResources\Admin;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ApiOnboardingsCollection extends ResourceCollection
+class AdminPaymentCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -14,6 +14,6 @@ class ApiOnboardingsCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return ApiOnboardingResource::collection($this->collection)->toArray($request);
+        return parent::toArray($request);
     }
 }

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\APIv3\Manager;
 
 use App\Http\ApiRequests\Admin\ApiAdminCustomersRequest;
 use App\Http\ApiRequests\Admin\ApiAdminPaymentListRequest;
-use App\Http\ApiResources\AdminCustomerCollection;
-use App\Http\ApiResources\AdminPaymentCollection;
+use App\Http\ApiResources\Admin\AdminCustomerCollection;
+use App\Http\ApiResources\Admin\AdminPaymentCollection;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Manager\Filters\PaymentsFilter;

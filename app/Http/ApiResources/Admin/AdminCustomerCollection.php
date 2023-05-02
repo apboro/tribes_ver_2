@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\ApiResources;
+namespace App\Http\ApiResources\Admin;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class AdminPaymentCollection extends ResourceCollection
+class AdminCustomerCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.

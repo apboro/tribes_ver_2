@@ -20,6 +20,8 @@ class Antispam extends Model
     ];
     protected $appends = ['type'];
     protected $primaryKey = 'uuid';
+    protected $keyType = 'string';
+
     protected $casts = [
         'uuid' => 'string'
     ];
@@ -31,8 +33,6 @@ class Antispam extends Model
 
     public function communities()
     {
-        return $this->hasMany(
-            Community::class
-        );
+        return $this->hasMany(Community::class, 'antispam_uuid', 'uuid');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\ApiResources;
+namespace App\Http\ApiResources\Rules;
 
 use App\Models\CommunityRule;
 use Illuminate\Http\Resources\Json\JsonResource;
