@@ -82,10 +82,10 @@ class CommunityRuleController extends Controller
      * @param int $id
      * @return ApiResponse
      */
-    public function update(ApiCommunityRuleEditRequest $request, int $id): ApiResponse
+    public function update(ApiCommunityRuleEditRequest $request, string $uuid): ApiResponse
     {
         /** @var CommunityRule $community_rule */
-        $community_rule = CommunityRule::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        $community_rule = CommunityRule::where('uuid', $uuid)->where('user_id', Auth::user()->id)->first();
         if ($community_rule == null) {
             return ApiResponse::notFound(trans('responses/common.not_found'));
         }

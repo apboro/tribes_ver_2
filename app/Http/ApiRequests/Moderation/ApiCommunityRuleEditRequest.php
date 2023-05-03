@@ -6,15 +6,15 @@ use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\POST(
- *  path="/api/v3/chats/rules/edit/{id}",
+ *  path="/api/v3/chats/rules/edit/{uuid}",
  *  operationId="chat-rules-edit",
  *  summary="Edit chat rules",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Moderation"},
  *     @OA\Parameter(
- *         name="id",
+ *         name="uuid",
  *         in="path",
- *         description="ID of chat rule in database",
+ *         description="UUID of chat rule in database",
  *         required=true,
  *         @OA\Schema(
  *             type="integer",
@@ -65,7 +65,7 @@ class ApiCommunityRuleEditRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:community_rules,id',
+            'uuid' => 'required|string|exists:community_rules,uuid',
             'name' => 'required|string|max:120',
             'content' => 'required|string',
             'content_image'=>'image|mimetypes:image/jpeg,image/png',

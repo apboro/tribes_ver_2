@@ -12,7 +12,7 @@ namespace App\Http\ApiRequests;
  *  tags={"Chats Onboarding"},
  *     @OA\RequestBody(
  *      @OA\JsonContent(
- *          @OA\Property(property="onboarding_id", type="integer"),
+ *          @OA\Property(property="onboarding_uuid", type="integer"),
  *      )
  *  ),
  *     @OA\Response(response=200, description="OK"),
@@ -24,7 +24,7 @@ class ApiDeleteOnboardingRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'onboarding_id' => 'required|exists:onboardings,id'
+            'onboarding_uuid' => 'required|exists:onboardings,uuid'
         ];
     }
 

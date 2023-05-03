@@ -6,12 +6,12 @@ use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\Put(
- *  path="/api/v3/antispam/{id}",
+ *  path="/api/v3/antispam/{uuid}",
  *  operationId="antispam-edit",
  *  summary="Edit antispam",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Antispam"},
- *     @OA\Parameter(name="id",in="path",required=true,@OA\Schema(type="integer",format="int64")),
+ *     @OA\Parameter(name="uuid",in="path",required=true,@OA\Schema(type="string",format="int64")),
  *     @OA\RequestBody(
  *         @OA\MediaType(mediaType="application/json",encoding={
  *                  "community_ids[]": {
@@ -57,7 +57,7 @@ class ApiAntispamEditRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|min:1|exists:antispams,id',
+            'uuid' => 'required|string|min:1|exists:antispams,uuid',
             'name' => 'required|string|max:120',
             'del_message_with_link' => 'boolean',
             'ban_user_contain_link' => 'boolean',

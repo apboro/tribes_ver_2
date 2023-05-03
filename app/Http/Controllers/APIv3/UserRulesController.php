@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\APIv3;
 
 
 use App\Http\ApiRequests\ApiGetAllRulesRequest;
@@ -8,8 +8,8 @@ use App\Http\ApiRequests\ApiUserRulesDeleteRequest;
 use App\Http\ApiRequests\ApiUserRulesGetRequest;
 use App\Http\ApiRequests\ApiUserRulesStoreRequest;
 use App\Http\ApiRequests\ApiUserRulesUpdateRequest;
-use App\Http\ApiResources\CommunitiesCollection;
 use App\Http\ApiResponses\ApiResponse;
+use App\Http\Controllers\Controller;
 use App\Models\Antispam;
 use App\Models\Community;
 use App\Models\CommunityRule;
@@ -45,8 +45,7 @@ class UserRulesController extends Controller
 
     public function update(ApiUserRulesUpdateRequest $request)
     {
-
-        $rule = UserRule::find($request->user_rule_id);
+        $rule = UserRule::find($request->user_rule_uuid);
         $rule->rules = json_encode($request->input('rules'));
         $rule->save();
         foreach ($request->input('communities_ids') as $community_id) {
@@ -62,7 +61,7 @@ class UserRulesController extends Controller
 
     public function delete(ApiUserRulesDeleteRequest $request)
     {
-        UserRule::find($request->user_rule_id)->delete();
+        UserRule::find($request->user_rule_uuid)->delete();
 
         return ApiResponse::success('Правило удалено');
     }

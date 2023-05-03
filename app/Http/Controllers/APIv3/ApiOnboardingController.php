@@ -73,7 +73,7 @@ class ApiOnboardingController extends Controller
 
     public function destroy(ApiDeleteOnboardingRequest $request)
     {
-        $ruleToDelete = Onboarding::findOrFail($request->onboarding_id);
+        $ruleToDelete = Onboarding::findOrFail($request->onboarding_uuid);
         $ruleToDelete->delete();
         return ApiResponse::success('common.deleted');
     }

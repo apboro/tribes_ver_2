@@ -15,7 +15,7 @@ class AddRulesIdToCommunity extends Migration
     public function up()
     {
         Schema::table('communities', function (Blueprint $table) {
-            $table->foreignIdFor(CommunityRule::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('community_rule_id')->nullable()->constrained()->nullOnDelete();
         });
     }
 

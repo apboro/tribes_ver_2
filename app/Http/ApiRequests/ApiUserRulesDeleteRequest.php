@@ -12,7 +12,7 @@ namespace App\Http\ApiRequests;
  * tags= {"Chats IF-THEN"},
  *     @OA\RequestBody(
  *        @OA\JsonContent(
- *          @OA\Property(property="user_rule_id", type="integer"),
+ *          @OA\Property(property="user_rule_uuid", type="string"),
  *        )
  *     ),
  *     @OA\Response(response=200, description="OK"),
@@ -24,7 +24,7 @@ class ApiUserRulesDeleteRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'user_rule_id' => 'required|integer',
+            'user_rule_uuid' => 'required|string',
         ];
     }
 

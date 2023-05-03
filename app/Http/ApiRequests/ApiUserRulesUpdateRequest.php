@@ -7,12 +7,12 @@ namespace App\Http\ApiRequests;
  * @OA\PUT(
  * path="/api/v3/user-community-rules",
  * operationId="Update_user_community_rules",
- * summary= "Update user rules for communities IDs",
+ * summary= "Update user rules for communities UUIDs",
  * security= {{"sanctum": {} }},
  * tags= {"Chats IF-THEN"},
  *     @OA\RequestBody(
  *        @OA\JsonContent(
- *          @OA\Property (property="user_rule_uuid", type="integer"),
+ *          @OA\Property (property="user_rule_uuid", type="string"),
  *          @OA\Property(property="rules", type="object"),
  *          @OA\Property(property="communities_ids", type="array", @OA\Items(type="integer"))
  *        )

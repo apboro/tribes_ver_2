@@ -20,6 +20,7 @@ class ApiAntispamResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'uuid' => $this->resource->uuid,
             'name' => $this->resource->name,
             'del_message_with_link' => $this->resource->del_message_with_link,
             'ban_user_contain_link' => $this->resource->ban_user_contain_link,

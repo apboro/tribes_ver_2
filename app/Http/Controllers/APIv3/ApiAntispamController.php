@@ -85,9 +85,9 @@ class ApiAntispamController extends Controller
      * @param int $id
      * @return Response
      */
-    public function edit(ApiAntispamEditRequest $request, int $id): ApiResponse
+    public function edit(ApiAntispamEditRequest $request, string $uuid): ApiResponse
     {
-        $antispam = Antispam::where('owner', Auth::user()->id)->where('id', $id)->first();
+        $antispam = Antispam::where('owner', Auth::user()->id)->where('uuid', $uuid)->first();
 
         if ($antispam === null) {
             return ApiResponse::notFound(trans('responses/common.not_found'));
@@ -103,7 +103,7 @@ class ApiAntispamController extends Controller
         ]);
         $antispam->save();
         if (!empty($request->input('community_ids'))) {
-            Community::where('owner', Auth::user()->id)->where('antispam_id', $id)->update(['antispam_id' => null]);
+            Community::where('owner', Auth::user()->id)->where('antispam_uuid', $uuid)->update(['antispam_uuid' => null]);
 
             /** @var Community $community */
             foreach ($request->input('community_ids') as $row) {

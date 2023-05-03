@@ -139,6 +139,7 @@ class MainBotCommands
                 }
             });
         } catch (\Exception $e) {
+            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -413,6 +414,7 @@ class MainBotCommands
                 ]);
             });
         } catch (\Exception $e) {
+            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -430,6 +432,7 @@ class MainBotCommands
                     $ctx);
             });
             } catch (\Exception $e) {
+            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -1103,7 +1106,9 @@ class MainBotCommands
                 ->row()->btn('🚀Личный кабинет')
                 ->row()->btn('🕹️Мои сообщества');
 //                ->row()->btn('📂Мои подписки');
-
+            Menux::Create('menuCustom', 'custom')
+                ->row()->btn('🚀Личный кабинет')
+                ->row()->btn('📂Мои подписки');
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }

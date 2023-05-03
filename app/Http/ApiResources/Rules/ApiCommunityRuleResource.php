@@ -21,7 +21,7 @@ class ApiCommunityRuleResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->resource->id,
+            'uuid' => $this->resource->uuid,
             'user_id' => $this->resource->user_id,
             'name' => $this->resource->name,
             'content' => $this->resource->content,
