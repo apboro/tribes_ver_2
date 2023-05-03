@@ -17,7 +17,7 @@ class CreateRestrictedWordsTable extends Migration
         Schema::create('restricted_words', function (Blueprint $table) {
             $table->id();
             $table->string('word');
-            $table->foreignIdFor(CommunityRule::class)->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('community_rule_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
