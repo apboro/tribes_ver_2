@@ -1,0 +1,27 @@
+<?php
+
+
+namespace App\Http\ApiResources;
+
+
+use App\Models\QuestionCategory;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class ApiQuestionCategoryResource extends JsonResource
+{
+    /**
+     * @var QuestionCategory
+     */
+    public $resource;
+
+    /**
+     * Transform the resource into an array.
+     */
+    public function toArray($request): array
+    {
+        return [
+            'id'   => $this->resource->id,
+            'name' => $this->resource->name,
+        ];
+    }
+}

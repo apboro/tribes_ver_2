@@ -2,10 +2,11 @@
 
 namespace Database\Factories\Knowledge;
 
+use App\Models\Community;
 use Database\Factories\instanceTrait;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class AnswerFactory extends Factory
+class CategoryFactory extends Factory
 {
     use instanceTrait;
     protected static $items = [];
@@ -17,8 +18,9 @@ class AnswerFactory extends Factory
     public function definition()
     {
         return [
-            'context' => $this->faker->text(600),
-
+            'variant' => $this->faker->word(),
+            'community_id' => Community::query()->first()->id,
+            'title' => $this->faker->word,
         ];
     }
 }

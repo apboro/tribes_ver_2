@@ -2,10 +2,11 @@
 
 namespace Database\Factories\Knowledge;
 
+use App\Models\User;
 use Database\Factories\instanceTrait;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class AnswerFactory extends Factory
+class KnowledgeFactory extends Factory
 {
     use instanceTrait;
     protected static $items = [];
@@ -14,11 +15,12 @@ class AnswerFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
-            'context' => $this->faker->text(600),
-
+            'owner_id' => User::all()->random()->id,
+            'name' => $this->faker->word,
+            'uri_hash' => $this->faker->uuid,
         ];
     }
 }

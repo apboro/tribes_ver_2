@@ -22,6 +22,7 @@ class CreateCommunitiesTable extends Migration
             $table->string('title')->nullable();
             $table->string('image')->nullable();
             $table->text('description')->nullable();
+            $table->integer('knowledge_id')->nullable();
             $table->timestamps();
         });
     }

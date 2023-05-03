@@ -13,11 +13,12 @@ use App\Http\Controllers\APIv3\ApiConditionActionController;
 use App\Http\Controllers\APIv3\ApiConditionController;
 use App\Http\Controllers\APIv3\ApiCourseController;
 use App\Http\Controllers\APIv3\ApiFeedBackController;
-use App\Http\Controllers\APIv3\ApiGreetingMessageController;
+use App\Http\Controllers\APIv3\ApiKnowledgeController;
 use App\Http\Controllers\APIv3\ApiOnboardingController;
 use App\Http\Controllers\APIv3\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiRankRuleController;
+use App\Http\Controllers\APIv3\ApiQuestionCategoryController;
 use App\Http\Controllers\APIv3\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
+use App\Http\Controllers\APIv3\ApiQuestionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
 use App\Http\Controllers\APIv3\User\ApiAuthController;
 use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
@@ -154,10 +156,29 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::put('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
     Route::get('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
 
+    Route::get('/knowledge', [ApiKnowledgeController::class, 'list']);
+    Route::post('/knowledge', [ApiKnowledgeController::class, 'store']);
+    Route::delete('/knowledge/{id}', [ApiKnowledgeController::class, 'delete']);
+    Route::get('/knowledge/{id}', [ApiKnowledgeController::class, 'show']);
+    Route::put('/knowledge/{id}', [ApiKnowledgeController::class, 'update']);
+    Route::post('/knowledge/bind-communities', [ApiKnowledgeController::class, 'bindToCommunity']);
+
     Route::post('/chats/rank', [ApiRankRuleController::class, 'store'])->name('chats.rank.store');
     Route::get('/chats/rank', [ApiRankRuleController::class, 'list'])->name('chats.rank.list');
     Route::put('/chats/rank/{id}', [ApiRankRuleController::class, 'update'])->name('chats.rank.update');
     Route::get('/chats/rank/{id}', [ApiRankRuleController::class, 'show'])->name('chats.rank.show');
+
+    Route::get('/question/list/{id}', [ApiQuestionController::class, 'list']);
+    Route::post('/question', [ApiQuestionController::class, 'store']);
+    Route::get('/question/{id}', [ApiQuestionController::class, 'show']);
+    Route::put('/question/{id}', [ApiQuestionController::class, 'update']);
+    Route::delete('/question/{id}', [ApiQuestionController::class, 'delete']);
+
+    Route::get('/question-category', [ApiQuestionCategoryController::class, 'list']);
+    Route::post('/question-category', [ApiQuestionCategoryController::class, 'store']);
+    Route::get('/question-category/{id}', [ApiQuestionCategoryController::class, 'show']);
+    Route::put('/question-category/{id}', [ApiQuestionCategoryController::class, 'update']);
+    Route::delete('/question-category/{id}', [ApiQuestionCategoryController::class, 'delete']);
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
 });
@@ -185,8 +206,6 @@ Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(fu
 
     Route::get('/payments', [ApiAdminPaymentController::class, 'list'])->name('api.manager.payments.list');
     Route::get('/payments/customers', [ApiAdminPaymentController::class, 'customers'])->name('api.manager.payments.customers');
-
-
 });
 
 
@@ -246,12 +265,12 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
     Route::get('hosts/{community}/{count}/{rank}/{beforeTime?}', 'StatisticController@getHostsPeriod')->name('api.get.hosts');
 
     Route::group(['prefix' => 'questions'], function () {
-        Route::post('list', 'QuestionController@list')->name('api.question.list');
-        Route::post('get', 'QuestionController@get')->name('api.question.get');
-        Route::post('add', 'QuestionController@add')->name('api.question.add');
-        Route::post('store', 'QuestionController@store')->name('api.question.store');
-        Route::post('delete', 'QuestionController@delete')->name('api.question.delete');
-        Route::post('do', 'QuestionController@do')->name('api.question.do');
+        Route::post('list', 'ApiQuestionController@list')->name('api.question.list');
+        Route::post('get', 'ApiQuestionController@get')->name('api.question.get');
+        Route::post('add', 'ApiQuestionController@add')->name('api.question.add');
+        Route::post('store', 'ApiQuestionController@store')->name('api.question.store');
+        Route::post('delete', 'ApiQuestionController@delete')->name('api.question.delete');
+        Route::post('do', 'ApiQuestionController@do')->name('api.question.do');
     });
     Route::group(['prefix' => 'communities'], function () {
         Route::post('list', 'CommunityController@list')->name('api.community.list');

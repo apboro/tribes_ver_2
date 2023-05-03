@@ -2,29 +2,34 @@
 
 namespace App\Models\Knowledge;
 
-use App\Filters\API\QuestionsFilter;
 use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
-use App\Models\Community;
+use App\Models\QuestionCategory;
 use App\Traits\Searchable;
+use Carbon\Carbon;
 use Database\Factories\Knowledge\QuestionFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /** @method QuestionFactory factory() */
 
 /**
  * @method Builder filter()
- * @property mixed $community_id
- * @property mixed $context
- * @property bool|mixed $is_draft
- * @property false|mixed $is_public
- * @property mixed $author_id
- * @property mixed|string $uri_hash
- * @property int|mixed $c_enquiry
- * @property mixed $id
+ * @property int $id
+ * @property string $status
  * @property int $category_id
+ * @property int $knowledge_id
+ * @property string $overlap
+ * @property string context
+ * @property int $answer_id
+ * @property int $author_id
+ * @property string $uri_hash
+ * @property int $c_enquiry
+ * @property Carbon $updated_at
+ * @property Carbon $created_at
  */
 class Question extends Model
 {
@@ -33,18 +38,16 @@ class Question extends Model
     public $useSearchType = 'Question';
 
     protected $fillable = [
-        'community_id',
+        'status',
+        'knowledge_id',
+        'category_id',
+        'overlap',
+        'context',
+        'answer_id',
         'author_id',
         'uri_hash',
-        'is_draft',
-        'is_public',
         'c_enquiry',
-        'context',
-        'category_id',
-        'answer_id'
     ];
-
-    protected $table = 'questions';
 
     /**
      *   Question::filter($filters)
@@ -54,13 +57,14 @@ class Question extends Model
         return $filters->apply($builder);
     }
 
-    public function answer()
+    public function answer(): HasOne
     {
-        return $this->hasOne(Answer::class, 'question_id', 'id');
+        return $this->hasOne(Answer::class, 'id', 'answer_id');
     }
 
     public function getShortAnswerAttribute()
     {
+        /** @var Answer $answer */
         $answer = $this->answer()->first();
 
         if (strlen($answer->context) > 200) {
@@ -69,13 +73,7 @@ class Question extends Model
         return $answer;
     }
 
-
-    public function community()
-    {
-        return $this->belongsTo(Community::class, 'community_id');
-    }
-
-    public function getLink()
+    public function getLink(): string
     {
         return $this->uri_hash;
     }
@@ -88,34 +86,18 @@ class Question extends Model
         return route('public.knowledge.view', compact('hash', 'question'));
     }
 
-    public function isUnpublishable(): bool
-    {
-        return empty($this->context) || $this->is_draft;
-    }
-
-    /**
-     * Автоматически снимает с публикации если статус черновика true
-     * @param bool $draft
-     * @return void
-     */
-    public function setDraft(bool $draft): void
-    {
-        $this->is_draft = $draft;
-        if($draft) {
-            $this->is_public = false;
-        }
-    }
-
-    public function setPublic(bool $publish): void
-    {
-        $this->is_public = $publish;
-        if($publish) {
-            $this->is_draft = false;
-        }
-    }
-
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function knowledge(): BelongsTo
+    {
+        return $this->belongsTo(Knowledge::class, 'knowledge_id', 'id');
+    }
+
+    public function questionCategory(): HasOne
+    {
+        return $this->hasOne(QuestionCategory::class, 'id', 'category_id');
     }
 }
