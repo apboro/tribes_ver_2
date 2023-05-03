@@ -10,7 +10,7 @@ use App\Http\ApiRequests\ApiRequest;
  * @OA\Delete(
  *  path="/api/v3/knowledge/{id}",
  *  operationId="knowledge-delete",
- *  summary="Delete the sepified knowledge",
+ *  summary="Delete the specified knowledge",
  *  security={{"sanctum": {} }},
  *  tags={"Knowledge"},
  *     @OA\Parameter(

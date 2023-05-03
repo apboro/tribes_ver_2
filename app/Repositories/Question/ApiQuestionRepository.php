@@ -30,11 +30,9 @@ class ApiQuestionRepository
             'status' => $request->get('question_status'),
             'knowledge_id' => $request->get('knowledge_id'),
             'category_id' => $request->get('category_id'),
-            'overlap' => $request->get('overlap'),
             'context' => $request->get('question_text'),
             'answer_id' => $answer->id,
             'author_id' => Auth::user()->id,
-            'c_enquiry' => 0,
         ]);
 
 
@@ -103,7 +101,6 @@ class ApiQuestionRepository
         $question->update([
             'status' => $request->get('question_status'),
             'category_id' => $request->get('category_id'),
-            'overlap' => $request->get('overlap'),
             'context' => $request->get('question_text'),
         ]);
 

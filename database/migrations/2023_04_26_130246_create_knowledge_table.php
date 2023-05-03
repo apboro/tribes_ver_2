@@ -20,7 +20,7 @@ class CreateKnowledgeTable extends Migration
             $table->string('uri_hash')->unique();
             $table->timestamps();
             $table->foreign('owner_id')
-                ->references('id')->on('users');
+                ->references('id')->on('users')->cascadeOnDelete();
         });
     }
 
