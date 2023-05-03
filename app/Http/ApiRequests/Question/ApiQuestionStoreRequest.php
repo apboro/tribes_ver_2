@@ -15,7 +15,7 @@ use App\Http\ApiRequests\ApiRequest;
  *  tags={"Question"},
  *     @OA\RequestBody(
  *         description="
- *          question_status - enum from [draft,draft_auto,published]
+ *          question_status - enum from [draft,draft_auto,published]",
  *         @OA\MediaType(
  *             mediaType="application/json",
  *             @OA\Schema(
