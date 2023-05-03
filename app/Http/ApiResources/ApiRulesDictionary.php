@@ -9,7 +9,6 @@ class ApiRulesDictionary
 
     public function get(ApiGetRulesDictRequest $request)
     {
-        $title = "Правило Если-То";
         $subjects = [
             [
                 'name' => 'message_text',
@@ -79,18 +78,6 @@ class ApiRulesDictionary
         ];
 
         $values = [
-//            [
-//                'name' => 'text',
-//                'label' => 'ввести вручную',
-//                'allowedSubjects' => ['message_text'],
-//                'allowedActions' => ['contain', 'equal_to'],
-//            ],
-//            [
-//                'name' => 'length',
-//                'label' => 'ввести вручную',
-//                'allowedSubjects' => ['message_text','message_length', 'username_length', 'first_name_length', 'last_name_length', 'reputation'],
-//                'allowedActions' => ['equal_to', 'less_than', 'more_than'],
-//            ],
             [
                 'name' => 'rtl_format',
                 'label' => 'арабская вязь',
@@ -151,7 +138,6 @@ class ApiRulesDictionary
         ];
 
         return response()->json([
-            'title' => $title,
             'subjects' => $subjects,
             'actions' => $actions,
             'values' => $values,
