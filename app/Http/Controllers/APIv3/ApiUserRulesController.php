@@ -17,13 +17,14 @@ use App\Models\Onboarding;
 use App\Models\UserRule;
 use Illuminate\Support\Facades\Auth;
 
-class UserRulesController extends Controller
+class ApiUserRulesController extends Controller
 {
     public function store(ApiUserRulesStoreRequest $request)
     {
         $rule = new UserRule();
         $rule->rules = json_encode($request->input('rules'));
         $rule->user_id = Auth::user()->id;
+        $rule->title = $request->input('title');
         $rule->save();
         foreach ($request->input('communities_ids') as $community_id) {
             $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
@@ -46,6 +47,7 @@ class UserRulesController extends Controller
     public function update(ApiUserRulesUpdateRequest $request)
     {
         $rule = UserRule::find($request->user_rule_uuid);
+        $rule->title = $request->input('title');
         $rule->rules = json_encode($request->input('rules'));
         $rule->save();
         foreach ($request->input('communities_ids') as $community_id) {
@@ -84,7 +86,7 @@ class UserRulesController extends Controller
         $ifThenRules = UserRule::where('user_id', $user->id)
             ->with('communities')
             ->when($request->has('rule_title'), function ($query) use ($request) {
-                $query->whereRaw('rules->>\'title\' like ?', ['%' . $request->input('rule_title') . '%']);
+                $query->where('title', 'like', '%' . $request->input('rule_title') . '%');
             })
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));

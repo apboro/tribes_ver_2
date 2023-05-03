@@ -13,6 +13,7 @@ namespace App\Http\ApiRequests;
  *     @OA\RequestBody(
  *        @OA\JsonContent(
  *          @OA\Property (property="user_rule_uuid", type="string"),
+ *          @OA\Property (property="title", type="string", maxLength=120),
  *          @OA\Property(property="rules", type="object"),
  *          @OA\Property(property="communities_ids", type="array", @OA\Items(type="integer"))
  *        )
@@ -27,6 +28,7 @@ class ApiUserRulesUpdateRequest extends ApiRequest
     {
         return [
             'user_rule_uuid' => 'required|integer',
+            'title' => 'required|string|max:120',
             'rules' => 'required',
             'community_ids' => 'array',
             'community_ids.*' => 'integer|exists:communities,id',

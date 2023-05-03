@@ -13,6 +13,7 @@ namespace App\Http\ApiRequests;
  *     @OA\RequestBody(
  *        @OA\JsonContent(
  *          @OA\Property(property="rules", type="object"),
+ *          @OA\Property(property="title", type="string", maxLength=120),
  *          @OA\Property(property="communities_ids", type="array", @OA\Items(type="integer"))
  *        )
  *     ),
@@ -25,10 +26,11 @@ class ApiUserRulesStoreRequest extends ApiRequest
     public function rules(): array
     {
         return [
-          'rules' => 'required',
-          'community_ids' => 'array',
-          'community_ids.*' => 'integer|exists:communities,id',
+            'rules' => 'required',
+            'title' => 'required|string|max:120',
+            'community_ids' => 'array',
+            'community_ids.*' => 'integer|exists:communities,id',
         ];
-   }
+    }
 
 }

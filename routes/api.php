@@ -23,7 +23,7 @@ use App\Http\Controllers\APIv3\ApiTagController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiUserSubscriptionController;
-use App\Http\Controllers\APIv3\CommunityRuleController;
+use App\Http\Controllers\APIv3\ApiCommunityRuleController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
@@ -36,7 +36,7 @@ use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
-use App\Http\Controllers\APIv3\UserRulesController;
+use App\Http\Controllers\APIv3\ApiUserRulesController;
 use App\Http\Controllers\TelegramUserReputationController;
 use App\Services\SMTP\MailSender;
 use Illuminate\Http\Request;
@@ -126,21 +126,21 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 
-    Route::post('/user-community-rules',[UserRulesController::class, 'store']);
-    Route::get('/user-community-rules',[UserRulesController::class, 'get']);
-    Route::put('/user-community-rules',[UserRulesController::class, 'update']);
-    Route::delete('/user-community-rules',[UserRulesController::class, 'delete']);
-    Route::get('/all_user_rules', [UserRulesController::class, 'getAllRules']);
+    Route::post('/user-community-rules',[ApiUserRulesController::class, 'store']);
+    Route::get('/user-community-rules',[ApiUserRulesController::class, 'get']);
+    Route::put('/user-community-rules',[ApiUserRulesController::class, 'update']);
+    Route::delete('/user-community-rules',[ApiUserRulesController::class, 'delete']);
+    Route::get('/all_user_rules', [ApiUserRulesController::class, 'getAllRules']);
 
     Route::post('/antispam', [ApiAntispamController::class, 'store']);
     Route::put('/antispam/{id}', [ApiAntispamController::class, 'edit']);
     Route::get('/antispam', [ApiAntispamController::class, 'list']);
     Route::get('/antispam/{id}', [ApiAntispamController::class, 'show']);
 
-    Route::post('/chats/rules', [CommunityRuleController::class, 'store'])->name('chats.rules.store');
-    Route::get('/chats/rules', [CommunityRuleController::class, 'list'])->name('chats.rules.list');
-    Route::post('/chats/rules/edit/{id}', [CommunityRuleController::class, 'update'])->name('chats.rules.update');
-    Route::get('/chats/rules/{id}', [CommunityRuleController::class, 'show'])->name('chats.rules.show');
+    Route::post('/chats/rules', [ApiCommunityRuleController::class, 'store'])->name('chats.rules.store');
+    Route::get('/chats/rules', [ApiCommunityRuleController::class, 'list'])->name('chats.rules.list');
+    Route::post('/chats/rules/edit/{id}', [ApiCommunityRuleController::class, 'update'])->name('chats.rules.update');
+    Route::get('/chats/rules/{id}', [ApiCommunityRuleController::class, 'show'])->name('chats.rules.show');
     Route::get('/chats/rules-template', [ApiRulesTemplateController::class, 'getTemplate']);
 
     Route::post('/onboarding',[ApiOnboardingController::class, 'store']);

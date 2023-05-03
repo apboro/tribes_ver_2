@@ -14,7 +14,7 @@ use App\Models\CommunityRule;
 use App\Repositories\Community\CommunityRuleRepository;
 use Illuminate\Support\Facades\Auth;
 
-class CommunityRuleController extends Controller
+class ApiCommunityRuleController extends Controller
 {
 
     private CommunityRuleRepository $communityRuleRepository;
