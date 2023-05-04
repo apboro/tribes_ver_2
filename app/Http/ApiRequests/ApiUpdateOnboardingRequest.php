@@ -3,7 +3,7 @@
 namespace App\Http\ApiRequests;
 
 /**
- * @OA\Put(
+ * @OA\Post(
  * path="/api/v3/onboarding",
  * operationId="Update_onboarding",
  * summary= "Update onboarding",
