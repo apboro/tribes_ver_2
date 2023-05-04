@@ -7,7 +7,7 @@ use App\Http\ApiRequests\ApiRequest;
 /**
  * @OA\Get(path="/api/v3/chats/rules",
  *     tags={"Chats Moderation"},
- *     summary="Show list if chat rules",
+ *     summary="Show list of chat rules",
  *     operationId="chat-rules-list",
  *     security={{"sanctum": {} }},
  *     @OA\Response(response=200, description="OK"),

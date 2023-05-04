@@ -21,6 +21,7 @@ namespace App\Http\ApiRequests;
  *                 @OA\Property(property="whitelisted", type="boolean", example="false"),
  *                 @OA\Property(property="blacklisted", type="boolean", example="false"),
  *                 @OA\Property(property="is_spammer", type="integer", example=1),
+ *                 @OA\Property(property="kick", type="boolean", example="false"),
  *             ),
  *         )
  *     ),
@@ -40,7 +41,8 @@ class ApiCommunityUserListAddRequest extends ApiRequest
             'muted' => 'boolean',
             'whitelisted' => 'boolean',
             'blacklisted' => 'boolean',
-            'is_spammer' => 'integer'
+            'is_spammer' => 'integer',
+            'kick' => 'boolean'
         ];
     }
 

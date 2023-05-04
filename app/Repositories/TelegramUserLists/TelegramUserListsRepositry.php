@@ -173,4 +173,25 @@ class TelegramUserListsRepositry
         }
         return $query->orderBy('created_at')->paginate(10);
     }
+
+    public function kick(ApiRequest $request, int $telegram_id)
+    {
+        foreach ($request->input('community_ids') as $community_id) {
+            $community = Community::where('id', $community_id)->first();
+            $community_telegram_chat_id = $community->connection->chat_id;
+            $this->telegramMainBotService->kickUser(
+                config('telegram_bot.bot.botName'),
+                $telegram_id,
+                $community_telegram_chat_id
+            );
+            $this->telegramMainBotService->unKickUser(
+                config('telegram_bot.bot.botName'),
+                $telegram_id,
+                $community_telegram_chat_id
+            );
+            $ty = TelegramUser::where('telegram_id', $telegram_id)->first();
+            $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time()]);
+        }
+
+    }
 }

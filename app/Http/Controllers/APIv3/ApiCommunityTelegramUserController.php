@@ -180,6 +180,11 @@ class ApiCommunityTelegramUserController extends Controller
             $result =  $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BLACK_LIST);
         }
 
+        if ($request->boolean('kick')) {
+            $this->telegramUserListsRepositry->kick($request, $request->telegram_id);
+            return ApiResponse::success('Пользователь исключен');
+        }
+
         if ($result) {
             return ApiResponse::success('Пользователь добавлен в список');
         } else {
