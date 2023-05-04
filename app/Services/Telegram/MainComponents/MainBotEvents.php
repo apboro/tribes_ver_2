@@ -443,6 +443,19 @@ class MainBotEvents
         }
     }
 
+    protected function isSetRules($callable, $params = [])
+    {
+        $data  = ArrayHelper::toArray($this->data);
+        if (
+            ArrayHelper::getValue($data, 'message.message_id') &&
+            ArrayHelper::getValue($data, 'message.from.is_bot') !== true &&
+            ArrayHelper::getValue($data, 'message.text') &&
+            empty(ArrayHelper::getValue($data, 'message.reply_to_message'))
+        ) {
+            call_user_func($callable, $data);
+        }
+    }
+
     protected function isNewMessageInBotChat($callable, $params = [])
     {
         $data  = ArrayHelper::toArray($this->data);

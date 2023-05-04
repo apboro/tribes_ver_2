@@ -6,6 +6,7 @@ use App\Helper\Data;
 use App\Helper\PseudoCrypt;
 use App\Services\File\common\FileConfig;
 use App\Services\Telegram\MainComponents\KnowledgeObserver;
+use App\Services\Telegram\MainComponents\RulesObserver;
 use Illuminate\Config\Repository;
 use App\Services\Telegram\MainComponents\MessageObserver;
 use App\Services\Tinkoff\TinkoffApi;
@@ -49,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('messageObserver',function(){
             return app()->make(MessageObserver::class);
+        });
+
+        $this->app->bind('rulesObserver',function(){
+            return app()->make(RulesObserver::class);
         });
 
         $this->app->bind('payTerminal',function(){

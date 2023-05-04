@@ -13,6 +13,7 @@ use App\Models\Antispam;
 use App\Models\Community;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ApiAntispamController extends Controller
 {
@@ -50,15 +51,14 @@ class ApiAntispamController extends Controller
             return ApiResponse::error(trans('responses/common.antispam.add_error'));
         }
 
-        if (!empty($request->input('community_ids'))) {
             /** @var Community $communities */
-            foreach ($request->input('community_ids') as $row) {
-                $community = Community::where('owner', Auth::user()->id)->where('id', $row)->first();
-                $community->communityAntispamRule()->associate($antispam)->save();
+            foreach ($request->input('community_ids') as $community_id) {
+                $community = Community::where('owner', Auth::user()->id)->where('id', $community_id)->first();
+                $community->antispam_uuid = $antispam->uuid;
+                $community->save();
             }
 
-        }
-        return ApiResponse::success();
+        return ApiResponse::success('common.success');
     }
 
     /**

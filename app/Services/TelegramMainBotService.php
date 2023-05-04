@@ -54,6 +54,10 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
             $events->initEventsMainBot();
 
+            $events->initEventsMainBot([[
+                'isSetRules' => [app('rulesObserver'), 'handleRules'],
+            ]]);
+
             $events->initEventsMainBot([
                 [
                     'isNewReplay' => [app('knowledgeObserver'), 'handleAuthorReply'],

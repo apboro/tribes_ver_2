@@ -11,7 +11,7 @@ use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class MessageObserver
+class RulesObserver
 {
 
     private Logger $logger;
@@ -26,11 +26,12 @@ class MessageObserver
         $this->logger = $logger;
     }
 
-    public function handleUserMessage($data)
+    public function handleRules($data)
     {
-//        $this->logger->debug('MessageObserver::handleUserMessage', $data);
+        $this->logger->debug('RulesObserver::handleRules', $data);
 
         try {
+            $this->logger->debug('Before Message DTO', [$data]);
             $dto = new MessageDTO();
             $dto->message_id = ArrayHelper::getValue($data,'message.message_id');
             $dto->telegram_user_id = ArrayHelper::getValue($data,'message.from.id');
@@ -41,14 +42,15 @@ class MessageObserver
             $dto->telegram_date = ArrayHelper::getValue($data,'message.date');
             $dto->text = ArrayHelper::getValue($data,'message.text');
             $dto->message_entities = ArrayHelper::getValue($data,'message.entities');
+            $dto->forward = ArrayHelper::getValue($data,'message.forward_date');
 
-//            $this->logger->debug('Message DTO ready', [$dto]);
-//            $this->rulesRepository->handleRules($dto);
+            $this->logger->debug('Message DTO ready', [$dto]);
+            $this->rulesRepository->handleRules($dto);
 
         } catch (Throwable $exception)
         {
-            $this->logger->error('MessageObserver::handleUserMessage exception', [$exception]);
+            $this->logger->error('RulesObserver::handleModerationRule exception', [$exception]);
         }
-
     }
+
 }

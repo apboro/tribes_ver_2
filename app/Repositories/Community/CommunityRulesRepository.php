@@ -5,15 +5,19 @@ namespace App\Repositories\Community;
 
 use App\Http\ApiResources\ApiRulesDictionary;
 use App\Models\Community;
+use App\Models\CommunityRule;
 use App\Models\Condition;
 use App\Models\ConditionAction;
+use App\Models\TelegramUser;
 use App\Models\UserRule;
 use App\Repositories\Telegram\DTO\MessageDTO;
 use App\Services\TelegramLogService;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Services\TelegramMainBotService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Log\Logger;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 
@@ -22,6 +26,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
     private MessageDTO $messageDTO;
     private Community $community;
+
+    private TelegramUser $telegramUser;
     private Logger $logger;
     private CommunityRepositoryContract $communityRepository;
     protected TelegramMainBotService $botService;
@@ -45,11 +51,11 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         $result = false;
         foreach ($rules as $rule) {
             foreach ($rule->rules['children'] as $condition) {
-                $rule = $condition['subject'].'-'.$condition['action'].'-'.$condition['value'];
+                $rule = $condition['subject'] . '-' . $condition['action'] . '-' . $condition['value'];
                 if ($condition['value'] === 'custom') {
                     $rule_parameter = $condition['value']['value'];
                 }
-                    $result = $this->conditionMatcher($rule, $rule_parameter, $this->messageDTO);
+                $result = $this->conditionMatcher($rule, $rule_parameter, $this->messageDTO);
             }
             $this->logger->debug('parseRule result', [$result]);
 
@@ -57,24 +63,101 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         }
     }
 
+    private function handleModerationRule(CommunityRule $rule)
+    {
+        $this->logger->debug('in moderationRule handler', [$rule]);
+        $restricted_words = $rule->restrictedWords;
+        $this->logger->debug('restricted words are', [$restricted_words]);
+        foreach ($restricted_words as $word) {
+            if (Str::contains($this->messageDTO->text, $word->word)) {
+//                    $path= env('APP_URL').'/'.$rule->warning_image_path;
+//                    $message = "<img alt='warning' src='$path'>$rule->warning";
+                $this->actionRunner('send_message_in_pm_from_bot', $this->messageDTO, $rule->warning);
+            }
+        }
+    }
+
+    private function handleAntispamRule($rule)
+    {
+        $this->logger->debug('in antispamRule handler', [$rule]);
+
+        $userInCommunity = DB::table('telegram_users_community')
+            ->where('community_id', $this->community->id)
+            ->where('telegram_user_id', $this->telegramUser->telegram_id)->first();
+
+        $this->logger->debug('UserInCommunity', [$userInCommunity]);
+        $this->logger->debug('dates', [
+            'access_date' => Carbon::createFromTimestamp($userInCommunity->accession_date),
+            'rule_date' => Carbon::createFromTimestamp($userInCommunity->accession_date)->addSeconds($rule->work_period),
+            'now' => Carbon::now()]);
+
+        if (Carbon::createFromTimestamp($userInCommunity->accession_date)->addSeconds($rule->work_period) > Carbon::now()) {
+            if ($this->conditionMatcher('message_text-contain-link', null, $this->messageDTO)) {
+                if ($rule->del_message_with_link) {
+                    $this->actionRunner('delete_message', $this->messageDTO);
+                }
+                if ($rule->ban_user_contain_link) {
+                    $this->actionRunner('ban_user', $this->messageDTO);
+                }
+            }
+
+            if ($this->conditionMatcher('message_is_forward', null, $this->messageDTO)) {
+                if ($rule->del_message_with_forward) {
+                    $this->actionRunner('delete_message', $this->messageDTO);
+                }
+                if ($rule->ban_user_contain_forward) {
+                    $this->actionRunner('ban_user', $this->messageDTO);
+                }
+            }
+
+
+        }
+    }
+
     public function handleRules($dto)
     {
+
         try {
             $this->logger->debug('parseRule', [$dto]);
-            $this->community = $this->communityRepository->getCommunityByChatId($dto->chat_id);
-            $this->messageDTO = $dto;
-            $rules = $this->getCommunityRules($this->community->id);
-            if ($rules->isNotEmpty()) {
-                $this->parseRule($rules);
+            if ($chat = $this->communityRepository->getCommunityByChatId($dto->chat_id)) {
+
+                $this->community = $chat;
+
+                $this->messageDTO = $dto;
+
+                $this->telegramUser = TelegramUser::where('telegram_id', $dto->telegram_user_id)->first();
+
+                $moderationRule = $this->getCommunityModerationRule($this->community);
+
+                if ($moderationRule) {
+                    $this->handleModerationRule($moderationRule);
+                }
+
+                $antispamRule = $this->getCommunityAntispamRule($this->community);
+
+                if ($antispamRule) {
+                    $this->handleAntispamRule($antispamRule);
+                }
+
             }
         } catch (\Exception $e) {
             $this->logger->error($e);
         }
     }
 
-    public function getCommunityRules($community_id)
+    public function getCommunityIfThenRules(Community $community)
     {
-        return UserRule::query()->where('community_id', $community_id)->get();
+        return;
+    }
+
+    public function getCommunityModerationRule(Community $community)
+    {
+        return $community->moderationRule;
+    }
+
+    public function getCommunityAntispamRule(Community $community)
+    {
+        return $community->communityAntispamRule;
     }
 
     public function conditionMatcher(string $rule, $rule_parameter, MessageDTO $data)
@@ -117,13 +200,13 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 break;
             case 'first_name-format-rtl_format':
                 $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
-                if (preg_match($rtl_symbols_pattern, $data->telegram_user_first_name))  {
+                if (preg_match($rtl_symbols_pattern, $data->telegram_user_first_name)) {
                     return true;
                 }
                 break;
             case 'last_name-format-rtl_format':
                 $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
-                if (preg_match($rtl_symbols_pattern, $data->telegram_user_last_name))  {
+                if (preg_match($rtl_symbols_pattern, $data->telegram_user_last_name)) {
                     return true;
                 }
                 break;
@@ -177,13 +260,19 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $this->logger->debug('conditionChecker entities', $data->message_entities);
                     foreach ($data->message_entities as $item) {
                         $this->logger->debug('conditionChecker item', $item);
-                            if ($item['type'] == "url" || $item['type'] == "text_link") {
-                                return true;
+                        if ($item['type'] == "url" || $item['type'] == "text_link") {
+                            return true;
                         }
                     }
                 }
                 break;
-            case'message_text-contain-bot_command':
+            case 'message_is_forward':
+                if ($data->forward_date) {
+                    $this->logger->debug('conditionChecker forward', $data->forward_date);
+                    return true;
+                }
+                break;
+            case 'message_text-contain-bot_command':
                 //todo 1
                 break;
             case 'message_text-contain-channel_message':
@@ -197,7 +286,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         return false;
     }
 
-    public function actionRunner(string $action, MessageDTO $messageDTO, $action_parameter = null )
+    public function actionRunner(string $action, MessageDTO $messageDTO, $action_parameter = null)
     {
         $this->logger->debug('rules are ', ['data' => $messageDTO, 'act_type' => $action]);
         switch ($action) {
@@ -210,7 +299,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 );
                 break;
             case 'send_message_in_pm_from_bot':
-                $this->logger->debug('Action >> sending mess PM');
+                $this->logger->debug('Action >> sending mess PM', [$action_parameter]);
                 $this->botService->sendMessageFromBot(
                     config('telegram_bot.bot.botName'),
                     $messageDTO->telegram_user_id,
@@ -252,9 +341,10 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 //todo 3
                 break;
             case 'delete_warning':
-                 //todo 4
+                //todo 4
                 break;
         }
     }
+
 
 }

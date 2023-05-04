@@ -4,6 +4,9 @@ namespace App\Repositories\Telegram\DTO;
 
 use Carbon\Carbon;
 
+/**
+ * @property mixed $forward
+ */
 class MessageDTO
 {
     public int $message_id;
@@ -31,4 +34,5 @@ class MessageDTO
      * @var mixed
      */
     public $message_entities;
+    public $forward;
 }

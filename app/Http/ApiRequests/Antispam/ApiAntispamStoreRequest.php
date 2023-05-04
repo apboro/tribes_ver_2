@@ -13,22 +13,14 @@ use App\Http\ApiRequests\ApiRequest;
  *  security={{"sanctum": {} }},
  *  tags={"Chats Antispam"},
  *     @OA\RequestBody(
- *         @OA\MediaType(
- *             mediaType="application/json",
- *             encoding={
- *                  "community_ids[]": {
- *                      "explode": true,
- *                  },
- *              },
- *             @OA\Schema(
+ *          @OA\JsonContent(
  *                 @OA\Property(property="name",type="string",example="test name"),
  *                 @OA\Property(property="del_message_with_link",type="boolean",example="false"),
  *                 @OA\Property(property="ban_user_contain_link",type="boolean",example="false"),
  *                 @OA\Property(property="del_message_with_forward",type="boolean",example="false"),
  *                 @OA\Property(property="ban_user_contain_forward",type="boolean",example="false"),
  *                 @OA\Property(property="work_period",type="integer",example="10"),
- *                 @OA\Property(property="community_ids[]",type="array",@OA\Items(type="integer")),
- *     )
+ *                 @OA\Property(property="community_ids",type="array",@OA\Items(type="integer")),
  *         )
  *     ),
  *   @OA\Response(response=200, description="OK")
