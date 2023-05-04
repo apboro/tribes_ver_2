@@ -425,7 +425,11 @@ class MainBotCommands
             $this->bot->onText('база знаний', function (Context $ctx) {
                 $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
                 $link = $community->getPublicKnowledgeLink();
-                $ctx->reply('Ссылка на Базу Знаний по сообществу: '. $link);
+                if ($link){
+                    $ctx->reply('Ссылка на Базу Знаний по сообществу: '. $link);
+                } else {
+                    $ctx->reply('У сообщества еще нет базы знаний');
+                }
                 $this->save_log(
                     TelegramBotActionHandler::HELP_ON_CHAT,
                     TelegramBotActionHandler::SEND_HELP_IN_CHAT,

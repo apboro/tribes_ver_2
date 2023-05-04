@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Auth;
  * @property mixed $ifThenRule
  * @property mixed $moderationRule
  * @property mixed $onboardingRule
+ * @property mixed $knowledge
  */
 class Community extends Model
 {
@@ -302,10 +303,13 @@ class Community extends Model
     /**
      *   Взять ссылку на публичный список вопросов сообщества
      */
-    public function getPublicKnowledgeLink(): string
+    public function getPublicKnowledgeLink(): ?string
     {
-        $hash = PseudoCrypt::hash($this->id);
-        return route('knowledge.public', compact('hash'));
+        if ($this->knowledge){
+            return env('FRONTEND_URL') .'/app/knowledge/'. $this->knowledge->uri_hash;
+        } else {
+            return null;
+        }
     }
 
     /**
