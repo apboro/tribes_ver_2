@@ -18,7 +18,7 @@ namespace App\Http\ApiRequests;
  *                  }
  *            },
  *          @OA\Schema(
- *              @OA\Property(property="onboarding_id", type="integer"),
+ *              @OA\Property(property="onboarding_uuid", type="string"),
  *              @OA\Property(property="rules", type="object"),
  *              @OA\Property(property="title", type="string"),
  *              @OA\Property(property="greeting_message_text",type="string"),
@@ -38,7 +38,7 @@ class ApiUpdateOnboardingRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'onboarding_id' => 'required|exists:onboardings,id',
+            'onboarding_uuid' => 'required|exists:onboardings,uuid',
             'rules'=>'json|required',
             'title' =>'required|string',
             'greeting_image' => 'image|nullable',

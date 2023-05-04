@@ -53,7 +53,7 @@ class ApiOnboardingController extends Controller
         $greetingImagePath = $request->file('greeting_image') ? Storage::disk('public')->putFile('greeting_images', $request->file('greeting_image')) : null;
         $questionImagePath = $request->file('question_image') ? Storage::disk('public')->putFile('question_images', $request->file('question_image')) : null;
 
-        $onboarding = Onboarding::find($request->onboarding_id);
+        $onboarding = Onboarding::find($request->onboarding_uuid);
         $onboarding->rules = $request->input('rules');
         $onboarding->title = $request->input('title');
         $onboarding->greeting_image = $greetingImagePath;
