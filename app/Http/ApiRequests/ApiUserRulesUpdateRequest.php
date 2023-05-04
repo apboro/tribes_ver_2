@@ -27,7 +27,7 @@ class ApiUserRulesUpdateRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'user_rule_uuid' => 'required|integer',
+            'user_rule_uuid' => 'required|string',
             'title' => 'required|string|max:120',
             'rules' => 'required',
             'community_ids' => 'array',
