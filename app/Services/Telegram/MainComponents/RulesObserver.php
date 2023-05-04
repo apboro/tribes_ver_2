@@ -47,9 +47,8 @@ class RulesObserver
             $this->logger->debug('Message DTO ready', [$dto]);
             $this->rulesRepository->handleRules($dto);
 
-        } catch (Throwable $exception)
-        {
-            $this->logger->error('RulesObserver::handleModerationRule exception', [$exception]);
+        } catch (Throwable $exception){
+            $this->logger->error('RulesObserver::handleRules exception', [$exception]);
         }
     }
 

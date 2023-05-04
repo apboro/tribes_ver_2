@@ -32,7 +32,6 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
     private CommunityRepositoryContract $communityRepository;
     protected TelegramMainBotService $botService;
 
-    private $rules;
 
     public function __construct(
         CommunityRepositoryContract $communityRepository,
@@ -45,22 +44,54 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         $this->botService = $botService;
     }
 
-    public function parseRule($rules): void
+    public function handleIfThenRules($rule): void
     {
-        $this->logger->debug('parseRule', [$rules]);
+        $this->logger->debug('handleIfThenRules', [$rule]);
         $result = false;
-        foreach ($rules as $rule) {
-            foreach ($rule->rules['children'] as $condition) {
-                $rule = $condition['subject'] . '-' . $condition['action'] . '-' . $condition['value'];
-                if ($condition['value'] === 'custom') {
-                    $rule_parameter = $condition['value']['value'];
-                }
-                $result = $this->conditionMatcher($rule, $rule_parameter, $this->messageDTO);
-            }
-            $this->logger->debug('parseRule result', [$result]);
+        $rules = json_decode($rule->rules, true);
+        $this->logger->debug('handleIfThenRules decoded', [$rules]);
 
-            if ($result) $this->actionRunner($rule['callback']['name'], $rule['callback']['value'], $this->messageDTO);
+        foreach ($rules['children'] as $rule) {
+
+            $result = $this->conditionChecker($rule);
+
+            if ($rules['type'] === 'OR' && $result === true) {
+                break;
+            }
+            if ($rules['type'] === 'AND' && $result === false) {
+                break;
+            }
         }
+
+        if ($result) {
+            $this->actionRunner($rules['callback']['type'], $this->messageDTO, $rules['callback']['parameter']);
+        }
+    }
+
+    protected function conditionChecker($rule): bool
+    {
+        if ($rule['type'] !== "EXPRESSION") {
+            $result = false;
+            foreach ($rule['children'] as $inner_rule){
+
+                $result = $this->conditionChecker($inner_rule);
+
+                if ($inner_rule['type'] === 'OR' && $result === true) {
+                    break;
+                }
+                if ($inner_rule['type'] === 'AND' && $result === false) {
+                    break;
+                }
+            }
+            return $result;
+        }
+        $conditionToCheck = $rule['subject'] . '-' . $rule['action'] . '-' . $rule['value']['type'];
+        if ($rule['value']['type'] === 'custom') {
+            $rule_parameter = $rule['value']['parameter'];
+        }
+        $this->logger->debug('in foreach of ifThen', ['rule' => $conditionToCheck, 'parameter' => $rule_parameter ?? null]);
+
+        return $this->conditionMatcher($conditionToCheck, $this->messageDTO, $rule_parameter ?? null);
     }
 
     private function handleModerationRule(CommunityRule $rule)
@@ -92,7 +123,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             'now' => Carbon::now()]);
 
         if (Carbon::createFromTimestamp($userInCommunity->accession_date)->addSeconds($rule->work_period) > Carbon::now()) {
-            if ($this->conditionMatcher('message_text-contain-link', null, $this->messageDTO)) {
+            if ($this->conditionMatcher('message_text-contain-link', $this->messageDTO)) {
                 if ($rule->del_message_with_link) {
                     $this->actionRunner('delete_message', $this->messageDTO);
                 }
@@ -101,7 +132,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 }
             }
 
-            if ($this->conditionMatcher('message_is_forward', null, $this->messageDTO)) {
+            if ($this->conditionMatcher('message_is_forward', $this->messageDTO)) {
                 if ($rule->del_message_with_forward) {
                     $this->actionRunner('delete_message', $this->messageDTO);
                 }
@@ -139,6 +170,12 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $this->handleAntispamRule($antispamRule);
                 }
 
+                $ifThenRule = $this->getCommunityIfThenRules($this->community);
+
+                if ($ifThenRule) {
+                    $this->handleIfThenRules($ifThenRule);
+                }
+
             }
         } catch (\Exception $e) {
             $this->logger->error($e);
@@ -147,7 +184,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
     public function getCommunityIfThenRules(Community $community)
     {
-        return;
+        return $community->ifThenRule;
     }
 
     public function getCommunityModerationRule(Community $community)
@@ -160,7 +197,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         return $community->communityAntispamRule;
     }
 
-    public function conditionMatcher(string $rule, $rule_parameter, MessageDTO $data)
+
+    public function conditionMatcher(string $rule, MessageDTO $data, $rule_parameter = null)
     {
         $this->logger->debug('checking condition ID' . $rule, ['rules' => $rule, 'data' => $data]);
         switch ($rule) {
@@ -171,6 +209,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 }
                 break;
             case 'message_text-contain-custom':
+                $this->logger->debug('message_text-contain-custom', ['rule_parameter' => $rule_parameter
+                    , 'data' => $data]);
                 if (Str::contains($data->text, $rule_parameter)) {
                     $this->logger->debug('type rule 2 true');
                     return true;
