@@ -4,7 +4,7 @@ namespace App\Http\ApiRequests;
 
 /**
  * @OA\Post(
- * path="/api/v3/onboarding",
+ * path="/api/v3/onboarding/edit",
  * operationId="Update_onboarding",
  * summary= "Update onboarding",
  * security= {{"sanctum": {} }},
