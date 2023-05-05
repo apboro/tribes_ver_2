@@ -20,15 +20,15 @@ class ApiOnboardingController extends Controller
     {
         $user_id = Auth::user()->id;
 
-        $greetingImagePath = $request->file('greeting_image') ? Storage::disk('public')->putFile('greeting_images', $request->file('greeting_image')) : null;
-        $questionImagePath = $request->file('question_image') ? Storage::disk('public')->putFile('question_images', $request->file('question_image')) : null;
+        $greetingImagePath = $request->file('greeting_image') ? Storage::disk('public')->putFile('storage/greeting_images', $request->file('greeting_image')) : null;
+        $questionImagePath = $request->file('question_image') ? Storage::disk('public')->putFile('storage/question_images', $request->file('question_image')) : null;
 
         $onboarding = new Onboarding();
         $onboarding->rules = $request->input('rules');
         $onboarding->user_id = $user_id;
         $onboarding->title = $request->input('title');
-        $onboarding->greeting_image = $greetingImagePath ? 'storage/'.$greetingImagePath : null;
-        $onboarding->question_image = $questionImagePath ? 'storage/'.$questionImagePath : null;
+        $onboarding->greeting_image = $greetingImagePath;
+        $onboarding->question_image = $questionImagePath;
         $onboarding->save();
         foreach ($request->input('communities_ids') as $community_id) {
             $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
@@ -50,14 +50,14 @@ class ApiOnboardingController extends Controller
 
     public function update(ApiUpdateOnboardingRequest $request): ApiResponse
     {
-        $greetingImagePath = $request->file('greeting_image') ? Storage::disk('public')->putFile('greeting_images', $request->file('greeting_image')) : null;
-        $questionImagePath = $request->file('question_image') ? Storage::disk('public')->putFile('question_images', $request->file('question_image')) : null;
+        $greetingImagePath = $request->file('greeting_image') ? Storage::disk('public')->putFile('storage/greeting_images', $request->file('greeting_image')) : null;
+        $questionImagePath = $request->file('question_image') ? Storage::disk('public')->putFile('storage/question_images', $request->file('question_image')) : null;
 
         $onboarding = Onboarding::find($request->onboarding_uuid);
-        $onboarding->rules = $request->input('rules');
         $onboarding->title = $request->input('title');
-        $onboarding->greeting_image = $greetingImagePath;
+        $onboarding->rules = $request->input('rules');
         $onboarding->question_image = $questionImagePath;
+        $onboarding->greeting_image = $greetingImagePath;
         $onboarding->save();
 
         foreach ($request->input('communities_ids') as $community_id) {
