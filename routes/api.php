@@ -141,7 +141,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/chats/rules', [ApiCommunityRuleController::class, 'store'])->name('chats.rules.store');
     Route::get('/chats/rules', [ApiCommunityRuleController::class, 'list'])->name('chats.rules.list');
-    Route::post('/chats/rules/edit/{id}', [ApiCommunityRuleController::class, 'update'])->name('chats.rules.update');
+    Route::post('/chats/rules/edit/{uuid}', [ApiCommunityRuleController::class, 'update'])->name('chats.rules.update');
     Route::get('/chats/rules/{id}', [ApiCommunityRuleController::class, 'show'])->name('chats.rules.show');
     Route::get('/chats/rules-template', [ApiRulesTemplateController::class, 'getTemplate']);
 

@@ -22,19 +22,20 @@ class CommunityRuleRepository
         $community_rule = CommunityRule::create([
             'user_id' => Auth::user()->id,
             'name' => $request->input('name'),
-            'content' => $request->input('content'),
-            'warning' => $request->input('warning'),
-            'max_violation_times' => $request->input('max_violation_times'),
-            'action' => $request->input('action'),
-            'complaint_text' => $request->input('complaint_text'),
-            'quiet_on_restricted_words' => $request->input('quiet_on_restricted_words'),
-            'quiet_on_complaint' => $request->input('quiet_on_complaint'),
+            'content' => $request->input('content') ?? null,
+            'warning' => $request->input('warning') ?? null,
+            'max_violation_times' => $request->input('max_violation_times') ?? null,
+            'action' => $request->input('action') ?? null,
+            'complaint_text' => $request->input('complaint_text') ?? null,
+            'quiet_on_restricted_words' => $request->input('quiet_on_restricted_words') ?? false,
+            'quiet_on_complaint' => $request->input('quiet_on_complaint') ?? false,
         ]);
 
         if ($community_rule == null) {
             return false;
         }
-        if (!empty($request->input('restricted_words'))) {
+
+        if (!empty($request->input('restricted_words')) && $request->input('restricted_words')) {
             $this->addRestrictedWords($request, $community_rule);
         }
         $this->uploadImages($request, $community_rule);
@@ -75,7 +76,7 @@ class CommunityRuleRepository
         foreach ($request->input('restricted_words') as $word) {
             RestrictedWord::create([
                 'moderation_rule_uuid' => $community_rule->uuid,
-                'word' => $word
+                'word' => $word ?? null,
             ]);
         }
     }
@@ -130,17 +131,21 @@ class CommunityRuleRepository
     {
         $community_rule->fill([
             'name' => $request->input('name'),
-            'content' => $request->input('content'),
-            'warning' => $request->input('warning'),
-            'max_violation_times' => $request->input('max_violation_times'),
-            'action' => $request->input('action'),
-            'complaint_text' => $request->input('complaint_text'),
-            'quiet_on_restricted_words' => $request->input('quiet_on_restricted_words'),
-            'quiet_on_complaint' => $request->input('quiet_on_complaint'),
+            'content' => $request->input('content') ?? null,
+            'warning' => $request->input('warning') ?? null,
+            'max_violation_times' => $request->input('max_violation_times') ?? null,
+            'action' => $request->input('action') ?? null,
+            'complaint_text' => $request->input('complaint_text') ?? null,
+            'quiet_on_restricted_words' => $request->input('quiet_on_restricted_words') ?? false,
+            'quiet_on_complaint' => $request->input('quiet_on_complaint') ?? false,
         ]);
         $community_rule->save();
         $this->removeRestrictedWords($community_rule);
-        $this->addRestrictedWords($request, $community_rule);
+
+        if (!empty($request->input('restricted_words')) && $request->input('restricted_words')) {
+            $this->addRestrictedWords($request, $community_rule);
+        }
+
         $this->uploadImages($request, $community_rule);
         if (!empty($request->input('community_ids'))) {
             $this->attachCommunities($request, $community_rule);

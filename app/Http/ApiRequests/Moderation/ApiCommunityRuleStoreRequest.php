@@ -50,17 +50,17 @@ class ApiCommunityRuleStoreRequest extends ApiRequest
     {
         return [
             'name' => 'required|string|max:120',
-            'content' => 'required|string',
+            'content' => 'string|nullable',
             'content_image' => 'image|nullable',
-            'restricted_words' => 'required|array',
-            'max_violation_times' => 'required|integer',
-            'warning' => 'required|string',
+            'restricted_words' => 'array|nullable',
+            'max_violation_times' => 'nullable|integer',
+            'warning' => 'nullable|string',
             'warning_image' => 'image|nullable',
             'user_complaint_image' => 'image|nullable',
             'community_ids' => 'array',
             'community_ids.*' => 'integer|exists:communities,id',
-            'action' => 'required|integer',
-            'complaint_text' => 'string|max:1500',
+            'action' => 'nullable|integer',
+            'complaint_text' => 'string|max:1500|nullable',
             'quiet_on_restricted_words' => 'required|boolean',
             'quiet_on_complaint' => 'required|boolean'
         ];
