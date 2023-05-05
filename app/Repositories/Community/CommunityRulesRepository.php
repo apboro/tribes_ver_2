@@ -9,12 +9,14 @@ use App\Models\CommunityRule;
 use App\Models\Condition;
 use App\Models\ConditionAction;
 use App\Models\TelegramUser;
+use App\Models\TelegramUserCommunity;
 use App\Models\UserRule;
 use App\Repositories\Telegram\DTO\MessageDTO;
 use App\Services\TelegramLogService;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Services\TelegramMainBotService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\DB;
@@ -72,7 +74,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
     {
         if ($rule['type'] !== "EXPRESSION") {
             $result = false;
-            foreach ($rule['children'] as $inner_rule){
+            foreach ($rule['children'] as $inner_rule) {
 
                 $result = $this->conditionChecker($inner_rule);
 
@@ -96,15 +98,34 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
     private function handleModerationRule(CommunityRule $rule)
     {
-        $this->logger->debug('in moderationRule handler', [$rule]);
-        $restricted_words = $rule->restrictedWords;
-        $this->logger->debug('restricted words are', [$restricted_words]);
-        foreach ($restricted_words as $word) {
-            if (Str::contains($this->messageDTO->text, $word->word)) {
-//                    $path= env('APP_URL').'/'.$rule->warning_image_path;
-//                    $message = "<img alt='warning' src='$path'>$rule->warning";
-                $this->actionRunner('send_message_in_pm_from_bot', $this->messageDTO, $rule->warning);
+        try {
+
+            $restricted_words = $rule->restrictedWords;
+
+            foreach ($restricted_words as $word) {
+                if (Str::contains($this->messageDTO->text, $word->word)) {
+                    $communityUser = TelegramUserCommunity::query()
+                        ->where('telegram_user_id', $this->messageDTO->telegram_user_id)
+                        ->where('community_id', $this->community->id)->first();
+                    $communityUser->increment('warnings_count');
+
+                    $warnings = $communityUser->warnings_count;
+                    $path = env('APP_URL') . '/' . $rule->warning_image_path;
+                    $message = $rule->warning . "<a href='$path'>&#160</a> '\n'Количество нарушений - $warnings";
+
+                    $this->actionRunner('send_message_in_pm_from_bot', $this->messageDTO, $message);
+
+                    if ($warnings > $rule->max_violation_times) {
+                        $this->botService->kickUser(
+                            env('TELEGRAM_BOT_NAME'),
+                            $this->messageDTO->telegram_user_id,
+                            $this->messageDTO->chat_id);
+                    }
+
+                }
             }
+        } catch (Exception $e) {
+            $this->logger->error($e);
         }
     }
 
@@ -177,7 +198,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 }
 
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger->error($e);
         }
     }
