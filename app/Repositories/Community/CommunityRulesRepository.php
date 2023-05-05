@@ -92,10 +92,13 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             }
             return $result;
         }
+
         $conditionToCheck = $rule['subject'] . '-' . $rule['action'] . '-' . $rule['value']['type'];
+
         if ($rule['value']['type'] === 'custom') {
-            $rule_parameter = $rule['value']['parameter'];
+            $rule_parameter = $rule['value']['parameter'] ?? null;
         }
+
         $this->logger->debug('in foreach of ifThen', ['rule' => $conditionToCheck, 'parameter' => $rule_parameter ?? null]);
 
         return $this->conditionMatcher($conditionToCheck, $this->messageDTO, $rule_parameter ?? null);
