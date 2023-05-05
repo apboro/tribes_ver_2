@@ -10,6 +10,7 @@ use App\Models\Community;
 use App\Models\TelegramBotUpdateLog;
 use App\Models\TelegramConnection;
 use App\Models\TelegramUserList;
+use App\Repositories\Community\CommunityRulesRepository;
 use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Repositories\TelegramUserLists\TelegramUserListsRepositry;
 use App\Services\Telegram;
@@ -119,6 +120,7 @@ class MainBotEvents
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
+
 
     /** Новый пользователь */
     protected function newChatUser()
@@ -462,14 +464,7 @@ class MainBotEvents
     function isSetRules($callable, $params = [])
     {
         $data = ArrayHelper::toArray($this->data);
-        if (
-            ArrayHelper::getValue($data, 'message.message_id') &&
-            ArrayHelper::getValue($data, 'message.from.is_bot') !== true &&
-            ArrayHelper::getValue($data, 'message.text') &&
-            empty(ArrayHelper::getValue($data, 'message.reply_to_message'))
-        ) {
-            call_user_func($callable, $data);
-        }
+        call_user_func($callable, $data);
     }
 
     protected

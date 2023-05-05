@@ -6,17 +6,19 @@ use Carbon\Carbon;
 
 /**
  * @property mixed $forward
+ * @property mixed $new_chat_member_id
+ * @property mixed $new_chat_member_bot
  */
 class MessageDTO
 {
-    public int $message_id;
-    public int $telegram_user_id;
-    public int $group_chat_id;
-    public int $post_id;
-    public string $chat_type;
-    public int $chat_id;
+    public $message_id;
+    public $telegram_user_id;
+    public $group_chat_id;
+    public $post_id;
+    public $chat_type;
+    public $chat_id;
     public $parrent_message_id;
-    public string $text;
+    public $text;
     public $telegram_date;
     /**
      * @var mixed
@@ -35,4 +37,6 @@ class MessageDTO
      */
     public $message_entities;
     public $forward;
+    public $new_chat_member_id;
+    public $new_chat_member_bot;
 }

@@ -20,6 +20,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 
@@ -66,7 +67,11 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         }
 
         if ($result) {
-            $this->actionRunner($rules['callback']['type'], $this->messageDTO, $rules['callback']['parameter']);
+            if (isset($rules['callback']['parameter'])) {
+                $this->actionRunner($rules['callback']['type'], $this->messageDTO, $rules['callback']['parameter']);
+            } else {
+                $this->actionRunner($rules['callback']['type'], $this->messageDTO);
+            }
         }
     }
 
@@ -161,8 +166,6 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $this->actionRunner('ban_user', $this->messageDTO);
                 }
             }
-
-
         }
     }
 
@@ -179,170 +182,197 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
                 $this->telegramUser = TelegramUser::where('telegram_id', $dto->telegram_user_id)->first();
 
-                $moderationRule = $this->getCommunityModerationRule($this->community);
+                $moderationRule = $this->community->moderationRule;
 
                 if ($moderationRule) {
                     $this->handleModerationRule($moderationRule);
                 }
 
-                $antispamRule = $this->getCommunityAntispamRule($this->community);
+                $antispamRule = $this->community->communityAntispamRule;
 
                 if ($antispamRule) {
                     $this->handleAntispamRule($antispamRule);
                 }
 
-                $ifThenRule = $this->getCommunityIfThenRules($this->community);
+                $ifThenRule = $this->community->ifThenRule;
 
                 if ($ifThenRule) {
                     $this->handleIfThenRules($ifThenRule);
                 }
 
+                $onboardingRule = $this->community->onboardingRule;
+
+                if ($onboardingRule) {
+                    $this->handleOnboardingRule($onboardingRule);
+                }
             }
         } catch (Exception $e) {
             $this->logger->error($e);
         }
     }
 
-    public function getCommunityIfThenRules(Community $community)
+    protected function handleOnboardingRule($rule)
     {
-        return $community->ifThenRule;
-    }
+        $this->logger->debug('in onboardingRule handler', [$this->messageDTO, $rule]);
+        $rules = json_decode($rule->rules, true);
+        $this->logger->debug('onboarding $rules', [$rules]);
 
-    public function getCommunityModerationRule(Community $community)
-    {
-        return $community->moderationRule;
-    }
+        if ($this->messageDTO->new_chat_member_bot && $rules['botJoinLimitation']['action'] === 'ban_user') {
+            $this->botService->kickUser(
+                env('TELEGRAM_BOT_NAME'),
+                $this->messageDTO->new_chat_member_id,
+                $this->messageDTO->chat_id);
+            if (($this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id) && ($rules['inviteBotLimitation']['action'] === 'ban_user')){
+                $this->botService->kickUser(
+                    env('TELEGRAM_BOT_NAME'),
+                    $this->messageDTO->telegram_user_id,
+                    $this->messageDTO->chat_id);
+            }
 
-    public function getCommunityAntispamRule(Community $community)
-    {
-        return $community->communityAntispamRule;
+            return;
+        }
+
+        if ($this->conditionMatcher('username-format-rtl_format', $this->messageDTO) || $this->conditionMatcher('first_name-format-rtl_format', $this->messageDTO)
+            || $this->conditionMatcher('last_name-format-rtl_format', $this->messageDTO) && $rules['rtlNameJoinLimitation']['action'] === 'ban_user')
+        {
+                $this->actionRunner($rules['rtlNameJoinLimitation']['action'], $this->messageDTO);
+                return;
+        }
+
+
+
+
     }
 
 
     public function conditionMatcher(string $rule, MessageDTO $data, $rule_parameter = null)
     {
         $this->logger->debug('checking condition ID' . $rule, ['rules' => $rule, 'data' => $data]);
-        switch ($rule) {
-            case 'message_text-equal_to-custom':
-                if ($rule_parameter === $data->text) {
-                    $this->logger->debug('type rule 1 true');
-                    return true;
-                }
-                break;
-            case 'message_text-contain-custom':
-                $this->logger->debug('message_text-contain-custom', ['rule_parameter' => $rule_parameter
-                    , 'data' => $data]);
-                if (Str::contains($data->text, $rule_parameter)) {
-                    $this->logger->debug('type rule 2 true');
-                    return true;
-                }
-                break;
-            case 'message_length-more_than-custom':
-                if (Str::length($data->text) > $rule_parameter) {
-                    $this->logger->debug('type rule 3 true');
-                    return true;
-                }
-                break;
-            case 'message_length-less_than-custom':
-                if (Str::length($data->text) < $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'message_length-equal_to-custom':
-                if (Str::length($data->text) == $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'username-format-rtl_format':
-                $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
-                if (preg_match($rtl_symbols_pattern, $data->telegram_user_username)) {
-                    return true;
-                }
-                break;
-            case 'first_name-format-rtl_format':
-                $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
-                if (preg_match($rtl_symbols_pattern, $data->telegram_user_first_name)) {
-                    return true;
-                }
-                break;
-            case 'last_name-format-rtl_format':
-                $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
-                if (preg_match($rtl_symbols_pattern, $data->telegram_user_last_name)) {
-                    return true;
-                }
-                break;
-            case 'first_name_length-less_than-custom':
-                if (Str::length($data->telegram_user_first_name) < $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'first_name_length-more_than-custom':
-                if (Str::length($data->telegram_user_first_name) > $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'first_name_length-equal_to-custom':
-                if (Str::length($data->telegram_user_first_name) == $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'last_name_length-less_than-custom':
-                if (Str::length($data->telegram_user_last_name) < $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'last_name_length-more_than-custom':
-                if (Str::length($data->telegram_user_last_name) > $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'last_name_length-equal_to-custom':
-                if (Str::length($data->telegram_user_last_name) == $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'username_length-less_than-custom':
-                if (Str::length($data->telegram_user_username) < $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'username_length-more_than-custom':
-                if (Str::length($data->telegram_user_username) > $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'username_length-equal_to-custom':
-                if (Str::length($data->telegram_user_username) == $rule_parameter) {
-                    return true;
-                }
-                break;
-            case 'message_text-contain-link':
-                if ($data->message_entities) {
-                    $this->logger->debug('conditionChecker entities', $data->message_entities);
-                    foreach ($data->message_entities as $item) {
-                        $this->logger->debug('conditionChecker item', $item);
-                        if ($item['type'] == "url" || $item['type'] == "text_link") {
-                            return true;
+        try {
+            switch ($rule) {
+                case 'message_text-equal_to-custom':
+                    if ($rule_parameter === $data->text) {
+                        $this->logger->debug('type rule 1 true');
+                        return true;
+                    }
+                    break;
+                case 'message_text-contain-custom':
+                    $this->logger->debug('message_text-contain-custom', ['rule_parameter' => $rule_parameter
+                        , 'data' => $data]);
+                    if (Str::contains($data->text, $rule_parameter)) {
+                        $this->logger->debug('type rule 2 true');
+                        return true;
+                    }
+                    break;
+                case 'message_length-more_than-custom':
+                    if (Str::length($data->text) > $rule_parameter) {
+                        $this->logger->debug('type rule 3 true');
+                        return true;
+                    }
+                    break;
+                case 'message_length-less_than-custom':
+                    if (Str::length($data->text) < $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'message_length-equal_to-custom':
+                    if (Str::length($data->text) == $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'username-format-rtl_format':
+                    $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
+                    if (preg_match($rtl_symbols_pattern, $data->telegram_user_username)) {
+                        return true;
+                    }
+                    break;
+                case 'first_name-format-rtl_format':
+                    $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
+                    if (preg_match($rtl_symbols_pattern, $data->telegram_user_first_name)) {
+                        return true;
+                    }
+                    break;
+                case 'last_name-format-rtl_format':
+                    $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
+                    if (preg_match($rtl_symbols_pattern, $data->telegram_user_last_name)) {
+                        return true;
+                    }
+                    break;
+                case 'first_name_length-less_than-custom':
+                    if (Str::length($data->telegram_user_first_name) < $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'first_name_length-more_than-custom':
+                    if (Str::length($data->telegram_user_first_name) > $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'first_name_length-equal_to-custom':
+                    if (Str::length($data->telegram_user_first_name) == $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'last_name_length-less_than-custom':
+                    if (Str::length($data->telegram_user_last_name) < $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'last_name_length-more_than-custom':
+                    if (Str::length($data->telegram_user_last_name) > $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'last_name_length-equal_to-custom':
+                    if (Str::length($data->telegram_user_last_name) == $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'username_length-less_than-custom':
+                    if (Str::length($data->telegram_user_username) < $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'username_length-more_than-custom':
+                    if (Str::length($data->telegram_user_username) > $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'username_length-equal_to-custom':
+                    if (Str::length($data->telegram_user_username) == $rule_parameter) {
+                        return true;
+                    }
+                    break;
+                case 'message_text-contain-link':
+                    if ($data->message_entities) {
+                        $this->logger->debug('conditionChecker entities', $data->message_entities);
+                        foreach ($data->message_entities as $item) {
+                            $this->logger->debug('conditionChecker item', $item);
+                            if ($item['type'] == "url" || $item['type'] == "text_link") {
+                                return true;
+                            }
                         }
                     }
-                }
-                break;
-            case 'message_is_forward':
-                if ($data->forward_date) {
-                    $this->logger->debug('conditionChecker forward', $data->forward_date);
-                    return true;
-                }
-                break;
-            case 'message_text-contain-bot_command':
-                //todo 1
-                break;
-            case 'message_text-contain-channel_message':
-                //todo 2
-                break;
-            case 'message_text-contain-telegram_system_message':
-                //todo 3
-                break;
+                    break;
+                case 'message_is_forward':
+                    if ($data->forward) {
+                        $this->logger->debug('conditionChecker forward', $data->forward);
+                        return true;
+                    }
+                    break;
+                case 'message_text-contain-bot_command':
+                    //todo 1
+                    break;
+                case 'message_text-contain-channel_message':
+                    //todo 2
+                    break;
+                case 'message_text-contain-telegram_system_message':
+                    //todo 3
+                    break;
 
+            }
+        } catch (Exception $e) {
+            $this->logger->debug('conditionChecker forward', [$e]);
         }
         return false;
     }

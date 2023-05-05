@@ -43,12 +43,14 @@ class RulesObserver
             $dto->text = ArrayHelper::getValue($data,'message.text');
             $dto->message_entities = ArrayHelper::getValue($data,'message.entities');
             $dto->forward = ArrayHelper::getValue($data,'message.forward_date');
+            $dto->new_chat_member_id = ArrayHelper::getValue($data,'message.new_chat_member.id');
+            $dto->new_chat_member_bot = ArrayHelper::getValue($data,'message.new_chat_member.is_bot');
 
             $this->logger->debug('Message DTO ready', [$dto]);
             $this->rulesRepository->handleRules($dto);
 
-        } catch (Throwable $exception){
-            $this->logger->error('RulesObserver::handleRules exception', [$exception]);
+        } catch (Throwable $e){
+            $this->logger->error('RulesObserver::handleRules exception', ['Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile()]);
         }
     }
 
