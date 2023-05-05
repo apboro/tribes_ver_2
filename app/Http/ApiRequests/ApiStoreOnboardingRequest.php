@@ -40,8 +40,8 @@ class ApiStoreOnboardingRequest extends ApiRequest
             'title' =>'required|string',
             'greeting_image' => 'image|nullable',
             'question_image' => 'image|nullable',
-            'community_ids' => 'array',
-            'community_ids.*' => 'integer|exists:communities,id',
+            'communities_ids' => 'array',
+            'communities_ids.*' => 'integer|exists:communities,id',
         ];
     }
 
