@@ -452,7 +452,7 @@ class MainBotCommands
                         $menu->row()->uBtn($community->title, $link);
                     }
                     $ctx->reply('Выберите сообщество', $menu);
-                } else $ctx->reply('У вас нет подписок');
+                } else $ctx->reply('Вы не состоите в сообществах');
                 $this->save_log(
                     TelegramBotActionHandler::HELP_ON_BOT,
                     TelegramBotActionHandler::SEND_HELP_ON_BOT,
