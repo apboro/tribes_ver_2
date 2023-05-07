@@ -43,11 +43,11 @@ class KnowledgeObserver
      */
     public function handleAuthorReply($data): bool
     {
-        $this->logger->debug('author replay', $data);
+        Log::debug('author replay', $data);
         $replyTeleUserId = ArrayHelper::getValue($data, 'message.from.id', 0);
         $chatId = ArrayHelper::getValue($data, 'message.chat.id', 0);
         if (!$this->communityRepository->isChatBelongsToTeleUserId($chatId, $replyTeleUserId)) {
-            $this->logger->debug('чат не принадлежит этому пользователю', [
+            Log::debug('чат не принадлежит этому пользователю', [
                 'chat' => $chatId,
                 'replyTeleUserId' => $replyTeleUserId
             ]);
@@ -60,7 +60,7 @@ class KnowledgeObserver
         try {
             if (Str::startsWith($answer, '/qas')) {
                 $answer = trim(str_replace('/qas', '', $answer));
-                $this->logger->debug('create qa pair on reply', compact('question', 'answer'));
+                Log::debug('create qa pair on reply', compact('question', 'answer'));
                 $this->manageQuestionService->setUserId($community->owner);
                 $this->manageQuestionService->createFromArray([
                     'community_id' => $community->id,
@@ -86,7 +86,7 @@ class KnowledgeObserver
 
     public function detectUserQuestion($data)
     {
-        $this->logger->debug('user custom question handler', $data);
+        Log::debug('user custom question handler', $data);
         //todo реализовать если надо вытягивать вопросы из текстового сообщения пользователя
         //  по каким то признакам в самом тексте
         //dd($data);
@@ -100,7 +100,7 @@ class KnowledgeObserver
      */
     public function detectForwardMessageBotQuestion($data, $params = [])
     {
-        $this->logger->debug('detect_forward_message_bot_question', $data);
+        Log::debug('detect_forward_message_bot_question', $data);
         //todo первое бот событие пересланного сообщения устанавливает флаг записи
         // второе аналогичное бот событие записывает вопрос и ответ
         $mChatId = ArrayHelper::getValue($data, 'message.chat.id');
@@ -117,7 +117,7 @@ class KnowledgeObserver
 
         $firstMessageAsQuestion = Cache::get($key, null);
         if ($firstMessageAsQuestion) {
-            $this->logger->debug('create qa pair on forward messages');
+            Log::debug('create qa pair on forward messages');
             $communityCollection = $this->communityRepository->getCommunitiesForOwnerByTeleUserId($mChatId);
             if ($communityCollection->count() == 1) {
                 $community = $communityCollection->first();
@@ -146,7 +146,7 @@ class KnowledgeObserver
                     $menu[][] = ['text' => $eachCommunity->title, 'callback_data' => 'add-qa-community-' . $eachCommunity->id];
                 }
                 $this->mainBotService->sendMessageFromBot($params['botName'], $mChatId, 'Выберите сообщество',false, $menu);
-                $this->logger->debug('telegram scene on forward messages for more communities');
+                Log::debug('telegram scene on forward messages for more communities');
             }
             Cache::forget($key);
         } else {

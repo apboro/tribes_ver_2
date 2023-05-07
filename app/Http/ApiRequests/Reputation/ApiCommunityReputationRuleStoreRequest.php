@@ -63,9 +63,9 @@ class ApiCommunityReputationRuleStoreRequest extends ApiRequest
             'keyword_rate_up' => 'required|array',
             'keyword_rate_down' => 'required|array',
 
-            'rate_period' => 'required|integer',
-            'rate_member_period' => 'required|integer',
-            'rate_reset_period' => 'required|integer',
+            'rate_period' => 'integer',
+            'rate_member_period' => 'integer',
+            'rate_reset_period' => 'integer',
 
             'notify_about_rate_change' => 'boolean',
             'notify_type' => 'in:common,all',

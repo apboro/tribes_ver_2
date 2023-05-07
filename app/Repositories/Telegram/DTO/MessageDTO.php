@@ -39,4 +39,8 @@ class MessageDTO
     public $forward;
     public $new_chat_member_id;
     public $new_chat_member_bot;
+
+    public $reply_message_id;
+    public $reply_from_id;
+
 }

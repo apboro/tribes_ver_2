@@ -31,6 +31,8 @@ use Illuminate\Support\Facades\Auth;
  * @property mixed $moderationRule
  * @property mixed $onboardingRule
  * @property mixed $knowledge
+ * @property mixed $reputation_rules_id
+ * @property mixed $communityReputationRule
  */
 class Community extends Model
 {
@@ -371,7 +373,19 @@ class Community extends Model
             $this->communityAntispamRule,
             $this->ifThenRule,
             $this->moderationRule,
-            $this->onboardingRule
+            $this->onboardingRule,
+            $this->communityReputationRule,
+        ]);
+    }
+
+    public function getCommunityRulesAssoc(): array
+    {
+        return array_filter([
+            'antispamRule'=>$this->communityAntispamRule,
+            'ifThenRule' =>$this->ifThenRule,
+            'moderationRule' =>$this->moderationRule,
+            'onboardingRule' =>$this->onboardingRule,
+            'reputationRule' =>$this->communityReputationRule,
         ]);
     }
 

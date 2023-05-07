@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property mixed $id
+ */
 class CommunityReputationRules extends Model
 {
     use HasFactory;
@@ -31,5 +34,10 @@ class CommunityReputationRules extends Model
     {
         return $this->hasMany(ReputationKeyword::class)->
                       where('direction','=',-1);
+    }
+
+    public function reputationWords(): HasMany
+    {
+        return $this->hasMany(ReputationKeyword::class);
     }
 }

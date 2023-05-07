@@ -28,7 +28,7 @@ class MessageObserver
 
     public function handleUserMessage($data)
     {
-//        $this->logger->debug('MessageObserver::handleUserMessage', $data);
+//        Log::debug('MessageObserver::handleUserMessage', $data);
 
         try {
             $dto = new MessageDTO();
@@ -42,7 +42,7 @@ class MessageObserver
             $dto->text = ArrayHelper::getValue($data,'message.text');
             $dto->message_entities = ArrayHelper::getValue($data,'message.entities');
 
-//            $this->logger->debug('Message DTO ready', [$dto]);
+//            Log::debug('Message DTO ready', [$dto]);
 //            $this->rulesRepository->handleRules($dto);
 
         } catch (Throwable $exception)

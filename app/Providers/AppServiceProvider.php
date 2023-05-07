@@ -29,9 +29,6 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
-        if (app()->environment('development')){
-            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
-        }
         $this->app->bind('pseudoCrypt',function(){
             return new PseudoCrypt();
         });

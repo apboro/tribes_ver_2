@@ -28,10 +28,10 @@ class RulesObserver
 
     public function handleRules($data)
     {
-        $this->logger->debug('RulesObserver::handleRules', $data);
+        Log::debug('RulesObserver::handleRules', $data);
 
         try {
-            $this->logger->debug('Before Message DTO', [$data]);
+            Log::debug('Before Message DTO', [$data]);
             $dto = new MessageDTO();
             $dto->message_id = ArrayHelper::getValue($data,'message.message_id');
             $dto->telegram_user_id = ArrayHelper::getValue($data,'message.from.id');
@@ -45,12 +45,14 @@ class RulesObserver
             $dto->forward = ArrayHelper::getValue($data,'message.forward_date');
             $dto->new_chat_member_id = ArrayHelper::getValue($data,'message.new_chat_member.id');
             $dto->new_chat_member_bot = ArrayHelper::getValue($data,'message.new_chat_member.is_bot');
+            $dto->reply_message_id = ArrayHelper::getValue($data,'message.reply_to_message.message_id');
+            $dto->reply_from_id = ArrayHelper::getValue($data,'message.reply_to_message.from.id');
 
-            $this->logger->debug('Message DTO ready', [$dto]);
+            Log::debug('Message DTO ready', [$dto]);
             $this->rulesRepository->handleRules($dto);
 
         } catch (Throwable $e){
-            $this->logger->error('RulesObserver::handleRules exception', ['Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile()]);
+            $this->logger->error('RulesObserver::handleRules exception', ['Ошибка:' . $e->getMessage() . ' : ' . $e->getFile() .':' . $e->getLine()]);
         }
     }
 

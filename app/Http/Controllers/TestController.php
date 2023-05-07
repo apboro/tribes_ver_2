@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\UserRule;
 use App\Repositories\Tariff\TariffRepository;
 use App\Repositories\Tariff\TariffRepositoryContract;
+use App\Services\Telegram\MainBot;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffApi;
@@ -28,13 +29,13 @@ use stdClass;
 
 class TestController extends Controller
 {
+    protected ?object $data;
     private TinkoffService $tinkoff;
     private TariffRepositoryContract $tariffRepository;
-
     protected TelegramMainBotService $telegramService;
-
     public function __construct(TelegramMainBotService   $telegramService,
-                                TariffRepositoryContract $tariffRepository)
+                                TariffRepositoryContract $tariffRepository,
+                                )
     {
         $this->tariffRepository = $tariffRepository;
         $this->telegramService = $telegramService;
@@ -58,8 +59,30 @@ class TestController extends Controller
 
     public function test()
     {
+
+        $community = Community::find(12);
+//        if ($onboarding = $community->onboardingRule) {
+//            $onboarding = json_decode($onboarding->rules, true);
+//            dd($onboarding['greetings']['content']);
+//        }
+
+        if ($onboarding = $community->onboardingRule) {
+            if ($onboarding->greeting_image) {
+                $path = env('APP_URL') . '/' . $community->onboardingRule->greeting_image;
+                $image = "<a href='$path'>&#160</a>";
+            }
+            $onboarding = json_decode($onboarding->rules, true);
+            $description = strip_tags(str_replace('<br>', "\n", $onboarding['greetings']['content']));
+            $text = $description . $image;
+            TelegramLogService::staticSendLogMessage($text);
+        }
+//        dd(env('APP_URL').'/'.$community->onboardingRule->greeting_image);
+//        $path = env('APP_URL').'/'.$community->onboardingRule->greeting_image;
+//        $image = "<a href='$path'>&#160</a>";
+//        dd($image);
+//        dd(json_decode($rule->rules, true));
 //        dd('q');
-        return redirect(env('FRONTEND_URL').'/app/subscriptions?payment_result=success');
+//        return redirect(env('FRONTEND_URL').'/app/subscriptions?payment_result=success');
 //        for ($i = 51; $i <= 63; $i++) {
 //            Community::create([
 //                    'connection_id'=> $i
@@ -101,7 +124,7 @@ class TestController extends Controller
 ');
 //        dd($d->message->entities);
         foreach ($d->message->entities as $item) {
-//            $this->logger->debug('actionRunner', [$item]);
+//            Log::debug('actionRunner', [$item]);
             dd($item->offset, $item->type);
             if ($item->offset != 0 && ($item->type == "url" || $item->type == "text_link")) {
                 return true; //$this->actionRunner($data, $rule->action);

@@ -26,10 +26,10 @@ class CommunityReputationRepository
             'name' => $request->input('name'),
             'user_id'=>Auth::user()->id,
 
-            'who_can_rate' => $request->input('who_can_rate'),
-            'rate_period' => $request->input('rate_period'),
-            'rate_member_period' => $request->input('rate_member_period'),
-            'rate_reset_period' => $request->input('rate_reset_period'),
+            'who_can_rate' => $request->input('who_can_rate') ?? 'all',
+            'rate_period' => $request->input('rate_period') ?? null,
+            'rate_member_period' => $request->input('rate_member_period') ?? 60,
+            'rate_reset_period' => $request->input('rate_reset_period') ?? null,
 
             'notify_about_rate_change' => $request->input('notify_about_rate_change'),
             'notify_type' => $request->input('notify_type'),
@@ -104,7 +104,7 @@ class CommunityReputationRepository
         if(!empty($community_rule->communities)){
             /** @var Community $community */
             foreach($community_rule->communities as $community){
-                $community->communityReputationRule()->disassociate();
+                $community->reputation_rules_id = null;
                 $community->save();
             }
         }
@@ -114,7 +114,7 @@ class CommunityReputationRepository
                                     where('owner', Auth::user()->id)->
                                     first();
             if ($community !== null) {
-                $community->communityReputationRule()->associate($community_rule);
+                $community->reputation_rules_id = $community_rule->id;
                 $community->save();
             }
         }
@@ -131,10 +131,10 @@ class CommunityReputationRepository
             'name' => $request->input('name'),
             'user_id'=>Auth::user()->id,
 
-            'who_can_rate' => $request->input('who_can_rate'),
-            'rate_period' => $request->input('rate_period'),
-            'rate_member_period' => $request->input('rate_member_period'),
-            'rate_reset_period' => $request->input('rate_reset_period'),
+            'who_can_rate' => $request->input('who_can_rate') ?? 'all',
+            'rate_period' => $request->input('rate_period') ?? null,
+            'rate_member_period' => $request->input('rate_member_period') ?? 60,
+            'rate_reset_period' => $request->input('rate_reset_period') ?? null,
 
             'notify_about_rate_change' => $request->input('notify_about_rate_change'),
             'notify_type' => $request->input('notify_type'),
