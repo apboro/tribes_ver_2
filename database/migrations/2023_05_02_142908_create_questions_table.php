@@ -22,7 +22,7 @@ class CreateQuestionsTable extends Migration
             $table->integer('c_enquiry');
             $table->foreignId('answer_id')->constrained('answers')->cascadeOnDelete();
             $table->foreignId('author_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained('categories');
+            $table->foreignId('category_id')->constrained('question_categories')->cascadeOnDelete();
             $table->foreignId('knowledge_id')->constrained('knowledge');
             $table->timestamps();
         });
