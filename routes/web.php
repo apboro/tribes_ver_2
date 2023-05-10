@@ -324,6 +324,9 @@ Route::group(['prefix' => 'bot'], function () {
     Route::match(['get', 'post'], 'webhook', [TelegramBotController::class, 'index']);
     Route::match(['get', 'post'], 'webhook-bot2', [TelegramBotController::class, 'index-bot2']);
 });
+Route::get('/telegram-bot-integration/webhook', function(){
+   return response('OK', 200);
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/user-bot-form', [UserBotFormController::class, 'index'])->name('user.bot.form');

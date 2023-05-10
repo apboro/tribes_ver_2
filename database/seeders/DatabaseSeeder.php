@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             CommunitySeeder::class,
-            KnowledgeSeeder::class,
+//            KnowledgeSeeder::class,
             StatisticSeeder::class,
             TariffSeeder::class,
             DonateSeeder::class,
