@@ -33,8 +33,9 @@ class TestController extends Controller
     private TinkoffService $tinkoff;
     private TariffRepositoryContract $tariffRepository;
     protected TelegramMainBotService $telegramService;
+
     public function __construct(TelegramMainBotService   $telegramService,
-                                TariffRepositoryContract $tariffRepository,
+                                TariffRepositoryContract $tariffRepository
                                 )
     {
         $this->tariffRepository = $tariffRepository;
