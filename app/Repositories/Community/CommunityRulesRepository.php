@@ -11,6 +11,7 @@ use App\Models\ConditionAction;
 use App\Models\TelegramMessage;
 use App\Models\TelegramUser;
 use App\Models\TelegramUserCommunity;
+use App\Models\TelegramUserList;
 use App\Models\TelegramUserReputation;
 use App\Models\UserRule;
 use App\Repositories\Telegram\DTO\MessageDTO;
@@ -179,15 +180,27 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             Log::debug('handleRules', [$dto]);
             if ($chat = $this->communityRepository->getCommunityByChatId($dto->chat_id)) {
 
+
                 $this->community = $chat;
 
                 $this->messageDTO = $dto;
+
+                $telegramUserWhiteListed = TelegramUserList::query()
+                    ->where('telegram_id', '=', $this->messageDTO->telegram_user_id)
+                    ->where('community_id', '=', $this->community->id)
+                    ->where('type', '2')
+                    ->first();
+
+                if ($telegramUserWhiteListed) return;
 
                 $this->telegramUserCommunity = TelegramUserCommunity::where('telegram_user_id', $this->messageDTO->telegram_user_id)
                     ->where('community_id', $this->messageDTO->chat_id)
                     ->first();
 
                 $this->telegramUser = TelegramUser::where('telegram_id', $dto->telegram_user_id)->first();
+
+
+
 
                 $allRules = $this->community->getCommunityRulesAssoc();
 
