@@ -111,7 +111,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             $restricted_words = $rule->restrictedWords;
             if ($restricted_words->isNotEmpty()) {
                 foreach ($restricted_words as $word) {
-                    if (Str::contains($this->messageDTO->text, $word->word)) {
+                    if (Str::contains(Str::upper($this->messageDTO->text), Str::upper($word->word))) {
                         $communityUser = TelegramUserCommunity::query()
                             ->where('telegram_user_id', $this->messageDTO->telegram_user_id)
                             ->where('community_id', $this->community->id)->first();
@@ -296,7 +296,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         try {
             switch ($rule) {
                 case 'message_text-equal_to-custom':
-                    if ($rule_parameter === $data->text) {
+                    if (Str::upper($rule_parameter) === Str::upper($data->text)) {
                         Log::debug('type rule 1 true');
                         return true;
                     }
@@ -304,7 +304,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 case 'message_text-contain-custom':
                     Log::debug('message_text-contain-custom', ['rule_parameter' => $rule_parameter
                         , 'data' => $data]);
-                    if (!is_null($data->text) && Str::contains($data->text, $rule_parameter)) {
+                    if (!is_null($data->text) && Str::contains(Str::upper($data->text), Str::upper($rule_parameter))) {
                         Log::debug('type rule 2 true');
                         return true;
                     }
