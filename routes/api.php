@@ -149,7 +149,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/onboarding',[ApiOnboardingController::class, 'store']);
     Route::get('/onboarding',[ApiOnboardingController::class, 'get']);
-    Route::get('/onboarding/{uuid}',[ApiOnboardingController::class, 'show']);
+    Route::get('/onboarding/{onboarding_uuid}',[ApiOnboardingController::class, 'show']);
     Route::post('/onboarding/edit',[ApiOnboardingController::class, 'update']);
     Route::delete('/onboarding',[ApiOnboardingController::class, 'destroy']);
 

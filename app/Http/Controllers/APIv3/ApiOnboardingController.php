@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIv3;
 
 use App\Http\ApiRequests\ApiDeleteOnboardingRequest;
 use App\Http\ApiRequests\ApiGetOnboardingRequest;
+use App\Http\ApiRequests\ApiShowOnboardingRequest;
 use App\Http\ApiRequests\ApiStoreOnboardingRequest;
 use App\Http\ApiRequests\ApiUpdateOnboardingRequest;
 use App\Http\ApiResources\Rules\ApiOnboardingsCollection;
@@ -76,6 +77,14 @@ class ApiOnboardingController extends Controller
         $ruleToDelete = Onboarding::findOrFail($request->onboarding_uuid);
         $ruleToDelete->delete();
         return ApiResponse::success('common.deleted');
+    }
+
+    public function show(ApiShowOnboardingRequest $request): ApiResponse
+    {
+        $onboarding = Onboarding::where('user_id', Auth::user()->id)
+            ->where('uuid', $request->onboarding_uuid)->first();
+
+        return ApiResponse::common($onboarding);
     }
 
 

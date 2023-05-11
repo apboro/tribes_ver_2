@@ -5,6 +5,7 @@ namespace App\Http\Controllers\APIv3;
 use App\Http\ApiRequests\Antispam\ApiAntispamEditRequest;
 use App\Http\ApiRequests\Antispam\ApiAntispamShowRequest;
 use App\Http\ApiRequests\Antispam\ApiAntispamStoreRequest;
+use App\Http\ApiRequests\ApiAntispamDeleteRequest;
 use App\Http\ApiResources\Rules\ApiAntispamCollection;
 use App\Http\ApiResources\Rules\ApiAntispamResource;
 use App\Http\ApiResponses\ApiResponse;
@@ -65,12 +66,12 @@ class ApiAntispamController extends Controller
      * Display the specified resource.
      *
      * @param ApiAntispamShowRequest $request
-     * @param $id
+     * @param $uuid
      * @return ApiResponse
      */
-    public function show(ApiAntispamShowRequest $request, $id): ApiResponse
+    public function show(ApiAntispamShowRequest $request, $uuid): ApiResponse
     {
-        $antispam = Antispam::where('owner', Auth::user()->id)->where('id', $id)->first();
+        $antispam = Antispam::where('owner', Auth::user()->id)->where('uuid', $uuid)->first();
 
         if ($antispam === null) {
             return ApiResponse::notFound(trans('responses/common.not_found'));
@@ -112,6 +113,16 @@ class ApiAntispamController extends Controller
             }
 
         }
-        return ApiResponse::success();
+        return ApiResponse::success('common.success');
+    }
+
+    public function delete(ApiAntispamDeleteRequest $request)
+    {
+        $antispam_rule = Antispam::where('owner', Auth::user()->id)->where('uuid', $request->antispam_uuid)->first();
+        if ($antispam_rule){
+            $antispam_rule->delete();
+            return ApiResponse::success('common.deleted');
+        }
+        return ApiResponse::error('common.not_found');
     }
 }

@@ -57,7 +57,6 @@ class ApiAntispamEditRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'uuid' => 'required|string|min:1|exists:antispams,uuid',
             'name' => 'required|string|max:120',
             'del_message_with_link' => 'boolean',
             'ban_user_contain_link' => 'boolean',
