@@ -22,13 +22,12 @@ class TelegramUserListsRepositry
         $this->telegramMainBotService = $telegramMainBotService;
     }
 
-    const TYPE_BLACK_LIST = 1;
     const TYPE_WHITE_LIST = 2;
     const TYPE_MUTE_LIST = 3;
     const TYPE_BAN_LIST = 4;
     const SPAMMER = 1;
 
-    public function add(ApiRequest $request, int $telegram_id, int $type = self::TYPE_BLACK_LIST)
+    public function add(ApiRequest $request, int $telegram_id, int $type = self::TYPE_BAN_LIST)
     {
         /** @var TelegramUserList $telegram_list */
         foreach ($request->input('community_ids') as $community_id) {
@@ -38,18 +37,17 @@ class TelegramUserListsRepositry
                 ->where('community_id', '=', $community_id)
                 ->first();
 
-            if ($telegramUserAlreadyInList) {
+            if ($telegramUserAlreadyInList && $telegramUserAlreadyInList->type === self::TYPE_WHITE_LIST) {
                 return false;
             }
 
-            TelegramUserList::create([
+            TelegramUserList::updateOrCreate([
                 'telegram_id' => $telegram_id,
                 'community_id' => $community_id,
-                'type' => $type
-            ]);
+            ], ['type' => $type]);
         }
 
-        if ($type === self::TYPE_BLACK_LIST || $type === self::TYPE_BAN_LIST) {
+        if ($type === self::TYPE_BAN_LIST) {
             try {
                 /** @var Community $community */
                 $community = Community::where('id', $community_id)->first();
@@ -60,9 +58,9 @@ class TelegramUserListsRepositry
                     $community_telegram_chat_id
                 );
                 $ty = TelegramUser::where('telegram_id', $telegram_id)->first();
-                $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time()]);
+                $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time(), 'status'=>'banned']);
             } catch (\Exception $e) {
-                TelegramLogService::staticSendLogMessage('Black/ban list error' . $e);
+                TelegramLogService::staticSendLogMessage('Ban list error ' . $e);
             }
         }
         if ($type === self::TYPE_MUTE_LIST) {
@@ -76,8 +74,10 @@ class TelegramUserListsRepositry
                     $community_telegram_chat_id,
                     60
                 );
+                $ty = TelegramUser::where('telegram_id', $telegram_id)->first();
+                $ty->communities()->updateExistingPivot($community->id, ['status'=>'muted']);
             } catch (\Exception $e) {
-                TelegramLogService::staticSendLogMessage('Mute list error' . $e);
+                TelegramLogService::staticSendLogMessage('Mute list error ' . $e);
             }
         }
 
@@ -90,7 +90,7 @@ class TelegramUserListsRepositry
     }
 
     public
-    function remove(ApiRequest $request, int $telegram_id, int $type = self::TYPE_BLACK_LIST)
+    function remove(ApiRequest $request, int $telegram_id, int $type = self::TYPE_BAN_LIST)
     {
         /** @var TelegramUserList $telegram_list */
         foreach ($request->input('community_ids') as $community_id) {
@@ -104,7 +104,7 @@ class TelegramUserListsRepositry
                 return false;
             }
 
-            if ($type === self::TYPE_BLACK_LIST || $type === self::TYPE_BAN_LIST) {
+            if ($type === self::TYPE_BAN_LIST) {
                 try {
                     /** @var Community $community */
                     $community = Community::where('id', $community_id)->first();
@@ -114,8 +114,10 @@ class TelegramUserListsRepositry
                         $telegram_id,
                         $community_telegram_chat_id
                     );
+                    $ty = TelegramUser::where('telegram_id', $telegram_id)->first();
+                    $ty->communities()->updateExistingPivot($community->id, ['status'=>null]);
                 } catch (\Exception $e) {
-                    TelegramLogService::staticSendLogMessage('Black/ban list error' . $e);
+                    TelegramLogService::staticSendLogMessage('Ban list error' . $e);
                 }
             }
 
@@ -145,7 +147,7 @@ class TelegramUserListsRepositry
     }
 
     public
-    function filter(ApiRequest $request, int $type = self::TYPE_BLACK_LIST)
+    function filter(ApiRequest $request, int $type = self::TYPE_BAN_LIST)
     {
         $query = TelegramUserList::with(['communities', 'telegramUser', 'listParameters'])->
         whereHas('communities', function ($query) use ($type) {
@@ -190,8 +192,9 @@ class TelegramUserListsRepositry
                 $community_telegram_chat_id
             );
             $ty = TelegramUser::where('telegram_id', $telegram_id)->first();
-            $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time()]);
+            $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time(), 'status'=>'kicked']);
         }
 
     }
+
 }

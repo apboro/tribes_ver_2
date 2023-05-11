@@ -94,6 +94,7 @@ class ApiCommunityTelegramUserController extends Controller
             ->whereHas('communities', function ($query) {
                 $query->where('owner', Auth::user()->id)
                     ->whereNull('telegram_users_community.exit_date')
+                    ->orWhere('telegram_users_community.status', 'banned')
                     ->where('is_active', true)
                 ;
             })
@@ -165,7 +166,7 @@ class ApiCommunityTelegramUserController extends Controller
     {
         $result = false;
         if ($request->boolean('banned')) {
-            $result = $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BAN_LIST);
+            $result = $this->telegramUserListsRepositry->add($request, $request->telegram_id);
         }
 
         if ($request->boolean('muted')) {
@@ -176,10 +177,6 @@ class ApiCommunityTelegramUserController extends Controller
             $result = $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_WHITE_LIST);
         }
 
-        if ($request->boolean('blacklisted')) {
-            $result =  $this->telegramUserListsRepositry->add($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BLACK_LIST);
-        }
-
         if ($request->boolean('kick')) {
             $this->telegramUserListsRepositry->kick($request, $request->telegram_id);
             return ApiResponse::success('Пользователь исключен');
@@ -188,7 +185,7 @@ class ApiCommunityTelegramUserController extends Controller
         if ($result) {
             return ApiResponse::success('Пользователь добавлен в список');
         } else {
-            return ApiResponse::error('Пользователь уже в списке');
+            return ApiResponse::error('Пользователь в белом списке');
         }
     }
 
@@ -205,10 +202,6 @@ class ApiCommunityTelegramUserController extends Controller
 
         if ($request->boolean('whitelisted')) {
             $result = $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_WHITE_LIST);
-        }
-
-        if ($request->boolean('blacklisted')) {
-            $result = $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_BLACK_LIST);
         }
 
         if ($result){

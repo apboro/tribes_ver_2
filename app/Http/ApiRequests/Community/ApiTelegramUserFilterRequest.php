@@ -86,16 +86,6 @@ use OpenApi\Annotations as OA;
  *         )
  *     ),
  *    @OA\Parameter(
- *         name="blacklisted",
- *         in="query",
- *         description="Black list, type = 1 ",
- *         required=false,
- *         @OA\Schema(
- *             type="boolean",
- *             example="false"
- *         )
- *     ),
- *    @OA\Parameter(
  *         name="whitelisted",
  *         in="query",
  *         description="White list, type = 2",
@@ -132,7 +122,6 @@ class ApiTelegramUserFilterRequest extends ApiRequest
             'banned' => 'string',
             'muted' => 'string',
             'whitelisted' => 'string',
-            'blacklisted' => 'string',
             'is_spammer' => 'integer'
         ];
     }

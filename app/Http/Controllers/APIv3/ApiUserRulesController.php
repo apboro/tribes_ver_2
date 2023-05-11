@@ -81,7 +81,7 @@ class ApiUserRulesController extends Controller
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));
             })
-            ->get();
+            ->orderBy('updated_at', 'desc')->get();
 
         $ifThenRules = UserRule::where('user_id', $user->id)
             ->with('communities')
@@ -91,7 +91,7 @@ class ApiUserRulesController extends Controller
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));
             })
-            ->get();
+            ->orderBy('updated_at', 'desc')->get();
 
         $antispamRules = Antispam::where('owner', $user->id)
             ->with('communities')
@@ -101,7 +101,7 @@ class ApiUserRulesController extends Controller
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));
             })
-            ->get();
+            ->orderBy('updated_at', 'desc')->get();
 
         $moderationRules = CommunityRule::where('user_id', $user->id)
             ->with('communities')
@@ -111,7 +111,7 @@ class ApiUserRulesController extends Controller
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));
             })
-            ->get();
+            ->orderBy('updated_at', 'desc')->get();
 
         $countAll = $onboardings->count() + $ifThenRules->count() + $antispamRules->count() + $moderationRules->count();
 

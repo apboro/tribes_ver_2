@@ -6,10 +6,13 @@ namespace App\Http\ApiRequests;
  * @OA\Delete(
  *  path="/api/v3/user/community-users/remove_from_list",
  *  operationId="community-user-list-remove",
- *  summary="Remove user from list (black, mute, ban, white)",
+ *  summary="Remove user from list (mute, ban, white)",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Users"},
+ *     description = "
+ *      Чтобы сделать Unban нужно прислать на эту точку banned: true",
  *     @OA\RequestBody(
+ *
  *         @OA\MediaType(
  *            mediaType="application/json",
  *             @OA\Schema(
@@ -18,7 +21,6 @@ namespace App\Http\ApiRequests;
  *                 @OA\Property(property="banned", type="boolean", example="false"),
  *                 @OA\Property(property="muted", type="boolean", example="false"),
  *                 @OA\Property(property="whitelisted", type="boolean", example="false"),
- *                 @OA\Property(property="blacklisted", type="boolean", example="false"),
  *                 @OA\Property(property="is_spammer", type="integer", example=1),
  *             ),
  *         )
@@ -38,7 +40,6 @@ class ApiCommunityUserListRemoveRequest extends ApiRequest
             'banned' => 'boolean',
             'muted' => 'boolean',
             'whitelisted' => 'boolean',
-            'blacklisted' => 'boolean',
             'is_spammer' => 'integer'
         ];
     }

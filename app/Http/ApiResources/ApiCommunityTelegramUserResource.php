@@ -30,7 +30,7 @@ class ApiCommunityTelegramUserResource extends JsonResource
                 'communities', function () {
                 return $this->resource->communities()->where('owner', Auth::user()->id)
                     ->where('is_active', true)
-                    ->wherePivot('exit_date','=', null)
+                    ->wherePivot('exit_date','=', null)->orWherePivot('status', 'banned')
                     ->get()
                     ->map(function ($community) {
                         $accessionDate = $community->pivot->accession_date;

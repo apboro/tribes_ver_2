@@ -7,7 +7,7 @@ namespace App\Http\ApiRequests;
  * @OA\Put(
  *  path="/api/v3/user/community-users/add_to_list",
  *  operationId="community-user-list-add",
- *  summary="Add user to list (black, mute, ban, white)",
+ *  summary="Add user to list (mute, ban, white)",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Users"},
  *     @OA\RequestBody(
@@ -19,9 +19,8 @@ namespace App\Http\ApiRequests;
  *                 @OA\Property(property="banned", type="boolean", example="false"),
  *                 @OA\Property(property="muted", type="boolean", example="false"),
  *                 @OA\Property(property="whitelisted", type="boolean", example="false"),
- *                 @OA\Property(property="blacklisted", type="boolean", example="false"),
- *                 @OA\Property(property="is_spammer", type="integer", example=1),
  *                 @OA\Property(property="kick", type="boolean", example="false"),
+ *                 @OA\Property(property="is_spammer", type="integer", example=1),
  *             ),
  *         )
  *     ),
@@ -40,7 +39,6 @@ class ApiCommunityUserListAddRequest extends ApiRequest
             'banned' => 'boolean',
             'muted' => 'boolean',
             'whitelisted' => 'boolean',
-            'blacklisted' => 'boolean',
             'is_spammer' => 'integer',
             'kick' => 'boolean'
         ];
