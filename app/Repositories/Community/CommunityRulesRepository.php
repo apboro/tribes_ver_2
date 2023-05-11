@@ -199,9 +199,6 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
                 $this->telegramUser = TelegramUser::where('telegram_id', $dto->telegram_user_id)->first();
 
-
-
-
                 $allRules = $this->community->getCommunityRulesAssoc();
 
                 Log::debug('allRules array', $allRules);

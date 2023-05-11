@@ -7,6 +7,7 @@ use App\Http\ApiRequests\ApiGetOnboardingRequest;
 use App\Http\ApiRequests\ApiShowOnboardingRequest;
 use App\Http\ApiRequests\ApiStoreOnboardingRequest;
 use App\Http\ApiRequests\ApiUpdateOnboardingRequest;
+use App\Http\ApiResources\Rules\ApiOnboardingResource;
 use App\Http\ApiResources\Rules\ApiOnboardingsCollection;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -84,7 +85,7 @@ class ApiOnboardingController extends Controller
         $onboarding = Onboarding::where('user_id', Auth::user()->id)
             ->where('uuid', $request->onboarding_uuid)->first();
 
-        return ApiResponse::common($onboarding);
+        return ApiResponse::common(ApiOnboardingResource::make($onboarding)->toArray($request));
     }
 
 

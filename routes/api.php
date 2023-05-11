@@ -129,7 +129,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 
     Route::post('/user-community-rules',[ApiUserRulesController::class, 'store']);
-    Route::get('/user-community-rules',[ApiUserRulesController::class, 'get']);
+    Route::get('/user-community-rules',[ApiUserRulesController::class, 'list']);
+    Route::get('/user-community-rules/{rule_uuid}',[ApiUserRulesController::class, 'show']);
     Route::put('/user-community-rules',[ApiUserRulesController::class, 'update']);
     Route::delete('/user-community-rules',[ApiUserRulesController::class, 'delete']);
     Route::get('/all_user_rules', [ApiUserRulesController::class, 'getAllRules']);

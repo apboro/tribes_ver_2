@@ -6,8 +6,11 @@ namespace App\Http\Controllers\APIv3;
 use App\Http\ApiRequests\ApiGetAllRulesRequest;
 use App\Http\ApiRequests\ApiUserRulesDeleteRequest;
 use App\Http\ApiRequests\ApiUserRulesGetRequest;
+use App\Http\ApiRequests\ApiUserRulesShowRequest;
 use App\Http\ApiRequests\ApiUserRulesStoreRequest;
 use App\Http\ApiRequests\ApiUserRulesUpdateRequest;
+use App\Http\ApiResources\Rules\ApiUserRuleResource;
+use App\Http\ApiResources\Rules\ApiUserRulesCollection;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Antispam;
@@ -37,11 +40,18 @@ class ApiUserRulesController extends Controller
         return ApiResponse::success('rules.saved_successfully');
     }
 
-    public function get(ApiUserRulesGetRequest $request)
+    public function list(ApiUserRulesGetRequest $request)
     {
         $rules = UserRule::where('user_id', Auth::user()->id)->get();
 
-        return ApiResponse::common($rules);
+        return ApiResponse::list()->items(ApiUserRulesCollection::make($rules)->toArray($request));
+    }
+
+    public function show(ApiUserRulesShowRequest $request)
+    {
+        $rule = UserRule::where('user_id', Auth::user()->id)->where('uuid', $request->rule_uuid)->first();
+
+        return ApiResponse::common(ApiUserRuleResource::make($rule)->toArray($request));
     }
 
     public function update(ApiUserRulesUpdateRequest $request)
