@@ -135,18 +135,21 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/all_user_rules', [ApiUserRulesController::class, 'getAllRules']);
 
     Route::post('/antispam', [ApiAntispamController::class, 'store']);
-    Route::put('/antispam/{id}', [ApiAntispamController::class, 'edit']);
+    Route::put('/antispam/{uuid}', [ApiAntispamController::class, 'edit']);
     Route::get('/antispam', [ApiAntispamController::class, 'list']);
-    Route::get('/antispam/{id}', [ApiAntispamController::class, 'show']);
+    Route::get('/antispam/{uuid}', [ApiAntispamController::class, 'show']);
+    Route::delete('/antispam/{antispam_uuid}', [ApiAntispamController::class, 'delete']);
 
     Route::post('/chats/rules', [ApiCommunityRuleController::class, 'store'])->name('chats.rules.store');
     Route::get('/chats/rules', [ApiCommunityRuleController::class, 'list'])->name('chats.rules.list');
     Route::post('/chats/rules/edit/{uuid}', [ApiCommunityRuleController::class, 'update'])->name('chats.rules.update');
-    Route::get('/chats/rules/{id}', [ApiCommunityRuleController::class, 'show'])->name('chats.rules.show');
+    Route::get('/chats/rules/{uuid}', [ApiCommunityRuleController::class, 'show'])->name('chats.rules.show');
+    Route::delete('/chats/rules/{moderation_uuid}', [ApiCommunityRuleController::class, 'delete']);
     Route::get('/chats/rules-template', [ApiRulesTemplateController::class, 'getTemplate']);
 
     Route::post('/onboarding',[ApiOnboardingController::class, 'store']);
     Route::get('/onboarding',[ApiOnboardingController::class, 'get']);
+    Route::get('/onboarding/{uuid}',[ApiOnboardingController::class, 'show']);
     Route::post('/onboarding/edit',[ApiOnboardingController::class, 'update']);
     Route::delete('/onboarding',[ApiOnboardingController::class, 'destroy']);
 

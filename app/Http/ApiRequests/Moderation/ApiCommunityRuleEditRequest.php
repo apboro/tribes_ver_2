@@ -18,7 +18,6 @@ use App\Http\ApiRequests\ApiRequest;
  *         required=true,
  *         @OA\Schema(
  *             type="string",
- *             format="int64",
  *         )
  *     ),
  *     @OA\RequestBody(

@@ -5,19 +5,18 @@ namespace App\Http\ApiRequests\Moderation;
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Get(path="/api/v3/chats/rules/{id}",
+ * @OA\Get(path="/api/v3/chats/rules/{uuid}",
  *     tags={"Chats Moderation"},
- *     summary="Show chat rules by ID",
+ *     summary="Show chat rules by UUID",
  *     operationId="show-chat-rule-by-id",
  *     security={{"sanctum": {} }},
  *     @OA\Parameter(
- *         name="id",
+ *         name="uuid",
  *         in="path",
- *         description="ID of chat rule in database",
+ *         description="UUID of chat rule in database",
  *         required=true,
  *         @OA\Schema(
- *             type="integer",
- *             format="int64",
+ *             type="string",
  *         )
  *     ),
  *
@@ -31,7 +30,7 @@ class ApiCommunityRuleShowRequest extends ApiRequest
     public function all($keys = null)
     {
         $data = parent::all();
-        $data['id'] = $this->route('id');
+        $data['uuid'] = $this->route('uuid');
 
         return $data;
     }
@@ -39,16 +38,16 @@ class ApiCommunityRuleShowRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:community_rules,id'
+            'uuid' => 'required|string|exists:moderation_rules,uuid'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.required' => $this->localizeValidation('chat_rule.id_required'),
-            'id.integer' => $this->localizeValidation('chat_rule.id_integer'),
-            'id.exists' => $this->localizeValidation('chat_rule.id_exists'),
+            'uuid.required' => $this->localizeValidation('chat_rule.id_required'),
+            'uuid.integer' => $this->localizeValidation('chat_rule.id_integer'),
+            'uuid.exists' => $this->localizeValidation('chat_rule.id_exists'),
         ];
     }
 }

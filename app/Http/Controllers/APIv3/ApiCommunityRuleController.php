@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3;
 
+use App\Http\ApiRequests\ApiCommunityRuleDeleteRequest;
 use App\Http\ApiRequests\Moderation\ApiCommunityRuleEditRequest;
 use App\Http\ApiRequests\Moderation\ApiCommunityRuleListRequest;
 use App\Http\ApiRequests\Moderation\ApiCommunityRuleShowRequest;
@@ -61,14 +62,14 @@ class ApiCommunityRuleController extends Controller
     /**
      *
      * @param ApiCommunityRuleShowRequest $request
-     * @param int $id
+     * @param int $uuid
      * @return ApiResponse
      */
 
-    public function show(ApiCommunityRuleShowRequest $request, int $id): ApiResponse
+    public function show(ApiCommunityRuleShowRequest $request, string $uuid): ApiResponse
     {
         /** @var CommunityRule $community_rule */
-        $community_rule = CommunityRule::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        $community_rule = CommunityRule::where('uuid', $uuid)->where('user_id', Auth::user()->id)->first();
         if ($community_rule === null) {
             return ApiResponse::error(trans('responses/common.add_error'));
         }
@@ -93,6 +94,16 @@ class ApiCommunityRuleController extends Controller
         return ApiResponse::common(
             ApiCommunityRuleResource::make($community_rule)->toArray($request)
         );
+    }
+
+    public function delete(ApiCommunityRuleDeleteRequest $request)
+    {
+        $moderation_rule = CommunityRule::where('user_id', Auth::user()->id)->where('uuid', $request->moderation_uuid)->first();
+        if ($moderation_rule){
+            $moderation_rule->delete();
+            return ApiResponse::success('common.deleted');
+        }
+        return ApiResponse::error('common.not_found');
     }
 
 
