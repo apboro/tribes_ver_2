@@ -296,7 +296,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         try {
             switch ($rule) {
                 case 'message_text-equal_to-custom':
-                    if ($rule_parameter === $data->text) {
+                    if (Str::upper($rule_parameter) === Str::upper($data->text)) {
                         Log::debug('type rule 1 true');
                         return true;
                     }
@@ -304,7 +304,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 case 'message_text-contain-custom':
                     Log::debug('message_text-contain-custom', ['rule_parameter' => $rule_parameter
                         , 'data' => $data]);
-                    if (!is_null($data->text) && Str::contains($data->text, $rule_parameter)) {
+                    if (!is_null($data->text) && Str::contains(Str::upper($data->text), Str::upper($rule_parameter))) {
                         Log::debug('type rule 2 true');
                         return true;
                     }
