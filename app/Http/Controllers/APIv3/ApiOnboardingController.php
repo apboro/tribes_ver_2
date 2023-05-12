@@ -22,8 +22,8 @@ class ApiOnboardingController extends Controller
     {
         $user_id = Auth::user()->id;
 
-        $greetingImagePath = $request->file('greeting_image') ? Storage::disk('public')->putFile('storage/greeting_images', $request->file('greeting_image')) : null;
-        $questionImagePath = $request->file('question_image') ? Storage::disk('public')->putFile('storage/question_images', $request->file('question_image')) : null;
+        $greetingImagePath = $request->file('greeting_image') ? Storage::disk('public')->putFile('greeting_images', $request->file('greeting_image')) : null;
+        $questionImagePath = $request->file('question_image') ? Storage::disk('public')->putFile('question_images', $request->file('question_image')) : null;
 
         $onboarding = new Onboarding();
         $onboarding->rules = $request->input('rules') ?? null;
@@ -52,14 +52,29 @@ class ApiOnboardingController extends Controller
 
     public function update(ApiUpdateOnboardingRequest $request): ApiResponse
     {
-        $greetingImagePath = $request->file('greeting_image') ? Storage::disk('public')->putFile('storage/greeting_images', $request->file('greeting_image')) : null;
-        $questionImagePath = $request->file('question_image') ? Storage::disk('public')->putFile('storage/question_images', $request->file('question_image')) : null;
+        $greetingImagePath = $request->file('greeting_image') ? Storage::disk('public')->putFile('greeting_images', $request->file('greeting_image')) : null;
+        $questionImagePath = $request->file('question_image') ? Storage::disk('public')->putFile('question_images', $request->file('question_image')) : null;
 
         $onboarding = Onboarding::find($request->onboarding_uuid);
-        $onboarding->title = $request->input('title') ?? null;
-        $onboarding->rules = $request->input('rules') ?? null;
-        $onboarding->question_image = $questionImagePath;
-        $onboarding->greeting_image = $greetingImagePath;
+
+        if ($request->input('title')) {
+            $onboarding->title = $request->input('title');
+        }
+        if ($request->input('rules')) {
+            $onboarding->rules = $request->input('rules');
+        }
+        if ($request->file('greeting_image')) {
+            $onboarding->greeting_image = $greetingImagePath;
+        }
+        if ($request->file('question_image')) {
+            $onboarding->question_image = $questionImagePath;
+        }
+        if ($request->input('greeting_image_delete')) {
+            $onboarding->greeting_image = null;
+        }
+        if ($request->input('question_image_delete')) {
+            $onboarding->question_image = null;
+        }
         $onboarding->save();
 
         foreach ($request->input('communities_ids') as $community_id) {

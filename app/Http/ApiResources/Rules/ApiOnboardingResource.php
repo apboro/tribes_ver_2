@@ -20,8 +20,8 @@ class ApiOnboardingResource extends JsonResource
             'uuid' => $this->resource->uuid,
             'rules' => $this->resource->rules,
             'title' => $this->resource->title,
-            'question_image' => $this->resource->question_image,
-            'greeting_image' => $this->resource->greeting_image,
+            'question_image' => 'storage/'.$this->resource->question_image,
+            'greeting_image' => 'storage/'.$this->resource->greeting_image,
             'communities_ids' => $this->resource->communities->pluck('id')
         ];
 

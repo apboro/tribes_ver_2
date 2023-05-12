@@ -24,6 +24,8 @@ namespace App\Http\ApiRequests;
  *              @OA\Property(property="greeting_message_text",type="string"),
  *              @OA\Property(property="greeting_image", type="file", format="binary"),
  *              @OA\Property(property="question_image", type="file", format="binary"),
+ *              @OA\Property(property="greeting_image_delete", type="boolean"),
+ *              @OA\Property(property="question_image_delete", type="boolean"),
  *              @OA\Property(property="communities_ids[]",type="array",@OA\Items(type="integer"))
  *         )
  *      )
@@ -43,8 +45,38 @@ class ApiUpdateOnboardingRequest extends ApiRequest
             'title' =>'required|string',
             'greeting_image' => 'image|nullable',
             'question_image' => 'image|nullable',
+            'greeting_image_delete' => 'boolean',
+            'question_image_delete' => 'boolean',
             'community_ids' => 'array',
             'community_ids.*' => 'integer|exists:communities,id',
+        ];
+    }
+
+    public function prepareForValidation(): void
+    {
+        $this->merge([
+            'greeting_image_delete' => $this->toBoolean($this->greeting_image_delete)
+        ]);
+        $this->merge([
+            'question_image_delete' => $this->toBoolean($this->question_image_delete)
+        ]);
+    }
+
+
+    /**
+     * Convert to boolean
+     *
+     * @param $booleable
+     * @return boolean
+     */
+    private function toBoolean($booleable)
+    {
+        return filter_var($booleable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    }
+
+    public function messages(): array
+    {
+        return [
         ];
     }
 
