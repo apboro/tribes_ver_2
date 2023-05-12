@@ -145,7 +145,6 @@ class ApiCommunityTelegramUserController extends Controller
                 $request->boolean('banned') ? TelegramUserListsRepositry::TYPE_BAN_LIST : 0,
                 $request->boolean('muted') ? TelegramUserListsRepositry::TYPE_MUTE_LIST : 0,
                 $request->boolean('whitelisted') ? TelegramUserListsRepositry::TYPE_WHITE_LIST : 0,
-                $request->boolean('blacklisted') ? TelegramUserListsRepositry::TYPE_BLACK_LIST : 0,
             ];
             $query->whereHas('userList', function ($query) use ($request, $arr_to_search) {
                 $query->whereIn('type', $arr_to_search);
@@ -185,7 +184,7 @@ class ApiCommunityTelegramUserController extends Controller
         if ($result) {
             return ApiResponse::success('Пользователь добавлен в список');
         } else {
-            return ApiResponse::error('Пользователь в белом списке');
+            return ApiResponse::error('Действие не может быть выполнено');
         }
     }
 

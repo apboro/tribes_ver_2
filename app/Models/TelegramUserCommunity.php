@@ -15,4 +15,9 @@ class TelegramUserCommunity extends Model
     protected $table = 'telegram_users_community';
     protected $guarded = [];
     public $timestamps = false;
+
+    public function community()
+    {
+        return $this->belongsTo(Community::class);
+    }
 }

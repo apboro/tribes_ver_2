@@ -41,7 +41,7 @@ class TelegramUserListsRepositry
                 return false;
             }
 
-            TelegramUserList::updateOrCreate([
+            $telegram_list = TelegramUserList::updateOrCreate([
                 'telegram_id' => $telegram_id,
                 'community_id' => $community_id,
             ], ['type' => $type]);
@@ -104,6 +104,10 @@ class TelegramUserListsRepositry
                 return false;
             }
 
+            if ($request->input('is_spammer') === 0) {
+                $telegram_list->listParameters()->sync([]);
+            }
+
             if ($type === self::TYPE_BAN_LIST) {
                 try {
                     /** @var Community $community */
@@ -124,9 +128,7 @@ class TelegramUserListsRepositry
             $telegram_list->delete();
 
         }
-        if ($request->input('is_spammer') === 0) {
-            $telegram_list->listParameters()->sync([]);
-        }
+
 
         return true;
 

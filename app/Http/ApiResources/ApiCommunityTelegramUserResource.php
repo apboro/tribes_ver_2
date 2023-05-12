@@ -35,7 +35,7 @@ class ApiCommunityTelegramUserResource extends JsonResource
                     ->map(function ($community) {
                         $accessionDate = $community->pivot->accession_date;
                         return [
-                            'id' => $community->id,
+                            'id' => $community->community_id,
                             'title' => $community->title,
                             'accession_date' => $accessionDate,
                             'chat_tags' => $community->tags
