@@ -109,7 +109,8 @@ class ApiAntispamController extends Controller
             /** @var Community $community */
             foreach ($request->input('community_ids') as $row) {
                 $community = Community::where('owner', Auth::user()->id)->where('id', $row)->first();
-                $community->communityAntispamRule()->associate($antispam)->save();
+                $community->antispam_uuid = $antispam->uuid;
+                $community->save();
             }
 
         }
