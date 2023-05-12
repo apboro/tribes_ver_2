@@ -398,11 +398,10 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                         return true;
                     }
                     break;
-                case 'message_text-contain-link':
+                case 'message_type-equal_to-link':
                     if ($data->message_entities) {
                         Log::debug('conditionChecker entities', $data->message_entities);
                         foreach ($data->message_entities as $item) {
-                            Log::debug('conditionChecker item', $item);
                             if ($item['type'] == "url" || $item['type'] == "text_link") {
                                 return true;
                             }
@@ -415,8 +414,15 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                         return true;
                     }
                     break;
-                case 'message_text-contain-bot_command':
-                    //todo 1
+                case 'message_type-equal_to-bot_command':
+                    if ($data->message_entities) {
+                        Log::debug('conditionChecker entities', $data->message_entities);
+                        foreach ($data->message_entities as $item) {
+                            if ($item['type'] == "bot_command") {
+                                return true;
+                            }
+                        }
+                    }
                     break;
                 case 'message_text-contain-channel_message':
                     //todo 2
