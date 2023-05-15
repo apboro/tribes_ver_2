@@ -112,12 +112,12 @@ class CommunityController extends Controller
 
         $service = app()->make(Messenger::$platform[$request['platform']]);
 
-        $hash = $request['hash'];
+        $telegram_user_id = $request['telegram_user_id'];
 
         if (method_exists($service, 'checkCommunityConnect')) {
 
             return response()->json(
-                $service->checkCommunityConnect($hash),
+                $service->checkCommunityConnect($telegram_user_id),
                 200
             );
         }
