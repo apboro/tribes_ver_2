@@ -337,7 +337,7 @@ class Telegram extends Messenger
         }
 
         if ($td) {
-            $hash = self::hash($td->telegram_id, $type);
+            $hash = self::hash($td->telegram_id, time());
 
             $tc = TelegramConnection::firstOrCreate([
                 'user_id' => Auth::user()->id,
@@ -370,21 +370,20 @@ class Telegram extends Messenger
 
             $chatType = $isChannel ? 'channel' : 'group';
 
-            $hash = self::hash($telegram_user_id, $chatType);
-
             $telegramConnectionExists = TelegramConnection::query()
                 ->where('chat_id', $chat_id)
                 ->where('telegram_user_id', $telegram_user_id)
                 ->first();
 
-            $telegramConnectionNew = TelegramConnection::whereHash($hash)->whereStatus('init')->first();
+            $telegramConnectionNew = TelegramConnection::where('telegram_user_id', $telegram_user_id)->whereStatus('init')->first();
+
             if ($telegramConnectionExists) {
                 if ($telegramConnectionNew) {
                     $telegramConnectionNew->delete();
                 }
                 Log::debug('Бот добавлен в имеющуюся в БД группу', compact('chat_id', 'chatTitle', 'chatType'));
             } else {
-                Log::debug('поиск группы $hash init', compact('chat_id', 'hash'));
+                Log::debug('поиск группы init ', compact('chat_id'));
                 if ($telegramConnectionNew) {
                     $telegramConnectionNew->chat_id = $chat_id;
                     $telegramConnectionNew->chat_title = $chatTitle;
