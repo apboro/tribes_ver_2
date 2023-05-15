@@ -122,7 +122,7 @@ class ApiCommunityTelegramUserController extends Controller
 
         if (!empty($request->input('user_name'))) {
             $query->where(function ($query) use ($request) {
-                $query->where('user_name', 'ilike', '%' . $request->input('user_name') . '%');
+                $query->where('user_name', 'ilike', '%' . str_replace('@','',$request->input('user_name')) . '%');
             });
         }
 
