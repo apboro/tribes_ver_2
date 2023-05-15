@@ -20,8 +20,8 @@ class CreateQuestionsTable extends Migration
             $table->text('context');
             $table->foreignId('answer_id')->constrained('answers');
             $table->foreignId('author_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
-            $table->foreignId('knowledge_id')->constrained('knowledge')->cascadeOnDelete();
+            $table->foreignId('category_id')->constrained('question_categories')->cascadeOnDelete();
+            $table->foreignId('knowledge_id')->constrained('knowledge');
             $table->timestamps();
         });
     }
