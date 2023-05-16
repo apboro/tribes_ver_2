@@ -291,10 +291,12 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             return;
         }
 
-        if ($this->conditionMatcher('username-format-rtl_format', $this->messageDTO) || $this->conditionMatcher('first_name-format-rtl_format', $this->messageDTO)
-            || $this->conditionMatcher('last_name-format-rtl_format', $this->messageDTO) && $rules['rtlNameJoinLimitation']['action'] === 'ban_user') {
-            $this->actionRunner($rules['rtlNameJoinLimitation']['action'], $this->messageDTO);
-            return;
+        if ($this->conditionMatcher('username-format-rtl_format', $this->messageDTO)
+            || $this->conditionMatcher('first_name-format-rtl_format', $this->messageDTO)
+            || $this->conditionMatcher('last_name-format-rtl_format', $this->messageDTO)
+            && $rules['rtlNameJoinLimitation']['action'] == 10) {
+
+            $this->actionRunner('ban_user',$this->messageDTO);
         }
 
 
@@ -349,6 +351,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     }
                     break;
                 case 'last_name-format-rtl_format':
+                    Log::debug('last_name-format-rtl_format');
                     $rtl_symbols_pattern = '/[\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF}]/u';
                     if (!is_null($data->telegram_user_last_name) && preg_match($rtl_symbols_pattern, $data->telegram_user_last_name)) {
                         return true;
