@@ -43,7 +43,7 @@ services:
   nginx:
     image: nginx
     volumes:
-      - .docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - .docker/docker-compose-ingress-nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "80:80"
   redis:
