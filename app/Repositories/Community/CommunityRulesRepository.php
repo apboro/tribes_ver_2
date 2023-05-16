@@ -113,6 +113,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             if ($restricted_words->isNotEmpty()) {
                 foreach ($restricted_words as $word) {
                     if (Str::contains(Str::upper($this->messageDTO->text), Str::upper($word->word))) {
+
                         $communityUser = TelegramUserCommunity::query()
                             ->where('telegram_user_id', $this->messageDTO->telegram_user_id)
                             ->where('community_id', $this->community->id)->first();
@@ -487,7 +488,13 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 //todo 2
                 break;
             case 'add_warning':
-                //todo 3
+                Log::debug('Action >> add_warning');
+                $communityUser = TelegramUserCommunity::query()
+                    ->where('telegram_user_id', $this->messageDTO->telegram_user_id)
+                    ->where('community_id', $this->community->id)->first();
+                $communityUser->increment('warnings_count');
+                $this->actionRunner('send_message_in_pm_from_bot', $this->messageDTO, 'Вы нарушили правила чата');
+
                 break;
             case 'delete_warning':
                 //todo 4
