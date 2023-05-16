@@ -9,6 +9,7 @@ use App\Models\Payment;
 use App\Models\Donate;
 use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
+use App\Models\TelegramUserCommunity;
 use App\Models\TestData;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Tariff\TariffRepository;
@@ -163,7 +164,7 @@ class Telegram extends Messenger
     public function deleteUser($chat_id, $t_user_id)
     {
         try {
-            Log::info('deleteUser', compact('chat_id','t_user_id'));
+            Log::info('deleteUser', compact('chat_id', 't_user_id'));
             $community = null;
             $connection = TelegramConnection::where('chat_id', $chat_id)->first();
             if ($connection)
@@ -228,6 +229,14 @@ class Telegram extends Messenger
                 $community = $connection->community;
                 if ($community) {
                     $community->update(['is_active' => $community_is_active]);
+                    if ($community_is_active) {
+                        TelegramUserCommunity::create([
+                            'community_id' => $community->id,
+                            'telegram_user_id' => $telegramUser->telegram_id,
+                            'role' => 'creator',
+                            'accession_date' => time(),
+                        ]);
+                    }
                 }
             }
         }
