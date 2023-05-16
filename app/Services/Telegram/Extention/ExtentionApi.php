@@ -7,6 +7,7 @@ use Askoldex\Teletant\Api;
 use Askoldex\Teletant\Settings;
 use Askoldex\Teletant\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log as Logg;
 
 class ExtentionApi extends Api implements ExtentionApiInterface
 {
@@ -38,9 +39,10 @@ class ExtentionApi extends Api implements ExtentionApiInterface
                     "inline_keyboard" => $keyboard
                 ]
             ];
+            Logg::debug('Lets send mess', [$params]);
             Http::post(env('TELEGRAM_BASE_URL') . '/bot' . $this->token . '/sendMessage', $params);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::channel('telegram-bot-log')
+            Logg::channel('telegram-bot-log')
                 ->alert('Error from ' . get_called_class() . ' text: ' . $e->getMessage() . PHP_EOL);
         }
     }
@@ -92,6 +94,7 @@ class ExtentionApi extends Api implements ExtentionApiInterface
      */
     public function kickUser(int $userId, int $chatId)
     {
+        Logg::debug('we already in extention api to ban him!');
         return $this->invokeAction('banChatMember', [
             'chat_id' => $chatId,
             'user_id' => $userId
