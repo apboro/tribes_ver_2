@@ -54,7 +54,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
                 $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
             }
 
-            $chatId = $object->message->chat->id;
+//            $chatId = $object->message->chat->id;
 //
 //            $community = Community::whereHas('connection', function ($q) use ($chatId) {
 //                $q->where('chat_id', $chatId);
