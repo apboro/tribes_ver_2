@@ -6,6 +6,7 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Models\SmsConfirmations as SmsConfirmation;
 use App\Services\SMS16 as SmsService;
 use App\Services\TelegramLogService;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 class Sms16Repository implements NotificationRepositoryContract
@@ -48,7 +49,7 @@ class Sms16Repository implements NotificationRepositoryContract
         $sms = $message->sendMessage($phone, 'Код подтверждения ' . env('APP_NAME') . ':' . $code);
 
         if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] == 'phone_code_user') {
-            TelegramLogService::staticSendLogMessage('Предположительно на sms16.ru закончились деньги. ' . 'Ответ сервиса: ' .$sms[0][$phone]['error']);
+            Log::debug('Предположительно на sms16.ru закончились деньги. ' . 'Ответ сервиса: ' .$sms[0][$phone]['error']);
 
             return false;
         }

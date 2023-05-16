@@ -15,7 +15,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     @OA\RequestBody(
  *          @OA\JsonContent(
  *               @OA\Property(property="platform", type="string", example="Telegram"),
- *               @OA\Property(property="hash", type="string", example="61e0d7be43532c90768a6c0227f279a5"),
+ *               @OA\Property(property="telegram_user_id", type="integer", example="123456789123"),
  *         )
  *      ),
  *
@@ -28,14 +28,8 @@ class ApiTelegramConnectionSearchRequest extends ApiRequest
     {
         return [
             'platform'=>'required',
-            'hash'=>'required'
+            'telegram_user_id'=>'required'
         ];
     }
 
-    public function messages(): array
-    {
-        return [
-            'hash.required'=>$this->localizeValidation('hash_required')
-        ];
-    }
 }

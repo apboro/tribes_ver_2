@@ -117,7 +117,7 @@ return [
         'id_exists'=>'Id не найдено'
     ],
     'telegram_user'=>[
-        'unique'=> 'Данный телегерам аккаунт уже привязан к другому пользователю',
+        'unique'=> 'Данный телегерам аккаунт уже привязан.',
         'required_telegram_id'=>'Id telegram обязательно для заполнения',
         'integer_telegram_id'=>'Id telegram должно быть целым число',
         'exists_telegram_id'=>'Id telegram не найден в таблице',

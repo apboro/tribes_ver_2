@@ -17,7 +17,8 @@ class AuthorRepository implements AuthorRepositoryContract
 
     public function __construct(
         NotificationRepositoryContract $notyRepo
-    ) {
+    )
+    {
         $this->notyRepo = $notyRepo;
     }
 
@@ -42,9 +43,10 @@ class AuthorRepository implements AuthorRepositoryContract
 
         $user = User::find(Auth::user()->id);
 
-        $user->code = str_replace($chars, '', $request['code']);
-        $user->phone = str_replace($chars, '', $request['phone']);
-        $user->save();
+        $user->update([
+            'code' => str_replace($chars, '', $request['code']),
+            'phone' => str_replace($chars, '', $request['phone'])
+        ]);
 
         $phone = str_replace($chars, '', $request['code'] . $request['phone']);
 

@@ -29,7 +29,7 @@ class ApiCommunityRuleResource extends JsonResource
             'warning' => $this->resource->warning,
             'max_violation_times' => $this->resource->max_violation_times,
             'action' => $this->resource->action,
-            'warning_file' => $this->resource->warning_image_path,
+            'warning_image' => $this->resource->warning_image_path,
             'user_complaint_image' => $this->resource->user_complaint_image_path,
             'communities' => $this->resource->communities,
             'restricted_words' => $this->resource->restrictedWords,

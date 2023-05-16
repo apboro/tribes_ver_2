@@ -51,9 +51,7 @@ class ApiTelegramConnectionController extends Controller
 
         $service = app()->make(Messenger::$platform[$request['platform']]);
 
-        $hash = $request['hash'];
-
-        $result = $service->checkCommunityConnect($hash);
+        $result = $service->checkCommunityConnect($request->telegram_user_id);
 
         return ApiResponse::common($result);
 
