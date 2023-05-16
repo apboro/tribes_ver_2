@@ -249,7 +249,7 @@ class Telegram extends Messenger
     public function checkCommunityConnect(int $telegram_id)
     {
         $telegramConnectionsOfUser = TelegramConnection::where('telegram_user_id', $telegram_id)
-            ->where('user_id', Auth::user()->id)
+//            ->where('user_id', Auth::user()->id)
             ->where('botStatus', 'administrator')
             ->whereStatus('connected')
             ->get();
