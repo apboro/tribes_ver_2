@@ -18,7 +18,7 @@ class UserRule extends Model
 
     protected $guarded=[];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at'];
 
     protected $appends = ['type'];
     protected $primaryKey = 'uuid';

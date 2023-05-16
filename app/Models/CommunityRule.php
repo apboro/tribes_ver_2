@@ -14,7 +14,7 @@ class CommunityRule extends Model
     use HasFactory;
 
     protected $table = 'moderation_rules';
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at'];
     protected $guarded = [];
     protected $appends = ['type'];
     protected $primaryKey = 'uuid';
