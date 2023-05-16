@@ -16,6 +16,7 @@ use App\Repositories\TelegramUserLists\TelegramUserListsRepositry;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
 use App\Services\TelegramMainBotService;
+use Askoldex\Teletant\Context;
 use Exception;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
@@ -141,6 +142,10 @@ class MainBotEvents
                         $q->where('chat_id', $chatId);
                     })->first();
 
+//                    $this->bot->onUpdate('new_chat_member', function(Context $ctx){
+//                        Log::debug('new_chat_member', [$ctx]);
+//                    });
+
                     if ($community) {
 
                         $member = $this->data->message->new_chat_member;
@@ -164,8 +169,9 @@ class MainBotEvents
                             }
 
                             if ($onboarding = $community->onboardingRule) {
+                                $image= null;
                                 if ($onboarding->greeting_image) {
-                                    $path = env('APP_URL') . '/' . $community->onboardingRule->greeting_image;
+                                    $path = env('APP_URL') . '/storage/' . $community->onboardingRule->greeting_image;
                                     $image = "<a href='$path'>&#160</a>";
                                 }
                                 $onboarding = json_decode($onboarding->rules, true);
@@ -368,9 +374,7 @@ class MainBotEvents
                 $community = NULL;
             }
             if ($community) {
-                Log::channel('telegram_bot_action_log')
-                    ->
-                    log('info', '', [
+                Log::channel('telegram_bot_action_log')->log('info', '', [
                         'event' => TelegramBotActionHandler::EVENT_NEW_CHAT_TITLE,
                         'chat_id' => $community->chat->id
                     ]);
@@ -380,7 +384,7 @@ class MainBotEvents
                 );
             }
         } catch (Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            Log::debug('newChatTitle err '. $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
