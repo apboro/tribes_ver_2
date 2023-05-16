@@ -11,6 +11,7 @@ use App\Services\Telegram\MainComponents\MainBotEvents;
 use App\Services\Telegram\MainComponents\MessageObserver;
 use App\Services\Telegram\MainComponents\TelegramMidlwares;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class TelegramMainBotService implements TelegramMainBotServiceContract
 {
@@ -21,11 +22,12 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
 
 
     public function __construct(
-        MainBotCollection $botCollection,
-        MainBotCommands $mainBotCommands,
-        TelegramMidlwares $middleware,
+        MainBotCollection  $botCollection,
+        MainBotCommands    $mainBotCommands,
+        TelegramMidlwares  $middleware,
         TelegramLogService $telegramLogService
-    ) {
+    )
+    {
         $this->botCollect = $botCollection;
         $this->mainBotCommands = $mainBotCommands;
         $this->middleware = $middleware;
@@ -51,6 +53,25 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             if (!isset($object->channel_post)) {
                 $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
             }
+
+//            $chatId = $object->message->chat->id;
+//
+//            $community = Community::whereHas('connection', function ($q) use ($chatId) {
+//                $q->where('chat_id', $chatId);
+//            })->first();
+
+            if (isset($object->message->new_chat_member)) {
+                Log::debug('new chat member', [$object]);
+                $bot = $this->botCollect->getBotByName($nameBot);
+                $keyboard = [[[
+                    'text' => 'keyboard',
+                    'callback_data' => 'button_pressed'
+                ]]];
+                $bot->getExtentionApi()->sendMess($object->message->chat->id, 'privet drug', false, $keyboard);
+//                $this->middleware->captchaMiddleware($this->botCollect->getBotByName($nameBot));
+            }
+
+
             $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
             $events->initEventsMainBot();
 
@@ -74,7 +95,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             // Если локально используется бот к которому прокинут хук, его необходимо отключить.
             //$this->botCollect->getBotByName($nameBot)->polling();
             $this->botCollect->getBotByName($nameBot)->listen($data);
-        } catch (Exception | TelegramException $e) {
+        } catch (Exception|TelegramException $e) {
             $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
         }
     }
@@ -82,9 +103,9 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     public function sendLogMessage(string $text)
     {
         $this->getApiCommandsForBot(config('telegram_bot.bot.botName'))->sendMessage([
-            'chat_id'        => env('TELEGRAM_LOG_CHAT'),
-            'text'           => $text,
-            'parse_mode'     => 'HTML'
+            'chat_id' => env('TELEGRAM_LOG_CHAT'),
+            'text' => $text,
+            'parse_mode' => 'HTML'
         ]);
     }
 
@@ -165,6 +186,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
     {
         $this->getApiCommandsForBot($botName)->muteUser($userId, $chatId, $time);
     }
+
     public function deleteUserMessage(string $botName, int $message_id, int $chatId)
     {
         $this->getApiCommandsForBot($botName)->deleteUserMessage($message_id, $chatId);
