@@ -471,12 +471,13 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 );
                 break;
             case 'ban_user':
-                Log::debug('Action >> kicking user');
+                Log::debug('Action >> banning user');
                 $this->botService->kickUser(
                     config('telegram_bot.bot.botName'),
                     $messageDTO->telegram_user_id,
                     $messageDTO->chat_id,
                 );
+                Log::debug('User banned');
                 break;
             case 'mute_user':
                 Log::debug('Action >> restrict chat member');
