@@ -247,10 +247,9 @@ class Telegram extends Messenger
             foreach ($telegramConnectionsOfUser as $telegramConnection) {
                 /* @var $community Community */
 
-                $community = Community::where('connection_id', $telegramConnection->id)->first();
+                $community = Community::firstOrCreate('connection_id', $telegramConnection->id);
 
-                if (!$community) {
-                    $community = new Community();
+                if ($community->wasRecentlyCreated) {
                     $tariff = new Tariff();
                     $this->tariffRepository->generateLink($tariff);
                     $baseAttributes = Tariff::baseData();
