@@ -2,33 +2,20 @@
 
 namespace App\Services;
 
-use App\Helper\ArrayHelper;
+use App\Helper\PseudoCrypt;
 use App\Models\Community;
-
 use App\Models\Payment;
-use App\Models\Donate;
+use App\Models\Tariff;
 use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
 use App\Models\TelegramUserCommunity;
-use App\Models\TestData;
-use App\Repositories\Community\CommunityRepositoryContract;
+use App\Models\User;
 use App\Repositories\Tariff\TariffRepository;
 use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Abs\Messenger;
-use GuzzleHttp\Psr7\Request;
-use App\Models\User;
-use App\Models\Tariff;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
-use App\Helper\PseudoCrypt;
-use App\Models\Statistic;
-use App\Models\TariffVariant;
-
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class Telegram extends Messenger
 {
@@ -263,6 +250,7 @@ class Telegram extends Messenger
                 $community = Community::where('connection_id', $telegramConnection->id)->first();
 
                 if (!$community) {
+                    $community = new Community();
                     $tariff = new Tariff();
                     $this->tariffRepository->generateLink($tariff);
                     $baseAttributes = Tariff::baseData();
