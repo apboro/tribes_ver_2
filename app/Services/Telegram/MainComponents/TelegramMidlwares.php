@@ -8,6 +8,7 @@ use Askoldex\Teletant\Context;
 use Askoldex\Teletant\States\Stage;
 use App\Models\TelegramUser;
 use App\Services\Telegram;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class TelegramMidlwares
@@ -33,9 +34,24 @@ class TelegramMidlwares
                 },
                 $this->bootStage()->middleware()
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
+    }
+
+    public function captchaMiddleware(Telegram\MainBot $bot)
+    {
+        try {
+            $bot->middlewares([
+
+            ]);
+
+            $this->bootStage()->middleware();
+
+        } catch (Exception $e){
+            Log::error($e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+        
     }
 
     /** Подключение сцены */
