@@ -50,6 +50,8 @@ COPY composer.* .env.example artisan ${WORKDIR}/
 RUN cp -v .env.example .env && \
     php composer.phar install --no-dev --no-autoloader --prefer-dist
 
-COPY --chown=www-data:www-data . ${WORKDIR}/
-RUN php composer.phar install --no-dev --optimize-autoloader --prefer-dist
+COPY --chown=www-data:www-data . ${WORKDIR}/  
+RUN php composer.phar install --no-dev --optimize-autoloader --prefer-dist &&\
+    sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/" /etc/php7/php.ini && \
+    sed -i "s/post_max_size = 8M/post_max_size = 100M/" /etc/php7/php.ini
 COPY --chown=www-data:www-data --from=frontend-builder ${WORKDIR}/public ${WORKDIR}/public/
