@@ -287,8 +287,8 @@ class Telegram extends Messenger
                 $telegramConnection->status = 'completed';
                 $telegramConnection->save();
 
-//                return TelegramConnection::where('id', $tc->id)->with('community')->first();
             }
+            return true;
         } else {
             return false;
         }
