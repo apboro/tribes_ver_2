@@ -10,6 +10,7 @@ use App\Services\Abs\Messenger;
 use App\Services\Telegram;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ApiTelegramConnectionController extends Controller
 {
@@ -51,7 +52,13 @@ class ApiTelegramConnectionController extends Controller
 
         $service = app()->make(Messenger::$platform[$request['platform']]);
 
-        $result = $service->checkCommunityConnect($request['telegram_user_id']);
+        Log::debug($request['telegram_user_id']);
+
+        try {
+            $result = $service->checkCommunityConnect($request['telegram_user_id']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage().$e->getFile().$e->getLine());
+        }
 
         return ApiResponse::common($result);
 
