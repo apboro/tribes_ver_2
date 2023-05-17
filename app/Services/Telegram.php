@@ -261,7 +261,6 @@ class Telegram extends Messenger
                 /* @var $community Community */
                 $community = Community::firstOrCreate(['connection_id' => $telegramConnection->id],
                     [
-                        'owner' => Auth::user()->id,
                         'title' => $telegramConnection->chat_title,
                         'image' => self::saveCommunityPhoto($telegramConnection->photo_url, $telegramConnection->chat_id)
                     ]);
@@ -272,6 +271,7 @@ class Telegram extends Messenger
                     $baseAttributes['inline_link'] = $tariff->inline_link;
                     $community->tariff()->create($baseAttributes);
                     $community->is_active = true;
+                    $community->owner = Auth::user()->id;
                     $community->statistic()->create([
                         'community_id' => $community->id
                     ]);
@@ -279,6 +279,7 @@ class Telegram extends Messenger
                     $this->addAuthorOnCommunity($community);
                     $community->generateHash();
                 } else {
+                    $community->owner = Auth::user()->id;
                     $community->is_active = true;
                 }
                 $community->save();
