@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Auth;
  * @property mixed $knowledge
  * @property mixed $reputation_rules_id
  * @property mixed $communityReputationRule
+ * @property mixed|string $image
  */
 class Community extends Model
 {

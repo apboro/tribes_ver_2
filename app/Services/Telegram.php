@@ -259,12 +259,10 @@ class Telegram extends Messenger
         if ($telegramConnectionsOfUser->isNotEmpty()) {
             foreach ($telegramConnectionsOfUser as $telegramConnection) {
                 /* @var $community Community */
-                $community = Community::firstOrCreate(['connection_id' => $telegramConnection->id],
-                    [
-                        'title' => $telegramConnection->chat_title,
-                        'image' => self::saveCommunityPhoto($telegramConnection->photo_url, $telegramConnection->chat_id)
-                    ]);
-                if ($community->wasRecentlyCreated) {
+
+                $community = Community::where('connection_id', $telegramConnection->id)->first();
+
+                if (!$community) {
                     $tariff = new Tariff();
                     $this->tariffRepository->generateLink($tariff);
                     $baseAttributes = Tariff::baseData();
@@ -275,6 +273,8 @@ class Telegram extends Messenger
                     $community->statistic()->create([
                         'community_id' => $community->id
                     ]);
+                    $community->title = $telegramConnection->chat_title;
+                    $community->image = self::saveCommunityPhoto($telegramConnection->photo_url, $telegramConnection->chat_id);
                     $this->addBot($community);
                     $this->addAuthorOnCommunity($community);
                     $community->generateHash();
@@ -282,6 +282,7 @@ class Telegram extends Messenger
                     $community->owner = Auth::user()->id;
                     $community->is_active = true;
                 }
+
                 $community->save();
                 $telegramConnection->status = 'completed';
                 $telegramConnection->save();

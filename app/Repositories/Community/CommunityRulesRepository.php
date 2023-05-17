@@ -95,13 +95,17 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             return $result;
         }
 
-        $conditionToCheck = $rule['subject'] . '-' . $rule['action'] . '-' . $rule['value']['type'];
+        $conditionToCheck = null;
+        if ($rule['subject'] && $rule['action']) {
+            $conditionToCheck = $rule['subject'] . '-' . $rule['action'] . '-' . $rule['value']['type'];
 
-        if ($rule['value']['type'] === 'custom') {
-            $rule_parameter = $rule['value']['parameter'] ?? null;
+            if ($rule['value']['type'] === 'custom') {
+                $rule_parameter = $rule['value']['parameter'] ?? null;
+            }
+
+
+            Log::debug('in foreach of ifThen', ['rule' => $conditionToCheck, 'parameter' => $rule_parameter ?? null]);
         }
-
-        Log::debug('in foreach of ifThen', ['rule' => $conditionToCheck, 'parameter' => $rule_parameter ?? null]);
 
         return $this->conditionMatcher($conditionToCheck, $this->messageDTO, $rule_parameter ?? null);
     }
@@ -144,8 +148,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
     {
         Log::debug('in antispamRule handler', [$rule]);
 
-        $userInCommunity = DB::table('telegram_users_community')
-            ->where('community_id', $this->community->id)
+        $userInCommunity = TelegramUserCommunity::where('community_id', $this->community->id)
             ->where('telegram_user_id', $this->telegramUser->telegram_id)->first();
 
         Log::debug('UserInCommunity', [$userInCommunity]);
