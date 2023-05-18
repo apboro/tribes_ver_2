@@ -496,12 +496,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 break;
             case 'add_warning':
                 Log::debug('Action >> add_warning');
-                $communityUser = TelegramUserCommunity::query()
-                    ->where('telegram_user_id', $this->messageDTO->telegram_user_id)
-                    ->where('community_id', $this->community->id)->first();
-                $communityUser->increment('warnings_count');
-                $this->actionRunner('send_message_in_pm_from_bot', $this->messageDTO, 'Вы нарушили правила чата');
-
+                $this->actionRunner('send_message_in_chat_from_bot', $this->messageDTO, $action_parameter);
                 break;
             case 'delete_warning':
                 //todo 4
