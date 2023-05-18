@@ -77,7 +77,7 @@ class CommunityRuleRepository
         foreach ($words as $word) {
             RestrictedWord::create([
                 'moderation_rule_uuid' => $community_rule->uuid,
-                'word' => $word ?? null,
+                'word' => trim($word) ?? null,
             ]);
         }
     }
