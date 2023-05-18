@@ -4,6 +4,7 @@ namespace App\Services\Telegram\Extention;
 
 use App\Services\Telegram\BotInterface\ExtentionApiInterface;
 use Askoldex\Teletant\Api;
+use Askoldex\Teletant\Exception\TeletantException;
 use Askoldex\Teletant\Settings;
 use Askoldex\Teletant\Log;
 use Illuminate\Support\Facades\Http;
@@ -95,10 +96,14 @@ class ExtentionApi extends Api implements ExtentionApiInterface
     public function kickUser(int $userId, int $chatId)
     {
         Logg::debug('we already in extention api to ban him!');
-        return $this->invokeAction('banChatMember', [
-            'chat_id' => $chatId,
-            'user_id' => $userId
-        ]);
+        try {
+            return $this->invokeAction('banChatMember', [
+                'chat_id' => $chatId,
+                'user_id' => $userId
+            ]);
+        } catch (\Exception $e) {
+            Logg::error($e);
+        }
     }
 
     /**

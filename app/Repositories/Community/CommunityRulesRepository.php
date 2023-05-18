@@ -279,12 +279,12 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         $rules = json_decode($rule->rules, true);
         Log::debug('onboarding $rules', [$rules]);
 
-        if ($this->messageDTO->new_chat_member_bot && $rules['botJoinLimitation']['action'] === 'ban_user') {
+        if ($this->messageDTO->new_chat_member_bot && $rules['botJoinLimitation']['action'] == 4) {
             $this->botService->kickUser(
                 env('TELEGRAM_BOT_NAME'),
                 $this->messageDTO->new_chat_member_id,
                 $this->messageDTO->chat_id);
-            if (($this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id) && ($rules['inviteBotLimitation']['action'] === 'ban_user')) {
+            if (($this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id) && ($rules['inviteBotLimitation']['action'] == 4)) {
                 $this->botService->kickUser(
                     env('TELEGRAM_BOT_NAME'),
                     $this->messageDTO->telegram_user_id,
@@ -299,10 +299,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             || $this->conditionMatcher('last_name-format-rtl_format', $this->messageDTO)
             && $rules['rtlNameJoinLimitation']['action'] == 10) {
 
-            $this->actionRunner('ban_user',$this->messageDTO);
+            $this->actionRunner('ban_user', $this->messageDTO);
         }
-
-
     }
 
 
