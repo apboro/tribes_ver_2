@@ -407,7 +407,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     break;
                 case 'message_type-equal_to-link':
                     if ($data->message_entities) {
-                        Log::debug('conditionChecker entities', $data->message_entities);
+                        Log::debug('conditionChecker entities', [$data->message_entities]);
                         foreach ($data->message_entities as $item) {
                             if ($item['type'] == "url" || $item['type'] == "text_link") {
                                 return true;
@@ -417,13 +417,13 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     break;
                 case 'message_is_forward':
                     if ($data->forward) {
-                        Log::debug('conditionChecker forward', $data->forward);
+                        Log::debug('conditionChecker forward', [$data->forward]);
                         return true;
                     }
                     break;
                 case 'message_type-equal_to-bot_command':
                     if ($data->message_entities) {
-                        Log::debug('conditionChecker entities', $data->message_entities);
+                        Log::debug('conditionChecker entities', [$data->message_entities]);
                         foreach ($data->message_entities as $item) {
                             if ($item['type'] == "bot_command") {
                                 return true;
