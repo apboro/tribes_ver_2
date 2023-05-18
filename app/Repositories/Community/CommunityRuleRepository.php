@@ -35,8 +35,9 @@ class CommunityRuleRepository
             return false;
         }
 
-        if (!empty($request->input('restricted_words')) && $request->input('restricted_words')) {
-            $this->addRestrictedWords($request, $community_rule);
+        if (!empty(array_filter($request->input('restricted_words')))) {
+            $restrictedWords = explode(",", $request->input('restricted_words')[0]);
+            $this->addRestrictedWords($restrictedWords, $community_rule);
         }
         $this->uploadImages($request, $community_rule);
 
@@ -69,11 +70,11 @@ class CommunityRuleRepository
     }
 
     public function addRestrictedWords(
-        ApiRequest    $request,
+        array $words,
         CommunityRule $community_rule
     )
     {
-        foreach ($request->input('restricted_words') as $word) {
+        foreach ($words as $word) {
             RestrictedWord::create([
                 'moderation_rule_uuid' => $community_rule->uuid,
                 'word' => $word ?? null,
