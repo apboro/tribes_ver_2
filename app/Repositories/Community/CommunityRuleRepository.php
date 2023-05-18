@@ -8,6 +8,7 @@ use App\Models\CommunityRule;
 use App\Models\RestrictedWord;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CommunityRuleRepository
 {
@@ -36,7 +37,12 @@ class CommunityRuleRepository
         }
 
         if (!empty(array_filter($request->input('restricted_words')))) {
-            $restrictedWords = explode(",", $request->input('restricted_words')[0]);
+            if (Str::contains($request->input('restricted_words')[0], ',')) {
+                $restrictedWords = explode(",", $request->input('restricted_words')[0]);
+            } else {
+                $restrictedWords = $request->input('restricted_words');
+            }
+
             $this->addRestrictedWords($restrictedWords, $community_rule);
         }
         $this->uploadImages($request, $community_rule);
