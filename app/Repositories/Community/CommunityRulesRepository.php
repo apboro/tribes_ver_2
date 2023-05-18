@@ -158,7 +158,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             'now' => Carbon::now()]);
 
         if (Carbon::createFromTimestamp($userInCommunity->accession_date)->addSeconds($rule->work_period) > Carbon::now()) {
-            if ($this->conditionMatcher('message_type-contain-link', $this->messageDTO)) {
+            if ($this->conditionMatcher('message_type-equal_to-link', $this->messageDTO)) {
                 if ($rule->del_message_with_link) {
                     $this->actionRunner('delete_message', $this->messageDTO);
                 }
