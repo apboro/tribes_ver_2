@@ -275,7 +275,7 @@ class Telegram extends Messenger
                 $telegramConnection->save();
 
             }
-            return true;
+            return $telegramConnection;
         } else {
             return false;
         }
