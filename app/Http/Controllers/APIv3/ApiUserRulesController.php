@@ -9,6 +9,7 @@ use App\Http\ApiRequests\ApiUserRulesGetRequest;
 use App\Http\ApiRequests\ApiUserRulesShowRequest;
 use App\Http\ApiRequests\ApiUserRulesStoreRequest;
 use App\Http\ApiRequests\ApiUserRulesUpdateRequest;
+use App\Http\ApiResources\Rules\ApiCommunityRuleCollection;
 use App\Http\ApiResources\Rules\ApiUserRuleResource;
 use App\Http\ApiResources\Rules\ApiUserRulesCollection;
 use App\Http\ApiResponses\ApiResponse;
@@ -114,7 +115,7 @@ class ApiUserRulesController extends Controller
             ->orderBy('updated_at', 'desc')->get();
 
         $moderationRules = CommunityRule::where('user_id', $user->id)
-            ->with('communities')
+            ->with(['communities', 'restrictedWords'])
             ->when($request->has('rule_title'), function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->input('rule_title') . '%');
             })
@@ -122,6 +123,7 @@ class ApiUserRulesController extends Controller
                 $query->where('uuid', $request->input('rule_uuid'));
             })
             ->orderBy('updated_at', 'desc')->get();
+        $moderationRules = ApiCommunityRuleCollection::make($moderationRules);
 
         $countAll = $onboardings->count() + $ifThenRules->count() + $antispamRules->count() + $moderationRules->count();
 
