@@ -116,7 +116,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             $restricted_words = $rule->restrictedWords;
             if ($restricted_words->isNotEmpty()) {
                 foreach ($restricted_words as $word) {
-                    if (Str::contains(Str::upper($this->messageDTO->text), Str::upper($word->word))) {
+                    if (Str::is(Str::upper($this->messageDTO->text), Str::upper($word->word))) {
 
                         $communityUser = TelegramUserCommunity::query()
                             ->where('telegram_user_id', $this->messageDTO->telegram_user_id)
