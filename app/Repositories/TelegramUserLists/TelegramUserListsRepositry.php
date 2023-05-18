@@ -5,6 +5,7 @@ namespace App\Repositories\TelegramUserLists;
 use App\Http\ApiRequests\ApiRequest;
 use App\Models\Community;
 use App\Models\TelegramUser;
+use App\Models\TelegramUserCommunity;
 use App\Models\TelegramUserList;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
@@ -57,8 +58,11 @@ class TelegramUserListsRepositry
                     $telegram_id,
                     $community_telegram_chat_id
                 );
-                $ty = TelegramUser::where('telegram_id', $telegram_id)->first();
-                $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time(), 'status'=>'banned']);
+                $telegramUserCommunity = TelegramUserCommunity::where('telegram_user_id', $telegram_id)
+                    ->where('community_id', $community->id)->first();
+                 $telegramUserCommunity->exit_date = time();
+                 $telegramUserCommunity->status = 'banned';
+                 $telegramUserCommunity->save();
             } catch (\Exception $e) {
                 TelegramLogService::staticSendLogMessage('Ban list error ' . $e);
             }
@@ -74,8 +78,10 @@ class TelegramUserListsRepositry
                     $community_telegram_chat_id,
                     60
                 );
-                $ty = TelegramUser::where('telegram_id', $telegram_id)->first();
-                $ty->communities()->updateExistingPivot($community->id, ['status'=>'muted']);
+                $telegramUserCommunity = TelegramUserCommunity::where('telegram_user_id', $telegram_id)
+                    ->where('community_id', $community->id)->first();
+                $telegramUserCommunity->status = 'muted';
+                $telegramUserCommunity->save();
             } catch (\Exception $e) {
                 TelegramLogService::staticSendLogMessage('Mute list error ' . $e);
             }
@@ -86,7 +92,6 @@ class TelegramUserListsRepositry
         }
 
         return true;
-
     }
 
     public
@@ -118,20 +123,18 @@ class TelegramUserListsRepositry
                         $telegram_id,
                         $community_telegram_chat_id
                     );
-                    $ty = TelegramUser::where('telegram_id', $telegram_id)->first();
-                    $ty->communities()->updateExistingPivot($community->id, ['status'=>null]);
+                    $telegramUserCommunity = TelegramUserCommunity::where('telegram_user_id', $telegram_id)
+                        ->where('community_id', $community->id)->first();
+                    $telegramUserCommunity->status = null;
+                    $telegramUserCommunity->save();
                 } catch (\Exception $e) {
                     TelegramLogService::staticSendLogMessage('Ban list error' . $e);
                 }
             }
-
             $telegram_list->delete();
-
         }
 
-
         return true;
-
     }
 
     public
@@ -145,7 +148,6 @@ class TelegramUserListsRepositry
                 ->where('community_id', '=', $community_id)
                 ->delete();
         }
-
     }
 
     public
@@ -193,8 +195,11 @@ class TelegramUserListsRepositry
                 $telegram_id,
                 $community_telegram_chat_id
             );
-            $ty = TelegramUser::where('telegram_id', $telegram_id)->first();
-            $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time(), 'status'=>'kicked']);
+            $telegramUserCommunity = TelegramUserCommunity::where('telegram_user_id', $telegram_id)
+                ->where('community_id', $community->id)->first();
+            $telegramUserCommunity->exit_date = time();
+            $telegramUserCommunity->status = 'kicked';
+            $telegramUserCommunity->save();
         }
 
     }
