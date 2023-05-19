@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property mixed $restrictedWords
+ *
+ * @property int $user_id
+ * @property string content
+ * @property string content_image_path
  */
 class CommunityRule extends Model
 {
