@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Community;
 
 use App\Http\ApiRequests\Community\ApiAttachTagToCommunityRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\Models\Tag;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class ApiCommunityTagController extends Controller

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Community\Rules;
 
 use App\Http\ApiRequests\Antispam\ApiAntispamEditRequest;
 use App\Http\ApiRequests\Antispam\ApiAntispamShowRequest;
@@ -14,7 +14,6 @@ use App\Models\Antispam;
 use App\Models\Community;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class ApiAntispamController extends Controller
 {

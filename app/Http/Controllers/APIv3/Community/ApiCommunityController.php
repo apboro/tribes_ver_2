@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Community;
 
 use App\Events\CreateCommunity;
 use App\Http\ApiRequests\Community\ApiCommunityAddRequest;

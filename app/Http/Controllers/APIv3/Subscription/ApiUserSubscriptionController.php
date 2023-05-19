@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Subscription;
 
 use App\Http\ApiRequests\Subscription\ApiChangeSubscriptionRecurrentRequest;
 use App\Http\ApiRequests\Subscription\ApiSubscriptionPayRequest;

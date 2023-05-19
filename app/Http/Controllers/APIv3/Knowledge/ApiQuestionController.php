@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Knowledge;
 
 use App\Http\ApiRequests\Question\ApiQuestionDeleteRequest;
 use App\Http\ApiRequests\Question\ApiQuestionListRequest;

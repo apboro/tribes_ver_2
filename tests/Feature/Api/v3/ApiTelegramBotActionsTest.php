@@ -47,36 +47,10 @@ class ApiTelegramBotActionsTest extends TestCase
         ],
     ];
 
-    public function test_telegram_action_log_not_auth()
-    {
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-        ])->get($this->url['bot_log']);
-
-        $response->assertStatus($this->data['error_not_auth']['expected_status'])
-            ->assertJsonStructure($this->data['error_not_auth']['expected_structure']);
-    }
-
-
-    public function test_telegram_action_log_success()
-    {
-
-        $seeder_instance = new TelegramBotActionLogSeeder();
-        $seeder_instance->run();
-
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->get($this->url['bot_log'], $this->data['get_list_success']);
-
-        $response->assertStatus($this->data['get_list_success']['expected_status'])
-            ->assertJsonStructure($this->data['get_list_success']['expected_structure']);
-    }
-
     public function test_telegram_action_log_list_not_auth(){
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-        ])->post($this->url['bot_log_filter']);
+        ])->get($this->url['bot_log_filter']);
 
         $response->assertStatus($this->data['error_not_auth']['expected_status'])
             ->assertJsonStructure($this->data['error_not_auth']['expected_structure']);
@@ -93,7 +67,7 @@ class ApiTelegramBotActionsTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['bot_log_filter'],$this->data['get_list_success']);
+        ])->get($this->url['bot_log_filter'],$this->data['get_list_success']);
 
         $response->assertStatus($this->data['get_list_success']['expected_status'])
             ->assertJsonStructure($this->data['get_list_success']['expected_structure']);
@@ -110,7 +84,7 @@ class ApiTelegramBotActionsTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['bot_log_filter'],$this->data['error_not_valid_data']);
+        ])->get($this->url['bot_log_filter'],$this->data['error_not_valid_data']);
 
         $response->assertStatus($this->data['error_not_valid_data']['expected_status'])
             ->assertJsonStructure($this->data['error_not_valid_data']['expected_structure']);
@@ -127,7 +101,7 @@ class ApiTelegramBotActionsTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['bot_log_filter'],$this->data['error_not_valid_data']);
+        ])->get($this->url['bot_log_filter'],$this->data['error_not_valid_data']);
 
         $response->assertStatus($this->data['error_not_valid_data']['expected_status'])
             ->assertJsonStructure($this->data['error_not_valid_data']['expected_structure']);
@@ -144,7 +118,7 @@ class ApiTelegramBotActionsTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['bot_log_filter'],$this->data['error_not_valid_data']);
+        ])->get($this->url['bot_log_filter'],$this->data['error_not_valid_data']);
 
         $response->assertStatus($this->data['error_not_valid_data']['expected_status'])
             ->assertJsonStructure($this->data['error_not_valid_data']['expected_structure']);
@@ -161,7 +135,7 @@ class ApiTelegramBotActionsTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['bot_log_filter'],$this->data['error_not_valid_data']);
+        ])->get($this->url['bot_log_filter'],$this->data['error_not_valid_data']);
 
         $response->assertStatus($this->data['error_not_valid_data']['expected_status'])
             ->assertJsonStructure($this->data['error_not_valid_data']['expected_structure']);
@@ -178,7 +152,7 @@ class ApiTelegramBotActionsTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['bot_log_filter'],$this->data['get_list_success']);
+        ])->get($this->url['bot_log_filter'],$this->data['get_list_success']);
 
         $response->assertStatus($this->data['get_list_success']['expected_status'])
             ->assertJsonStructure($this->data['get_list_success']['expected_structure']);
@@ -193,7 +167,7 @@ class ApiTelegramBotActionsTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url['bot_log_filter'],$this->data['get_list_success']);
+        ])->get($this->url['bot_log_filter'],$this->data['get_list_success']);
 
         $response->assertStatus($this->data['get_list_success']['expected_status'])
             ->assertJsonStructure($this->data['get_list_success']['expected_structure']);

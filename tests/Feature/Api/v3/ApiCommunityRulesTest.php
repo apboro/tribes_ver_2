@@ -27,14 +27,13 @@ class ApiCommunityRulesTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'data' => [
-                    "id",
+                    "uuid",
                     "user_id",
                     "name",
                     "content",
                     "warning",
                     "max_violation_times",
                     "action",
-                    "warning_file",
                     "communities",
                     "restricted_words",
                     "complaint_text",
@@ -47,14 +46,13 @@ class ApiCommunityRulesTest extends TestCase
             'expected_status' => 200,
             'expected_structure' => [
                 'data' => [[
-                    "id",
+                    "uuid",
                     "user_id",
                     "name",
                     "content",
                     "warning",
                     "max_violation_times",
                     "action",
-                    "warning_file",
                     "communities",
                     "restricted_words"
                 ],
@@ -76,21 +74,10 @@ class ApiCommunityRulesTest extends TestCase
         ]);
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-        ])->get($this->url . "/" . $community_rule->id);
+        ])->get($this->url . "/" . $community_rule->uuid);
 
         $response->assertStatus($this->data['error_not_auth']['expected_status'])
             ->assertJsonStructure($this->data['error_not_auth']['expected_structure']);
-    }
-
-    public function test_get_community_rule_id_error()
-    {
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->get($this->url . "/test");
-
-        $response->assertStatus($this->data['validation_error']['expected_status'])
-            ->assertJsonStructure($this->data['validation_error']['expected_structure']);
     }
 
     public function test_get_community_rule_success()
@@ -106,7 +93,7 @@ class ApiCommunityRulesTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->get($this->url . "/" . $community_rule->id);
+        ])->get($this->url . "/" . $community_rule->uuid);
 
         $response->assertStatus($this->data['show_success']['expected_status'])
             ->assertJsonStructure($this->data['show_success']['expected_structure']);
@@ -258,14 +245,14 @@ class ApiCommunityRulesTest extends TestCase
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->custom_token,
-        ])->post($this->url . "/edit/" . $community_rule->id, $edit_array);
+        ])->post($this->url . "/edit/" . $community_rule->uuid, $edit_array);
 
         $response->assertStatus($this->data['show_success']['expected_status'])
             ->assertJsonStructure($this->data['show_success']['expected_structure']);
         $this->assertDatabaseHas('community_rules', ['name' => $name]);
         $this->assertDatabaseHas('restricted_words', ['word' => 'test1']);
         $this->assertDatabaseHas('restricted_words', ['word' => 'test2']);
-        $this->assertDatabaseHas('communities', ['community_rule_id' => $community_rule->id]);
+        $this->assertDatabaseHas('communities', ['community_rule_id' => $community_rule->uuid]);
     }
 
 

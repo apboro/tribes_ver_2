@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Community\Rules;
 
 use App\Http\ApiRequests\Reputation\ApiCommunityReputationRuleEditRequest;
 use App\Http\ApiRequests\Reputation\ApiCommunityReputationRuleListRequest;

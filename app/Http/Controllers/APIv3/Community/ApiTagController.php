@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Community;
 
 use App\Http\ApiRequests\Community\ApiTagDeleteRequest;
 use App\Http\ApiRequests\Community\ApiTagShowListRequest;
