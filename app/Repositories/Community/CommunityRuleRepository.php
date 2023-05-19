@@ -36,17 +36,9 @@ class CommunityRuleRepository
             return false;
         }
 
-        if (!empty(array_filter($request->input('restricted_words')))) {
-            if (Str::contains($request->input('restricted_words')[0], ',')) {
-                $restrictedWords = explode(",", $request->input('restricted_words')[0]);
-            } else {
-                $restrictedWords = $request->input('restricted_words');
-            }
+        $this->addRestrictedWords($request, $community_rule);
 
-            $this->addRestrictedWords($restrictedWords, $community_rule);
-        }
         $this->uploadImages($request, $community_rule);
-
 
         if (!empty($request->input('community_ids'))) {
             $this->attachCommunities($request, $community_rule);
@@ -75,16 +67,20 @@ class CommunityRuleRepository
         }
     }
 
-    public function addRestrictedWords(
-        array $words,
-        CommunityRule $community_rule
-    )
+    public function addRestrictedWords(ApiRequest $request, CommunityRule $community_rule)
     {
-        foreach ($words as $word) {
-            RestrictedWord::create([
-                'moderation_rule_uuid' => $community_rule->uuid,
-                'word' => trim($word) ?? null,
-            ]);
+        if ($request->input('restricted_words') && !empty(array_filter($request->input('restricted_words')))) {
+            if (Str::contains($request->input('restricted_words')[0], ',')) {
+                $restrictedWords = explode(",", $request->input('restricted_words')[0]);
+            } else {
+                $restrictedWords = $request->input('restricted_words');
+            }
+            foreach ($restrictedWords as $word) {
+                RestrictedWord::create([
+                    'moderation_rule_uuid' => $community_rule->uuid,
+                    'word' => trim($word) ?? null,
+                ]);
+            }
         }
     }
 
@@ -149,9 +145,7 @@ class CommunityRuleRepository
         $community_rule->save();
         $this->removeRestrictedWords($community_rule);
 
-        if (!empty($request->input('restricted_words')) && $request->input('restricted_words')) {
-            $this->addRestrictedWords($request, $community_rule);
-        }
+        $this->addRestrictedWords($request, $community_rule);
 
         $this->uploadImages($request, $community_rule);
         if (!empty($request->input('community_ids'))) {

@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Auth;
  * @property mixed $reputation_rules_id
  * @property mixed $communityReputationRule
  * @property mixed|string $image
+ * @property mixed|null $moderation_rule_uuid
  */
 class Community extends Model
 {
