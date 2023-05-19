@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Knowledge;
 
 use App\Http\ApiRequests\Knowledge\ApiKnowledgeBindToCommunityRequest;
 use App\Http\ApiRequests\Knowledge\ApiKnowledgeDeleteRequest;

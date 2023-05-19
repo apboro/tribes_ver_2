@@ -1,15 +1,15 @@
 <?php
 
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Community\Rules;
 
 
 use App\Http\ApiRequests\UserRank\ApiRankRuleListRequest;
 use App\Http\ApiRequests\UserRank\ApiRankRuleShowRequest;
 use App\Http\ApiRequests\UserRank\ApiRankRuleStoreRequest;
 use App\Http\ApiRequests\UserRank\ApiRankRuleUpdateRequest;
-use App\Http\ApiResources\ApiRankRuleResource;
 use App\Http\ApiResources\ApiRankRuleCollection;
+use App\Http\ApiResources\ApiRankRuleResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Repositories\Rank\RankRuleRepository;
 

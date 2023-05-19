@@ -1,16 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Payments;
 
 use App\Events\SubscriptionMade;
 use App\Helper\PseudoCrypt;
-use App\Http\ApiResponses\ApiResponse;
-use App\Http\ApiResponses\ApiResponseRedirect;
 use App\Http\Controllers\Controller;
-use App\Jobs\SendEmails;
 use App\Models\Payment;
 use App\Repositories\Payment\PaymentRepository;
-use App\Services\SMTP\Mailer;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffService;

@@ -3,12 +3,9 @@
 namespace Api\v3;
 
 use App\Helper\PseudoCrypt;
-use App\Http\Controllers\APIv3\ApiCourseController;
 use App\Models\Course;
-use App\Models\User;
 use App\Services\Tinkoff\Payment;
 use Illuminate\Foundation\Testing\WithFaker;
-use Mockery\MockInterface;
 use Tests\TestCase;
 
 class ApiPayCourseTest extends TestCase

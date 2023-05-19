@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Payments;
 
 use App\Http\ApiRequests\Profile\ApiCardListRequest;
 use App\Http\ApiRequests\Profile\ApiCardStoreRequest;

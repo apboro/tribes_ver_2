@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Community\UserLists;
 
 use App\Http\ApiRequests\ApiBlackListDeleteRequest;
 use App\Http\ApiRequests\ApiBlackListFilterRequest;

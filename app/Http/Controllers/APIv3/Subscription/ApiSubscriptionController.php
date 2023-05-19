@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Subscription;
 
 use App\Http\ApiRequests\ApiAssignSubscriptionRequest;
 use App\Http\ApiRequests\Subscription\ApiEditSubscriptionRequest;
@@ -8,7 +8,6 @@ use App\Http\ApiRequests\Subscription\ApiListSubscriptionsRequest;
 use App\Http\ApiRequests\Subscription\ApiShowSubscriptionRequest;
 use App\Http\ApiRequests\Subscription\ApiStoreSubscriptionRequest;
 use App\Http\ApiRequests\Subscription\ApiUpdateSubscriptionRequest;
-use App\Http\ApiResources\SubscriptionCollection;
 use App\Http\ApiResources\SubscriptionResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\ApiResponses\ApiResponseList;

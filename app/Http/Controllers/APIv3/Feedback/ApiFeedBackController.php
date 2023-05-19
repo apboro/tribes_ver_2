@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\APIv3;
+namespace App\Http\Controllers\APIv3\Feedback;
 
 use App\Events\FeedBackCreate;
 use App\Http\ApiRequests\Profile\ApiFeedBackRequest;
