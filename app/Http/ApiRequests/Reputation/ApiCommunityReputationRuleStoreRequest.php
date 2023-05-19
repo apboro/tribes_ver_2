@@ -14,6 +14,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     @OA\RequestBody(
  *         description="
  *          who_can_rate - enum from [all, owner, owner_and_admin]
+ *          rate_reset_period - enum from [first_day_of_year, first_day_of_month, first_day_of_week]
  *          notify_type - enum from [common,all]",
  *         @OA\MediaType(
  *             mediaType="application/json",
@@ -22,7 +23,7 @@ use App\Http\ApiRequests\ApiRequest;
  *                 @OA\Property(property="who_can_rate",type="string",  example="all"),
  *                 @OA\Property(property="rate_period",type="integer"),
  *                 @OA\Property(property="rate_member_period",type="integer"),
- *                 @OA\Property(property="rate_reset_period",type="integer"),
+ *                 @OA\Property(property="rate_reset_period",type="string"),
  *
  *                 @OA\Property(property="notify_about_rate_change",type="boolean", example="false"),
  *                 @OA\Property(property="notify_type",type="string",example="common"),
@@ -65,7 +66,7 @@ class ApiCommunityReputationRuleStoreRequest extends ApiRequest
 
             'rate_period' => 'integer',
             'rate_member_period' => 'integer',
-            'rate_reset_period' => 'integer',
+            'rate_reset_period' => 'string',
 
             'notify_about_rate_change' => 'boolean',
             'notify_type' => 'in:common,all',
