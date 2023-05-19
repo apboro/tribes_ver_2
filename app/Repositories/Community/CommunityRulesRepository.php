@@ -279,13 +279,25 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         $rules = json_decode($rule->rules, true);
         Log::debug('onboarding $rules', [$rules]);
 
-        if ($this->messageDTO->new_chat_member_bot && $rules['botJoinLimitation']['action'] == 4) {
+        if ($this->messageDTO->new_chat_member_bot && ($rules['botJoinLimitation']['action'] == 4 || $rules['botJoinLimitation']['action'] == 10) ) {
             $this->botService->kickUser(
                 env('TELEGRAM_BOT_NAME'),
                 $this->messageDTO->new_chat_member_id,
                 $this->messageDTO->chat_id);
-            if (($this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id) && ($rules['inviteBotLimitation']['action'] == 4)) {
+            if ($rules['botJoinLimitation']['action'] == 10) {
+                $this->botService->unKickUser(
+                    env('TELEGRAM_BOT_NAME'),
+                    $this->messageDTO->new_chat_member_id,
+                    $this->messageDTO->chat_id);
+            }
+            if (($this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id) && ($rules['inviteBotLimitation']['action'] == 4 || $rules['inviteBotLimitation']['action'] == 10)) {
                 $this->botService->kickUser(
+                    env('TELEGRAM_BOT_NAME'),
+                    $this->messageDTO->telegram_user_id,
+                    $this->messageDTO->chat_id);
+            }
+            if ($rules['inviteBotLimitation']['action'] == 10) {
+                $this->botService->unKickUser(
                     env('TELEGRAM_BOT_NAME'),
                     $this->messageDTO->telegram_user_id,
                     $this->messageDTO->chat_id);
