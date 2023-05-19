@@ -46,8 +46,6 @@ class ExtentionApi extends Api implements ExtentionApiInterface
             ];
 
             Logg::debug('Lets send mess', [$params]);
-            Http::post(env('TELEGRAM_BASE_URL') . '/bot' . $this->token . '/sendMessage', $params);
-
             $url = self::TELEGRAM_BASE_URL . '/bot' . $this->token . '/sendMessage';
 
             Http::post($url, $params);
