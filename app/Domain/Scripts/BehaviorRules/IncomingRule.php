@@ -27,7 +27,7 @@ final class IncomingRule
         $chatId = $telegramConnections->chat_id;
         $content = $communityRule->content;
 
-        $imageUrl = env('APP_URL') . $communityRule->content_image_path;
+        $imageUrl = env('APP_URL') . '/'. $communityRule->content_image_path;
         log::info('image url:'. $imageUrl);
 
         /** @var stdClass $response */
