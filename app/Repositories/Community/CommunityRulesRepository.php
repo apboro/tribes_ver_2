@@ -282,7 +282,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         if (isset($rules['botJoinLimitation'])
             && $this->messageDTO->new_chat_member_bot
             && ($rules['botJoinLimitation']['action'] == 4
-                || $rules['botJoinLimitation']['action'] == 10) ) {
+                || $rules['botJoinLimitation']['action'] == 10)) {
             $this->botService->kickUser(
                 env('TELEGRAM_BOT_NAME'),
                 $this->messageDTO->new_chat_member_id,
@@ -293,24 +293,22 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $this->messageDTO->new_chat_member_id,
                     $this->messageDTO->chat_id);
             }
-            if (isset($rules['inviteBotLimitation'])
-                && ($this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id)
-                && ($rules['inviteBotLimitation']['action'] == 4
-                    || $rules['inviteBotLimitation']['action'] == 10)) {
-                $this->botService->kickUser(
+        }
+        if (isset($rules['inviteBotLimitation'])
+            && ($this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id)
+            && ($rules['inviteBotLimitation']['action'] == 4
+                || $rules['inviteBotLimitation']['action'] == 10)) {
+            $this->botService->kickUser(
+                env('TELEGRAM_BOT_NAME'),
+                $this->messageDTO->telegram_user_id,
+                $this->messageDTO->chat_id);
+
+            if ($rules['inviteBotLimitation']['action'] == 10) {
+                $this->botService->unKickUser(
                     env('TELEGRAM_BOT_NAME'),
                     $this->messageDTO->telegram_user_id,
                     $this->messageDTO->chat_id);
-
-                if ($rules['inviteBotLimitation']['action'] == 10) {
-                    $this->botService->unKickUser(
-                        env('TELEGRAM_BOT_NAME'),
-                        $this->messageDTO->telegram_user_id,
-                        $this->messageDTO->chat_id);
-                }
             }
-
-            return;
         }
 
         if ($this->conditionMatcher('username-format-rtl_format', $this->messageDTO)
