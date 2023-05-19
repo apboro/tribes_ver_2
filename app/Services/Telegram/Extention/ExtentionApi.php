@@ -7,11 +7,15 @@ use Askoldex\Teletant\Api;
 use Askoldex\Teletant\Exception\TeletantException;
 use Askoldex\Teletant\Settings;
 use Askoldex\Teletant\Log;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log as Logg;
+use stdClass;
 
 class ExtentionApi extends Api implements ExtentionApiInterface
 {
+    private const TELEGRAM_BASE_URL = 'https://api.telegram.org';
+
     private string $token;
 
     public function __construct(Settings $settings, Log $logger, string $token)
@@ -40,8 +44,68 @@ class ExtentionApi extends Api implements ExtentionApiInterface
                     "inline_keyboard" => $keyboard
                 ]
             ];
+
             Logg::debug('Lets send mess', [$params]);
             Http::post(env('TELEGRAM_BASE_URL') . '/bot' . $this->token . '/sendMessage', $params);
+
+            $url = self::TELEGRAM_BASE_URL . '/bot' . $this->token . '/sendMessage';
+
+            Http::post($url, $params);
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::channel('telegram-bot-log')
+                ->alert('Error from ' . get_called_class() . ' text: ' . $e->getMessage() . PHP_EOL);
+        }
+    }
+
+    /**
+     * Send image
+     *
+     * @param string $chatId
+     * @param string $photoUrl
+     * @param string $caption
+     *
+     * @return \Illuminate\Http\Client\Response|void
+     */
+    public function sendImage(string $chatId, string $photoUrl, string $caption): stdClass
+    {
+        try {
+            $paramsToImage = [
+                'chat_id' => $chatId,
+                'photo' => $photoUrl,
+                'caption' => $caption
+            ];
+
+            $response = Http::post(self::TELEGRAM_BASE_URL . '/bot' . $this->token . '/sendPhoto', $paramsToImage);
+
+            return json_decode($response->body());
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::channel('telegram-bot-log')
+                ->alert('Error from ' . get_called_class() . ' text: ' . $e->getMessage() . PHP_EOL);
+        }
+    }
+
+    /**
+     * Pin message
+     *
+     * @param string $chatId
+     * @param string $messageId
+     *
+     * @return Response|void
+     */
+    public function pinMessage(string $chatId, string $messageId)
+    {
+        try {
+            $pinMessage = [
+                'chat_id' => $chatId,
+                'message_id' => $messageId,
+    //            'disable_notification' => true, // default  muted false
+            ];
+
+            $response = Http::post(self::TELEGRAM_BASE_URL . '/bot' . $this->token . '/pinChatMessage', $pinMessage);
+
+            return json_decode($response->body());
         } catch (\Exception $e) {
             Logg::channel('telegram-bot-log')
                 ->alert('Error from ' . get_called_class() . ' text: ' . $e->getMessage() . PHP_EOL);

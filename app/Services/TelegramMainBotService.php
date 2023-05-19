@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\TelegramException;
 use App\Models\Community;
 use App\Services\Telegram\BotInterface\TelegramMainBotServiceContract;
+use App\Services\Telegram\Extention\ExtentionApi;
 use App\Services\Telegram\MainBotCollection;
 use App\Services\Telegram\MainComponents\MainBotCommands;
 use App\Services\Telegram\MainComponents\MainBotEvents;
@@ -40,7 +41,7 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         return $this->mainBotCommands;
     }
 
-    public function getApiCommandsForBot(string $nameBot)
+    public function getApiCommandsForBot(string $nameBot): ExtentionApi
     {
         return $this->botCollect->getBotByName($nameBot)->getExtentionApi();
     }

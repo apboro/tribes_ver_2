@@ -11,9 +11,11 @@ use App\Http\ApiResources\Rules\ApiCommunityRuleCollection;
 use App\Http\ApiResources\Rules\ApiCommunityRuleResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Jobs\BehaviorIncomeRuleJob;
 use App\Models\CommunityRule;
 use App\Repositories\Community\CommunityRuleRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ApiCommunityRuleController extends Controller
 {
@@ -51,9 +53,15 @@ class ApiCommunityRuleController extends Controller
     {
         /** @var CommunityRule $community_rule */
         $community_rule = $this->communityRuleRepository->add($request);
+
         if ($community_rule === null) {
             return ApiResponse::error(trans('responses/common.add_error'));
         }
+
+        if($request->input('is_content_rules')) {
+            BehaviorIncomeRuleJob::dispatch($community_rule);
+        }
+
         return ApiResponse::common(
             ApiCommunityRuleResource::make($community_rule)->toArray($request)
         );
@@ -85,6 +93,8 @@ class ApiCommunityRuleController extends Controller
      */
     public function update(ApiCommunityRuleEditRequest $request, string $uuid): ApiResponse
     {
+        Log::info('update api comunication ');
+
         /** @var CommunityRule $community_rule */
         $community_rule = CommunityRule::where('uuid', $uuid)->where('user_id', Auth::user()->id)->first();
         if ($community_rule == null) {
