@@ -16,7 +16,10 @@ class CreateReputationKeywordsTable extends Migration
     {
         Schema::create('reputation_keywords', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(CommunityReputationRules::class)->constrained()->onDelete('cascade');
+            $table->foreignId('community_reputation_rules_uuid')->constrained()
+                ->on('community_reputation_rules')
+                ->references('uuid')
+                ->onDelete('cascade');
             $table->tinyInteger('direction')->default(1);
             $table->string('word');
             $table->timestamps();
