@@ -37,12 +37,13 @@ namespace App\Http\ApiRequests;
  *         )
  *     ),
  *    @OA\Parameter(
- *         name="event",
+ *         name="events",
  *         in="query",
- *         description="Event Name",
+ *         description="Events Array",
  *         required=false,
  *         @OA\Schema(
- *             type="string",
+ *            type="array",
+ *              @OA\Items(type="string"),
  *         )
  *     ),
  *  @OA\Parameter(
@@ -94,7 +95,7 @@ class ApiTelegramActionLogFilterRequest extends ApiRequest
         return [
             'user_name' =>'string',
             'tag_names'=>'array',
-            'event'=>'string',
+            'events'=>'array',
             'action_date_from'=>'date_format:Y-m-d',
             'action_date_to'=>'date_format:Y-m-d',
             'community_title'=>'string'
