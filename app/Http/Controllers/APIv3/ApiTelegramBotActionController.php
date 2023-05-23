@@ -28,8 +28,11 @@ class ApiTelegramBotActionController extends Controller
             $query->where('owner', Auth::user()->id);
         });
 
-        if (!empty($request->input('event'))) {
-            $list->where('event', 'ilike', '%' . $request->input('event') . '%');
+        if (!empty($request->input('events'))) {
+            if (!empty(array_filter($request->input('events')))) {
+                $events = explode(",", $request->input('events')[0]);
+                $list->whereIn('event', $events);
+            }
         }
 
         if (!empty($request->input('action_date_from'))) {

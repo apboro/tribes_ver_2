@@ -55,6 +55,10 @@ class ApiCommunityReputationRuleStoreRequest extends ApiRequest
     public function rules(): array
     {
         return [
+
+            'ranks_points_to_upgrade' =>'integer',
+            'ranks_names' => 'array',
+
             'keyword_rate_up' => 'required|array',
             'keyword_rate_down' => 'required|array',
 
