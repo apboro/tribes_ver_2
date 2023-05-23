@@ -16,6 +16,7 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Antispam;
 use App\Models\Community;
+use App\Models\CommunityReputationRules;
 use App\Models\CommunityRule;
 use App\Models\Onboarding;
 use App\Models\UserRule;
@@ -125,10 +126,26 @@ class ApiUserRulesController extends Controller
             ->orderBy('updated_at', 'desc')->get();
         $moderationRules = ApiCommunityRuleCollection::make($moderationRules);
 
-        $countAll = $onboardings->count() + $ifThenRules->count() + $antispamRules->count() + $moderationRules->count();
+        $reputationRules = CommunityReputationRules::where('user_id', $user->id)
+            ->with(['communities', 'reputationWords'])
+            ->when($request->has('rule_title'), function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->input('rule_title') . '%');
+            })
+            ->when($request->has('rule_uuid'), function ($query) use ($request) {
+                $query->where('uuid', $request->input('rule_uuid'));
+            })
+            ->orderBy('updated_at', 'desc')->get();
 
-        $counts = ['all' => $countAll, 'onboardings_count' => $onboardings->count(), 'if-thens_count' => $ifThenRules->count(), 'antispams_count' => $antispamRules->count(), "moderations_count" => $moderationRules->count()];
-        $rules = $onboardings->concat($ifThenRules)->concat($antispamRules)->concat($moderationRules);
+        $countAll = $onboardings->count() + $ifThenRules->count() + $antispamRules->count() + $moderationRules->count() + $reputationRules->count();
+
+        $counts = [
+            'all' => $countAll, 'onboardings_count' => $onboardings->count(),
+            'if-thens_count' => $ifThenRules->count(),
+            'antispams_count' => $antispamRules->count(),
+            "moderations_count" => $moderationRules->count(),
+            "reputations_count" => $reputationRules->count()
+        ];
+        $rules = $onboardings->concat($ifThenRules)->concat($antispamRules)->concat($moderationRules)->concat($reputationRules);
 
         return ApiResponse::common(['rules' => $rules->skip($request->offset)->take($request->limit), 'counts' => $counts]);
     }
