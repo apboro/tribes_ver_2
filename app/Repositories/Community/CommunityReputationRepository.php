@@ -23,29 +23,30 @@ class CommunityReputationRepository
         /** @var CommunityReputationRules $community_reputation_rules */
 
         $community_reputation_rules = CommunityReputationRules::create([
-            'name' => $request->input('name'),
-            'user_id'=>Auth::user()->id,
+            'title' => $request->input('title'),
+            'user_id' => Auth::user()->id,
+            'who_can_rate' => $request->input('who_can_rate'),
+            'restrict_rate_member_period' => $request->input('restrict_rate_member_period'),
 
-            'who_can_rate' => $request->input('who_can_rate') ?? 'all',
-            'rate_period' => $request->input('rate_period') ?? null,
-            'rate_member_period' => $request->input('rate_member_period') ?? 60,
-            'rate_reset_period' => $request->input('rate_reset_period') ?? null,
+            'delay_start_rules_time' => $request->input('delay_start_rules_time'),
+            'delay_start_rules_total_messages' => $request->input('delay_start_rules_total_messages'),
+
+            'show_rating_tables' => $request->input('show_rating_tables'),
+            'show_rating_tables_period' => $request->input('show_rating_tables_period'),
+            'show_rating_tables_time' => $request->input('show_rating_tables_time'),
+            'show_rating_tables_number_of_users' => $request->input('show_rating_tables_number_of_users'),
+            'show_rating_tables_image' => $request->input('show_rating_tables_image'),
+            'show_rating_tables_message' => $request->input('show_rating_tables_message'),
 
             'notify_about_rate_change' => $request->input('notify_about_rate_change'),
-            'notify_type' => $request->input('notify_type'),
-            'notify_period' => $request->input('notify_period'),
-            'notify_content_chat' => $request->input('notify_content_chat'),
-            'notify_content_user' => $request->input('notify_content_user'),
+            'notify_about_rate_change_points' => $request->input('notify_about_rate_change_points'),
+            'notify_about_rate_change_image' => $request->input('notify_about_rate_change_image'),
+            'notify_about_rate_change_message' => $request->input('notify_about_rate_change_message'),
 
-            'public_rate_in_chat' => $request->input('public_rate_in_chat'),
-            'type_public_rate_in_chat' => $request->input('type_public_rate_in_chat'),
-            'rows_public_rate_in_chat' => $request->input('rows_public_rate_in_chat'),
-            'text_public_rate_in_chat' => $request->input('text_public_rate_in_chat'),
-            'period_public_rate_in_chat' => $request->input('period_public_rate_in_chat'),
-
-            'count_for_new' => $request->input('count_for_new'),
-            'start_count_for_new' => $request->input('start_count_for_new'),
-            'count_reaction' => $request->input('count_reaction'),
+            'restrict_accumulate_rate' => $request->input('restrict_accumulate_rate'),
+            'restrict_accumulate_rate_period' => $request->input('restrict_accumulate_rate_period'),
+            'restrict_accumulate_rate_image' => $request->input('restrict_accumulate_rate_image'),
+            'restrict_accumulate_rate_message' => $request->input('restrict_accumulate_rate_message'),
         ]);
 
         if ($community_reputation_rules == null) {
@@ -76,15 +77,15 @@ class CommunityReputationRepository
 
 
     public function addReputationWords(
-        array $words,
+        array                    $words,
         CommunityReputationRules $community_reputation_rule,
-        int $direction = self::TYPE_INCREASE_REPUTATION
+        int                      $direction = self::TYPE_INCREASE_REPUTATION
     )
     {
         foreach ($words as $word) {
             ReputationKeyword::create([
-                'direction'=>$direction,
-                'community_reputation_rules_id' => $community_reputation_rule->id,
+                'direction' => $direction,
+                'community_reputation_rules_uuid' => $community_reputation_rule->uuid,
                 'word' => $word
             ]);
         }
@@ -97,24 +98,24 @@ class CommunityReputationRepository
      * @return void
      */
     public function attachCommunities(
-        ApiRequest    $request,
+        ApiRequest               $request,
         CommunityReputationRules $community_rule
     )
     {
-        if(!empty($community_rule->communities)){
+        if (!empty($community_rule->communities)) {
             /** @var Community $community */
-            foreach($community_rule->communities as $community){
-                $community->reputation_rules_id = null;
+            foreach ($community_rule->communities as $community) {
+                $community->reputation_rules_uuid = null;
                 $community->save();
             }
         }
         foreach ($request->input('community_ids') as $community_id) {
             /** @var Community $community */
             $community = Community::where('id', $community_id)->
-                                    where('owner', Auth::user()->id)->
-                                    first();
+            where('owner', Auth::user()->id)->
+            first();
             if ($community !== null) {
-                $community->reputation_rules_id = $community_rule->id;
+                $community->reputation_rules_uuid = $community_rule->uuid;
                 $community->save();
             }
         }
@@ -123,42 +124,43 @@ class CommunityReputationRepository
     public function edit(ApiRequest $request, int $id)
     {
         /** @var CommunityReputationRules $community_reputation_rules */
-        $community_reputation_rules = CommunityReputationRules::where('id',$id)->where('user_id',Auth::user()->id)->first();
-        if($community_reputation_rules === null){
+        $community_reputation_rules = CommunityReputationRules::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        if ($community_reputation_rules === null) {
             return false;
         }
         $community_reputation_rules->fill([
-            'name' => $request->input('name'),
-            'user_id'=>Auth::user()->id,
+            'title' => $request->input('title'),
+            'user_id' => Auth::user()->id,
+            'who_can_rate' => $request->input('who_can_rate'),
+            'restrict_rate_member_period' => $request->input('restrict_rate_member_period'),
 
-            'who_can_rate' => $request->input('who_can_rate') ?? 'all',
-            'rate_period' => $request->input('rate_period') ?? null,
-            'rate_member_period' => $request->input('rate_member_period') ?? 60,
-            'rate_reset_period' => $request->input('rate_reset_period') ?? null,
+            'delay_start_rules_time' => $request->input('delay_start_rules_time'),
+            'delay_start_rules_total_messages' => $request->input('delay_start_rules_total_messages'),
+
+            'show_rating_tables' => $request->input('show_rating_tables'),
+            'show_rating_tables_period' => $request->input('show_rating_tables_period'),
+            'show_rating_tables_time' => $request->input('show_rating_tables_time'),
+            'show_rating_tables_number_of_users' => $request->input('show_rating_tables_number_of_users'),
+            'show_rating_tables_image' => $request->input('show_rating_tables_image'),
+            'show_rating_tables_message' => $request->input('show_rating_tables_message'),
 
             'notify_about_rate_change' => $request->input('notify_about_rate_change'),
-            'notify_type' => $request->input('notify_type'),
-            'notify_period' => $request->input('notify_period'),
-            'notify_content_chat' => $request->input('notify_content_chat'),
-            'notify_content_user' => $request->input('notify_content_user'),
+            'notify_about_rate_change_points' => $request->input('notify_about_rate_change_points'),
+            'notify_about_rate_change_image' => $request->input('notify_about_rate_change_image'),
+            'notify_about_rate_change_message' => $request->input('notify_about_rate_change_message'),
 
-            'public_rate_in_chat' => $request->input('public_rate_in_chat'),
-            'type_public_rate_in_chat' => $request->input('type_public_rate_in_chat'),
-            'rows_public_rate_in_chat' => $request->input('rows_public_rate_in_chat'),
-            'text_public_rate_in_chat' => $request->input('text_public_rate_in_chat'),
-            'period_public_rate_in_chat' => $request->input('period_public_rate_in_chat'),
-
-            'count_for_new' => $request->input('count_for_new'),
-            'start_count_for_new' => $request->input('start_count_for_new'),
-            'count_reaction' => $request->input('count_reaction'),
+            'restrict_accumulate_rate' => $request->input('restrict_accumulate_rate'),
+            'restrict_accumulate_rate_period' => $request->input('restrict_accumulate_rate_period'),
+            'restrict_accumulate_rate_image' => $request->input('restrict_accumulate_rate_image'),
+            'restrict_accumulate_rate_message' => $request->input('restrict_accumulate_rate_message'),
         ]);
         $res = $community_reputation_rules->save();
-        if($res === null){
+        if ($res === null) {
             return false;
         }
 
         if (!empty($request->input('keyword_rate_up'))) {
-            $this->removeKeywords($community_reputation_rules,self::TYPE_INCREASE_REPUTATION);
+            $this->removeKeywords($community_reputation_rules, self::TYPE_INCREASE_REPUTATION);
             $this->addReputationWords(
                 $request->input('keyword_rate_up'),
                 $community_reputation_rules,
@@ -167,7 +169,7 @@ class CommunityReputationRepository
         }
 
         if (!empty($request->input('keyword_rate_down'))) {
-            $this->removeKeywords($community_reputation_rules,self::TYPE_DECREASE_REPUTATION);
+            $this->removeKeywords($community_reputation_rules, self::TYPE_DECREASE_REPUTATION);
             $this->addReputationWords(
                 $request->input('keyword_rate_down'),
                 $community_reputation_rules,
@@ -185,10 +187,11 @@ class CommunityReputationRepository
 
     public function removeKeywords(
         CommunityReputationRules $community_reputation_rules,
-        int $direction=self::TYPE_INCREASE_REPUTATION
-    ){
-        ReputationKeyword::where('community_reputation_rules_id',$community_reputation_rules->id)->
-                           where('direction',$direction)->
-                           delete();
+        int                      $direction = self::TYPE_INCREASE_REPUTATION
+    )
+    {
+        ReputationKeyword::where('community_reputation_rules_uuid', $community_reputation_rules->uuid)->
+        where('direction', $direction)->
+        delete();
     }
 }

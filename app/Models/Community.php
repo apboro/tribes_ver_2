@@ -31,10 +31,10 @@ use Illuminate\Support\Facades\Auth;
  * @property mixed $moderationRule
  * @property mixed $onboardingRule
  * @property mixed $knowledge
- * @property mixed $reputation_rules_id
  * @property mixed $communityReputationRule
  * @property mixed|string $image
  * @property mixed|null $moderation_rule_uuid
+ * @property mixed|null $reputation_rules_uuid
  */
 class Community extends Model
 {
@@ -356,7 +356,7 @@ class Community extends Model
 
     public function communityReputationRule()
     {
-        return $this->hasOne(CommunityReputationRules::class, 'id', 'reputation_rules_id');
+        return $this->hasOne(CommunityReputationRules::class, 'uuid', 'reputation_rules_uuid');
     }
 
     public function ifThenRule()

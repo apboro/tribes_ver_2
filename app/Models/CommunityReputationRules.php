@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property mixed $id
+ * @property mixed $uuid
  */
 class CommunityReputationRules extends Model
 {
@@ -15,12 +15,25 @@ class CommunityReputationRules extends Model
 
     protected $guarded=[];
 
+    protected $appends = ['type'];
+    protected $primaryKey = 'uuid';
+    protected $keyType = 'string';
+
+    protected $casts = [
+        'uuid' => 'string'
+    ];
+
+    public function getTypeAttribute()
+    {
+        return 'reputation_rule';
+    }
+
     public function communities():HasMany
     {
         return $this->hasMany(
             Community::class,
-            'reputation_rules_id',
-            'id'
+            'reputation_rules_uuid',
+            'uuid'
         );
     }
 

@@ -6,6 +6,7 @@ use App\Http\ApiRequests\ApiTelegramActionLogFilterRequest;
 use App\Http\ApiResources\ApiTelegramBotActionLogCollection;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Logging\TelegramBotActionHandler;
 use App\Models\TelegramBotActionLog;
 use Illuminate\Support\Facades\Auth;
 
@@ -63,7 +64,10 @@ class ApiTelegramBotActionController extends Controller
 
         $count = $list->count();
         $result = $list->skip($request->offset)->take($request->limit)->orderBy('id')->get();
+        $events =TelegramBotActionHandler::ALL_EVENTS_ARRAY;
 
-        return ApiResponse::listPagination(['Access-Control-Expose-Headers'=>'Items-Count', 'Items-Count'=>$count])->items(new ApiTelegramBotActionLogCollection($result));
+        return ApiResponse::listPagination(['Access-Control-Expose-Headers'=>'Items-Count', 'Items-Count'=>$count])
+            ->items(new ApiTelegramBotActionLogCollection($result))
+            ->payload(['events'=>$events]);
     }
 }
