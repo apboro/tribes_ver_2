@@ -37,7 +37,7 @@ namespace App\Http\ApiRequests;
  *         )
  *     ),
  *    @OA\Parameter(
- *         name="events",
+ *         name="events[]",
  *         in="query",
  *         description="Events Array",
  *         required=false,
