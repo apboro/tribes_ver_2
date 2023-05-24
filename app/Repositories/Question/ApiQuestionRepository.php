@@ -10,10 +10,14 @@ use App\Models\Knowledge\Answer;
 use App\Models\Knowledge\Question;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ApiQuestionRepository
 {
+    const TYPE_IMAGE_QUESTION = 'question_image';
+    const TYPE_IMAGE_ANSWER = 'answer_image';
+
     public function add(ApiQuestionStoreRequest $request)
     {
         /** @var Answer $answer */
@@ -21,6 +25,8 @@ class ApiQuestionRepository
             'context' => $request->get('answer_text'),
             'image' => $request->get('answer_image'),
         ]);
+
+        $this->uploadAnswer($request, $answer, self::TYPE_IMAGE_ANSWER);
 
         if (!$answer) {
             return false;
@@ -42,6 +48,8 @@ class ApiQuestionRepository
             $answer->delete();
             return false;
         }
+
+        $this->uploadQuestion($request, $question, self::TYPE_IMAGE_QUESTION);
 
         $question->knowledge->touch();
 
@@ -124,5 +132,27 @@ class ApiQuestionRepository
         }
 
         return $question->delete();
+    }
+
+    public function uploadAnswer(ApiQuestionStoreRequest $request, Answer $answer, string $type)
+    {
+        $file = $request->file($type);
+        $upload_folder = 'public/answers';
+        $extension = $file->getClientOriginalExtension();
+        $filename = md5(rand(1, 1000000) . $file->getClientOriginalName() . time()) . '.' . $extension;
+        Storage::putFileAs($upload_folder, $file, $filename);
+        $answer->image = 'storage/app/' . $upload_folder . '/' . $filename;
+        $answer->save();
+    }
+
+    public function uploadQuestion(ApiQuestionStoreRequest $request, Question $question, string $type)
+    {
+        $file = $request->file($type);
+        $upload_folder = 'public/questions';
+        $extension = $file->getClientOriginalExtension();
+        $filename = md5(rand(1, 1000000) . $file->getClientOriginalName() . time()) . '.' . $extension;
+        Storage::putFileAs($upload_folder, $file, $filename);
+        $question->image = 'storage/app/' . $upload_folder . '/' . $filename;
+        $question->save();
     }
 }
