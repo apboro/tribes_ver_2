@@ -12,41 +12,45 @@ class ApiCommunityReputationRuleResource extends JsonResource
      * @var CommunityReputationRules
      */
     public $resource;
+
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         return [
-            'id'=>$this->resource->id,
-            'name'=>$this->resource->name,
-            'who_can_rate'=>$this->resource->who_can_rate,
-            'rate_period'=>$this->resource->rate_period,
-            'rate_member_period'=>$this->resource->rate_member_period,
+            'uuid' => $this->resource->uuid,
+            'title' => $this->resource->title,
+            'who_can_rate' => $this->resource->who_can_rate,
+            'restrict_rate_member_period' => $this->resource->restrict_rate_member_period,
 
-            'rate_reset_period' => $this->resource->rate_reset_period,
+            'delay_start_rules_seconds' => $this->resource->delay_start_rules_seconds,
+            'delay_start_rules_total_messages' => $this->resource->delay_start_rules_total_messages,
+
+            'show_rating_tables' => $this->resource->show_rating_tables,
+            'show_rating_tables_period' => $this->resource->show_rating_tables_period,
+            'show_rating_tables_time' => $this->resource->show_rating_tables_time,
+            'show_rating_tables_number_of_users' => $this->resource->show_rating_tables_number_of_users,
+            'show_rating_tables_image' => $this->resource->show_rating_tables_image,
+            'show_rating_tables_message' => $this->resource->show_rating_tables_message,
 
             'notify_about_rate_change' => $this->resource->notify_about_rate_change,
-            'notify_type' => $this->resource->notify_type,
-            'notify_period' => $this->resource->notify_period,
-            'notify_content_chat' => $this->resource->notify_content_chat,
-            'notify_content_user' => $this->resource->notify_content_user,
+            'notify_about_rate_change_points' => $this->resource->notify_about_rate_change_points,
+            'notify_about_rate_change_image' => $this->resource->notify_about_rate_change_image,
+            'notify_about_rate_change_message' => $this->resource->notify_about_rate_change_message,
 
-            'public_rate_in_chat' => $this->resource->public_rate_in_chat,
-            'type_public_rate_in_chat' => $this->resource->type_public_rate_in_chat,
-            'rows_public_rate_in_chat' =>$this->resource->rows_public_rate_in_chat,
-            'text_public_rate_in_chat' => $this->resource->text_public_rate_in_chat,
-            'period_public_rate_in_chat' =>$this->resource->period_public_rate_in_chat,
+            'restrict_accumulate_rate' => $this->resource->restrict_accumulate_rate,
+            'restrict_accumulate_rate_period' => $this->resource->restrict_accumulate_rate_period,
+            'restrict_accumulate_rate_ptime' => $this->resource->restrict_accumulate_rate_time,
+            'restrict_accumulate_rate_image' => $this->resource->restrict_accumulate_rate_image,
+            'restrict_accumulate_rate_message' => $this->resource->restrict_accumulate_rate_message,
 
-            'count_for_new' => $this->resource->count_for_new,
-            'start_count_for_new' => $this->resource->start_count_for_new,
-            'count_reaction' => $this->resource->count_reaction,
             'keywords_up'=>$this->resource->reputationUpWords,
             'keywords_down'=>$this->resource->reputationDownWords,
-            'communities'=>$this->resource->communities
+            'communities'=>$this->communities->pluck('name', 'id'),
         ];
     }
 }

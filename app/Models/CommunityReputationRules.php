@@ -30,11 +30,7 @@ class CommunityReputationRules extends Model
 
     public function communities():HasMany
     {
-        return $this->hasMany(
-            Community::class,
-            'reputation_rules_uuid',
-            'uuid'
-        );
+        return $this->hasMany(Community::class,'reputation_rules_uuid','uuid');
     }
 
     public function reputationUpWords(): HasMany
