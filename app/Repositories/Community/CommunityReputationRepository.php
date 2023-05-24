@@ -5,14 +5,19 @@ namespace App\Repositories\Community;
 use App\Http\ApiRequests\ApiRequest;
 use App\Models\Community;
 use App\Models\CommunityReputationRules;
+use App\Models\CommunityRule;
 use App\Models\ReputationKeyword;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CommunityReputationRepository
 {
 
     const TYPE_INCREASE_REPUTATION = 1;
     const TYPE_DECREASE_REPUTATION = -1;
+    const TYPE_IMAGE_RATINGS = 'show_rating_tables_image';
+    const TYPE_IMAGE_NOTIFY = 'notify_about_rate_change_image';
+    const TYPE_IMAGE_ACCUMULATE = 'restrict_accumulate_rate_image';
 
     /**
      * @param ApiRequest $request
@@ -28,7 +33,7 @@ class CommunityReputationRepository
             'who_can_rate' => $request->input('who_can_rate'),
             'restrict_rate_member_period' => $request->input('restrict_rate_member_period'),
 
-            'delay_start_rules_time' => $request->input('delay_start_rules_time'),
+            'delay_start_rules_seconds' => $request->input('delay_start_rules_seconds'),
             'delay_start_rules_total_messages' => $request->input('delay_start_rules_total_messages'),
 
             'show_rating_tables' => $request->input('show_rating_tables'),
@@ -52,6 +57,9 @@ class CommunityReputationRepository
         if ($community_reputation_rules == null) {
             return false;
         }
+
+        $this->uploadImages($request, $community_reputation_rules);
+
         if (!empty($request->input('keyword_rate_up'))) {
             $this->addReputationWords(
                 $request->input('keyword_rate_up'),
@@ -73,6 +81,30 @@ class CommunityReputationRepository
         }
 
         return $community_reputation_rules;
+    }
+
+    public function UploadImages(ApiRequest $request, CommunityReputationRules $communityReputationRules)
+    {
+        if (!empty($request->file('show_rating_tables_image'))) {
+            $this->uploadFile($request, $communityReputationRules, self::TYPE_IMAGE_RATINGS);
+        }
+        if (!empty($request->file('notify_about_rate_change_image'))) {
+            $this->uploadFile($request, $communityReputationRules, self::TYPE_IMAGE_NOTIFY);
+        }
+        if (!empty($request->file('restrict_accumulate_rate_image'))) {
+            $this->uploadFile($request, $communityReputationRules, self::TYPE_IMAGE_ACCUMULATE);
+        }
+    }
+
+    public function uploadFile(ApiRequest $request, CommunityReputationRules $communityReputationRules, string $type)
+    {
+        $file = $request->file($type);
+        $upload_folder = 'public/reputation_images';
+        $extension = $file->getClientOriginalExtension();
+        $filename = md5(rand(1, 1000000) . $file->getClientOriginalName() . time()) . '.' . $extension;
+        Storage::putFileAs($upload_folder, $file, $filename);
+        $communityReputationRules->{$type} = 'storage/moderation_images/' . $filename;
+        $communityReputationRules->save();
     }
 
 
@@ -130,11 +162,10 @@ class CommunityReputationRepository
         }
         $community_reputation_rules->fill([
             'title' => $request->input('title'),
-            'user_id' => Auth::user()->id,
             'who_can_rate' => $request->input('who_can_rate'),
             'restrict_rate_member_period' => $request->input('restrict_rate_member_period'),
 
-            'delay_start_rules_time' => $request->input('delay_start_rules_time'),
+            'delay_start_rules_seconds' => $request->input('delay_start_rules_seconds'),
             'delay_start_rules_total_messages' => $request->input('delay_start_rules_total_messages'),
 
             'show_rating_tables' => $request->input('show_rating_tables'),
@@ -158,6 +189,8 @@ class CommunityReputationRepository
         if ($res === null) {
             return false;
         }
+
+        $this->uploadImages($request, $community_reputation_rules);
 
         if (!empty($request->input('keyword_rate_up'))) {
             $this->removeKeywords($community_reputation_rules, self::TYPE_INCREASE_REPUTATION);
