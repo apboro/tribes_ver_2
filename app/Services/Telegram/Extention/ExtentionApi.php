@@ -30,9 +30,10 @@ class ExtentionApi extends Api implements ExtentionApiInterface
      * @param string $text
      * @param bool $preview
      * @param array $keyboard
+     * @param bool $silent
      *
      */
-    public function sendMess(int $chatId, string $text, bool $preview = false, array $keyboard = [])
+    public function sendMess(int $chatId, string $text, bool $preview = false, array $keyboard = [], bool $silent = false)
     {
         try {
             $params = [
@@ -40,6 +41,7 @@ class ExtentionApi extends Api implements ExtentionApiInterface
                 'text' => $text,
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => $preview,
+                'disable_notification' => $silent,
                 'reply_markup' => [
                     "inline_keyboard" => $keyboard
                 ]

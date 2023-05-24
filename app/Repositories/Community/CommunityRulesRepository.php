@@ -126,10 +126,11 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                         $warnings = $communityUser->warnings_count;
                         $path = env('APP_URL') . '/' . $rule->warning_image_path;
                         $message = $rule->warning . "<a href='$path'>&#160</a> '\n'Количество нарушений - $warnings";
+                        $silent = $rule->quiet_on_restricted_words;
+                        Log::debug('Moderation rules handler', [$message, $silent]);
+                        $this->actionRunner('send_message_in_pm_from_bot', $this->messageDTO, $message, $silent);
 
-                        $this->actionRunner('send_message_in_pm_from_bot', $this->messageDTO, $message);
-
-                        if ($warnings > $rule->max_violation_times) {
+                        if ($rule->max_violation_times && $warnings > $rule->max_violation_times) {
                             $this->botService->kickUser(
                                 env('TELEGRAM_BOT_NAME'),
                                 $this->messageDTO->telegram_user_id,
@@ -295,6 +296,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             }
         }
         if (isset($rules['inviteBotLimitation'])
+            && $this->messageDTO->new_chat_member_bot
             && ($this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id)
             && ($rules['inviteBotLimitation']['action'] == 4
                 || $rules['inviteBotLimitation']['action'] == 10)) {
@@ -460,7 +462,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         return false;
     }
 
-    public function actionRunner(string $action, MessageDTO $messageDTO, $action_parameter = null)
+    public function actionRunner(string $action, MessageDTO $messageDTO, $action_parameter = null, bool $silent = false)
     {
         Log::debug('rules are ', ['data' => $messageDTO, 'act_type' => $action]);
         switch ($action) {
@@ -469,7 +471,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 $this->botService->sendMessageFromBot(
                     config('telegram_bot.bot.botName'),
                     $messageDTO->chat_id,
-                    $action_parameter,
+                    $action_parameter, false, [], $silent
                 );
                 break;
             case 'send_message_in_pm_from_bot':
@@ -477,7 +479,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 $this->botService->sendMessageFromBot(
                     config('telegram_bot.bot.botName'),
                     $messageDTO->telegram_user_id,
-                    $action_parameter,
+                    $action_parameter, false, [], $silent
                 );
                 break;
             case 'delete_message':
@@ -511,7 +513,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 break;
             case 'add_warning':
                 Log::debug('Action >> add_warning');
-                $this->actionRunner('send_message_in_chat_from_bot', $this->messageDTO, $action_parameter);
+                $this->actionRunner('send_message_in_chat_from_bot', $this->messageDTO, $action_parameter, $silent);
                 break;
             case 'delete_warning':
                 //todo 4
