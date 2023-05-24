@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $user_id
  * @property string content
  * @property string content_image_path
+ * @property boolean $quiet_on_restricted_words
+ * @property int $max_violation_times
  */
 class CommunityRule extends Model
 {

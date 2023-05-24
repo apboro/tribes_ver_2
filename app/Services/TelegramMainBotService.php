@@ -110,10 +110,10 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
         ]);
     }
 
-    public function sendMessageFromBot(string $botName, int $chatId, string $textMessage, bool $preview = false, array $keyboard = [])
+    public function sendMessageFromBot(string $botName, int $chatId, string $textMessage, bool $preview = false, array $keyboard = [], bool $silent = false)
     {
         if ($this->botCollect->hasBotByName($botName)) {
-            $this->getApiCommandsForBot($botName)->sendMess($chatId, $textMessage, $preview, $keyboard);
+            $this->getApiCommandsForBot($botName)->sendMess($chatId, $textMessage, $preview, $keyboard, $silent);
         }
     }
 
