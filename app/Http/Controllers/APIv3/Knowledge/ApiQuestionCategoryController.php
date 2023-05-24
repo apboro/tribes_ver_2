@@ -9,8 +9,8 @@ use App\Http\ApiRequests\QuestionCategory\ApiQuestionCategoryListRequest;
 use App\Http\ApiRequests\QuestionCategory\ApiQuestionCategoryShowRequest;
 use App\Http\ApiRequests\QuestionCategory\ApiQuestionCategoryStoreRequest;
 use App\Http\ApiRequests\QuestionCategory\ApiQuestionCategoryUpdateRequest;
-use App\Http\ApiResources\ApiQuestionCategoryCollection;
-use App\Http\ApiResources\ApiQuestionCategoryResource;
+use App\Http\ApiResources\Knowledge\ApiQuestionCategoryCollection;
+use App\Http\ApiResources\Knowledge\ApiQuestionCategoryResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Repositories\QuestionCategory\ApiQuestionCategoryRepository;
 

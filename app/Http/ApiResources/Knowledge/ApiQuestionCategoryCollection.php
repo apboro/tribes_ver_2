@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\ApiResources;
+
+namespace App\Http\ApiResources\Knowledge;
+
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ApiKnowledgeCollection extends ResourceCollection
+class ApiQuestionCategoryCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -14,6 +16,6 @@ class ApiKnowledgeCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return ApiKnowledgeResource::collection($this->collection);
+        return ApiQuestionCategoryResource::collection($this->collection);
     }
 }
