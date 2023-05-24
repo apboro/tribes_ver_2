@@ -2,27 +2,31 @@
 namespace App\Domain\Scripts\BehaviorRules;
 
 use App\Domain\Scripts\TelegramResponseErrorLogger;
+use App\Models\Community;
 use App\Models\CommunityRule;
 use App\Models\TelegramConnection;
 use App\Services\Telegram\Extention\ExtentionApi;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\URL;
 use stdClass;
 
 final class IncomingRule
 {
     private ExtentionApi $telegramApi;
+    private int $directionId;
 
-    public function __construct(ExtentionApi $telegramApi)
+    public function __construct(ExtentionApi $telegramApi, int $directionId)
     {
         $this->telegramApi = $telegramApi;
+        $this->directionId = $directionId;
     }
 
     public function __invoke(CommunityRule $communityRule)
     {
         $userId = $communityRule->user_id;
+        $community = Community::select('connection_id')->where('id', $this->directionId)->where('owner', $userId)->first();
+
         /** @var TelegramConnection $telegramConnections */
-        $telegramConnections = TelegramConnection::where('user_id', '=', $userId)->first();
+        $telegramConnections = TelegramConnection::where('id', '=', $community->connection_id)->first();
 
         $chatId = $telegramConnections->chat_id;
         $content = $communityRule->content;
