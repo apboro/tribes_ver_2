@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $id
  * @property string $context
+ * @property string $image
  */
 class Answer extends Model
 {
@@ -19,6 +20,7 @@ class Answer extends Model
 
     protected $fillable =[
         'context',
+        'image',
     ];
 
     function question(): BelongsTo

@@ -19,6 +19,7 @@ class ApiQuestionRepository
         /** @var Answer $answer */
         $answer = Answer::query()->create([
             'context' => $request->get('answer_text'),
+            'image' => $request->get('answer_image'),
         ]);
 
         if (!$answer) {
@@ -33,6 +34,7 @@ class ApiQuestionRepository
             'context' => $request->get('question_text'),
             'answer_id' => $answer->id,
             'author_id' => Auth::user()->id,
+            'image' => $request->get('question_image'),
         ]);
 
 
