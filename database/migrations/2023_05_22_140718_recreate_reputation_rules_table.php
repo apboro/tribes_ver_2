@@ -19,6 +19,10 @@ return new class extends Migration {
                 $table->dropConstrainedForeignId('reputation_rules_id');
                 $table->uuid('reputation_rules_uuid')->nullable();
             });
+        } else {
+            Schema::table('communities', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('reputation_rules_uuid');
+            });
         }
         Schema::dropIfExists('reputation_keywords');
         Schema::dropIfExists('community_reputation_rules');
