@@ -18,15 +18,20 @@ class BehaviorIncomeRuleJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private CommunityRule $communityRule;
+    /**
+     * @var mixed
+     */
+    private $directionId;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(CommunityRule $communityRule)
+    public function __construct(CommunityRule $communityRule, int $directionId)
     {
         $this->communityRule = $communityRule;
+        $this->directionId = $directionId;
     }
 
     /**
@@ -37,7 +42,7 @@ class BehaviorIncomeRuleJob implements ShouldQueue
     public function handle(TelegramMainBotService $botService)
     {
         $telegramApi = $botService->getApiCommandsForBot(config('telegram_bot.bot.botName'));
-        $domain = new IncomingRule($telegramApi);
+        $domain = new IncomingRule($telegramApi, $this->directionId);
         $domain($this->communityRule);
     }
 }

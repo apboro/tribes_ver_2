@@ -59,7 +59,11 @@ class ApiCommunityRuleController extends Controller
         }
 
         if($request->input('is_content_rules')) {
-            BehaviorIncomeRuleJob::dispatch($community_rule);
+            $communitiesList = $request->input('community_ids', []);
+            log::info(json_encode($communitiesList, JSON_UNESCAPED_UNICODE));
+            foreach($communitiesList as $communityId){
+                BehaviorIncomeRuleJob::dispatch($community_rule, $communityId);
+            }
         }
 
         return ApiResponse::common(
