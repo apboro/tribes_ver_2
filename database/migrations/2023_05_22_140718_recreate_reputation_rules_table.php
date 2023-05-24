@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -15,10 +14,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('communities', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('reputation_rules_id');
-            $table->uuid('reputation_rules_uuid')->nullable();
-        });
+        if (!Schema::hasColumn('communities', 'reputation_rules_uuid')) {
+            Schema::table('communities', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('reputation_rules_id');
+                $table->uuid('reputation_rules_uuid')->nullable();
+            });
+        }
         Schema::dropIfExists('reputation_keywords');
         Schema::dropIfExists('community_reputation_rules');
         Schema::create('community_reputation_rules', function (Blueprint $table) {
