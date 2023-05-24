@@ -53,8 +53,12 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        if (!Schema::hasColumn('communities', 'reputation_rules_uuid')) {
+            Schema::table('communities', function (Blueprint $table) {
+                $table->uuid('reputation_rules_uuid')->nullable();
+            });
+        }
         Schema::table('communities', function (Blueprint $table) {
-            $table->uuid('reputation_rules_uuid')->nullable();
             $table->foreign('reputation_rules_uuid')->references('uuid')->on('community_reputation_rules')->onDelete('cascade');
         });
 
