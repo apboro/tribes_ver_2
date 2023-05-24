@@ -6,15 +6,14 @@ use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\Put(
- *  path="/api/v3/chats/rate/{id}",
+ *  path="/api/v3/chats/rate/{uuid}",
  *  operationId="chats-reputation-rule-edit",
  *  summary="Edit reputation rules",
  *  security={{"sanctum": {} }},
  *  tags={"Chats Reputation"},
- *     @OA\Parameter(name="id",in="path",description="ID of chat reputation in database",required=true,
+ *     @OA\Parameter(name="uuid",in="path",description="UUID of chat reputation in database",required=true,
  *         @OA\Schema(
- *             type="integer",
- *             format="int64",
+ *             type="string",
  *         )
  *     ),
  *     @OA\RequestBody(
@@ -23,33 +22,32 @@ use App\Http\ApiRequests\ApiRequest;
  *          notify_type - enum from [common,all]",
  *         @OA\MediaType(
  *             mediaType="application/json",
- *             @OA\Schema(
- *                 @OA\Property(property="name",type="string"),
- *                 @OA\Property(property="who_can_rate",type="string",  example="all"),
- *                 @OA\Property(property="rate_period",type="integer"),
- *                 @OA\Property(property="rate_member_period",type="integer"),
- *                 @OA\Property(property="rate_reset_period",type="integer"),
+ *              @OA\Schema(
+ *                 @OA\Property(property="title",type="string", example="Who can rate?"),
+ *                 @OA\Property(property="who_can_rate",type="string",example="all"),
+ *                 @OA\Property(property="restrict_rate_member_period",type="integer", example="1"),
+ *                 @OA\Property(property="delay_start_rules_seconds",type="integer", example=10),
+ *                 @OA\Property(property="delay_start_rules_messages",type="integer", example=10),
  *
- *                 @OA\Property(property="notify_about_rate_change",type="boolean", example="false"),
- *                 @OA\Property(property="notify_type",type="string",example="common"),
- *                 @OA\Property(property="notify_period",type="integer"),
- *                 @OA\Property(property="notify_content_chat",type="string"),
- *                 @OA\Property(property="notify_content_user",type="string"),
+ *                 @OA\Property(property="show_rating_tables",type="boolean", example=true),
+ *                 @OA\Property(property="show_rating_tables_period",type="string", example="first_day_of_year"),
+ *                 @OA\Property(property="show_rating_tables_time",type="string", example="10:20"),
+ *                 @OA\Property(property="show_rating_tables_number_of_users",type="integer", example=10),
+ *                 @OA\Property(property="show_rating_tables_image",type="file"),
+ *                 @OA\Property(property="show_rating_tables_message",type="string", example="You can rate up to 10 users per month"),
  *
- *                 @OA\Property(property="public_rate_in_chat",type="boolean", example="false"),
- *                 @OA\Property(property="type_public_rate_in_chat",type="integer"),
- *                 @OA\Property(property="rows_public_rate_in_chat",type="integer"),
- *                 @OA\Property(property="text_public_rate_in_chat",type="string"),
- *                 @OA\Property(property="period_public_rate_in_chat",type="integer",example=1),
+ *                 @OA\Property(property="notify_about_rate_change",type="boolean", example=true),
+ *                 @OA\Property(property="notify_about_rate_change_points",type="integer", example=10),
+ *                 @OA\Property(property="notify_about_rate_change_image",type="file"),
+ *                 @OA\Property(property="notify_about_rate_change_message",type="string", example="You can rate"),
  *
- *                 @OA\Property(property="count_for_new",type="boolean",example=false),
- *                 @OA\Property(property="start_count_for_new",type="integer"),
- *                 @OA\Property(property="count_reaction",type="integer"),
- *
- *                 @OA\Property(property="keyword_rate_up",type="array",@OA\Items(type="string")),
- *                 @OA\Property(property="keyword_rate_down",type="array",@OA\Items(type="string")),
- *
- *                 @OA\Property(property="community_ids",type="array",@OA\Items(type="integer",),
+ *                 @OA\Property(property="restrict_accumulate_rate",type="boolean", example=true),
+ *                 @OA\Property(property="restrict_accumulate_rate_period",type="string", example="first_day_of_year"),
+ *                 @OA\Property(property="restrict_accumulate_rate_image",type="file"),
+ *                 @OA\Property(property="restrict_accumulate_rate_message",type="string", example="You can accum"),
+ *                 @OA\Property(property="community_ids[]",type="array",@OA\Items(type="integer")),
+ *                 @OA\Property(property="keyword_rate_up[]",type="array",@OA\Items(type="string")),
+ *                 @OA\Property(property="keyword_rate_down[]",type="array",@OA\Items(type="string")),
  *                 ),
  *             ),
  *         )
@@ -70,36 +68,34 @@ class ApiCommunityReputationRuleEditRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:community_reputation_rules,id',
-            'name' => 'required|string|max:120',
-            'who_can_rate' => 'required|in:all,owner,owner_and_admin',
+            'uuid' => 'required|string|exists:community_reputation_rules,uuid',
+            'keyword_rate_up' => 'array',
+            'keyword_rate_down' => 'array',
 
-            'keyword_rate_up' => 'required|array',
-            'keyword_rate_down' => 'required|array',
+            'title' => 'required|string|max:120',
+            'who_can_rate' => 'string',
+            'restrict_rate_member_period' => 'string',
+            'delay_start_rules_seconds' => 'string',
+            'delay_start_rules_total_messages' => 'integer',
+            'show_rating_tables' => 'bool',
+            'show_rating_tables_period' => 'string',
+            'show_rating_tables_time' => 'string',
+            'show_rating_tables_number_of_users' => 'integer',
+            'show_rating_tables_image' => 'image|nullable',
+            'show_rating_tables_message' => 'string',
+            'notify_about_rate_change' => 'bool',
+            'notify_about_rate_change_points' => 'integer',
+            'notify_about_rate_change_image' => 'image|nullable',
+            'notify_about_rate_change_time' => 'string',
+            'notify_about_rate_change_message' => 'string',
+            'restrict_accumulate_rate' => 'bool',
 
-            'rate_period' => 'required|integer',
-            'rate_member_period' => 'required|integer',
-            'rate_reset_period' => 'required|integer',
+            'restrict_accumulate_rate_period' => 'string',
+            'restrict_accumulate_rate_image' => 'image|nullable',
+            'restrict_accumulate_rate_message' => 'string',
 
-            'notify_about_rate_change' => 'boolean',
-            'notify_type' => 'in:common,all',
-            'notify_period' => 'integer',
-            'notify_content_chat' => 'string',
-            'notify_content_user' => 'string',
-
-            'public_rate_in_chat' => 'boolean',
-            'type_public_rate_in_chat' => 'integer',
-            'rows_public_rate_in_chat' => 'integer',
-            'text_public_rate_in_chat' => 'string',
-            'period_public_rate_in_chat' => 'integer',
-
-            'count_for_new' => 'boolean',
-            'start_count_for_new' => 'integer',
-
-            'count_reaction' => 'integer',
-
-            'community_ids'=>'array',
-            'community_ids.*'=>'integer',
+            'community_ids' => 'array',
+            'community_ids.*' => 'integer',
         ];
     }
 
@@ -107,30 +103,35 @@ class ApiCommunityReputationRuleEditRequest extends ApiRequest
     public function messages(): array
     {
         return [
-            'id.required' => $this->localizeValidation('id_required'),
-            'id.integer' => $this->localizeValidation('id_integer'),
-            'id.exists' => $this->localizeValidation('id_exists'),
+            'uuid.required' => $this->localizeValidation('id_required'),
+            'uuid.integer' => $this->localizeValidation('id_integer'),
+            'uuid.exists' => $this->localizeValidation('id_exists'),
         ];
     }
 
-    public function passedValidation(): void
+    public function prepareForValidation(): void
     {
-        if(!$this->boolean('public_rate_in_chat')){
-            $this->request->set('type_public_rate_in_chat',null);
-            $this->request->set('rows_public_rate_in_chat',null);
-            $this->request->set('text_public_rate_in_chat',null);
-            $this->request->set('period_public_rate_in_chat',null);
-        }
 
-        if(!$this->boolean('notify_about_rate_change')){
-            $this->request->set('notify_type',null);
-            $this->request->set('notify_period',null);
-            $this->request->set('notify_content_chat',null);
-            $this->request->set('notify_content_user',null);
-        }
+        $this->merge([
+            'show_rating_tables' => $this->toBoolean($this->show_rating_tables)
+        ]);
+        $this->merge([
+            'notify_about_rate_change' => $this->toBoolean($this->notify_about_rate_change)
+        ]);
+        $this->merge([
+            'restrict_accumulate_rate' => $this->toBoolean($this->restrict_accumulate_rate)
+        ]);
+    }
 
-        if($this->boolean('count_for_new')){
-            $this->request->set('start_count_for_new',null);
-        }
+
+    /**
+     * Convert to boolean
+     *
+     * @param $booleable
+     * @return boolean
+     */
+    private function toBoolean($booleable)
+    {
+        return filter_var($booleable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 }

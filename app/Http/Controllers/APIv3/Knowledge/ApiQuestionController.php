@@ -8,8 +8,8 @@ use App\Http\ApiRequests\Question\ApiQuestionListRequest;
 use App\Http\ApiRequests\Question\ApiQuestionShowRequest;
 use App\Http\ApiRequests\Question\ApiQuestionStoreRequest;
 use App\Http\ApiRequests\Question\ApiQuestionUpdateRequest;
-use App\Http\ApiResources\ApiQuestionCollection;
-use App\Http\ApiResources\ApiQuestionResource;
+use App\Http\ApiResources\Knowledge\ApiQuestionCollection;
+use App\Http\ApiResources\Knowledge\ApiQuestionResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Repositories\Question\ApiQuestionRepository;
 

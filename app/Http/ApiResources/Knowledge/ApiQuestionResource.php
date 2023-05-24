@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\ApiResources;
+namespace App\Http\ApiResources\Knowledge;
 
 use App\Models\Knowledge\Question;
 use Illuminate\Http\Resources\Json\JsonResource;

@@ -5,19 +5,18 @@ namespace App\Http\ApiRequests\Reputation;
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Get(path="/api/v3/chats/rate/{id}",
+ * @OA\Get(path="/api/v3/chats/rate/{uuid}",
  *     tags={"Chats Reputation"},
- *     summary="Show chat reputation by ID",
+ *     summary="Show chat reputation by UUID",
  *     operationId="chats-show-chat-repuataion",
  *     security={{"sanctum": {} }},
  *     @OA\Parameter(
- *         name="id",
+ *         name="uuid",
  *         in="path",
- *         description="ID of chat reputation in database",
+ *         description="UUID of chat reputation in database",
  *         required=true,
  *         @OA\Schema(
- *             type="integer",
- *             format="int64",
+ *             type="string",
  *         )
  *     ),
  *
@@ -38,16 +37,16 @@ class ApiCommunityReputationRuleShowRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:community_reputation_rules,id',
+            'uuid' => 'required|string|exists:community_reputation_rules,uuid',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.required' => $this->localizeValidation('id_required'),
-            'id.integer' => $this->localizeValidation('id_integer'),
-            'id.exists' => $this->localizeValidation('id_exists'),
+            'uuid.required' => $this->localizeValidation('id_required'),
+            'uuid.integer' => $this->localizeValidation('id_integer'),
+            'uuid.exists' => $this->localizeValidation('id_exists'),
         ];
     }
 }

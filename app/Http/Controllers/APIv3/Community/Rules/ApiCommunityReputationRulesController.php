@@ -80,10 +80,10 @@ class ApiCommunityReputationRulesController extends Controller
      * @param int $id
      * @return ApiResponse
      */
-    public function show(ApiCommunityReputationRuleShowRequest $request, int $id):ApiResponse
+    public function show(ApiCommunityReputationRuleShowRequest $request, string $uuid):ApiResponse
     {
         /** @var CommunityReputationRules $community_reputation */
-        $community_reputation = CommunityReputationRules::where('id',$id)->where('user_id',Auth::user()->id)->first();
+        $community_reputation = CommunityReputationRules::where('uuid',$uuid)->where('user_id',Auth::user()->id)->first();
         if($community_reputation === null){
             return ApiResponse::notFound(trans('responses/common.not_found'));
         }
@@ -97,9 +97,9 @@ class ApiCommunityReputationRulesController extends Controller
      * @param int $id
      * @return ApiResponse
      */
-    public function update(ApiCommunityReputationRuleEditRequest $request, int $id):ApiResponse
+    public function update(ApiCommunityReputationRuleEditRequest $request, string $uuid):ApiResponse
     {
-        $community_reputation = $this->communityReputationRepository->edit($request,$id);
+        $community_reputation = $this->communityReputationRepository->edit($request,$uuid);
         if($community_reputation == null){
             return ApiResponse::error(trans('responses/common.add_error'));
         }
