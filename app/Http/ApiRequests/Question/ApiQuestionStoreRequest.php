@@ -17,13 +17,15 @@ use App\Http\ApiRequests\ApiRequest;
  *         description="
  *          question_status - enum from [draft,draft_auto,published]",
  *         @OA\MediaType(
- *             mediaType="application/json",
+ *             mediaType="multipart/form-data",
  *             @OA\Schema(
  *                 @OA\Property(property="knowledge_id",type="integer"),
  *                 @OA\Property(property="question_status",type="string"),
  *                 @OA\Property(property="category_id",type="integer"),
  *                 @OA\Property(property="question_text",type="string"),
  *                 @OA\Property(property="answer_text",type="string"),
+ *                 @OA\Property(property="question_image",type="file"),
+ *                 @OA\Property(property="answer_image",type="file"),
  *                 ),
  *             ),
  *         ),
@@ -40,6 +42,8 @@ class ApiQuestionStoreRequest extends ApiRequest
             'category_id' => ['required','integer'],
             'question_text' => ['required','string','max:4096'],
             'answer_text' => ['required','string','max:4096'],
+            'question_image' => ['sometimes','nullable','image'],
+            'answer_image' => ['sometimes','nullable','image'],
         ];
     }
 }

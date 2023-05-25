@@ -22,6 +22,7 @@ class CreateQuestionsTable extends Migration
             $table->foreignId('author_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('category_id')->constrained('question_categories')->cascadeOnDelete();
             $table->foreignId('knowledge_id')->constrained('knowledge');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

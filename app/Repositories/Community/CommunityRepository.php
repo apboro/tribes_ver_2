@@ -18,7 +18,6 @@ class CommunityRepository implements CommunityRepositoryContract
 
     public function getList($request)
     {
-
         $user = User::find(Auth::user()->id);
         $user->role_index = User::$role['author'];
         $user->save();
