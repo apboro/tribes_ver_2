@@ -27,9 +27,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $answer_id
  * @property int $author_id
  * @property string $uri_hash
+ * @property string $image
  * @property int $c_enquiry
  * @property Carbon $updated_at
  * @property Carbon $created_at
+ *
+ * @property Answer $answer
  */
 class Question extends Model
 {
@@ -47,6 +50,7 @@ class Question extends Model
         'author_id',
         'uri_hash',
         'c_enquiry',
+        'image',
     ];
 
     /**
@@ -99,5 +103,10 @@ class Question extends Model
     public function questionCategory(): HasOne
     {
         return $this->hasOne(QuestionCategory::class, 'id', 'category_id');
+    }
+
+    public function getCategoryName(int $id): string
+    {
+        return QuestionCategory::query()->where('id', $id)->pluck('name')->first();
     }
 }
