@@ -103,7 +103,7 @@ class CommunityReputationRepository
         $extension = $file->getClientOriginalExtension();
         $filename = md5(rand(1, 1000000) . $file->getClientOriginalName() . time()) . '.' . $extension;
         Storage::putFileAs($upload_folder, $file, $filename);
-        $communityReputationRules->{$type} = 'storage/moderation_images/' . $filename;
+        $communityReputationRules->{$type} = 'storage/reputation_images/' . $filename;
         $communityReputationRules->save();
     }
 
