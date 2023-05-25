@@ -6,6 +6,7 @@ namespace App\Repositories\QuestionCategory;
 
 use App\Http\ApiRequests\QuestionCategory\ApiQuestionCategoryStoreRequest;
 use App\Http\ApiRequests\QuestionCategory\ApiQuestionCategoryUpdateRequest;
+use App\Models\Knowledge\Knowledge;
 use App\Models\QuestionCategory;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,18 +14,16 @@ class ApiQuestionCategoryRepository
 {
     public function add(ApiQuestionCategoryStoreRequest $request)
     {
-        $isAlreadyExists = QuestionCategory::query()
-            ->where('owner_id', Auth::user()->id)
-            ->where('name', $request->get('name'))
-            ->exists();
+        $isKnowledgeOwner = Knowledge::query()->where('id', $request->get('knowledge_id'))->where('owner_id', Auth::user()->id)->exists();
 
-        if ($isAlreadyExists) {
+        if (!$isKnowledgeOwner) {
             return false;
         }
 
         $questionCategory = QuestionCategory::query()->create([
             'owner_id' => Auth::user()->id,
-            'name' => $request->get('name')
+            'name' => $request->get('name'),
+            'knowledge_id' => $request->get('knowledge_id')
         ]);
 
         if (!$questionCategory) {
