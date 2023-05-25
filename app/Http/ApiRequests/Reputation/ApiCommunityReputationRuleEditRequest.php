@@ -50,7 +50,7 @@ use App\Http\ApiRequests\ApiRequest;
  *                 @OA\Property(property="keyword_rate_down[]",type="array",@OA\Items(type="string")),
  *                 ),
  *             ),
- *         )
+ *
  *     ),
  *   @OA\Response(response=200, description="OK")
  *)
