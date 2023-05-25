@@ -14,15 +14,6 @@ class ApiQuestionCategoryRepository
 {
     public function add(ApiQuestionCategoryStoreRequest $request)
     {
-        $isAlreadyExists = QuestionCategory::query()
-            ->where('owner_id', Auth::user()->id)
-            ->where('name', $request->get('name'))
-            ->exists();
-
-        if ($isAlreadyExists) {
-            return false;
-        }
-
         $isKnowledgeOwner = Knowledge::query()->where('id', $request->get('knowledge_id'))->where('owner_id', Auth::user()->id)->exists();
 
         if (!$isKnowledgeOwner) {
