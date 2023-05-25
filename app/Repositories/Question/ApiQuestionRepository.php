@@ -26,7 +26,9 @@ class ApiQuestionRepository
             'image' => $request->get('answer_image'),
         ]);
 
-        $this->uploadAnswer($request, $answer, self::TYPE_IMAGE_ANSWER);
+        if (!$request->get('answer_image') === null) {
+            $this->uploadAnswer($request, $answer, self::TYPE_IMAGE_ANSWER);
+        }
 
         if (!$answer) {
             return false;
@@ -49,7 +51,9 @@ class ApiQuestionRepository
             return false;
         }
 
-        $this->uploadQuestion($request, $question, self::TYPE_IMAGE_QUESTION);
+        if (!$request->has('question_image') === null) {
+            $this->uploadQuestion($request, $question, self::TYPE_IMAGE_QUESTION);
+        }
 
         $question->knowledge->touch();
 

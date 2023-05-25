@@ -18,6 +18,7 @@ use App\Http\ApiRequests\ApiRequest;
  *             mediaType="application/json",
  *             @OA\Schema(
  *                 @OA\Property(property="name",type="string"),
+ *                 @OA\Property(property="knowledge_id",type="integer"),
  *                 ),
  *             ),
  *         ),
@@ -30,6 +31,7 @@ class ApiQuestionCategoryStoreRequest extends ApiRequest
     {
         return [
             'name' => ['required','string','max:120'],
+            'knowledge_id' => ['required','integer','exists:knowledge,id']
         ];
     }
 }
