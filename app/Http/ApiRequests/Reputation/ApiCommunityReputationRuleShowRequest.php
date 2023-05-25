@@ -8,7 +8,7 @@ use App\Http\ApiRequests\ApiRequest;
  * @OA\Get(path="/api/v3/chats/rate/{uuid}",
  *     tags={"Chats Reputation"},
  *     summary="Show chat reputation by UUID",
- *     operationId="chats-show-chat-repuataion",
+ *     operationId="chats-show-chat-reputation",
  *     security={{"sanctum": {} }},
  *     @OA\Parameter(
  *         name="uuid",
@@ -26,27 +26,5 @@ use App\Http\ApiRequests\ApiRequest;
  */
 class ApiCommunityReputationRuleShowRequest extends ApiRequest
 {
-    public function all($keys = null)
-    {
-        $data = parent::all();
-        $data['id'] = $this->route('id');
 
-        return $data;
-    }
-
-    public function rules(): array
-    {
-        return [
-            'uuid' => 'required|string|exists:community_reputation_rules,uuid',
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'uuid.required' => $this->localizeValidation('id_required'),
-            'uuid.integer' => $this->localizeValidation('id_integer'),
-            'uuid.exists' => $this->localizeValidation('id_exists'),
-        ];
-    }
 }
