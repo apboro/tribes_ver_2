@@ -13,17 +13,16 @@ class AddSemanticTable extends Migration
      */
     public function up()
     {
-        Schema::create('semantic_table', function (Blueprint $table){
-           $table->id();
-           $table->bigInteger('chat_id');
-           $table->dateTime('messages_from_datetime')->nullable()->comment('начальный период сообщений');
-           $table->dateTime('messages_to_datetime')->nullable()->comment('конечный период сообщений');
-           $table->unsignedBigInteger('class_id');
-           $table->string('llm_answer')->nullable()->comment('строка, в которой хранится ответ от llm');
-           $table->float('sentiment')->nullable()->comment('эмоциональная окраска текста');
-           $table->string('sentiment_label')->nullable()->comment('название для sentiment');
-
-           $table->foreign('class_id')->references('class_id')->on('semantic_classes');
+        Schema::create('semantic_table', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('chat_id');
+            $table->dateTime('messages_from_datetime')->nullable()->comment('начальный период сообщений');
+            $table->dateTime('messages_to_datetime')->nullable()->comment('конечный период сообщений');
+            $table->string('class_name')->nullable()->comment('название класса');
+            $table->string('class_probability')->nullable()->comment('вероятность с которой текст принадлежит этому классу');
+            $table->string('llm_answer')->nullable()->comment('строка, в которой хранится ответ от llm');
+            $table->float('sentiment')->nullable()->comment('эмоциональная окраска текста');
+            $table->string('sentiment_label')->nullable()->comment('название для sentiment');
         });
     }
 
