@@ -156,8 +156,9 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/chats/rate-template', [ApiCommunityReputationRulesController::class, 'getTemplate'])->name('chats.reputation.template');
     Route::post('/chats/rate', [ApiCommunityReputationRulesController::class, 'store'])->name('chats.reputation.store');
     Route::get('/chats/rate', [ApiCommunityReputationRulesController::class, 'list'])->name('chats.reputation.list');
-    Route::put('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
-    Route::get('/chats/rate/{id}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
+    Route::put('/chats/rate/{uuid}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
+    Route::get('/chats/rate/{uuid}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
+    Route::delete('/chats/rate/{reputation_rule_uuid}', [ApiCommunityReputationRulesController::class, 'destroy'])->name('chats.reputation.destroy');
 
     Route::get('/knowledge', [ApiKnowledgeController::class, 'list']);
     Route::post('/knowledge', [ApiKnowledgeController::class, 'store']);
@@ -168,8 +169,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/chats/rank', [ApiRankRuleController::class, 'store'])->name('chats.rank.store');
     Route::get('/chats/rank', [ApiRankRuleController::class, 'list'])->name('chats.rank.list');
-    Route::put('/chats/rank/{id}', [ApiRankRuleController::class, 'update'])->name('chats.rank.update');
-    Route::get('/chats/rank/{id}', [ApiRankRuleController::class, 'show'])->name('chats.rank.show');
+    Route::put('/chats/rank/{uuid}', [ApiRankRuleController::class, 'update'])->name('chats.rank.update');
+    Route::get('/chats/rank/{uuid}', [ApiRankRuleController::class, 'show'])->name('chats.rank.show');
 
     Route::get('/question/list/{id}', [ApiQuestionController::class, 'list']);
     Route::post('/question', [ApiQuestionController::class, 'store']);

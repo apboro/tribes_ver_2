@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\Community\Rules;
 
+use App\Http\ApiRequests\ApiDeleteReputationRuleRequest;
 use App\Http\ApiRequests\Reputation\ApiCommunityReputationRuleEditRequest;
 use App\Http\ApiRequests\Reputation\ApiCommunityReputationRuleListRequest;
 use App\Http\ApiRequests\Reputation\ApiCommunityReputationRuleShowRequest;
@@ -106,6 +107,12 @@ class ApiCommunityReputationRulesController extends Controller
         return ApiResponse::common(
             ApiCommunityReputationRuleResource::make($community_reputation)->toArray($request)
         );
+    }
+    public function destroy(ApiDeleteReputationRuleRequest $request)
+    {
+        $ruleToDelete = CommunityReputationRules::findOrFail($request->reputation_rule_uuid);
+        $ruleToDelete->delete();
+        return ApiResponse::success('common.deleted');
     }
 
 }
