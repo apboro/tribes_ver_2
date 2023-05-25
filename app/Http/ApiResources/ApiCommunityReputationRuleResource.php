@@ -48,9 +48,9 @@ class ApiCommunityReputationRuleResource extends JsonResource
             'restrict_accumulate_rate_image' => $this->resource->restrict_accumulate_rate_image,
             'restrict_accumulate_rate_message' => $this->resource->restrict_accumulate_rate_message,
 
-            'keywords_up'=>$this->resource->reputationUpWords,
-            'keywords_down'=>$this->resource->reputationDownWords,
-            'communities'=>$this->communities->pluck('name', 'id'),
+            'keywords_up'=>$this->resource->reputationUpWords->pluck('word')->toArray(),
+            'keywords_down'=>$this->resource->reputationDownWords->pluck('word')->toArray(),
+            'communities'=>$this->resource->communities->pluck('id')->toArray(),
         ];
     }
 }

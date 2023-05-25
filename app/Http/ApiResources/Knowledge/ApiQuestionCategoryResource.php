@@ -20,8 +20,10 @@ class ApiQuestionCategoryResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id'   => $this->resource->id,
-            'name' => $this->resource->name,
+            'id'             => $this->resource->id,
+            'name'           => $this->resource->name,
+            'knowledge_id'   => $this->resource->knowledge_id,
+            'question_count' => $this->resource->questionsCount($this->resource->id),
         ];
     }
 }
