@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\ApiRequests\ApiGetUserBotSessionRequest;
+use App\Http\ApiRequests\ApiStoreUserBotSessionRequest;
+use App\Http\ApiResponses\ApiResponse;
 use App\Models\TestData;
 use App\Services\Telegram\TelegramMtproto\Event;
 use App\Services\Telegram\TelegramMtproto\UserBot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TelegramUserBotController extends Controller
 {
@@ -14,6 +18,18 @@ class TelegramUserBotController extends Controller
     public function __construct(Event $userBotEvents)
     {
         $this->userBotEvents = $userBotEvents;
+    }
+
+    public function storeSession(ApiStoreUserBotSessionRequest $request)
+    {
+       DB::table('user_bot_session')->insert(['session'=>$request->session_string]);
+       return ApiResponse::success('common.success');
+    }
+    public function getSession(ApiGetUserBotSessionRequest $request)
+    {
+        return ApiResponse::common(DB::table('user_bot_session')
+            ->orderBy('id', 'desc')
+            ->first()->session, ['Cache-Control', 'no-cache, no-store, must-revalidate']);
     }
 
     public function index(Request $request)

@@ -39,6 +39,7 @@ use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
+use App\Http\Controllers\TelegramUserBotController;
 use App\Http\Controllers\TelegramUserReputationController;
 use App\Services\SMTP\MailSender;
 use Illuminate\Http\Request;
@@ -55,6 +56,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::prefix('api/v3')->group(function () {
+    Route::post('/userbot_session', [TelegramUserBotController::class,'storeSession']);
+    Route::get('/userbot_session', [TelegramUserBotController::class,'getSession']);
     Route::post('/user/login', [ApiAuthController::class, 'login']);
     Route::post('/user/register', [ApiRegisterController::class, 'register']);
     Route::post('/user/password/forgot', [ApiForgotPasswordController::class, 'sendPasswordResetLink']);
@@ -185,6 +188,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/question-category/{id}', [ApiQuestionCategoryController::class, 'delete']);
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
+
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {
