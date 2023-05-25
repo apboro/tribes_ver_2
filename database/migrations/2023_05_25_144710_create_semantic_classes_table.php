@@ -15,10 +15,9 @@ class CreateSemanticClassesTable extends Migration
     {
         Schema::create('semantic_classes', function (Blueprint $table) {
             $table->id();
-            $table->integer('class_id');
-            $table->string('class_name')->nullable()->comment('название класса');
-            $table->string('class_probability')->nullable()->comment('вероятность с которой текст принадлежит этому классу');
-            $table->timestamps();
+            $table->unsignedInteger('class_id');
+            $table->string('class_name', 50)->nullable()->comment('название класса');
+            $table->float('class_probability')->nullable()->comment('вероятность с которой текст принадлежит этому классу');
         });
     }
 
