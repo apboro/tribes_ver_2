@@ -58,7 +58,7 @@ class ApiCommunityRuleController extends Controller
             return ApiResponse::error(trans('responses/common.add_error'));
         }
 
-        if($request->input('is_content_rules')) {
+        if($request->input('content')) {
             $communitiesList = $request->input('community_ids', []);
             log::info(json_encode($communitiesList, JSON_UNESCAPED_UNICODE));
             foreach($communitiesList as $communityId){
