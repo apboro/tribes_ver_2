@@ -76,7 +76,7 @@ class ApiOnboardingController extends Controller
             $onboarding->question_image = null;
         }
         $onboarding->save();
-        $onboarding->communities()->detach();
+        $onboarding->communities()->update(['onboarding_uuid' => null]);
         foreach ($request->input('communities_ids') as $community_id) {
             $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
             if ($community !== null) {
