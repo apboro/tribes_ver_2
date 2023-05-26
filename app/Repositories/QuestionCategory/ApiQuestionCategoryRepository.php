@@ -4,6 +4,7 @@
 namespace App\Repositories\QuestionCategory;
 
 
+use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiRequests\QuestionCategory\ApiQuestionCategoryStoreRequest;
 use App\Http\ApiRequests\QuestionCategory\ApiQuestionCategoryUpdateRequest;
 use App\Models\Knowledge\Knowledge;
@@ -51,10 +52,11 @@ class ApiQuestionCategoryRepository
         return $questionCategory;
     }
 
-    public function list()
+    public function list(ApiRequest $request)
     {
         $questionCategories = QuestionCategory::query()
             ->where('owner_id', Auth::user()->id)
+            ->where('knowledge_id', $request->get('knowledge_id'))
             ->get();
 
         if (!$questionCategories->count()) {
