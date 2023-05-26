@@ -47,7 +47,7 @@ class ApiQuestionCategoryController
 
     public function list(ApiQuestionCategoryListRequest $request): ApiResponse
     {
-        $questionCategories = $this->apiQuestionCategoryRepository->list();
+        $questionCategories = $this->apiQuestionCategoryRepository->list($request);
 
         if (!$questionCategories) {
             return ApiResponse::error('Не удалось показать список категорий вопросов');

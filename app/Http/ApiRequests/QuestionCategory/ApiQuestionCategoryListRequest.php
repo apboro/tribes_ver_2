@@ -13,9 +13,26 @@ use App\Http\ApiRequests\ApiRequest;
  *  summary="List of question categories",
  *  security={{"sanctum": {} }},
  *  tags={"Question Category"},
+ *      * @OA\Parameter(
+ *         name="knowledge_id",
+ *         in="query",
+ *         description="Knowledge ID",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
  *   @OA\Response(response=200, description="OK")
  *)
  */
 class ApiQuestionCategoryListRequest extends ApiRequest
 {
+    public function rules(): array
+    {
+        return[
+            'knowledge_id' => 'exists:question_categories,knowledge_id',
+        ];
+
+    }
+
 }
