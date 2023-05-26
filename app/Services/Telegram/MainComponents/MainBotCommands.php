@@ -5,6 +5,7 @@ namespace App\Services\Telegram\MainComponents;
 use App\Filters\API\QuestionsFilter;
 use App\Helper\ArrayHelper;
 use App\Helper\PseudoCrypt;
+use App\Jobs\SendEmails;
 use App\Jobs\SendTeleMessageToChatFromBot;
 use App\Logging\TelegramBotActionHandler;
 use App\Models\Community;
@@ -40,6 +41,13 @@ use Illuminate\Support\Str;
 
 class MainBotCommands
 {
+    private const CABINET = 'Личный кабинет'; //🚀
+    private const SUPPORT = 'Поддержка'; //🚀
+    private const SUPPORT_MESSAGE = '/issue'; //🚀
+    private const CONNECT_CHAT_TO_SPODIAL = 'Подключить чат к Spodial'; //🚀
+
+    private const KNOWLEDGE_BASE = 'База знаний'; //🚀
+
     protected MainBot $bot;
     private CommunityRepositoryContract $communityRepo;
     private TelegramConnectionRepositoryContract $connectionRepo;
@@ -101,6 +109,8 @@ class MainBotCommands
         'setTariffForUserByPayId',
         'knowledgeSearch',
         'saveForwardMessageInBotChatAsQA',
+        'support',
+        'getSpodial',
     ])
     {
         foreach ($methods as $method) {
@@ -110,8 +120,13 @@ class MainBotCommands
         }
     }
 
+    /**
+     *  /start
+     * @return void
+     */
     protected function startBot()
     {
+        log::info('bot start command');
         try {
             $this->createMenu();
             $this->bot->onText('/start {paymentId?}', function (Context $ctx) {
@@ -120,9 +135,15 @@ class MainBotCommands
 
                 if ($users->first()) {
                     if (str_split($ctx->getChatID(), 1)[0] !== '-') {
-                        $ctx->replyHTML('Добро пожаловать в главное меню, ' . $ctx->getUsername() . '! Я бот сервиса по монетизации Telegram-каналов и чатов.' . "\n\n"
-                            . 'Ссылка на сайт ' . route('main') . "\n"
-                            . 'Создание и настройка проектов происходит в веб кабинете.', Menux::Get('main'));
+                        $ctx->replyHTML('Вы успешно запустили бота Spodial! ' .  "\n\n"
+                            . 'Моя задача помогать комьюнити-менеджерам в управлении чатами. Мой основной функционал настраивается' . "\n"
+                            . 'в ЛК на платформе ' . route('main') . ', в диалоге я могу по вашему запросу вам помочь:' . "\n\n"
+                            . ' • Получить ссылку на личный кабинет и базу знаний' . "\n"
+                            . ' • Обратиться в службу поддержки' . "\n"
+                            . ' • Подключить новый чат к Spodial' . "\n"
+                            . ' • Получить информацию по ТОП-10 участникам вашего чата.' . "\n"
+                            . 'Также я могу выполнять команды /ban, /kick, /mute. ' . "\n"
+                            . 'Используйте встроенную клавиатуру ниже, чтобы начать.', Menux::Get('main'));
                     } else $ctx->reply('Здравствуйте, вас приветствует TestBot');
                 } else {
                     if (str_split($ctx->getChatID(), 1)[0] !== '-') {
@@ -275,6 +296,65 @@ class MainBotCommands
     }
 
     /**
+     * Support command
+     *
+     * @return void
+     */
+    protected function support()
+    {
+        try {
+            log::info('bot support command');
+            $this->bot->onHears(self::SUPPORT, function (Context $ctx) {
+                $ctx->replyHTML('Пожалуйста, опишите что случилось одним сообщением и оставьте ' . "\n"
+                    . 'ваши контакты для обратной связи:' . "\n\n"
+                    . ' • телефон' . "\n"
+                    . ' • почту' . "\n"
+                    . ' • UserName Telegram' . "\n\n"
+                    . '<b>Пример: </b>' . "\n"
+                    . self::SUPPORT_MESSAGE . ' 84950000000 your@email.ru  UserName текст ' . "\n", Menux::Get('main'));
+            });
+
+            $this->bot->onText(self::SUPPORT_MESSAGE . '{message}', function (Context $ctx) {
+                $message = $ctx->var('message');
+                if($message != '') {
+                    SendEmails::dispatch('info@spodial.com', $message, 'Cервис Spodial' , '<p></p>');
+                    SendTeleMessageToChatFromBot::dispatch(config('telegram_bot.bot.botName'), '6172841852', $message);
+                    $ctx->replyHTML('Жаль, что вы с этим столкнулись! Я передал сообщение в службу  ' . "\n"
+                        . 'поддержки, с вами свяжутся при первой же возможности. ' , Menux::Get('main'));
+
+                    /*
+                     * Ответ службы поддержки отправляется пользователю в телеграм от бота и на почту
+                     * отправлять на почту info@spodial.com и в телеграм @infospodial
+                     */
+
+                }else{
+                    $ctx->replyHTML('Чтобы отправить обращение напишите ' . "\n"
+                        . '<b> Пример: </b> ' . "\n"
+                        . " \issue текст и контактные данные. " , Menux::Get('main'));
+                }
+            });
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    protected function getSpodial()
+    {
+        try {
+            $this->bot->onHears(self::CONNECT_CHAT_TO_SPODIAL, function (Context $ctx) {
+                $menu = Menux::Create('links')->inline();
+                $menu->row()->uBtn('Перейти в личный кабинет', route('main'));
+                $ctx->reply('Проще всего подключить новый чат на нашей платформе. Там же вы'
+                    . 'сможете произвести все настройки моей работы с вашим чатом. ' . "\n\n"
+                    , $menu);
+            });
+
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    /**
      * todo реализовать регистрацию всех hash тарифов для инициации inline-команд
      *      !!!Лимит 50 шт на бота, рефакторинг у каждого бота свои сообщества
      * @return false|void
@@ -419,6 +499,9 @@ class MainBotCommands
         }
     }
 
+    /**
+     * @return void
+     */
     protected function helpOnChat()
     {
         try {
@@ -647,7 +730,7 @@ class MainBotCommands
     protected function personalArea()
     {
         try {
-            $this->bot->onHears('🚀Личный кабинет', function (Context $ctx) {
+            $this->bot->onHears(self::CABINET, function (Context $ctx) {
                 $menu = Menux::Create('links')->inline();
                 $menu->row()->uBtn('Перейти в личный кабинет', route('main'));
                 $ctx->reply('Для того чтобы перейти в личный кабинет перейдите по ссылке', $menu);
@@ -1107,8 +1190,12 @@ class MainBotCommands
     {
         try {
             Menux::Create('menu', 'main')
-                ->row()->btn('🚀Личный кабинет')
-                ->row()->btn('🕹️Мои сообщества');
+                ->row()->btn('Личный кабинет') // +
+//                ->row()->btn(self::KNOWLEDGE_BASE)
+                ->row()->btn('Поддержка'); // +
+//                ->row()->btn('Репутация'); //
+//                ->row()->btn('Подключить чат к Spodial');
+//                ->row()->btn('🕹️Мои сообщества');
 //                ->row()->btn('📂Мои подписки');
             Menux::Create('menuCustom', 'custom')
                 ->row()->btn('🚀Личный кабинет')
