@@ -153,10 +153,10 @@ class CommunityReputationRepository
         }
     }
 
-    public function edit(ApiRequest $request, int $id)
+    public function edit(ApiRequest $request, string $uuid)
     {
         /** @var CommunityReputationRules $community_reputation_rules */
-        $community_reputation_rules = CommunityReputationRules::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        $community_reputation_rules = CommunityReputationRules::where('uuid', $uuid)->where('user_id', Auth::user()->id)->first();
         if ($community_reputation_rules === null) {
             return false;
         }
