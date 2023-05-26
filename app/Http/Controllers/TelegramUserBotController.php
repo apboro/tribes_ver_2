@@ -29,7 +29,7 @@ class TelegramUserBotController extends Controller
     {
         return ApiResponse::common(DB::table('user_bot_session')
             ->orderBy('id', 'desc')
-            ->first()->session, ['Cache-Control', 'no-cache, no-store, must-revalidate']);
+            ->first()->session);
     }
 
     public function index(Request $request)
