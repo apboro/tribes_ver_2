@@ -72,8 +72,8 @@ class ApiCommunityReputationRuleStoreRequest extends ApiRequest
 
             'title' => 'required|string|max:120',
             'who_can_rate' => 'string',
-            'restrict_rate_member_period' => 'string',
-            'delay_start_rules_seconds' => 'string',
+            'restrict_rate_member_period' => 'integer',
+            'delay_start_rules_seconds' => 'integer',
             'delay_start_rules_total_messages' => 'integer',
             'show_rating_tables' => 'bool',
             'show_rating_tables_period' => 'string',

@@ -157,7 +157,8 @@ class ApiCommunityTelegramUserController extends Controller
         $count = $query->count();
         $telegram_users = $query->skip($request->offset)->take($request->limit)->orderBy('id')->get();
 
-        return ApiResponse::listPagination(['Access-Control-Expose-Headers'=>'Items-Count', 'Items-Count'=>$count])->items(new ApiCommunityTelegramUserCollection($telegram_users));
+        return ApiResponse::listPagination(['Access-Control-Expose-Headers'=>'Items-Count', 'Items-Count'=>$count])
+            ->items(new ApiCommunityTelegramUserCollection($telegram_users));
 
     }
 
