@@ -13,7 +13,6 @@ class CreateQuestionsTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('questions');
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->enum('status', ['draft','draft_auto','published']);
@@ -22,7 +21,6 @@ class CreateQuestionsTable extends Migration
             $table->foreignId('author_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('category_id')->constrained('question_categories')->cascadeOnDelete();
             $table->foreignId('knowledge_id')->constrained('knowledge');
-            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
