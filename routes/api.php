@@ -157,9 +157,9 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/onboarding/{onboarding_uuid}',[ApiOnboardingController::class, 'destroy']);
 
     Route::get('/chats/rate-template', [ApiCommunityReputationRulesController::class, 'getTemplate'])->name('chats.reputation.template');
+    Route::post('/chats/rate/{uuid}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
     Route::post('/chats/rate', [ApiCommunityReputationRulesController::class, 'store'])->name('chats.reputation.store');
     Route::get('/chats/rate', [ApiCommunityReputationRulesController::class, 'list'])->name('chats.reputation.list');
-    Route::put('/chats/rate/{uuid}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
     Route::get('/chats/rate/{uuid}', [ApiCommunityReputationRulesController::class, 'show'])->name('chats.reputation.show');
     Route::delete('/chats/rate/{reputation_rule_uuid}', [ApiCommunityReputationRulesController::class, 'destroy'])->name('chats.reputation.destroy');
 

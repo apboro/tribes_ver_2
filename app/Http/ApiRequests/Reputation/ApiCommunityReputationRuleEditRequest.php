@@ -5,7 +5,7 @@ namespace App\Http\ApiRequests\Reputation;
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Put(
+ * @OA\Post(
  *  path="/api/v3/chats/rate/{uuid}",
  *  operationId="chats-reputation-rule-edit",
  *  summary="Edit reputation rules",
