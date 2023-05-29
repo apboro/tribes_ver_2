@@ -318,12 +318,14 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             }
         }
 
-        if ($this->conditionMatcher('username-format-rtl_format', $this->messageDTO)
-            || $this->conditionMatcher('first_name-format-rtl_format', $this->messageDTO)
-            || $this->conditionMatcher('last_name-format-rtl_format', $this->messageDTO)
-            && $rules['rtlNameJoinLimitation']['action'] == 10) {
+        if (isset($rules['rtlNameJoinLimitation'])) {
+            if ($this->conditionMatcher('username-format-rtl_format', $this->messageDTO)
+                || $this->conditionMatcher('first_name-format-rtl_format', $this->messageDTO)
+                || $this->conditionMatcher('last_name-format-rtl_format', $this->messageDTO)
+                && $rules['rtlNameJoinLimitation']['action'] == 10) {
 
-            $this->actionRunner('ban_user', $this->messageDTO);
+                $this->actionRunner('ban_user', $this->messageDTO);
+            }
         }
     }
 
