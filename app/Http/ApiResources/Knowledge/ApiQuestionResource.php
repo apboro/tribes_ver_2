@@ -24,11 +24,8 @@ class ApiQuestionResource extends JsonResource
             'knowledge_id'              => $this->resource->knowledge_id,
             'category_id'               => $this->resource->category_id,
             'category_name'             => $this->resource->getCategoryName($this->resource->category_id),
-            'overlap'                   => $this->resource->overlap,
             'context'                   => $this->resource->context,
             'author_id'                 => $this->resource->author_id,
-            'uri_hash'                  => $this->resource->uri_hash,
-            'c_enquiry'                 => $this->resource->c_enquiry,
             'answer'                    => $this->resource->answer,
             'image'                     => $this->resource->image,
         ];

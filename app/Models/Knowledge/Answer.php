@@ -18,6 +18,8 @@ class Answer extends Model
 
     public $useSearchType = 'Answer';
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     protected $fillable =[
         'context',
         'image',
