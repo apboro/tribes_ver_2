@@ -33,7 +33,7 @@ use App\Http\ApiRequests\ApiRequest;
  *                 @OA\Property(property="answer_image",type="file"),
  *                 ),
  *             ),
- *         ),
+
  *   @OA\Response(response=200, description="OK")
  *)
  */
