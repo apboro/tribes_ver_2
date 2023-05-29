@@ -27,6 +27,7 @@ use App\Http\ApiRequests\ApiRequest;
  *             mediaType="multipart/form-data",
  *             @OA\Schema(
  *                 @OA\Property(property="question_status",type="string"),
+ *                 @OA\Property(property="category_id",type="integer"),
  *                 @OA\Property(property="question_text",type="string"),
  *                 @OA\Property(property="answer_text",type="string"),
  *                 @OA\Property(property="question_image",type="file"),
@@ -51,6 +52,7 @@ class ApiQuestionUpdateRequest extends ApiRequest
     {
         return [
             'question_status' => ['string','in:draft,draft_auto,published'],
+            'category_id' => 'required|integer|exists:question_categories,id',
             'question_text' => ['required','string','max:4096'],
             'answer_text' => ['required','string','max:4096'],
             'question_image' => ['sometimes','nullable','image'],

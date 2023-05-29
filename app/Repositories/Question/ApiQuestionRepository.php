@@ -114,6 +114,7 @@ class ApiQuestionRepository
         $question->update([
             'status' => $request->get('question_status'),
             'context' => $request->get('question_text'),
+            'category_id' => $request->get('category_id'),
         ]);
 
         if (!empty($request->file('question_image'))) {
