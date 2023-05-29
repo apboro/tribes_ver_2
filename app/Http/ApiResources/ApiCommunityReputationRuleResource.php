@@ -44,7 +44,7 @@ class ApiCommunityReputationRuleResource extends JsonResource
 
             'restrict_accumulate_rate' => $this->resource->restrict_accumulate_rate,
             'restrict_accumulate_rate_period' => $this->resource->restrict_accumulate_rate_period,
-            'restrict_accumulate_rate_ptime' => $this->resource->restrict_accumulate_rate_time,
+            'restrict_accumulate_rate_time' => $this->resource->restrict_accumulate_rate_time,
             'restrict_accumulate_rate_image' => $this->resource->restrict_accumulate_rate_image,
             'restrict_accumulate_rate_message' => $this->resource->restrict_accumulate_rate_message,
 
