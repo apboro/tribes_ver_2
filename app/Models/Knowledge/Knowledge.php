@@ -42,9 +42,9 @@ class Knowledge extends Model
         return $this->hasMany(Question::class, 'knowledge_id', 'id');
     }
 
-    public function communities(): BelongsToMany
+    public function communities(): HasMany
     {
-        return $this->belongsToMany(Community::class);
+        return $this->hasMany(Community::class);
     }
 
     public function getQuestionsWithAnswers(int $knowledgeId)

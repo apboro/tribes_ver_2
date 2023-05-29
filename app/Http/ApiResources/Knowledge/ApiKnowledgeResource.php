@@ -24,7 +24,8 @@ class ApiKnowledgeResource extends JsonResource
             'name'                      => $this->resource->name,
             'uri_hash'                  => $this->resource->uri_hash,
             'updated_at'                => $this->resource->updated_at,
-            'questions_count'           => $this->questions->count()
+            'questions_count'           => $this->questions->count(),
+            'communities'               => $this->communities->pluck('id')
         ];
     }
 }
