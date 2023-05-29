@@ -185,7 +185,6 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             Log::debug('handleRules', [$dto]);
             if ($chat = $this->communityRepository->getCommunityByChatId($dto->chat_id)) {
 
-
                 $this->community = $chat;
 
                 $this->messageDTO = $dto;
@@ -280,6 +279,10 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         $rules = json_decode($rule->rules, true);
         Log::debug('onboarding $rules', [$rules]);
 
+        if (isset($rules['joinLimitation'])) {
+            $this->massEnterBlock($rules);
+        }
+
         if (isset($rules['botJoinLimitation'])
             && $this->messageDTO->new_chat_member_bot
             && ($rules['botJoinLimitation']['action'] == 4
@@ -320,6 +323,40 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
             $this->actionRunner('ban_user', $this->messageDTO);
         }
+    }
+
+    public function massEnterBlock($rule)
+    {
+
+        try {
+            $blockPeriodStart = Carbon::createFromTimestamp($this->messageDTO->message_date)->subSeconds($rule['joinLimitation']['time'])->timestamp;
+            $blockPeriodEnd = $this->messageDTO->message_date;
+            $users = TelegramUserCommunity::query()
+                ->where('community_id', $this->community->id)
+                ->where('accession_date', '>', $blockPeriodStart)
+                ->where('accession_date', '<=', $blockPeriodEnd)
+                ->get();
+            if ($users->count() > $rule['joinLimitation']['count']) {
+                foreach ($users as $user) {
+                    if ($rule['joinLimitation']['action'] == 4) {
+                        $this->botService->kickUser(
+                            env('TELEGRAM_BOT_NAME'),
+                            $user->telegram_user_id,
+                            $this->messageDTO->chat_id);
+                    }
+
+                    if ($rule['joinLimitation']['action'] == 10) {
+                        $this->botService->unKickUser(
+                            env('TELEGRAM_BOT_NAME'),
+                            $user->telegram_user_id,
+                            $this->messageDTO->chat_id);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            Log::error('Rules handle error'. $e->getMessage() . $e->getFile() . $e->getLine());
+        }
+
     }
 
 
@@ -498,6 +535,15 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $messageDTO->chat_id,
                 );
                 Log::debug('User banned');
+                break;
+            case 'unBan_user':
+                Log::debug('Action >> unBanning user');
+                $this->botService->unKickUser(
+                    config('telegram_bot.bot.botName'),
+                    $messageDTO->telegram_user_id,
+                    $messageDTO->chat_id,
+                );
+                Log::debug('User unBanned');
                 break;
             case 'mute_user':
                 Log::debug('Action >> restrict chat member');

@@ -42,5 +42,6 @@ class MessageDTO
 
     public $reply_message_id;
     public $reply_from_id;
+    public $message_date;
 
 }
