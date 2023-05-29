@@ -29,6 +29,7 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
+use App\Http\Controllers\APIv3\Semantic\SemanticController;
 use App\Http\Controllers\APIv3\Subscription\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\Subscription\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
@@ -184,6 +185,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/question-category/{id}', [ApiQuestionCategoryController::class, 'delete']);
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
+
+    Route::get('/semantic', [SemanticController::class, 'calculateProbability']);
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {
