@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Onboarding extends Model
 {
-//    protected $casts = ['rules'=>'json'];
     protected $hidden = ['created_at'];
     protected $appends = ['type'];
     protected $keyType = 'string';
@@ -25,7 +24,6 @@ class Onboarding extends Model
     protected $casts = [
         'uuid' => 'string'
     ];
-
 
     use HasFactory;
 

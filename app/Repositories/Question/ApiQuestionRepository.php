@@ -151,22 +151,22 @@ class ApiQuestionRepository
     public function uploadAnswer(ApiRequest $request, Answer $answer, string $type)
     {
         $file = $request->file($type);
-        $upload_folder = 'public/answers';
+        $upload_folder = 'public/questions_images';
         $extension = $file->getClientOriginalExtension();
         $filename = md5(rand(1, 1000000) . $file->getClientOriginalName() . time()) . '.' . $extension;
         Storage::putFileAs($upload_folder, $file, $filename);
-        $answer->image = 'storage/app/' . $upload_folder . '/' . $filename;
+        $answer->image = 'storage/questions_images/' . $filename;
         $answer->save();
     }
 
     public function uploadQuestion(ApiRequest $request, Question $question, string $type)
     {
         $file = $request->file($type);
-        $upload_folder = 'public/questions';
+        $upload_folder = 'public/questions_images';
         $extension = $file->getClientOriginalExtension();
         $filename = md5(rand(1, 1000000) . $file->getClientOriginalName() . time()) . '.' . $extension;
         Storage::putFileAs($upload_folder, $file, $filename);
-        $question->image = 'storage/app/' . $upload_folder . '/' . $filename;
+        $question->image = 'storage/questions_images/' . $filename;
         $question->save();
     }
 }
