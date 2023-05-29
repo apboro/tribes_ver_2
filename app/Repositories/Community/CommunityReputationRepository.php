@@ -116,11 +116,13 @@ class CommunityReputationRepository
     )
     {
         foreach ($words as $word) {
-            ReputationKeyword::create([
-                'direction' => $direction,
-                'community_reputation_rules_uuid' => $community_reputation_rule->uuid,
-                'word' => $word
-            ]);
+            if ($word != '') {
+                ReputationKeyword::create([
+                    'direction' => $direction,
+                    'community_reputation_rules_uuid' => $community_reputation_rule->uuid,
+                    'word' => $word
+                ]);
+            }
         }
     }
 
