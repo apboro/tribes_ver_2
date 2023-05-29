@@ -285,6 +285,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
         if (isset($rules['botJoinLimitation'])
             && $this->messageDTO->new_chat_member_bot
+            && $this->messageDTO->new_chat_member_bot != env('TELEGRAM_BOT_ID')
             && ($rules['botJoinLimitation']['action'] == 4
                 || $rules['botJoinLimitation']['action'] == 10)) {
             $this->botService->kickUser(
@@ -300,6 +301,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         }
         if (isset($rules['inviteBotLimitation'])
             && $this->messageDTO->new_chat_member_bot
+            && $this->messageDTO->new_chat_member_bot != env('TELEGRAM_BOT_ID')
             && ($this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id)
             && ($rules['inviteBotLimitation']['action'] == 4
                 || $rules['inviteBotLimitation']['action'] == 10)) {
@@ -354,7 +356,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 }
             }
         } catch (Exception $e) {
-            Log::error('Rules handle error'. $e->getMessage() . $e->getFile() . $e->getLine());
+            Log::error('Rules handle error' . $e->getMessage() . $e->getFile() . $e->getLine());
         }
 
     }
