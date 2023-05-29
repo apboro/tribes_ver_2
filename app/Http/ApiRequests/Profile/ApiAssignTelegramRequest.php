@@ -35,7 +35,7 @@ class ApiAssignTelegramRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|unique:telegram_users,telegram_id',
+            'id' => 'required|integer',
             'first_name' => 'required|string',
             'username' => 'required|string',
             'auth_date' => 'required|integer',
