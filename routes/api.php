@@ -178,7 +178,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/question/list/{id}', [ApiQuestionController::class, 'list']);
     Route::post('/question', [ApiQuestionController::class, 'store']);
     Route::get('/question/{id}', [ApiQuestionController::class, 'show']);
-    Route::put('/question/{id}', [ApiQuestionController::class, 'update']);
+    Route::post('/question/{id}', [ApiQuestionController::class, 'update']);
     Route::delete('/question/{id}', [ApiQuestionController::class, 'delete']);
 
     Route::get('/question-category', [ApiQuestionCategoryController::class, 'list']);
