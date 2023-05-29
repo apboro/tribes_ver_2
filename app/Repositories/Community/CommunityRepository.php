@@ -21,11 +21,14 @@ class CommunityRepository implements CommunityRepositoryContract
         $user = User::find(Auth::user()->id);
         $user->role_index = User::$role['author'];
         $user->save();
+        $userTelegramAccounts = $user->telegramMeta()->pluck('telegram_id')->toArray();
+
 
         $list = Community::owned()->active()->with(['tags', 'connection'])->without('donate')->orderBy('created_at', 'DESC');
 
-        $list->whereHas('connection', function ($q) {
-            $q->where('botStatus', 'administrator');
+        $list->whereHas('connection', function ($q) use ($userTelegramAccounts) {
+            $q->where('botStatus', 'administrator')
+                ->whereIn('telegram_user_id', $userTelegramAccounts);
         });
 
         if (!empty($request->input('name'))) {
