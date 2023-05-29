@@ -7,7 +7,7 @@ namespace App\Http\ApiRequests\Question;
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Put(
+ * @OA\Post(
  *  path="/api/v3/question/{id}",
  *  operationId="question-update",
  *  summary="Update the specified question",
@@ -16,25 +16,21 @@ use App\Http\ApiRequests\ApiRequest;
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
- *         description="Question ID",
+ *         description="ID in database",
  *         required=true,
  *         @OA\Schema(
  *             type="integer",
  *             format="int64",
  *         )
  *     ),
- *     @OA\RequestBody(
- *         description="
- *          question_status - enum from [draft,draft_auto,published]
- *          overlap - enum from [full,part]",
  *         @OA\MediaType(
- *             mediaType="application/json",
+ *             mediaType="multipart/form-data",
  *             @OA\Schema(
  *                 @OA\Property(property="question_status",type="string"),
- *                 @OA\Property(property="category_id",type="integer"),
- *                 @OA\Property(property="overlap",type="string"),
  *                 @OA\Property(property="question_text",type="string"),
  *                 @OA\Property(property="answer_text",type="string"),
+ *                 @OA\Property(property="question_image",type="file"),
+ *                 @OA\Property(property="answer_image",type="file"),
  *                 ),
  *             ),
  *         ),
@@ -54,11 +50,11 @@ class ApiQuestionUpdateRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'question_status' => ['required','string','in:draft,draft_auto,published'],
-            'category_id' => ['required','integer'],
-            'overlap' => ['required','string','in:full,part'],
+            'question_status' => ['string','in:draft,draft_auto,published'],
             'question_text' => ['required','string','max:4096'],
             'answer_text' => ['required','string','max:4096'],
+            'question_image' => ['sometimes','nullable','image'],
+            'answer_image' => ['sometimes','nullable','image'],
         ];
     }
 }

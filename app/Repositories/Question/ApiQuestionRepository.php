@@ -3,6 +3,7 @@
 
 namespace App\Repositories\Question;
 
+use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiRequests\Question\ApiQuestionListRequest;
 use App\Http\ApiRequests\Question\ApiQuestionStoreRequest;
 use App\Http\ApiRequests\Question\ApiQuestionUpdateRequest;
@@ -23,10 +24,9 @@ class ApiQuestionRepository
         /** @var Answer $answer */
         $answer = Answer::query()->create([
             'context' => $request->get('answer_text'),
-            'image' => $request->get('answer_image'),
         ]);
 
-        if (!$request->get('answer_image') === null) {
+        if (!empty($request->file('answer_image'))) {
             $this->uploadAnswer($request, $answer, self::TYPE_IMAGE_ANSWER);
         }
 
@@ -42,7 +42,6 @@ class ApiQuestionRepository
             'context' => $request->get('question_text'),
             'answer_id' => $answer->id,
             'author_id' => Auth::user()->id,
-            'image' => $request->get('question_image'),
         ]);
 
 
@@ -51,7 +50,7 @@ class ApiQuestionRepository
             return false;
         }
 
-        if (!$request->has('question_image') === null) {
+        if (!empty($request->file('question_image'))) {
             $this->uploadQuestion($request, $question, self::TYPE_IMAGE_QUESTION);
         }
 
@@ -114,9 +113,20 @@ class ApiQuestionRepository
 
         $question->update([
             'status' => $request->get('question_status'),
-            'category_id' => $request->get('category_id'),
             'context' => $request->get('question_text'),
         ]);
+
+        if (!empty($request->file('question_image'))) {
+            $this->uploadQuestion($request, $question, self::TYPE_IMAGE_QUESTION);
+        } else {
+            $question->update(['image'=>null]);
+        }
+
+        if (!empty($request->file('answer_image'))) {
+            $this->uploadAnswer($request, $question->answer, self::TYPE_IMAGE_ANSWER);
+        } else {
+            $question->answer->update(['image'=>null]);
+        }
 
         $question->knowledge->touch();
 
@@ -138,7 +148,7 @@ class ApiQuestionRepository
         return $question->delete();
     }
 
-    public function uploadAnswer(ApiQuestionStoreRequest $request, Answer $answer, string $type)
+    public function uploadAnswer(ApiRequest $request, Answer $answer, string $type)
     {
         $file = $request->file($type);
         $upload_folder = 'public/answers';
@@ -149,7 +159,7 @@ class ApiQuestionRepository
         $answer->save();
     }
 
-    public function uploadQuestion(ApiQuestionStoreRequest $request, Question $question, string $type)
+    public function uploadQuestion(ApiRequest $request, Question $question, string $type)
     {
         $file = $request->file($type);
         $upload_folder = 'public/questions';
