@@ -50,6 +50,7 @@ class CommunityReputationRepository
 
             'restrict_accumulate_rate' => $request->input('restrict_accumulate_rate'),
             'restrict_accumulate_rate_period' => $request->input('restrict_accumulate_rate_period'),
+            'restrict_accumulate_rate_time' => $request->input('restrict_accumulate_rate_time'),
             'restrict_accumulate_rate_image' => $request->input('restrict_accumulate_rate_image'),
             'restrict_accumulate_rate_message' => $request->input('restrict_accumulate_rate_message'),
         ]);
@@ -182,6 +183,7 @@ class CommunityReputationRepository
 
             'restrict_accumulate_rate' => $request->input('restrict_accumulate_rate'),
             'restrict_accumulate_rate_period' => $request->input('restrict_accumulate_rate_period'),
+            'restrict_accumulate_rate_time' => $request->input('restrict_accumulate_rate_time'),
             'restrict_accumulate_rate_image' => $request->input('restrict_accumulate_rate_image'),
             'restrict_accumulate_rate_message' => $request->input('restrict_accumulate_rate_message'),
         ]);
