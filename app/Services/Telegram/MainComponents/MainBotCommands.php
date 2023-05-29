@@ -121,6 +121,16 @@ class MainBotCommands
     }
 
     /**
+     * @param Context $ctx
+     *
+     * @return bool
+     */
+    function isPrivateMessageToBot(Context $ctx): bool
+    {
+        return $ctx->getFrom()->id() === $ctx->getChatID();
+    }
+
+    /**
      *  /start
      * @return void
      */
@@ -303,7 +313,6 @@ class MainBotCommands
     protected function support()
     {
         try {
-            log::info('bot support command');
             $this->bot->onHears(self::SUPPORT, function (Context $ctx) {
                 $ctx->replyHTML('Пожалуйста, опишите что случилось одним сообщением и оставьте ' . "\n"
                     . 'ваши контакты для обратной связи:' . "\n\n"
@@ -505,11 +514,17 @@ class MainBotCommands
     protected function helpOnChat()
     {
         try {
-            $this->bot->onText('база знаний', function (Context $ctx) {
+            $this->bot->onText(self::KNOWLEDGE_BASE, function (Context $ctx) {
+
+                if ($this->isPrivateMessageToBot($ctx)) {
+                    return;
+                }
+
                 $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
+
                 $link = $community->getPublicKnowledgeLink();
                 if ($link){
-                    $ctx->reply('Ссылка на Базу Знаний по сообществу: '. $link);
+                    $ctx->reply('Ссылка на Базу Знаний по сообществу: ' . "\n\n" . $link);
                 } else {
                     $ctx->reply('У сообщества еще нет базы знаний');
                 }
@@ -1191,7 +1206,7 @@ class MainBotCommands
         try {
             Menux::Create('menu', 'main')
                 ->row()->btn('Личный кабинет') // +
-//                ->row()->btn(self::KNOWLEDGE_BASE)
+                ->row()->btn(self::KNOWLEDGE_BASE)
                 ->row()->btn('Поддержка'); // +
 //                ->row()->btn('Репутация'); //
 //                ->row()->btn('Подключить чат к Spodial');
@@ -1199,6 +1214,7 @@ class MainBotCommands
 //                ->row()->btn('📂Мои подписки');
             Menux::Create('menuCustom', 'custom')
                 ->row()->btn('Личный кабинет')
+                ->row()->btn(self::KNOWLEDGE_BASE)
                 ->row()->btn('Поддержка');
 //                ->row()->btn('📂Мои подписки');
         } catch (\Exception $e) {
