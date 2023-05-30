@@ -32,6 +32,7 @@ class ApiCommunityTelegramUserResource extends JsonResource
                     ->where('is_active', true)
                     ->wherePivot('exit_date', '=', null)
                     ->get();
+                $communitiesList = [];
                 foreach ($communities as $community) {
                     foreach ($this->resource->userList as $list) {
                         if ($list->community_id = $community->id) {
