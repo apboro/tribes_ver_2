@@ -37,6 +37,7 @@ class ApiCommunityRuleResource extends JsonResource
             'quiet_on_restricted_words' => $this->resource->quiet_on_restricted_words,
             'quiet_on_complaint' => $this->resource->quiet_on_complaint,
             'type' =>$this->resource->type,
+            'updated_at' => $this->resource->updated_at,
         ];
     }
 
