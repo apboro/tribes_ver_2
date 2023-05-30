@@ -25,29 +25,31 @@ class ApiCommunityTelegramUserResource extends JsonResource
             'telegram_id' => $this->resource->telegram_id,
             'name' => $this->resource->first_name,
             'last_name' => $this->resource->last_name,
-            'user_name' => $this->resource->user_name ? '@'.$this->resource->user_name : null,
+            'user_name' => $this->resource->user_name ? '@' . $this->resource->user_name : null,
             'communities' => $this->whenLoaded(
                 'communities', function () {
-                return $this->resource->communities()->where('owner', Auth::user()->id)
+                $communities = $this->resource->communities()->where('owner', Auth::user()->id)
                     ->where('is_active', true)
-                    ->wherePivot('exit_date','=', null)
-                    ->get()
-                    ->map(function ($community) {
-                        $accessionDate = $community->pivot->accession_date;
-                        return [
-                            'id' => $community->community_id,
-                            'title' => $community->title,
-                            'accession_date' => $accessionDate,
-                            'chat_tags' => $community->tags
-                        ];
-                    });
-            }),
-            'user_list' => $this->whenLoaded(
-                'userList',
-                function () {
-                    return $this->resource->userList;
+                    ->wherePivot('exit_date', '=', null)
+                    ->get();
+                foreach ($communities as $community) {
+                    foreach ($this->resource->userList as $list) {
+                        if ($list->community_id = $community->id) {
+                            $listTypeForCurrentCommunity = $list->type;
+                        }
+                    }
+                    $communitiesList[] = [
+                        'id' => $community->id,
+                        'title' => $community->title,
+                        'role' => $community->pivot->role,
+                        'accession_date' => $community->pivot->accession_date,
+                        'chat_tags' => $community->tags,
+                        'is_in_list_type' => $listTypeForCurrentCommunity ?? null,
+                    ];
+
                 }
-            )
+                return $communitiesList;
+            }),
         ];
     }
 }
