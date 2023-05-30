@@ -28,6 +28,7 @@ class ApiQuestionResource extends JsonResource
             'author_id'                 => $this->resource->author_id,
             'answer'                    => $this->resource->answer,
             'image'                     => $this->resource->image,
+            'updated_at'                => $this->resource->updated_at,
         ];
     }
 }
