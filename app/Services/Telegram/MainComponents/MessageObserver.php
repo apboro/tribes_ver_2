@@ -6,6 +6,7 @@ use App\Exceptions\TelegramException;
 use App\Helper\ArrayHelper;
 use App\Repositories\Community\CommunityRulesRepositoryContract;
 use App\Repositories\Telegram\DTO\MessageDTO;
+use App\Repositories\Telegram\TeleMessageRepositoryContract;
 use App\Services\TelegramLogService;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Log;
@@ -15,20 +16,20 @@ class MessageObserver
 {
 
     private Logger $logger;
-    private CommunityRulesRepositoryContract $rulesRepository;
+    private TeleMessageRepositoryContract $messageRepository;
 
     public function __construct(
-        CommunityRulesRepositoryContract $rulesRepository,
+        TeleMessageRepositoryContract $messageRepository,
         Logger                           $logger
     )
     {
-        $this->rulesRepository = $rulesRepository;
+        $this->messageRepository = $messageRepository;
         $this->logger = $logger;
     }
 
     public function handleUserMessage($data)
     {
-//        Log::debug('MessageObserver::handleUserMessage', $data);
+        Log::debug('MessageObserver::handleUserMessage', $data);
 
         try {
             $dto = new MessageDTO();
@@ -41,9 +42,12 @@ class MessageObserver
             $dto->telegram_date = ArrayHelper::getValue($data,'message.date');
             $dto->text = ArrayHelper::getValue($data,'message.text');
             $dto->message_entities = ArrayHelper::getValue($data,'message.entities');
+            $dto->reply_message_id = ArrayHelper::getValue($data,'message.reply_to_message.message_id');
+            $dto->reply_from_id = ArrayHelper::getValue($data,'message.reply_to_message.from.id');
+            $dto->chat_type = ArrayHelper::getValue($data,'message.chat.type');
 
-//            Log::debug('Message DTO ready', [$dto]);
-//            $this->rulesRepository->handleRules($dto);
+            Log::debug('Message DTO ready', [$dto]);
+            $this->messageRepository->saveChatMessageFromChatBot($dto, true);
 
         } catch (Throwable $exception)
         {

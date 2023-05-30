@@ -4,6 +4,7 @@ namespace App\Repositories\Telegram;
 
 use App\Models\TelegramConnection;
 use App\Models\TelegramMessage;
+use App\Repositories\Telegram\DTO\MessageDTO;
 use App\Services\TelegramLogService;
 
 class TeleMessageRepository implements TeleMessageRepositoryContract
@@ -11,20 +12,21 @@ class TeleMessageRepository implements TeleMessageRepositoryContract
     public function saveChatMessage($message, $isComment = false)
     {
         try {
-            if ($isComment === false) {
-                if ($message->peer_id->_ === 'peerChannel') {
-                    $group_chat_id = '-100' . $message->peer_id->channel_id;
-                    $type = 'channel';
+            if (isset($message->peer_id)) {
+                if ($isComment === false) {
+                    if ($message->peer_id->_ === 'peerChannel') {
+                        $group_chat_id = '-100' . $message->peer_id->channel_id;
+                        $type = 'channel';
+                    } else {
+                        $group_chat_id = '-' . $message->peer_id->chat_id;
+                        $type = 'group';
+                    }
                 } else {
-                    $group_chat_id = '-' . $message->peer_id->chat_id;
-                    $type = 'group';
+                    $group_chat_id = '-100' . $message->peer_id->channel_id;
+                    $comment_chat_id = '-100' . $message->peer_id->channel_id;
+                    $type = 'channel';
                 }
-            } else {
-                $group_chat_id = '-100' . $message->peer_id->channel_id;
-                $comment_chat_id = '-100' . $message->peer_id->channel_id;
-                $type = 'channel';
             }
-
             if (isset($message->from_id->user_id)) {
 
                 $connection = TelegramConnection::where('chat_id', $group_chat_id)->first();
@@ -95,18 +97,18 @@ class TeleMessageRepository implements TeleMessageRepositoryContract
         }
     }
 
-    public function editMessage($message) 
+    public function editMessage($message)
     {
         try {
-            if ($message->peer_id->_ === 'peerChannel') 
+            if ($message->peer_id->_ === 'peerChannel')
                 $group_chat_id = '-100' . $message->peer_id->channel_id;
-            else 
+            else
                 $group_chat_id = '-' . $message->peer_id->chat_id;
-            
+
             $messageModel = TelegramMessage::where('message_id', $message->id)->where('group_chat_id', $group_chat_id)->first();
             if ($messageModel) {
                 if ($message->message) {
-                    $messageModel->text	= $message->message;
+                    $messageModel->text = $message->message;
                     $messageModel->save();
                 }
             }
@@ -122,6 +124,34 @@ class TeleMessageRepository implements TeleMessageRepositoryContract
             if ($messageModel) {
                 $messageModel->answers = $messageModel->answers + 1;
                 $messageModel->save();
+            }
+        } catch (\Exception $e) {
+            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+
+    public
+    function saveChatMessageFromChatBot(MessageDTO $message, $isComment = false)
+    {
+        try {
+            $connection = TelegramConnection::where('chat_id', $message->chat_id)->first();
+            if ($connection) {
+                $replyTo = $message->reply_message_id;
+
+                $messageModel = new TelegramMessage();
+                $messageModel->message_id = $message->message_id;
+                $messageModel->group_chat_id = $message->chat_id;
+                $messageModel->telegram_user_id = $message->telegram_user_id;
+                $messageModel->text = $message->text;
+                $messageModel->chat_type = $message->chat_type;
+                $messageModel->parrent_message_id = $replyTo;
+                $messageModel->message_date = $message->telegram_date;
+                $messageModel->save();
+
+                if ($replyTo) {
+                    $this->addAnswers($replyTo, $message->chat_id);
+                }
             }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());

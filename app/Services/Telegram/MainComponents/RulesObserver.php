@@ -47,6 +47,7 @@ class RulesObserver
             $dto->new_chat_member_bot = ArrayHelper::getValue($data,'message.new_chat_member.is_bot');
             $dto->reply_message_id = ArrayHelper::getValue($data,'message.reply_to_message.message_id');
             $dto->reply_from_id = ArrayHelper::getValue($data,'message.reply_to_message.from.id');
+            $dto->message_date = ArrayHelper::getValue($data,'message.date');
 
             Log::debug('Message DTO ready', [$dto]);
             $this->rulesRepository->handleRules($dto);
