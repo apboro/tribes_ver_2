@@ -147,7 +147,11 @@ class ApiUserRulesController extends Controller
         ];
         $rules = $onboardings->concat($ifThenRules)->concat($antispamRules)->concat($moderationRules)->concat($reputationRules);
 
-        return ApiResponse::common(['rules' => $rules->skip($request->offset)->take($request->limit), 'counts' => $counts]);
+        $sorted = $rules->sortByDesc(function($item){
+            return $item->updated_at;
+        });
+
+        return ApiResponse::common(['rules' => $sorted->skip($request->offset)->take($request->limit), 'counts' => $counts]);
     }
 
 
