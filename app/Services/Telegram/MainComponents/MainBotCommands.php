@@ -16,6 +16,7 @@ use App\Models\Payment;
 use App\Models\Tariff;
 use App\Models\TariffVariant;
 use App\Models\TelegramUser;
+use App\Models\TelegramUserReputation;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Payment\PaymentRepositoryContract;
 use App\Repositories\Telegram\TelegramConnectionRepositoryContract;
@@ -34,6 +35,7 @@ use App\Repositories\Knowledge\KnowledgeRepositoryContract;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -47,6 +49,8 @@ class MainBotCommands
     private const CONNECT_CHAT_TO_SPODIAL = 'Подключить чат к Spodial'; //🚀
 
     private const KNOWLEDGE_BASE = 'База знаний'; //🚀
+    private const KNOWLEDGE_BASE_BOT = 'base';
+    private const SUPPORT_BOT = 'support';
 
     protected MainBot $bot;
     private CommunityRepositoryContract $communityRepo;
@@ -63,7 +67,8 @@ class MainBotCommands
         'tafiff' => 'Список тарифов сообщества',
         'donate' => 'Материальная помощь сообществу',
         'qa' => 'Найти ответ в Базе Знаний сообщества',
-
+//        self::KNOWLEDGE_BASE_BOT => 'База знаний',
+//        self::SUPPORT_BOT => 'Поддержка',
     ];
     private ManageQuestionService $manageQuestionService;
 
@@ -125,7 +130,7 @@ class MainBotCommands
      *
      * @return bool
      */
-    function isPrivateMessageToBot(Context $ctx): bool
+    public function isPrivateMessageToBot(Context $ctx): bool
     {
         return $ctx->getFrom()->id() === $ctx->getChatID();
     }
@@ -141,11 +146,7 @@ class MainBotCommands
             $this->createMenu();
             $this->bot->onText('/start {paymentId?}', function (Context $ctx) {
 
-                $users = TelegramUser::where('user_id', '!=', NULL)->where('telegram_id', $ctx->getUserID())->get();
-
-                if ($users->first()) {
-                    if (str_split($ctx->getChatID(), 1)[0] !== '-') {
-                        $ctx->replyHTML('Вы успешно запустили бота Spodial! ' .  "\n\n"
+                $messageUserOwner = 'Вы успешно запустили бота Spodial! ' . "\n\n"
                             . 'Моя задача помогать комьюнити-менеджерам в управлении чатами. Мой основной функционал настраивается' . "\n"
                             . 'в ЛК на платформе ' . route('main') . ', в диалоге я могу по вашему запросу вам помочь:' . "\n\n"
                             . ' • Получить ссылку на личный кабинет и базу знаний' . "\n"
@@ -153,21 +154,37 @@ class MainBotCommands
                             . ' • Подключить новый чат к Spodial' . "\n"
                             . ' • Получить информацию по ТОП-10 участникам вашего чата.' . "\n"
                             . 'Также я могу выполнять команды /ban, /kick, /mute. ' . "\n"
-                            . 'Используйте встроенную клавиатуру ниже, чтобы начать.', Menux::Get('main'));
-                    } else $ctx->reply('Здравствуйте, вас приветствует TestBot');
+                            . 'Используйте встроенную клавиатуру ниже, чтобы начать.';
+
+                $messageForMember = 'Вы успешно запустили бота Spodial!' . "\n\n"
+                    . 'Моя задача помогать комьюнити-менеджерам в управлении чатами. Мой основной функционал настраивается' . "\n"
+                    . 'в ЛК на платформе spodial.com, в диалоге я могу по вашему запросу вам помочь:' . "\n"
+                    . ' • Получить ссылку на личный кабинет и базу знаний' . "\n"
+                    . ' • Обратиться в службу поддержки' . "\n"
+                    . ' • Подключить новый чат к Spodial' . "\n"
+                    . 'Используйте встроенную клавиатуру ниже, чтобы начать.';
+
+            // in private to bot
+            if ($this->isPrivateMessageToBot($ctx)) {
+                if (TelegramUser::isCommunityUserOwner($ctx->getUserID())) {
+                    $ctx->replyHTML($messageUserOwner, Menux::Get('owner'));
                 } else {
-                    if (str_split($ctx->getChatID(), 1)[0] !== '-') {
-                        $userName = ', ' . $ctx->getUsername() . '!' ?? '';
-                        $ctx->replyHTML('Здравствуйте' . $userName, Menux::Get('custom'));
-                    }
+                    $ctx->replyHTML($messageForMember, Menux::Get('custom'));
                 }
+//                if (!empty($ctx->var('paymentId'))) {
+//                    $this->connectionTariff($ctx);
+//                }
+            } else{ // on group
+                if (TelegramUser::isCommunityUserOwner($ctx->getUserID())) {
+                    $ctx->replyHTML($messageUserOwner, Menux::Get('main'));
+                } else {
+                    $ctx->replyHTML($messageForMember, Menux::Get('custom'));
+                }
+            }
                 $this->save_log(
                     TelegramBotActionHandler::START_BOT,
                     TelegramBotActionHandler::ACTION_SEND_HELLO_MESSAGE,
                     $ctx);
-                if (!empty($ctx->var('paymentId'))) {
-                    $this->connectionTariff($ctx);
-                }
             });
         } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -313,7 +330,7 @@ class MainBotCommands
     protected function support()
     {
         try {
-            $this->bot->onHears(self::SUPPORT, function (Context $ctx) {
+            $supportBase = function (Context $ctx) {
                 $ctx->replyHTML('Пожалуйста, опишите что случилось одним сообщением и оставьте ' . "\n"
                     . 'ваши контакты для обратной связи:' . "\n\n"
                     . ' • телефон' . "\n"
@@ -321,9 +338,9 @@ class MainBotCommands
                     . ' • UserName Telegram' . "\n\n"
                     . '<b>Пример: </b>' . "\n"
                     . self::SUPPORT_MESSAGE . ' 84950000000 your@email.ru  UserName текст ' . "\n", Menux::Get('main'));
-            });
+            };
 
-            $this->bot->onText(self::SUPPORT_MESSAGE . '{message}', function (Context $ctx) {
+            $supportMessage = function (Context $ctx) {
                 $message = $ctx->var('message');
                 if($message != '') {
                     SendEmails::dispatch('info@spodial.com', $message, 'Cервис Spodial' , '<p></p>');
@@ -341,7 +358,11 @@ class MainBotCommands
                         . '<b> Пример: </b> ' . "\n"
                         . " \issue текст и контактные данные. " , Menux::Get('main'));
                 }
-            });
+            };
+
+            $this->bot->onHears(self::SUPPORT, $supportBase);
+            $this->bot->onHears('support', $supportBase);
+            $this->bot->onText(self::SUPPORT_MESSAGE . '{message}', $supportMessage);
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
@@ -515,19 +536,34 @@ class MainBotCommands
     {
         try {
             $this->bot->onText(self::KNOWLEDGE_BASE, function (Context $ctx) {
-
+                // in private to bot
                 if ($this->isPrivateMessageToBot($ctx)) {
-                    return;
-                }
-
-                $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
-
-                $link = $community->getPublicKnowledgeLink();
-                if ($link){
-                    $ctx->reply('Ссылка на Базу Знаний по сообществу: ' . "\n\n" . $link);
+                    $menu = Menux::Create('links')->inline();
+                    $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
+                    if ($communities->first()) {
+                        /** @var Community $community */
+                        foreach ($communities as $community) {
+                            $link = $community->getPublicKnowledgeLink();
+                            if($link) {
+                                log::info('title:' . $community->title . 'link' . $link);
+                                $menu->row()->uBtn($community->title, $link);
+                            }
+                        }
+                        $ctx->reply('Выберите сообщество', $menu);
+                    } else {
+                        $ctx->reply('Вы не состоите в сообществах');
+                    }
                 } else {
-                    $ctx->reply('У сообщества еще нет базы знаний');
+                    $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
+
+                    $link = $community->getPublicKnowledgeLink();
+                    if ($link){
+                        $ctx->reply('Ссылка на Базу Знаний по сообществу: ' . "\n\n" . $link);
+                    } else {
+                        $ctx->reply('У сообщества еще нет базы знаний');
+                    }
                 }
+
                 $this->save_log(
                     TelegramBotActionHandler::HELP_ON_CHAT,
                     TelegramBotActionHandler::SEND_HELP_IN_CHAT,
@@ -801,7 +837,6 @@ class MainBotCommands
 
     protected function knowledgeSearch()
     {
-
         try {
             $this->bot->onText('/qa {search?}', function (Context $ctx) {
 
@@ -1216,7 +1251,12 @@ class MainBotCommands
                 ->row()->btn('Личный кабинет')
                 ->row()->btn(self::KNOWLEDGE_BASE)
                 ->row()->btn('Поддержка');
-//                ->row()->btn('📂Мои подписки');
+
+            Menux::Create('menuOwner', 'owner')
+                ->row()->btn('Личный кабинет')
+                ->row()->btn(self::KNOWLEDGE_BASE)
+                ->row()->btn('Поддержка');
+//               ->row()->btn('Репутация');
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }

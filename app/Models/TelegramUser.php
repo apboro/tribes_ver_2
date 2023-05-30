@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @method TelegramUserFactory factory()
@@ -121,5 +122,14 @@ class TelegramUser extends Model
         )->whereHas('communities', function($query){
             $query->where('is_active', 1);
         });
+    }
+
+    public static function isCommunityUserOwner($userId): bool
+    {
+        if($userId === null) {
+            log::error('income user Context $ctx is null check this condition');
+        }
+
+        return self::where('user_id', '!=', NULL)->where('telegram_id', $userId)->get()->first() !== null;
     }
 }
