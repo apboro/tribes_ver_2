@@ -64,17 +64,24 @@ class TinkoffApi
 
     public function __construct($terminalKey, $secretKey, $need_test = true)
     {
-        if (env('TINKOFF_TEST') && $need_test) {
-            $this->api_url = 'https://rest-api-test.tinkoff.ru/v2/';
-            $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/v2/';
-            $this->terminalKey = env('TINKOFF_TERMINAL_DIRECT');
-            $this->secretKey = env('TINKOFF_TERMINAL_DIRECT_SECRET_KEY');
-        } else {
-            $this->api_url = 'https://securepay.tinkoff.ru/v2/';
-            $this->api_e2c_url = 'https://securepay.tinkoff.ru/e2c/v2/';
-            $this->terminalKey = $terminalKey;
-            $this->secretKey = $secretKey;
-        }
+
+        $this->api_url = 'https://securepay.tinkoff.ru/v2/';
+        $this->api_e2c_url = 'https://securepay.tinkoff.ru/e2c/v2/';
+//        $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/';
+        $this->terminalKey = $terminalKey;
+        $this->secretKey = $secretKey;
+
+//        if (env('TINKOFF_TEST') && $need_test) {
+//            $this->api_url = 'https://rest-api-test.tinkoff.ru/v2/';
+//            $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/v2/';
+//            $this->terminalKey = env('TINKOFF_TERMINAL_DIRECT');
+//            $this->secretKey = env('TINKOFF_TERMINAL_DIRECT_SECRET_KEY');
+//        } else {
+//            $this->api_url = 'https://securepay.tinkoff.ru/v2/';
+//            $this->api_e2c_url = 'https://securepay.tinkoff.ru/e2c/v2/';
+//            $this->terminalKey = $terminalKey;
+//            $this->secretKey = $secretKey;
+//        }
     }
 
     public function __get($name)
