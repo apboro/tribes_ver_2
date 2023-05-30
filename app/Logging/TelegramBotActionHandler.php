@@ -44,6 +44,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
     const EVENT_GROUP_CHAT_CREATED = 'Создание группы';
     const EVENT_CHANNEL_CHAT_CREATED = 'Создание канала';
     const EVENT_CHECK_MEMBER = 'Бот стал админом в группе';
+    const USER_BOT_GET_ADMIN = 'User Бот стал админом в группе';
     const EVENT_NEW_CHAT_PHOTO = 'Новое фото группы';
     const EVENT_DELETE_CHAT = 'Удаление группы';
     const EVENT_NEW_CHAT_TITLE = 'Новое название группы';
@@ -78,6 +79,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
         'Команда /help отправлена в группу',
         'Узнать Telegram ID',
         'Узнать ID чата',
+        'User Бот стал админом в группе',
         'Команда /tariff отпавлена боту',
         'Команда /tariff отправлена в группу',
         'Команда /donate отправлена в группу',

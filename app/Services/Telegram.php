@@ -148,6 +148,22 @@ class Telegram extends Messenger
         }
     }
 
+    public static function removeUserBot(int $chatId, int $telegram_user_id)
+    {
+        try {
+            $telegramConnection = TelegramConnection::query()
+                ->where('chat_id', $chatId)
+                ->where('telegram_user_id', $telegram_user_id)
+                ->first();
+            $telegramConnection->userBotStatus = null;
+            $telegramConnection->is_there_userbot = false;
+            $telegramConnection->save();
+        } catch (Exception $e) {
+            Log::error($e);
+        }
+
+    }
+
     public function deleteUser($chat_id, $t_user_id)
     {
         try {
@@ -235,8 +251,8 @@ class Telegram extends Messenger
      */
     public function checkCommunityConnect(int $telegram_id)
     {
-        $telegramConnectionsOfUser = TelegramConnection::where('telegram_user_id', $telegram_id)
-//            ->where('user_id', Auth::user()->id)
+        $telegramConnectionsOfUser = TelegramConnection::query()
+            ->where('telegram_user_id', $telegram_id)
             ->where('botStatus', 'administrator')
             ->whereStatus('connected')
             ->get();
@@ -277,220 +293,299 @@ class Telegram extends Messenger
             }
             return $telegramConnection;
         } else {
-            return false;
+            $telegramConnectionsOfUser = TelegramConnection::query()
+                ->where('telegram_user_id', $telegram_id)
+                ->where('userBotStatus', 'administrator')
+                ->where('is_there_userbot', false)
+                ->get();
+            if ($telegramConnectionsOfUser->isNotEmpty()) {
+                foreach ($telegramConnectionsOfUser as $tc) {
+                    $tc->is_there_userbot = true;
+                    $tc->save();
+                }
+                return 'Юзербот добавлен в группу и назначен администратором.';
+            }
         }
+        return false;
     }
 
-    /**
-     * Добавить бота в таблицу telegram_users и telegram_users_community если его там нет
-     *
-     * @return void
-     */
-    protected function addBot($community)
-    {
-        $ty = TelegramUser::where('telegram_id', config('telegram_bot.bot.botId'))->select('telegram_id')->first();
-        if (!$ty) {
-            $ty = TelegramUser::create([
-                'telegram_id' => config('telegram_bot.bot.botId'),
-                'auth_date' => time(),
-                'first_name' => config('telegram_bot.bot.botName'),
-                'user_name' => config('telegram_bot.bot.botFullName'),
-            ]);
-        }
-
-        $ty->communities()->attach($community, [
-            'role' => 'administrator',
-            'accession_date' => time()
+/**
+ * Добавить бота в таблицу telegram_users и telegram_users_community если его там нет
+ *
+ * @return void
+ */
+protected
+function addBot($community)
+{
+    $ty = TelegramUser::where('telegram_id', config('telegram_bot.bot.botId'))->select('telegram_id')->first();
+    if (!$ty) {
+        $ty = TelegramUser::create([
+            'telegram_id' => config('telegram_bot.bot.botId'),
+            'auth_date' => time(),
+            'first_name' => config('telegram_bot.bot.botName'),
+            'user_name' => config('telegram_bot.bot.botFullName'),
         ]);
     }
 
-    /**
-     * Добавить автора в таблицу telegram_users_community
-     *
-     * @return void
-     */
-    protected function addAuthorOnCommunity($community)
-    {
-        $ty = TelegramUser::where('user_id', $community->owner)->first();
-        if ($ty)
-            $ty->communities()->attach($community, [
-                'role' => 'creator',
-                'accession_date' => time()
-            ]);
-    }
+    $ty->communities()->attach($community, [
+        'role' => 'administrator',
+        'accession_date' => time()
+    ]);
+}
 
-    public function createCommunity($community)
-    {
-        $this->addBot($community);
-        $this->addAuthorOnCommunity($community);
-    }
+/**
+ * Добавить автора в таблицу telegram_users_community
+ *
+ * @return void
+ */
+protected
+function addAuthorOnCommunity($community)
+{
+    $ty = TelegramUser::where('user_id', $community->owner)->first();
+    if ($ty)
+        $ty->communities()->attach($community, [
+            'role' => 'creator',
+            'accession_date' => time()
+        ]);
+}
 
-    public function invokeCommunityConnect($user, $type, $telegram_id)
-    {
-        /* @var $user User */
+public
+function createCommunity($community)
+{
+    $this->addBot($community);
+    $this->addAuthorOnCommunity($community);
+}
 
-        $user_telegram_accounts = $user->telegramData();
-        $td = null;
-        foreach ($user_telegram_accounts as $telegram_account) {
-            if ($telegram_account->telegram_id == $telegram_id) {
-                $td = $telegram_account;
-            }
+public
+function invokeCommunityConnect($user, $type, $telegram_id)
+{
+    /* @var $user User */
+
+    $user_telegram_accounts = $user->telegramData();
+    $td = null;
+    foreach ($user_telegram_accounts as $telegram_account) {
+        if ($telegram_account->telegram_id == $telegram_id) {
+            $td = $telegram_account;
         }
+    }
 
-        if ($td) {
-            $hash = self::hash($td->telegram_id, time());
+    if ($td) {
+        $hash = self::hash($td->telegram_id, time());
 
-            $tc = TelegramConnection::firstOrCreate([
-                'user_id' => Auth::user()->id,
-                'telegram_user_id' => $td->telegram_id,
-                'chat_type' => $type ?? 'errorType',
-                'status' => 'init'
-            ], ['hash' => $hash]);
+        $tc = TelegramConnection::firstOrCreate([
+            'user_id' => Auth::user()->id,
+            'telegram_user_id' => $td->telegram_id,
+            'chat_type' => $type ?? 'errorType',
+            'status' => 'init'
+        ], ['hash' => $hash]);
 
-            return [
-                'original' => [
-                    'status' => $tc->status,
-                    'telegram_user_id' => $tc->telegram_user_id
-                ]
-            ];
+        return [
+            'original' => [
+                'status' => $tc->status,
+                'telegram_user_id' => $tc->telegram_user_id
+            ]
+        ];
+    } else {
+        return [
+            'original' => [
+                'status' => 'error',
+                'message' => 'Необходимо авторизоваться через Telegram'
+            ]
+        ];
+    }
+}
+
+public
+static function userBotEnterGroupEvent($telegram_user_id, $chat_id,  $chatType, $chatTitle, $photo_url = null)
+{
+    try {
+        $telegramConnectionExists = TelegramConnection::query()
+            ->where('chat_id', $chat_id)
+            ->where('telegram_user_id', $telegram_user_id)
+            ->first();
+
+        $telegramConnectionNew = TelegramConnection::where('telegram_user_id', $telegram_user_id)->whereStatus('init')->first();
+
+        if ($telegramConnectionExists) {
+            if ($telegramConnectionNew) {
+                $telegramConnectionNew->delete();
+            }
+            $telegramConnectionExists->userBotStatus = 'member';
+            $telegramConnectionExists->save();
+            Log::debug('User Бот добавлен в имеющуюся в БД группу', compact('chat_id', 'chatTitle', 'chatType'));
         } else {
-            return [
-                'original' => [
-                    'status' => 'error',
-                    'message' => 'Необходимо авторизоваться через Telegram'
-                ]
-            ];
-        }
-    }
+            Log::debug('поиск группы init for userbot', compact('chat_id'));
+            if ($telegramConnectionNew) {
+                $telegramConnectionNew->chat_id = $chat_id;
+                $telegramConnectionNew->chat_title = $chatTitle;
+                $telegramConnectionNew->chat_type = $chatType;
 
+                $telegramConnectionNew->isAdministrator = false;
 
-    public static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chatTitle, $photo_url = null)
-    {
-        try {
-            $isChannel = strpos($chatType, 'channel') !== false;
-
-            $chatType = $isChannel ? 'channel' : 'group';
-
-            $telegramConnectionExists = TelegramConnection::query()
-                ->where('chat_id', $chat_id)
-                ->where('telegram_user_id', $telegram_user_id)
-                ->first();
-
-            $telegramConnectionNew = TelegramConnection::where('telegram_user_id', $telegram_user_id)->whereStatus('init')->first();
-
-            if ($telegramConnectionExists) {
-                if ($telegramConnectionNew) {
-                    $telegramConnectionNew->delete();
-                }
-                Log::debug('Бот добавлен в имеющуюся в БД группу', compact('chat_id', 'chatTitle', 'chatType'));
-            } else {
-                Log::debug('поиск группы init ', compact('chat_id'));
-                if ($telegramConnectionNew) {
-                    $telegramConnectionNew->chat_id = $chat_id;
-                    $telegramConnectionNew->chat_title = $chatTitle;
-                    $telegramConnectionNew->chat_type = $chatType;
-
-                    $telegramConnectionNew->isAdministrator = false;
-                    $telegramConnectionNew->isChannel = $isChannel;
-                    $telegramConnectionNew->isGroup = !$isChannel;
-
-                    $telegramConnectionNew->photo_url = $photo_url;
-                    $telegramConnectionNew->save();
-                    Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chat_id', 'chatTitle', 'chatType'));
-                }
+                $telegramConnectionNew->photo_url = $photo_url;
+                $telegramConnectionNew->userBotStatus = 'member';
+                $telegramConnectionNew->save();
+                Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chat_id', 'chatTitle', 'chatType'));
             }
-        } catch (Exception $e) {
-            Log::error($e);
         }
+    } catch (Exception $e) {
+        Log::error($e);
     }
 
-    public static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id)
-    {
-        try {
-            $telegramConnection = TelegramConnection::where('chat_id', $chat_id)
-                ->where('telegram_user_id', $telegram_user_id)
-                ->first();
-            Log::debug('botGetPermissionsEvent', compact('telegramConnection'));
-            if ($telegramConnection) {
-                $telegramConnection->botStatus = $status;
-                $telegramConnection->status = 'connected';
-                $telegramConnection->save();
+}
+
+public
+static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chatTitle, $photo_url = null)
+{
+    try {
+        $isChannel = strpos($chatType, 'channel') !== false;
+
+        $chatType = $isChannel ? 'channel' : 'group';
+
+        $telegramConnectionExists = TelegramConnection::query()
+            ->where('chat_id', $chat_id)
+            ->where('telegram_user_id', $telegram_user_id)
+            ->first();
+
+        $telegramConnectionNew = TelegramConnection::where('telegram_user_id', $telegram_user_id)->whereStatus('init')->first();
+
+        if ($telegramConnectionExists) {
+            if ($telegramConnectionNew) {
+                $telegramConnectionNew->delete();
             }
-        } catch (Exception $e) {
-            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
-    }
-
-    public static function updateConnectionPhoto($chat_id, $photo_url)
-    {
-        $tc = TelegramConnection::where('chat_id', $chat_id)->first();
-        if ($tc) {
-            $tc->photo_url = $photo_url;
-            $tc->save();
-        }
-
-        if ($tc->community()->first()) {
-            $tc->community()->first()->update([
-                'image' => self::saveCommunityPhoto($photo_url, $chat_id)
-            ]);
-        }
-    }
-
-    public static function newTitle($chat_id, $new_title)
-    {
-        $tc = TelegramConnection::where('chat_id', $chat_id)->first();
-        if ($tc) {
-            $tc->chat_title = $new_title;
-            $tc->save();
-        }
-
-        if ($tc->community()->first()) {
-            $tc->community()->first()->update([
-                'title' => $new_title
-            ]);
-        }
-    }
-
-    private static function hash($x, $y)
-    {
-        return md5($x . 'telegram_' . $y);
-    }
-
-    protected static function saveCommunityPhoto($photo_url, $chat_id)
-    {
-        $hash = self::hash($chat_id, time());
-        $dir = storage_path('app/public/image/community');
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-
-        if ($photo_url === '/images/no-image.svg') {
-            return $photo_url;
+            Log::debug('Бот добавлен в имеющуюся в БД группу', compact('chat_id', 'chatTitle', 'chatType'));
         } else {
+            Log::debug('поиск группы init ', compact('chat_id'));
+            if ($telegramConnectionNew) {
+                $telegramConnectionNew->chat_id = $chat_id;
+                $telegramConnectionNew->chat_title = $chatTitle;
+                $telegramConnectionNew->chat_type = $chatType;
+
+                $telegramConnectionNew->isAdministrator = false;
+                $telegramConnectionNew->isChannel = $isChannel;
+                $telegramConnectionNew->isGroup = !$isChannel;
+
+                $telegramConnectionNew->photo_url = $photo_url;
+                $telegramConnectionNew->save();
+                Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chat_id', 'chatTitle', 'chatType'));
+            }
+        }
+    } catch (Exception $e) {
+        Log::error($e);
+    }
+}
+
+public
+static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id)
+{
+    try {
+        $telegramConnection = TelegramConnection::where('chat_id', $chat_id)
+            ->where('telegram_user_id', $telegram_user_id)
+            ->first();
+        Log::debug('botGetPermissionsEvent', compact('telegramConnection'));
+        if ($telegramConnection) {
+            $telegramConnection->botStatus = $status;
+            $telegramConnection->status = 'connected';
+            $telegramConnection->save();
+        }
+    } catch (Exception $e) {
+        Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+    }
+}
+
+public
+static function userBotGetPermissionsEvent($telegram_user_id, $status, $chat_id)
+{
+    try {
+        $telegramConnection = TelegramConnection::query()
+            ->where('chat_id', $chat_id)
+            ->where('telegram_user_id', $telegram_user_id)
+            ->first();
+        Log::debug('userBotGetPermissionsEvent', compact('telegramConnection'));
+        if ($telegramConnection) {
+            $telegramConnection->userBotStatus = 'administrator';
+            $telegramConnection->save();
+        }
+    } catch (Exception $e) {
+        Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+    }
+}
+
+public
+static function updateConnectionPhoto($chat_id, $photo_url)
+{
+    $tc = TelegramConnection::where('chat_id', $chat_id)->first();
+    if ($tc) {
+        $tc->photo_url = $photo_url;
+        $tc->save();
+    }
+
+    if ($tc->community()->first()) {
+        $tc->community()->first()->update([
+            'image' => self::saveCommunityPhoto($photo_url, $chat_id)
+        ]);
+    }
+}
+
+public
+static function newTitle($chat_id, $new_title)
+{
+    $tc = TelegramConnection::where('chat_id', $chat_id)->first();
+    if ($tc) {
+        $tc->chat_title = $new_title;
+        $tc->save();
+    }
+
+    if ($tc->community()->first()) {
+        $tc->community()->first()->update([
+            'title' => $new_title
+        ]);
+    }
+}
+
+private
+static function hash($x, $y)
+{
+    return md5($x . 'telegram_' . $y);
+}
+
+protected
+static function saveCommunityPhoto($photo_url, $chat_id)
+{
+    $hash = self::hash($chat_id, time());
+    $dir = storage_path('app/public/image/community');
+    if (!is_dir($dir)) {
+        mkdir($dir, 0755, true);
+    }
+
+    if ($photo_url === '/images/no-image.svg') {
+        return $photo_url;
+    } else {
+        $path = $dir . '/' . $hash . '.jpg';
+        $photo_url ? file_put_contents($path, file_get_contents($photo_url) ?? null) : null;
+        return '/storage/image/community/' . $hash . '.jpg';
+    }
+}
+
+protected
+static function saveUserAvatar($photo_url)
+{
+    $hash = self::hash(Auth::user()->id, time());
+    $dir = storage_path('app/public/image/avatar');
+    if (!is_dir($dir)) {
+        mkdir($dir, 0755, true);
+    }
+
+    if ($photo_url === '/images/no-image.svg') {
+        return $photo_url;
+    } else {
+        try {
             $path = $dir . '/' . $hash . '.jpg';
             $photo_url ? file_put_contents($path, file_get_contents($photo_url) ?? null) : null;
-            return '/storage/image/community/' . $hash . '.jpg';
+            return '/storage/image/avatar/' . $hash . '.jpg';
+        } catch (Exception $e) {
+            return null;
         }
     }
-
-    protected static function saveUserAvatar($photo_url)
-    {
-        $hash = self::hash(Auth::user()->id, time());
-        $dir = storage_path('app/public/image/avatar');
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-
-        if ($photo_url === '/images/no-image.svg') {
-            return $photo_url;
-        } else {
-            try {
-                $path = $dir . '/' . $hash . '.jpg';
-                $photo_url ? file_put_contents($path, file_get_contents($photo_url) ?? null) : null;
-                return '/storage/image/avatar/' . $hash . '.jpg';
-            } catch (Exception $e) {
-                return null;
-            }
-        }
-    }
+}
 }
