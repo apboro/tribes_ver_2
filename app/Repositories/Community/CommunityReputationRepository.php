@@ -9,6 +9,7 @@ use App\Models\CommunityRule;
 use App\Models\ReputationKeyword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CommunityReputationRepository
 {
@@ -61,17 +62,29 @@ class CommunityReputationRepository
 
         $this->uploadImages($request, $community_reputation_rules);
 
-        if (!empty($request->input('keyword_rate_up'))) {
+        $this->uploadImages($request, $community_reputation_rules);
+
+        if ($request->input('keyword_rate_up') && !empty(array_filter($request->input('keyword_rate_up')))) {
+            if (Str::contains($request->input('keyword_rate_up')[0], ',')) {
+                $keyword_rate_up = explode(",", $request->input('keyword_rate_up')[0]);
+            } else {
+                $keyword_rate_up = $request->input('keyword_rate_up');
+            }
             $this->addReputationWords(
-                $request->input('keyword_rate_up'),
+                $keyword_rate_up,
                 $community_reputation_rules,
                 self::TYPE_INCREASE_REPUTATION
             );
         }
 
-        if (!empty($request->input('keyword_rate_down'))) {
+        if ($request->input('keyword_rate_down') && !empty(array_filter($request->input('keyword_rate_down')))) {
+            if (Str::contains($request->input('keyword_rate_down')[0], ',')) {
+                $keyword_rate_down = explode(",", $request->input('keyword_rate_down')[0]);
+            } else {
+                $keyword_rate_down = $request->input('keyword_rate_down');
+            }
             $this->addReputationWords(
-                $request->input('keyword_rate_down'),
+                $keyword_rate_down,
                 $community_reputation_rules,
                 self::TYPE_DECREASE_REPUTATION
             );
@@ -196,19 +209,29 @@ class CommunityReputationRepository
 
         $this->uploadImages($request, $community_reputation_rules);
 
-        if (!empty($request->input('keyword_rate_up'))) {
+        if ($request->input('keyword_rate_up') && !empty(array_filter($request->input('keyword_rate_up')))) {
+            if (Str::contains($request->input('keyword_rate_up')[0], ',')) {
+                $keyword_rate_up = explode(",", $request->input('keyword_rate_up')[0]);
+            } else {
+                $keyword_rate_up = $request->input('keyword_rate_up');
+            }
             $this->removeKeywords($community_reputation_rules, self::TYPE_INCREASE_REPUTATION);
             $this->addReputationWords(
-                $request->input('keyword_rate_up'),
+                $keyword_rate_up,
                 $community_reputation_rules,
                 self::TYPE_INCREASE_REPUTATION
             );
         }
 
-        if (!empty($request->input('keyword_rate_down'))) {
+        if ($request->input('keyword_rate_down') && !empty(array_filter($request->input('keyword_rate_down')))) {
+            if (Str::contains($request->input('keyword_rate_down')[0], ',')) {
+                $keyword_rate_down = explode(",", $request->input('keyword_rate_down')[0]);
+            } else {
+                $keyword_rate_down = $request->input('keyword_rate_down');
+            }
             $this->removeKeywords($community_reputation_rules, self::TYPE_DECREASE_REPUTATION);
             $this->addReputationWords(
-                $request->input('keyword_rate_down'),
+                $keyword_rate_down,
                 $community_reputation_rules,
                 self::TYPE_DECREASE_REPUTATION
             );
