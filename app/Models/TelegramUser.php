@@ -132,4 +132,9 @@ class TelegramUser extends Model
 
         return self::where('user_id', '!=', NULL)->where('telegram_id', $userId)->get()->first() !== null;
     }
+
+    public function getTelegramUserName()
+    {
+        return $this->user_name ?? 'not user name';
+    }
 }

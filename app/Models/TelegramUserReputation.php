@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use phpDocumentor\Reflection\Types\Collection;
 
 class TelegramUserReputation extends Model
 {
@@ -18,6 +19,11 @@ class TelegramUserReputation extends Model
 
     public function telegramUser()
     {
-        return $this->belongsTo(TelegramUser::class);
+        return $this->belongsTo(TelegramUser::class)->withDefault();
+    }
+
+    public static function getUsersByCondition(string $direction, int $communityId)
+    {
+        return self::where($direction, '=' , $communityId)->take(10)->orderBy('reputation_count', 'desc')->get();
     }
 }
