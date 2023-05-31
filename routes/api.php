@@ -29,6 +29,8 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
+use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
+use App\Http\Controllers\APIv3\Statistic\ApiTelegramUsersStatistic;
 use App\Http\Controllers\APIv3\Subscription\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\Subscription\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
@@ -64,7 +66,7 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/user/password/reset', [ApiResetPasswordController::class, 'resetUserPassword']);
     Route::post('/courses/pay/{hash}', [ApiCourseController::class, 'pay']);
     Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
-    Route::post('/send_demo_email', [MailSender::class,'sendDemoEmail']);
+    Route::post('/send_demo_email', [MailSender::class, 'sendDemoEmail']);
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
@@ -130,11 +132,11 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
     Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
 
-    Route::post('/user-community-rules',[ApiUserRulesController::class, 'store']);
-    Route::get('/user-community-rules',[ApiUserRulesController::class, 'list']);
-    Route::get('/user-community-rules/{rule_uuid}',[ApiUserRulesController::class, 'show']);
-    Route::put('/user-community-rules',[ApiUserRulesController::class, 'update']);
-    Route::delete('/user-community-rules',[ApiUserRulesController::class, 'delete']);
+    Route::post('/user-community-rules', [ApiUserRulesController::class, 'store']);
+    Route::get('/user-community-rules', [ApiUserRulesController::class, 'list']);
+    Route::get('/user-community-rules/{rule_uuid}', [ApiUserRulesController::class, 'show']);
+    Route::put('/user-community-rules', [ApiUserRulesController::class, 'update']);
+    Route::delete('/user-community-rules', [ApiUserRulesController::class, 'delete']);
     Route::get('/all_user_rules', [ApiUserRulesController::class, 'getAllRules']);
 
     Route::post('/antispam', [ApiAntispamController::class, 'store']);
@@ -150,11 +152,11 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/chats/rules/{moderation_uuid}', [ApiCommunityRuleController::class, 'delete']);
     Route::get('/chats/rules-template', [ApiRulesTemplateController::class, 'getTemplate']);
 
-    Route::post('/onboarding',[ApiOnboardingController::class, 'store']);
-    Route::get('/onboarding',[ApiOnboardingController::class, 'get']);
-    Route::get('/onboarding/{onboarding_uuid}',[ApiOnboardingController::class, 'show']);
-    Route::post('/onboarding/edit',[ApiOnboardingController::class, 'update']);
-    Route::delete('/onboarding/{onboarding_uuid}',[ApiOnboardingController::class, 'destroy']);
+    Route::post('/onboarding', [ApiOnboardingController::class, 'store']);
+    Route::get('/onboarding', [ApiOnboardingController::class, 'get']);
+    Route::get('/onboarding/{onboarding_uuid}', [ApiOnboardingController::class, 'show']);
+    Route::post('/onboarding/edit', [ApiOnboardingController::class, 'update']);
+    Route::delete('/onboarding/{onboarding_uuid}', [ApiOnboardingController::class, 'destroy']);
 
     Route::get('/chats/rate-template', [ApiCommunityReputationRulesController::class, 'getTemplate'])->name('chats.reputation.template');
     Route::post('/chats/rate/{uuid}', [ApiCommunityReputationRulesController::class, 'update'])->name('chats.reputation.update');
@@ -187,6 +189,14 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/question-category/{id}', [ApiQuestionCategoryController::class, 'show']);
     Route::put('/question-category/{id}', [ApiQuestionCategoryController::class, 'update']);
     Route::delete('/question-category/{id}', [ApiQuestionCategoryController::class, 'delete']);
+
+    Route::get('/statistic/members', [ApiTelegramUsersStatistic::class, 'members'])->name('api.statistic.members');
+    Route::get('/statistic/members/charts', [ApiTelegramUsersStatistic::class, 'memberCharts'])->name('api.statistic.members.charts');
+    Route::get('/statistic/members/export', [ApiTelegramUsersStatistic::class, 'exportMembers'])->name('api.statistic.members.export');
+
+    Route::get('/statistic/messages/users', [ApiTelegramMessageStatistic::class, 'messages'])->name('api.statistic.messages');
+    Route::get('/statistic/messages/charts', [ApiTelegramMessageStatistic::class, 'messageCharts'])->name('api.statistic.messages.charts');
+    Route::get('/statistic/messages/export', [ApiTelegramMessageStatistic::class, 'exportMessages'])->name('api.statistic.messages.export');
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
 
