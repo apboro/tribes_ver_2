@@ -168,6 +168,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/knowledge/{id}', [ApiKnowledgeController::class, 'delete']);
     Route::get('/knowledge/{id}', [ApiKnowledgeController::class, 'show']);
     Route::put('/knowledge/{id}', [ApiKnowledgeController::class, 'update']);
+    Route::get('/public/knowledge/{hash}', [ApiKnowledgeController::class, 'public']);
     Route::post('/knowledge/bind-communities', [ApiKnowledgeController::class, 'bindToCommunity']);
 
     Route::post('/chats/rank', [ApiRankRuleController::class, 'store'])->name('chats.rank.store');

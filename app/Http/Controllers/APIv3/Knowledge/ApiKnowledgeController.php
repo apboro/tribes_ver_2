@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\APIv3\Knowledge;
 
+use App\Http\ApiRequests\ApiPublicKnowledgePageRequest;
 use App\Http\ApiRequests\Knowledge\ApiKnowledgeBindToCommunityRequest;
 use App\Http\ApiRequests\Knowledge\ApiKnowledgeDeleteRequest;
 use App\Http\ApiRequests\Knowledge\ApiKnowledgeListRequest;
@@ -11,8 +12,11 @@ use App\Http\ApiRequests\Knowledge\ApiKnowledgeStoreRequest;
 use App\Http\ApiRequests\Knowledge\ApiKnowledgeUpdateRequest;
 use App\Http\ApiResources\Knowledge\ApiKnowledgeCollection;
 use App\Http\ApiResources\Knowledge\ApiKnowledgeResource;
+use App\Http\ApiResources\Knowledge\ApiQuestionCategoryResource;
+use App\Http\ApiResources\Knowledge\ApiQuestionResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Models\Knowledge\Knowledge;
 use App\Repositories\Knowledge\ApiKnowledgeRepository;
 
 class ApiKnowledgeController extends Controller
@@ -88,5 +92,12 @@ class ApiKnowledgeController extends Controller
         }
 
         return ApiResponse::success('База знаний успешно привязана к сообществам');
+    }
+
+    public function public(ApiPublicKnowledgePageRequest $request, string $hash)
+    {
+        $knowledge = Knowledge::where('uri_hash', $hash)->first();
+        $categories = $knowledge->categories;
+        return ApiResponse::common(['categories' => ApiQuestionCategoryResource::collection($categories),]);
     }
 }

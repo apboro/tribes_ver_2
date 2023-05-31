@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $name
  * @property int $owner_id
  * @property int $knowledge_id
+ * @property mixed $questions
  */
 class QuestionCategory extends Model
 {
@@ -33,5 +34,10 @@ class QuestionCategory extends Model
     public function questionsCount(int $id): int
     {
         return Question::query()->where('category_id', $id)->count();
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'category_id', 'id');
     }
 }
