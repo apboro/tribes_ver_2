@@ -31,6 +31,7 @@ use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramUsersStatistic;
+use App\Http\Controllers\APIv3\Semantic\SemanticController;
 use App\Http\Controllers\APIv3\Subscription\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\Subscription\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
@@ -199,7 +200,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/statistic/messages/export', [ApiTelegramMessageStatistic::class, 'exportMessages'])->name('api.statistic.messages.export');
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
-
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {
