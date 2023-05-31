@@ -12,7 +12,7 @@ use OpenApi\Annotations as OA;
  *  summary="Statistic message for chart",
  *  security={{"sanctum": {} }},
  *  tags={"Statistic Message"},
- *  @OA\Parameter(name="period",in="query",description="Select period",required=false,@OA\Schema(type="string",)),
+ *  @OA\Parameter(name="period",in="query",description="Select period (day, week, month, year)",required=false,@OA\Schema(type="string",)),
  *  @OA\Parameter(name="community_ids[]",in="query",description="Community Array",required=false,@OA\Schema(type="array",@OA\Items(type="integer"))),
  *  @OA\Parameter(name="telegram_users_id[]",in="query",description="Teelgram ids Array",required=false,@OA\Schema(type="array",@OA\Items(type="integer"))),
  * @OA\Response(response=200, description="OK"),
