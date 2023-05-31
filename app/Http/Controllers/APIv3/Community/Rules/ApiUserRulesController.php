@@ -20,22 +20,25 @@ use App\Models\CommunityReputationRules;
 use App\Models\CommunityRule;
 use App\Models\Onboarding;
 use App\Models\UserRule;
+use Askoldex\Teletant\Api;
+use Discord\Helpers\Collection;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class ApiUserRulesController extends Controller
 {
     public function store(ApiUserRulesStoreRequest $request)
     {
-        $rule = new UserRule();
-        $rule->rules = json_encode($request->input('rules'));
-        $rule->user_id = Auth::user()->id;
-        $rule->title = $request->input('title');
-        $rule->save();
         foreach ($request->input('communities_ids') as $community_id) {
+            $rule = new UserRule();
+            $rule->rules = json_encode($request->input('rules'));
+            $rule->user_id = Auth::user()->id;
+            $rule->title = $request->input('title');
+            $rule->save();
             $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
             if ($community !== null) {
-                $community->if_then_uuid = $rule->uuid;
-                $community->save();
+                $rule->community_id = $community->id;
+                $rule->save();
             }
         }
 
@@ -59,14 +62,16 @@ class ApiUserRulesController extends Controller
     public function update(ApiUserRulesUpdateRequest $request)
     {
         $rule = UserRule::find($request->user_rule_uuid);
-        $rule->title = $request->input('title');
-        $rule->rules = json_encode($request->input('rules'));
-        $rule->save();
+
         foreach ($request->input('communities_ids') as $community_id) {
+
+            $rule->title = $request->input('title');
+            $rule->rules = json_encode($request->input('rules'));
+            $rule->save();
             $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
             if ($community !== null) {
-                $community->if_then_uuid = $rule->uuid;
-                $community->save();
+                $rule->community_id = $community->id;
+                $rule->save();
             }
         }
 
@@ -147,10 +152,10 @@ class ApiUserRulesController extends Controller
         ];
         $rules = $onboardings->concat($ifThenRules)->concat($antispamRules)->concat($moderationRules)->concat($reputationRules);
 
-        $sorted = $rules->sortByDesc(function($item){
+        /** @var \Illuminate\Support\Collection $sorted */
+        $sorted = $rules->sortByDesc(function ($item) {
             return $item->updated_at;
-        });
-
+        })->flatten();
         return ApiResponse::common(['rules' => $sorted->skip($request->offset)->take($request->limit), 'counts' => $counts]);
     }
 
