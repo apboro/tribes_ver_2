@@ -21,7 +21,18 @@ use App\Http\ApiRequests\ApiRequest;
  *          who_can_rate - enum from [all, owner, owner_and_admin]
  *          notify_type - enum from [common,all]",
  *         @OA\MediaType(
- *             mediaType="application/json",
+ *             mediaType="multipart/form-data",
+ *             encoding={
+ *                  "community_ids[]": {
+ *                      "explode": true,
+ *                  },
+ *                  "keyword_rate_up[]":{
+ *                      "explode": true,
+ *                  },
+ *                "keyword_rate_down[]":{
+ *                      "explode": true,
+ *                  }
+ *              },
  *              @OA\Schema(
  *                 @OA\Property(property="title",type="string", example="Who can rate?"),
  *                 @OA\Property(property="who_can_rate",type="string",example="all"),
