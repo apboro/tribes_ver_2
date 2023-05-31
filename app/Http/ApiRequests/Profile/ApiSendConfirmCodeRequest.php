@@ -39,7 +39,7 @@ class ApiSendConfirmCodeRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'phone' => 'required|integer',
+            'phone' => 'required|integer|unique:users',
             'code' => 'required|integer',
         ];
     }
