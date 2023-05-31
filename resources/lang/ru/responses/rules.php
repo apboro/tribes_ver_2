@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'saved_successfully'=>'Правило успешно созранено',
+    'saved_successfully'=>'Правило успешно сохранено',
 ];
