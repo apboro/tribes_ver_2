@@ -116,6 +116,7 @@ class MainBotCommands
         'saveForwardMessageInBotChatAsQA',
         'support',
         'getSpodial',
+        'reputation'
     ])
     {
         foreach ($methods as $method) {
@@ -352,7 +353,6 @@ class MainBotCommands
                      * Ответ службы поддержки отправляется пользователю в телеграм от бота и на почту
                      * отправлять на почту info@spodial.com и в телеграм @infospodial
                      */
-
                 }else{
                     $ctx->replyHTML('Чтобы отправить обращение напишите ' . "\n"
                         . '<b> Пример: </b> ' . "\n"
@@ -523,6 +523,56 @@ class MainBotCommands
                     'results' => (string)$result,
                 ]);
             });
+        } catch (\Exception $e) {
+            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    protected function reputation()
+    {
+        try {
+            $reputation = function (Context $ctx) {
+                if ($this->isPrivateMessageToBot($ctx)) {
+                    if (TelegramUser::isCommunityUserOwner($ctx->getUserID())) {
+                        $menu = Menux::Create('inline_keyboard')->inline();
+                        $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
+                        if ($communities->first()) {
+                            foreach ($communities as $community) {
+                                if ($community->communityReputationRule->show_rating_tables) {
+                                    $menu->btn($community->title, 'community_rep ' . $community->id);
+                                }
+                            }
+                            $ctx->reply('Выберите один из чатов с включенной репутацией.', $menu);
+                        } else {
+                            $ctx->reply('У вас нет чатов');
+                        }
+                    }
+                }
+            };
+
+            $reputationCommunities = function  (Context $ctx) {
+                $communityId = (int) $ctx->var('id');
+                $communities = $this->communityRepo->getCommunitiesForOwnerByTeleUserId($ctx->getChatID());
+                $community = $communities->find($communityId);
+
+                if ($community) {
+                    $reputationUsers = TelegramUserReputation::getUsersByCondition('community_id', $communityId);
+                    $str = ''; $c = 1;
+                    foreach ($reputationUsers as $userRep) {
+                        $str .= $c . '. ' .$userRep->telegramUser->getTelegramUserName()  . ' ' . $userRep->reputation_count  . "\n\n";
+                        $c++;
+                    }
+
+                    $ctx->reply('Рейтинг ТОП-10 участников чата '. $community->title . "\n\n" .$str);
+                } else {
+                    $ctx->reply('Рейтинг ТОП-10 участников чата '.$communityId);
+                }
+            };
+
+            $this->bot->onText('Репутация', $reputation);
+            $this->bot->onAction('1', $reputationCommunities);
+            $this->bot->onAction('community_rep {id}', $reputationCommunities);
         } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -1255,8 +1305,8 @@ class MainBotCommands
             Menux::Create('menuOwner', 'owner')
                 ->row()->btn('Личный кабинет')
                 ->row()->btn(self::KNOWLEDGE_BASE)
-                ->row()->btn('Поддержка');
-//               ->row()->btn('Репутация');
+                ->row()->btn('Поддержка')
+                ->row()->btn('Репутация');
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
