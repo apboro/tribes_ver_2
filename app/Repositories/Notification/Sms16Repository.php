@@ -76,7 +76,7 @@ class Sms16Repository implements NotificationRepositoryContract
 
         $balance = $message->getBalance();
         if (isset($balance['money']) && $balance['money'] < '20') {
-            TelegramLogService::staticSendLogMessage('На sms16.ru осталось менее 20 рублей, пожалуйста пополните счёт.');
+            Log::info('На sms16.ru осталось менее 20 рублей, пожалуйста пополните счёт.');
         }
 
         return $sms;
