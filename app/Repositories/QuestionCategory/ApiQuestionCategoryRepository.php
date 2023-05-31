@@ -54,9 +54,12 @@ class ApiQuestionCategoryRepository
 
     public function list(ApiRequest $request)
     {
+        $knowledge_id = $request->get('knowledge_id');
         $questionCategories = QuestionCategory::query()
             ->where('owner_id', Auth::user()->id)
-            ->where('knowledge_id', $request->get('knowledge_id'))
+            ->when($knowledge_id, function ($query) use ($knowledge_id) {
+                $query->where('knowledge_id', $knowledge_id);
+            })
             ->get();
 
         if (!$questionCategories->count()) {

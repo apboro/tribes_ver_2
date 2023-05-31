@@ -27,6 +27,7 @@ class ApiAntispamResource extends JsonResource
             'del_message_with_forward' => $this->resource->del_message_with_forward,
             'ban_user_contain_forward' => $this->resource->ban_user_contain_forward,
             'work_period' => $this->resource->work_period,
+            'type' => $this->resource->type,
             'community_ids' => (new CommunitiesCollection($this->resource->communities))->pluck('id'),
         ];
     }
