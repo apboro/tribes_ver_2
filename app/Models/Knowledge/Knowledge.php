@@ -3,6 +3,7 @@
 namespace App\Models\Knowledge;
 
 use App\Models\Community;
+use App\Models\QuestionCategory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -50,5 +51,10 @@ class Knowledge extends Model
     public function getQuestionsWithAnswers(int $knowledgeId)
     {
         return Question::query()->where('knowledge_id', $knowledgeId)->with('answer')->get();
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(QuestionCategory::class);
     }
 }

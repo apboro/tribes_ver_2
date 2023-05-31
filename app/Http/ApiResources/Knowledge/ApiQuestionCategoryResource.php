@@ -23,6 +23,7 @@ class ApiQuestionCategoryResource extends JsonResource
             'id'             => $this->resource->id,
             'name'           => $this->resource->name,
             'knowledge_id'   => $this->resource->knowledge_id,
+            'questions'      => ApiQuestionResource::collection($this->resource->questions),
             'question_count' => $this->resource->questionsCount($this->resource->id),
         ];
     }
