@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $owner_id
  * @property int $knowledge_id
  * @property mixed $questions
+ * @property mixed $knowledge
  */
 class QuestionCategory extends Model
 {
