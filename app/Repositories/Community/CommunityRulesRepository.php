@@ -275,57 +275,61 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
     protected function handleOnboardingRule($rule)
     {
-        Log::debug('in onboardingRule handler', [$this->messageDTO, $rule]);
-        $rules = json_decode($rule->rules, true);
-        Log::debug('onboarding $rules', [$rules]);
-
-        if (isset($rules['joinLimitation'])) {
-            $this->massEnterBlock($rules);
-        }
-
-        if (isset($rules['botJoinLimitation'])
-            && $this->messageDTO->new_chat_member_bot
-            && $this->messageDTO->new_chat_member_id != env('TELEGRAM_BOT_ID')
-            && ($rules['botJoinLimitation']['action'] == 4
-                || $rules['botJoinLimitation']['action'] == 10)) {
-            $this->botService->kickUser(
-                env('TELEGRAM_BOT_NAME'),
-                $this->messageDTO->new_chat_member_id,
-                $this->messageDTO->chat_id);
-            if ($rules['botJoinLimitation']['action'] == 10) {
-                $this->botService->unKickUser(
+        try {
+            Log::debug('in onboardingRule handler', [$this->messageDTO, $rule]);
+            $rules = json_decode($rule->rules, true);
+            Log::debug('onboarding $rules', [$rules]);
+            if (isset($rules['joinLimitation'])) {
+                $this->massEnterBlock($rules);
+            }
+            if (
+                isset($rules['botJoinLimitation'])
+                && $this->messageDTO->new_chat_member_bot
+                && $this->messageDTO->new_chat_member_id != env('TELEGRAM_BOT_ID')
+                && ($rules['botJoinLimitation']['action'] == 4
+                    || $rules['botJoinLimitation']['action'] == 10)
+            ) {
+                $this->botService->kickUser(
                     env('TELEGRAM_BOT_NAME'),
                     $this->messageDTO->new_chat_member_id,
                     $this->messageDTO->chat_id);
+                if ($rules['botJoinLimitation']['action'] == 10) {
+                    $this->botService->unKickUser(
+                        env('TELEGRAM_BOT_NAME'),
+                        $this->messageDTO->new_chat_member_id,
+                        $this->messageDTO->chat_id);
+                }
             }
-        }
-        if (isset($rules['inviteBotLimitation'])
-            && $this->messageDTO->new_chat_member_bot
-            && $this->messageDTO->new_chat_member_id != env('TELEGRAM_BOT_ID')
-            && ($this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id)
-            && ($rules['inviteBotLimitation']['action'] == 4
-                || $rules['inviteBotLimitation']['action'] == 10)) {
-            $this->botService->kickUser(
-                env('TELEGRAM_BOT_NAME'),
-                $this->messageDTO->telegram_user_id,
-                $this->messageDTO->chat_id);
-
-            if ($rules['inviteBotLimitation']['action'] == 10) {
-                $this->botService->unKickUser(
+            if (isset($rules['inviteBotLimitation'])
+                && $this->messageDTO->new_chat_member_bot
+                && $this->messageDTO->new_chat_member_id != env('TELEGRAM_BOT_ID')
+                && $this->messageDTO->telegram_user_id != $this->messageDTO->new_chat_member_id
+                && ($rules['inviteBotLimitation']['action'] == 4
+                    || $rules['inviteBotLimitation']['action'] == 10)) {
+                Log::debug('in inviteBotLimitation');
+                $this->botService->kickUser(
                     env('TELEGRAM_BOT_NAME'),
                     $this->messageDTO->telegram_user_id,
                     $this->messageDTO->chat_id);
-            }
-        }
 
-        if (isset($rules['rtlNameJoinLimitation'])) {
-            if ($this->conditionMatcher('username-format-rtl_format', $this->messageDTO)
-                || $this->conditionMatcher('first_name-format-rtl_format', $this->messageDTO)
-                || $this->conditionMatcher('last_name-format-rtl_format', $this->messageDTO)
-                && $rules['rtlNameJoinLimitation']['action'] == 10) {
-
-                $this->actionRunner('ban_user', $this->messageDTO);
+                if ($rules['inviteBotLimitation']['action'] == 10) {
+                    $this->botService->unKickUser(
+                        env('TELEGRAM_BOT_NAME'),
+                        $this->messageDTO->telegram_user_id,
+                        $this->messageDTO->chat_id);
+                }
             }
+            if (isset($rules['rtlNameJoinLimitation'])) {
+                if ($this->conditionMatcher('username-format-rtl_format', $this->messageDTO)
+                    || $this->conditionMatcher('first_name-format-rtl_format', $this->messageDTO)
+                    || $this->conditionMatcher('last_name-format-rtl_format', $this->messageDTO)
+                    && $rules['rtlNameJoinLimitation']['action'] == 10) {
+
+                    $this->actionRunner('ban_user', $this->messageDTO);
+                }
+            }
+        } catch (Exception $e) {
+            Log::error($e);
         }
     }
 
@@ -333,7 +337,9 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
     {
 
         try {
-            $blockPeriodStart = Carbon::createFromTimestamp($this->messageDTO->message_date)->subSeconds($rule['joinLimitation']['time'])->timestamp;
+            Log::debug('massEnterBlock ', [$this->messageDTO, $rule]);
+
+            $blockPeriodStart = Carbon::createFromTimestamp($this->messageDTO->message_date)->subSeconds($rule['joinLimitation']['duration'])->timestamp;
             $blockPeriodEnd = $this->messageDTO->message_date;
             $users = TelegramUserCommunity::query()
                 ->where('community_id', $this->community->id)
@@ -358,7 +364,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 }
             }
         } catch (Exception $e) {
-            Log::error('Rules handle error' . $e->getMessage() . $e->getFile() . $e->getLine());
+            Log::error('Rules handle error ' . $e->getMessage() .' '. $e->getFile(). ' '. $e->getLine());
         }
 
     }
