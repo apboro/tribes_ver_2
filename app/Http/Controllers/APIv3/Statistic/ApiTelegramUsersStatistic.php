@@ -62,7 +62,10 @@ class ApiTelegramUsersStatistic extends Controller
         ApiMemberStatisticChartsRequest $request
     ): ApiResponse
     {
-        $active_user = $this->statisticRepository->getActiveUsers($request->input('community_ids') ?? []);
+
+        $active_user = $this->statisticRepository->getActiveUsers(
+            $request->input('community_ids') ?? []
+        );
         $current_members = $this->statisticRepository->currentMembersChart(
             $request->input('community_ids') ?? [],
             $request
@@ -79,7 +82,8 @@ class ApiTelegramUsersStatistic extends Controller
             'join_users_by_days' => $join_users,
             'exit_users_by_days' => $exit_users,
             'join_users_total' => $join_users->sum('users'),
-            'exit_users_total' => $exit_users->sum('users')
+            'exit_users_total' => $exit_users->sum('users'),
+            'active_users' => $active_user->count(),
         ]);
     }
 
