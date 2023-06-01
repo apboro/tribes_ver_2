@@ -31,7 +31,7 @@ use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramUsersStatistic;
-use App\Http\Controllers\APIv3\Semantic\SemanticController;
+use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Subscription\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\Subscription\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
@@ -198,6 +198,10 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/statistic/messages/users', [ApiTelegramMessageStatistic::class, 'messages'])->name('api.statistic.messages');
     Route::get('/statistic/messages/charts', [ApiTelegramMessageStatistic::class, 'messageCharts'])->name('api.statistic.messages.charts');
     Route::get('/statistic/messages/export', [ApiTelegramMessageStatistic::class, 'exportMessages'])->name('api.statistic.messages.export');
+
+    Route::get('/statistic/semantic/export',[ApiSemanticController::class, 'exportSemantic']);
+    Route::get('/statistic/semantic/charts', [ApiSemanticController::class, 'charts']);
+
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
 });

@@ -31,7 +31,7 @@ class TelgramMembersStatisticRepository
     {
         $builder = $this->queryMembers($community_ids);
         $builder->having('COUNT(distinct($tm.message_id))', '>', 0);
-        var_dump($builder->toSql());;
+        var_dump($builder->toSql());
         die();
     }
 
@@ -242,7 +242,7 @@ class TelgramMembersStatisticRepository
         }
     }
 
-    public function getStartDate($value): Carbon
+    public function getStartDate($value): ?Carbon
     {
         switch ($value) {
             case self::DAY:
@@ -254,6 +254,7 @@ class TelgramMembersStatisticRepository
             case self::WEEK:
                 return $this->getEndDate()->sub('6 days')->startOfDay();
         }
+        return null;
     }
 
     public function getEndDate(): Carbon

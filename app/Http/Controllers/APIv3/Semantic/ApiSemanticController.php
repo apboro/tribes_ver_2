@@ -4,10 +4,10 @@ namespace App\Http\Controllers\APIv3\Semantic;
 
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Semantic\CalculateProbabilityRequest;
+use App\Http\Requests\Semantic\ApiCalculateProbabilityRequest;
 use App\Repositories\Semantic\SemanticRepository;
 
-class SemanticController extends Controller
+class ApiSemanticController extends Controller
 {
     private SemanticRepository $semanticRepository;
 
@@ -16,7 +16,7 @@ class SemanticController extends Controller
         $this->semanticRepository = $semanticRepository;
     }
 
-    public function calculateProbability(CalculateProbabilityRequest $request)
+    public function charts(ApiCalculateProbabilityRequest $request)
     {
         $statistics = $this->semanticRepository->calculateProbability($request);
 
