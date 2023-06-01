@@ -31,11 +31,11 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 {
 
     private MessageDTO $messageDTO;
-    private Community $community;
+    private ?Community $community;
 
     private ?TelegramUserReputation $telegramUserReputation;
     private ?TelegramUserCommunity $telegramUserCommunity;
-    private TelegramUser $telegramUser;
+    private ?TelegramUser $telegramUser;
     private CommunityRepositoryContract $communityRepository;
     protected TelegramMainBotService $botService;
 
@@ -293,7 +293,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     env('TELEGRAM_BOT_NAME'),
                     $this->messageDTO->new_chat_member_id,
                     $this->messageDTO->chat_id);
-                if ($rules['botJoinLimitation']['action'] == 10 && $this->messageDTO->chat_type == 'supergroup') {
+                if ($rules['botJoinLimitation']['action'] == 10 && $this->messageDTO->chat_type === 'supergroup') {
+                    Log::debug('unKicking user in onboarding');
                     $this->botService->unKickUser(
                         env('TELEGRAM_BOT_NAME'),
                         $this->messageDTO->new_chat_member_id,
@@ -312,7 +313,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     $this->messageDTO->telegram_user_id,
                     $this->messageDTO->chat_id);
 
-                if ($rules['inviteBotLimitation']['action'] == 10) {
+                if ($rules['inviteBotLimitation']['action'] == 10 && $this->messageDTO->chat_type === 'supergroup') {
                     $this->botService->unKickUser(
                         env('TELEGRAM_BOT_NAME'),
                         $this->messageDTO->telegram_user_id,
@@ -355,7 +356,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                             $this->messageDTO->chat_id);
                     }
 
-                    if ($rule['joinLimitation']['action'] == 10 && $this->messageDTO->chat_type == 'supergroup') {
+                    if ($rule['joinLimitation']['action'] == 10 && $this->messageDTO->chat_type === 'supergroup') {
                         $this->botService->unKickUser(
                             env('TELEGRAM_BOT_NAME'),
                             $user->telegram_user_id,
