@@ -355,7 +355,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                             $this->messageDTO->chat_id);
                     }
 
-                    if ($rule['joinLimitation']['action'] == 10) {
+                    if ($rule['joinLimitation']['action'] == 10 && $this->community->connection->group_type = 'supergroup') {
                         $this->botService->unKickUser(
                             env('TELEGRAM_BOT_NAME'),
                             $user->telegram_user_id,
