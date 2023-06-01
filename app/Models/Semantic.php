@@ -21,8 +21,6 @@ class Semantic extends Model
 {
     use HasFactory;
 
-    protected $table = 'semantic_table';
-
     protected $fillable = [
         'chat_id',
         'messages_from_datetime',
