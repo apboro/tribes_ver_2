@@ -39,6 +39,7 @@ class RulesObserver
             $dto->telegram_user_last_name = ArrayHelper::getValue($data,'message.from.last_name');
             $dto->telegram_user_username = ArrayHelper::getValue($data,'message.from.username');
             $dto->chat_id = ArrayHelper::getValue($data,'message.chat.id');
+            $dto->chat_type = ArrayHelper::getValue($data,'message.chat.type');
             $dto->telegram_date = ArrayHelper::getValue($data,'message.date');
             $dto->text = ArrayHelper::getValue($data,'message.text');
             $dto->message_entities = ArrayHelper::getValue($data,'message.entities');
