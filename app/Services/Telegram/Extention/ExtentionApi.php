@@ -159,7 +159,6 @@ class ExtentionApi extends Api implements ExtentionApiInterface
      */
     public function kickUser(int $userId, int $chatId)
     {
-        Logg::debug('we already in extention api to ban him!');
         try {
             return $this->invokeAction('banChatMember', [
                 'chat_id' => $chatId,
