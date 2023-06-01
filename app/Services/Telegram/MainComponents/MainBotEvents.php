@@ -87,6 +87,7 @@ class MainBotEvents
                 $this->bot->logger()->debug('превращение в супергруппу c id: ', ArrayHelper::toArray($this->data->message->migrate_to_chat_id));
                 $connection = TelegramConnection::query()->where('chat_id', $oldChatId)->first();
                 $connection->chat_id = $newChatId;
+                $connection->chat_type = 'supergroup';
                 $connection->save();
             }
         } catch (Exception $e) {
