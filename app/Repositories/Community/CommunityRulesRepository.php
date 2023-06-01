@@ -293,7 +293,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     env('TELEGRAM_BOT_NAME'),
                     $this->messageDTO->new_chat_member_id,
                     $this->messageDTO->chat_id);
-                if ($rules['botJoinLimitation']['action'] == 10) {
+                if ($rules['botJoinLimitation']['action'] == 10 && $this->community->connection->chat_type = 'supergroup') {
                     $this->botService->unKickUser(
                         env('TELEGRAM_BOT_NAME'),
                         $this->messageDTO->new_chat_member_id,
@@ -355,7 +355,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                             $this->messageDTO->chat_id);
                     }
 
-                    if ($rule['joinLimitation']['action'] == 10 && $this->community->connection->group_type = 'supergroup') {
+                    if ($rule['joinLimitation']['action'] == 10 && $this->community->connection->chat_type = 'supergroup') {
                         $this->botService->unKickUser(
                             env('TELEGRAM_BOT_NAME'),
                             $user->telegram_user_id,
