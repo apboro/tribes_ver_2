@@ -287,7 +287,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
             if (isset($rules['deleteGreetings'])){
                 DeleteGreetingMessage::dispatch($this->botService, $this->messageDTO->chat_id, $this->messageDTO->message_id)
-                    ->delay(Carbon::now('Europe/Moscow')->addSeconds($rules['deleteGreetings']['duration']));
+                    ->delay($rules['deleteGreetings']['duration']);
             }
 
             if (
