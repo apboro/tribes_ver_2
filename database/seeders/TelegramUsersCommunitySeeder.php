@@ -16,7 +16,7 @@ class TelegramUsersCommunitySeeder extends Seeder
     private int $user_id;
 
     /**
-     * @param int $user_id
+     * com     * @param int $user_id
      */
 
     public function __construct(int $user_id)
@@ -33,7 +33,6 @@ class TelegramUsersCommunitySeeder extends Seeder
      */
     public function run()
     {
-
         $faker = Faker::create();
         $communities_count = 5;
         $telegram_user_count = 500;
@@ -60,12 +59,14 @@ class TelegramUsersCommunitySeeder extends Seeder
 
         /** @var TelegramUser $user */
         foreach ($telegram_users as $user) {
-            $acc_date = $faker->numberBetween(Carbon::now()->subYear()->timestamp, Carbon::now()->timestamp);
+            $acc_date = $faker->numberBetween(Carbon::now()->subYear()->timestamp, Carbon::now()->subDay()->timestamp);
+            $is_kicked = $faker->boolean();
             $user->communities()->sync([
                 $communities[$faker->numberBetween(0, $communities_count - 1)]->id
                 => [
                     'accession_date' => $acc_date,
-                    'exit_date' => $faker->boolean() ? $faker->numberBetween($acc_date, Carbon::now()->timestamp) : null
+                    'exit_date' => ($faker->boolean() || $is_kicked) ? $faker->numberBetween($acc_date, Carbon::now()->subDay()->timestamp) : null,
+                    'status' => $is_kicked ? 'kicked' : null
                 ]
             ]);
         }

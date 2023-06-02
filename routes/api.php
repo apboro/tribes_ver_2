@@ -30,6 +30,7 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
+use App\Http\Controllers\APIv3\Statistic\ApiTelegramModerationStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramUsersStatistic;
 use App\Http\Controllers\APIv3\Subscription\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\Subscription\ApiUserSubscriptionController;
@@ -192,6 +193,10 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/statistic/messages/users', [ApiTelegramMessageStatistic::class, 'messages'])->name('api.statistic.messages');
     Route::get('/statistic/messages/charts', [ApiTelegramMessageStatistic::class, 'messageCharts'])->name('api.statistic.messages.charts');
     Route::get('/statistic/messages/export', [ApiTelegramMessageStatistic::class, 'exportMessages'])->name('api.statistic.messages.export');
+
+    Route::get('/statistic/moderation/users', [ApiTelegramModerationStatistic::class, 'userList'])->name('api.statistic.moderation.user_list');
+    Route::get('/statistic/moderation/charts', [ApiTelegramModerationStatistic::class, 'moderationCharts'])->name('api.statistic.moderation.charts');
+    Route::get('/statistic/moderation/export', [ApiTelegramModerationStatistic::class, 'exportModeration'])->name('api.statistic.moderation.export');
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
 });
