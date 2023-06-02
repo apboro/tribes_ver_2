@@ -310,7 +310,7 @@ class Community extends Model
     public function getPublicKnowledgeLink(): ?string
     {
         if ($this->knowledge){
-            return env('FRONTEND_URL') .'/app/knowledge/'. $this->knowledge->uri_hash;
+            return env('FRONTEND_URL') .'/app/public/knowledge-base/'. $this->knowledge->uri_hash;
         } else {
             return null;
         }

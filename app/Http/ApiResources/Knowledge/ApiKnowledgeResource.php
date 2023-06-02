@@ -22,7 +22,7 @@ class ApiKnowledgeResource extends JsonResource
         return [
             'id'                        => $this->resource->id,
             'name'                      => $this->resource->name,
-            'uri_hash'                  => $this->resource->uri_hash,
+            'uri_hash'                  => env('FRONTEND_URL'). '/app/public/knowledge-base/' . $this->resource->uri_hash,
             'updated_at'                => $this->resource->updated_at,
             'questions_count'           => $this->questions->count(),
             'communities'               => $this->communities->pluck('id')
