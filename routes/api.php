@@ -71,6 +71,9 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/send_demo_email', [MailSender::class, 'sendDemoEmail']);
 });
 
+/** TODO fastFIX  */
+Route::get('/question/{id}', [ApiQuestionController::class, 'show']);
+
 Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
     Route::get('/user', [ApiUserController::class, 'show']);
     Route::post('/user/logout', [ApiAuthController::class, 'logout']);
@@ -181,7 +184,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::get('/question/list/{id}', [ApiQuestionController::class, 'list']);
     Route::post('/question', [ApiQuestionController::class, 'store']);
-    Route::get('/question/{id}', [ApiQuestionController::class, 'show']);
+//    Route::get('/question/{id}', [ApiQuestionController::class, 'show']);
     Route::post('/question/{id}', [ApiQuestionController::class, 'update']);
     Route::delete('/question/{id}', [ApiQuestionController::class, 'delete']);
 
