@@ -93,10 +93,11 @@ class ApiCommunityTelegramUserController extends Controller
         $query = TelegramUser::with(['communities', 'userList'])
             ->whereHas('communities', function ($query) {
                 $query->where('owner', Auth::user()->id)
-                    ->whereNull('telegram_users_community.exit_date')
-                    ->orWhere('telegram_users_community.status', 'banned')
-                    ->where('is_active', true)
-                ;
+                    ->where(function ($query) {
+                        $query->whereNull('telegram_users_community.exit_date')
+                            ->orWhere('telegram_users_community.status', 'banned');
+                    })
+                    ->where('is_active', true);
             })
             ->newQuery();
         if (!empty($request->input('accession_date_from'))) {
@@ -122,7 +123,7 @@ class ApiCommunityTelegramUserController extends Controller
 
         if (!empty($request->input('user_name'))) {
             $query->where(function ($query) use ($request) {
-                $query->where('user_name', 'ilike', '%' . str_replace('@','',$request->input('user_name')) . '%');
+                $query->where('user_name', 'ilike', '%' . str_replace('@', '', $request->input('user_name')) . '%');
             });
         }
 
@@ -157,7 +158,7 @@ class ApiCommunityTelegramUserController extends Controller
         $count = $query->count();
         $telegram_users = $query->skip($request->offset)->take($request->limit)->orderBy('id')->get();
 
-        return ApiResponse::listPagination(['Access-Control-Expose-Headers'=>'Items-Count', 'Items-Count'=>$count])
+        return ApiResponse::listPagination(['Access-Control-Expose-Headers' => 'Items-Count', 'Items-Count' => $count])
             ->items(new ApiCommunityTelegramUserCollection($telegram_users));
 
     }
@@ -204,7 +205,7 @@ class ApiCommunityTelegramUserController extends Controller
             $result = $this->telegramUserListsRepositry->remove($request, $request->telegram_id, TelegramUserListsRepositry::TYPE_WHITE_LIST);
         }
 
-        if ($result){
+        if ($result) {
             return ApiResponse::success('common.success');
         } else {
             return ApiResponse::error('common.not_found');
