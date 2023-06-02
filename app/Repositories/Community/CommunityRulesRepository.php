@@ -4,6 +4,7 @@ namespace App\Repositories\Community;
 
 
 use App\Http\ApiResources\ApiRulesDictionary;
+use App\Jobs\DeleteGreetingMessage;
 use App\Models\Community;
 use App\Models\CommunityRule;
 use App\Models\Condition;
@@ -279,9 +280,16 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             Log::debug('in onboardingRule handler', [$this->messageDTO, $rule]);
             $rules = json_decode($rule->rules, true);
             Log::debug('onboarding $rules', [$rules]);
+
             if (isset($rules['joinLimitation'])) {
                 $this->massEnterBlock($rules);
             }
+
+            if (isset($rules['deleteGreetings'])){
+                DeleteGreetingMessage::dispatch($this->botService, $this->messageDTO->chat_id, $this->messageDTO->message_id)
+                    ->delay(Carbon::now('Europe/Moscow')->addSeconds($rules['deleteGreetings']['duration']));
+            }
+
             if (
                 isset($rules['botJoinLimitation'])
                 && $this->messageDTO->new_chat_member_bot
