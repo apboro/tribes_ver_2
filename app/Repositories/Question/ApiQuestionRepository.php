@@ -85,7 +85,7 @@ class ApiQuestionRepository
         /** @var Question $question */
         $question = Question::query()
             ->where('id', $id)
-            ->where('author_id', Auth::user()->id)
+//            ->where('author_id', Auth::user()->id)
             ->first();
 
         if (!$question) {
