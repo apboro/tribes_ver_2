@@ -67,7 +67,7 @@ class ApiKnowledgeRepository
 
         $knowledge->update([
             'name' => $request->get('knowledge_name'),
-            'uri_hash' => Str::uuid(),
+//            'uri_hash' => Str::uuid(),
         ]);
 
 
