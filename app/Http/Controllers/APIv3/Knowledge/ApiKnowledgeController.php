@@ -97,7 +97,10 @@ class ApiKnowledgeController extends Controller
     public function public(ApiPublicKnowledgePageRequest $request, string $hash)
     {
         $knowledge = Knowledge::where('uri_hash', $hash)->first();
+        if (!$knowledge){
+            return ApiResponse::error('common.not_found');
+        }
         $categories = $knowledge->categories;
-        return ApiResponse::common(['categories' => ApiQuestionCategoryResource::collection($categories),]);
+        return ApiResponse::common(['categories' => ApiQuestionCategoryResource::collection($categories)]);
     }
 }

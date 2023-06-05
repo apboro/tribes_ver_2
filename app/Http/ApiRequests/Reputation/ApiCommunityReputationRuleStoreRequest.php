@@ -3,6 +3,7 @@
 namespace App\Http\ApiRequests\Reputation;
 
 use App\Http\ApiRequests\ApiRequest;
+use Illuminate\Support\Str;
 
 /**
  * @OA\Post(
@@ -100,7 +101,11 @@ class ApiCommunityReputationRuleStoreRequest extends ApiRequest
 
     public function prepareForValidation(): void
     {
-
+        if (Str::contains($this->community_ids[0], ',')){
+            $this->merge([
+                'community_ids' => explode(',', $this->community_ids[0])
+        ]);
+        }
         $this->merge([
             'show_rating_tables' => $this->toBoolean($this->show_rating_tables)
         ]);
@@ -110,6 +115,7 @@ class ApiCommunityReputationRuleStoreRequest extends ApiRequest
         $this->merge([
             'restrict_accumulate_rate' => $this->toBoolean($this->restrict_accumulate_rate)
         ]);
+
     }
 
 
