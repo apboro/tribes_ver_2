@@ -2,6 +2,8 @@
 
 namespace App\Http\ApiRequests;
 
+use Illuminate\Support\Str;
+
 /**
  * @OA\Post(
  * path="/api/v3/onboarding/edit",
@@ -54,6 +56,13 @@ class ApiUpdateOnboardingRequest extends ApiRequest
 
     public function prepareForValidation(): void
     {
+        if($this->community_ids) {
+            if (Str::contains($this->community_ids[0], ',')) {
+                $this->merge([
+                    'community_ids' => explode(',', $this->community_ids[0])
+                ]);
+            }
+        }
         $this->merge([
             'greeting_image_delete' => $this->toBoolean($this->greeting_image_delete)
         ]);
