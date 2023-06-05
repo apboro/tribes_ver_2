@@ -55,32 +55,20 @@ class ApiQuestionCategoryRepository
     public function list(ApiRequest $request)
     {
         $knowledge_id = $request->get('knowledge_id');
-        $questionCategories = QuestionCategory::query()
+        return QuestionCategory::query()
             ->where('owner_id', Auth::user()->id)
             ->when($knowledge_id, function ($query) use ($knowledge_id) {
                 $query->where('knowledge_id', $knowledge_id);
             })
             ->get();
-
-        if (!$questionCategories->count()) {
-            return false;
-        }
-
-        return $questionCategories;
     }
 
     public function show(int $id)
     {
-        $questionCategory = QuestionCategory::query()
+        return QuestionCategory::query()
             ->where('id', $id)
             ->where('owner_id', Auth::user()->id)
             ->first();
-
-        if (!$questionCategory) {
-            return false;
-        }
-
-        return $questionCategory;
     }
 
     public function delete(int $id)
