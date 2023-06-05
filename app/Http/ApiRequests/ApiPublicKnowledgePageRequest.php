@@ -16,15 +16,6 @@ namespace App\Http\ApiRequests;
  *         @OA\Schema(
  *             type="string",
  *         )
- *     ), *     @OA\Parameter(
- *         name="XDEBUG_SESSION_START",
- *         in="query",
- *         description="uri_hash of knowledge",
- *         required=true,
- *          example="PHPSTORM",
- *         @OA\Schema(
- *             type="string",
- *         )
  *     ),
  *     @OA\Response(response=200, description="OK"),
  *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
