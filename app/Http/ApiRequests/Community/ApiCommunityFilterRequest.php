@@ -93,21 +93,31 @@ use App\Http\ApiRequests\ApiRequest;
 class ApiCommunityFilterRequest extends ApiRequest
 
 {
-    public function rules():array
+    public function rules(): array
     {
         return [
-            'name'=>'string',
-            'tags_names'=>'array',
-            'date_from'=>'date_format:U',
-            'date_to'=>'date_format:U'
+            'name' => 'string',
+            'tags_names' => 'array',
+            'date_from' => 'date_format:U',
+            'date_to' => 'date_format:U'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'date_from.date_format'=>$this->localizeValidation('date.incorrect_format'),
-            'date_to.date_format'=>$this->localizeValidation('date.incorrect_format')
+            'date_from.date_format' => $this->localizeValidation('date.incorrect_format'),
+            'date_to.date_format' => $this->localizeValidation('date.incorrect_format')
         ];
     }
+
+    public function prepareForValidation(): void
+    {
+        if (is_string($this->tags_names)){
+        $this->merge([
+            'tags_names' => explode(',', $this->tags_names)
+        ]);
+    }
+    }
+
 }
