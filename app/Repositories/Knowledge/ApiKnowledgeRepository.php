@@ -104,6 +104,13 @@ class ApiKnowledgeRepository
 
     public function bindToCommunity(ApiKnowledgeBindToCommunityRequest $request): bool
     {
+        if (!$request->get('community_ids')){
+            $communities = Community::where('knowledge_id', $request->get('knowledge_id'))->get();
+            foreach ($communities as $community){
+                $community->update(['knowledge_id'=>null]);
+            }
+            return true;
+        }
         $communities = Community::query()
             ->where('owner', Auth::user()->id)
             ->whereIn('id', $request->get('community_ids'))

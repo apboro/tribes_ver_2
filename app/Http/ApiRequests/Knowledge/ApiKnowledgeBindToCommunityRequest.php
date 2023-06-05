@@ -13,6 +13,16 @@ use App\Http\ApiRequests\ApiRequest;
  *  summary="Bind knowledge to communities",
  *  security={{"sanctum": {} }},
  *  tags={"Knowledge"},
+ *         @OA\Parameter(
+ *         name="XDEBUG_SESSION_START",
+ *         in="query",
+ *         description="uri_hash of knowledge",
+ *         required=true,
+ *          example="PHPSTORM",
+ *         @OA\Schema(
+ *             type="string",
+ *         )
+ *     ),
  *     @OA\RequestBody(
  *         @OA\MediaType(
  *             mediaType="application/json",
@@ -31,7 +41,7 @@ class ApiKnowledgeBindToCommunityRequest extends ApiRequest
     {
         return [
             'knowledge_id' => ['required','integer'],
-            'community_ids' => ['required','array'],
+            'community_ids' => ['array'],
         ];
     }
 }
