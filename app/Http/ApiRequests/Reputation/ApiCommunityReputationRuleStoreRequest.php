@@ -101,10 +101,12 @@ class ApiCommunityReputationRuleStoreRequest extends ApiRequest
 
     public function prepareForValidation(): void
     {
-        if (Str::contains($this->community_ids[0], ',')){
-            $this->merge([
-                'community_ids' => explode(',', $this->community_ids[0])
-        ]);
+        if($this->community_ids) {
+            if (Str::contains($this->community_ids[0], ',')) {
+                $this->merge([
+                    'community_ids' => explode(',', $this->community_ids[0])
+                ]);
+            }
         }
         $this->merge([
             'show_rating_tables' => $this->toBoolean($this->show_rating_tables)

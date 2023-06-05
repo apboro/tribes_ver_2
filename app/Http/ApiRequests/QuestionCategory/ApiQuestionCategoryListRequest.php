@@ -30,7 +30,7 @@ class ApiQuestionCategoryListRequest extends ApiRequest
     public function rules(): array
     {
         return[
-            'knowledge_id' => 'exists:question_categories,knowledge_id',
+            'knowledge_id' => 'integer',
         ];
 
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\ApiRequests;
 
+use Illuminate\Support\Str;
+
 /**
  * @OA\Post(
  * path="/api/v3/onboarding",
@@ -45,4 +47,14 @@ class ApiStoreOnboardingRequest extends ApiRequest
         ];
     }
 
+    public function prepareForValidation(): void
+    {
+        if($this->communities_ids) {
+            if (Str::contains($this->communities_ids[0], ',')) {
+                $this->merge([
+                    'community_ids' => explode(',', $this->community_ids[0])
+                ]);
+            }
+        }
+    }
 }

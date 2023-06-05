@@ -3,6 +3,7 @@
 namespace App\Http\ApiRequests\Reputation;
 
 use App\Http\ApiRequests\ApiRequest;
+use Illuminate\Support\Str;
 
 /**
  * @OA\Post(
@@ -121,6 +122,13 @@ class ApiCommunityReputationRuleEditRequest extends ApiRequest
 
     public function prepareForValidation(): void
     {
+        if ($this->community_ids) {
+            if (Str::contains($this->community_ids[0], ',')) {
+                $this->merge([
+                    'community_ids' => explode(',', $this->community_ids[0])
+                ]);
+            }
+        }
 
         $this->merge([
             'show_rating_tables' => $this->toBoolean($this->show_rating_tables)
