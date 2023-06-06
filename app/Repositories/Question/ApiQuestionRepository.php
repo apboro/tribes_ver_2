@@ -117,15 +117,15 @@ class ApiQuestionRepository
             'category_id' => $request->get('category_id'),
         ]);
 
-        if (!empty($request->file('question_image'))) {
+        if ($request->file('question_image') && $request->file('question_image') !== null) {
             $this->uploadQuestion($request, $question, self::TYPE_IMAGE_QUESTION);
-        } else {
+        } elseif ($request->file('question_image') && $request->file('question_image') === null) {
             $question->update(['image'=>null]);
         }
 
-        if (!empty($request->file('answer_image'))) {
+        if ($request->file('answer_image') && $request->file('answer_image') !== null) {
             $this->uploadAnswer($request, $question->answer, self::TYPE_IMAGE_ANSWER);
-        } else {
+        } elseif ($request->file('answer_image') && $request->file('answer_image') === null) {
             $question->answer->update(['image'=>null]);
         }
 
