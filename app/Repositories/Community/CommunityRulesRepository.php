@@ -285,11 +285,6 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 $this->massEnterBlock($rules);
             }
 
-            if (isset($rules['deleteGreetings'])){
-                DeleteGreetingMessage::dispatch($this->botService, $this->messageDTO->chat_id, $this->messageDTO->message_id)
-                    ->delay($rules['deleteGreetings']['duration'])->onConnection('redis');
-            }
-
             if (
                 isset($rules['botJoinLimitation'])
                 && $this->messageDTO->new_chat_member_bot
