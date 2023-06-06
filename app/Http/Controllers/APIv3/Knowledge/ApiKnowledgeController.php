@@ -101,6 +101,7 @@ class ApiKnowledgeController extends Controller
             return ApiResponse::error('common.not_found');
         }
         $categories = $knowledge->categories;
-        return ApiResponse::common(['categories' => ApiQuestionCategoryResource::collection($categories)]);
+
+        return ApiResponse::common(['knowledge_name'=>$knowledge->name, 'categories' => ApiQuestionCategoryResource::collection($categories)]);
     }
 }
