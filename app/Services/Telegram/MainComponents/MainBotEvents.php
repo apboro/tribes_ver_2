@@ -5,6 +5,7 @@ namespace App\Services\Telegram\MainComponents;
 use App\Events\NewChatUserJoin;
 use App\Exceptions\KnowledgeException;
 use App\Helper\ArrayHelper;
+use App\Jobs\DeleteGreetingMessage;
 use App\Logging\TelegramBotActionHandler;
 use App\Models\Community;
 use App\Models\TelegramBotUpdateLog;
@@ -211,7 +212,13 @@ class MainBotEvents
                                 $onboarding = json_decode($onboarding->rules, true);
                                 $description = strip_tags(str_replace('<br>', "\n", $onboarding['greetings']['content']));
                                 $text = $description . $image;
-                                $this->bot->getExtentionApi()->sendMess($chatId, $text);
+
+                                $mess = $this->bot->getExtentionApi()->sendMessWithReturn($chatId, $text);
+
+                                if ($onboarding['deleteGreetings']){
+                                    DeleteGreetingMessage::dispatch($chatId, $mess['result']['message_id'])
+                                        ->delay($onboarding['deleteGreetings']['duration'])->onConnection('redis');
+                                }
                             }
                         }
                         Event::dispatch(new NewChatUserJoin($chatId, $new_member_id));

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed $rules
  * @property mixed $user_id
  * @property mixed $community_id
+ * @property mixed $title
  */
 class UserRule extends Model
 {

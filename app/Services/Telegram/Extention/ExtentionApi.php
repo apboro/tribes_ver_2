@@ -53,7 +53,34 @@ class ExtentionApi extends Api implements ExtentionApiInterface
             Http::post($url, $params);
 
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::channel('telegram-bot-log')
+            Logg::channel('telegram-bot-log')
+                ->alert('Error from ' . get_called_class() . ' text: ' . $e->getMessage() . PHP_EOL);
+        }
+    }
+
+    public function sendMessWithReturn(int $chatId, string $text, bool $preview = false, array $keyboard = [], bool $silent = false)
+    {
+        try {
+            $params = [
+                'chat_id' => $chatId,
+                'text' => $text,
+                'parse_mode' => 'HTML',
+                'disable_web_page_preview' => $preview,
+                'disable_notification' => $silent,
+                'reply_markup' => [
+                    "inline_keyboard" => $keyboard
+                ]
+            ];
+
+            Logg::debug('Lets send mess with return params', [$params]);
+            $url = self::TELEGRAM_BASE_URL . '/bot' . $this->token . '/sendMessage';
+
+           $response = Http::post($url, $params);
+
+           return $response->json();
+
+        } catch (\Exception $e) {
+            Logg::channel('telegram-bot-log')
                 ->alert('Error from ' . get_called_class() . ' text: ' . $e->getMessage() . PHP_EOL);
         }
     }
@@ -81,7 +108,7 @@ class ExtentionApi extends Api implements ExtentionApiInterface
             return json_decode($response->body());
 
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::channel('telegram-bot-log')
+            Logg::channel('telegram-bot-log')
                 ->alert('Error from ' . get_called_class() . ' text: ' . $e->getMessage() . PHP_EOL);
         }
     }
