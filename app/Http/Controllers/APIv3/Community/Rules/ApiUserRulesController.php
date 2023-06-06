@@ -29,16 +29,16 @@ class ApiUserRulesController extends Controller
 {
     public function store(ApiUserRulesStoreRequest $request)
     {
+        $rule = new UserRule();
+        $rule->rules = json_encode($request->input('rules'));
+        $rule->user_id = Auth::user()->id;
+        $rule->title = $request->input('title');
+        $rule->save();
         foreach ($request->input('communities_ids') as $community_id) {
-            $rule = new UserRule();
-            $rule->rules = json_encode($request->input('rules'));
-            $rule->user_id = Auth::user()->id;
-            $rule->title = $request->input('title');
-            $rule->save();
             $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
             if ($community !== null) {
-                $rule->community_id = $community->id;
-                $rule->save();
+                $community->if_then_uuid = $rule->uuid;
+                $community->save();
             }
         }
 
@@ -62,16 +62,14 @@ class ApiUserRulesController extends Controller
     public function update(ApiUserRulesUpdateRequest $request)
     {
         $rule = UserRule::find($request->user_rule_uuid);
-
+        $rule->title = $request->input('title');
+        $rule->rules = json_encode($request->input('rules'));
+        $rule->save();
         foreach ($request->input('communities_ids') as $community_id) {
-
-            $rule->title = $request->input('title');
-            $rule->rules = json_encode($request->input('rules'));
-            $rule->save();
             $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
             if ($community !== null) {
-                $rule->community_id = $community->id;
-                $rule->save();
+                $community->if_then_uuid = $rule->uuid;
+                $community->save();
             }
         }
 
