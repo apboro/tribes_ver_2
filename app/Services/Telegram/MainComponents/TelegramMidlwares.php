@@ -39,21 +39,6 @@ class TelegramMidlwares
         }
     }
 
-    public function captchaMiddleware(Telegram\MainBot $bot)
-    {
-        try {
-            $bot->middlewares([
-
-            ]);
-
-            $this->bootStage()->middleware();
-
-        } catch (Exception $e){
-            Log::error($e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
-        
-    }
-
     /** Подключение сцены */
     protected function bootStage()
     {

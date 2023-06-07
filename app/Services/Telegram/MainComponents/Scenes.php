@@ -9,6 +9,7 @@ use Askoldex\Teletant\Addons\Menux;
 use Askoldex\Teletant\Context;
 use App\Models\Community;
 use App\Models\Donate;
+use Illuminate\Support\Facades\Log;
 
 class Scenes
 {
@@ -141,6 +142,30 @@ class Scenes
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
+
+//    public static function getCaptchaScene()
+//    {
+//        try {
+//            $scene = new Scene('captcha');
+//            Log::debug('getCaptchaScene', [$scene]);
+//
+//            $scene->onAction('captcha-yes', function (Context $ctx) {
+//                Log::debug('IN getCaptchaScene - ctx', [$ctx]);
+//                $ctx->reply('Поглядите-ка, кто пришёл!');
+//            });
+//
+//            $scene->onAction('captcha-no', function (Context $ctx) {
+//                $ctx->replyHTML('Увы...');
+//                $ctx->leave();
+//            });
+//
+//            return $scene;
+//        } catch (\Exception $e) {
+//            TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+//        }
+//
+//    }
+
 
     public static function getAllScene()
     {

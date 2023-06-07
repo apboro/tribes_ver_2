@@ -5,8 +5,9 @@ namespace App\Services\Telegram\MainComponents;
 use App\Events\NewChatUserJoin;
 use App\Exceptions\KnowledgeException;
 use App\Helper\ArrayHelper;
-use App\Jobs\DeleteGreetingMessage;
+use App\Jobs\DeleteTelegramMessage;
 use App\Logging\TelegramBotActionHandler;
+use App\Models\Captcha;
 use App\Models\Community;
 use App\Models\TelegramBotUpdateLog;
 use App\Models\TelegramConnection;
@@ -17,6 +18,7 @@ use App\Repositories\TelegramUserLists\TelegramUserListsRepositry;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
 use App\Services\TelegramMainBotService;
+use Askoldex\Teletant\Addons\Menux;
 use Askoldex\Teletant\Context;
 use Exception;
 use Illuminate\Support\Facades\Event;
@@ -41,6 +43,7 @@ class MainBotEvents
         'botAddedToGroup',
         'userBotAddedToGroup',
         'newChatUser',
+        'newChatUserWithCaptcha',
         'groupChatCreated',
         'chanelChatCreated',
         'makeBotAdmin',
@@ -105,7 +108,7 @@ class MainBotEvents
                 $chatId = $this->data->message->chat->id;
                 $new_chat_member_id = $this->data->message->new_chat_member->id;
                 if ($new_chat_member_id == $this->bot->botId) {
-                    $this->bot->logger()->debug('Добавление бота в уже существующую ГРУППУ', ['chat'=>$chatId]);
+                    $this->bot->logger()->debug('Добавление бота в уже существующую ГРУППУ', ['chat' => $chatId]);
                     Telegram::botEnterGroupEvent(
                         $this->data->message->from->id,
                         $chatId,
@@ -157,75 +160,127 @@ class MainBotEvents
         }
     }
 
+    private function newChatUserWithCaptcha()
+    {
+        if (isset($this->data->callback_query)
+            && $this->data->callback_query->data === "captcha_button") {
+            $member = $this->data->callback_query->from;
+            $chatId = $this->data->callback_query->message->chat->id;
+            Log::debug('New chat user with captcha, $member', [$member]);
+
+            $community = Community::whereHas('connection', function ($q) use ($chatId) {
+                $q->where('chat_id', $chatId);
+            })->first();
+            $captcha = Captcha::where('telegram_user_id', $member->id)
+                ->where('chat_id', $chatId)
+                ->where('solved', false)
+                ->first();
+            if ($captcha) {
+                $captcha->solved = true;
+                $captcha->save();
+                $this->registerNewUser($member, $community, $chatId);
+                $this->bot->getExtentionApi()
+                    ->deleteUserMessage($captcha->message_id, $chatId);
+            }
+        }
+    }
+
+    protected function registerNewUser($member, $community, $chatId)
+    {
+        $userName = !empty($member->username) ? $member->username : '';
+        $firstName = !empty($member->first_name) ? $member->first_name : '';
+        $lastName = !empty($member->last_name) ? $member->last_name : '';
+
+        $ty = Telegram::registerTelegramUser($member->id, NULL, $userName, $firstName, $lastName);
+        Log::debug('New user registered', [$ty]);
+        $tyWasInCommunityBefore = $ty->communities()->find($community->id);
+
+        if ($tyWasInCommunityBefore) {
+            $ty->communities()->updateExistingPivot($community->id, ['exit_date' => null]);
+        } else {
+            $ty->communities()->attach($community, [
+                'role' => 'member',
+                'accession_date' => time()
+            ]);
+        }
+        $this->sendGreeting($chatId, $community);
+        Event::dispatch(new NewChatUserJoin($chatId, $member->id));
+    }
+
+    protected function sendGreeting($chatId, $community)
+    {
+        if ($onboarding = $community->onboardingRule) {
+            $image = null;
+            if ($onboarding->greeting_image) {
+                $path = env('APP_URL') . '/storage/' . $community->onboardingRule->greeting_image;
+                $image = "<a href='$path'>&#160</a>";
+            }
+            $onboarding = json_decode($onboarding->rules, true);
+            if (isset($onboarding['greetings'])) {
+                $description = strip_tags(str_replace('<br>', "\n", $onboarding['greetings']['content']));
+                $text = $description . $image;
+                Log::debug('Send greeting', [$onboarding]);
+                $mess = $this->bot->getExtentionApi()->sendMessWithReturn($chatId, $text);
+
+                if ($onboarding['deleteGreetings']) {
+                    DeleteTelegramMessage::dispatch($chatId, $mess['result']['message_id'])
+                        ->delay($onboarding['deleteGreetings']['duration'])->onConnection('redis');
+                }
+            }
+        }
+    }
 
     /** Новый пользователь */
     protected function newChatUser()
     {
         try {
-            if (isset($this->data->message->new_chat_member->id)) {
-                if ($this->data->message->new_chat_member->id !== $this->bot->botId) {
-                    $chatId = $this->data->message->chat->id;
-                    $new_member_id = $this->data->message->new_chat_member->id;
+            if (isset($this->data->message->new_chat_member->id) &&
+                $this->data->message->new_chat_member->id !== $this->bot->botId) {
 
-                    Log::channel('telegram_bot_action_log')->
-                    log('info', '', [
-                        'event' => TelegramBotActionHandler::EVENT_NEW_CHAT_USER,
-                        'telegram_id' => $new_member_id,
-                        'chat_id' => $chatId
-                    ]);
-                    $community = Community::whereHas('connection', function ($q) use ($chatId) {
-                        $q->where('chat_id', $chatId);
-                    })->first();
+                $chatId = $this->data->message->chat->id;
+                $new_member_id = $this->data->message->new_chat_member->id;
+                $member = $this->data->message->new_chat_member;
 
-//                    $this->bot->onUpdate('new_chat_member', function(Context $ctx){
-//                        Log::debug('new_chat_member', [$ctx]);
-//                    });
+                Log::channel('telegram_bot_action_log')->
+                log('info', '', [
+                    'event' => TelegramBotActionHandler::EVENT_NEW_CHAT_USER,
+                    'telegram_id' => $new_member_id,
+                    'chat_id' => $chatId
+                ]);
+                $community = Community::whereHas('connection', function ($q) use ($chatId) {
+                    $q->where('chat_id', $chatId);
+                })->first();
 
-                    if ($community) {
+                if ($community) {
+                    $onboarding = $community->onboardingRule;
+                    $onboarding = json_decode($onboarding->rules, true);
+                    Log::debug('onboarding in newUser', [$onboarding]);
 
-                        $member = $this->data->message->new_chat_member;
-                        if (!empty($member->username) || !empty($member->first_name)) {
+                    if (isset($onboarding['chatJoinAction']) && $onboarding['chatJoinAction']['type'] === 'captcha') {
+                        $keyboard = [[[
+                            'text' => 'Вступить в группу',
+                            'callback_data' => 'captcha_button'
+                        ]]];
+                        $message = $this->bot->getExtentionApi()
+                            ->sendMessWithReturn($chatId, 'Нажмите кнопку для вступления', false, $keyboard);
 
-                            $userName = !empty($member->username) ? $member->username : '';
-                            $firstName = !empty($member->first_name) ? $member->first_name : '';
-                            $lastName = !empty($member->last_name) ? $member->last_name : '';
+                        Captcha::updateOrCreate(['chat_id' => $chatId, 'telegram_user_id' => $new_member_id],
+                            [
+                                'solved' => false,
+                                'message_id' => $message['result']['message_id'],
+                                'username' => $member->username ?? '',
+                                'first_name' => $member->first_name ?? '',
+                                'last_name' => $member->last_name ?? '',
+                            ]);
 
-                            $ty = Telegram::registerTelegramUser($member->id, NULL, $userName, $firstName, $lastName);
-
-                            $tyWasInCommunityBefore = $ty->communities()->find($community->id);
-
-                            if ($tyWasInCommunityBefore) {
-                                $ty->communities()->updateExistingPivot($community->id, ['exit_date' => null]);
-                            } else {
-                                $ty->communities()->attach($community, [
-                                    'role' => 'member',
-                                    'accession_date' => time()
-                                ]);
-                            }
-
-                            if ($onboarding = $community->onboardingRule) {
-                                $image= null;
-                                if ($onboarding->greeting_image) {
-                                    $path = env('APP_URL') . '/storage/' . $community->onboardingRule->greeting_image;
-                                    $image = "<a href='$path'>&#160</a>";
-                                }
-                                $onboarding = json_decode($onboarding->rules, true);
-                                $description = strip_tags(str_replace('<br>', "\n", $onboarding['greetings']['content']));
-                                $text = $description . $image;
-
-                                $mess = $this->bot->getExtentionApi()->sendMessWithReturn($chatId, $text);
-
-                                if ($onboarding['deleteGreetings']){
-                                    DeleteGreetingMessage::dispatch($chatId, $mess['result']['message_id'])
-                                        ->delay($onboarding['deleteGreetings']['duration'])->onConnection('redis');
-                                }
-                            }
-                        }
-                        Event::dispatch(new NewChatUserJoin($chatId, $new_member_id));
+                        exit;
+                    } else {
+                        $this->registerNewUser($member, $community, $chatId);
                     }
                 }
             }
-        } catch (Exception $e) {
+        } catch
+        (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -471,16 +526,16 @@ class MainBotEvents
             }
             if ($community) {
                 Log::channel('telegram_bot_action_log')->log('info', '', [
-                        'event' => TelegramBotActionHandler::EVENT_NEW_CHAT_TITLE,
-                        'chat_id' => $community->chat->id
-                    ]);
+                    'event' => TelegramBotActionHandler::EVENT_NEW_CHAT_TITLE,
+                    'chat_id' => $community->chat->id
+                ]);
                 Telegram::newTitle(
                     $community->chat->id,
                     $community->new_chat_title
                 );
             }
         } catch (Exception $e) {
-            Log::debug('newChatTitle err '. $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            Log::debug('newChatTitle err ' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
 
