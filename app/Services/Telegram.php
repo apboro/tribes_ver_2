@@ -9,6 +9,7 @@ use App\Models\Tariff;
 use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
 use App\Models\TelegramUserCommunity;
+use App\Models\TelegramUserList;
 use App\Models\User;
 use App\Repositories\Tariff\TariffRepository;
 use App\Repositories\Tariff\TariffRepositoryContract;
@@ -264,6 +265,8 @@ class Telegram extends Messenger
                 /* @var $community Community */
 
                 $community = Community::firstOrCreate(['connection_id' => $telegramConnection->id]);
+                $community->owner = Auth::user()->id;
+                $community->is_active = true;
 
                 if ($community->wasRecentlyCreated) {
                     $tariff = new Tariff();
@@ -271,8 +274,6 @@ class Telegram extends Messenger
                     $baseAttributes = Tariff::baseData();
                     $baseAttributes['inline_link'] = $tariff->inline_link;
                     $community->tariff()->create($baseAttributes);
-                    $community->is_active = true;
-                    $community->owner = Auth::user()->id;
                     $community->statistic()->create([
                         'community_id' => $community->id
                     ]);
@@ -281,16 +282,15 @@ class Telegram extends Messenger
                     $this->addBot($community);
                     $this->addAuthorOnCommunity($community);
                     $community->generateHash();
-                } else {
-                    $community->owner = Auth::user()->id;
-                    $community->is_active = true;
                 }
 
                 $community->save();
                 $telegramConnection->status = 'completed';
                 $telegramConnection->save();
 
+                $this->addAuthorAndChatBotOnWhiteList($community);
             }
+
             return $telegramConnection;
         } else {
             $telegramConnectionsOfUser = TelegramConnection::query()
@@ -314,8 +314,7 @@ class Telegram extends Messenger
  *
  * @return void
  */
-protected
-function addBot($community)
+protected function addBot(Community $community)
 {
     $ty = TelegramUser::where('telegram_id', config('telegram_bot.bot.botId'))->select('telegram_id')->first();
     if (!$ty) {
@@ -336,10 +335,10 @@ function addBot($community)
 /**
  * Добавить автора в таблицу telegram_users_community
  *
+ *
  * @return void
  */
-protected
-function addAuthorOnCommunity($community)
+protected function addAuthorOnCommunity(Community $community)
 {
     $ty = TelegramUser::where('user_id', $community->owner)->first();
     if ($ty)
@@ -347,6 +346,31 @@ function addAuthorOnCommunity($community)
             'role' => 'creator',
             'accession_date' => time()
         ]);
+}
+
+/**
+ * Fast solution
+ *
+ * @param Community $community
+ *
+ * @return void
+ */
+private function addAuthorAndChatBotOnWhiteList(Community $community)
+{
+    $ty = TelegramUser::where('user_id', $community->owner)->first();
+    if ($ty) {
+        $community->telegramUserList->create([
+            'community_id' => $community->id,
+            'telegram_id' => $ty->telegram_id,
+            'type' => TelegramUserList::TYPE_WHITE_LIST
+        ]);
+    }
+
+    $community->telegramUserList->create([
+        'community_id' => $community->id,
+        'telegram_id' => config('telegram_bot.bot.botId'),
+        'type' => TelegramUserList::TYPE_WHITE_LIST
+    ]);
 }
 
 public
