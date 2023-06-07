@@ -3,7 +3,10 @@
 namespace App\Repositories\Statistic;
 
 use App\Filters\API\TeleMessagesFilter;
+use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageStatisticChartRequest;
+use App\Models\Community;
+use App\Models\Semantic;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
@@ -70,10 +73,12 @@ class TelegramMessageStatisticRepository
             ->leftJoin(DB::raw("({$sub->toSql()}) as sub"), 'sub.dt', '=', 'd1.dt')
             ->select([
                 DB::raw("d1.dt as scale"),
+                DB::raw("CAST(EXTRACT(epoch FROM d1.dt) AS INTEGER) as scale_unix"),
                 DB::raw("coalesce(sub.messages,0) as messages"),
             ])
             ->mergeBindings($sub)
-            ->orderBy('scale');
+            ->orderBy('scale')
+            ->orderBy('scale_unix');
 
         $result = $builder->get();
 
@@ -104,6 +109,7 @@ class TelegramMessageStatisticRepository
             ->select([
                 "$tm.telegram_user_id",
                 "$tm.group_chat_id",
+                "$tm.message_date",
                 "$tu.user_name as nick_name",
                 DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
                 DB::raw("COUNT(distinct($tm.id)) as count_messages")
@@ -111,6 +117,7 @@ class TelegramMessageStatisticRepository
             ->groupBy(
                 "$tm.telegram_user_id",
                 "$tm.group_chat_id",
+                "$tm.message_date",
                 "$tu.first_name",
                 "$tu.last_name",
                 "$tu.user_name",
@@ -124,7 +131,7 @@ class TelegramMessageStatisticRepository
     }
 
 
-    public function getStartDate($value): Carbon
+    public function getStartDate($value): ?Carbon
     {
         switch ($value) {
             case self::DAY:
@@ -136,6 +143,7 @@ class TelegramMessageStatisticRepository
             case self::YEAR:
                 return $this->getEndDate()->sub('11 months')->startOfMonth();
         }
+        return null;
     }
 
     public function getEndDate(): Carbon
@@ -147,15 +155,52 @@ class TelegramMessageStatisticRepository
     {
         $value = $period ?? 'week';
         switch ($value) {
-            case self::DAY:
-                return "1 hour";//час
             case self::YEAR:
-                return "1 month";//в среднем месяц
+                return "1 week";//в среднем месяц
             case self::MONTH:
+                return "1 day";
             case self::WEEK:
             default:
-                return "1 days";//день
+                return "4 hour";//день
         }
     }
+
+    public function getMessagesTonality(ApiRequest $request)
+    {
+        $chat_ids = [];
+        if ($request->community_ids) {
+            foreach ($request->community_ids as $community_id) {
+                $chat_ids[] = Community::find($community_id)->connection->chat_id;
+            }
+        } else {
+            $chat_ids = Community::query()->owned()->with('connection')->get()->pluck('connection.chat_id')->toArray();
+        }
+        $start = $this->getStartDate($request->input('period') ?? 'week')->toDateTimeString();
+        $end = $this->getEndDate()->toDateTimeString();
+        $tonalities = Semantic::query()
+            ->when(!empty($chat_ids), function ($query) use ($chat_ids) {
+                $query->whereIn('chat_id', $chat_ids);
+            })
+            ->where('messages_from_datetime', '>', $start)
+            ->where('messages_from_datetime', '<', $end)
+//            ->get()->pluck(/'sentiment')->toArray();
+            ->avg('sentiment');
+//        return $tonalities;
+
+        if ($tonalities === null){
+            return 'Нет статистики';
+        }
+        if ($tonalities > -0.33 && $tonalities < 0.33) {
+            return 'Нейтральная';
+        }
+        if ($tonalities > 0.33){
+            return 'Позитивная';
+        }
+        if ($tonalities < -0.33){
+            return 'Негативная';
+        }
+
+
+}
 
 }

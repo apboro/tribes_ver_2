@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\APIv3\Statistic;
 
+use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageExportStatisticRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageStatisticChartRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageUserStatisticRequest;
 use App\Http\ApiResources\ExportMessageResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Models\Community;
 use App\Repositories\Statistic\TelegramMessageStatisticRepository;
 use App\Services\File\FileSendService;
 
@@ -24,7 +26,6 @@ class ApiTelegramMessageStatistic extends Controller
         $this->statisticRepository = $statisticRepository;
         $this->fileSendService = $fileSendService;
     }
-
 
     public function messages(ApiMessageUserStatisticRequest $request)
     {
@@ -47,9 +48,11 @@ class ApiTelegramMessageStatistic extends Controller
         $chartMessagesData = $this->statisticRepository->getMessageChart(
             $request
         );
+        $chartMessagesTonality = $this->statisticRepository->getMessagesTonality($request);
         return ApiResponse::common([
+            'messages_tonality' => $chartMessagesTonality,
             'message_statistic' => $chartMessagesData,
-            'total_messages' => $chartMessagesData->sum('messages')
+            'total_messages' => $chartMessagesData->sum('messages'),
         ]);
     }
 
@@ -92,4 +95,5 @@ class ApiTelegramMessageStatistic extends Controller
             'messages'
         );
     }
+
 }
