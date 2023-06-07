@@ -345,14 +345,17 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
             $blockPeriodStart = Carbon::createFromTimestamp($this->messageDTO->message_date)->subSeconds($rule['joinLimitation']['duration'])->timestamp;
             $blockPeriodEnd = $this->messageDTO->message_date;
+            Log::debug('massEnterBlock times', ['start'=>$blockPeriodStart, 'end'=>$blockPeriodEnd, 'community_id'=>$this->community->id]);
             $users = TelegramUserCommunity::query()
                 ->where('community_id', $this->community->id)
                 ->where('accession_date', '>', $blockPeriodStart)
                 ->where('accession_date', '<=', $blockPeriodEnd)
                 ->get();
+            Log::debug('massEnterBlock $users', [$users]);
             if ($users->count() > $rule['joinLimitation']['count']) {
                 foreach ($users as $user) {
                     if ($rule['joinLimitation']['action'] == 4) {
+                        Log::info('kicking user in massEnterBlock', [$user]);
                         $this->botService->kickUser(
                             env('TELEGRAM_BOT_NAME'),
                             $user->telegram_user_id,
