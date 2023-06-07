@@ -354,7 +354,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             Log::debug('massEnterBlock $users', [$users]);
             if ($users->count() > $rule['joinLimitation']['count']) {
                 foreach ($users as $user) {
-                    if ($rule['joinLimitation']['action'] == 4) {
+                    if ($rule['joinLimitation']['action'] == 4 || $rule['joinLimitation']['action'] == 10 ) {
                         Log::info('kicking user in massEnterBlock', [$user]);
                         $this->botService->kickUser(
                             env('TELEGRAM_BOT_NAME'),
