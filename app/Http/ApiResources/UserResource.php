@@ -58,6 +58,7 @@ class UserResource extends JsonResource
             'phone_confirmed'=>$this->phone_confirmed,
             'telegram_accounts' =>new TelegramAccountCollection($this->resource->telegramData()),
             'subscription'=>new SubscriptionResource($this->subscription),
+            'admin' => $this->resource->isAdmin()
         ];
     }
 }
