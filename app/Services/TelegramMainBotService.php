@@ -55,24 +55,6 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
                 $this->middleware->bootMidlwares($this->botCollect->getBotByName($nameBot));
             }
 
-//            $chatId = $object->message->chat->id;
-//
-//            $community = Community::whereHas('connection', function ($q) use ($chatId) {
-//                $q->where('chat_id', $chatId);
-//            })->first();
-
-//            if (isset($object->message->new_chat_member)) {
-//                Log::debug('new chat member', [$object]);
-//                $bot = $this->botCollect->getBotByName($nameBot);
-//                $keyboard = [[[
-//                    'text' => 'keyboard',
-//                    'callback_data' => 'button_pressed'
-//                ]]];
-//                $bot->getExtentionApi()->sendMess($object->message->chat->id, 'privet drug', false, $keyboard);
-//                $this->middleware->captchaMiddleware($this->botCollect->getBotByName($nameBot));
-//            }
-
-
             $events = new MainBotEvents($this->botCollect->getBotByName($nameBot), $object);
             $events->initEventsMainBot();
 

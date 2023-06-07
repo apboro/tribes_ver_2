@@ -4,7 +4,7 @@ namespace App\Repositories\Community;
 
 
 use App\Http\ApiResources\ApiRulesDictionary;
-use App\Jobs\DeleteGreetingMessage;
+use App\Jobs\DeleteTelegramMessage;
 use App\Models\Community;
 use App\Models\CommunityRule;
 use App\Models\Condition;
