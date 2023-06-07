@@ -7,23 +7,16 @@ use App\Http\ApiResources\ApiRulesDictionary;
 use App\Jobs\DeleteTelegramMessage;
 use App\Models\Community;
 use App\Models\CommunityRule;
-use App\Models\Condition;
-use App\Models\ConditionAction;
 use App\Models\TelegramMessage;
 use App\Models\TelegramUser;
 use App\Models\TelegramUserCommunity;
 use App\Models\TelegramUserList;
 use App\Models\TelegramUserReputation;
-use App\Models\UserRule;
+use App\Models\Violation;
 use App\Repositories\Telegram\DTO\MessageDTO;
-use App\Services\TelegramLogService;
-use App\Repositories\Community\CommunityRepositoryContract;
 use App\Services\TelegramMainBotService;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Log\Logger;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -129,7 +122,14 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                         $message = $rule->warning . "<a href='$path'>&#160</a> '\n'Количество нарушений - $warnings";
                         $silent = $rule->quiet_on_restricted_words;
                         Log::debug('Moderation rules handler', [$message, $silent]);
-                        $this->actionRunner('send_message_in_pm_from_bot', $this->messageDTO, $message, $silent);
+                        $this->actionRunner('send_message_in_pm_from_bot', $this->messageDTO, $message);
+
+                        Violation::create([
+                            'community_id' => $this->community->id,
+                            'group_chat_id' => $this->messageDTO->chat_id,
+                            'telegram_user_id' => $this->messageDTO->telegram_user_id,
+                            'violation_date' => Carbon::now()->timestamp
+                        ]);
 
                         if ($rule->max_violation_times && $warnings > $rule->max_violation_times) {
                             $this->botService->kickUser(
