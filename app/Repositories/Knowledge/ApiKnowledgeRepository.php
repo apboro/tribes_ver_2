@@ -105,17 +105,18 @@ class ApiKnowledgeRepository
     public function bindToCommunity(ApiKnowledgeBindToCommunityRequest $request): bool
     {
 
-        $communities = Community::where('knowledge_id', $request->get('knowledge_id'))->get();
-        foreach ($communities as $community) {
+        $communitiesToCleanBindings = Community::where('knowledge_id', $request->get('knowledge_id'))->get();
+        foreach ($communitiesToCleanBindings as $community) {
             $community->update(['knowledge_id' => null]);
         }
 
-        $communities = Community::query()
-            ->where('owner', Auth::user()->id)
-            ->whereIn('id', $request->get('community_ids'))
-            ->get();
-
-        if (!$communities->count()) {
+        if ($request->get('community_ids')) {
+            $communitiesToBind = Community::query()
+                ->where('owner', Auth::user()->id)
+                ->whereIn('id', $request->get('community_ids'))
+                ->get();
+        }
+        if (!isset($communitiesToBind) || !$communitiesToBind->count()) {
             return false;
         }
 
@@ -125,7 +126,7 @@ class ApiKnowledgeRepository
             ->exists();
 
         if ($isUserKnowledgeOwner) {
-            foreach ($communities as $community) {
+            foreach ($communitiesToBind as $community) {
                 $community->update([
                     'knowledge_id' => $request->get('knowledge_id')
                 ]);
