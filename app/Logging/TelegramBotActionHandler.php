@@ -30,7 +30,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
     const HELP_ON_BOT = 'Команда /help отпавлена боту';
     const DONATE_ON_USER = 'Команда /donate отпавлена боту';
     const MATERIAL_AID = 'Материальная помощь';
-    const PERSONAL_AREA = 'personalArea';
+    const PERSONAL_AREA = 'Перейти в личный кабинет';
 
     const FAQ = 'faq';
     const MY_SUBSCRIPTION = 'Вызов команды "Мои подписки"';
