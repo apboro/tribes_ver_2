@@ -17,6 +17,7 @@ use App\Repositories\Telegram\DTO\MessageDTO;
 use App\Services\TelegramMainBotService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -183,7 +184,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
     public function handleRules($dto)
     {
         try {
-            Log::debug('handleRules', [$dto]);
+            Log::debug('handleRules got DTO', [$dto]);
             if ($chat = $this->communityRepository->getCommunityByChatId($dto->chat_id)) {
 
                 $this->community = $chat;
@@ -196,6 +197,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     ->where('type', '2')
                     ->first();
 
+                Log::debug('User in White List, EXIT RULES', [$telegramUserWhiteListed]);
                 if ($telegramUserWhiteListed) return;
 
                 $this->telegramUserCommunity = TelegramUserCommunity::where('telegram_user_id', $this->messageDTO->telegram_user_id)
@@ -345,16 +347,27 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
 
             $blockPeriodStart = Carbon::createFromTimestamp($this->messageDTO->message_date)->subSeconds($rule['joinLimitation']['duration'])->timestamp;
             $blockPeriodEnd = $this->messageDTO->message_date;
-            Log::debug('massEnterBlock times', ['start'=>$blockPeriodStart, 'end'=>$blockPeriodEnd, 'community_id'=>$this->community->id]);
+
+            Log::debug('massEnterBlock times', [
+                'start' => ['unix' => $blockPeriodStart, 'norm' => Carbon::createFromTimestamp($blockPeriodStart)],
+                'end' => ['unix' => $blockPeriodEnd, 'norm' => Carbon::createFromTimestamp($blockPeriodEnd)],
+                'community_id' => $this->community->id,
+                'all_users' => TelegramUserCommunity::query()->select(
+                    'telegram_user_id',
+                    'accession_date',
+                    DB::raw('FROM_UNIXTIME(accession_date) as accession_date_normal')
+                )->where('community_id', $this->community->id)->get()
+            ]);
             $users = TelegramUserCommunity::query()
                 ->where('community_id', $this->community->id)
                 ->where('accession_date', '>', $blockPeriodStart)
                 ->where('accession_date', '<=', $blockPeriodEnd)
                 ->get();
+
             Log::debug('massEnterBlock $users', [$users]);
             if ($users->count() > $rule['joinLimitation']['count']) {
                 foreach ($users as $user) {
-                    if ($rule['joinLimitation']['action'] == 4 || $rule['joinLimitation']['action'] == 10 ) {
+                    if ($rule['joinLimitation']['action'] == 4 || $rule['joinLimitation']['action'] == 10) {
                         Log::info('kicking user in massEnterBlock', [$user]);
                         $this->botService->kickUser(
                             env('TELEGRAM_BOT_NAME'),
@@ -371,7 +384,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 }
             }
         } catch (Exception $e) {
-            Log::error('Rules handle error ' . $e->getMessage() .' '. $e->getFile(). ' '. $e->getLine());
+            Log::error('Rules handle error ' . $e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine());
         }
 
     }
