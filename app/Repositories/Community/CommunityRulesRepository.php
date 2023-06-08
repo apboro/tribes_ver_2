@@ -355,7 +355,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 'all_users' => TelegramUserCommunity::query()->select(
                     'telegram_user_id',
                     'accession_date',
-                    DB::raw('FROM_UNIXTIME(accession_date) as accession_date_normal')
+                    DB::raw('TO_TIMESTAMP(accession_date)::date AS as accession_date_normal')
                 )->where('community_id', $this->community->id)->get()
             ]);
             $users = TelegramUserCommunity::query()
