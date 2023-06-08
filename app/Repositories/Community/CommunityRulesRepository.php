@@ -355,7 +355,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 'all_users' => TelegramUserCommunity::query()->select(
                     'telegram_user_id',
                     'accession_date',
-                    DB::raw('TO_TIMESTAMP(accession_date)::date AS as accession_date_normal')
+                    DB::raw('TO_TIMESTAMP(accession_date)::timestamp AS accession_date_normal')
                 )->where('community_id', $this->community->id)->get()
             ]);
             $users = TelegramUserCommunity::query()
@@ -364,7 +364,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 ->where('accession_date', '<=', $blockPeriodEnd)
                 ->get();
 
-            Log::debug('massEnterBlock $users', [$users]);
+            Log::debug('massEnterBlock $users', ['users'=>$users->count(), 'max'=>$rule['joinLimitation']['count']]);
             if ($users->count() > $rule['joinLimitation']['count']) {
                 foreach ($users as $user) {
                     if ($rule['joinLimitation']['action'] == 4 || $rule['joinLimitation']['action'] == 10) {
