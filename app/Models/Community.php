@@ -395,4 +395,9 @@ class Community extends Model
     {
         return $this->hasOne(Knowledge::class, 'id', 'knowledge_id');
     }
+
+    public function telegramUserList(): HasOne
+    {
+        return $this->hasOne(TelegramUserList::class, 'community_id', 'id')->withDefault();
+    }
 }
