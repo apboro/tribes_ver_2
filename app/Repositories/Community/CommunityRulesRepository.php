@@ -345,8 +345,8 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         try {
             Log::debug('massEnterBlock ', [$this->messageDTO, $rule]);
 
-            $blockPeriodStart = Carbon::createFromTimestamp($this->messageDTO->message_date)->subSeconds($rule['joinLimitation']['duration'])->timestamp;
-            $blockPeriodEnd = $this->messageDTO->message_date;
+            $blockPeriodStart = Carbon::now()->subSeconds($rule['joinLimitation']['duration'])->timestamp;
+            $blockPeriodEnd = time();
 
             Log::debug('massEnterBlock times', [
                 'start' => ['unix' => $blockPeriodStart, 'norm' => Carbon::createFromTimestamp($blockPeriodStart)],
