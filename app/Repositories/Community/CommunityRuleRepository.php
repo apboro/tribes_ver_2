@@ -23,7 +23,7 @@ class CommunityRuleRepository
         $community_rule = CommunityRule::create([
             'user_id' => Auth::user()->id,
             'name' => $request->input('name'),
-            'content' => $request->input('content') ?? null,
+            'content' => strip_tags($request->input('content')) ?? null,
             'warning' => $request->input('warning') ?? null,
             'max_violation_times' => $request->input('max_violation_times') ?? null,
             'action' => $request->input('action') ?? null,
