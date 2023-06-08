@@ -14,8 +14,10 @@ use App\Http\ApiRequests\ApiRequest;
  *  tags={"Subscription"},
  *     @OA\RequestBody(
  *          @OA\JsonContent(
- *                 @OA\Property(property="subscription_id",type="integer"),
+ *                @OA\Property(property="subscription_id",type="integer"),
  *                example={"subscription_id": 2}
+ *                @OA\Property(property="success_url",type="string"),
+ *                example={"success_url": "https://spodial.com"}
  *           )
  *      ),
  *      @OA\Response(response=200, description="Subscription Paid", @OA\JsonContent(
@@ -35,6 +37,7 @@ class ApiSubscriptionPayRequest extends ApiRequest
     {
         return [
             'subscription_id' => 'required|integer|exists:subscriptions,id',
+            'success_url' => 'string'
         ];
     }
 

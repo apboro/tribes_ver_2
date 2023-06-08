@@ -40,6 +40,7 @@ class Payment
     private $callbackUrl;
     public bool $recurrent = false;
     public $telegram_id;
+    private $success_url;
 
     public function __construct()
     {
@@ -260,6 +261,9 @@ class Payment
         if($this->telegram_id) {
             $attaches['telegram_id'] = $this->telegram_id;
         }
+        if($this->success_url) {
+            $attaches['success_url'] = $this->success_url;
+        }
 
         $receiptItem = [[
             'Name'          => 'Оплата за использование системы',
@@ -319,12 +323,15 @@ class Payment
         return $params;
     }
 
-    public function doPayment($payer, $payFor, $cost)
+    public function doPayment($payer, $payFor, $cost, $success_url)
     {
 
         $this->amount($cost * 100);
         $this->payFor($payFor);
         $this->payer($payer);
+        if($success_url) {
+            $this->success_url = $success_url;
+        }
         if ($this->type == 'subscription') {
             $this->recurrent = true;
         }

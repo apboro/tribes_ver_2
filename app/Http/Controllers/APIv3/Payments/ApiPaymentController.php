@@ -12,6 +12,7 @@ use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 
 class ApiPaymentController extends Controller
 {
@@ -34,14 +35,16 @@ class ApiPaymentController extends Controller
     }
 
     //TODO Tests
-    public function successPayment(Request $request, $hash, $telegramId = NULL)
+    public function successPayment(Request $request, $hash, $telegramId = NULL, $successUrl = null)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
         if ($payment->status === 'CONFIRMED') {
             Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
         }
+        $redirectUrl = $successUrl ?? env('FRONTEND_URL').'/app/subscriptions?payment_result=success';
+        Log::debug('successPayment $redirectUrl - '. $redirectUrl);
 
-        return redirect(env('FRONTEND_URL').'/app/subscriptions?payment_result=success');
+        return redirect($redirectUrl);
     }
 
 }

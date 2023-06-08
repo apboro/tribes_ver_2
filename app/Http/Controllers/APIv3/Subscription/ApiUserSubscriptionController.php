@@ -46,7 +46,9 @@ class ApiUserSubscriptionController extends Controller
 
         $subscription = Subscription::find($request->input('subscription_id'));
 
-        $payment = $this->tinkoff_payment->doPayment($user, $subscription, $subscription->price);
+        $success_url = $request->success_url ?? null;
+
+        $payment = $this->tinkoff_payment->doPayment($user, $subscription, $subscription->price, $success_url);
 
         if ($payment === false) {
             $this->telegramLogService->sendLogMessage(
