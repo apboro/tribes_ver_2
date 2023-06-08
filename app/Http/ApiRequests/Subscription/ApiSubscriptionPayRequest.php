@@ -15,7 +15,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     @OA\RequestBody(
  *          @OA\JsonContent(
  *                @OA\Property(property="subscription_id",type="integer"),
- *                example={"subscription_id": 2}
+ *                example={"subscription_id": 2},
  *                @OA\Property(property="success_url",type="string"),
  *                example={"success_url": "https://spodial.com"}
  *           )
