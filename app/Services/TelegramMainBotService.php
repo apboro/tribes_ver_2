@@ -62,13 +62,13 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
                 'isSetRules' => [app('rulesObserver'), 'handleRules'],
             ]]);
 
-            $events->initEventsMainBot([
-                [
+//            $events->initEventsMainBot([
+//                [
 //                    'isNewReplay' => [app('knowledgeObserver'), 'handleAuthorReply'],
 //                    'isNewTextMessage' => [app('knowledgeObserver'), 'detectUserQuestion'],
 //                    'isNewForwardMessageInBotChat' => [app('knowledgeObserver'), 'detectForwardMessageBotQuestion', ['botName' => $nameBot]],
-                ]
-            ]);
+//                ]
+//            ]);
 
             $events->initEventsMainBot([[
                 'isNewTextMessage' => [app('messageObserver'), 'handleUserMessage'],
