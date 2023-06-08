@@ -27,7 +27,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::get('/payments/outcome', 'PaymentController@outcomeList')->name('payment.outcome.list');
     });
 
-    Route::get('/payment/{hash}/success/{telegramId?}', 'App\Http\Controllers\APIv3\Payments\ApiPaymentController@successPayment')->name('payment.success');
+    Route::get('/payment/{hash}/success/{telegramId?}/{successUrl?}', 'App\Http\Controllers\APIv3\Payments\ApiPaymentController@successPayment')->name('payment.success');
 
 
 
