@@ -35,13 +35,13 @@ class ApiPaymentController extends Controller
     }
 
     //TODO Tests
-    public function successPayment(Request $request, $hash, $telegramId = NULL, $successUrl = null)
+    public function successPayment(Request $request, $hash)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
         if ($payment->status === 'CONFIRMED') {
             Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
         }
-        $redirectUrl = $successUrl ?? env('FRONTEND_URL').'/app/subscriptions?payment_result=success';
+        $redirectUrl = $request->success_url ?? env('FRONTEND_URL').'/app/subscriptions?payment_result=success';
         Log::debug('successPayment $redirectUrl - '. $redirectUrl);
 
         return redirect($redirectUrl);
