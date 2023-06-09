@@ -65,3 +65,4 @@ public/temp.png
 /public/vendor/telescope/mix-manifest.json
 /config/telescope.php
 /tnt
+/Http/Controllers/TestController.php
