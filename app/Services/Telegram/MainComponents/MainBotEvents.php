@@ -253,27 +253,30 @@ class MainBotEvents
 
                 if ($community) {
                     $onboarding = $community->onboardingRule;
-                    $onboarding = json_decode($onboarding->rules, true);
-                    Log::debug('onboarding in newUser', [$onboarding]);
+                    if ($onboarding) {
+                        $onboarding = json_decode($onboarding->rules, true);
 
-                    if (isset($onboarding['chatJoinAction']) && $onboarding['chatJoinAction']['type'] === 'captcha') {
-                        $keyboard = [[[
-                            'text' => 'Вступить в группу',
-                            'callback_data' => 'captcha_button'
-                        ]]];
-                        $message = $this->bot->getExtentionApi()
-                            ->sendMessWithReturn($chatId, 'Нажмите кнопку для вступления', false, $keyboard);
+                        Log::debug('onboarding in newUser', [$onboarding]);
 
-                        Captcha::updateOrCreate(['chat_id' => $chatId, 'telegram_user_id' => $new_member_id],
-                            [
-                                'solved' => false,
-                                'message_id' => $message['result']['message_id'],
-                                'username' => $member->username ?? '',
-                                'first_name' => $member->first_name ?? '',
-                                'last_name' => $member->last_name ?? '',
-                            ]);
+                        if (isset($onboarding['chatJoinAction']) && $onboarding['chatJoinAction']['type'] === 'captcha') {
+                            $keyboard = [[[
+                                'text' => 'Вступить в группу',
+                                'callback_data' => 'captcha_button'
+                            ]]];
+                            $message = $this->bot->getExtentionApi()
+                                ->sendMessWithReturn($chatId, 'Нажмите кнопку для вступления', false, $keyboard);
 
-                        exit;
+                            Captcha::updateOrCreate(['chat_id' => $chatId, 'telegram_user_id' => $new_member_id],
+                                [
+                                    'solved' => false,
+                                    'message_id' => $message['result']['message_id'],
+                                    'username' => $member->username ?? '',
+                                    'first_name' => $member->first_name ?? '',
+                                    'last_name' => $member->last_name ?? '',
+                                ]);
+
+                            exit;
+                        }
                     } else {
                         $this->registerNewUser($member, $community, $chatId);
                     }
@@ -293,6 +296,7 @@ class MainBotEvents
             if (isset($this->data->message->group_chat_created)) {
                 if ($this->data->message->group_chat_created == true) {
                     $chatId = $this->data->message->chat->id;
+                    Log::debug('Создание Группы С Ботом', [$chatId]);
                     Telegram::botEnterGroupEvent(
                         $this->data->message->from->id,
                         $chatId,

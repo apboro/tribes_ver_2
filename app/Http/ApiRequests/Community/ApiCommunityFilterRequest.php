@@ -21,6 +21,16 @@ use App\Http\ApiRequests\ApiRequest;
  *             type="integer",
  *         )
  *     ),
+ *       @OA\Parameter(
+ *         name="XDEBUG_SESSION_START",
+ *         in="query",
+ *         description="uri_hash of knowledge",
+ *         required=true,
+ *          example="PHPSTORM",
+ *         @OA\Schema(
+ *             type="string",
+ *         )
+ *     ),
  *     @OA\Parameter(
  *         name="limit",
  *         in="query",

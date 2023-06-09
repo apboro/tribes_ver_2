@@ -9,7 +9,9 @@ use App\Http\ApiRequests\ApiUserRulesGetRequest;
 use App\Http\ApiRequests\ApiUserRulesShowRequest;
 use App\Http\ApiRequests\ApiUserRulesStoreRequest;
 use App\Http\ApiRequests\ApiUserRulesUpdateRequest;
+use App\Http\ApiResources\Rules\ApiAntispamResource;
 use App\Http\ApiResources\Rules\ApiCommunityRuleCollection;
+use App\Http\ApiResources\Rules\ApiOnboardingsCollection;
 use App\Http\ApiResources\Rules\ApiUserRuleResource;
 use App\Http\ApiResources\Rules\ApiUserRulesCollection;
 use App\Http\ApiResponses\ApiResponse;
@@ -34,11 +36,12 @@ class ApiUserRulesController extends Controller
         $rule->user_id = Auth::user()->id;
         $rule->title = $request->input('title');
         $rule->save();
-        foreach ($request->input('communities_ids') as $community_id) {
-            $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
-            if ($community !== null) {
-                $community->if_then_uuid = $rule->uuid;
-                $community->save();
+        if (!empty($request->input('communities_ids'))) {
+            foreach ($request->input('communities_ids') as $community_id) {
+                $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
+                if ($community !== null) {
+                    $rule->communities()->attach($community->id);
+                }
             }
         }
 
@@ -65,15 +68,17 @@ class ApiUserRulesController extends Controller
         $rule->title = $request->input('title');
         $rule->rules = json_encode($request->input('rules'));
         $rule->save();
-        foreach ($request->input('communities_ids') as $community_id) {
-            $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
-            if ($community !== null) {
-                $community->if_then_uuid = $rule->uuid;
-                $community->save();
+        $rule->communities()->detach();
+        if (!empty($request->input('communities_ids'))) {
+            foreach ($request->input('communities_ids') as $community_id) {
+                $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
+                if ($community !== null) {
+                    $rule->communities()->attach($community->id);
+                }
             }
         }
 
-        return ApiResponse::common($rule);
+        return ApiResponse::common(ApiUserRuleResource::make($rule)->toArray($request));
     }
 
     public function delete(ApiUserRulesDeleteRequest $request)
@@ -99,7 +104,7 @@ class ApiUserRulesController extends Controller
             ->orderBy('updated_at', 'desc')->get();
 
         $ifThenRules = UserRule::where('user_id', $user->id)
-            ->with('communities')
+            ->with(['communities'])
             ->when($request->has('rule_title'), function ($query) use ($request) {
                 $query->where('title', 'like', '%' . $request->input('rule_title') . '%');
             })
@@ -107,6 +112,7 @@ class ApiUserRulesController extends Controller
                 $query->where('uuid', $request->input('rule_uuid'));
             })
             ->orderBy('updated_at', 'desc')->get();
+        $ifThenRules = ApiUserRuleResource::collection($ifThenRules);
 
         $antispamRules = Antispam::where('owner', $user->id)
             ->with('communities')
@@ -117,6 +123,7 @@ class ApiUserRulesController extends Controller
                 $query->where('uuid', $request->input('rule_uuid'));
             })
             ->orderBy('updated_at', 'desc')->get();
+        $antispamRules = ApiAntispamResource::collection($antispamRules);
 
         $moderationRules = CommunityRule::where('user_id', $user->id)
             ->with(['communities', 'restrictedWords'])
@@ -132,7 +139,7 @@ class ApiUserRulesController extends Controller
         $reputationRules = CommunityReputationRules::where('user_id', $user->id)
             ->with(['communities', 'reputationWords'])
             ->when($request->has('rule_title'), function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->input('rule_title') . '%');
+                $query->where('title', 'like', '%' . $request->input('rule_title') . '%');
             })
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));
