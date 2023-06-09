@@ -283,7 +283,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             $rules = json_decode($rule->rules, true);
             Log::debug('onboarding $rules', [$rules]);
 
-            if (isset($rules['joinLimitation'])) {
+            if (isset($rules['joinLimitation']) && $this->messageDTO->new_chat_member_id) {
                 $this->massEnterBlock($rules);
             }
 
@@ -367,7 +367,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             Log::debug('massEnterBlock $users', ['users'=>$users->count(), 'max'=>$rule['joinLimitation']['count']]);
             if ($users->count() > $rule['joinLimitation']['count']) {
                 foreach ($users as $user) {
-                    if ($rule['joinLimitation']['action'] == 4 || $rule['joinLimitation']['action'] == 10 && $user->telegram_user_id !== config('telegram_bot.bot.botId')) {
+                    if ($user->telegram_user_id != config('telegram_bot.bot.botId') && ($rule['joinLimitation']['action'] == 4 || $rule['joinLimitation']['action'] == 10)) {
                         Log::info('kicking user in massEnterBlock', [$user]);
                         $this->botService->kickUser(
                             env('TELEGRAM_BOT_NAME'),
