@@ -41,9 +41,9 @@ use App\Http\ApiRequests\ApiRequest;
  *         )
  *     ),
  *     @OA\Parameter(
- *         name="rule_ids[]",
+ *         name="rules_uuids[]",
  *         in="query",
- *         description="Filter by rule_ids",
+ *         description="Filter by rule_uuids",
  *         required=false,
  *         @OA\Schema(
  *             type="array",
@@ -109,7 +109,9 @@ class ApiCommunityFilterRequest extends ApiRequest
             'name' => 'string',
             'tags_names' => 'array',
             'date_from' => 'date_format:U',
-            'date_to' => 'date_format:U'
+            'date_to' => 'date_format:U',
+            'rules_uuids' =>'array',
+            'rules_uuids.*' =>'string',
         ];
     }
 

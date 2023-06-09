@@ -36,6 +36,6 @@ class UserRule extends Model
 
     public function communities()
     {
-        return $this->hasMany(Community::class, 'if_then_uuid', 'uuid');
+        return $this->belongsToMany(Community::class, 'if_then_rules_communities', 'rule_uuid', 'community_id');
     }
 }

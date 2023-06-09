@@ -44,30 +44,32 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
         $this->botService = $botService;
     }
 
-    public function handleIfThenRules($rule): void
+    public function handleIfThenRules($collectionOfRules): void
     {
-        Log::debug('handleIfThenRules', [$rule]);
-        $result = false;
-        $rules = json_decode($rule->rules, true);
-        Log::debug('handleIfThenRules decoded', [$rules]);
+        Log::debug('handleIfThenRules', [$collectionOfRules]);
+        foreach ($collectionOfRules as $rule) {
+            $result = false;
+            $currentRule = json_decode($rule->rules, true);
+            Log::debug('handleIfThenRules decoded', [$currentRule]);
 
-        foreach ($rules['children'] as $rule) {
+            foreach ($currentRule['children'] as $condition) {
 
-            $result = $this->conditionChecker($rule);
+                $result = $this->conditionChecker($condition);
 
-            if ($rules['type'] === 'OR' && $result === true) {
-                break;
+                if ($currentRule['type'] === 'OR' && $result === true) {
+                    break;
+                }
+                if ($currentRule['type'] === 'AND' && $result === false) {
+                    break;
+                }
             }
-            if ($rules['type'] === 'AND' && $result === false) {
-                break;
-            }
-        }
 
-        if ($result) {
-            if (isset($rules['callback']['parameter'])) {
-                $this->actionRunner($rules['callback']['type'], $this->messageDTO, $rules['callback']['parameter']);
-            } else {
-                $this->actionRunner($rules['callback']['type'], $this->messageDTO);
+            if ($result) {
+                if (isset($currentRule['callback']['parameter'])) {
+                    $this->actionRunner($currentRule['callback']['type'], $this->messageDTO, $currentRule['callback']['parameter']);
+                } else {
+                    $this->actionRunner($currentRule['callback']['type'], $this->messageDTO);
+                }
             }
         }
     }
@@ -197,8 +199,10 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     ->where('type', '2')
                     ->first();
 
-                Log::debug('User in White List, EXIT RULES', [$telegramUserWhiteListed]);
-                if ($telegramUserWhiteListed) return;
+                if ($telegramUserWhiteListed) {
+                    Log::debug('User in White List, EXIT RULES', [$telegramUserWhiteListed]);
+                    return;
+                }
 
                 $this->telegramUserCommunity = TelegramUserCommunity::where('telegram_user_id', $this->messageDTO->telegram_user_id)
                     ->where('community_id', $this->messageDTO->chat_id)
@@ -207,28 +211,23 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 $this->telegramUser = TelegramUser::where('telegram_id', $dto->telegram_user_id)->first();
 
                 $allRules = $this->community->getCommunityRulesAssoc();
-
+                $ifThenRules = $this->community->ifThenRules;
                 Log::debug('allRules array', $allRules);
                 if (isset($allRules['moderationRule'])) {
                     $this->handleModerationRule($allRules['moderationRule']);
                 }
-
                 if (isset($allRules['antispamRule'])) {
                     $this->handleAntispamRule($allRules['antispamRule']);
                 }
-
-                if (isset($allRules['ifThenRule'])) {
-                    $this->handleIfThenRules($allRules['ifThenRule']);
+                if ($ifThenRules->isNotEmpty()) {
+                    $this->handleIfThenRules($ifThenRules);
                 }
-
                 if (isset($allRules['onboardingRule'])) {
                     $this->handleOnboardingRule($allRules['onboardingRule']);
                 }
-
                 if (isset($allRules['reputationRule']) && $this->messageDTO->reply_from_id) {
                     $this->handleReputationRules($allRules['reputationRule']);
                 }
-
             }
         } catch (Exception $e) {
             Log::error($e);
@@ -364,7 +363,7 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                 ->where('accession_date', '<=', $blockPeriodEnd)
                 ->get();
 
-            Log::debug('massEnterBlock $users', ['users'=>$users->count(), 'max'=>$rule['joinLimitation']['count']]);
+            Log::debug('massEnterBlock $users', ['users' => $users->count(), 'max' => $rule['joinLimitation']['count']]);
             if ($users->count() > $rule['joinLimitation']['count']) {
                 foreach ($users as $user) {
                     if ($user->telegram_user_id != config('telegram_bot.bot.botId') && ($rule['joinLimitation']['action'] == 4 || $rule['joinLimitation']['action'] == 10)) {

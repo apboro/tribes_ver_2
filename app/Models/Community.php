@@ -27,11 +27,11 @@ use Illuminate\Support\Facades\Auth;
  * @property mixed|true $is_active
  * @property BelongsToMany $tags
  * @property mixed $communityAntispamRule
- * @property mixed $ifThenRule
  * @property mixed $moderationRule
  * @property mixed $onboardingRule
  * @property mixed $knowledge
  * @property mixed $communityReputationRule
+ * @property mixed $ifThenRules
  * @property mixed|string $image
  * @property mixed|null $moderation_rule_uuid
  * @property mixed|null $reputation_rules_uuid
@@ -359,9 +359,9 @@ class Community extends Model
         return $this->hasOne(CommunityReputationRules::class, 'uuid', 'reputation_rules_uuid');
     }
 
-    public function ifThenRule()
+    public function ifThenRules()
     {
-        return $this->hasOne(UserRule::class, 'uuid', 'if_then_uuid');
+        return $this->belongsToMany(UserRule::class, 'if_then_rules_communities', 'community_id', 'rule_uuid');
     }
 
     public function onboardingRule()
@@ -373,7 +373,7 @@ class Community extends Model
     {
         return array_filter([
             $this->communityAntispamRule,
-            ...$this->ifThenRules->toArray(),
+            ...$this->ifThenRules->makeHidden('pivot')->toArray(),
             $this->moderationRule,
             $this->onboardingRule,
             $this->communityReputationRule,
@@ -383,11 +383,11 @@ class Community extends Model
     public function getCommunityRulesAssoc(): array
     {
         return array_filter([
-            'antispamRule'=>$this->communityAntispamRule,
-            'ifThenRule' =>$this->ifThenRule,
-            'moderationRule' =>$this->moderationRule,
-            'onboardingRule' =>$this->onboardingRule,
-            'reputationRule' =>$this->communityReputationRule,
+            'antispamRule'=> $this->communityAntispamRule,
+            'ifThenRule' => $this->ifThenRules,
+            'moderationRule' => $this->moderationRule,
+            'onboardingRule' => $this->onboardingRule,
+            'reputationRule' => $this->communityReputationRule,
         ]);
     }
 
