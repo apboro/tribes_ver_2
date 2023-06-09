@@ -57,117 +57,118 @@ class CommunityRepository implements CommunityRepositoryContract
                     $q->whereIn('uuid', $uuids_arr);
                 });
             });
-
-            if (!empty($request->input('date_from'))) {
-                $list->whereDate('created_at', '>=', Carbon::createFromTimestamp($request->input('date_from')));
-            }
-
-            if (!empty($request->input('date_to'))) {
-                $list->whereDate('created_at', '<=', Carbon::createFromTimestamp($request->input('date_to')));
-            }
-
-            if (!empty($request->input('telegram_id'))) {
-                $list->whereHas('connection', function ($q) use ($request) {
-                    $q->where('telegram_user_id', $request->input('telegram_id'));
-                });
-            }
-            $count = $list->count();
-            return [
-                'list' => $list->skip($request->offset)->take($request->limit)->orderBy('id')->get(),
-                'count' => $count,
-            ];
         }
+
+        if (!empty($request->input('date_from'))) {
+            $list->whereDate('created_at', '>=', Carbon::createFromTimestamp($request->input('date_from')));
+        }
+
+        if (!empty($request->input('date_to'))) {
+            $list->whereDate('created_at', '<=', Carbon::createFromTimestamp($request->input('date_to')));
+        }
+
+        if (!empty($request->input('telegram_id'))) {
+            $list->whereHas('connection', function ($q) use ($request) {
+                $q->where('telegram_user_id', $request->input('telegram_id'));
+            });
+        }
+        $count = $list->count();
+        return [
+            'list' => $list->skip($request->offset)->take($request->limit)->orderBy('id')->get(),
+            'count' => $count,
+        ];
     }
 
-        public
-        function findCommunityByHash($hash)
-        {
-            return Community::whereHash($hash)->first();
-        }
 
-        public
-        function create($connection)
-        {
-            $community = Community::create([
-                'title' => $connection->chat_title,
-                'connection_id' => $connection->id
-            ]);
+    public
+    function findCommunityByHash($hash)
+    {
+        return Community::whereHash($hash)->first();
+    }
 
-            return $community;
-        }
+    public
+    function create($connection)
+    {
+        $community = Community::create([
+            'title' => $connection->chat_title,
+            'connection_id' => $connection->id
+        ]);
 
-        public
-        function update()
-        {
-            dd(1);
+        return $community;
+    }
+
+    public
+    function update()
+    {
+        dd(1);
 //        $this->donateRepo->storeDonateVariant();
-            //dd($request);
+        //dd($request);
 //        return $community;
-        }
-
-        public
-        function getCommunityByChatId($chatId): ?Community
-        {
-            Log::debug('getCommunityByChatId', [$chatId]);
-            return Community::whereHas('connection', function ($q) use ($chatId) {
-                $q->where('chat_id', $chatId);
-            })->first();
-        }
-
-        public
-        function getCommunitiesForMemberByTeleUserId($userTelegramId): Collection
-        {
-            return Community::whereHas('followers', function ($query) use ($userTelegramId) {
-                $query->where('telegram_id', $userTelegramId);
-            })->get();
-        }
-
-        public
-        function getAllCommunity()
-        {
-            $community = Community::with('communityOwner', 'connection')->orderBy('created_at', 'desc');
-            return $community->paginate(50);
-        }
-
-        public
-        function getCommunityById($id): ?Community
-        {
-            return Community::find($id);
-        }
-
-        public
-        function getCommunitiesForOwner(int $ownerId, ?CommunitiesFilter $filters = null): Collection
-        {
-            return Community::filter($filters)->where('owner', $ownerId)->get();
-        }
-
-        public
-        function getUsersCommunities($userId): Collection
-        {
-            return Community::where('owner', $userId)->get();
-        }
-
-        public
-        function isChatBelongsToTeleUserId(int $chatId, int $teleUserId): bool
-        {
-            return TelegramConnection::query()->where([
-                'chat_id' => $chatId,
-                'telegram_user_id' => $teleUserId,
-            ])->exists();
-        }
-
-        public
-        function getOwnerIdByChatId(int $chatId): ?int
-        {
-            $tConnect = TelegramConnection::where('chat_id', $chatId)->with('community')->first();
-            return $tConnect->community->id ?? null;
-        }
-
-        public
-        function getCommunitiesForOwnerByTeleUserId(int $userTelegramId): Collection
-        {
-            return Community::whereHas('connection', function ($query) use ($userTelegramId) {
-                $query->where('telegram_user_id', $userTelegramId);
-            })->get();
-        }
     }
+
+    public
+    function getCommunityByChatId($chatId): ?Community
+    {
+        Log::debug('getCommunityByChatId', [$chatId]);
+        return Community::whereHas('connection', function ($q) use ($chatId) {
+            $q->where('chat_id', $chatId);
+        })->first();
+    }
+
+    public
+    function getCommunitiesForMemberByTeleUserId($userTelegramId): Collection
+    {
+        return Community::whereHas('followers', function ($query) use ($userTelegramId) {
+            $query->where('telegram_id', $userTelegramId);
+        })->get();
+    }
+
+    public
+    function getAllCommunity()
+    {
+        $community = Community::with('communityOwner', 'connection')->orderBy('created_at', 'desc');
+        return $community->paginate(50);
+    }
+
+    public
+    function getCommunityById($id): ?Community
+    {
+        return Community::find($id);
+    }
+
+    public
+    function getCommunitiesForOwner(int $ownerId, ?CommunitiesFilter $filters = null): Collection
+    {
+        return Community::filter($filters)->where('owner', $ownerId)->get();
+    }
+
+    public
+    function getUsersCommunities($userId): Collection
+    {
+        return Community::where('owner', $userId)->get();
+    }
+
+    public
+    function isChatBelongsToTeleUserId(int $chatId, int $teleUserId): bool
+    {
+        return TelegramConnection::query()->where([
+            'chat_id' => $chatId,
+            'telegram_user_id' => $teleUserId,
+        ])->exists();
+    }
+
+    public
+    function getOwnerIdByChatId(int $chatId): ?int
+    {
+        $tConnect = TelegramConnection::where('chat_id', $chatId)->with('community')->first();
+        return $tConnect->community->id ?? null;
+    }
+
+    public
+    function getCommunitiesForOwnerByTeleUserId(int $userTelegramId): Collection
+    {
+        return Community::whereHas('connection', function ($query) use ($userTelegramId) {
+            $query->where('telegram_user_id', $userTelegramId);
+        })->get();
+    }
+}
