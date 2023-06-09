@@ -373,7 +373,7 @@ class Community extends Model
     {
         return array_filter([
             $this->communityAntispamRule,
-            $this->ifThenRule,
+            ...$this->ifThenRules->toArray(),
             $this->moderationRule,
             $this->onboardingRule,
             $this->communityReputationRule,

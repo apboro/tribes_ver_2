@@ -293,6 +293,7 @@ class MainBotEvents
             if (isset($this->data->message->group_chat_created)) {
                 if ($this->data->message->group_chat_created == true) {
                     $chatId = $this->data->message->chat->id;
+                    Log::debug('Создание Группы С Ботом', [$chatId]);
                     Telegram::botEnterGroupEvent(
                         $this->data->message->from->id,
                         $chatId,

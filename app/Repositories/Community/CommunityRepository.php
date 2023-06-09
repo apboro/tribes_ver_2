@@ -52,8 +52,8 @@ class CommunityRepository implements CommunityRepositoryContract
                 $q->whereIn('uuid', $uuids_arr);
             })->orWhereHas('communityAntispamRule', function ($q) use ($uuids_arr) {
                 $q->whereIn('uuid', $uuids_arr);
-            })->orWhereHas('IfThenRule', function ($q) use ($uuids_arr) {
-                $q->whereIn('uuid', $uuids_arr);
+            })->orWhereHas('IfThenRules', function ($q) use ($uuids_arr) {
+                $q->whereInPivot('uuid', $uuids_arr);
             });
         }
 
