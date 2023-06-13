@@ -26,11 +26,12 @@ class FeedBackResource extends JsonResource
             'id' => $this->resource->id,
             'name' => $this->resource->name,
             'email' => $this->resource->email,
+            'phone' => $this->resource->phone,
             'text' => $this->resource->text,
-            'answer'=>$this->resource->answer,
-            'status'=>$this->resource->status,
+            'answer' => $this->resource->answer,
+            'status' => $this->resource->status,
             'user_id' => $this->resource->user_id,
-            'manager_id'=>$this->resource->manager_user_id,
+            'manager_id' => $this->resource->manager_user_id,
             'created_at' => $this->resource->created_at->timestamp,
         ];
     }
