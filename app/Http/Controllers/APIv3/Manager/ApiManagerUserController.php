@@ -50,12 +50,12 @@ class ApiManagerUserController extends Controller
      * @param int $id
      * @return ApiResponse
      */
-    public function show(ApiManagerUserGetRequest $request, int $id):ApiResponse
+    public function show(ApiManagerUserGetRequest $request, int $id): ApiResponse
     {
         /** @var User $user */
-        $user = User::where('id','=',$id)->first();
+        $user = User::where('id', '=', $id)->first();
 
-        if($user === null){
+        if ($user === null) {
             return ApiResponse::notFound('validation.manager.user_not_found');
         }
 
@@ -67,22 +67,22 @@ class ApiManagerUserController extends Controller
      * @param int $id
      * @return ApiResponse
      */
-    public function editCommission(ApiUserManagerComissionRequest $request, int $id):ApiResponse
+    public function editCommission(ApiUserManagerComissionRequest $request, int $id): ApiResponse
     {
         /** @var User $user */
-        $user = User::where('id','=',$id)->first();
+        $user = User::where('id', '=', $id)->first();
 
-        if($user === null){
+        if ($user === null) {
             return ApiResponse::notFound('validation.manager.user_not_found');
         }
 
         /** @var UserSettings $user_settings */
 
         $user_settings = UserSettings::updateOrCreate(
-            ['user_id'=>$id, 'name'=>'percent'],
-            ['value'=>$request->input('commission')]
+            ['user_id' => $id, 'name' => 'percent'],
+            ['value' => $request->input('commission')]
         );
-        if($user_settings == null){
+        if ($user_settings == null) {
             return ApiResponse::error('common.user_settings.update_error');
         }
         return ApiResponse::success('common.user_settings.update_success');
@@ -94,16 +94,16 @@ class ApiManagerUserController extends Controller
      * @return ApiResponse
      */
 
-    public function block(ApiUserManagerBlockRequest $request, int $id):ApiResponse
+    public function block(ApiUserManagerBlockRequest $request, int $id): ApiResponse
     {
         /** @var User $user */
-        $user = User::where('id','=',$id)->first();
+        $user = User::where('id', '=', $id)->first();
 
-        if($user === null){
+        if ($user === null) {
             return ApiResponse::notFound('validation.manager.user_not_found');
         }
         $user->is_blocked = true;
-        if(!$user->save()){
+        if (!$user->save()) {
             return ApiResponse::error('common.user.update_error');
         }
         return ApiResponse::success('common.user.update_success');
@@ -115,17 +115,17 @@ class ApiManagerUserController extends Controller
      * @param int $id
      * @return ApiResponse
      */
-    public function unBlock(ApiUserManagerUnBlockRequest $request, int $id):ApiResponse
+    public function unBlock(ApiUserManagerUnBlockRequest $request, int $id): ApiResponse
     {
         /** @var User $user */
-        $user = User::where('id','=',$id)->first();
+        $user = User::where('id', '=', $id)->first();
 
-        if($user === null){
+        if ($user === null) {
             return ApiResponse::notFound('validation.manager.user_not_found');
         }
 
         $user->is_blocked = false;
-        if(!$user->save()){
+        if (!$user->save()) {
             return ApiResponse::error('common.user.update_error');
         }
         return ApiResponse::success('common.user.update_success');
@@ -136,12 +136,12 @@ class ApiManagerUserController extends Controller
      * @param int $id
      * @return ApiResponse
      */
-    public function makeUserAdmin(ApiUserManagerMakeAdminRequest $request, int $id):ApiResponse
+    public function makeUserAdmin(ApiUserManagerMakeAdminRequest $request, int $id): ApiResponse
     {
         /** @var User $user */
-        $user = User::where('id','=',$id)->first();
+        $user = User::where('id', '=', $id)->first();
 
-        if($user === null){
+        if ($user === null) {
             return ApiResponse::notFound('validation.manager.user_not_found');
         }
 
@@ -150,7 +150,7 @@ class ApiManagerUserController extends Controller
 
         $admin->user_id = $user->id;
 
-        if(!$admin->save()){
+        if (!$admin->save()) {
             return ApiResponse::error('common.admin.make_admin_error');
         }
         return ApiResponse::success('common.admin.make_admin_success');
@@ -161,18 +161,19 @@ class ApiManagerUserController extends Controller
      * @param int $id
      * @return ApiResponseError|ApiResponseNotFound|ApiResponseSuccess
      */
-    public function removeUserFromAdmin(ApiUserManagerRevokeAdminRequest $request, int $id){
+    public function removeUserFromAdmin(ApiUserManagerRevokeAdminRequest $request, int $id)
+    {
         /** @var User $user */
-        $user = User::where('id','=',$id)->first();
+        $user = User::where('id', '=', $id)->first();
 
-        if($user === null){
+        if ($user === null) {
             return ApiResponse::notFound('validation.manager.user_not_found');
         }
 
         /** @var Administrator $user_admin */
-        $user_admin = Administrator::where('user_id','=',$id)->delete();
+        $user_admin = Administrator::where('user_id', '=', $id)->delete();
 
-        if($user_admin === null){
+        if ($user_admin === null) {
             return ApiResponse::notFound('validation.admin.admin_user_not_found');
         }
 
@@ -184,19 +185,19 @@ class ApiManagerUserController extends Controller
      * @param int $id
      * @return ApiResponse
      */
-    public function sendNewPassword(ApiUserManagerSendPasswordRequest $request, int $id):ApiResponse
+    public function sendNewPassword(ApiUserManagerSendPasswordRequest $request, int $id): ApiResponse
     {
         /** @var User $user */
-        $user = User::where('id','=',$id)->first();
+        $user = User::where('id', '=', $id)->first();
 
-        if($user === null){
+        if ($user === null) {
             return ApiResponse::notFound('validation.manager.user_not_found');
         }
 
         $password = Str::random(8);
         $user->password = Hash::make($password);
 
-        if(!$user->save()){
+        if (!$user->save()) {
             return ApiResponse::error('common.user.send_new_password_error');
         }
         Event::dispatch(new RemindPassword($user, $password));
@@ -210,16 +211,15 @@ class ApiManagerUserController extends Controller
      * @return ApiResponse
      */
 
-    public function list(ApiUserListManagerRequest $request, UsersFilter $filter):ApiResponse
+    public function list(ApiUserListManagerRequest $request, UsersFilter $filter): ApiResponse
     {
-        $users = User::with('telegramMeta','accumulation')->
-                       filter($filter)->
-                       paginate(25);
+        $users = User::with('telegramMeta', 'accumulation')->
+        filter($filter)->
+        paginate(25);
 
 
         return ApiResponse::list()->
-                            items(UserForManagerCollection::make($users)->toArray($request))
-                            ;
+        items(UserForManagerCollection::make($users)->toArray($request));
     }
 
 
@@ -274,7 +274,7 @@ class ApiManagerUserController extends Controller
             User::query(),
             $names,
             UserForManagerResource::class,
-            $request->get('type','csv'),
+            $request->get('type', 'csv'),
             'users'
         );
     }
