@@ -20,6 +20,7 @@ class ApiUserRuleResource extends JsonResource
             'uuid' => $this->resource->uuid,
             'rules' => $this->resource->rules,
             'title' => $this->resource->title,
+            'type' => $this->resource->type,
             'communities_ids' => $this->resource->communities->pluck('id')
         ];
 
