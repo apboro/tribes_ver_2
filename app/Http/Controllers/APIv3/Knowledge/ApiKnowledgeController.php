@@ -88,7 +88,7 @@ class ApiKnowledgeController extends Controller
         $isSuccess = $this->apiKnowledgeRepository->bindToCommunity($request);
 
         if (!$isSuccess) {
-            return ApiResponse::error('Не удалось привязать базу знаний к сообществам');
+            return ApiResponse::success('Данные сохранены');
         }
 
         return ApiResponse::success('База знаний успешно привязана к сообществам');
