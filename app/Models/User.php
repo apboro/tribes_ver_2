@@ -4,7 +4,6 @@ namespace App\Models;
 
 //use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Filters\QueryFilter;
-use App\Models\TelegramUser;
 use App\Services\SMTP\Mailer;
 use App\Services\TinkoffE2C;
 use Carbon\Carbon;
@@ -12,13 +11,12 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\SmsConfirmations;
 
 /**
  * @property int $id
@@ -33,7 +31,7 @@ use App\Models\SmsConfirmations;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     public static $role = [
         'author' => 0,
@@ -286,7 +284,7 @@ class User extends Authenticatable
 
     public function subscription()
     {
-        return $this->hasOne(UserSubscription::class, 'user_id', 'id' );
+        return $this->hasOne(UserSubscription::class, 'user_id', 'id');
     }
 
     public function actions(): HasMany

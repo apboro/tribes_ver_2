@@ -11,12 +11,14 @@ use App\Events\FeedBackCreate;
 use App\Events\NewChatUserJoin;
 use App\Events\RemindPassword;
 use App\Events\SubscriptionMade;
+use App\Events\UserDeleteEvent;
 use App\Listeners\AssignStartSubscription;
 use App\Listeners\CreateCommunityListener;
 use App\Listeners\FeedBackAnswerListener;
 use App\Listeners\FeedBackListener;
 use App\Listeners\NewChatUserBlackListCheck;
 use App\Listeners\RemindPasswordListener;
+use App\Listeners\SendAdminEmail;
 use App\Listeners\SubscriptionListener;
 use App\Listeners\UserRegisterSendEmail;
 use Illuminate\Auth\Events\Registered;
@@ -34,30 +36,33 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        ApiUserRegister::class=>[
+        ApiUserRegister::class => [
             AssignStartSubscription::class,
             UserRegisterSendEmail::class
         ],
-        CreateCommunity::class=>[
+        CreateCommunity::class => [
             CreateCommunityListener::class
         ],
-        FeedBackCreate::class=>[
+        FeedBackCreate::class => [
             FeedBackListener::class
         ],
-        SubscriptionMade::class=>[
+        SubscriptionMade::class => [
             SubscriptionListener::class
         ],
-        RemindPassword::class=>[
+        RemindPassword::class => [
             RemindPasswordListener::class
         ],
-        FeedBackAnswer::class=>[
+        FeedBackAnswer::class => [
             FeedBackAnswerListener::class
         ],
-        BuyCourse::class=>[
+        BuyCourse::class => [
             BuyCourseListener::class
         ],
-        NewChatUserJoin::class=>[
+        NewChatUserJoin::class => [
             NewChatUserBlackListCheck::class
+        ],
+        UserDeleteEvent::class => [
+            SendAdminEmail::class
         ]
 
     ];
