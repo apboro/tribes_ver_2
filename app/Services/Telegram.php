@@ -293,6 +293,7 @@ class Telegram extends Messenger
 
             return $telegramConnection;
         } else {
+            log::info('Check user bot status');
             $telegramConnectionsOfUser = TelegramConnection::query()
                 ->where('telegram_user_id', $telegram_id)
                 ->where('userBotStatus', 'administrator')
@@ -389,17 +390,19 @@ function invokeCommunityConnect($user, $type, $telegram_id)
     $td = null;
     foreach ($user_telegram_accounts as $telegram_account) {
         if ($telegram_account->telegram_id == $telegram_id) {
+            log::info('finded $user_telegram_accounts');
             $td = $telegram_account;
         }
     }
 
     if ($td) {
         $hash = self::hash($td->telegram_id, time());
-
+        $type = $type ?? 'errorType';
+        log::info('finded $user_telegram_accounts type: ' .$type);
         $tc = TelegramConnection::firstOrCreate([
             'user_id' => Auth::user()->id,
             'telegram_user_id' => $td->telegram_id,
-            'chat_type' => $type ?? 'errorType',
+            'chat_type' => $type,
             'status' => 'init'
         ], ['hash' => $hash]);
 
@@ -422,6 +425,7 @@ function invokeCommunityConnect($user, $type, $telegram_id)
 public
 static function userBotEnterGroupEvent($telegram_user_id, $chat_id,  $chatType, $chatTitle, $photo_url = null)
 {
+    log::info('User Bot Enter Group Event');
     try {
         $telegramConnectionExists = TelegramConnection::query()
             ->where('chat_id', $chat_id)

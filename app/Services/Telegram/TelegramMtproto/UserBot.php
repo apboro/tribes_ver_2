@@ -3,6 +3,7 @@
 namespace App\Services\Telegram\TelegramMtproto;
 
 use Illuminate\Support\Facades\Http;
+use Log;
 
 class UserBot
 {
@@ -16,6 +17,9 @@ class UserBot
      */
     public function setWebhook($url, $user_id = 1)
     {
+
+        Log::info('setWebhook  USER BOT');
+
         $params = [
             'ident' => env('IDENT_USER_BOT') . $user_id,
             'phone' => env('PHONE_USER_BOT'),
@@ -70,16 +74,17 @@ class UserBot
     public function getMessages($chat_id, $type, $access_hash = null, $min_id = null, $limit = null, $offset_id = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('IDENT_USER_BOT') . $user_id,
-            'phone' => env('PHONE_USER_BOT'),
+//            'ident' => env('IDENT_USER_BOT') . $user_id,
+//            'phone' => env('PHONE_USER_BOT'),
+            'chatId' => $chat_id,
             'type' => $type,
-            'chat_id' => $chat_id,
             'access_hash' => $access_hash,
             'min_id' => $min_id,
             'limit' => $limit,
             'offset_id' => $offset_id
         ];
-        return $this->request('/history', $params)->object();
+
+        return $this->requestPost( $params)->object();
     }
 
     /**
@@ -178,13 +183,13 @@ class UserBot
      */
     public function getDialogs($limit = null, $offset_id = null, $user_id = 1)
     {
-        $params = [
-            'ident' => env('IDENT_USER_BOT') . $user_id,
-            'phone' => env('PHONE_USER_BOT'),
-            'limit' => $limit,
-            'offset_id' => $offset_id
-        ];
-        return $this->request('/dialogs', $params)->object();
+//        $params = [
+//            'ident' => env('IDENT_USER_BOT') . $user_id,
+//            'phone' => env('PHONE_USER_BOT'),
+//            'limit' => $limit,
+//            'offset_id' => $offset_id
+//        ];
+//        return $this->request('/dialogs', $params)->object();
     }
 
     /**
@@ -199,8 +204,9 @@ class UserBot
     public function getUsersInChannel($channel_id, $access_hash, $limit = null, $offset = null, $user_id = 1)
     {
         $params = [
-            'ident' => env('IDENT_USER_BOT') . $user_id,
-            'phone' => env('PHONE_USER_BOT'),
+            'chatId' => '',
+//            'ident' => env('IDENT_USER_BOT') . $user_id,
+//            'phone' => env('PHONE_USER_BOT'),
             'channel_id' => $channel_id,
             'access_hash' => $access_hash,
             'limit' => $limit,
@@ -212,5 +218,10 @@ class UserBot
     protected function request($address, $params) 
     {
         return Http::get(env('MTPROTO_HOST') . $address, $params);
+    }
+
+    protected function requestPost($params)
+    {
+        return Http::post(env('MTPROTO_HOST') , $params);
     }
 }

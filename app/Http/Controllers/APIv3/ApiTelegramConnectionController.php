@@ -26,11 +26,15 @@ class ApiTelegramConnectionController extends Controller
      */
     public function create(ApiTelegramConnectionCreateRequest $request): ApiResponse
     {
+        log::info('Create User Bot');
+
         $service = app()->make(Messenger::$platform[$request->input('platform')]);
 
+        /** @var Telegram $service */
         $result = $service->invokeCommunityConnect(Auth::user(), $request->input('type'), $request->input('telegram_id'));
 
         if ($result['original']['status'] === 'error') {
+            Log::error('telegram_account_not_connected');
             return ApiResponse::error('validation.telegram_account_not_connected');
         }
 
@@ -48,8 +52,7 @@ class ApiTelegramConnectionController extends Controller
      */
     public function checkStatus(ApiTelegramConnectionSearchRequest $request): ApiResponse
     {
-        /* @var  $service Telegram */
-
+        /** @var Telegram $service */
         $service = app()->make(Messenger::$platform[$request['platform']]);
 
         Log::debug($request['telegram_user_id']);
