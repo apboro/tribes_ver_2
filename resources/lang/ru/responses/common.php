@@ -25,8 +25,9 @@ return [
     'community_tag_attach_error' => 'Ошибка привязки тега к сообществу',
     'community_tag_detach_error' => 'Ошибка отвязки тега от сообщества',
     'community_tag_detach_success' => 'Тег успешно отвязан от сообщества',
-
-
+    'users' => [
+        'delete' => 'Пользователь успешно удален'
+    ],
     'user_settings' => [
         'update_error' => 'Ошибка обновления комиссии пользователя',
         'update_success' => 'комиссии пользователя успешно обновлена',
