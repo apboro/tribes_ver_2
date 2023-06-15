@@ -11,9 +11,10 @@ use OpenApi\Annotations as OA;
  *     summary="Export users",
  *     operationId="admin-users-export",
  *     security={{"sanctum": {} }},
+ *
  *     @OA\Parameter(
  *         name="type",
- *         in="path",
+ *         in="query",
  *         description="type of output format",
  *         required=true,
  *         @OA\Schema(
@@ -28,14 +29,14 @@ use OpenApi\Annotations as OA;
  */
 class ApiUserManagerExportRequest extends ApiRequest
 {
-    public function rules():array
+    public function rules(): array
     {
         return [
-            'type'=>'string'
+            'type' => 'string|in:csv,xlsx'
         ];
     }
 
-    public function messages():array
+    public function messages(): array
     {
         return [
             'type.string' => $this->localizeValidation('export.type_string'),
