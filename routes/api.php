@@ -68,7 +68,9 @@ Route::prefix('api/v3')->group(function () {
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
+
     Route::get('/user', [ApiUserController::class, 'show']);
+    Route::delete('/users', [ApiUserController::class, 'delete'])->name('api.user.delete');
     Route::post('/user/logout', [ApiAuthController::class, 'logout']);
     Route::post('/user/password/change', [ApiUserController::class, 'passChange']);
 
