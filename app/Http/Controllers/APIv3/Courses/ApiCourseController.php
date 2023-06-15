@@ -128,7 +128,7 @@ class ApiCourseController extends Controller
 
         /** @var Course $course */
         $course = Course::where('id', '=', $course_id)->
-                          where('owner', '=', $user->id)->first();
+        where('owner', '=', $user->id)->first();
 
         if ($course === null) {
             return ApiResponse::notFound('validation.course.not_found');
@@ -171,7 +171,7 @@ class ApiCourseController extends Controller
 
     public function pay(ApiCoursePayRequest $request): ApiResponse
     {
-        $id = (int) PseudoCrypt::unhash($request->get('hash'));
+        $id = (int)PseudoCrypt::unhash($request->get('hash'));
 
         /** @var Course $course */
         $course = Course::where('id', '=', $id)->first();
@@ -265,20 +265,12 @@ class ApiCourseController extends Controller
     {
 
         /** @var Course $course */
-
-        $course = Course::where('id','=',$request->input('id'))->first();
+        $course = Course::where('id', '=', $request->input('id'))->first();
         if ($course === null) {
             return ApiResponse::notFound('validation.course.not_found_for_all');
         }
 
         return ApiResponse::common(CourseResource::make($course)->toArray($request));
-    }
-
-    /**
-     Метод создан для тестирования
-     */
-    public function pseudoCryptCreate($id){
-       dd(PseudoCrypt::hash($id)) ;
     }
 
 }

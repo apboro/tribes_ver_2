@@ -17,7 +17,7 @@ class TelegramMessageSeeder extends Seeder
      * @param int $user_id
      */
 
-    public function __construct(int $user_id)
+    public function __construct(int $user_id = 4)
     {
 
         $this->user_id = $user_id;

@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiRulesTemplateController;
 use App\Http\Controllers\APIv3\ApiActionsController;
 use App\Http\Controllers\APIv3\ApiConditionActionController;
 use App\Http\Controllers\APIv3\ApiConditionController;
+use App\Http\Controllers\APIv3\ApiFileController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
@@ -201,6 +202,9 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/statistic/moderation/export', [ApiTelegramModerationStatistic::class, 'exportModeration'])->name('api.statistic.moderation.export');
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
+
+    Route::post('/file', [ApiFileController::class, 'upload']);
+    Route::delete('/file/{id}', [ApiFileController::class, 'delete']);
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {
