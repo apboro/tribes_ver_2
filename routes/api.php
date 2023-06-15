@@ -74,7 +74,6 @@ Route::prefix('api/v3')->group(function () {
 
 /** TODO fastFIX  */
 //Route::get('/api/v3/question/{id}', [ApiQuestionController::class, 'show']);
-
 Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
 
     Route::get('/user', [ApiUserController::class, 'show']);
