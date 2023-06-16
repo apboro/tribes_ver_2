@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\APIv3\Statistic;
 
-use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageExportStatisticRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageStatisticChartRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageUserStatisticRequest;
 use App\Http\ApiResources\ExportMessageResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Models\Community;
 use App\Repositories\Statistic\TelegramMessageStatisticRepository;
 use App\Services\File\FileSendService;
 
@@ -60,28 +58,7 @@ class ApiTelegramMessageStatistic extends Controller
         ApiMessageExportStatisticRequest $request
     )
     {
-        $columnNames = [
-            [
-                'attribute' => 'telegram_user_id',
-                'title' => 'Telegram user id'
-            ],
-            [
-                'attribute' => 'group_chat_id',
-                'title' => 'Group chat id'
-            ],
-            [
-                'attribute' => 'name',
-                'title' => 'Имя'
-            ],
-            [
-                'attribute' => 'nick_name',
-                'title' => 'Никнейм'
-            ],
-            [
-                'attribute' => 'count_messages',
-                'title' => 'Количество сообщений'
-            ],
-        ];
+        $columnNames = $this->statisticRepository::EXPORT_FIELDS;
 
         $builder = $this->statisticRepository->getMessagesListForFile(
             $request->input('community_ids') ?? []
