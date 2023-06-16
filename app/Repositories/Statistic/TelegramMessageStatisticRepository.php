@@ -16,6 +16,29 @@ use Illuminate\Support\Facades\DB;
 class TelegramMessageStatisticRepository
 {
 
+    const EXPORT_FIELDS = [
+        [
+            'attribute' => 'telegram_user_id',
+            'title' => 'Telegram user id'
+        ],
+        [
+            'attribute' => 'group_chat_id',
+            'title' => 'Group chat id'
+        ],
+        [
+            'attribute' => 'name',
+            'title' => 'Имя'
+        ],
+        [
+            'attribute' => 'nick_name',
+            'title' => 'Никнейм'
+        ],
+        [
+            'attribute' => 'count_messages',
+            'title' => 'Количество сообщений'
+        ],
+    ];
+
     const DAY = 'day';
     const WEEK = 'week';
     const MONTH = 'month';
@@ -187,20 +210,20 @@ class TelegramMessageStatisticRepository
             ->avg('sentiment');
 //        return $tonalities;
 
-        if ($tonalities === null){
+        if ($tonalities === null) {
             return 'Нет статистики';
         }
         if ($tonalities > -0.33 && $tonalities < 0.33) {
             return 'Нейтральная';
         }
-        if ($tonalities > 0.33){
+        if ($tonalities > 0.33) {
             return 'Позитивная';
         }
-        if ($tonalities < -0.33){
+        if ($tonalities < -0.33) {
             return 'Негативная';
         }
 
 
-}
+    }
 
 }

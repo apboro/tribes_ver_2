@@ -2,10 +2,11 @@
 
 namespace App\Http\ApiResources;
 
+use App\Helper\PseudoCrypt;
 use App\Models\Course;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class CourseResource extends JsonResource
 {
@@ -17,7 +18,7 @@ class CourseResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array|Arrayable|\JsonSerializable
      */
@@ -36,13 +37,15 @@ class CourseResource extends JsonResource
             'isPublished' => $this->resource->isPublished,
             'isEthernal' => $this->resource->isEthernal,
             'price' => $this->resource->price,
+            'description' => $this->resource->description,
             //'preview' => $this->resource->preview,
             'attachments' => $this->resource->attachments,
             'thanks_text' => $this->resource->thanks_text,
             'shipping_noty' => $this->resource->shipping_noty,
             'activation_date' => $this->resource->activation_date,
             'deactivation_date' => $this->resource->deactivation_date,
-            'publication_date' => $this->resource->publication_date
+            'publication_date' => $this->resource->publication_date,
+            'hash' => PseudoCrypt::hash($this->resource->id)
         ];
     }
 }
