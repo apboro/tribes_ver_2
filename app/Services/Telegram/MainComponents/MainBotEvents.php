@@ -131,29 +131,38 @@ class MainBotEvents
         }
     }
 
-    /** Добавление Юзербота в группу */
+    /** Добавление Юзербота в группу
+     * @TODO after test fix logs
+     */
     protected function userBotAddedToGroup()
     {
+        log::info('User Bot Added To Group');
         try {
-            if (isset($this->data->message->new_chat_member->id)) {
-                $chatId = $this->data->message->chat->id;
-                if ($this->data->message->new_chat_member->id == config('telegram_user_bot.user_bot.id')) {
-                    $this->bot->logger()->debug('Добавление Юзер Бота в уже существующую ГРУППУ', ArrayHelper::toArray($this->data->message->chat));
+            $str = json_encode($this->data, JSON_UNESCAPED_UNICODE);
+            log::info('$this->data'. $str);
+            log::info('config(telegram_user_bot.user_bot.id)'. config('telegram_user_bot.user_bot.id'));
+//            if (isset($this->data->message->new_chat_member->id)) {
+            if (isset($this->data->chat_member->new_chat_member->user->id)) {
+                $chatId = $this->data->chat_member->chat->id;
+                if ($this->data->chat_member->new_chat_member->user->id == config('telegram_user_bot.user_bot.id')) {
+                    $this->bot->logger()->debug('Добавление Юзер Бота в уже существующую ГРУППУ', ArrayHelper::toArray($this->data->chat_member->chat));
                     Telegram::userBotEnterGroupEvent(
-                        $this->data->message->from->id,
+                        $this->data->chat_member->from->id,
                         $chatId,
-                        $this->data->message->chat->type,
-                        $this->data->message->chat->title
+                        $this->data->chat_member->chat->type,
+                        $this->data->chat_member->chat->title
                     );
                     Log::channel('telegram_bot_action_log')
                         ->
                         log('info', '', [
                             'action' => TelegramBotActionHandler::EVENT_USER_BOT_ADDED,
                             'event' => TelegramBotActionHandler::EVENT_USER_BOT_ADDED,
-                            'telegram_id' => $this->data->message->new_chat_member->id,
+                            'telegram_id' => $this->data->chat_member->new_chat_member->user->id,
                             'chat_id' => $chatId
                         ]);
                 }
+            }else{
+                log::info('not seet chat_member->new_chat_member->user->id');
             }
         } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -379,29 +388,35 @@ class MainBotEvents
     }
 
     /** Событие назначения User бота администратором в ГРУППЕ */
-    protected
-    function makeUserBotAdmin()
+    protected function makeUserBotAdmin()
     {
         try {
-            if (isset($this->data->my_chat_member)) {
+            $str = json_encode($this->data, JSON_UNESCAPED_UNICODE);
+            log::info('$this->data' . $str);
+            if (isset($this->data->chat_member)) {
                 if (
-                    $this->data->my_chat_member->new_chat_member->user->id == config('telegram_user_bot.user_bot.id') &&
-                    $this->data->my_chat_member->new_chat_member->status == 'administrator'
+                    $this->data->chat_member->new_chat_member->user->id == config('telegram_user_bot.user_bot.id') &&
+                    $this->data->chat_member->new_chat_member->status == 'administrator'
                 ) {
                     $this->bot->logger()->debug('User Бот в группе стал администратором', ArrayHelper::toArray($this->data));
-                    $chatId = $this->data->my_chat_member->chat->id;
+                    $chatId = $this->data->chat_member->chat->id;
                     Telegram::userBotGetPermissionsEvent(
-                        $this->data->my_chat_member->from->id,
-                        $this->data->my_chat_member->new_chat_member->status,
+                        $this->data->chat_member->from->id,
+                        $this->data->chat_member->new_chat_member->status,
                         $chatId
                     );
                     Log::channel('telegram_bot_action_log')->
                     log('info', '', [
                         'event' => TelegramBotActionHandler::USER_BOT_GET_ADMIN,
                         'chat_id' => $chatId,
-                        'telegram_id' => $this->data->my_chat_member->from->id
+                        'telegram_id' => $this->data->chat_member->from->id
                     ]);
+                } else {
+                    log::debug('my_chat_member not ' . config('telegram_user_bot.user_bot.id'));
+                    log::debug('new_chat_member->status  not administrator');
                 }
+            } else {
+                log::info('not income date chat_member');
             }
         } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
