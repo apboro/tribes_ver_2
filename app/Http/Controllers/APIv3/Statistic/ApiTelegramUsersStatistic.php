@@ -84,6 +84,10 @@ class ApiTelegramUsersStatistic extends Controller
             'join_users_total' => $join_users->sum('users'),
             'exit_users_total' => $exit_users->sum('users'),
             'active_users' => $active_user->count(),
+            'total_users' => $current_members->max('users'),
+            'active_user_percent' => number_format(
+                ($active_user->count() / $current_members->max('users')) * 100, 2
+            )
         ]);
     }
 
