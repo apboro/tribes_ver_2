@@ -13,10 +13,22 @@ class ChangeSemanticTable extends Migration
      */
     public function up()
     {
-        Schema::table('semantic_table', function (Blueprint $table){
-            $table->dropColumn(['class_name','class_probability']);
-            $table->unsignedBigInteger('class_id')->nullable();
-        });
+        if (Schema::hasColumn('semantic_table', 'class_name')) {
+            Schema::table('semantic_table', function (Blueprint $table) {
+                $table->dropColumn(['class_name']);
+            });
+        }
+        if (Schema::hasColumn('semantic_table', 'class_probability')) {
+            Schema::table('semantic_table', function (Blueprint $table) {
+                $table->dropColumn(['class_probability']);
+                $table->unsignedBigInteger('class_id')->nullable();
+            });
+        }
+        if (!Schema::hasColumn('semantic_table', 'class_id')) {
+            Schema::table('semantic_table', function (Blueprint $table) {
+                $table->unsignedBigInteger('class_id')->nullable();
+            });
+        }
     }
 
 }

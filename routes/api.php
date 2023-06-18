@@ -29,10 +29,10 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
+use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramModerationStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramUsersStatistic;
-use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Subscription\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\Subscription\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
@@ -41,6 +41,7 @@ use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
 use App\Http\Controllers\APIv3\User\ApiMessengersController;
 use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
+use App\Http\Controllers\APIv3\User\ApiUserAdditionalFieldsController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\TelegramUserBotController;
@@ -61,8 +62,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::prefix('api/v3')->group(function () {
     Route::get('/public/knowledge/{hash}', [ApiKnowledgeController::class, 'public']);
-    Route::post('/userbot_session', [TelegramUserBotController::class,'storeSession']);
-    Route::get('/userbot_session', [TelegramUserBotController::class,'getSession']);
+    Route::post('/userbot_session', [TelegramUserBotController::class, 'storeSession']);
+    Route::get('/userbot_session', [TelegramUserBotController::class, 'getSession']);
     Route::post('/user/login', [ApiAuthController::class, 'login']);
     Route::post('/user/register', [ApiRegisterController::class, 'register']);
     Route::post('/user/password/forgot', [ApiForgotPasswordController::class, 'sendPasswordResetLink']);
@@ -79,6 +80,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/user', [ApiUserController::class, 'show']);
     Route::post('/user/logout', [ApiAuthController::class, 'logout']);
     Route::post('/user/password/change', [ApiUserController::class, 'passChange']);
+    Route::put('/users/additional-fields', [ApiUserAdditionalFieldsController::class, 'update'])->name('api.users.edit_additional_fields');
 
     Route::post('/user/phone/reset-confirmed', [ApiUserPhoneController::class, 'resetConfirmed']);
     Route::post('/user/phone/send-confirm-code', [ApiUserPhoneController::class, 'sendConfirmCode']);
@@ -203,7 +205,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/statistic/messages/charts', [ApiTelegramMessageStatistic::class, 'messageCharts'])->name('api.statistic.messages.charts');
     Route::get('/statistic/messages/export', [ApiTelegramMessageStatistic::class, 'exportMessages'])->name('api.statistic.messages.export');
 
-    Route::get('/statistic/semantic/export',[ApiSemanticController::class, 'exportSemantic']);
+    Route::get('/statistic/semantic/export', [ApiSemanticController::class, 'exportSemantic']);
     Route::get('/statistic/semantic/charts', [ApiSemanticController::class, 'charts']);
 
     Route::get('/statistic/moderation/users', [ApiTelegramModerationStatistic::class, 'userList'])->name('api.statistic.moderation.user_list');
