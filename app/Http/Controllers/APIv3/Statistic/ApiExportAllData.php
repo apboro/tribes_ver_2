@@ -94,15 +94,17 @@ class ApiExportAllData extends Controller
                 if (!$zip->open($zip_full_file_path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
                     return ApiResponse::error('Ошибка создания архива');
                 }
-
-                foreach ($this->settings_array as $type => $value) {
+                $files_to_delete = [];
+                foreach ($this->settings_array as $value) {
                     $builder = $value['repository']->getListForFile($request->input('community_ids') ?? []);
-                    $full_file_path = storage_path() . $value['csv_file_name'];
+                    $full_file_path = storage_path() . "/app/statistic/" . $value['csv_file_name'];
+                    $files_to_delete[] = $full_file_path;
                     $this->exportCsv($full_file_path, $value['export_fields'], $builder, $value['resource_class']);
                     $zip->addFile($full_file_path, $value['csv_file_name']);
-                }
 
+                }
                 $zip->close();
+                //$this->deleteTmpFiles($files_to_delete);
                 return response()->download($zip_full_file_path)->deleteFileAfterSend();
             case 'xlsx':
                 $date = Carbon::now()->format("Y_m_d_H_i_s");
@@ -195,6 +197,13 @@ class ApiExportAllData extends Controller
 
             }
         });
+    }
+
+    private function deleteTmpFiles(array $fileNames)
+    {
+        foreach ($fileNames as $file) {
+            unlink($file);
+        }
     }
 
 }
