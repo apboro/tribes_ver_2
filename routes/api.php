@@ -74,6 +74,7 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/courses/pay/{hash}', [ApiCourseController::class, 'pay']);
     Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
     Route::post('/send_demo_email', [MailSender::class, 'sendDemoEmail']);
+
 });
 
 /** TODO fastFIX  */
@@ -215,7 +216,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/statistic/moderation/users', [ApiTelegramModerationStatistic::class, 'userList'])->name('api.statistic.moderation.user_list');
     Route::get('/statistic/moderation/charts', [ApiTelegramModerationStatistic::class, 'moderationCharts'])->name('api.statistic.moderation.charts');
     Route::get('/statistic/moderation/export', [ApiTelegramModerationStatistic::class, 'exportModeration'])->name('api.statistic.moderation.export');
-
+    
     Route::get('/statistic/export-all-data', [ApiExportAllData::class, 'exportAllData'])->name('api.statistic.export.all_data');
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);

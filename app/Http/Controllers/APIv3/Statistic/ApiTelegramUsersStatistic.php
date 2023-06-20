@@ -98,49 +98,8 @@ class ApiTelegramUsersStatistic extends Controller
         ApiMemberStatisticExportRequest $request
     ): StreamedResponse
     {
-        $columnNames = [
-            [
-                'attribute' => 'name',
-                'title' => 'Имя'
-            ],
-            [
-                'attribute' => 'nick_name',
-                'title' => 'Никнейм'
-            ],
-            [
-                'attribute' => 'accession_date',
-                'title' => 'Дата вступления'
-            ],
-
-            [
-                'attribute' => 'exit_date',
-                'title' => 'Дата выхода'
-            ],
-
-            [
-                'attribute' => 'c_messages',
-                'title' => 'Количество сообщений'
-            ],
-            [
-                'attribute' => 'comm_name',
-                'title' => 'Название сообщества'
-            ],
-            [
-                'attribute' => 'c_put_reactions',
-                'title' => 'Количество реакций оставил'
-            ],
-            [
-                'attribute' => 'c_got_reactions',
-                'title' => 'Количество реакций получил'
-            ],
-            [
-                'attribute' => 'utility',
-                'title' => 'Полезность'
-            ],
-        ];
-
-        $membersBuilder = $this->statisticRepository->getMembersListForFile($request->input('community_ids') ?? []);
-
+        $columnNames = $this->statisticRepository::EXPORT_FIELDS;
+        $membersBuilder = $this->statisticRepository->getListForFile($request->input('community_ids') ?? []);
 
         return $this->fileSendService->sendFile(
             $membersBuilder,

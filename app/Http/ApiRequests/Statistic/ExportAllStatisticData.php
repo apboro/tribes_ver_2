@@ -12,7 +12,7 @@ use App\Http\ApiRequests\ApiRequest;
  *  summary="Export all statistic",
  *  security={{"sanctum": {} }},
  *  tags={"Statistic"},
- *  @OA\Parameter(name="type", in="query",description="",required=false, @OA\Schema(type="string",)),
+ *  @OA\Parameter(name="export_type", in="query",description="",required=false, @OA\Schema(type="string",)),
  *
  * @OA\Response(response=200, description="OK"),
  * @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
@@ -20,4 +20,13 @@ use App\Http\ApiRequests\ApiRequest;
  */
 class ExportAllStatisticData extends ApiRequest
 {
+
+    public function rules(): array
+    {
+        return [
+            'community_ids' => 'array',
+            'community_ids.*' => 'integer|exists:communities,id',
+            'export_type' => 'string|in:xlsx,csv',
+        ];
+    }
 }
