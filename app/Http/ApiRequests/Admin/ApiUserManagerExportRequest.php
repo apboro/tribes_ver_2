@@ -13,7 +13,7 @@ use OpenApi\Annotations as OA;
  *     security={{"sanctum": {} }},
  *     @OA\Parameter(
  *         name="type",
- *         in="path",
+ *         in="query",
  *         description="type of output format",
  *         required=true,
  *         @OA\Schema(
@@ -28,14 +28,21 @@ use OpenApi\Annotations as OA;
  */
 class ApiUserManagerExportRequest extends ApiRequest
 {
-    public function rules():array
+    public function rules(): array
     {
         return [
-            'type'=>'string'
+            'type' => 'string|in:xlsx,csv'
         ];
     }
 
-    public function messages():array
+    public function prepareForValidation(): void
+    {
+        $this->merge([
+            'type' => strtolower($this->request->get('type'))
+        ]);
+    }
+
+    public function messages(): array
     {
         return [
             'type.string' => $this->localizeValidation('export.type_string'),
