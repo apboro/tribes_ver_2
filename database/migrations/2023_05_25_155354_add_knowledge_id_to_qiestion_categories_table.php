@@ -13,9 +13,11 @@ class AddKnowledgeIdToQiestionCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('question_categories', function (Blueprint $table) {
-            $table->foreignId('knowledge_id')->nullable()->constrained('knowledge')->nullOnDelete();
-        });
+        if (!Schema::hasColumn('question_categories', 'knowledge_id')) {
+            Schema::table('question_categories', function (Blueprint $table) {
+                $table->foreignId('knowledge_id')->nullable()->constrained('knowledge')->nullOnDelete();
+            });
+        }
     }
 
     /**
@@ -25,8 +27,10 @@ class AddKnowledgeIdToQiestionCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::table('question_categories', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('knowledge_id');
-        });
+        if (Schema::hasColumn('question_categories', 'knowledge_id')) {
+            Schema::table('question_categories', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('knowledge_id');
+            });
+        }
     }
 }

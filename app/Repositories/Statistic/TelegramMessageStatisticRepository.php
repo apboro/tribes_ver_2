@@ -52,9 +52,11 @@ class TelegramMessageStatisticRepository
         return $builder;
     }
 
-    public function getMessagesListForFile(array $communityIds): Builder
+    public function getListForFile(array $communityIds): Builder
     {
-        return $this->queryMessages($communityIds);
+        $builder = $this->queryMessages($communityIds);
+        $builder->orderBy('count_messages', 'DESC');
+        return $builder;
     }
 
     public function getMessageChart(
@@ -149,6 +151,7 @@ class TelegramMessageStatisticRepository
             $builder->whereIn('communities.id', $communityIds);
         }
         $builder->where('communities.owner', Auth::user()->id);
+
 
         return $builder;
     }

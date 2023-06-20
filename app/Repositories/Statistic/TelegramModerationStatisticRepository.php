@@ -12,6 +12,25 @@ use Illuminate\Support\Facades\DB;
 class TelegramModerationStatisticRepository
 {
 
+    const EXPORT_FIELDS = [
+        [
+            'attribute' => 'action_date',
+            'title' => 'Дата и время'
+        ],
+        [
+            'attribute' => 'nick_name',
+            'title' => 'Никнейм'
+        ],
+        [
+            'attribute' => 'name',
+            'title' => 'Имя'
+        ],
+        [
+            'attribute' => 'action',
+            'title' => 'Событие'
+        ],
+    ];
+
     const DAY = 'day';
     const WEEK = 'week';
     const MONTH = 'month';
@@ -25,7 +44,7 @@ class TelegramModerationStatisticRepository
         return $builder;
     }
 
-    public function getMembersListForFile(array $communityIds): Builder
+    public function getListForFile(array $communityIds): Builder
     {
         return $this->queryMessages($communityIds);
     }

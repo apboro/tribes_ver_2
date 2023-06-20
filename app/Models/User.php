@@ -53,6 +53,9 @@ class User extends Authenticatable
         'locale',
         'phone_confirmed',
         'api_token',
+        'gender',
+        'age',
+        'country'
     ];
 
     /**

@@ -12,6 +12,47 @@ use Illuminate\Support\Facades\DB;
 class TelgramMembersStatisticRepository
 {
 
+    const EXPORT_FIELDS = [
+        [
+            'attribute' => 'name',
+            'title' => 'Имя'
+        ],
+        [
+            'attribute' => 'nick_name',
+            'title' => 'Никнейм'
+        ],
+        [
+            'attribute' => 'accession_date',
+            'title' => 'Дата вступления'
+        ],
+
+        [
+            'attribute' => 'exit_date',
+            'title' => 'Дата выхода'
+        ],
+
+        [
+            'attribute' => 'c_messages',
+            'title' => 'Количество сообщений'
+        ],
+        [
+            'attribute' => 'comm_name',
+            'title' => 'Название сообщества'
+        ],
+        [
+            'attribute' => 'c_put_reactions',
+            'title' => 'Количество реакций оставил'
+        ],
+        [
+            'attribute' => 'c_got_reactions',
+            'title' => 'Количество реакций получил'
+        ],
+        [
+            'attribute' => 'utility',
+            'title' => 'Полезность'
+        ],
+    ];
+
     const DAY = 'day';
     const WEEK = 'week';
     const MONTH = 'month';
@@ -34,7 +75,7 @@ class TelgramMembersStatisticRepository
         return $builder->get();
     }
 
-    public function getMembersListForFile(array $communityIds): Builder
+    public function getListForFile(array $communityIds): Builder
     {
         return $this->queryMembers($communityIds);
     }

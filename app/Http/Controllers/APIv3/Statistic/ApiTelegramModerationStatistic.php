@@ -74,26 +74,9 @@ class ApiTelegramModerationStatistic extends Controller
         ApiModerationStatisticExportRequest $request
     ): StreamedResponse
     {
-        $columnNames = [
-            [
-                'attribute' => 'action_date',
-                'title' => 'Дата и время'
-            ],
-            [
-                'attribute' => 'nick_name',
-                'title' => 'Никнейм'
-            ],
-            [
-                'attribute' => 'name',
-                'title' => 'Имя'
-            ],
-            [
-                'attribute' => 'action',
-                'title' => 'Событие'
-            ],
-        ];
+        $columnNames = $this->statisticRepository::EXPORT_FIELDS;
 
-        $membersBuilder = $this->statisticRepository->getMembersListForFile($request->input('community_ids') ?? []);
+        $membersBuilder = $this->statisticRepository->getListForFile($request->input('community_ids') ?? []);
 
 
         return $this->fileSendService->sendFile(
