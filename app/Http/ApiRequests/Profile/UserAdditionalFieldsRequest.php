@@ -16,7 +16,7 @@ use App\Http\ApiRequests\ApiRequest;
  *             mediaType="application/json",
  *             @OA\Schema(
  *                 @OA\Property(property="gender",type="string",example="m"),
- *                 @OA\Property(property="age",type="integer",example="20"),
+ *                 @OA\Property(property="birthdate",type="date",example="01.01.2000"),
  *                 @OA\Property(property="country",type="string",example="США"),
  *             ),
  *         )
@@ -35,7 +35,7 @@ class UserAdditionalFieldsRequest extends ApiRequest
     {
         return [
             'gender' => 'nullable|in:m,f',
-            'age' => 'nullable|integer|min:0|max:100',
+            'birthdate' => 'nullable|date_format:d.m.Y',
             'country' => 'nullable|string'
         ];
     }
