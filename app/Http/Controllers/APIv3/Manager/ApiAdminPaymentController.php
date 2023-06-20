@@ -19,21 +19,24 @@ class ApiAdminPaymentController extends Controller
      * @param PaymentsFilter $filter
      * @return ApiResponse
      */
-    public function list(ApiAdminPaymentListRequest $request, PaymentsFilter $filter):ApiResponse
+    public function list(ApiAdminPaymentListRequest $request, PaymentsFilter $filter): ApiResponse
     {
         /** @var Payment $customers */
-        $payments = Payment::whereNotNull('status')->
-                             filter($filter)->
-                             paginate(25);
-        $payments->load('community');
-        return ApiResponse::list()->items(AdminPaymentCollection::make($payments)->toArray($request));
+        $payments = Payment::with(['community'])->whereNotNull('status')->filter($filter);
+        $count = $payments->count();
+        return ApiResponse::listPagination(
+            [
+                'Access-Control-Expose-Headers' => 'Items-Count',
+                'Items-Count' => $count
+            ])->items((new AdminPaymentCollection($payments->skip($request->offset)->take($request->limit)->orderBy('id')->get()))->toArray($request));
+
     }
 
     /**
      * @param ApiAdminCustomersRequest $request
      * @return ApiResponse
      */
-    public function customers(ApiAdminCustomersRequest $request):ApiResponse
+    public function customers(ApiAdminCustomersRequest $request): ApiResponse
     {
 
         /** @var Payment $customers */
