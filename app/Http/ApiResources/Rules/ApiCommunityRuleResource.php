@@ -31,7 +31,7 @@ class ApiCommunityRuleResource extends JsonResource
             'action' => $this->resource->action,
             'warning_image_path' => $this->resource->warning_image_path,
             'user_complaint_image_path' => $this->resource->user_complaint_image_path,
-            'communities' => $this->resource->communities,
+            'communities' => $this->resource->communities->pluck('id'),
             'restricted_words' => $this->resource->restrictedWords->pluck('word'),
             'complaint_text' => $this->resource->complaint_text,
             'quiet_on_restricted_words' => $this->resource->quiet_on_restricted_words,

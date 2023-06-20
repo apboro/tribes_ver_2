@@ -102,16 +102,19 @@ class ApiAntispamController extends Controller
             'work_period' => $request->input('work_period')
         ]);
         $antispam->save();
-        if (!empty($request->input('community_ids'))) {
-            Community::where('owner', Auth::user()->id)->where('antispam_uuid', $uuid)->update(['antispam_uuid' => null]);
 
-            /** @var Community $community */
-            foreach ($request->input('community_ids') as $row) {
-                $community = Community::where('owner', Auth::user()->id)->where('id', $row)->first();
-                $community->antispam_uuid = $antispam->uuid;
-                $community->save();
+        if ($request->has('community_ids')) {
+            Community::where('owner', Auth::user()->id)
+                ->where('antispam_uuid', $uuid)
+                ->update(['antispam_uuid' => null]);
+            if (!empty($request->input('community_ids'))) {
+                /** @var Community $community */
+                foreach ($request->input('community_ids') as $row) {
+                    $community = Community::where('owner', Auth::user()->id)->where('id', $row)->first();
+                    $community->antispam_uuid = $antispam->uuid;
+                    $community->save();
+                }
             }
-
         }
         return ApiResponse::success('common.success');
     }

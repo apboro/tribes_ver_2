@@ -110,19 +110,19 @@ class CommunityRuleRepository
         CommunityRule $community_rule
     )
     {
-        if (!empty($community_rule->communities)) {
-            /** @var Community $community */
-            foreach ($community_rule->communities as $community) {
-                $community->moderation_rule_uuid = null;
-                $community->save();
-            }
+        /** @var Community $community */
+        foreach ($community_rule->communities as $community) {
+            $community->moderation_rule_uuid = null;
+            $community->save();
         }
-        foreach ($request->input('community_ids') as $community_id) {
-            /** @var Community $community */
-            $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
-            if ($community !== null) {
-                $community->moderation_rule_uuid = $community_rule->uuid;
-                $community->save();
+        if (!empty($request->input('community_ids'))) {
+            foreach ($request->input('community_ids') as $community_id) {
+                /** @var Community $community */
+                $community = Community::where('id', $community_id)->where('owner', Auth::user()->id)->first();
+                if ($community !== null) {
+                    $community->moderation_rule_uuid = $community_rule->uuid;
+                    $community->save();
+                }
             }
         }
     }
@@ -148,9 +148,7 @@ class CommunityRuleRepository
         $this->addRestrictedWords($request, $community_rule);
 
         $this->uploadImages($request, $community_rule);
-        if (!empty($request->input('community_ids'))) {
-            $this->attachCommunities($request, $community_rule);
-        }
+        $this->attachCommunities($request, $community_rule);
         $community_rule->load('communities');
         return $community_rule;
 
