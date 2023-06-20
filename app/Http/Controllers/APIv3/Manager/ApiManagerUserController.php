@@ -213,13 +213,14 @@ class ApiManagerUserController extends Controller
 
     public function list(ApiUserListManagerRequest $request, UsersFilter $filter): ApiResponse
     {
-        $users = User::with('telegramMeta', 'accumulation')->
-        filter($filter)->
-        paginate(25);
+        $users = User::with('telegramMeta', 'accumulation')->filter($filter);
+        $count = $users->count();
 
-
-        return ApiResponse::list()->
-        items(UserForManagerCollection::make($users)->toArray($request));
+        return ApiResponse::listPagination(
+            [
+                'Access-Control-Expose-Headers' => 'Items-Count',
+                'Items-Count' => $count
+            ])->items((new UserForManagerCollection($users->skip($request->offset)->take($request->limit)->orderBy('id')->get()))->toArray($request));
     }
 
 

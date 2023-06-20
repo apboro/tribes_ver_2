@@ -54,7 +54,7 @@ class User extends Authenticatable
         'phone_confirmed',
         'api_token',
         'gender',
-        'age',
+        'birthdate',
         'country'
     ];
 

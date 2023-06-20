@@ -7,6 +7,7 @@ use App\Http\ApiRequests\Profile\UserAdditionalFieldsRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class ApiUserAdditionalFieldsController extends Controller
@@ -24,7 +25,7 @@ class ApiUserAdditionalFieldsController extends Controller
         }
         $user->fill([
             'gender' => $request->input('gender') ?? null,
-            'age' => $request->input('age') ?? null,
+            'birthdate' => !empty($request->input('birthdate')) ? Carbon::parse($request->input('birthdate')) : null,
             'country' => $request->input('country') ?? null,
         ]);
         $user->save();

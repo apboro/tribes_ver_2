@@ -11,7 +11,6 @@ use OpenApi\Annotations as OA;
  *     summary="Export users",
  *     operationId="admin-users-export",
  *     security={{"sanctum": {} }},
- *
  *     @OA\Parameter(
  *         name="type",
  *         in="query",
@@ -32,8 +31,15 @@ class ApiUserManagerExportRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'type' => 'string|in:csv,xlsx'
+            'type' => 'string|in:xlsx,csv'
         ];
+    }
+
+    public function prepareForValidation(): void
+    {
+        $this->merge([
+            'type' => strtolower($this->request->get('type'))
+        ]);
     }
 
     public function messages(): array

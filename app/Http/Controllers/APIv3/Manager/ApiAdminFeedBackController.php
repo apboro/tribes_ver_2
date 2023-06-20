@@ -95,10 +95,13 @@ class ApiAdminFeedBackController extends Controller
 
         /** @var Feedback $feedbacks */
         $feedbacks = Feedback::query()->
-                    filter($filter)->
-                    paginate(10);
-
-        return ApiResponse::list()->items(FeedBackCollection::make($feedbacks)->toArray($request));
+        filter($filter);
+        $count = $feedbacks->count();
+        return ApiResponse::listPagination(
+            [
+                'Access-Control-Expose-Headers' => 'Items-Count',
+                'Items-Count' => $count
+            ])->items((new FeedBackCollection($feedbacks->skip($request->offset)->take($request->limit)->orderBy('id')->get()))->toArray($request));
     }
 
 }

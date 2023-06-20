@@ -12,6 +12,7 @@ use App\Http\ApiResources\Rules\ApiCommunityRuleResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Jobs\BehaviorIncomeRuleJob;
+use App\Models\Community;
 use App\Models\CommunityRule;
 use App\Repositories\Community\CommunityRuleRepository;
 use Illuminate\Support\Facades\Auth;
@@ -100,7 +101,9 @@ class ApiCommunityRuleController extends Controller
         Log::info('update api comunication ');
 
         /** @var CommunityRule $community_rule */
-        $community_rule = CommunityRule::where('uuid', $uuid)->where('user_id', Auth::user()->id)->first();
+        $community_rule = CommunityRule::where('uuid', $uuid)
+            ->where('user_id', Auth::user()->id)
+            ->first();
         if ($community_rule == null) {
             return ApiResponse::notFound(trans('responses/common.not_found'));
         }

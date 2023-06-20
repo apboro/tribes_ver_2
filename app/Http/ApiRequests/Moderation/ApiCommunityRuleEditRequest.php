@@ -75,7 +75,6 @@ class ApiCommunityRuleEditRequest extends ApiRequest
             'warning' => 'nullable|string',
             'user_complaint_image' => 'image|nullable',
             'community_ids' => 'array',
-            'community_ids.*' => 'integer|exists:communities,id',
             'action' => 'nullable|integer',
             'complaint_text' => 'string|max:1500|nullable',
             'quiet_on_restricted_words' => 'required|boolean',
