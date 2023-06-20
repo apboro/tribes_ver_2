@@ -32,7 +32,6 @@ use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiExportAllData;
-use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramModerationStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramUsersStatistic;
