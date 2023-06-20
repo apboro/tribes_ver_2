@@ -32,6 +32,7 @@ use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiExportAllData;
+use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramModerationStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramUsersStatistic;
@@ -43,6 +44,7 @@ use App\Http\Controllers\APIv3\User\ApiForgotPasswordController;
 use App\Http\Controllers\APIv3\User\ApiMessengersController;
 use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
+use App\Http\Controllers\APIv3\User\ApiUserAdditionalFieldsController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\TelegramUserBotController;
@@ -82,6 +84,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/users', [ApiUserController::class, 'delete'])->name('api.user.delete');
     Route::post('/user/logout', [ApiAuthController::class, 'logout']);
     Route::post('/user/password/change', [ApiUserController::class, 'passChange']);
+    Route::put('/users/additional-fields', [ApiUserAdditionalFieldsController::class, 'update'])->name('api.users.edit_additional_fields');
 
     Route::post('/user/phone/reset-confirmed', [ApiUserPhoneController::class, 'resetConfirmed']);
     Route::post('/user/phone/send-confirm-code', [ApiUserPhoneController::class, 'sendConfirmCode']);
