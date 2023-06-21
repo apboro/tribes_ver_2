@@ -16,7 +16,7 @@ class AdminCommunityResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array|Arrayable|JsonSerializable
      */
@@ -25,11 +25,12 @@ class AdminCommunityResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'title' => $this->resource-> title,
+            'title' => $this->resource->title,
             'owner_name' => $this->resource->communityOwner->name ?? null,
-            'owner_id' => $this->resource->communityOwner->id ?? null ,
+            'owner_user_name' => $this->resource->communityOwner->telegramMeta->pluck('user_name'),
+            'owner_id' => $this->resource->communityOwner->id ?? null,
             'telegram' => $this->resource->connection->chat_type ?? null,
-            'created_at' => $this->resource -> created_at->timestamp,
+            'created_at' => $this->resource->created_at->timestamp,
             'followers' => $this->resource->followers_count,
             'balance' => $this->resource->balance,
             'chat_invite_link' => $this->resource->connection->chat_invite_link ?? null,
