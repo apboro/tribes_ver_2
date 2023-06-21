@@ -21,6 +21,10 @@ image: docker-registry.fitdev.ru:15500/docker-io/docker:20.10.14
 variables:
   APP_NAME: backend
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "merge_request_event"
+
 build_image:
   stage: build
   extends:
