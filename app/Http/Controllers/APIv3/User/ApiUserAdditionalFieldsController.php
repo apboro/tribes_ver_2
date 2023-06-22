@@ -8,7 +8,6 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 class ApiUserAdditionalFieldsController extends Controller
 {
@@ -18,17 +17,19 @@ class ApiUserAdditionalFieldsController extends Controller
      */
     public function update(UserAdditionalFieldsRequest $request): ApiResponse
     {
-        $user_data = Auth::user();
-        $user = User::find($user_data->id);
+        /** @var User $user */
+        $user = $request->user();
         if ($user === null) {
             return ApiResponse::notFound('common.not_found');
         }
-        $user->fill([
-            'gender' => $request->input('gender') ?? null,
-            'birthdate' => !empty($request->input('birthdate')) ? Carbon::parse($request->input('birthdate')) : null,
-            'country' => $request->input('country') ?? null,
-        ]);
+
+        $user->gender = $request->input('gender', $user->gender) ?? $user->gender;
+        $user->birthdate = !empty($request->input('birthdate')) ? Carbon::parse($request->input('birthdate')) : $user->birthdate;
+        $user->country = $request->input('country', $user->country);
+        $user->is_see_tour = $request->input('is_see_tour',  $user->is_see_tour);
+
         $user->save();
+
         return ApiResponse::success();
     }
 }
