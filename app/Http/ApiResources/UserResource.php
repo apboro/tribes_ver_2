@@ -60,7 +60,8 @@ class UserResource extends JsonResource
             'country' => $this->resource->country,
             'telegram_accounts' => new TelegramAccountCollection($this->resource->telegramData()),
             'subscription' => new SubscriptionResource($this->subscription),
-            'admin' => $this->resource->isAdmin()
+            'admin' => $this->resource->isAdmin(),
+            'is_see_tour' => $this->resource->is_see_tour,
         ];
     }
 }
