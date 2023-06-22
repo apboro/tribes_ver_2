@@ -18,6 +18,7 @@ use App\Http\ApiRequests\ApiRequest;
  *                 @OA\Property(property="gender",type="string",example="m"),
  *                 @OA\Property(property="birthdate",type="date",example="01.01.2000"),
  *                 @OA\Property(property="country",type="string",example="США"),
+ *                 @OA\Property(property="is_see_tour",type="bool",example="false"),
  *             ),
  *         )
  *     ),
@@ -36,7 +37,8 @@ class UserAdditionalFieldsRequest extends ApiRequest
         return [
             'gender' => 'nullable|in:m,f',
             'birthdate' => 'nullable|date_format:d.m.Y',
-            'country' => 'nullable|string'
+            'country' => 'nullable|string',
+            'is_see_tour' => 'nullable|bool'
         ];
     }
 }
