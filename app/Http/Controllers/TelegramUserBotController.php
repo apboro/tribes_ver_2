@@ -25,6 +25,7 @@ class TelegramUserBotController extends Controller
        DB::table('user_bot_session')->insert(['session'=>$request->session_string]);
        return ApiResponse::success('common.success');
     }
+
     public function getSession(ApiGetUserBotSessionRequest $request)
     {
         return ApiResponse::common(DB::table('user_bot_session')
