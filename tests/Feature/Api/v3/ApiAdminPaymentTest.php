@@ -5,7 +5,6 @@ namespace Tests\Feature\Api\v3;
 use App\Models\Administrator;
 use App\Models\Payment;
 use App\Models\User;
-use App\Services\Pay\Entity\Pay;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -49,13 +48,13 @@ class ApiAdminPaymentTest extends TestCase
                 ]
             ],
         ],
-        'payment_costomers_success'=>[
+        'payment_costomers_success' => [
             'expected_status' => 200,
             'expected_structure' => [
                 'data' => [[
                     "id",
                     "name",
-                    ]
+                ]
                 ]
             ],
         ]
@@ -155,7 +154,7 @@ class ApiAdminPaymentTest extends TestCase
                 'SpAccumulationId' => $this->faker->text(255),
                 'RebillId' => $this->faker->text(255),
 
-                'user_id' => rand(1,50),
+                'user_id' => rand(1, 50),
                 'payable_id' => null,
                 'payable_type' => null,
                 'author' => null,
@@ -170,4 +169,17 @@ class ApiAdminPaymentTest extends TestCase
         $response->assertStatus($this->data['payment_costomers_success']['expected_status'])
             ->assertJsonStructure($this->data['payment_costomers_success']['expected_structure']);
     }
+
+
+    public function test_payments_export()
+    {
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->custom_token,
+        ])->get(route('api.manager.payments.export'));
+
+        $response->assertOk();
+    }
+
+
 }
