@@ -34,10 +34,10 @@ class ApiAdminCommunityController extends Controller
      * @return ApiResponse
      */
 
-    public function show(ApiAdminCommunityShowRequest $request, int $id):ApiResponse
+    public function show(ApiAdminCommunityShowRequest $request, int $id): ApiResponse
     {
 
-        $community = Community::where('id','=',$id)->first();
+        $community = Community::where('id', '=', $id)->first();
         return ApiResponse::common(AdminCommunityResource::make($community)->toArray($request));
     }
 
@@ -47,14 +47,17 @@ class ApiAdminCommunityController extends Controller
      * @return ApiResponse
      */
 
-    public function list(ApiAdminCommunityListRequest $request, CommunityFilter $filter):ApiResponse
+    public function list(ApiAdminCommunityListRequest $request, CommunityFilter $filter): ApiResponse
     {
-        $communities =  Community::with('communityOwner', 'connection')->
-                                   withCount('followers')->
-                                   filter($filter)->
-                                   paginate(25);
-
-        return ApiResponse::list()->items(AdminCommunityCollection::make($communities)->toArray($request));
+        $communities = Community::with('communityOwner', 'connection')->
+        withCount('followers')->
+        filter($filter);
+        $count = $communities->count();
+        return ApiResponse::listPagination(
+            [
+                'Access-Control-Expose-Headers' => 'Items-Count',
+                'Items-Count' => $count
+            ])->items((new AdminCommunityCollection($communities->skip($request->offset)->take($request->limit)->orderBy('id')->get()))->toArray($request));
     }
 
 
@@ -100,7 +103,7 @@ class ApiAdminCommunityController extends Controller
             Community::with('communityOwner', 'connection')->withCount('followers'),
             $names,
             CommunityResource::class,
-            $request->get('type','csv'),
+            $request->get('type', 'csv'),
             'communities'
         );
     }
