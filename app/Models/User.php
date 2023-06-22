@@ -26,6 +26,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Subscription $subscription
  * @property HasMany $actions
  * @property mixed $phone
+ * @property bool $is_see_tour
  *
  * @method UserFactory factory()
  */
@@ -55,7 +56,8 @@ class User extends Authenticatable
         'api_token',
         'gender',
         'birthdate',
-        'country'
+        'country',
+        'is_see_tour'
     ];
 
     /**
