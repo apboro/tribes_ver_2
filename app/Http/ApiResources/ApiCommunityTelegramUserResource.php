@@ -3,6 +3,7 @@
 namespace App\Http\ApiResources;
 
 use App\Models\TelegramUser;
+use App\Models\TelegramUserList;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,18 +38,17 @@ class ApiCommunityTelegramUserResource extends JsonResource
                     ->get();
                 $communitiesList = [];
                 foreach ($communities as $community) {
-                    foreach ($this->resource->userList as $list) {
-                        if ($list->community_id = $community->id) {
-                            $listTypeForCurrentCommunity = $list->type;
-                        }
-                    }
+                    $telegramUserList = TelegramUserList::query()
+                        ->where('community_id', $community->id)
+                        ->where('telegram_id', $this->resource->telegram_id)
+                        ->first();
                     $communitiesList[] = [
                         'id' => $community->id,
                         'title' => $community->title,
                         'role' => $community->pivot->role,
                         'accession_date' => $community->pivot->accession_date,
                         'chat_tags' => $community->tags,
-                        'is_in_list_type' => $listTypeForCurrentCommunity ?? null,
+                        'is_in_list_type' => $telegramUserList->type ?? null,
                     ];
 
                 }
