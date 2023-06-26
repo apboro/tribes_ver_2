@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Statistic\MemberResource;
 use App\Repositories\Statistic\TelegramMessageStatisticRepository;
 use App\Repositories\Statistic\TelegramModerationStatisticRepository;
-use App\Repositories\Statistic\TelgramMembersStatisticRepository;
+use App\Repositories\Statistic\TelegramMembersStatisticRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -26,19 +26,19 @@ class ApiExportAllData extends Controller
 {
 
     private TelegramMessageStatisticRepository $statisticMessageRepository;
-    private TelgramMembersStatisticRepository $membersStatisticRepository;
+    private TelegramMembersStatisticRepository $membersStatisticRepository;
     private TelegramModerationStatisticRepository $moderationStatisticRepository;
 
     private $settings_array = [];
 
     /**
      * @param TelegramMessageStatisticRepository $statisticMessageRepository
-     * @param TelgramMembersStatisticRepository $membersStatisticRepository
+     * @param TelegramMembersStatisticRepository $membersStatisticRepository
      * @param TelegramModerationStatisticRepository $moderationStatisticRepository
      */
     public function __construct(
         TelegramMessageStatisticRepository    $statisticMessageRepository,
-        TelgramMembersStatisticRepository     $membersStatisticRepository,
+        TelegramMembersStatisticRepository    $membersStatisticRepository,
         TelegramModerationStatisticRepository $moderationStatisticRepository
     )
     {

@@ -202,7 +202,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/question-category/{id}', [ApiQuestionCategoryController::class, 'delete']);
 
     Route::get('/statistic/members', [ApiTelegramUsersStatistic::class, 'members'])->name('api.statistic.members');
-    Route::get('/statistic/members/charts', [ApiTelegramUsersStatistic::class, 'memberCharts'])->name('api.statistic.members.charts');
     Route::get('/statistic/members/export', [ApiTelegramUsersStatistic::class, 'exportMembers'])->name('api.statistic.members.export');
 
     Route::get('/statistic/messages/users', [ApiTelegramMessageStatistic::class, 'messages'])->name('api.statistic.messages');
