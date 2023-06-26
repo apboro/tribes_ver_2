@@ -264,28 +264,24 @@ class MainBotEvents
                     $onboarding = $community->onboardingRule;
                     if ($onboarding) {
                         $onboarding = json_decode($onboarding->rules, true);
-
+                    }
+                    if (isset($onboarding['chatJoinAction']) && $onboarding['chatJoinAction']['type'] === 'captcha') {
                         Log::debug('onboarding in newUser', [$onboarding]);
-
-                        if (isset($onboarding['chatJoinAction']) && $onboarding['chatJoinAction']['type'] === 'captcha') {
-                            $keyboard = [[[
-                                'text' => 'Вступить в группу',
-                                'callback_data' => 'captcha_button'
-                            ]]];
-                            $message = $this->bot->getExtentionApi()
-                                ->sendMessWithReturn($chatId, 'Нажмите кнопку для вступления', false, $keyboard);
-
-                            Captcha::updateOrCreate(['chat_id' => $chatId, 'telegram_user_id' => $new_member_id],
-                                [
-                                    'solved' => false,
-                                    'message_id' => $message['result']['message_id'],
-                                    'username' => $member->username ?? '',
-                                    'first_name' => $member->first_name ?? '',
-                                    'last_name' => $member->last_name ?? '',
-                                ]);
-
-                            exit;
-                        }
+                        $keyboard = [[[
+                            'text' => 'Вступить в группу',
+                            'callback_data' => 'captcha_button'
+                        ]]];
+                        $message = $this->bot->getExtentionApi()
+                            ->sendMessWithReturn($chatId, 'Нажмите кнопку для вступления', false, $keyboard);
+                        Captcha::updateOrCreate(['chat_id' => $chatId, 'telegram_user_id' => $new_member_id],
+                            [
+                                'solved' => false,
+                                'message_id' => $message['result']['message_id'],
+                                'username' => $member->username ?? '',
+                                'first_name' => $member->first_name ?? '',
+                                'last_name' => $member->last_name ?? '',
+                            ]);
+                        exit;
                     } else {
                         $this->registerNewUser($member, $community, $chatId);
                     }
