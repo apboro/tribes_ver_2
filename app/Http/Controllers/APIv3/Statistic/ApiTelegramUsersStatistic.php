@@ -9,24 +9,21 @@ use App\Http\ApiRequests\Statistic\ApiMemberStatisticRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Statistic\MemberResource;
-use App\Repositories\Statistic\TelgramMembersStatisticRepository;
+use App\Repositories\Statistic\TelegramMembersStatisticRepository;
 use App\Services\File\FileSendService;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApiTelegramUsersStatistic extends Controller
 {
-    private TelgramMembersStatisticRepository $statisticRepository;
+    private TelegramMembersStatisticRepository $statisticRepository;
     private FileSendService $fileSendService;
 
     /**
-     * @param TelgramMembersStatisticRepository $statisticRepository
+     * @param TelegramMembersStatisticRepository $statisticRepository
      * @param FileSendService $fileSendService
      */
 
-    public function __construct(
-        TelgramMembersStatisticRepository $statisticRepository,
-        FileSendService                   $fileSendService
-    )
+    public function __construct(TelegramMembersStatisticRepository $statisticRepository, FileSendService $fileSendService)
     {
         $this->statisticRepository = $statisticRepository;
         $this->fileSendService = $fileSendService;
@@ -38,29 +35,7 @@ class ApiTelegramUsersStatistic extends Controller
      * @return ApiResponse
      */
 
-    public function members(
-        ApiMemberStatisticRequest $request
-    ): ApiResponse
-    {
-
-        $members = $this->statisticRepository->getMembersList(
-            $request->input('community_ids') ?? [],
-            $request
-        );
-
-        $count = $members->count();
-        $members_statistic = $members->skip($request->input('offset') ?? 0)
-            ->take($request->input('limit') ?? 15)
-            ->get();
-
-        return ApiResponse::listPagination(
-            ['Access-Control-Expose-Headers' => 'Items-Count', 'Items-Count' => $count]
-        )->items($members_statistic);
-    }
-
-    public function memberCharts(
-        ApiMemberStatisticChartsRequest $request
-    ): ApiResponse
+    public function members(ApiMemberStatisticChartsRequest $request): ApiResponse
     {
 
         $active_user = $this->statisticRepository->getActiveUsers(
@@ -70,24 +45,24 @@ class ApiTelegramUsersStatistic extends Controller
             $request->input('community_ids') ?? [],
             $request
         );
-        $join_users = $this->statisticRepository->getJoiningMembersChart(
-            $request->input('community_ids') ?? [],
-            $request
-        );
         $exit_users = $this->statisticRepository->getExitingMembersChart(
             $request->input('community_ids') ?? [],
             $request);
+
+        $members = $this->statisticRepository->getMembersList($request->input('community_ids') ?? []);
+
         return ApiResponse::common([
-            'current_members_by_days' => $current_members,
-            'join_users_by_days' => $join_users,
-            'exit_users_by_days' => $exit_users,
-            'join_users_total' => $join_users->sum('users'),
-            'exit_users_total' => $exit_users->sum('users'),
-            'active_users' => $active_user->count(),
-            'total_users' => $current_members->max('users'),
-            'active_user_percent' => number_format(
-                ($active_user->count() / $current_members->max('users')) * 100, 2
-            )
+            'totalMembers' => $current_members->max('users'),
+            'activeMembers' => [
+                'value' => $active_user->count(),
+                'delta' =>$current_members->max('users') > 0 ? number_format($active_user->count() / $current_members->max('users') * 100, 2) : 0,
+            ],
+            'leftMembers' => [
+                'value' => $exit_users->sum('users'),
+                'delta' => $current_members->max('users') > 0 ? number_format($exit_users->sum('users') / $current_members->max('users') * 100, 2) : 0,
+            ],
+            'series' => [$current_members],
+            'members'=>$members->get()->unique('nick_name')->values()
         ]);
     }
 

@@ -9,7 +9,7 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class TelgramMembersStatisticRepository
+class TelegramMembersStatisticRepository
 {
 
     const EXPORT_FIELDS = [
@@ -58,17 +58,13 @@ class TelgramMembersStatisticRepository
     const MONTH = 'month';
     const YEAR = 'year';
 
-    public function getMembersList(
-        array $community_ids
-    ): Builder
+    public function getMembersList(array $community_ids): Builder
     {
         $builder = $this->queryMembers($community_ids);
         return $builder;
     }
 
-    public function getActiveUsers(
-        array $community_ids
-    )
+    public function getActiveUsers(array $community_ids)
     {
         $builder = $this->queryMembers($community_ids);
         $builder->having(DB::raw("COUNT(distinct(telegram_messages.id))"), '>', 0);
@@ -80,10 +76,7 @@ class TelgramMembersStatisticRepository
         return $this->queryMembers($communityIds);
     }
 
-    public function currentMembersChart(
-        array                           $communityIds,
-        ApiMemberStatisticChartsRequest $request
-    )
+    public function currentMembersChart(array $communityIds, ApiMemberStatisticChartsRequest $request)
     {
 
         $scale = $this->getScale($request->input('period'));
@@ -114,6 +107,7 @@ class TelgramMembersStatisticRepository
             ->leftJoin(DB::raw("({$sub->toSql()}) as sub"), 'sub.dt', '=', 'd1.dt')
             ->select([
                 DB::raw("d1.dt as scale"),
+                DB::raw("CAST(EXTRACT(epoch FROM d1.dt) AS INTEGER) as scale_unix"),
                 DB::raw("coalesce(sub.users,0) as users"),
             ])
             ->mergeBindings($sub)
@@ -124,10 +118,7 @@ class TelgramMembersStatisticRepository
     }
 
 
-    public function getJoiningMembersChart(
-        array                           $communityIds,
-        ApiMemberStatisticChartsRequest $request
-    )
+    public function getJoiningMembersChart(array $communityIds, ApiMemberStatisticChartsRequest $request)
     {
 
         $scale = $this->getScale($request->input('period'));
@@ -167,10 +158,7 @@ class TelgramMembersStatisticRepository
         return $result;
     }
 
-    public function getExitingMembersChart(
-        array                           $communityIds,
-        ApiMemberStatisticChartsRequest $request
-    )
+    public function getExitingMembersChart(array $communityIds, ApiMemberStatisticChartsRequest $request)
     {
 
         $scale = $this->getScale($request->input('period'));
@@ -245,20 +233,13 @@ class TelgramMembersStatisticRepository
                     ->on("pmr.group_chat_id", '=', "$tc.chat_id");
             })
             ->select([
-                "chat_id",
-                "$com.title as comm_name",
-                "$tu.telegram_id as tele_id",
-                "$tuc.user_utility as utility",
                 DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
                 "$tu.user_name as nick_name",
                 DB::raw("$tuc.accession_date as accession_date"),
-                DB::raw("$tuc.exit_date as exit_date"),
-                DB::raw("COUNT(distinct($tm.message_id)) as c_messages"),
-                DB::raw("COUNT(distinct(gmr.id)) as c_got_reactions"),
-                DB::raw("COUNT(distinct(pmr.id)) as c_put_reactions"),
+                "$tu.photo_url as image"
             ]);
 
-        $builder->groupBy("$com.title", "$tu.telegram_id", "$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tuc.exit_date", 'chat_id', "$tuc.user_utility");
+        $builder->groupBy("$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tu.photo_url");
         if (!empty($communityIds)) {
             $builder->whereIn("$tuc.community_id", $communityIds);
         }
