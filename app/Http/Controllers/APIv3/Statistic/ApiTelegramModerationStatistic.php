@@ -43,8 +43,9 @@ class ApiTelegramModerationStatistic extends Controller
         $members = $this->statisticRepository->getMemberList($request->input('community_ids') ?? [], $request);
 
         $current_moderation_chart = $this->statisticRepository->getModerationChart($request);
+        $current_moderation_chart['members'] = $members->get();
 
-        return ApiResponse::common([...$current_moderation_chart, 'members' => $members->get()]);
+        return ApiResponse::common($current_moderation_chart);
     }
 
     public function exportModeration(ApiModerationStatisticExportRequest $request): StreamedResponse
