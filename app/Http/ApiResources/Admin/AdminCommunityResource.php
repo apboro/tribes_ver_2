@@ -27,7 +27,7 @@ class AdminCommunityResource extends JsonResource
             'id' => $this->resource->id,
             'title' => $this->resource->title,
             'owner_name' => $this->resource->communityOwner->name ?? null,
-            'owner_user_name' => $this->resource->communityOwner->telegramMeta->pluck('user_name'),
+            'owner_user_name' => $this->resource->communityOwner ? $this->resource->communityOwner->telegramMeta->pluck('user_name') : null,
             'owner_id' => $this->resource->communityOwner->id ?? null,
             'telegram' => $this->resource->connection->chat_type ?? null,
             'created_at' => $this->resource->created_at->timestamp,
