@@ -114,7 +114,7 @@ class MainBotEvents
                         $chatId,
                         $this->data->message->chat->type,
                         $this->data->message->chat->title,
-//                        $this->getPhoto($chatId)
+                        $this->getPhoto($chatId)
                     );
                     Log::channel('telegram_bot_action_log')
                         ->
