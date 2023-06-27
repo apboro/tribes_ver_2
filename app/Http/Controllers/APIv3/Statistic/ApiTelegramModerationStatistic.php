@@ -101,6 +101,6 @@ class ApiTelegramModerationStatistic extends Controller
             $columnNames,
             ExportModerationResource::class,
             $request->get('export_type', 'csv'),
-            'members');
+            'moderation');
     }
 }
