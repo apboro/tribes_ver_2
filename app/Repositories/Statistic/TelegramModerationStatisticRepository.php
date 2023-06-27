@@ -36,11 +36,9 @@ class TelegramModerationStatisticRepository
     const MONTH = 'month';
     const YEAR = 'year';
 
-    public function getMemberList(
-        array $communityIds
-    ): Builder
+    public function getMemberList(array $communityIds, $request): Builder
     {
-        $builder = $this->queryMessages($communityIds);
+        $builder = $this->queryMessages($communityIds, $request);
         return $builder;
     }
 
@@ -49,9 +47,7 @@ class TelegramModerationStatisticRepository
         return $this->queryMessages($communityIds);
     }
 
-    public function getModerationChart(
-        ApiModerationStatisticChartRequest $request
-    )
+    public function getModerationChart(ApiModerationStatisticChartRequest $request)
     {
 
         $start = $this->getStartDate($request->input('period') ?? 'week')->toDateTimeString();
@@ -126,15 +122,21 @@ class TelegramModerationStatisticRepository
      * @return \Illuminate\Database\Eloquent\Builder|Builder
      * @throws \Exception
      */
-    protected function queryMessages(array $communityIds)
+    protected function queryMessages(array $communityIds, $request = null)
     {
+
+        $start = $this->getStartDate($request->input('period') ?? 'week')->toDateTimeString();
+        $end = $this->getEndDate()->toDateTimeString();
 
         $builder_lists = DB::table('telegram_user_lists');
         $builder_lists->leftJoin('communities', 'communities.id', "=", "telegram_user_lists.community_id");
+        $builder_lists->whereDate('telegram_user_lists.created_at', '>=', $start);
+        $builder_lists->whereDate('telegram_user_lists.created_at', '<=', $end);
         $builder_lists->leftJoin('telegram_users', "telegram_users.telegram_id", "=", "telegram_user_lists.telegram_id")
             ->select([
-                DB::raw("telegram_user_lists.created_at::date || ' '|| telegram_user_lists.created_at::time as action_date"),
+                DB::raw("cast (extract (epoch from telegram_user_lists.created_at) as integer) as action_date"),
                 "telegram_users.user_name as nick_name",
+                "telegram_users.photo_url",
                 DB::raw("CONCAT (telegram_users.first_name,' ', telegram_users.last_name) as name"),
                 DB::raw("CASE WHEN telegram_user_lists.type=" . TelegramUserListsRepositry::TYPE_BAN_LIST . " THEN 'Бан' WHEN telegram_user_lists.type=" . TelegramUserListsRepositry::TYPE_MUTE_LIST . " THEN 'Мьют' END as action"),
             ]);
@@ -148,10 +150,13 @@ class TelegramModerationStatisticRepository
 
         $builder_violations->leftJoin('communities', 'communities.id', "=", "violations.community_id");
         $builder_violations->leftJoin('telegram_users', "telegram_users.telegram_id", "=", "violations.telegram_user_id");
+        $builder_violations->whereDate(DB::raw('to_timestamp(violations.violation_date)'), '>=', $start);
+        $builder_violations->whereDate(DB::raw('to_timestamp(violations.violation_date)'), '<=', $end);
 
         $builder_violations->select([
-            DB::raw("to_timestamp(violations.violation_date)::date ||' '||to_timestamp(violations.violation_date)::time as action_date"),
+            "violations.violation_date as action_date",
             "telegram_users.user_name as nick_name",
+            "telegram_users.photo_url",
             DB::raw("CONCAT (telegram_users.first_name,' ', telegram_users.last_name) as name"),
             DB::raw("'Нарушение' as action"),
         ]);
@@ -165,10 +170,13 @@ class TelegramModerationStatisticRepository
 
         $builder_kicked->leftJoin('communities', 'communities.id', "=", "telegram_users_community.community_id");
         $builder_kicked->leftJoin('telegram_users', "telegram_users.telegram_id", "=", "telegram_users_community.telegram_user_id");
+        $builder_kicked->whereDate(DB::raw('to_timestamp(telegram_users_community.exit_date)'), '>=', $start);
+        $builder_kicked->whereDate(DB::raw('to_timestamp(telegram_users_community.exit_date)'), '<=', $end);
         $builder_kicked->where('telegram_users_community.status', '=', 'kicked');
         $builder_kicked->select([
-            DB::raw("to_timestamp(telegram_users_community.exit_date)::date ||' '||to_timestamp(telegram_users_community.exit_date)::time as action_date"),
+            "telegram_users_community.exit_date as action_date",
             "telegram_users.user_name as nick_name",
+            "telegram_users.photo_url",
             DB::raw("CONCAT (telegram_users.first_name,' ', telegram_users.last_name) as name"),
             DB::raw("'Кик' as action"),
         ]);

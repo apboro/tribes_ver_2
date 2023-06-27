@@ -37,42 +37,17 @@ class ApiTelegramModerationStatistic extends Controller
      * @return ApiResponse
      */
 
-    public function userList(
-        ApiModerationStatisticRequest $request
-    ): ApiResponse
+    public function userList(ApiModerationStatisticChartRequest $request): ApiResponse
     {
 
-        $members = $this->statisticRepository->getMemberList(
-            $request->input('community_ids') ?? [],
-        );
+        $members = $this->statisticRepository->getMemberList($request->input('community_ids') ?? [], $request);
 
-        $count = $members->count();
-        $members_statistic = $members->skip($request->input('offset') ?? 0)
-            ->take($request->input('limit') ?? 15)
-            ->get();
+        $current_moderation_chart = $this->statisticRepository->getModerationChart($request);
 
-        return ApiResponse::listPagination(
-            ['Access-Control-Expose-Headers' => 'Items-Count', 'Items-Count' => $count]
-        )->items($members_statistic);
+        return ApiResponse::common([$current_moderation_chart, 'members' => $members->get()]);
     }
 
-    public function moderationCharts(
-        ApiModerationStatisticChartRequest $request
-    ): ApiResponse
-    {
-        $current_moderation_chart = $this->statisticRepository->getModerationChart(
-            $request
-        );
-
-        return ApiResponse::common(
-            $current_moderation_chart
-        );
-    }
-
-
-    public function exportModeration(
-        ApiModerationStatisticExportRequest $request
-    ): StreamedResponse
+    public function exportModeration(ApiModerationStatisticExportRequest $request): StreamedResponse
     {
         $columnNames = $this->statisticRepository::EXPORT_FIELDS;
 
