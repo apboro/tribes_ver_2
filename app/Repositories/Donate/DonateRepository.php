@@ -233,4 +233,20 @@ class DonateRepository implements DonateRepositoryContract
             return Donate::whereIn('community_id', $communityIds)->get();
         }
     }
+
+    public function store($data)
+    {
+        $this->donateModel = new Donate();
+        $this->donateModel->title = $data['title'];
+        $this->donateModel->user_id = $data['user_id'];
+        $this->donateModel->image = $data['image'];
+        $this->generateLink();
+        $this->donateModel->save();
+        DonateVariant::create(['donate_id'=>$this->donateModel->id]);
+        DonateVariant::create(['donate_id'=>$this->donateModel->id]);
+        DonateVariant::create(['donate_id'=>$this->donateModel->id]);
+        DonateVariant::create(['donate_id'=>$this->donateModel->id]);
+//        $this->updateVariants($data);
+        return $this->donateModel;
+    }
 }

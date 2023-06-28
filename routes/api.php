@@ -21,6 +21,7 @@ use App\Http\Controllers\APIv3\Community\Rules\ApiOnboardingController;
 use App\Http\Controllers\APIv3\Community\Rules\ApiRankRuleController;
 use App\Http\Controllers\APIv3\Community\Rules\ApiUserRulesController;
 use App\Http\Controllers\APIv3\Courses\ApiCourseController;
+use App\Http\Controllers\APIv3\Donates\ApiNewDonateController;
 use App\Http\Controllers\APIv3\Feedback\ApiFeedBackController;
 use App\Http\Controllers\APIv3\Knowledge\ApiKnowledgeController;
 use App\Http\Controllers\APIv3\Knowledge\ApiQuestionCategoryController;
@@ -135,15 +136,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::get('/user/bot/action-log/filter', [ApiTelegramBotActionController::class, 'filter']);
 
-    Route::get('/rules-dict', [ApiRulesDictionary::class, 'get']);
-    Route::post('/conditions', [ApiConditionController::class, 'store']);
-    Route::get('/conditions/getList', [ApiConditionController::class, 'getList']);
-    Route::delete('/conditions/delete', [ApiConditionController::class, 'delete']);
-    Route::post('/actions/store', [ApiActionsController::class, 'store']);
-    Route::get('/actions-conditions/getList', [ApiConditionActionController::class, 'getList']);
-    Route::post('/actions-conditions/assign', [ApiConditionActionController::class, 'assignToCommunity']);
-    Route::post('/actions-conditions/detach', [ApiConditionActionController::class, 'detachFromCommunity']);
-
     Route::post('/user-community-rules', [ApiUserRulesController::class, 'store']);
     Route::get('/user-community-rules', [ApiUserRulesController::class, 'list']);
     Route::get('/user-community-rules/{rule_uuid}', [ApiUserRulesController::class, 'show']);
@@ -220,6 +212,13 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/file', [ApiFileController::class, 'upload']);
     Route::delete('/file/{id}', [ApiFileController::class, 'delete']);
+
+    Route::get('/donates', [ApiNewDonateController::class, 'list']);
+    Route::get('/donate/{id}', [ApiNewDonateController::class, 'show']);
+    Route::post('/donate', [ApiNewDonateController::class, 'store']);
+    Route::delete('/donate/{id}', [ApiNewDonateController::class, 'delete']);
+    Route::put('/donate/{id}', [ApiNewDonateController::class, 'update']);
+
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {
