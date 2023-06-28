@@ -44,12 +44,9 @@ class TelegramMessageStatisticRepository
     const MONTH = 'month';
     const YEAR = 'year';
 
-    public function getMessagesList(
-        array $communityIds
-    ): Builder
+    public function getMessagesList(array $communityIds, $request): Builder
     {
-        $builder = $this->queryMessages($communityIds);
-        return $builder;
+        return $this->queryMessages($communityIds, $request);
     }
 
     public function getListForFile(array $communityIds): Builder
@@ -59,8 +56,7 @@ class TelegramMessageStatisticRepository
         return $builder;
     }
 
-    public function getMessageChart(
-        ApiMessageStatisticChartRequest $request)
+    public function getMessageChart(ApiMessageStatisticChartRequest $request)
     {
 
         $scale = $this->getScale($request->input('period'));
@@ -105,9 +101,7 @@ class TelegramMessageStatisticRepository
             ->orderBy('scale')
             ->orderBy('scale_unix');
 
-        $result = $builder->get();
-
-        return $result;
+        return $builder->get();
     }
 
     /**
@@ -116,15 +110,18 @@ class TelegramMessageStatisticRepository
      * @return \Illuminate\Database\Eloquent\Builder|Builder
      * @throws \Exception
      */
-    protected function queryMessages(array $communityIds)
+    protected function queryMessages(array $communityIds, $request)
     {
+        $start = $this->getStartDate($request->input('period') ?? 'week')->toDateTimeString();
+        $end = $this->getEndDate()->toDateTimeString();
+
         $tc = 'telegram_connections';
         $tm = 'telegram_messages';
         $tu = 'telegram_users';
         $com = 'communities';
         $tmr = 'telegram_message_reactions';
 
-        $builder = DB::table($tm)
+        $subQuery = DB::table($tm)
             ->join('telegram_connections', function (JoinClause $join) use ($tm) {
                 $join->on("$tm.group_chat_id", '=', 'telegram_connections.chat_id')
                     ->on("$tm.group_chat_id", '=', 'telegram_connections.comment_chat_id', 'OR');
@@ -132,7 +129,7 @@ class TelegramMessageStatisticRepository
             ->join('communities', 'communities.connection_id', "=", "telegram_connections.id")
             ->join($tu, "$tm.telegram_user_id", "=", "$tu.telegram_id")
             ->select([
-                "$tm.telegram_user_id",
+                DB::raw("distinct($tm.telegram_user_id) as telegram_id"),
                 "$tm.group_chat_id",
                 "$tm.message_date",
                 "$tu.user_name as nick_name",
@@ -147,13 +144,24 @@ class TelegramMessageStatisticRepository
                 "$tu.last_name",
                 "$tu.user_name",
             );
-        if (!empty($communityIds)) {
-            $builder->whereIn('communities.id', $communityIds);
+        $subQuery->whereDate(DB::raw('telegram_messages.created_at'), '>=', $start);
+        $subQuery->whereDate(DB::raw('telegram_messages.created_at'), '<=', $end);
+        $subQuery->where('communities.owner', Auth::user()->id);
+        if (!empty($request->input('community_ids'))) {
+            $subQuery->whereIn('communities.id', $request->input('community_ids'));
         }
-        $builder->where('communities.owner', Auth::user()->id);
 
-
-        return $builder;
+        return DB::query()
+            ->fromSub($subQuery, 'subquery')
+            ->select(
+                'subquery.telegram_id',
+                DB::raw('MIN(subquery.group_chat_id) as group_chat_id'),
+                DB::raw('MIN(subquery.message_date) as message_date'),
+                DB::raw('MIN(subquery.nick_name) as nick_name'),
+                DB::raw('MIN(subquery.name) as name'),
+                DB::raw('cast (SUM(subquery.count_messages) as integer) as count_messages')
+            )
+            ->groupBy('subquery.telegram_id');
     }
 
 
@@ -182,7 +190,7 @@ class TelegramMessageStatisticRepository
         $value = $period ?? 'week';
         switch ($value) {
             case self::YEAR:
-                return "1 week";//в среднем месяц
+                return "1 month";//в среднем месяц
             case self::MONTH:
                 return "1 day";
             case self::WEEK:
@@ -194,8 +202,8 @@ class TelegramMessageStatisticRepository
     public function getMessagesTonality(ApiRequest $request)
     {
         $chat_ids = [];
-        if ($request->community_ids) {
-            foreach ($request->community_ids as $community_id) {
+        if (!empty($request->input('community_ids'))) {
+            foreach ($request->input('community_ids') as $community_id) {
                 $chat_ids[] = Community::find($community_id)->connection->chat_id;
             }
         } else {
@@ -209,9 +217,8 @@ class TelegramMessageStatisticRepository
             })
             ->where('messages_from_datetime', '>', $start)
             ->where('messages_from_datetime', '<', $end)
-//            ->get()->pluck(/'sentiment')->toArray();
             ->avg('sentiment');
-//        return $tonalities;
+
 
         if ($tonalities === null) {
             return 'Нет статистики';
@@ -225,8 +232,6 @@ class TelegramMessageStatisticRepository
         if ($tonalities < -0.33) {
             return 'Негативная';
         }
-
-
     }
 
 }
