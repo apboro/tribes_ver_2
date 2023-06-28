@@ -6,7 +6,7 @@ use App\Http\ApiRequests\ApiRequest;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Get(path="/api/v3/manager/payments/export",
+ * @OA\Get(path="/api/v3/manager/export/payments",
  *     tags={"Admin payments"},
  *     summary="Export payments",
  *     operationId="admin-payments-export",

@@ -17,9 +17,6 @@ class UsersFilter extends QueryAPIFilter
             ->where(DB::raw('lower(name)'), 'like', '%' . $string . '%')
             ->orWhere('phone', 'like', '%' . $string . '%')
             ->orWhere('id', 'like', '%' . $string . '%');
-//            ->orWhereHas('id', function($q) use ($string){
-//                $q->where('title', 'like', '%' . $string . '%');
-//            });
     }
 
     public function entries($string)

@@ -245,8 +245,7 @@ Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(fu
 
     Route::get('/payments', [ApiAdminPaymentController::class, 'list'])->name('api.manager.payments.list');
     Route::get('/payments/customers', [ApiAdminPaymentController::class, 'customers'])->name('api.manager.payments.customers');
-    Route::get('/payments/export', [ApiAdminPaymentController::class, 'export'])->name('api.manager.payments.export');
-
+    Route::get('/export/payments', [ApiAdminPaymentController::class, 'export'])->name('api.manager.payments.export');
 
 });
 

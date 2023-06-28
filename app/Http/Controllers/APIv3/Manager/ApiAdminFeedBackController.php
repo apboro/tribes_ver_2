@@ -101,7 +101,7 @@ class ApiAdminFeedBackController extends Controller
             [
                 'Access-Control-Expose-Headers' => 'Items-Count',
                 'Items-Count' => $count
-            ])->items((new FeedBackCollection($feedbacks->skip($request->offset)->take($request->limit)->orderBy('id')->get()))->toArray($request));
+            ])->items((new FeedBackCollection($feedbacks->skip($request->offset)->take($request->limit ?? 25)->orderBy('id')->get()))->toArray($request));
     }
 
 }
