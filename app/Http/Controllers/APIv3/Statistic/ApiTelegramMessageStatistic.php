@@ -25,38 +25,23 @@ class ApiTelegramMessageStatistic extends Controller
         $this->fileSendService = $fileSendService;
     }
 
-    public function messages(ApiMessageUserStatisticRequest $request)
+    public function messageCharts(ApiMessageStatisticChartRequest $request): ApiResponse
     {
-
-        $messages = $this->statisticRepository->getMessagesList($request->input('community_ids') ?? []);
-        $count = $messages->count();
-        $message_members_statistic = $messages->skip($request->input('offset') ?? 0)
-            ->take($request->input('limit') ?? 15)
-            ->get();
-
-        return ApiResponse::listPagination(
-            ['Access-Control-Expose-Headers' => 'Items-Count', 'Items-Count' => $count]
-        )->items($message_members_statistic);
-    }
-
-    public function messageCharts(
-        ApiMessageStatisticChartRequest $request
-    ): ApiResponse
-    {
-        $chartMessagesData = $this->statisticRepository->getMessageChart(
-            $request
-        );
+        $chartMessagesData = $this->statisticRepository->getMessageChart($request);
         $chartMessagesTonality = $this->statisticRepository->getMessagesTonality($request);
+
+        $messages = $this->statisticRepository->getMessagesList($request->input('community_ids') ?? [], $request);
+        $message_members_statistic = $messages->get();
+
         return ApiResponse::common([
             'messages_tonality' => $chartMessagesTonality,
             'message_statistic' => $chartMessagesData,
             'total_messages' => $chartMessagesData->sum('messages'),
+            'message_members_statistic' => $message_members_statistic
         ]);
     }
 
-    public function exportMessages(
-        ApiMessageExportStatisticRequest $request
-    )
+    public function exportMessages(ApiMessageExportStatisticRequest $request)
     {
         $columnNames = $this->statisticRepository::EXPORT_FIELDS;
 
