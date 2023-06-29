@@ -127,6 +127,7 @@ class FileSendService
         }
         $headers['Content-Transfer-Encoding'] = 'binary';
         $headers['Pragma'] = 'public';
+        $headers['Access-Control-Expose-Headers'] = 'Content-Disposition';
         $headers['Cache-Control'] = 'max-age=3600, must-revalidate, public';
         $date = Carbon::now()->format("Y_m_d_H_i_s");
         return response()->streamDownload($callback, "{$name}_{$date}.{$type}", $headers);
