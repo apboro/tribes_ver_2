@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\ApiResources;
+
+use App\Models\Author;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class AuthorResourse extends JsonResource
+{
+
+    /** @var Author */
+
+    public $resource;
+
+    /**
+     * Transform the resource into an array.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     */
+    public function toArray($request)
+    {
+        return [
+            'author_id' => $this->resource->id,
+            'user_id' => $this->resource->user_id,
+            'name' => $this->resource->name,
+            'about' => $this->resource->about,
+            'photo' => $this->resource->photo,
+        ];
+    }
+}
