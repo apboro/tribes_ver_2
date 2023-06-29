@@ -55,7 +55,7 @@ class SubscriptionResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "user_subscription_id" => $this->resource->id,
+            "user_subscription_id" => $this->resource->id ?? null,
             "user_id" => $this->resource->user_id,
             "subscription_id" => $this->resource->subscription_id,
             "created_at" => $this->resource->created_at->timestamp ?? null,
