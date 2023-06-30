@@ -16,6 +16,8 @@ class ApiDonatesResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
+            'title'=>$this->resource->title,
+            'command'=>config('telegram_bot.bot.botFullName').' '.$this->resource->inline_link,
             'image' => $this->resource->image,
             'donate_is_active' => $this->resource->donate_is_active,
             'description' => $this->resource->description,

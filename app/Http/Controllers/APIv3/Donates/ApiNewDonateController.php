@@ -45,24 +45,23 @@ class ApiNewDonateController extends Controller
 
     public function show(ApiNewDonateShowRequest $request)
     {
-        $donate = NewDonate::findOrFail($request->id);
+        $donate = Donate::owned()->findOrFail($request->id);
 
-        return ApiResponse::common($donate);
+        return ApiResponse::common(ApiDonatesResource::make($donate)->toArray($request));
     }
-
 
     public function update(ApiNewDonateUpdateRequest $request)
     {
-        $donate = NewDonate::owned()->findOrFail($request->id);
         $data = $request->all();
-        $donate->fill($data);
+        $data['id']=$request->id;
+        $donate = $this->donateRepo->updateModel($data);
 
-        return ApiResponse::common($donate);
+        return ApiResponse::common(ApiDonatesResource::make($donate)->toArray($request));
     }
 
     public function delete(ApiNewDonateDeleteRequest $request)
     {
-        $donate = NewDonate::owned()->findOrFail($request->id);
+        $donate = Donate::owned()->findOrFail($request->id);
         $donate->delete();
 
         return ApiResponse::success('common.success');

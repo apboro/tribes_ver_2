@@ -89,7 +89,6 @@ class ApiCommunityTelegramUserController extends Controller
 
     public function filter(ApiTelegramUserFilterRequest $request): ApiResponse
     {
-
         $query = TelegramUser::with(['communities', 'userList'])
             ->whereHas('communities', function ($query) {
                 $query->where('owner', Auth::user()->id)
