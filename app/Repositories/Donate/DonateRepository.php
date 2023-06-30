@@ -103,7 +103,7 @@ class DonateRepository implements DonateRepositoryContract
             if ($dv->variant_name === 'random_sum'){
                 $dv->isStatic = false;
                 $dv->description = $data['random_sum_button'];
-                $dv->isActive = isset($data['status']);
+                $dv->isActive = $data['random_sum_is_active'];
                 $dv->min_price = $data['random_sum_min'] ?? null;
                 $dv->max_price = $data['random_sum_max'] ?? null;
             }
@@ -238,11 +238,17 @@ class DonateRepository implements DonateRepositoryContract
     public function store($data)
     {
         $this->donateModel = new Donate();
-        $this->donateModel->title = $data['title'];
+        $this->saveModel($data);
         $this->donateModel->user_id = $data['user_id'];
-        $this->donateModel->image = $data['image'];
         $this->generateLink();
         $this->donateModel->save();
+        $this->genereateVariants();
+        $this->updateVariants($data);
+        return $this->donateModel;
+    }
+
+    public function genereateVariants()
+    {
         DonateVariant::create([
             'donate_id' => $this->donateModel->id,
             'variant_name' => 'fix_sum_1']);
@@ -255,19 +261,22 @@ class DonateRepository implements DonateRepositoryContract
         DonateVariant::create([
             'donate_id' => $this->donateModel->id,
             'variant_name' => 'random_sum']);
+    }
+
+    public function updateModel($data)
+    {
+        $this->donateModel = Donate::owned()->findOrFail($data['id']);
+        $this->saveModel($data);
+        $this->donateModel->save();
         $this->updateVariants($data);
         return $this->donateModel;
     }
 
-//    public function update($data)
-//    {
-//        $this->donateModel = new Donate();
-//        $this->donateModel->title = $data['title'];
-//        $this->donateModel->user_id = $data['user_id'];
-//        $this->donateModel->image = $data['image'];
-//        $this->generateLink();
-//        $this->donateModel->save();
-//        $this->updateVariants($data);
-//        return $this->donateModel;
-//    }
+    public function saveModel($data)
+    {
+        $this->donateModel->title = $data['title'];
+        $this->donateModel->image = $data['image'];
+        $this->donateModel->description = $data['description'];
+        $this->donateModel->donate_is_active = $data['donate_is_active'];
+    }
 }

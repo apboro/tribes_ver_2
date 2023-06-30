@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Auth;
 /**
  * @method DonateFactory factory()
  * @property int $id
+ * @property mixed $command
+ * @property mixed $title
+ * @property mixed $user_id
+ * @property mixed $image
+ * @property mixed $description
+ * @property mixed $donate_is_active
  *
  */
 class Donate extends Model

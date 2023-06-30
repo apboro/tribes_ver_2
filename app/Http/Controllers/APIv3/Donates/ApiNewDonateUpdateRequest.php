@@ -25,7 +25,6 @@ use OpenApi\Annotations as OA;
  *     @OA\RequestBody(
  *      @OA\JsonContent(
  *           @OA\Property(property="title", type="string", example="Donate 111"),
- *           @OA\Property(property="command", type="string", example="@my_donate"),
  *           @OA\Property(property="description", type="string", example="My lovely donate"),
  *           @OA\Property(property="image", description="base64 image", type="string"),
  *           @OA\Property(property="donate_is_active", type="boolean", example="true"),
@@ -41,6 +40,7 @@ use OpenApi\Annotations as OA;
  *           @OA\Property(property="fix_sum_1_button", type="string", example="na iriski"),
  *           @OA\Property(property="fix_sum_2_button", type="string", example="na kotletki"),
  *           @OA\Property(property="fix_sum_3_button", type="string", example="na samolet"),
+ *           @OA\Property(property="random_sum_button", type="string", example="na doktorskuyu"),
  *         ),
  *      ),
  *      @OA\Response(response=200, description="Phone confirmed successfully")
