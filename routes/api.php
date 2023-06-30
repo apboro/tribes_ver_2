@@ -26,6 +26,8 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
+use App\Http\Controllers\APIv3\Publication\ApiPublicationController;
+use App\Http\Controllers\APIv3\Publication\ApiPublicationPartController;
 use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiExportAllData;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
@@ -219,6 +221,14 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::put('/authors', [ApiAuthorController::class, 'update'])->name('api.author.update');
     Route::get('/authors/{id}', [ApiAuthorController::class, 'show'])->name('api.author.show');
     Route::delete('/authors', [ApiAuthorController::class, 'destroy'])->name('api.author.delete');
+
+    Route::post('/publications', [ApiPublicationController::class, 'store'])->name('api.publications.create');
+    Route::delete('/publications/{id}', [ApiPublicationController::class, 'destroy'])->name('api.publications.delete');
+    Route::post('/publications/{id}', [ApiPublicationController::class, 'update'])->name('api.publications.update');
+    Route::get('/publications/{id}', [ApiPublicationController::class, 'show'])->name('api.publications.show');
+
+    Route::post('/publication-parts', [ApiPublicationPartController::class, 'store'])->name('api.publication_parts.create');
+    Route::delete('/publication-parts/{id}', [ApiPublicationPartController::class, 'destroy'])->name('api.publication_parts.delete');
 
 });
 

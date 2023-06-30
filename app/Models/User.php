@@ -301,5 +301,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(TelegramConnection::class, 'user_id', 'id');
     }
+
+    public function author()
+    {
+        return $this->hasOne(Author::class);
+    }
 }
 

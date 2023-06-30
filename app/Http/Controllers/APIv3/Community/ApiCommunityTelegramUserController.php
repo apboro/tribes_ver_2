@@ -139,14 +139,14 @@ class ApiCommunityTelegramUserController extends Controller
         if (
             $request->boolean('banned') ||
             $request->boolean('muted') ||
-            $request->boolean('whitelisted') ||
-            $request->boolean('blacklisted')
+            $request->boolean('whitelisted')
         ) {
             $arr_to_search = [
                 $request->boolean('banned') ? TelegramUserListsRepositry::TYPE_BAN_LIST : 0,
                 $request->boolean('muted') ? TelegramUserListsRepositry::TYPE_MUTE_LIST : 0,
                 $request->boolean('whitelisted') ? TelegramUserListsRepositry::TYPE_WHITE_LIST : 0,
             ];
+
             $query->whereHas('userList', function ($query) use ($request, $arr_to_search) {
                 $query->whereIn('type', $arr_to_search);
                 if (!empty($request->input('community_id'))) {
