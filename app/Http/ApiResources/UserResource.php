@@ -3,7 +3,7 @@
 namespace App\Http\ApiResources;
 
 use App\Models\User;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -62,6 +62,7 @@ class UserResource extends JsonResource
             'subscription' => new SubscriptionResource($this->subscription),
             'admin' => $this->resource->isAdmin(),
             'is_see_tour' => $this->resource->is_see_tour,
+            'author_fields' => $this->resource->author
         ];
     }
 }
