@@ -12,6 +12,15 @@ use Illuminate\Validation\ValidationException;
 
 abstract class ApiRequest extends FormRequest
 {
+
+    public function all($keys = null)
+    {
+        $data = parent::all();
+        $data['id'] = $this->route('id');
+
+        return $data;
+    }
+
     /**
      * Request authorization.
      *
@@ -95,7 +104,7 @@ abstract class ApiRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator): void
     {
-       // dump($validator->errors()->toArray());
+        // dump($validator->errors()->toArray());
         throw new ValidationException(
             $validator,
             ApiResponse::validationError(
