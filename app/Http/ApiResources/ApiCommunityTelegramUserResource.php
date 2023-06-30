@@ -30,9 +30,11 @@ class ApiCommunityTelegramUserResource extends JsonResource
 
         $communitiesList = $this->resource->communities()->where('owner', Auth::user()->id)
             ->where('is_active', true)
-            ->where(function ($query) {
+            ->where(function ($query) use ($arr_to_search){
                 $query->where('telegram_users_community.exit_date', '=', null)
-                    ->orWhere('telegram_users_community.status', 'banned');
+                    ->when(in_array(4, $arr_to_search), function($query) {
+                        $query->orWhere('telegram_users_community.status', 'banned');
+                    });
             })
             ->when(!empty(array_filter($arr_to_search)), function ($query) use ($arr_to_search) {
                 $query->whereHas('telegramUserList', function ($query) use ($arr_to_search) {

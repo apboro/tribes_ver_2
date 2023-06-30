@@ -98,19 +98,16 @@ class ApiCommunityTelegramUserController extends Controller
                             ->orWhere('telegram_users_community.status', 'banned');
                     })
                     ->where('is_active', true);
-            })
-            ->newQuery();
+            })->newQuery();
         if (!empty($request->input('accession_date_from'))) {
             $query->whereHas('communities', function ($query) use ($request) {
                 $query->where('telegram_users_community.accession_date', '>=', strtotime($request->input('accession_date_from')));
-
             });
         }
 
         if (!empty($request->input('accession_date_to'))) {
             $query->whereHas('communities', function ($query) use ($request) {
                 $query->where('telegram_users_community.accession_date', '<=', strtotime($request->input('accession_date_to')));
-
             });
         }
 
@@ -119,7 +116,6 @@ class ApiCommunityTelegramUserController extends Controller
                 $query->where('telegram_users_community.community_id', '=', $request->input('community_id'));
             });
         }
-
 
         if (!empty($request->input('user_name'))) {
             $query->where(function ($query) use ($request) {
@@ -132,7 +128,6 @@ class ApiCommunityTelegramUserController extends Controller
                 $query->where('first_name', 'ilike', '%' . $request->input('name') . '%')
                     ->orWhere('last_name', 'ilike', '%' . $request->input('name') . '%')
                     ->orWhere(DB::raw("CONCAT('first_name', ' ', 'last_name')"), 'ilike', "%" . $request->input('name') . "%");
-
             });
         }
 
