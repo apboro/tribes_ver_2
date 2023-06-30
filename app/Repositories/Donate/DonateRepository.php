@@ -81,33 +81,34 @@ class DonateRepository implements DonateRepositoryContract
 
     private function updateVariants($data)
     {
-
-        if ($data['donate']) {
-            foreach ($data['donate'] as $donate) {
-
-                $isStatic = array_key_exists('cost', $donate);
-                $old  = !empty($donate['variant_id'])?$donate['variant_id']:null;
-                $dv = $old ?
-                    DonateVariant::find($old) :
-                    new DonateVariant();
-                if(empty($old)) {
-                    $dv->donate_id = $this->donateModel->id;
-                }
-                $dv->isStatic = $isStatic;
-                $dv->description = $donate['description'];
-                $dv->isActive = isset($donate['status']);
-
-                if (isset($donate['cost']) && $donate['cost'] > 0) {
-                    $dv->price = $donate['cost'];
-                }
-
-                $dv->min_price = isset($donate['min_price']) ? $donate['min_price'] : null;
-                $dv->max_price = isset($donate['max_price']) ? $donate['max_price'] : null;
-
-                $dv->currency = Donate::$currency[$donate['currency'] ?? 'rub'];
-
-                $dv->save();
+        foreach ($this->donateModel->variants as $dv) {
+            if ($dv->variant_name === 'fix_sum_1'){
+                $dv->isStatic = true;
+                $dv->description = $data['fix_sum_1_button'];
+                $dv->isActive = $data['fix_sum_1_is_active'];
+                $dv->price = $data['fix_sum_1'] ?? null;
             }
+            if ($dv->variant_name === 'fix_sum_2'){
+                $dv->isStatic = true;
+                $dv->description = $data['fix_sum_2_button'];
+                $dv->isActive = $data['fix_sum_2_is_active'];
+                $dv->price = $data['fix_sum_2'] ?? null;
+            }
+            if ($dv->variant_name === 'fix_sum_3'){
+                $dv->isStatic = true;
+                $dv->description = $data['fix_sum_3_button'];
+                $dv->isActive = $data['fix_sum_3_is_active'];
+                $dv->price = $data['fix_sum_3'] ?? null;
+            }
+            if ($dv->variant_name === 'random_sum'){
+                $dv->isStatic = false;
+                $dv->description = $data['random_sum_button'];
+                $dv->isActive = isset($data['status']);
+                $dv->min_price = $data['random_sum_min'] ?? null;
+                $dv->max_price = $data['random_sum_max'] ?? null;
+            }
+            $dv->currency = 0;
+            $dv->save();
         }
     }
 
@@ -242,11 +243,31 @@ class DonateRepository implements DonateRepositoryContract
         $this->donateModel->image = $data['image'];
         $this->generateLink();
         $this->donateModel->save();
-        DonateVariant::create(['donate_id'=>$this->donateModel->id]);
-        DonateVariant::create(['donate_id'=>$this->donateModel->id]);
-        DonateVariant::create(['donate_id'=>$this->donateModel->id]);
-        DonateVariant::create(['donate_id'=>$this->donateModel->id]);
-//        $this->updateVariants($data);
+        DonateVariant::create([
+            'donate_id' => $this->donateModel->id,
+            'variant_name' => 'fix_sum_1']);
+        DonateVariant::create([
+            'donate_id' => $this->donateModel->id,
+            'variant_name' => 'fix_sum_2']);
+        DonateVariant::create([
+            'donate_id' => $this->donateModel->id,
+            'variant_name' => 'fix_sum_3']);
+        DonateVariant::create([
+            'donate_id' => $this->donateModel->id,
+            'variant_name' => 'random_sum']);
+        $this->updateVariants($data);
         return $this->donateModel;
     }
+
+//    public function update($data)
+//    {
+//        $this->donateModel = new Donate();
+//        $this->donateModel->title = $data['title'];
+//        $this->donateModel->user_id = $data['user_id'];
+//        $this->donateModel->image = $data['image'];
+//        $this->generateLink();
+//        $this->donateModel->save();
+//        $this->updateVariants($data);
+//        return $this->donateModel;
+//    }
 }

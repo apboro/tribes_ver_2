@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIv3\Donates;
 
 use App\Http\ApiRequests\Donates\ApiNewDonateListRequest;
 use App\Http\ApiRequests\Donates\ApiNewDonateShowRequest;
+use App\Http\ApiResources\ApiDonatesResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Donate;
@@ -15,8 +16,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ApiNewDonateController extends Controller
 {
-    private Donate $donateModel;
-
     public function __construct(
         DonateRepositoryContract $donateRepo,
         CommunityRepositoryContract $communityRepo,
@@ -29,9 +28,9 @@ class ApiNewDonateController extends Controller
 
     public function list(ApiNewDonateListRequest $request)
     {
-        $donates = NewDonate::owned()->get();
+        $donates = Donate::owned()->get();
 
-        return ApiResponse::common($donates);
+        return ApiResponse::common(ApiDonatesResource::collection($donates)->toArray($request));
     }
 
     public function store(ApiNewDonateStoreRequest $request)
@@ -41,7 +40,7 @@ class ApiNewDonateController extends Controller
 
         $donate = $this->donateRepo->store($data);
 
-        return ApiResponse::common($donate);
+        return ApiResponse::common(ApiDonatesResource::make($donate)->toArray($request));
     }
 
     public function show(ApiNewDonateShowRequest $request)

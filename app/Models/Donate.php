@@ -142,4 +142,9 @@ class Donate extends Model
         return $status;
     }
 
+    public function scopeOwned($query)
+    {
+        return $query->where('user_id', '=', Auth::user()->id);
+    }
+
 }
