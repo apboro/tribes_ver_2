@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Storage;
  *           @OA\Property(property="fix_sum_1_button", type="string", example="na iriski"),
  *           @OA\Property(property="fix_sum_2_button", type="string", example="na kotletki"),
  *           @OA\Property(property="fix_sum_3_button", type="string", example="na samolet"),
+ *           @OA\Property(property="random_sum_button", type="string", example="na doktorskuyu"),
  *         ),
  *      ),
  *      @OA\Response(response=200, description="Phone confirmed successfully")
