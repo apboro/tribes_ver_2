@@ -4,6 +4,7 @@ namespace App\Http\ApiResources;
 
 use App\Models\TelegramUser;
 use App\Models\TelegramUserList;
+use App\Repositories\TelegramUserLists\TelegramUserListsRepositry;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,39 +22,45 @@ class ApiCommunityTelegramUserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $arr_to_search = [
+            $request->boolean('banned') ? TelegramUserListsRepositry::TYPE_BAN_LIST : null,
+            $request->boolean('muted') ? TelegramUserListsRepositry::TYPE_MUTE_LIST : null,
+            $request->boolean('whitelisted') ? TelegramUserListsRepositry::TYPE_WHITE_LIST : null,
+        ];
+
+        $communitiesList = $this->resource->communities()->where('owner', Auth::user()->id)
+            ->where('is_active', true)
+            ->where(function ($query) {
+                $query->where('telegram_users_community.exit_date', '=', null)
+                    ->orWhere('telegram_users_community.status', 'banned');
+            })
+            ->when(!empty(array_filter($arr_to_search)), function ($query) use ($arr_to_search) {
+                $query->whereHas('telegramUserList', function ($query) use ($arr_to_search) {
+                    $query->whereIn('type', $arr_to_search);
+                });
+            })
+            ->get();
+
+        $communitiesList->transform(function ($community) use ($arr_to_search) {
+            return [
+                'id' => $community->id,
+                'title' => $community->title,
+                'role' => $community->pivot->role,
+                'accession_date' => $community->pivot->accession_date,
+                'chat_tags' => $community->tags,
+                'is_in_list_type' => TelegramUserList::query()
+                ->where('community_id', $community->id)
+                ->where('telegram_id', $this->resource->telegram_id)
+                ->first()->type ?? null
+            ];
+        });
 
         return [
             'telegram_id' => $this->resource->telegram_id,
             'name' => $this->resource->first_name,
             'last_name' => $this->resource->last_name,
             'user_name' => $this->resource->user_name ? '@' . $this->resource->user_name : null,
-            'communities' => $this->whenLoaded(
-                'communities', function () {
-                $communities = $this->resource->communities()->where('owner', Auth::user()->id)
-                    ->where('is_active', true)
-                    ->where(function ($query){
-                        $query->where('telegram_users_community.exit_date', '=', null)
-                            ->orWhere('telegram_users_community.status', 'banned');
-                    })
-                    ->get();
-                $communitiesList = [];
-                foreach ($communities as $community) {
-                    $telegramUserList = TelegramUserList::query()
-                        ->where('community_id', $community->id)
-                        ->where('telegram_id', $this->resource->telegram_id)
-                        ->first();
-                    $communitiesList[] = [
-                        'id' => $community->id,
-                        'title' => $community->title,
-                        'role' => $community->pivot->role,
-                        'accession_date' => $community->pivot->accession_date,
-                        'chat_tags' => $community->tags,
-                        'is_in_list_type' => $telegramUserList->type ?? null,
-                    ];
-
-                }
-                return $communitiesList;
-            }),
+            'communities' => $communitiesList,
         ];
     }
 }
