@@ -59,14 +59,14 @@ class ApiTelegramUsersStatistic extends Controller
             'totalMembers' => $current_members->max('users'),
             'activeMembers' => [
                 'value' => $active_user->count(),
-                'delta' =>$current_members->max('users') > 0 ?
+                'delta' => $current_members->max('users') > 0 ?
                     number_format($active_user->count() / $current_members->max('users') * 100, 2)
                     : 0,
             ],
             'joinMembers' => [
-                'value' => $join_users->count(),
-                'delta' =>$current_members->max('users') > 0 ?
-                    number_format($join_users->count() / $current_members->max('users') * 100, 2)
+                'value' => $join_users->sum('users'),//$join_users->count(),
+                'delta' => $current_members->max('users') > 0 ?
+                    number_format($join_users->sum('users') / $current_members->max('users') * 100, 2)
                     : 0,
             ],
             'leftMembers' => [
@@ -76,7 +76,7 @@ class ApiTelegramUsersStatistic extends Controller
                     : 0,
             ],
             'series' => [$current_members],
-            'members'=>$members->get()->unique('nick_name')->values()
+            'members' => $members->get()->unique('nick_name')->values()
         ]);
     }
 
