@@ -33,6 +33,7 @@ class AdminPaymentResource extends JsonResource
             'type' => $this->resource->type ?? null,
             'telegram_id' => $this->resource->telegram_user_id,
             'telegram_user_name' => $this->resource->telegramUser ? $this->resource->telegramUser->user_name : null,
+            'user_email' => $this->resource->payer ? $this->resource->payer->email : null
         ];
     }
 }
