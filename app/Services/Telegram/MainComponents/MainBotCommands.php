@@ -486,7 +486,7 @@ class MainBotCommands
                 $message = new InputTextMessageContent();
 
                 $image = $donate->getMainImage() ? $donate->getMainImage()->url : '';
-                $description = $donate->description ? $donate->description : '';
+                $description = $donate->description ?? '';
                 $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
 
                 $message->parseMode('HTML');
@@ -507,25 +507,27 @@ class MainBotCommands
                         $data = [
                             'amount' => $variant->price,
                             'currency' => $variant->currency,
-                            'donateId' => $donate->id
+                            'donateId' => $donate->id,
+                            'communityId' => $this->communityRepo->getCommunityByChatId($ctx->getChatID()),
                         ];
 
                         if ($variant->description) {
                             $menu->row()->uBtn(
                                 $variant->price . $currencyLabel . ' — ' . $variant->description,
-                                env('FRONTEND_URL').'/give_donate?'.http_build_query($data)
+                                $donate->getDonatePaymentLink($data)
                             );
                         } else {
-                            $menu->row()->uBtn($variant->price . $currencyLabel, env('FRONTEND_URL').'/give_donate?'.http_build_query($data));
+                            $menu->row()->uBtn($variant->price . $currencyLabel, $donate->getDonatePaymentLink($data));
                         }
                     } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
                         $dataNull = [
                             'amount' => 0,
                             'currency' => 0,
-                            'donateId' => $donate->id
+                            'donateId' => $donate->id,
+                            'communityId' => $this->communityRepo->getCommunityByChatId($ctx->getChatID()),
                         ];
-                        $variantDesc = $variant->description ? $variant->description : 'Произвольная сумма';
-                        $menu->row()->uBtn($variantDesc, env('FRONTEND_URL').'/give_donate?'.http_build_query($dataNull));
+                        $variantDesc = $variant->description ?? 'Произвольная сумма';
+                        $menu->row()->uBtn($variantDesc, $donate->getDonatePaymentLink($dataNull));
                     }
                 }
 

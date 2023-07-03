@@ -153,4 +153,18 @@ class Donate extends Model
         return $query->where('user_id', '=', Auth::user()->id);
     }
 
+    public function getDonatePaymentLink($data = null)
+    {
+        $params = '';
+        if ($data && is_array($data)) {
+            $params = '?' . http_build_query($data);
+        }
+        return route('donate.process') . $params;
+    }
+
+    function owner()
+    {
+        return $this->belongsTo(User::class,'user_id', 'id');
+    }
+
 }
