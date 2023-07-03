@@ -222,10 +222,12 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/authors/{id}', [ApiAuthorController::class, 'show'])->name('api.author.show');
     Route::delete('/authors', [ApiAuthorController::class, 'destroy'])->name('api.author.delete');
 
+    Route::get('/publications', [ApiPublicationController::class, 'list'])->name('api.publications.list');
     Route::post('/publications', [ApiPublicationController::class, 'store'])->name('api.publications.create');
     Route::delete('/publications/{id}', [ApiPublicationController::class, 'destroy'])->name('api.publications.delete');
     Route::post('/publications/{id}', [ApiPublicationController::class, 'update'])->name('api.publications.update');
     Route::get('/publications/{id}', [ApiPublicationController::class, 'show'])->name('api.publications.show');
+    Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])->name('api.publications.show_by_uuid');
 
     Route::post('/publication-parts', [ApiPublicationPartController::class, 'store'])->name('api.publication_parts.create');
     Route::delete('/publication-parts/{id}', [ApiPublicationPartController::class, 'destroy'])->name('api.publication_parts.delete');

@@ -17,15 +17,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ApiAuthorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -105,11 +96,16 @@ class ApiAuthorController extends Controller
 
     private function updateEntity(Author $author, Request $request, User $user, $photo)
     {
-        $author = $author->fill([
+        $fill_array = [
             'name' => $request->input('name') ?? null,
             'about' => $request->input('about') ?? null,
-            'photo' => $photo
-        ]);
+        ];
+        if ($request->exists('photo')) {
+            $fill_array = array_merge($fill_array, ['photo' => $photo]);
+        }
+
+
+        $author = $author->fill($fill_array);
 
         $author->save();
     }

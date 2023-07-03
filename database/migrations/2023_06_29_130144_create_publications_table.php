@@ -17,6 +17,7 @@ class CreatePublicationsTable extends Migration
             $table->id();
 
             $table->unsignedBigInteger('author_id');
+            $table->uuid('uuid');
             $table->string('title', 150)->nullable();
             $table->integer('price')->nullable();
             $table->text('description')->nullable();
