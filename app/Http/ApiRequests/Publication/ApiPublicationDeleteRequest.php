@@ -6,15 +6,13 @@ use App\Http\ApiRequests\ApiRequest;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Get(
+ * @OA\DELETE(
  *  path="/api/v3/publications/{id}",
- *  operationId="publication-show",
- *  summary="Show publication by id",
+ *  operationId="publication-delete",
+ *  summary="Delete publication",
  *  security={{"sanctum": {} }},
  *  tags={"Publication"},
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
+ *     @OA\Parameter(name="id",in="path",
  *         description="ID of publication in database",
  *         required=true,
  *         @OA\Schema(
@@ -22,13 +20,12 @@ use OpenApi\Annotations as OA;
  *             format="int64",
  *         )
  *     ),
- *
- *     @OA\Response(response=200, description="OK"),
- *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
- * )
+ *   @OA\Response(response=200, description="OK")
+ *)
  */
-class ApiPublicationShowRequest extends ApiRequest
+class ApiPublicationDeleteRequest extends ApiRequest
 {
+
     public function all($keys = null)
     {
         $data = parent::all();
@@ -40,7 +37,8 @@ class ApiPublicationShowRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:publications,id'
+            'id' => 'required|exists:publications,id'
         ];
     }
+
 }
