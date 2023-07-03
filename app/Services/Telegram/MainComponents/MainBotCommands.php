@@ -81,7 +81,8 @@ class MainBotCommands
         PaymentRepositoryContract            $paymentRepo,
         KnowledgeRepositoryContract          $knowledgeRepository,
         ManageQuestionService                $manageQuestionService
-    ) {
+    )
+    {
         $this->paymentRepo = $paymentRepo;
         $this->connectionRepo = $connectionRepo;
         $this->communityRepo = $communityRepo;
@@ -191,7 +192,7 @@ class MainBotCommands
 //                    $this->connectionTariff($ctx);
 //                }
                 }
-                    $this->save_log(
+                $this->save_log(
                     TelegramBotActionHandler::START_BOT,
                     TelegramBotActionHandler::ACTION_SEND_HELLO_MESSAGE,
                     $ctx);
@@ -320,15 +321,13 @@ class MainBotCommands
     protected function inlineCommand()
     {
         try {
-            $communities = Community::all();//$this->communityRepo->getAllCommunity();
-            foreach ($communities as $community) {
-                foreach ($community->donate as $donate) {
-                    if (!$donate)
-                        return false;
-                    if (!$donate->inline_link)
-                        return false;
-                    $this->inlineQuery($donate);
-                }
+            $donates = Donate::all();
+            foreach ($donates as $donate) {
+                if (!$donate)
+                    return false;
+                if (!$donate->inline_link)
+                    return false;
+                $this->inlineQuery($donate);
             }
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -357,20 +356,20 @@ class MainBotCommands
 
             $supportMessage = function (Context $ctx) {
                 $message = $ctx->var('message');
-                if($message != '' ?? $this->isPrivateBot($ctx)) {
-                    SendEmails::dispatch('info@spodial.com', $message, 'Cервис Spodial' , '<p></p>');
+                if ($message != '' ?? $this->isPrivateBot($ctx)) {
+                    SendEmails::dispatch('info@spodial.com', $message, 'Cервис Spodial', '<p></p>');
                     SendTeleMessageToChatFromBot::dispatch(config('telegram_bot.bot.botName'), '6172841852', $message);
                     $ctx->replyHTML('Жаль, что вы с этим столкнулись! Я передал сообщение в службу  ' . "\n"
-                        . 'поддержки, с вами свяжутся при первой же возможности. ' );
+                        . 'поддержки, с вами свяжутся при первой же возможности. ');
 
                     /*
                      * Ответ службы поддержки отправляется пользователю в телеграм от бота и на почту
                      * отправлять на почту info@spodial.com и в телеграм @infospodial
                      */
-                }else{
+                } else {
                     $ctx->replyHTML('Чтобы отправить обращение напишите ' . "\n"
                         . '<b> Пример: </b> ' . "\n"
-                        . " \issue текст и контактные данные. " );
+                        . " \issue текст и контактные данные. ");
                 }
             };
 
@@ -427,51 +426,51 @@ class MainBotCommands
     {
         try {
             if ($tariff)
-            $this->bot->onInlineQuery($tariff->inline_link, function (Context $ctx) use ($tariff, $community) {
+                $this->bot->onInlineQuery($tariff->inline_link, function (Context $ctx) use ($tariff, $community) {
 
-                $result = new Result();
-                $article = new Article(1);
-                $message = new InputTextMessageContent();
-                $message->parseMode('HTML');
-
-
-                if($tariff instanceof TariffVariant) {
-                    //todo для одиночного тарифа
-                    $menu = Menux::Create('links')->inline();
-                    $variant = $tariff;
-                    $message->text($variant->title);
-                    $price = ($variant->price) ? $variant->price . '₽' : '';
-                    $title = ($variant->title) ? $variant->title . ' — ' : '';
-                    $period = ($variant->period) ? '/Дней:' . $variant->period : '';
-                    $article->description(mb_strimwidth($title, 0, 55, "..."));
-                    $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
-                        'amount' => $variant->price,
-                        'currency' => 0,
-                        'type' => 'tariff',
-                        'telegram_user_id' => null,
-                        'inline_link'=> PseudoCrypt::hash($variant->id, 8),
-                    ]));
-
-                } elseif ($tariff instanceof Tariff) {
-                    //todo для всех активных не персональных тарифов сообщества
-                    $image = $tariff->getMainImage() ? $tariff->getMainImage()->url : '';
-                    $description = $tariff->publication_description ?? '&#160';
-                    $article->description($description);
-                    $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
-                    $article->thumbUrl('' . route('main') . $image);
-                    [$text, $menu] = $this->tariffButton($community);
-                }
-                $article->title($community->title);
-                $article->inputMessageContent($message);
+                    $result = new Result();
+                    $article = new Article(1);
+                    $message = new InputTextMessageContent();
+                    $message->parseMode('HTML');
 
 
-                $article->keyboard($menu->getAsObject());
-                $result->add($article);
-                $ctx->Api()->answerInlineQuery([
-                    'inline_query_id' => $ctx->getInlineQueryID(),
-                    'results' => (string)$result,
-                ]);
-            });
+                    if ($tariff instanceof TariffVariant) {
+                        //todo для одиночного тарифа
+                        $menu = Menux::Create('links')->inline();
+                        $variant = $tariff;
+                        $message->text($variant->title);
+                        $price = ($variant->price) ? $variant->price . '₽' : '';
+                        $title = ($variant->title) ? $variant->title . ' — ' : '';
+                        $period = ($variant->period) ? '/Дней:' . $variant->period : '';
+                        $article->description(mb_strimwidth($title, 0, 55, "..."));
+                        $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
+                            'amount' => $variant->price,
+                            'currency' => 0,
+                            'type' => 'tariff',
+                            'telegram_user_id' => null,
+                            'inline_link' => PseudoCrypt::hash($variant->id, 8),
+                        ]));
+
+                    } elseif ($tariff instanceof Tariff) {
+                        //todo для всех активных не персональных тарифов сообщества
+                        $image = $tariff->getMainImage() ? $tariff->getMainImage()->url : '';
+                        $description = $tariff->publication_description ?? '&#160';
+                        $article->description($description);
+                        $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
+                        $article->thumbUrl('' . route('main') . $image);
+                        [$text, $menu] = $this->tariffButton($community);
+                    }
+                    $article->title($community->title);
+                    $article->inputMessageContent($message);
+
+
+                    $article->keyboard($menu->getAsObject());
+                    $result->add($article);
+                    $ctx->Api()->answerInlineQuery([
+                        'inline_query_id' => $ctx->getInlineQueryID(),
+                        'results' => (string)$result,
+                    ]);
+                });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
@@ -479,9 +478,9 @@ class MainBotCommands
 
     private function inlineQuery($donate)
     {
+        Log::debug('start donate callback query '. $donate->inline_link);
         try {
             $this->bot->onInlineQuery($donate->inline_link, function (Context $ctx) use ($donate) {
-
                 $result = new Result();
                 $article = new Article(1);
                 $message = new InputTextMessageContent();
@@ -491,14 +490,14 @@ class MainBotCommands
                 $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
 
                 $message->parseMode('HTML');
-                $article->title($donate->community->title);
+                $article->title($donate->title);
 
                 if ($donate->description)
                     $article->description(mb_strimwidth($donate->description, 0, 55, "..."));
 
                 $article->inputMessageContent($message);
                 $article->thumbUrl('' . route('main') . $image);
-
+                Log::debug('INNER donate callback query '. $donate->inline_link);
                 $menu = Menux::Create('a')->inline();
                 foreach ($donate->variants as $variant) {
                     if ($variant->price && $variant->isActive !== false) {
@@ -514,10 +513,10 @@ class MainBotCommands
                         if ($variant->description) {
                             $menu->row()->uBtn(
                                 $variant->price . $currencyLabel . ' — ' . $variant->description,
-                                $donate->community->getDonatePaymentLink($data)
+                                env('FRONTEND_URL').'/give_donate?'.http_build_query($data)
                             );
                         } else {
-                            $menu->row()->uBtn($variant->price . $currencyLabel, $donate->community->getDonatePaymentLink($data));
+                            $menu->row()->uBtn($variant->price . $currencyLabel, env('FRONTEND_URL').'/give_donate?'.http_build_query($data));
                         }
                     } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
                         $dataNull = [
@@ -526,12 +525,13 @@ class MainBotCommands
                             'donateId' => $donate->id
                         ];
                         $variantDesc = $variant->description ? $variant->description : 'Произвольная сумма';
-                        $menu->row()->uBtn($variantDesc, $donate->community->getDonatePaymentLink($dataNull));
+                        $menu->row()->uBtn($variantDesc, env('FRONTEND_URL').'/give_donate?'.http_build_query($dataNull));
                     }
                 }
 
                 $article->keyboard($menu->getAsObject());
                 $result->add($article);
+                Log::debug('Sending query answer', [$result]);
                 $ctx->Api()->answerInlineQuery([
                     'inline_query_id' => $ctx->getInlineQueryID(),
                     'results' => (string)$result,
@@ -565,22 +565,23 @@ class MainBotCommands
                 }
             };
 
-            $reputationCommunities = function  (Context $ctx) {
-                $communityId = (int) $ctx->var('id');
+            $reputationCommunities = function (Context $ctx) {
+                $communityId = (int)$ctx->var('id');
                 $communities = $this->communityRepo->getCommunitiesForOwnerByTeleUserId($ctx->getChatID());
                 $community = $communities->find($communityId);
 
                 if ($community) {
                     $reputationUsers = TelegramUserReputation::getUsersByCondition('community_id', $communityId);
-                    $str = ''; $c = 1;
+                    $str = '';
+                    $c = 1;
                     foreach ($reputationUsers as $userRep) {
-                        $str .= $c . '. ' .$userRep->telegramUser->getTelegramUserName()  . ' ' . $userRep->reputation_count  . "\n\n";
+                        $str .= $c . '. ' . $userRep->telegramUser->getTelegramUserName() . ' ' . $userRep->reputation_count . "\n\n";
                         $c++;
                     }
 
-                    $ctx->reply('Рейтинг ТОП-10 участников чата '. $community->title . "\n\n" .$str);
+                    $ctx->reply('Рейтинг ТОП-10 участников чата ' . $community->title . "\n\n" . $str);
                 } else {
-                    $ctx->reply('Рейтинг ТОП-10 участников чата '.$communityId);
+                    $ctx->reply('Рейтинг ТОП-10 участников чата ' . $communityId);
                 }
             };
 
@@ -609,15 +610,15 @@ class MainBotCommands
                         $basesCount = 0;
                         foreach ($communities as $community) {
                             $link = $community->getPublicKnowledgeLink();
-                            if($link) {
+                            if ($link) {
                                 log::info('title:' . $community->title . 'link' . $link);
                                 $menu->row()->uBtn($community->title, $link);
                                 $basesCount++;
                             }
                         }
-                        if($basesCount) {
+                        if ($basesCount) {
                             $ctx->reply('Выберите сообщество', $menu);
-                        }else{
+                        } else {
                             $ctx->reply('У сообщества еще нет базы знаний');
                         }
                     } else {
@@ -627,7 +628,7 @@ class MainBotCommands
                     $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
 
                     $link = $community->getPublicKnowledgeLink();
-                    if ($link){
+                    if ($link) {
                         $menu = Menux::Create('links')->inline();
                         $menu->row()->uBtn($community->title, $link);
                         $ctx->reply('Ссылка на Базу Знаний по сообществу: ' . "\n\n", $menu);
@@ -644,11 +645,12 @@ class MainBotCommands
 
             $this->bot->onText(self::KNOWLEDGE_BASE, $base);
             $this->bot->onCommand(self::KNOWLEDGE_BASE_BOT, $base);
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
+
     protected function helpOnBot()
     {
         try {
@@ -667,7 +669,7 @@ class MainBotCommands
                     TelegramBotActionHandler::SEND_HELP_ON_BOT,
                     $ctx);
             });
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -1090,7 +1092,7 @@ class MainBotCommands
                         array_merge(['community_id' => $community->id], $data)
                     );
 
-                $category = Category::firstOrCreate(['title'=>'ЧАТБОТ', 'community_id' => $community->id],[
+                $category = Category::firstOrCreate(['title' => 'ЧАТБОТ', 'community_id' => $community->id], [
                     'variant' => 'permanent',
                 ]);
                 $this->manageQuestionService->setUserId($community->owner);
@@ -1196,7 +1198,7 @@ class MainBotCommands
                                         'currency' => 0,
                                         'type' => 'tariff',
                                         'telegram_user_id' => $ctx->getUserID(),
-                                        'inline_link'=> PseudoCrypt::hash($variant->id, 8),
+                                        'inline_link' => PseudoCrypt::hash($variant->id, 8),
                                     ]));
                                 }
                             }
@@ -1238,13 +1240,13 @@ class MainBotCommands
                     $message = $payment->community->tariff->thanks_description ?? '';
 
                     $image = ($payment->community->tariff->getThanksImage()) ? ' <a href="' . route('main') . $payment->community->tariff->getThanksImage()->url . '">&#160</a>' : '';
-                        $variant = $payment->community->tariff->variants()->find($payment->payable_id);
+                    $variant = $payment->community->tariff->variants()->find($payment->payable_id);
                     if ($variant->isActive === true) {
                         $variantName = $variant->title ?? '{Название тарифа}';
                         $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
                     }
 
-                    $defMassage = "\n\n". 'Сообщество: ' . $payment->community->title ."\n". 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
+                    $defMassage = "\n\n" . 'Сообщество: ' . $payment->community->title . "\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
 //                    $ctx->replyHTML($image . $message . $defMassage . $invite); //отключить приветствие в боте после подписки
                     $ctx->replyHTML($defMassage . $invite);
                     //todo отправить сообщение автору через личный чат с ботом,
@@ -1257,15 +1259,15 @@ class MainBotCommands
                     $tariffCost = ($payment->amount / 100) ?? 0;
                     $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y H:i') ?? '';
                     $communityTitle = strip_tags($payment->community->title);
-                    $variantPeriod = $variant->period. ' ' .trans_choice('plurals.days', $variant->period, [], 'ru');
+                    $variantPeriod = $variant->period . ' ' . trans_choice('plurals.days', $variant->period, [], 'ru');
 
                     if ($payment->comment !== 'trial') {
                         $message = "Участник $payerName оплатил $tariffName в сообществе $communityTitle, стоимость $tariffCost рублей, действует до $tariffEndDate г.";
                     } else {
-                        $message = "Участник $payerName присоединился к сообществу $communityTitle на Пробный период продолжительностью $variantPeriod." ."\n". "Действует до $tariffEndDate";
+                        $message = "Участник $payerName присоединился к сообществу $communityTitle на Пробный период продолжительностью $variantPeriod." . "\n" . "Действует до $tariffEndDate";
                     }
                     Log::info('send tariff pay message to own author chat bot', [
-                        'message' =>  $message
+                        'message' => $message
                     ]);
 
                     $authorTeleUserId = $payment->community->connection->telegram_user_id ?? 0;
@@ -1287,7 +1289,7 @@ class MainBotCommands
                             $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
                         }
                     }
-                    $defMassage = "\n\n". 'Сообщество: ' . $community->title ."\n". 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
+                    $defMassage = "\n\n" . 'Сообщество: ' . $community->title . "\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
 
 //                    $ctx->replyHTML($image . $message . $defMassage . $invite); //отключить приветствие в боте после подписки
                     $ctx->replyHTML($defMassage . $invite);
@@ -1360,7 +1362,7 @@ class MainBotCommands
                     'currency' => 0,
                     'type' => 'tariff',
                     'telegram_user_id' => null,
-                    'inline_link'=> PseudoCrypt::hash($variant->id, 8),
+                    'inline_link' => PseudoCrypt::hash($variant->id, 8),
                 ]));
             }
             return [$text, $menu];
@@ -1429,7 +1431,7 @@ class MainBotCommands
                         'currency' => 0,
                         'type' => 'tariff',
                         'telegram_user_id' => NULL,
-                        'inline_link'=> PseudoCrypt::hash($variant->id, 8),
+                        'inline_link' => PseudoCrypt::hash($variant->id, 8),
                     ];
 
                     $button[] = [[
@@ -1471,7 +1473,7 @@ class MainBotCommands
                         'currency' => 0,
                         'type' => 'tariff',
                         'telegram_user_id' => NULL,
-                        'inline_link'=> PseudoCrypt::hash($variant->id, 8),
+                        'inline_link' => PseudoCrypt::hash($variant->id, 8),
                     ];
 
                     $button[] = [[
@@ -1501,16 +1503,17 @@ class MainBotCommands
     }
 
     public function save_log(
-        string $event,
-        string $action,
+        string  $event,
+        string  $action,
         Context $context
-    ){
+    )
+    {
         Log::channel('telegram_bot_action_log')->
-        log('info','',[
-            'event'=>$event,
-            'action'=>$action,
-            'telegram_id'=>$context->getUserID(),
-            'chat_id'=>$context->getChatID(),
+        log('info', '', [
+            'event' => $event,
+            'action' => $action,
+            'telegram_id' => $context->getUserID(),
+            'chat_id' => $context->getChatID(),
         ]);
     }
 }

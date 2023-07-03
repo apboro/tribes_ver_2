@@ -53,6 +53,11 @@ class ApiNewDonateUpdateRequest extends ApiRequest
     {
         return [
             'title' => 'required|string|max:120',
+            "random_sum_min" => 'sometimes|integer|min:50',
+            "random_sum_max" => 'sometimes|integer|max:100000',
+            "fix_sum_1" => 'sometimes|integer|min:50',
+            "fix_sum_2" => 'sometimes|integer|min:50',
+            "fix_sum_3" => 'sometimes|integer|min:50',
         ];
     }
 
