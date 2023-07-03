@@ -21,7 +21,10 @@ class ApiDonatesResource extends JsonResource
             'image' => $this->resource->image,
             'donate_is_active' => $this->resource->donate_is_active,
             'description' => $this->resource->description,
-            'variants'=>ApiDonatesVariantsResource::collection($this->resource->variants)
+            'created_at' => $this->resource->created_at,
+            'payments_sum' => array_sum($this->resource->getSumDonateByIndex()),
+            'payments_count' => count($this->resource->getSumDonateByIndex()),
+            'variants'=>ApiDonatesVariantsResource::collection($this->resource->variants),
         ];
     }
 }

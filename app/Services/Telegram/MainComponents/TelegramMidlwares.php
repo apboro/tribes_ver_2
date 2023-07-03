@@ -32,7 +32,7 @@ class TelegramMidlwares
                     $ctx->setStorage($storage);
                     $next($ctx);
                 },
-//                $this->bootStage()->middleware()
+                $this->bootStage()->middleware()
             ]);
         } catch (Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
