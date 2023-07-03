@@ -16,7 +16,11 @@ class SendAdminEmail
      */
     public function handle(UserDeleteEvent $event)
     {
-        $v = view('mail.user_delete')->with(['user_id' => $event->user->id])->render();
+        $v = view('mail.user_delete')->with([
+            'user_id' => $event->user->id,
+            'user_name' => $event->user->name ? $event->user->name : null,
+            'user_email' => $event->user->email ? $event->user->email : null,
+        ])->render();
         new Mailer('Сервис ' . env('APP_NAME'), $v, 'Удаление пользователя', 'info@spodial.com');
     }
 }

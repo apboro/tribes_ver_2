@@ -13,7 +13,7 @@
     </o:officedocumentsettings>
     </xml>
     <![endif]-->
-    <title>Восстановление пароля</title>
+    <title>Пользователь удалился</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700"
           rel="stylesheet" media="screen">
     <style>
@@ -78,7 +78,8 @@
                                         style="mso-line-height-rule: exactly; border-radius: 4px; background-color: #ffffff; padding: 48px; text-align: left; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 16px; line-height: 24px; color: #626262;">
 
                                         <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; margin-bottom: 24px;">
-                                            Пользователь с ID {{$user_id}} удалил себя
+                                            Пользователь с именем {{$user_name}} (ID {{$user_id}}) и
+                                            почтой {{$user_email}} удалил аккаунт Spodial
                                         </p>
                                     </td>
                                 </tr>

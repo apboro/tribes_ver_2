@@ -17,7 +17,7 @@ class DonateVariant extends Model
 
     function author()
     {
-        return $this->community()->owner()->first();
+        return $this->donate()->first()->owner()->first();
     }
 
     function donate()
@@ -39,4 +39,5 @@ class DonateVariant extends Model
     {
         return $this->morphMany(Payment::class, 'payable');
     }
+
 }

@@ -3,6 +3,7 @@
 namespace App\Http\ApiRequests\Publication;
 
 use App\Http\ApiRequests\ApiRequest;
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\Post(
@@ -36,6 +37,13 @@ use App\Http\ApiRequests\ApiRequest;
  */
 class ApiPublicationUpdateRequest extends ApiRequest
 {
+    public function all($keys = null)
+    {
+        $data = parent::all();
+        $data['id'] = $this->route('id');
+
+        return $data;
+    }
 
     public function rules(): array
     {

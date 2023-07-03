@@ -8,9 +8,10 @@ use App\Http\ApiResources\Publication\PublicationPartResourse;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\PublicationPart;
+use App\Models\User;
 use App\Repositories\Publication\PublicationPartRepository;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ApiPublicationPartController extends Controller
 {
@@ -26,16 +27,6 @@ class ApiPublicationPartController extends Controller
 
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param ApiPublicationPartStoreRequest $request
@@ -48,29 +39,6 @@ class ApiPublicationPartController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\PublicationPart $publicationPart
-     * @return \Illuminate\Http\Response
-     */
-    public function show(PublicationPart $publicationPart)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\PublicationPart $publicationPart
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, PublicationPart $publicationPart)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param ApiPublicationPartDeleteRequest $request
@@ -79,7 +47,19 @@ class ApiPublicationPartController extends Controller
      */
     public function destroy(ApiPublicationPartDeleteRequest $request, int $id): ApiResponse
     {
-        PublicationPart::where('id', $id)->delete();
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->author == null) {
+            ApiResponse::notFound('common.not_found');
+        }
+        $author_id = $user->author->id;
+        $publication_part = PublicationPart::with('publication')->whereHas('publication', function ($query) use ($author_id) {
+            $query->where('author_id', $author_id);
+        })->where('id', $id);
+        if ($publication_part == null) {
+            ApiResponse::notFound('common.not_found');
+        }
+        $publication_part->delete();
         return ApiResponse::success();
     }
 }

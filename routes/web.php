@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\APIv3\Donates\ApiNewDonateController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\TelegramUserBotController;
@@ -19,7 +20,6 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     Route::namespace('App\Http\Controllers')->group(function () {
         //Payments
         Route::post('/payment/donate/range', 'DonateController@takeRangeDonatePayment')->name('payment.donate.range');
-        Route::get('/payment/donate/{hash}', 'DonateController@donatePage')->name('community.donate.form');
         Route::get('/payments', 'PaymentController@list')->name('payment.list');
         Route::get('/payments/card', 'PaymentController@cardList')->name('payment.card.list');
         Route::get('/payments/card/add', 'PaymentController@cardAdd')->name('payment.card.add');
@@ -27,8 +27,10 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::get('/payments/outcome', 'PaymentController@outcomeList')->name('payment.outcome.list');
     });
 
+    //USED FOR APIv3
     Route::get('/payment/{hash}/success', 'App\Http\Controllers\APIv3\Payments\ApiPaymentController@successPayment')->name('payment.success');
-
+    Route::get('/payment/donate', [ApiNewDonateController::class, 'processDonate'])->name('donate.process');
+    //--->
 
 
     //TINKOFF API
