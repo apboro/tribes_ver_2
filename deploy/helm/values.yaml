@@ -185,8 +185,8 @@ config:
     secretKey: ""
     terminalDirect: ""
     terminalDirectSecretKey: ""
-    termicalKeyE2E: ""
-    secretKeyE2E: ""
+    terminalKeyE2C: ""
+    secretKeyE2C: ""
     x509serial: ""
     x509key: ""
   telegram:
