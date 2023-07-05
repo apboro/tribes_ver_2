@@ -191,11 +191,11 @@ class TelegramModerationStatisticRepository
     }
 
 
-    public function getStartDate($value): Carbon
+    public function getStartDate($value): ?Carbon
     {
         switch ($value) {
             case self::DAY:
-                return $this->getEndDate()->sub('23 hours')->startOfHour();
+                return $this->getEndDate()->startOfDay();
             case self::WEEK:
                 return $this->getEndDate()->sub('6 days')->startOfDay();
             case self::MONTH:
@@ -203,11 +203,12 @@ class TelegramModerationStatisticRepository
             case self::YEAR:
                 return $this->getEndDate()->sub('11 months')->startOfMonth();
         }
+        return null;
     }
 
     public function getEndDate(): Carbon
     {
-        return Carbon::now()->sub('1 day')->endOfDay();
+        return Carbon::now();
     }
 
 

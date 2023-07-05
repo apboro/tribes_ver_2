@@ -267,7 +267,7 @@ class TelegramMembersStatisticRepository
     {
         switch ($value) {
             case self::DAY:
-                return $this->getEndDate()->sub('23 hours')->startOfHour();
+                return $this->getEndDate()->startOfDay();
             case self::MONTH:
                 return $this->getEndDate()->sub('30 days')->startOfDay();
             case self::YEAR:
@@ -280,7 +280,7 @@ class TelegramMembersStatisticRepository
 
     public function getEndDate(): Carbon
     {
-        return Carbon::now()->sub('1 day')->endOfDay();
+        return Carbon::now();
     }
 
 }
