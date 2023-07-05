@@ -555,7 +555,7 @@ class MainBotCommands
         try {
             $this->bot->onAction('{donate_hash}_{amount}', function (Context $ctx) {
                 Log::debug('In donate answer query');
-                $ctx->ansCallback('', false, 't.me/alevi_tribes_bot?start='. $ctx->var('donate_hash').'_'.$ctx->var('amount'));
+                $ctx->ansCallback('', false, 't.me/'.config('telegram_bot.bot.botFullName').'?start='. $ctx->var('donate_hash').'_'.$ctx->var('amount'));
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
