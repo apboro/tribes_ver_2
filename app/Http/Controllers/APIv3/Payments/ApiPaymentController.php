@@ -38,10 +38,14 @@ class ApiPaymentController extends Controller
     public function successPayment(Request $request, $hash)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
-        if ($payment->status === 'CONFIRMED') {
+        if ($payment->status === 'CONFIRMED' && $payment->type === 'subscription') {
             Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
+            $redirectUrl = $request->success_url ?? env('FRONTEND_URL').'/app/subscriptions?payment_result=success';
         }
-        $redirectUrl = $request->success_url ?? env('FRONTEND_URL').'/app/subscriptions?payment_result=success';
+
+        if ($payment->status === 'CONFIRMED' && $payment->type === 'donate') {
+            $redirectUrl = $request->success_url ?? env('FRONTEND_URL').'/app/subscriptions?payment_result=success';
+        }
         Log::debug('successPayment $redirectUrl - '. $redirectUrl);
 
         return redirect($redirectUrl);
