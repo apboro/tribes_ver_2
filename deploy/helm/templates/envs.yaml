@@ -90,8 +90,8 @@ data:
   DB_USERNAME_KNOWLEDGE:  {{ quote .Values.config.postgresql.username | b64enc }}
   DB_PASSWORD_KNOWLEDGE: {{ quote .Values.config.postgresql.password | b64enc }}
   SMS_RU_CODE: {{ quote .Values.config.smsRuCode | b64enc }}
-  TINKOFF_TERMINAL_KEY_E2C: {{ quote .Values.config.tinkoff.terminalKeyE2С | b64enc }}
-  TINKOFF_SECRET_KEY_E2C: {{ quote .Values.config.tinkoff.secretKeyE2С | b64enc }}
+  TINKOFF_TERMINAL_KEY_E2C: {{ quote .Values.config.tinkoff.terminalKeyE2C | b64enc }}
+  TINKOFF_SECRET_KEY_E2C: {{ quote .Values.config.tinkoff.secretKeyE2C | b64enc }}
   TINKOFF_TERMINAL_KEY: {{ quote .Values.config.tinkoff.terminalKey | b64enc }}
   TINKOFF_SECRET_KEY: {{ quote .Values.config.tinkoff.secretKey | b64enc }}
   TINKOFF_TERMINAL_DIRECT: {{ quote .Values.config.tinkoff.terminalDirect | b64enc }}
