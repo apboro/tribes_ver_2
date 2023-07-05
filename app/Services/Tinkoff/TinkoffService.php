@@ -23,9 +23,9 @@ class TinkoffService
     public function __construct()
     {
         // todo в контейнер
-        $this->payTerminal = new TinkoffApi(env('TINKOFF_TERMINAL_KEY'), env('TINKOFF_SECRET_KEY'));
-        $this->e2cTerminal = new TinkoffApi(env('TINKOFF_TERMINAL_KEY_E2C'), env('TINKOFF_SECRET_KEY_E2C'));
-        $this->directTerminal = new TinkoffApi(env('TINKOFF_TERMINAL_DIRECT'), env('TINKOFF_TERMINAL_DIRECT_SECRET_KEY'));
+        $this->payTerminal = new TinkoffApi(config('tinkoff.terminals.terminalKey'), config('tinkoff.terminals.secretKey'));
+        $this->e2cTerminal = new TinkoffApi(config('tinkoff.terminals.terminalKeyE2C'), config('tinkoff.terminals.secretKeyE2C'));
+        $this->directTerminal = new TinkoffApi(config('tinkoff.terminals.terminalDirect'), config('tinkoff.terminals.terminalDirectSecretKey'));
     }
 
     public function initPay($args)
