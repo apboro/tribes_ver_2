@@ -23,65 +23,58 @@ class TinkoffApi
 
 
     public static $taxations = [
-        'osn'                => 'osn',                      // Общая СН
-        'usn_income'         => 'usn_income',               // Упрощенная СН (доходы)
+        'osn' => 'osn',                      // Общая СН
+        'usn_income' => 'usn_income',               // Упрощенная СН (доходы)
         'usn_income_outcome' => 'usn_income_outcome',       // Упрощенная СН (доходы минус расходы)
-        'envd'               => 'envd',                     // Единый налог на вмененный доход
-        'esn'                => 'esn',                      // Единый сельскохозяйственный налог
-        'patent'             => 'patent'                    // Патентная СН
+        'envd' => 'envd',                     // Единый налог на вмененный доход
+        'esn' => 'esn',                      // Единый сельскохозяйственный налог
+        'patent' => 'patent'                    // Патентная СН
     ];
 
     public static $paymentMethod = [
         'full_prepayment' => 'full_prepayment',             //Предоплата 100%
-        'prepayment'      => 'prepayment',                  //Предоплата
-        'advance'         => 'advance',                     //Аванc
-        'full_payment'    => 'full_payment',                //Полный расчет
+        'prepayment' => 'prepayment',                  //Предоплата
+        'advance' => 'advance',                     //Аванc
+        'full_payment' => 'full_payment',                //Полный расчет
         'partial_payment' => 'partial_payment',             //Частичный расчет и кредит
-        'credit'          => 'credit',                      //Передача в кредит
-        'credit_payment'  => 'credit_payment',              //Оплата кредита
+        'credit' => 'credit',                      //Передача в кредит
+        'credit_payment' => 'credit_payment',              //Оплата кредита
     ];
 
     public static $paymentObject = [
-        'commodity'             => 'commodity',             //Товар
-        'excise'                => 'excise',                //Подакцизный товар
-        'job'                   => 'job',                   //Работа
-        'service'               => 'service',               //Услуга
-        'gambling_bet'          => 'gambling_bet',          //Ставка азартной игры
-        'gambling_prize'        => 'gambling_prize',        //Выигрыш азартной игры
-        'lottery'               => 'lottery',               //Лотерейный билет
-        'lottery_prize'         => 'lottery_prize',         //Выигрыш лотереи
+        'commodity' => 'commodity',             //Товар
+        'excise' => 'excise',                //Подакцизный товар
+        'job' => 'job',                   //Работа
+        'service' => 'service',               //Услуга
+        'gambling_bet' => 'gambling_bet',          //Ставка азартной игры
+        'gambling_prize' => 'gambling_prize',        //Выигрыш азартной игры
+        'lottery' => 'lottery',               //Лотерейный билет
+        'lottery_prize' => 'lottery_prize',         //Выигрыш лотереи
         'intellectual_activity' => 'intellectual_activity', //Предоставление результатов интеллектуальной деятельности
-        'payment'               => 'payment',               //Платеж
-        'agent_commission'      => 'agent_commission',      //Агентское вознаграждение
-        'composite'             => 'composite',             //Составной предмет расчета
-        'another'               => 'another',               //Иной предмет расчета
+        'payment' => 'payment',               //Платеж
+        'agent_commission' => 'agent_commission',      //Агентское вознаграждение
+        'composite' => 'composite',             //Составной предмет расчета
+        'another' => 'another',               //Иной предмет расчета
     ];
 
     public static $vats = [
-        'none'  => 'none',                                  // Без НДС
-        'vat0'  => 'vat0',                                  // НДС 0%
+        'none' => 'none',                                  // Без НДС
+        'vat0' => 'vat0',                                  // НДС 0%
         'vat10' => 'vat10',                                 // НДС 10%
         'vat20' => 'vat20'                                  // НДС 20%
     ];
 
-    public function __construct($terminalKey, $secretKey, $need_test = true)
+    public function __construct($terminalKey, $secretKey)
     {
-        $this->api_url = 'https://securepay.tinkoff.ru/v2/';
-        $this->api_e2c_url = 'https://securepay.tinkoff.ru/e2c/v2/';
-//        $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/';
+        if (config('tinkoff.test')) {
+            $this->api_url = config('tinkoff.urls.test_url');
+            $this->api_e2c_url = config('tinkoff.urls.test_e2c_url');
+        } else {
+            $this->api_url = config('tinkoff.urls.real_url');
+            $this->api_e2c_url = config('tinkoff.urls.real_e2c_url');
+        }
         $this->terminalKey = $terminalKey;
         $this->secretKey = $secretKey;
-//        if (env('TINKOFF_TEST') && $need_test) {
-//            $this->api_url = 'https://rest-api-test.tinkoff.ru/v2/';
-//            $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/v2/';
-//            $this->terminalKey = env('TINKOFF_TERMINAL_DIRECT');
-//            $this->secretKey = env('TINKOFF_TERMINAL_DIRECT_SECRET_KEY');
-//        } else {
-//            $this->api_url = 'https://securepay.tinkoff.ru/v2/';
-//            $this->api_e2c_url = 'https://securepay.tinkoff.ru/e2c/v2/';
-//            $this->terminalKey = $terminalKey;
-//            $this->secretKey = $secretKey;
-//        }
     }
 
     public function __get($name)
@@ -206,7 +199,7 @@ class TinkoffApi
     {
         $url = $a2c ? $this->api_e2c_url : $this->api_url;
 
-        if(is_array($args)){
+        if (is_array($args)) {
             if (!$a2c) {
                 if (!array_key_exists('TerminalKey', $args)) {
                     $args['TerminalKey'] = $this->terminalKey;
@@ -228,7 +221,7 @@ class TinkoffApi
                 }
             }
         }
-        if(env('DEBUG_TINKOFF', false)){
+        if (env('DEBUG_TINKOFF', false)) {
             dump("url: " . $url . " аргументы:" . json_encode($args, JSON_UNESCAPED_UNICODE));
             TelegramLogService::staticSendLogMessage("url: " . $url . " аргументы:" . json_encode($args, JSON_UNESCAPED_UNICODE));
         }
@@ -255,7 +248,7 @@ class TinkoffApi
 
         $binary = hex2bin($hash);
 
-        $args['DigestValue'] = base64_encode( $binary );
+        $args['DigestValue'] = base64_encode($binary);
 
         $certFile = Storage::disk('local')->get('private.key');
 
@@ -263,7 +256,7 @@ class TinkoffApi
 
         openssl_sign($binary, $signature, $privateKey, OPENSSL_ALGO_SHA256);
 
-        $args['SignatureValue'] =  base64_encode($signature);
+        $args['SignatureValue'] = base64_encode($signature);
 
         return $args;
     }
@@ -307,23 +300,23 @@ class TinkoffApi
             $args = json_encode($args);
         }
 
-        if(env('APP_ENV') === 'testing') {
-            $testArgs = json_decode($args,true);
-            Log::debug('tinkoff api send request',[
+        if (env('APP_ENV') === 'testing') {
+            $testArgs = json_decode($args, true);
+            Log::debug('tinkoff api send request', [
                 'api_url' => $api_url,
                 'args' => $testArgs
             ]);
-            $path = Str::afterLast(rtrim($api_url,'/'),'/');
+            $path = Str::afterLast(rtrim($api_url, '/'), '/');
             // создание хеша для тестового файла данных по платежу можно опираться только на путь и сумму платежа
             // потому что все остальные параметры в $args являются динамическими,
             // потому автотесты платежей разделять по Amount, каждый тест должен иметь свою сумму
-            $file_name = md5($path.$testArgs['Amount']);
+            $file_name = md5($path . $testArgs['Amount']);
             $storage = Storage::disk('test_data');
-            return $storage->exists("payment/$file_name.json")?
-                $storage->get("payment/$file_name.json"):
+            return $storage->exists("payment/$file_name.json") ?
+                $storage->get("payment/$file_name.json") :
                 $storage->get("payment/file.json");
 
-        }else if ($curl = curl_init()) {
+        } else if ($curl = curl_init()) {
             curl_setopt($curl, CURLOPT_URL, $api_url);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
