@@ -159,7 +159,7 @@ class TelegramMessageStatisticRepository
                 DB::raw('MIN(subquery.message_date) as message_date'),
                 DB::raw('MIN(subquery.nick_name) as nick_name'),
                 DB::raw('MIN(subquery.name) as name'),
-                DB::raw('cast (SUM(subquery.count_messages) as integer) as count_messages')
+                DB::raw("ARRAY_AGG(json_build_object('message_date', subquery.message_date)) AS messages")
             )
             ->groupBy('subquery.telegram_id');
     }
