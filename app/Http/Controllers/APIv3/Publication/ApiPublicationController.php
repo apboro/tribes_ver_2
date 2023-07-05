@@ -13,7 +13,9 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Publication;
 use App\Models\User;
+use App\Models\VisitedPublication;
 use App\Repositories\Publication\PublicationRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class ApiPublicationController extends Controller
@@ -116,10 +118,15 @@ class ApiPublicationController extends Controller
 
     public function showByUuid(ApiPublicationShowForAllRequest $request, string $uuid)
     {
+        $user = Auth::user();
         $publication = Publication::where('uuid', $uuid)->first();
         if ($publication == null) {
             ApiResponse::notFound('common.not_found');
         }
+        VisitedPublication::updateOrCreate([
+            'user_id' => $user->id,
+            'publication_id' => $publication->id
+        ], ['last_visited' => Carbon::now()]);
         return ApiResponse::common(PublicationResource::make($publication)->toArray($request));
     }
 }
