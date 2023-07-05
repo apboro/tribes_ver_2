@@ -207,8 +207,8 @@ class MainBotCommands
                     if (!$donate) return;
                     $data = [
                         'amount' => $ctx->var('amount'),
-                        'donateId' => $donate->id,
-                        'telegramUserId' =>$ctx->getUserID(),
+                        'donate_id' => $donate->id,
+                        'telegram_user_id' =>$ctx->getUserID(),
                     ];
                     $menu->row()->uBtn('Внести донат',$donate->getDonatePaymentLink($data));
                     $ctx->reply('Ссылка для доната ' . "\n\n", $menu);
