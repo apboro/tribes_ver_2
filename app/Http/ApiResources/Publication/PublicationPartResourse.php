@@ -16,6 +16,7 @@ class PublicationPartResourse extends JsonResource
     {
         return [
             'id' => $this->resource->id,
+            'order' => $this->resource->order,
             'publication_id' => $this->resource->publication_id,
             'type' => $this->resource->type,
             'file_path' => $this->resource->file_path,

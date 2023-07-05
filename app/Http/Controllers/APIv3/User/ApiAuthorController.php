@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\APIv3\User;
 
 use App\Http\ApiRequests\Author\ApiAuthorDelete;
+use App\Http\ApiRequests\Author\ApiAuthorShowForFollowersRequest;
 use App\Http\ApiRequests\Author\ApiAuthorShowRequest;
 use App\Http\ApiRequests\Author\ApiAuthorStoreRequest;
 use App\Http\ApiRequests\Author\ApiAuthorUpdateRequest;
@@ -126,4 +127,11 @@ class ApiAuthorController extends Controller
         Author::where('user_id', $user->id)->delete();
         return ApiResponse::success();
     }
+
+    public function showForFollowers(ApiAuthorShowForFollowersRequest $request, int $id)
+    {
+        $author = Author::find($id);
+        return ApiResponse::common(AuthorResourse::make($author)->toArray($request));
+    }
+
 }
