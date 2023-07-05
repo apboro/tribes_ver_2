@@ -169,7 +169,7 @@ class TelegramMessageStatisticRepository
     {
         switch ($value) {
             case self::DAY:
-                return $this->getEndDate()->sub('23 hours')->startOfHour();
+                return $this->getEndDate()->startOfDay();
             case self::WEEK:
                 return $this->getEndDate()->sub('6 days')->startOfDay();
             case self::MONTH:
@@ -182,7 +182,7 @@ class TelegramMessageStatisticRepository
 
     public function getEndDate(): Carbon
     {
-        return Carbon::now()->sub('1 day')->endOfDay();
+        return Carbon::now();
     }
 
     public function getScale($period)

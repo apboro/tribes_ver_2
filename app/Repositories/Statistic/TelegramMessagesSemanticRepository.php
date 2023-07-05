@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Repositories\Semantic;
+namespace App\Repositories\Statistic;
 
 use App\Http\Requests\Semantic\ApiCalculateProbabilityRequest;
 use App\Models\Community;
 use App\Models\Semantic;
-use App\Models\SemanticClass;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class SemanticRepository
+class TelegramMessagesSemanticRepository
 {
     const DAY = 'day';
     const WEEK = 'week';
@@ -59,7 +57,7 @@ class SemanticRepository
     {
         switch ($value) {
             case self::DAY:
-                return $this->getEndDate()->sub('23 hours')->startOfHour();
+                return $this->getEndDate()->startOfDay();
             case self::MONTH:
                 return $this->getEndDate()->sub('30 days')->startOfDay();
             case self::YEAR:
@@ -72,7 +70,7 @@ class SemanticRepository
 
     public function getEndDate(): Carbon
     {
-        return Carbon::now()->sub('1 day')->endOfDay();
+        return Carbon::now();
     }
 
 }
