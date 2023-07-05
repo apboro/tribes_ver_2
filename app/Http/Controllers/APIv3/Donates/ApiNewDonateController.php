@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\APIv3\Donates;
 
+use App\Http\ApiRequests\Donates\ApiDonatePageRequest;
 use App\Http\ApiRequests\Donates\ApiNewDonateListRequest;
 use App\Http\ApiRequests\Donates\ApiNewDonateShowRequest;
 use App\Http\ApiResources\ApiDonatesResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Donate\DonatePageRequest;
 use App\Models\Donate;
-use App\Models\NewDonate;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Donate\DonateRepositoryContract;
 use App\Repositories\Payment\PaymentRepository;
@@ -70,11 +69,11 @@ class ApiNewDonateController extends Controller
 
     }
 
-    public function processDonate(DonatePageRequest $request)
+    public function processDonatePayment(ApiDonatePageRequest $request)
     {
         $amount = $request['amount'];
-        $currency = $request['currency'];
-        $donate = Donate::find($request['donateId']);
+        $telegram_user_id = $request['telegram_user_id'];
+        $donate = Donate::find($request['donate_id']);
 
         foreach ($donate->variants ?? [] as $variant) {
             if (!$variant->isActive) {
@@ -82,12 +81,11 @@ class ApiNewDonateController extends Controller
             }
 
             if ($variant->isStatic) {
-                if ($variant->price === $amount && $variant->currency === $currency) {
-
+                if ($variant->price === $amount) {
                     $p = new Pay();
                     $p->amount($amount * 100)
                         ->payFor($variant)
-                        ->payer(null);
+                        ->payer($telegram_user_id);
 
                     $payment = $p->pay();
 
@@ -97,18 +95,19 @@ class ApiNewDonateController extends Controller
                     return redirect()->to($payment->paymentUrl);
                 }
             } else {
-                if ($amount === 0 && $variant->currency === $currency) {
-//                    return $community ? view('common.donate.form')
-//                        ->withMin($variant->min_price)
-//                        ->withMax($variant->max_price)
-//                        ->withCommunity($community)
-//                        ->withDonate($donate)
-//                        : abort(404);
-                } elseif ($amount !== 0) {
+                if ($amount == 0) {
+                    return redirect(config('app.frontend_url'))->with([
+                        'min_price' =>$variant->min_price,
+                        'max_price'=>$variant->max_price,
+                        'donate_variant_id' => $variant->id,
+                        'donate'=>$donate,
+                        'telegram_user_id'=>$telegram_user_id
+                    ]);
+                } elseif ($amount != 0) {
                     $p = new Pay();
                     $p->amount($amount * 100)
                         ->payFor($variant)
-                        ->payer(null);
+                        ->payer($telegram_user_id);
 
                     $payment = $p->pay();
 
