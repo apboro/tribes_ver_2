@@ -12,6 +12,7 @@ use App\Models\DonateVariant;
 use App\Models\Payment as P;
 use App\Models\Subscription;
 use App\Models\TariffVariant;
+use App\Models\TelegramUser;
 use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
@@ -55,14 +56,14 @@ class Payment
 //        return $this;
     }
 
-    public function amount($amount) : Payment
+    public function amount($amount): Payment
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    public function recurrent($state = false) : Payment
+    public function recurrent($state = false): Payment
     {
         $this->recurrent = (bool)$state;
 
@@ -71,7 +72,7 @@ class Payment
 
     public function payFor($payFor)
     {
-        switch ($payFor){
+        switch ($payFor) {
             case $payFor instanceof TariffVariant:
                 $this->type = 'tariff';
                 break;
@@ -97,7 +98,7 @@ class Payment
         return $this;
     }
 
-    public function charged($charged = false) : Payment
+    public function charged($charged = false): Payment
     {
         $this->charged = $charged;
 
@@ -134,9 +135,14 @@ class Payment
         $this->accumulation = $this->author->getActiveAccumulation();
     }
 
-    public function payer($user) : Payment
+    public function payer($user): Payment
     {
-        if($user){
+        if ($user) {
+            if ($this->type == 'donate') {
+                $this->payer = TelegramUser::where('telegram_id', $user)->first();
+                $this->telegram_id = $user;
+                return $this;
+            }
             $this->payer = $user;
             $this->telegram();
         }
@@ -145,9 +151,9 @@ class Payment
 
     public function pay()
     {
-        if($this->charged){ // Запрос на рекуррентный платёж, без подтверждения покупателем
+        if ($this->charged) { // Запрос на рекуррентный платёж, без подтверждения покупателем
 
-            if(isset($this->payFor) && isset($this->payer)){ // Если указано за что платить и кто плательщик
+            if (isset($this->payFor) && isset($this->payer)) { // Если указано за что платить и кто плательщик
 
                 $this->payment = new P();
                 $rebildPayment = $this->payment->tariffs()
@@ -155,7 +161,7 @@ class Payment
                     ->where('user_id', $this->payer->id)
                     ->where('RebillId', '!=', 'null')->latest()->first();
 
-                if($rebildPayment){ // Если платёж найден - находим Community и владельца
+                if ($rebildPayment) { // Если платёж найден - находим Community и владельца
                     $this->community = $rebildPayment->community()->first();
                     $this->author = $this->community->owner()->first();
                 } else {
@@ -170,7 +176,8 @@ class Payment
         $this->payment = new P();
         $this->payment->type = $this->type;
         $this->payment->amount = $this->amount;
-        $this->payment->from = $this->payer ? $this->payer->name : 'Анонимный пользователь';
+        $this->payment->from = $this->type == 'donate' ? $this->payer->user_name : $this->payer->name;
+        $this->payment->telegram_user_id = $this->telegram_id ?? null;
         $this->payment->community_id = $this->community ? $this->community->id : null;
         $this->payment->author = ($this->type == 'subscription') ? null : $this->payFor->getAuthor()->id;
         $this->payment->add_balance = $this->amount / 100;
@@ -178,73 +185,71 @@ class Payment
         $this->orderId = $this->payment->id . date("_md_s");
 
         $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
-        if ($params['Amount'] == 0)
-        {
+        if ($params['Amount'] == 0 && $this->payFor === 'App\Models\TariffVariant') {
             $this->comment = 'trial';
             $resp = (object)[
                 'PaymentId' => rand(1000000000, 9999999999),
-                'PaymentURL' => route('payment.success', ['hash' =>PseudoCrypt::hash($this->payment->id), 'telegram_id'=>$this->telegram_id]),
+                'PaymentURL' => route('payment.success', ['hash' => PseudoCrypt::hash($this->payment->id), 'telegram_id' => $this->telegram_id]),
                 'Status' => 'CONFIRMED',
                 'ErrorCode' => null,
                 'Success' => true,
             ];
         } else {
-            if ($this->type == 'subscription')
-            {
+            if ($this->type == 'subscription') {
                 $resp = json_decode($this->tinkoff->initDirectPay($params)); // Шлём запрос в банк на терминал direct
             } else {
                 $resp = json_decode($this->tinkoff->initPay($params)); // Шлём запрос в банк на терминал pay
             }
         }
 
-        if(isset($resp->Success) && $resp->Success){
+        if (isset($resp->Success) && $resp->Success) {
 //            if(isset($resp->SpAccumulationId, $this->payment)){
 //                $this->accumulation($resp->SpAccumulationId);
 //            }
 
-                $this->payment->OrderId = $this->orderId;
-                $this->payment->paymentId = $resp->PaymentId;
-                $this->payment->paymentUrl = $resp->PaymentURL;
-                $this->payment->response = 'deprecated';
-                $this->payment->status = $resp->Status;
-                $this->payment->token = hash('sha256', $this->payment->id);
-                $this->payment->error = $resp->ErrorCode;
-                $this->payment->isNotify = isset($this->notify);
-                $this->payment->comment = $this->comment ?? null;
-                $this->payment->save();
+            $this->payment->OrderId = $this->orderId;
+            $this->payment->paymentId = $resp->PaymentId;
+            $this->payment->paymentUrl = $resp->PaymentURL;
+            $this->payment->response = 'deprecated';
+            $this->payment->status = $resp->Status;
+            $this->payment->token = hash('sha256', $this->payment->id);
+            $this->payment->error = $resp->ErrorCode;
+            $this->payment->isNotify = isset($this->notify);
+            $this->payment->comment = $this->comment ?? null;
+            $this->payment->save();
 
-                if ($this->payFor) {
-                    $this->payFor->payments()->save($this->payment);
-                }
-                $this->payment->payer()->associate($this->payer)->save();
-
-                if ($this->charged) {
-                    $chargeRes = $this->tinkoff->payTerminal->Charge([
-                        'PaymentId' => $this->payment->paymentId,
-                        'RebillId' => !empty($rebildPayment->RebillId) ? $rebildPayment->RebillId : null,
-                    ]);
-                    $chargeRes = json_decode($chargeRes);
-
-                    if (isset($chargeRes->Success) && $chargeRes->Success) {
-
-                        $previous_status = $this->payment->status;
-                        $this->payment->status = $chargeRes->Status;
-                        $this->payment->SpAccumulationId = $chargeRes->SpAccumulationId ?? null;
-                        $this->payment->RebillId = $chargeRes->RebillId ?? null;
-                        $this->payment->save();
-
-                        TinkoffService::checkStatus($chargeRes, $this->payment, $previous_status);
-                    } else {
-                        //todo сохранять в лог файл TelegramLogService::staticSendLogMessage заменить на
-                        // \App\Exceptions\TelegramException::report() сделать похожий для платежей
-                        TelegramLogService::staticSendLogMessage("Charge ответил с ошибкой: " . json_encode($chargeRes, JSON_UNESCAPED_UNICODE));
-                        return false;
-                    }
-                }
+            if ($this->payFor) {
                 $this->payFor->payments()->save($this->payment);
-                $this->payment->payer()->associate($this->payer)->save();
+            }
+            $this->payment->payer()->associate($this->payer)->save();
 
-                return $this->payment;
+            if ($this->charged) {
+                $chargeRes = $this->tinkoff->payTerminal->Charge([
+                    'PaymentId' => $this->payment->paymentId,
+                    'RebillId' => !empty($rebildPayment->RebillId) ? $rebildPayment->RebillId : null,
+                ]);
+                $chargeRes = json_decode($chargeRes);
+
+                if (isset($chargeRes->Success) && $chargeRes->Success) {
+
+                    $previous_status = $this->payment->status;
+                    $this->payment->status = $chargeRes->Status;
+                    $this->payment->SpAccumulationId = $chargeRes->SpAccumulationId ?? null;
+                    $this->payment->RebillId = $chargeRes->RebillId ?? null;
+                    $this->payment->save();
+
+                    TinkoffService::checkStatus($chargeRes, $this->payment, $previous_status);
+                } else {
+                    //todo сохранять в лог файл TelegramLogService::staticSendLogMessage заменить на
+                    // \App\Exceptions\TelegramException::report() сделать похожий для платежей
+                    TelegramLogService::staticSendLogMessage("Charge ответил с ошибкой: " . json_encode($chargeRes, JSON_UNESCAPED_UNICODE));
+                    return false;
+                }
+            }
+            $this->payFor->payments()->save($this->payment);
+            $this->payment->payer()->associate($this->payer)->save();
+
+            return $this->payment;
         } else {
             TelegramLogService::staticSendLogMessage("Оплата по карте с ошибкой: " . json_encode($resp, JSON_UNESCAPED_UNICODE));
             return false;
@@ -255,44 +260,44 @@ class Payment
     {
         $attaches = [];
 
-        if($this->payment) {
+        if ($this->payment) {
             $attaches['hash'] = PseudoCrypt::hash($this->payment->id);
         }
-        if($this->telegram_id) {
+        if ($this->telegram_id) {
             $attaches['telegram_id'] = $this->telegram_id;
         }
-        if($this->success_url) {
+        if ($this->success_url) {
             $attaches['success_url'] = $this->success_url;
         }
 
         $receiptItem = [[
-            'Name'          => 'Оплата за использование системы',
-            'Price'         => $this->amount / 100,
-            'Quantity'      => 1,
-            'Amount'        => $this->amount,
+            'Name' => 'Оплата за использование системы',
+            'Price' => $this->amount / 100,
+            'Quantity' => 1,
+            'Amount' => $this->amount,
             'PaymentMethod' => TinkoffApi::$paymentMethod['full_prepayment'],
             'PaymentObject' => TinkoffApi::$paymentObject['service'],
-            'Tax'           => TinkoffApi::$vats['none']
+            'Tax' => TinkoffApi::$vats['none']
         ]];
 
         $receipt = [
             'EmailCompany' => 'manager@spodial.com',
-            'Phone'        => '89524365064', //Auth::user()->phone,
-            'Taxation'     => TinkoffApi::$taxations['osn'],
-            'Items'        => TinkoffApi::balanceAmount(false, $receiptItem, $this->amount),
+            'Phone' => '89524365064', //Auth::user()->phone,
+            'Taxation' => TinkoffApi::$taxations['osn'],
+            'Items' => TinkoffApi::balanceAmount(false, $receiptItem, $this->amount),
         ];
 
         $params = [
             'NotificationURL' => $this->callbackUrl,
             'OrderId' => $this->orderId,
-            'Amount'  => $this->amount,
-            'FailURL' => env('FRONTEND_URL').'/app/subscriptions?payment_result=fail',
+            'Amount' => $this->amount,
+            'FailURL' => env('FRONTEND_URL') . '/app/subscriptions?payment_result=fail',
             'SuccessURL' => $this->payFor instanceof Course
                 ? $this->payFor->successPageLink()
                 :
                 route('payment.success', $attaches),
-            'DATA'    => [
-                'Email'  => $this->payer ? $this->payer->email : '',
+            'DATA' => [
+                'Email' => $this->payer ? $this->payer->email : '',
             ],
         ];
         $params['Receipt'] = $receipt;
@@ -304,7 +309,7 @@ class Payment
     private function checkAccumulation()
     {
         $params = [];
-        if($this->accumulation != null){
+        if ($this->accumulation != null) {
             $params['DATA']['StartSpAccumulation'] = false;
             $params['DATA']['SpAccumulationId'] = $this->accumulation->SpAccumulationId;
         } else {
@@ -316,7 +321,7 @@ class Payment
     private function checkRecurrent()
     {
         $params = [];
-        if($this->recurrent){
+        if ($this->recurrent) {
             $params['Recurrent'] = 'Y';
             $params['CustomerKey'] = $this->payer->getCustomerKey();
         }
@@ -329,7 +334,7 @@ class Payment
         $this->amount($cost * 100);
         $this->payFor($payFor);
         $this->payer($payer);
-        if($success_url) {
+        if ($success_url) {
             $this->success_url = $success_url;
         }
         if ($this->type == 'subscription') {

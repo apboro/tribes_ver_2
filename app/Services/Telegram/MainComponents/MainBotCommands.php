@@ -97,6 +97,7 @@ class MainBotCommands
 
     public function initCommand(array $methods = [
         'startBot',
+        'onStartDonate',
         'startOnGroup',
         'getTelegramUserId',
         'getChatId',
@@ -119,7 +120,8 @@ class MainBotCommands
         'saveForwardMessageInBotChatAsQA',
         'support',
         'getSpodial',
-        'reputation'
+        'reputation',
+        'getDonateData',
     ])
     {
         foreach ($methods as $method) {
@@ -196,8 +198,23 @@ class MainBotCommands
                     TelegramBotActionHandler::START_BOT,
                     TelegramBotActionHandler::ACTION_SEND_HELLO_MESSAGE,
                     $ctx);
-
             };
+
+                $this->bot->onText('/start donate-{donate_hash:string}_{amount:integer}', function (Context $ctx){
+                    Log::debug('In start donate');
+                    $donate = Donate::where('inline_link', $ctx->var('donate_hash'))->first();
+                    $menu = Menux::Create('link')->inline();
+                    if (!$donate) return;
+                    $data = [
+                        'amount' => $ctx->var('amount'),
+                        'donateId' => $donate->id,
+                        'telegramUserId' =>$ctx->getUserID(),
+                    ];
+                    $menu->row()->uBtn('Внести донат',$donate->getDonatePaymentLink($data));
+                    $ctx->reply('Ссылка для доната ' . "\n\n", $menu);
+                });
+
+
 //          $this->bot->onText('/start {paymentId?}', $start);
             $this->bot->onCommand('start', $start);
         } catch (\Exception $e) {
@@ -478,56 +495,44 @@ class MainBotCommands
 
     private function inlineQuery($donate)
     {
-        Log::debug('start donate callback query '. $donate->inline_link);
         try {
             $this->bot->onInlineQuery($donate->inline_link, function (Context $ctx) use ($donate) {
+                Log::debug('start donate callback query ' . $donate->inline_link);
+
                 $result = new Result();
                 $article = new Article(1);
                 $message = new InputTextMessageContent();
 
-                $image = $donate->getMainImage() ? $donate->getMainImage()->url : '';
+                $image = $donate->image;
                 $description = $donate->description ?? '';
-                $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
+                $message->text($description . '<a href="' . config('app.frontend_url') .'/'. $image . '">&#160</a>');
 
                 $message->parseMode('HTML');
                 $article->title($donate->title);
-
                 if ($donate->description)
                     $article->description(mb_strimwidth($donate->description, 0, 55, "..."));
 
                 $article->inputMessageContent($message);
-                $article->thumbUrl('' . route('main') . $image);
-                Log::debug('INNER donate callback query '. $donate->inline_link);
+                $article->thumbUrl('' . config('app.frontend_url') .'/' . $image);
+
                 $menu = Menux::Create('a')->inline();
                 foreach ($donate->variants as $variant) {
                     if ($variant->price && $variant->isActive !== false) {
                         $key = array_search($variant->currency, Donate::$currency);
 
                         $currencyLabel = Donate::$currency_labels[$key];
-                        $data = [
-                            'amount' => $variant->price,
-                            'currency' => $variant->currency,
-                            'donateId' => $donate->id,
-                            'communityId' => $this->communityRepo->getCommunityByChatId($ctx->getChatID()),
-                        ];
 
                         if ($variant->description) {
-                            $menu->row()->uBtn(
+                            $menu->row()->btn(
                                 $variant->price . $currencyLabel . ' — ' . $variant->description,
-                                $donate->getDonatePaymentLink($data)
+                                'donate-'.$donate->inline_link.'_'.$variant->price
                             );
                         } else {
-                            $menu->row()->uBtn($variant->price . $currencyLabel, $donate->getDonatePaymentLink($data));
+                            $menu->row()->btn($variant->price . $currencyLabel, 'donate-'.$donate->inline_link.'_'.$variant->price);
                         }
                     } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
-                        $dataNull = [
-                            'amount' => 0,
-                            'currency' => 0,
-                            'donateId' => $donate->id,
-                            'communityId' => $this->communityRepo->getCommunityByChatId($ctx->getChatID()),
-                        ];
                         $variantDesc = $variant->description ?? 'Произвольная сумма';
-                        $menu->row()->uBtn($variantDesc, $donate->getDonatePaymentLink($dataNull));
+                        $menu->row()->btn($variantDesc, 'donate-'.$donate->inline_link.'_0');
                     }
                 }
 
@@ -541,6 +546,18 @@ class MainBotCommands
             });
         } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    private function getDonateData()
+    {
+        try {
+            $this->bot->onAction('{donate_hash}_{amount}', function (Context $ctx) {
+                Log::debug('In donate answer query');
+                $ctx->ansCallback('', false, 't.me/alevi_tribes_bot?start='. $ctx->var('donate_hash').'_'.$ctx->var('amount'));
+            });
+        } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -1179,7 +1196,8 @@ class MainBotCommands
         }
     }
 
-    private function extend()
+    private
+    function extend()
     {
         try {
             $this->bot->onAction('extend-{id:string}', function (Context $ctx) {
@@ -1218,7 +1236,8 @@ class MainBotCommands
         }
     }
 
-    private function connectionTariff(Context $ctx)
+    private
+    function connectionTariff(Context $ctx)
     {
         try {
             Telegram::paymentUser(
@@ -1303,7 +1322,8 @@ class MainBotCommands
         }
     }
 
-    private function createAndSaveInviteLink($telegramConnection)
+    private
+    function createAndSaveInviteLink($telegramConnection)
     {
         try {
             $invite = $this->bot->getExtentionApi()->createAdditionalLink($telegramConnection->chat_id);
@@ -1317,7 +1337,8 @@ class MainBotCommands
         }
     }
 
-    private function createMenu()
+    private
+    function createMenu()
     {
         try {
             Menux::Create('menu', 'main')
@@ -1343,7 +1364,8 @@ class MainBotCommands
         }
     }
 
-    private function tariffButton($community, $userId = NULL)
+    private
+    function tariffButton($community, $userId = NULL)
     {
         try {
             $menu = Menux::Create('links')->inline();
@@ -1377,7 +1399,8 @@ class MainBotCommands
      * @param int $chatId
      * @param int $donateId
      */
-    public function sendDonateMessage(int $chatId, int $donateId)
+    public
+    function sendDonateMessage(int $chatId, int $donateId)
     {
         try {
             $donate = Donate::find($donateId);
@@ -1422,7 +1445,8 @@ class MainBotCommands
     /** Отправляет сообщение в группу с тарифами
      * @param Community $community
      */
-    public function sendTariffMessage(Community $community)
+    public
+    function sendTariffMessage(Community $community)
     {
         try {
             $tariff = $community->tariff;
@@ -1464,7 +1488,8 @@ class MainBotCommands
      * @param bool $preview
      * @param array $keyboard
      */
-    public function sendMessageFromBotWithTariff(int $chatId, string $textMessage, Community $community)
+    public
+    function sendMessageFromBotWithTariff(int $chatId, string $textMessage, Community $community)
     {
         try {
             $tariff = $community->tariff;
@@ -1495,7 +1520,8 @@ class MainBotCommands
         }
     }
 
-    private function getCommandsListAsString(): string
+    private
+    function getCommandsListAsString(): string
     {
         $text = '';
         foreach ($this->availableBotCommands as $command => $description) {
@@ -1504,7 +1530,8 @@ class MainBotCommands
         return $text;
     }
 
-    public function save_log(
+    public
+    function save_log(
         string  $event,
         string  $action,
         Context $context

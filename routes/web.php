@@ -29,7 +29,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
     //USED FOR APIv3
     Route::get('/payment/{hash}/success', 'App\Http\Controllers\APIv3\Payments\ApiPaymentController@successPayment')->name('payment.success');
-    Route::get('/payment/donate', [ApiNewDonateController::class, 'processDonate'])->name('donate.process');
+    Route::get('/payment/donate', [ApiNewDonateController::class, 'processDonatePayment'])->name('donate.process');
     //--->
 
 

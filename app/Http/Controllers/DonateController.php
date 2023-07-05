@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Community\DonateRequest;
-use App\Http\Requests\Donate\DonatePageRequest;
+use App\Http\Requests\Donate\ApiDonatePageRequest;
 use App\Http\Requests\Donate\DonateSettingsRequest;
 use App\Http\Requests\Donate\TakeDonatePageRequest;
 use App\Models\Community;
@@ -124,7 +124,7 @@ class DonateController extends Controller
             ->withMessage($messages);
     }
 
-    public function donatePage(DonatePageRequest $request, $hash)
+    public function donatePage(ApiDonatePageRequest $request, $hash)
     {
         $amount = (int)$request['amount'];
         $currency = (int)$request['currency'];

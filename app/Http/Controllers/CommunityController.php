@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Community\CommunityListRequest;
 use App\Http\Requests\Community\DonateRequest;
 use App\Http\Requests\Community\DonateSettingsRequest;
-use App\Http\Requests\Donate\DonatePageRequest;
+use App\Http\Requests\Donate\ApiDonatePageRequest;
 use App\Http\Requests\Donate\TakeDonatePageRequest;
 use App\Models\Community;
 use App\Models\File;
