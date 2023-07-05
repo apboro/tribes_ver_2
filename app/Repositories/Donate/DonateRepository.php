@@ -84,26 +84,26 @@ class DonateRepository implements DonateRepositoryContract
         foreach ($this->donateModel->variants as $dv) {
             if ($dv->variant_name === 'fix_sum_1'){
                 $dv->isStatic = true;
-                $dv->description = $data['fix_sum_1_button'];
-                $dv->isActive = $data['fix_sum_1_is_active'];
+                $dv->description = $data['fix_sum_1_button'] ?? null;
+                $dv->isActive = $data['fix_sum_1_is_active'] ?? false;
                 $dv->price = $data['fix_sum_1'] ?? null;
             }
             if ($dv->variant_name === 'fix_sum_2'){
                 $dv->isStatic = true;
-                $dv->description = $data['fix_sum_2_button'];
-                $dv->isActive = $data['fix_sum_2_is_active'];
+                $dv->description = $data['fix_sum_2_button'] ?? null;
+                $dv->isActive = $data['fix_sum_2_is_active'] ?? false;
                 $dv->price = $data['fix_sum_2'] ?? null;
             }
             if ($dv->variant_name === 'fix_sum_3'){
                 $dv->isStatic = true;
-                $dv->description = $data['fix_sum_3_button'];
-                $dv->isActive = $data['fix_sum_3_is_active'];
+                $dv->description = $data['fix_sum_3_button'] ?? null;
+                $dv->isActive = $data['fix_sum_3_is_active'] ?? false;
                 $dv->price = $data['fix_sum_3'] ?? null;
             }
             if ($dv->variant_name === 'random_sum'){
                 $dv->isStatic = false;
-                $dv->description = $data['random_sum_button'];
-                $dv->isActive = $data['random_sum_is_active'];
+                $dv->description = $data['random_sum_button'] ?? null;
+                $dv->isActive = $data['random_sum_is_active'] ?? false;
                 $dv->min_price = $data['random_sum_min'] ?? null;
                 $dv->max_price = $data['random_sum_max'] ?? null;
             }
@@ -275,8 +275,8 @@ class DonateRepository implements DonateRepositoryContract
     public function saveModel($data)
     {
         $this->donateModel->title = $data['title'];
-        $this->donateModel->image = $data['image'];
-        $this->donateModel->description = $data['description'];
-        $this->donateModel->donate_is_active = $data['donate_is_active'];
+        $this->donateModel->image = $data['image'] ?? null;
+        $this->donateModel->description = $data['description'] ?? null;
+        $this->donateModel->donate_is_active = $data['donate_is_active'] ?? false;
     }
 }
