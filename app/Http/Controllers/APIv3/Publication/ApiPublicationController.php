@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ApiPublicationController extends Controller
 {
+
+
     private PublicationRepository $publicationRepository;
 
     public function __construct(PublicationRepository $publicationRepository)
@@ -118,17 +120,20 @@ class ApiPublicationController extends Controller
 
     public function showByUuid(ApiPublicationShowForAllRequest $request, string $uuid)
     {
-
-        $user = Auth::user();
+        $user = Auth::check();
         $publication = Publication::where('uuid', $uuid)->first();
         if ($publication == null) {
             ApiResponse::notFound('common.not_found');
         }
-        if ($user !== null) {
-            VisitedPublication::updateOrCreate([
-                'user_id' => $user->id,
-                'publication_id' => $publication->id
-            ], ['last_visited' => Carbon::now()]);
+        if ($request->bearerToken() !== null) {
+            $user = User::where('api_token', $request->bearerToken())->first();
+            if ($user !== null) {
+                VisitedPublication::updateOrCreate([
+                    'user_id' => $user->id,
+                    'publication_id' => $publication->id
+                ], ['last_visited' => Carbon::now()]);
+            }
+
         }
 
         return ApiResponse::common(PublicationResource::make($publication)->toArray($request));

@@ -96,14 +96,14 @@ class ApiNewDonateController extends Controller
                 }
             } else {
                 if ($amount == 0) {
-                    return redirect(config('app.frontend_url'))->with([
+                    return redirect(config('app.frontend_url').'/app/public/monetization/arbitrary')->with([
                         'min_price' =>$variant->min_price,
                         'max_price'=>$variant->max_price,
                         'donate_variant_id' => $variant->id,
                         'donate'=>$donate,
                         'telegram_user_id'=>$telegram_user_id
                     ]);
-                } elseif ($amount != 0) {
+                } else {
                     $p = new Pay();
                     $p->amount($amount * 100)
                         ->payFor($variant)

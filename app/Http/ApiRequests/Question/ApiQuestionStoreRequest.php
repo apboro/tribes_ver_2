@@ -39,7 +39,6 @@ class ApiQuestionStoreRequest extends ApiRequest
         return [
             'knowledge_id' => ['required','integer'],
             'question_status' => ['required','string','in:draft,draft_auto,published'],
-            'category_id' => 'integer',
             'question_text' => ['required','string','max:4096'],
             'answer_text' => ['required','string','max:4096'],
             'question_image' => ['sometimes','nullable','image'],
