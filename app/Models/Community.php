@@ -63,6 +63,13 @@ class Community extends Model
         });
     }
 
+    public static function getCommunityByChatId($chatId): ?Community
+    {
+        return self::whereHas('connection', function ($q) use ($chatId) {
+            $q->where('chat_id', $chatId);
+        })->first();
+    }
+
     public function scopeOwned($query)
     {
         return $query->where('owner', '=', Auth::user()->id);
