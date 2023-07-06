@@ -29,6 +29,7 @@ use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\Publication\ApiFavouritePublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationPartController;
+use App\Http\Controllers\APIv3\Publication\ApiVisitedPublicationController;
 use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiExportAllData;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
@@ -237,6 +238,9 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/favourite/publications', [ApiFavouritePublicationController::class, 'store'])->name('api.publications.favorite.create');
     Route::delete('/favourite/publications/{id}', [ApiFavouritePublicationController::class, 'destroy'])->name('api.publications.favorite.delete');
     Route::get('/favourite/publications', [ApiFavouritePublicationController::class, 'list'])->name('api.publications.favorite.list');
+
+    Route::get('/visited/publications', [ApiVisitedPublicationController::class, 'list'])->name('api.publications.visited.list');
+
 
 });
 

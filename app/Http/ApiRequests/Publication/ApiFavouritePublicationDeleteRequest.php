@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *  operationId="publications-favourite-delete",
  *  summary="Delete publication from favorite list",
  *  security={{"sanctum": {} }},
- *  tags={"Publication Favorite"},
+ *  tags={"Publication Favourite"},
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
