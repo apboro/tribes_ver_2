@@ -78,6 +78,8 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
 
     Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])->name('api.publications.show_by_uuid');
+
+    Route::post('/pay/donate', [ApiNewDonateController::class, 'processDonatePayment']);
 });
 
 /** TODO fastFIX  */
@@ -221,7 +223,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/donate', [ApiNewDonateController::class, 'store']);
     Route::delete('/donate/{id}', [ApiNewDonateController::class, 'delete']);
     Route::put('/donate/{id}', [ApiNewDonateController::class, 'update']);
-    Route::post('/pay/donate', [ApiNewDonateController::class, 'processDonatePayment']);
 
     Route::post('/authors', [ApiAuthorController::class, 'store'])->name('api.author.create');
     Route::put('/authors', [ApiAuthorController::class, 'update'])->name('api.author.update');
