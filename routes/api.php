@@ -76,6 +76,7 @@ Route::prefix('api/v3')->group(function () {
 
     Route::get('/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
 
+    Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])->name('api.publications.show_by_uuid');
 });
 
 /** TODO fastFIX  */
@@ -231,7 +232,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/publications/{id}', [ApiPublicationController::class, 'destroy'])->name('api.publications.delete');
     Route::post('/publications/{id}', [ApiPublicationController::class, 'update'])->name('api.publications.update');
     Route::get('/publications/{id}', [ApiPublicationController::class, 'show'])->name('api.publications.show');
-    Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])->name('api.publications.show_by_uuid');
+
 
     Route::post('/publication-parts', [ApiPublicationPartController::class, 'store'])->name('api.publication_parts.create');
     Route::delete('/publication-parts/{id}', [ApiPublicationPartController::class, 'destroy'])->name('api.publication_parts.delete');
