@@ -14,6 +14,7 @@ class PublicationPartRepository
     const MEDIA_TYPE_AUDIO = 3;
     const MEDIA_TYPE_IMAGE = 4;
     const MEDIA_TYPE_OTHER = 5;
+    const MEDIA_TYPE_HEADER = 6;
 
     public function store(ApiPublicationPartStoreRequest $request)
     {

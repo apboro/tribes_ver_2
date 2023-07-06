@@ -26,6 +26,7 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
+use App\Http\Controllers\APIv3\Publication\ApiFavouritePublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationPartController;
 use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
@@ -72,6 +73,8 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/courses/pay/{hash}', [ApiCourseController::class, 'pay']);
     Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
     Route::post('/send_demo_email', [MailSender::class, 'sendDemoEmail']);
+
+    Route::get('/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
 
 });
 
@@ -232,6 +235,11 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/publication-parts', [ApiPublicationPartController::class, 'store'])->name('api.publication_parts.create');
     Route::delete('/publication-parts/{id}', [ApiPublicationPartController::class, 'destroy'])->name('api.publication_parts.delete');
+
+
+    Route::post('/favourite/publications', [ApiFavouritePublicationController::class, 'store'])->name('api.publications.favorite.create');
+    Route::delete('/favourite/publications/{id}', [ApiFavouritePublicationController::class, 'destroy'])->name('api.publications.favorite.delete');
+    Route::get('/favourite/publications', [ApiFavouritePublicationController::class, 'list'])->name('api.publications.favorite.list');
 
 });
 

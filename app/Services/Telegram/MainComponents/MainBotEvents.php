@@ -139,8 +139,8 @@ class MainBotEvents
         log::info('User Bot Added To Group');
         try {
             $str = json_encode($this->data, JSON_UNESCAPED_UNICODE);
-            log::info('$this->data'. $str);
-            log::info('config(telegram_user_bot.user_bot.id)'. config('telegram_user_bot.user_bot.id'));
+            log::info('$this->data' . $str);
+            log::info('config(telegram_user_bot.user_bot.id)' . config('telegram_user_bot.user_bot.id'));
 //            if (isset($this->data->message->new_chat_member->id)) {
             if (isset($this->data->chat_member->new_chat_member->user->id)) {
                 $chatId = $this->data->chat_member->chat->id;
@@ -161,7 +161,7 @@ class MainBotEvents
                             'chat_id' => $chatId
                         ]);
                 }
-            }else{
+            } else {
                 log::info('not seet chat_member->new_chat_member->user->id');
             }
         } catch (Exception $e) {
@@ -205,7 +205,11 @@ class MainBotEvents
         $tyWasInCommunityBefore = $ty->communities()->find($community->id);
 
         if ($tyWasInCommunityBefore) {
-            $ty->communities()->updateExistingPivot($community->id, ['exit_date' => null]);
+            $ty->communities()->updateExistingPivot($community->id,
+                [
+                    'exit_date' => null,
+                    'accession_date' => time()
+                ]);
         } else {
             $ty->communities()->attach($community, [
                 'role' => 'member',
