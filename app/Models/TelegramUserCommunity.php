@@ -20,4 +20,9 @@ class TelegramUserCommunity extends Model
     {
         return $this->belongsTo(Community::class);
     }
+
+    public static function getByCommunityIdAndTelegramUserId($communityId, $telegramUserId)
+    {
+        return TelegramUserCommunity::where('community_id', $communityId)->where('telegram_user_id', $telegramUserId)->first();
+    }
 }

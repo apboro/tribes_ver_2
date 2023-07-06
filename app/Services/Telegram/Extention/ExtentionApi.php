@@ -2,6 +2,9 @@
 
 namespace App\Services\Telegram\Extention;
 
+use App\Models\Community;
+use App\Models\TelegramUserCommunity;
+use App\Models\TelegramUserList;
 use App\Services\Telegram\BotInterface\ExtentionApiInterface;
 use Askoldex\Teletant\Api;
 use Askoldex\Teletant\Exception\TeletantException;
@@ -187,10 +190,21 @@ class ExtentionApi extends Api implements ExtentionApiInterface
     public function kickUser(int $userId, int $chatId)
     {
         try {
+            $community = Community::getCommunityByChatId($chatId);
+            TelegramUserList::firstOrCreate([
+                "community_id" => $community->id,
+                "telegram_id" => $userId,
+                "type" => 4
+            ]);
+            $telegramUserCommunity= TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $userId);
+            $telegramUserCommunity->exit_date = time();
+            $telegramUserCommunity->status = 'banned';
+            $telegramUserCommunity->save();
             return $this->invokeAction('banChatMember', [
                 'chat_id' => $chatId,
                 'user_id' => $userId
             ]);
+
         } catch (\Exception $e) {
             Logg::error($e);
         }
@@ -227,6 +241,18 @@ class ExtentionApi extends Api implements ExtentionApiInterface
             'user_id' => $userId,
             'only_if_banned' => true
         ];
+        $community = Community::getCommunityByChatId($chatId);
+        $telegramUserInList = TelegramUserList::where([
+            "community_id" => $community->id,
+            "telegram_id" => $userId,
+            "type" => 4
+        ])->first();
+
+        if ($telegramUserInList) $telegramUserInList->delete();
+
+        $telegramUserCommunity= TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $userId);
+        $telegramUserCommunity->status = null;
+        $telegramUserCommunity->save();
 
         return $this->unbanChatMember($params);
     }
