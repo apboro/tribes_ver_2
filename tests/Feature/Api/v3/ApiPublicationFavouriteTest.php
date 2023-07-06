@@ -81,4 +81,24 @@ class ApiPublicationFavouriteTest extends TestCase
         ])->delete(route('api.publications.favorite.delete', ['id' => '123']))->assertStatus(401);
     }
 
+    public function test_add_to_visited()
+    {
+        $author = Author::create([
+            'user_id' => $this->custom_user->id,
+        ]);
+
+        $publication = Publication::create([
+            'author_id' => $author->id
+        ]);
+
+        $this->withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->custom_token,
+        ])->get(route('api.publications.show_by_uuid', ['uuid' => $publication->uuid]))->assertOk();
+
+        $this->assertDatabaseHas('visited_publications', [
+            'user_id' => $this->custom_user->id,
+            'publication_id' => $publication->id
+        ]);
+    }
 }

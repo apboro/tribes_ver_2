@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *  operationId="publications-favorite-add",
  *  summary="Add publication to favorite list",
  *  security={{"sanctum": {} }},
- *  tags={"Publication Favorite"},
+ *  tags={"Publication Favourite"},
  *     @OA\RequestBody(
  *         @OA\MediaType(
  *             mediaType="application/json",
