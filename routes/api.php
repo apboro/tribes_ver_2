@@ -73,6 +73,8 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
     Route::post('/send_demo_email', [MailSender::class, 'sendDemoEmail']);
 
+    Route::get('/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
+
 });
 
 /** TODO fastFIX  */

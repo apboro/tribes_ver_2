@@ -49,8 +49,8 @@ class ApiPublicationUpdateRequest extends ApiRequest
     {
         return [
             'id' => 'required|integer|exists:publications,id',
-            'title' => 'nullable|string',
-            'description' => 'nullable|string',
+            'title' => 'required|string',
+            'description' => 'required|string',
             'background_image' => 'nullable|image|max:10240',
             'price' => 'nullable|integer',
         ];
