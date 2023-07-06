@@ -161,10 +161,24 @@ class Donate extends Model
         }
         return route('donate.process') . $params;
     }
+    public function getDonatePaymentLinkRandom($data = null)
+    {
+        $params = '';
+        if ($data && is_array($data)) {
+            $params = '?' . http_build_query($data);
+        }
+        return config('app.frontend_url').'/app/public/monetization/arbitrary' . $params;
+    }
 
-    function owner()
+    public function owner()
     {
         return $this->belongsTo(User::class,'user_id', 'id');
     }
+
+    public function getRandomVariant()
+    {
+        return $this->variants()->where('variant_name', 'random_sum')->first();
+    }
+
 
 }

@@ -18,10 +18,11 @@ use Illuminate\Support\Facades\Auth;
 class ApiNewDonateController extends Controller
 {
     public function __construct(
-        DonateRepositoryContract $donateRepo,
+        DonateRepositoryContract    $donateRepo,
         CommunityRepositoryContract $communityRepo,
-        PaymentRepository $paymentRepo
-    ) {
+        PaymentRepository           $paymentRepo
+    )
+    {
         $this->donateRepo = $donateRepo;
         $this->communityRepo = $communityRepo;
         $this->paymentRepo = $paymentRepo;
@@ -54,7 +55,7 @@ class ApiNewDonateController extends Controller
     public function update(ApiNewDonateUpdateRequest $request)
     {
         $data = $request->all();
-        $data['id']=$request->id;
+        $data['id'] = $request->id;
         $donate = $this->donateRepo->updateModel($data);
 
         return ApiResponse::common(ApiDonatesResource::make($donate)->toArray($request));
@@ -90,37 +91,25 @@ class ApiNewDonateController extends Controller
                     $payment = $p->pay();
 
                     if (!$payment) {
-                        abort(404);
+                        return ApiResponse::error('Оплата не удалась');
                     }
                     return redirect()->to($payment->paymentUrl);
                 }
             } else {
-                if ($amount == 0) {
-                    return redirect(config('app.frontend_url').'/app/public/monetization/arbitrary')->with([
-                        'min_price' =>$variant->min_price,
-                        'max_price'=>$variant->max_price,
-                        'donate_variant_id' => $variant->id,
-                        'donate'=>$donate,
-                        'telegram_user_id'=>$telegram_user_id
-                    ]);
-                } else {
-                    $p = new Pay();
-                    $p->amount($amount * 100)
-                        ->payFor($variant)
-                        ->payer($telegram_user_id);
+                $p = new Pay();
+                $p->amount($amount * 100)
+                    ->payFor($variant)
+                    ->payer($telegram_user_id);
 
-                    $payment = $p->pay();
+                $payment = $p->pay();
 
-                    if (!$payment) {
-                        abort(404);
-                    }
-                    return redirect()->to($payment->paymentUrl);
+                if (!$payment) {
+                    return ApiResponse::error('Оплата не удалась');
                 }
+                return redirect()->to($payment->paymentUrl);
             }
-
         }
-        abort(404);
-        return null;
+        return ApiResponse::error('Оплата не удалась');
     }
 
 }
