@@ -27,12 +27,6 @@ class ApiPublicationController extends Controller
     public function __construct(PublicationRepository $publicationRepository)
     {
         $this->publicationRepository = $publicationRepository;
-
-        $this->middleware(function ($request, $next) {
-            $this->user = Auth::user();
-
-            return $next($request);
-        });
     }
 
 
