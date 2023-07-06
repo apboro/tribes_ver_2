@@ -22,8 +22,8 @@ class PublicationRepository
         $create_array = [
             'author_id' => $author->id,
             'is_active' => $request->boolean('is_active'),
-            'description' => $request->input('description'),
-            'title' => $request->input('title'),
+            'description' => $request->input('description') ?? 'Описание',
+            'title' => $request->input('title') ?? 'Новый пост',
             'price' => $request->input('price')
         ];
 

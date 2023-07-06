@@ -31,4 +31,14 @@ class Publication extends Model
     {
         return $this->hasMany(PublicationPart::class);
     }
+
+    public function favourites()
+    {
+        return $this->hasMany(FavouritePublication::class);
+    }
+
+    public function visited()
+    {
+        return $this->hasMany(VisitedPublication::class);
+    }
 }

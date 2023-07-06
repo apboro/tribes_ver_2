@@ -38,8 +38,8 @@ class ApiPublicationStoreRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
-            'description' => 'required|string',
+            'title' => 'nullable|string',
+            'description' => 'nullable|string',
             'background_image' => 'nullable|image|max:10240',
             'price' => 'nullable|integer',
             'parts' => 'nullable|array',

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\APIv3\Publication;
 use App\Http\ApiRequests\Publication\ApiFavouritePublicationDeleteRequest;
 use App\Http\ApiRequests\Publication\ApiFavouritePublicationListRequest;
 use App\Http\ApiRequests\Publication\ApiFavouritePublicationStoreRequest;
+use App\Http\ApiResources\Publication\PublicationCollection;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\FavouritePublication;
+use App\Models\Publication;
 use Illuminate\Support\Facades\Auth;
 
 class ApiFavouritePublicationController extends Controller
@@ -21,8 +23,17 @@ class ApiFavouritePublicationController extends Controller
 
     public function list(ApiFavouritePublicationListRequest $request): ApiResponse
     {
+        $user = Auth::user();
+        $publications = Publication::with('favourites')->whereRelation('favourites', 'user_id', $user->id);
+        $count = $publications->count();
+        return ApiResponse::listPagination(
+            [
+                'Access-Control-Expose-Headers' => 'Items-Count',
+                'Items-Count' => $count
+            ])->items((
+        new PublicationCollection($publications->skip($request->offset ?? 0)->take($request->limit ?? 3)->orderBy('id')->get()
+        ))->toArray($request));
 
-        //   return ApiResponse::common();
     }
 
     /**
