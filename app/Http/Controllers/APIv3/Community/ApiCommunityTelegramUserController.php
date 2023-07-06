@@ -90,14 +90,16 @@ class ApiCommunityTelegramUserController extends Controller
     public function filter(ApiTelegramUserFilterRequest $request): ApiResponse
     {
         $query = TelegramUser::with(['communities', 'userList'])
-            ->whereHas('communities', function ($query) {
+            ->whereHas('communities', function ($query) use ($request){
                 $query->where('owner', Auth::user()->id)
-                    ->where(function ($query) {
+                    ->where(function ($query) use ($request){
                         $query->whereNull('telegram_users_community.exit_date')
-                            ->orWhere('telegram_users_community.status', 'banned');
+                            ->when($request->boolean('banned'), function($query) {
+                                $query->orWhere('telegram_users_community.status', 'banned');
+                            });
                     })
                     ->where('is_active', true);
-            })->newQuery();
+            });
         if (!empty($request->input('accession_date_from'))) {
             $query->whereHas('communities', function ($query) use ($request) {
                 $query->where('telegram_users_community.accession_date', '>=', strtotime($request->input('accession_date_from')));
@@ -112,7 +114,13 @@ class ApiCommunityTelegramUserController extends Controller
 
         if (!empty($request->input('community_id'))) {
             $query->whereHas('communities', function ($query) use ($request) {
-                $query->where('telegram_users_community.community_id', '=', $request->input('community_id'));
+                $query->where('telegram_users_community.community_id', '=', $request->input('community_id'))
+                    ->where(function ($query) use ($request) {
+                        $query->whereNull('telegram_users_community.exit_date')
+                            ->when($request->boolean('banned'), function ($query) {
+                                $query->orWhere('telegram_users_community.status', 'banned');
+                            });
+                    });
             });
         }
 
