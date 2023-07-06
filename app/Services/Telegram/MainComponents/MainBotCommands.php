@@ -210,7 +210,13 @@ class MainBotCommands
                         'donate_id' => $donate->id,
                         'telegram_user_id' =>$ctx->getUserID(),
                     ];
-                    $menu->row()->uBtn('Внести донат',$donate->getDonatePaymentLink($data));
+                    $dataRandom = [
+                        'min_price' => $donate->getRandomVariant()->min_price,
+                        'max_price' => $donate->getRandomVariant()->max_price,
+                        'donate_id' => $donate->id,
+                        'telegram_user_id' =>$ctx->getUserID(),
+                    ];
+                    $menu->row()->uBtn('Внести донат', $ctx->var('amount') == 0 ? $donate->getDonatePaymentLinkRandom($dataRandom) : $donate->getDonatePaymentLink($data));
                     $ctx->reply('Ссылка для доната ' . "\n\n", $menu);
                 });
 
