@@ -137,6 +137,7 @@ class TelegramModerationStatisticRepository
                 DB::raw("cast (extract (epoch from telegram_user_lists.created_at) as integer) as action_date"),
                 "telegram_users.user_name as nick_name",
                 "telegram_users.photo_url",
+                "telegram_user_lists.community_id as community_id",
                 DB::raw("CONCAT (telegram_users.first_name,' ', telegram_users.last_name) as name"),
                 DB::raw("CASE WHEN telegram_user_lists.type=" . TelegramUserListsRepositry::TYPE_BAN_LIST . " THEN 'Бан' WHEN telegram_user_lists.type=" . TelegramUserListsRepositry::TYPE_MUTE_LIST . " THEN 'Мьют' END as action"),
             ]);
@@ -150,6 +151,7 @@ class TelegramModerationStatisticRepository
 
         $builder_violations->leftJoin('communities', 'communities.id', "=", "violations.community_id");
         $builder_violations->leftJoin('telegram_users', "telegram_users.telegram_id", "=", "violations.telegram_user_id");
+        $builder_violations->leftJoin('telegram_users_community', "telegram_users_community.community_id", "=", "violations.community_id");
         $builder_violations->whereDate(DB::raw('to_timestamp(violations.violation_date)'), '>=', $start);
         $builder_violations->whereDate(DB::raw('to_timestamp(violations.violation_date)'), '<=', $end);
 
@@ -157,6 +159,7 @@ class TelegramModerationStatisticRepository
             "violations.violation_date as action_date",
             "telegram_users.user_name as nick_name",
             "telegram_users.photo_url",
+            "telegram_users_community.community_id as community_id",
             DB::raw("CONCAT (telegram_users.first_name,' ', telegram_users.last_name) as name"),
             DB::raw("'Нарушение' as action"),
         ]);
@@ -177,6 +180,7 @@ class TelegramModerationStatisticRepository
             "telegram_users_community.exit_date as action_date",
             "telegram_users.user_name as nick_name",
             "telegram_users.photo_url",
+            "telegram_users_community.community_id as community_id",
             DB::raw("CONCAT (telegram_users.first_name,' ', telegram_users.last_name) as name"),
             DB::raw("'Кик' as action"),
         ]);
