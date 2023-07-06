@@ -81,6 +81,7 @@ class ApiNewDonateController extends Controller
                 continue;
             }
 
+            //оплата фикс суммы
             if ($variant->isStatic) {
                 if ($variant->price === $amount) {
                     $p = new Pay();
@@ -93,9 +94,11 @@ class ApiNewDonateController extends Controller
                     if (!$payment) {
                         return ApiResponse::error('Оплата не удалась');
                     }
+                    //редиректим по ссылке сразу на тинькофф
                     return redirect()->to($payment->paymentUrl);
                 }
             } else {
+                //оплата рандом суммы после ввода на фронте
                 $p = new Pay();
                 $p->amount($amount * 100)
                     ->payFor($variant)
@@ -106,7 +109,10 @@ class ApiNewDonateController extends Controller
                 if (!$payment) {
                     return ApiResponse::error('Оплата не удалась');
                 }
-                return redirect()->to($payment->paymentUrl);
+                //присылаем на фронт ссылку для редиректа
+                return ApiResponse::common([
+                    'redirect' => $payment->paymentUrl
+                ]);
             }
         }
         return ApiResponse::error('Оплата не удалась');
