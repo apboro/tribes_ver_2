@@ -23,6 +23,9 @@ use App\Http\ApiRequests\ApiRequest;
  *             format="int64",
  *         )
  *     ),
+ *   @OA\RequestBody(
+ *         description="
+ *          question_status - enum from [draft,draft_auto,published]",
  *         @OA\MediaType(
  *             mediaType="multipart/form-data",
  *             @OA\Schema(
@@ -34,6 +37,7 @@ use App\Http\ApiRequests\ApiRequest;
  *                 @OA\Property(property="answer_image",type="file"),
  *                 ),
  *             ),
+ *     ),
 
  *   @OA\Response(response=200, description="OK")
  *)
@@ -52,7 +56,6 @@ class ApiQuestionUpdateRequest extends ApiRequest
     {
         return [
             'question_status' => ['string','in:draft,draft_auto,published'],
-            'category_id' => 'required|integer|exists:question_categories,id',
             'question_text' => ['required','string','max:4096'],
             'answer_text' => ['required','string','max:4096'],
             'question_image' => ['sometimes','nullable','image'],
