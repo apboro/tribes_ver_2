@@ -2,6 +2,7 @@
 
 namespace App\Services\Telegram\MainComponents;
 
+use App;
 use App\Events\NewChatUserJoin;
 use App\Exceptions\KnowledgeException;
 use App\Helper\ArrayHelper;
@@ -17,6 +18,7 @@ use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Repositories\TelegramUserLists\TelegramUserListsRepositry;
 use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
+use App\Services\Telegram\TelegramMtproto\Event as ProtoEvents;
 use App\Services\TelegramMainBotService;
 use Askoldex\Teletant\Addons\Menux;
 use Askoldex\Teletant\Context;
@@ -31,7 +33,6 @@ class MainBotEvents
 
 
     public function __construct(MainBot $bot, ?object $data)
-
     {
         $this->bot = $bot;
         $this->data = $data;
@@ -405,6 +406,11 @@ class MainBotEvents
                         $this->data->chat_member->new_chat_member->status,
                         $chatId
                     );
+
+                    /** @var ProtoEvents $events */
+                    $events = App::make(Telegram\TelegramMtproto\Event::class);
+                    $events->handler($str);
+
                     Log::channel('telegram_bot_action_log')->
                     log('info', '', [
                         'event' => TelegramBotActionHandler::USER_BOT_GET_ADMIN,

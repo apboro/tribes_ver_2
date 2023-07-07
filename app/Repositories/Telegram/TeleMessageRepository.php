@@ -12,22 +12,22 @@ class TeleMessageRepository implements TeleMessageRepositoryContract
     public function saveChatMessage($message, $isComment = false)
     {
         try {
-            if (isset($message->peer_id)) {
+            if (isset($message->peerId)) {
                 if ($isComment === false) {
-                    if ($message->peer_id->_ === 'peerChannel') {
-                        $group_chat_id = '-100' . $message->peer_id->channel_id;
+                    if ($message->peerId->className === 'peerChannel') {
+                        $group_chat_id = '-100' . $message->peerId->channel_id;
                         $type = 'channel';
                     } else {
-                        $group_chat_id = '-' . $message->peer_id->chat_id;
+                        $group_chat_id = '-' . $message->peerId->chatId;
                         $type = 'group';
                     }
                 } else {
-                    $group_chat_id = '-100' . $message->peer_id->channel_id;
-                    $comment_chat_id = '-100' . $message->peer_id->channel_id;
+                    $group_chat_id = '-100' . $message->peerId->channel_id;
+                    $comment_chat_id = '-100' . $message->peerId->channel_id;
                     $type = 'channel';
                 }
             }
-            if (isset($message->from_id->user_id)) {
+            if (isset($message->fromId->userId)) {
 
                 $connection = TelegramConnection::where('chat_id', $group_chat_id)->first();
                 if ($connection) {
@@ -38,23 +38,23 @@ class TeleMessageRepository implements TeleMessageRepositoryContract
                         'chat_type' => $type ?? 'group',
                         'message_date' => $message->date
                     ]);
-                    $messageModel->post_id = isset($message->reply_to->reply_to_top_id) ? $message->reply_to->reply_to_top_id : null;
-                    $messageModel->telegram_user_id = $message->from_id->user_id ?? null;
-                    $messageModel->text = isset($message->message) ? $message->message : '';
+                    $messageModel->post_id = null; //isset($message->reply_to->reply_to_top_id) ? $message->reply_to->reply_to_top_id : null;
+                    $messageModel->telegram_user_id = $message->fromId->userId ?? null;
+                    $messageModel->text = $message->message ?? '';
                     $messageModel->comment_chat_id = $comment_chat_id ?? null;
-                    $messageModel->parrent_message_id = isset($message->reply_to->reply_to_msg_id) ? $message->reply_to->reply_to_msg_id : null;
+                    $messageModel->parrent_message_id = null;//isset($message->reply_to->reply_to_msg_id) ? $message->reply_to->reply_to_msg_id : null;
 
                     $messageModel->save();
 
-                    if (isset($message->reply_to->answer_to_msg_id) || isset($message->reply_to->reply_to_msg_id)) {
-                        $replyMessageId = $message->reply_to->answer_to_msg_id ?? $message->reply_to->reply_to_msg_id;
-                        $newMessageModel = TelegramMessage::where('message_id', $replyMessageId)
-                            ->where('group_chat_id', $group_chat_id)->first();
-                        if ($newMessageModel) {
-                            $newMessageModel->answers = $newMessageModel->answers + 1;
-                            $newMessageModel->save();
-                        }
-                    }
+//                    if (isset($message->reply_to->answer_to_msg_id) || isset($message->reply_to->reply_to_msg_id)) {
+//                        $replyMessageId = $message->reply_to->answer_to_msg_id ?? $message->reply_to->reply_to_msg_id;
+//                        $newMessageModel = TelegramMessage::where('message_id', $replyMessageId)
+//                            ->where('group_chat_id', $group_chat_id)->first();
+//                        if ($newMessageModel) {
+//                            $newMessageModel->answers = $newMessageModel->answers + 1;
+//                            $newMessageModel->save();
+//                        }
+//                    }
                 }
             }
         } catch (\Exception $e) {

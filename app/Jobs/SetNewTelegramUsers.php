@@ -13,6 +13,7 @@ use App\Models\TelegramUser;
 use App\Models\Community;
 use App\Services\Telegram\TelegramMtproto\UserBot;
 use App\Services\TelegramLogService;
+use Log;
 
 class SetNewTelegramUsers implements ShouldQueue
 {
@@ -42,14 +43,13 @@ class SetNewTelegramUsers implements ShouldQueue
             $community = Community::whereHas('connection', function ($query) {
                 $query->where('chat_id', '-' . $this->chatId)->orWhere('chat_id', '-100' . $this->chatId)->orWhere('chat_id', $this->chatId);
             })->first();
-
             $userBot = new UserBot;
             $connection = $community->connection ?? null;
             $limit = 100;
             $offset = 0;
             if ($connection && $connection->is_there_userbot === true) {
                 $chat_id = str_replace('-', '', (str_replace(-100, '', $connection->chat_id)));
-                if ($connection->access_hash !== null and $connection->userBotStatus == 'administrator') {
+                if ($connection->access_hash !== null and $connection->userBotStatus === 'administrator') {
 
                     $participants = $userBot->getUsersInChannel($chat_id, $connection->access_hash, $limit, $offset);
                     $this->getChannelUsers($community, $participants);
@@ -65,7 +65,10 @@ class SetNewTelegramUsers implements ShouldQueue
                         }
                     }
                 } else {
-                    $participants = $userBot->getChatInfo($chat_id);
+                    log::info('else $connection->access_hash !== null and $connection->userBotStatus == administrator');
+
+                    $participants = $userBot->getUsersInChannel($chat_id);
+//                    $participants =  json_decode(file_get_contents(storage_path('users.log')));
                     $this->getUsersForGroup($community, $participants);
                 }
             }
@@ -77,17 +80,23 @@ class SetNewTelegramUsers implements ShouldQueue
     protected function getChannelUsers($community, $participants)
     {
         try {
-            $newParticipants = isset($participants[0]->users->participants) ? $participants[0]->users->participants : null;
-            $users = isset($participants[0]->users->users) ? $participants[0]->users->users : null;
-            if ($newParticipants && $users) {
-                foreach ($newParticipants as $participant) {
-                    foreach ($users as $user) {
-                        $role = $this->getChannelRole($participant);
-                        if ($participant->user_id === $user->id)
-                            $this->saveUser($community, $user, $participant->date ?? null, $role);
-                    }
-                }
+//            $newParticipants = isset($participants[0]->users->participants) ? $participants[0]->users->participants : null;
+//            $users = isset($participants[0]->users->users) ? $participants[0]->users->users : null;
+
+            foreach($participants as $partipant) {
+                $role = $this->getGroupRole($partipant);
+                $this->saveUser($community, $partipant,$participant->participant->date ?? null, $role);
             }
+
+//            if ($newParticipants && $users) {
+//                foreach ($newParticipants as $participant) {
+//                    foreach ($users as $user) {
+//                        $role = 'member';//$this->getChannelRole($participant);
+//                        if ($participant->user_id === $user->id)
+//                            $this->saveUser($community, $user, $participant->date ?? null, $role);
+//                    }
+//                }
+//            }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
@@ -108,18 +117,24 @@ class SetNewTelegramUsers implements ShouldQueue
     protected function getUsersForGroup($community, $participants)
     {
         try {
-            $newParticipants = isset($participants[0]->chatInfo->full_chat->participants->participants) ? $participants[0]->chatInfo->full_chat->participants->participants : null;
-            $users = isset($participants[0]->chatInfo->users) ? $participants[0]->chatInfo->users : null;
-
-            if ($newParticipants and $users) {
-                foreach ($newParticipants as $participant) {
-                    foreach ($users as $user) {
-                        $role = $this->getGroupRole($participant);
-                        if ($participant->user_id === $user->id)
-                            $this->saveUser($community, $user, $participant->date ?? null, $role);
-                    }
-                }
+            foreach($participants as $partipant) {
+                $role = $this->getGroupRole($partipant);
+                $this->saveUser($community, $partipant,$partipant->participant->date ?? null, $role);
             }
+
+
+//            $newParticipants = isset($participants[0]->chatInfo->full_chat->participants->participants) ? $participants[0]->chatInfo->full_chat->participants->participants : null;
+//            $users = isset($participants[0]->chatInfo->users) ? $participants[0]->chatInfo->users : null;
+//
+//            if ($newParticipants and $users) {
+//                foreach ($newParticipants as $participant) {
+//                    foreach ($users as $user) {
+//                        $role = $this->getGroupRole($participant);
+//                        if ($participant->user_id === $user->id)
+//                            $this->saveUser($community, $user, $participant->date ?? null, $role);
+//                    }
+//                }
+//            }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
@@ -127,9 +142,10 @@ class SetNewTelegramUsers implements ShouldQueue
 
     protected function getGroupRole($participant)
     {
-        if ($participant->_ == 'chatParticipantAdmin')
+        $className = $participant->participant->className;
+        if ($className === 'chatParticipantAdmin')
             $role = 'administrator';
-        elseif ($participant->_ == 'chatParticipantCreator')
+        elseif ($className === 'chatParticipantCreator')
             $role = 'creator';
         else
             $role = 'member';
@@ -142,9 +158,9 @@ class SetNewTelegramUsers implements ShouldQueue
         $ty = TelegramUser::firstOrCreate([
             'telegram_id' => $user->id
         ]);
-        $ty->user_name  = $user->username ?? NULL;
-        $ty->first_name  = $user->first_name ?? NULL;
-        $ty->last_name   = $user->last_name ?? NULL;
+        $ty->user_name  = $user->username ?? $ty->user_name;
+        $ty->first_name  = $user->first_name ?? $ty->first_name;
+        $ty->last_name   = $user->last_name ??  $ty->last_name;
         $ty->save();
 
         if (!$ty->communities()->find($community->id)){
