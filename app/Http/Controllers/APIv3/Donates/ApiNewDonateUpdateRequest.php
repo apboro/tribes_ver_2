@@ -43,7 +43,7 @@ use OpenApi\Annotations as OA;
  *           @OA\Property(property="random_sum_button", type="string", example="na doktorskuyu"),
  *         ),
  *      ),
- *      @OA\Response(response=200, description="Phone confirmed successfully")
+ *      @OA\Response(response=200, description="OK")
  * )
  */
 class ApiNewDonateUpdateRequest extends ApiRequest

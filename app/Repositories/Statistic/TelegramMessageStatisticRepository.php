@@ -67,7 +67,7 @@ class TelegramMessageStatisticRepository
         $tc = 'telegram_connections';
         $com = 'communities';
 
-        DB::statement("SET TIMEZONE TO 'Europe/Moscow'");
+//        DB::statement("SET TIMEZONE TO 'Europe/Moscow'");
         $sub = DB::table(DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d(dt)"))
             ->leftJoin($tm, function (JoinClause $join) use ($tm, $scale) {
                 $join->on(DB::raw(" to_timestamp($tm.message_date)"), '>=', 'd.dt')

@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Storage;
  *           @OA\Property(property="random_sum_button", type="string", example="na doktorskuyu"),
  *         ),
  *      ),
- *      @OA\Response(response=200, description="Phone confirmed successfully")
+ *      @OA\Response(response=200, description="OK")
  * )
  */
 class ApiNewDonateStoreRequest extends ApiRequest
@@ -54,19 +54,21 @@ class ApiNewDonateStoreRequest extends ApiRequest
 
     public function prepareForValidation(): void
     {
-        $base64String = $this->request->get('image');
-        $base64Data = substr($base64String, strpos($base64String, ',') + 1);
-        $file = base64_decode($base64Data, true);
-        if ($file) {
-            preg_match('/^data:image\/(\w+);base64,/', $base64String, $matches);
-            $fileExtension = $matches[1];
-            $filename = uniqid() . '-' . time();
-            $filePath = 'donates_images/' . $filename . '.' . $fileExtension;
-            Storage::disk('public')->put($filePath, $file);
+        if ($this->request->get('image')) {
+            $base64String = $this->request->get('image');
+            $base64Data = substr($base64String, strpos($base64String, ',') + 1);
+            $file = base64_decode($base64Data, true);
+            if ($file) {
+                preg_match('/^data:image\/(\w+);base64,/', $base64String, $matches);
+                $fileExtension = $matches[1];
+                $filename = uniqid() . '-' . time();
+                $filePath = 'donates_images/' . $filename . '.' . $fileExtension;
+                Storage::disk('public')->put($filePath, $file);
 
-            $this->merge([
-                'image' => 'storage/' . $filePath
-            ]);
+                $this->merge([
+                    'image' => 'storage/' . $filePath
+                ]);
+            }
         }
     }
 

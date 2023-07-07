@@ -37,6 +37,7 @@ use App\Http\Controllers\APIv3\Statistic\ApiTelegramModerationStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramUsersStatistic;
 use App\Http\Controllers\APIv3\Subscription\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\Subscription\ApiUserSubscriptionController;
+use App\Http\Controllers\APIv3\Tariff\ApiTariffController;
 use App\Http\Controllers\APIv3\User\ApiAssignDetachTelegramController;
 use App\Http\Controllers\APIv3\User\ApiAuthController;
 use App\Http\Controllers\APIv3\User\ApiAuthorController;
@@ -235,16 +236,19 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/publications/{id}', [ApiPublicationController::class, 'update'])->name('api.publications.update');
     Route::get('/publications/{id}', [ApiPublicationController::class, 'show'])->name('api.publications.show');
 
-
     Route::post('/publication-parts', [ApiPublicationPartController::class, 'store'])->name('api.publication_parts.create');
     Route::delete('/publication-parts/{id}', [ApiPublicationPartController::class, 'destroy'])->name('api.publication_parts.delete');
-
 
     Route::post('/favourite/publications', [ApiFavouritePublicationController::class, 'store'])->name('api.publications.favorite.create');
     Route::delete('/favourite/publications/{id}', [ApiFavouritePublicationController::class, 'destroy'])->name('api.publications.favorite.delete');
     Route::get('/favourite/publications', [ApiFavouritePublicationController::class, 'list'])->name('api.publications.favorite.list');
 
     Route::get('/visited/publications', [ApiVisitedPublicationController::class, 'list'])->name('api.publications.visited.list');
+
+    Route::get('/tariff/{id}', [ApiTariffController::class, 'show']);
+    Route::post('/tariff', [ApiTariffController::class, 'store']);
+    Route::get('/tariffs', [ApiTariffController::class, 'list']);
+    Route::delete('/tariff/{id}', [ApiTariffController::class, 'destroy']);
 
 
 });

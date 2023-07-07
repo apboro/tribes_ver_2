@@ -14,7 +14,7 @@ namespace App\Http\ApiRequests;
  *           @OA\Property(property="session_string", type="string", example="79500168570gdfgdfgd"),
  *         ),
  *      ),
- *      @OA\Response(response=200, description="Phone confirmed successfully")
+ *      @OA\Response(response=200, description="OK")
  * )
  */
 class ApiStoreUserBotSessionRequest extends ApiRequest

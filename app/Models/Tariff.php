@@ -5,8 +5,17 @@ namespace App\Models;
 use Database\Factories\TariffFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
-/** @method TariffFactory factory() */
+/** @method TariffFactory factory()
+ * @property mixed $main_image
+ * @property mixed $thanks_image
+ * @property mixed $thanks_message_is_active
+ * @property mixed $tariff_is_payable
+ * @property mixed $thanks_message
+ * @property mixed $test_period_is_active
+ * @property mixed $user_id
+ */
 class Tariff extends Model
 {
     use HasFactory;
@@ -23,6 +32,11 @@ class Tariff extends Model
     function variants()
     {
         return $this->hasMany(TariffVariant::class, 'tariff_id', 'id');
+    }
+
+    public function scopeOwned($query)
+    {
+        return $query->where('user_id', '=', Auth::user()->id);
     }
 
     public function getTariffVariants($inlineLink = null)
