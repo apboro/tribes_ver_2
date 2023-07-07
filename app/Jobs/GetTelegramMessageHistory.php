@@ -56,19 +56,22 @@ class GetTelegramMessageHistory implements ShouldQueue
             $telegramConnection = TelegramConnection::select('chat_id', 'access_hash', 'chat_type', 'comment_chat_id', 'comment_chat_hash')
                 ->where('is_there_userbot', true)
                 ->where('userBotStatus', 'administrator')
-                ->where('chat_id', '-' . $this->chatId)
+                ->where('chat_id', $this->chatId)
                 ->orWhere('chat_id', '-100' . $this->chatId)
                 ->first();
 
             if ($telegramConnection && $telegramConnection->chat_type) {
-                if ($telegramConnection->chat_type == 'group')
+                if ($telegramConnection->chat_type === 'group') {
                     $this->forGroup($telegramConnection, 'group');
-                elseif ($telegramConnection->chat_type == 'channel')
-                    $this->forChannel($telegramConnection, 'channel');
-                elseif ($telegramConnection->chat_type == 'comment') 
-                    $this->forComment($telegramConnection, 'channel');
-                else 
-                    TelegramLogService::staticSendLogMessage('GetTelegramMessageHistory - отсуствует chat_type в connections');
+//                elseif ($telegramConnection->chat_type == 'channel')
+//                    $this->forChannel($telegramConnection, 'channel');
+//                elseif ($telegramConnection->chat_type == 'comment')
+//                    $this->forComment($telegramConnection, 'channel');
+                }else {
+                    TelegramLogService::staticSendLogMessage(
+                        'GetTelegramMessageHistory - отсуствует chat_type в connections'
+                    );
+                }
             }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -79,12 +82,19 @@ class GetTelegramMessageHistory implements ShouldQueue
     {
         try {
             $access_hash = $connect->access_hash ?? null;
-            if ($access_hash)
+            if ($access_hash) {
                 $type = 'channel';
+            }
 
-            $chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
+            $chat_id = $connect->chat_id;//str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
 
             $messages = $this->userBot->getMessages($chat_id, $type, $access_hash, 0, $this->limit);
+//
+//            $res = json_encode($messages, JSON_UNESCAPED_UNICODE);
+//
+//            file_put_contents(storage_path('messanges.log'),  $res);
+//            $messages =  json_decode(file_get_contents(storage_path('messanges.log')));
+
             $this->saveMessage($messages);
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -110,7 +120,9 @@ class GetTelegramMessageHistory implements ShouldQueue
             $comment_chat_id = str_replace('-', '', (str_replace(-100, '', $connect->chat_id)));
 
             $messages = $this->userBot->getMessages($comment_chat_id, $type, $comment_access_hash, 0, $this->limit);
-            
+
+//            $messages =  json_decode(file_get_contents(storage_path('messanges.log')), true);
+
             $this->saveMessage($messages, true);
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -120,21 +132,36 @@ class GetTelegramMessageHistory implements ShouldQueue
     protected function saveMessage($messages, $isComment = false)
     {
         try {
-            if (isset($messages[0]->messages->messages)) {
-                foreach ($messages[0]->messages->messages as $message) {
-                    if ($message->post === true) {
-                        $this->postRepository->savePost($message);
-                    } else {
-                        if (isset($message->message)) {
-                            $this->messageRepository->saveChatMessage($message, $isComment);
 
-                            if (isset($message->reactions->recent_reactions)) {
-                                $this->saveMessageReaction($message); 
-                            }
+            foreach ($messages as $message) {
+                if ($message->post === true) {
+                    $this->postRepository->savePost($message);
+                } else {
+                    if (isset($message->message)) {
+                        $this->messageRepository->saveChatMessage($message, $isComment);
+
+                        if (isset($message->reactions->recent_reactions)) {
+                            $this->saveMessageReaction($message);
                         }
                     }
                 }
             }
+
+//            if (isset($messages[0]->messages->messages)) {
+//                foreach ($messages[0]->messages->messages as $message) {
+//                    if ($message->post === true) {
+//                        $this->postRepository->savePost($message);
+//                    } else {
+//                        if (isset($message->message)) {
+//                            $this->messageRepository->saveChatMessage($message, $isComment);
+//
+//                            if (isset($message->reactions->recent_reactions)) {
+//                                $this->saveMessageReaction($message);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
@@ -143,7 +170,7 @@ class GetTelegramMessageHistory implements ShouldQueue
     protected function saveMessageReaction($message)
     {
         try {
-            if ($message->peer_id->_ == 'peerChannel') {
+            if ($message->peer_id->_ === 'peerChannel') {
                 $chat_id = isset($message->peer_id->channel_id) ? '-100' . $message->peer_id->channel_id : null;
             } else {
                 $chat_id = isset($message->peer_id->chat_id) ? '-' . $message->peer_id->chat_id : null;

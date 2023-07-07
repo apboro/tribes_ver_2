@@ -25,6 +25,7 @@ class UserBot
             'phone' => env('PHONE_USER_BOT'),
             'url' => $url
         ];
+
         return $this->request('/start-listen', $params)->object();
     }
 
@@ -73,18 +74,20 @@ class UserBot
      */
     public function getMessages($chat_id, $type, $access_hash = null, $min_id = null, $limit = null, $offset_id = null, $user_id = 1)
     {
+        log::info('getMessages');
         $params = [
 //            'ident' => env('IDENT_USER_BOT') . $user_id,
 //            'phone' => env('PHONE_USER_BOT'),
             'chatId' => $chat_id,
             'type' => $type,
-            'access_hash' => $access_hash,
+//            'access_hash' => $access_hash,
             'min_id' => $min_id,
             'limit' => $limit,
             'offset_id' => $offset_id
         ];
+        $uri = '?chatId='. $chat_id;
 
-        return $this->requestPost( $params)->object();
+        return $this->requestSimple( 'group-messages', $uri )->object();
     }
 
     /**
@@ -170,6 +173,7 @@ class UserBot
             'phone' => env('PHONE_USER_BOT'),
             'chat_id' => $chat_id
         ];
+
         return $this->request('/chat-info', $params)->object();
     }
 
@@ -201,7 +205,7 @@ class UserBot
      * @param int $user_id        id пользователя
      * @return object|array
      */
-    public function getUsersInChannel($channel_id, $access_hash, $limit = null, $offset = null, $user_id = 1)
+    public function getUsersInChannel($channel_id, $access_hash = null, $limit = null, $offset = null, $user_id = 1)
     {
         $params = [
             'chatId' => '',
@@ -212,12 +216,34 @@ class UserBot
             'limit' => $limit,
             'offset' => $offset
         ];
-        return $this->request('/participants', $params)->object();
+        return $this->requestSimpleGet('group-members?chatId=' . $channel_id )->object();
+//        $res = json_encode($res, JSON_UNESCAPED_UNICODE);
+//
+//        file_put_contents(storage_path('users.log'),  $res);
+//        $res =  json_decode(file_get_contents(storage_path('users.log')), true);
+//        return $res;
+        //gateway/api/telegram-client/group-members?chatId=-908763618
+
+//        return $this->requestSimpleGet('/group-members?chatId=' . $channel_id )->object();
     }
 
     protected function request($address, $params) 
     {
         return Http::get(env('MTPROTO_HOST') . $address, $params);
+    }
+
+    protected function requestSimpleGet($address)
+    {
+        $url = env('MTPROTO_HOST') . $address;
+
+        return Http::get(env('MTPROTO_HOST') . $address);
+    }
+
+    protected function requestSimple($uri = 'group-messages' , $params)
+    {
+        $url = env('MTPROTO_HOST') . $uri . $params;
+
+        return Http::get($url );
     }
 
     protected function requestPost($params)

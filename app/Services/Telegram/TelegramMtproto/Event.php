@@ -31,7 +31,7 @@ class Event
 
     public function handler($updates)
     {
-        $updates = json_decode($updates)->data;
+        $updates = json_decode($updates);
         if (gettype($updates) == 'array') {
             foreach ($updates as $update) {
                 $this->getProcessingMethods($update);
@@ -56,20 +56,23 @@ class Event
     protected function newParticipants($update)
     {
         try {
-            $participants = $update->participants ?? null;
-            if ($participants && $update->_ === 'updateChatParticipants') {
-                foreach ($participants->participants as $participant) {
-                    if ($participant->user_id === config('telegram_user_bot.user_bot.id')) {
-                        $connect = TelegramConnection::where('chat_id', '-' . $participants->chat_id)->first();
+            $participants = $update->chat_member ?? null;
+            if ($participants) {
+//            if ($participants && $update->_ === 'updateChatParticipants') {
+//                foreach ($participants->participants as $participant) {
+                $isMainBot = $participants->new_chat_member->user->id == config('telegram_user_bot.user_bot.id');
+                $isAdmin = $participants->new_chat_member->status == 'administrator';
+                    if ($isMainBot && $isAdmin) {
+                        $connect = TelegramConnection::where('chat_id', '=', '-' . $participants->chat->id)->first();
                         if ($connect) {
                             $connect->is_there_userbot = true;
                             $connect->userBotStatus = 'administrator';
                             $connect->save();
                         }
-                        dispatch(new SetNewTelegramUsers($participants->chat_id));
-                        dispatch(new GetTelegramMessageHistory($participants->chat_id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo))->delay(5);
+                        SetNewTelegramUsers::dispatch($participants->chat->id);
+                        GetTelegramMessageHistory::dispatch($participants->chat->id, $this->messageRepository, $this->postRepository, $this->messageReactionRepo)->delay(5);
                     }
-                }
+//                }
             }
         } catch (\Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());

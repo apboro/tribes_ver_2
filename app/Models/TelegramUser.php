@@ -36,6 +36,11 @@ class TelegramUser extends Model
     protected $table = 'telegram_users';
 
     protected $connection = 'main';
+
+    protected $fillable = [
+        'telegram_id',
+    ];
+
     protected $hidden = ['id', 'scene', 'scene_for_donate'];
 
     function user()
