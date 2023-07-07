@@ -120,10 +120,11 @@ class ApiPublicationController extends Controller
 
     public function showByUuid(ApiPublicationShowForAllRequest $request, string $uuid)
     {
-        $user = Auth::check();
+
+
         $publication = Publication::where('uuid', $uuid)->first();
         if ($publication == null) {
-            ApiResponse::notFound('common.not_found');
+            return ApiResponse::notFound('common.not_found');
         }
         if ($request->bearerToken() !== null) {
             $user = User::where('api_token', $request->bearerToken())->first();

@@ -77,7 +77,8 @@ Route::prefix('api/v3')->group(function () {
 
     Route::get('/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
 
-    Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])->name('api.publications.show_by_uuid');
+    Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])
+        ->name('api.publications.show_by_uuid')->middleware('api');
 });
 
 /** TODO fastFIX  */
