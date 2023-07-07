@@ -12,16 +12,6 @@ use Illuminate\Foundation\Http\FormRequest;
  *  summary="Pay donate with random sum",
  *  security={{"sanctum": {} }},
  *  tags={"Donates"},
- *    @OA\Parameter(
- *         name="XDEBUG_SESSION_START",
- *         in="query",
- *         description="uri_hash of knowledge",
- *         required=true,
- *          example="PHPSTORM",
- *         @OA\Schema(
- *             type="string",
- *         )
- *     ),
  *     @OA\RequestBody(
  *          @OA\JsonContent(
  *                 @OA\Property(property="amount",type="string",example="100"),

@@ -26,7 +26,7 @@ use function PHPUnit\Framework\isTrue;
 class TariffRepository implements TariffRepositoryContract
 {
     private $fileRepo;
-    private $tariffModel;
+    private Tariff $tariffModel;
     public $perPage = 15;
     protected TelegramMainBotService $mainServiceBot;
     private $fileUploadService;
@@ -501,4 +501,35 @@ class TariffRepository implements TariffRepositoryContract
         $baseAttributes['inline_link'] = $tariff->inline_link;
         return $baseAttributes;
     }
+
+    public function storeOrUpdate($data): Tariff
+    {
+        $community = Community::find($data['community_id']);
+
+        $this->initTariffModel($community);
+
+        $this->tariffModel->title = $data['title'];
+        $this->tariffModel->test_period_is_active = $data['test_period_is_active'];
+        $this->tariffModel->test_period = 3;
+        $this->tariffModel->main_description = $data['main_description'];
+        $this->tariffModel->thanks_message = $data['thanks_message'];
+        $this->tariffModel->tariff_is_payable = $data['tariff_is_payable'];
+        $this->tariffModel->thanks_message_is_active = $data['thanks_message_is_active'];
+        $this->tariffModel->main_image = $data['main_image'];
+        $this->tariffModel->thanks_image = $data['thanks_image'];
+        $this->tariffModel->user_id = Auth::user()->id;
+        $this->tariffModel->save();
+
+        $variant = $this->tariffModel->variants()->first() ?? new TariffVariant;
+        $variant->tariff_id = $this->tariffModel->id;
+        $variant->title = $data['title'];
+        $variant->price = $data['price'];
+        $variant->period = 30;
+        $variant->isActive = true;
+        $this->generateLink($variant);
+        $variant->save();
+
+        return $this->tariffModel;
+    }
+
 }
