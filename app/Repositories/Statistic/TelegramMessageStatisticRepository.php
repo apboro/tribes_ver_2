@@ -49,9 +49,9 @@ class TelegramMessageStatisticRepository
         return $this->queryMessages($communityIds, $request);
     }
 
-    public function getListForFile(array $communityIds): Builder
+    public function getListForFile(array $communityIds, $request): Builder
     {
-        $builder = $this->queryMessages($communityIds);
+        $builder = $this->queryMessages($communityIds, $request);
         $builder->orderBy('count_messages', 'DESC');
         return $builder;
     }
