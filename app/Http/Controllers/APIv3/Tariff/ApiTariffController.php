@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\APIv3\Tariff;
 
-use App\Http\ApiRequests\Community\ApiTariffsRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffActivateRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffDestroyRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffListRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffShowRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffStoreRequest;
+use App\Http\ApiRequests\Tariffs\ApiTariffUpdateRequest;
 use App\Http\ApiResources\ApiTariffResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -34,7 +34,7 @@ class ApiTariffController extends Controller
     public function store(ApiTariffStoreRequest $request)
     {
         $data = $request->all();
-        $tariff = $this->tariffRepository->storeOrUpdate($data);
+        $tariff = $this->tariffRepository->store($data);
         return ApiResponse::common(ApiTariffResource::make($tariff));
     }
 
@@ -46,6 +46,12 @@ class ApiTariffController extends Controller
             $tariff = Tariff::owned()->where('inline_link', $request->hash)->firstOrFail();
         }
         return ApiResponse::common(ApiTariffResource::make($tariff));
+    }
+
+    public function update(ApiTariffUpdateRequest $request)
+    {
+        $tariffModel = $this->tariffRepository->update($request);
+        return ApiResponse::common(ApiTariffResource::make($tariffModel));
     }
 
     public function destroy(ApiTariffDestroyRequest $request)
