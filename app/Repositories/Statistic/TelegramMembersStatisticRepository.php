@@ -64,9 +64,9 @@ class TelegramMembersStatisticRepository
         return $builder;
     }
 
-    public function getActiveUsers(array $community_ids)
+    public function getActiveUsers(array $community_ids, $request)
     {
-        $builder = $this->queryMembers($community_ids);
+        $builder = $this->getActiveMembers($community_ids, $request);
         $builder->having(DB::raw("COUNT(distinct(telegram_messages.id))"), '>', 0);
         return $builder->get();
     }
@@ -195,6 +195,62 @@ class TelegramMembersStatisticRepository
         $result = $builder->get();
 
         return $result;
+    }
+
+    public function getActiveMembers(array $communityIds, $request)
+    {
+        if (!empty($request)) {
+            $scale = $this->getScale($request->input('period'));
+            $start = $this->getStartDate($request->input('period') ?? 'week')->toDateTimeString();
+            $end = $this->getEndDate()->toDateTimeString();
+        }
+
+        $com = "communities";
+        $tc = "telegram_connections";
+        $tu = 'telegram_users';
+        $tuc = 'telegram_users_community';
+        $tm = 'telegram_messages';
+        $pmr = 'telegram_message_reactions as pmr';
+        $gmr = 'telegram_message_reactions as gmr';
+        $builder = DB::table($tu)
+            ->leftJoin($tuc, "$tu.telegram_id", "=", "$tuc.telegram_user_id")
+            ->leftJoin($com, "$tuc.community_id", "$com.id")
+            ->leftJoin($tc, "$com.connection_id", "$tc.id")
+            ->leftJoin($tm, function ($join) use ($tm, $tu, $tc) {
+                $join->on("$tm.telegram_user_id", '=', "$tu.telegram_id")
+                    ->on("$tm.group_chat_id", '=', "$tc.comment_chat_id")
+                    ->orOn("$tm.telegram_user_id", '=', "$tu.telegram_id")
+                    ->on("$tm.group_chat_id", '=', "$tc.chat_id");
+            })
+            ->leftJoin($gmr, function ($join) use ($tm, $tc) {
+                $join->on("gmr.message_id", '=', "$tm.message_id")
+                    ->on("gmr.group_chat_id", '=', "$tc.comment_chat_id")
+                    ->orOn("gmr.message_id", '=', "$tm.message_id")
+                    ->on("gmr.group_chat_id", '=', "$tc.chat_id");
+            })
+            ->leftJoin($pmr, function ($join) use ($tuc, $tc) {
+                $join->on("pmr.telegram_user_id", '=', "$tuc.telegram_user_id")
+                    ->on("pmr.group_chat_id", '=', "$tc.comment_chat_id")
+                    ->orOn("pmr.telegram_user_id", '=', "$tuc.telegram_user_id")
+                    ->on("pmr.group_chat_id", '=', "$tc.chat_id");
+            })
+            ->select([
+                DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
+                "$tu.user_name as nick_name",
+                DB::raw("$tuc.accession_date as accession_date"),
+                "$tu.photo_url as image"
+            ]);
+        $builder->where(DB::raw("to_timestamp($tm.message_date)::timestamp"), '>=', $start);
+        $builder->where(DB::raw("to_timestamp($tm.message_date)::timestamp"), '<=', $end);
+
+        $builder->groupBy("$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tu.photo_url");
+        if (!empty($communityIds)) {
+            $builder->whereIn("$tuc.community_id", $communityIds);
+        }
+        $builder->where("$com.owner", Auth::user()->id);
+        $builder->orderBy('accession_date');
+
+        return $builder;
     }
 
     /**
