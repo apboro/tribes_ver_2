@@ -43,7 +43,7 @@ class ApiTariffStoreRequest extends ApiRequest
             'test_period_is_active' => 'boolean',
             'title' => 'required|string|max:150',
             'tariff_is_payable' => 'boolean',
-            'main_description' => 'string|max:4096',
+            'main_description' => 'nullable|string|max:4096',
             'thanks_message_is_active' => 'boolean',
             'thanks_message' => 'string|max:940',
             'price' => 'integer',

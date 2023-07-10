@@ -10,6 +10,7 @@ class ApiTariffResource extends JsonResource
     public function toArray($request)
     {
         $variant = $this->variants()->first();
+        $community = $this->community;
 
         return [
             'id' => $this->id,
@@ -27,6 +28,8 @@ class ApiTariffResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'price' =>$variant->price,
+            'chat_name' => $community->title,
+            'followers' => $community->followers()->count(),
         ];
     }
 }
