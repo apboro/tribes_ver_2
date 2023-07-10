@@ -2,6 +2,7 @@
 
 namespace App\Http\ApiResources;
 
+use App\Models\Tariff;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /** @mixin \App\Models\Tariff */
@@ -27,10 +28,10 @@ class ApiTariffResource extends JsonResource
             'test_period_is_active' => $this->test_period_is_active,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'price' =>$variant->price,
+            'price' => $variant ? $variant->price : null,
             'chat_name' => $community->title,
             'followers' => $community->followers()->count(),
-            'tariff_page' => config('app.frontend_url').$this->resource::FRONTEND_TARIFF_PAGE.$this->inline_link,
+            'tariff_page' => config('app.frontend_url').Tariff::FRONTEND_TARIFF_PAGE.$this->inline_link,
         ];
     }
 }
