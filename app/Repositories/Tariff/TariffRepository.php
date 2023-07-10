@@ -509,23 +509,23 @@ class TariffRepository implements TariffRepositoryContract
         $this->initTariffModel($community);
 
         $this->tariffModel->title = $data['title'];
-        $this->tariffModel->test_period_is_active = $data['test_period_is_active'];
+        $this->tariffModel->test_period_is_active = $data['test_period_is_active'] ?? false;
         $this->tariffModel->test_period = 3;
-        $this->tariffModel->main_description = $data['main_description'];
-        $this->tariffModel->thanks_message = $data['thanks_message'];
-        $this->tariffModel->tariff_is_payable = $data['tariff_is_payable'];
-        $this->tariffModel->thanks_message_is_active = $data['thanks_message_is_active'];
-        $this->tariffModel->main_image = $data['main_image'];
-        $this->tariffModel->thanks_image = $data['thanks_image'];
+        $this->tariffModel->main_description = $data['main_description'] ?? null;
+        $this->tariffModel->thanks_message = $data['thanks_message'] ?? null;
+        $this->tariffModel->tariff_is_payable = $data['tariff_is_payable'] ?? false;
+        $this->tariffModel->thanks_message_is_active = $data['thanks_message_is_active'] ?? false;
+        $this->tariffModel->main_image = $data['main_image'] ?? null;
+        $this->tariffModel->thanks_image = $data['thanks_image'] ?? null;
         $this->tariffModel->user_id = Auth::user()->id;
         $this->tariffModel->save();
 
         $variant = $this->tariffModel->variants()->first() ?? new TariffVariant;
         $variant->tariff_id = $this->tariffModel->id;
-        $variant->title = $data['title'];
-        $variant->price = $data['price'];
+        $variant->title = $data['title'] ?? null;
+        $variant->price = $data['price'] ?? null;
         $variant->period = 30;
-        $variant->isActive = $data['tariff_is_payable'];
+        $variant->isActive = $data['tariff_is_payable'] ?? false;
         $this->generateLink($variant);
         $variant->save();
 
