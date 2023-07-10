@@ -6,19 +6,28 @@ use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\Get(
- *     path="/api/v3/tariff/{id}",
- *     operationId="get-tariff-with-id",
- *     summary="Get tariff by ID",
+ *     path="/api/v3/show/tariff",
+ *     operationId="get-tariff-with-id-and-hash",
+ *     summary="Get tariff by ID and hash",
  *     security={{"sanctum": {} }},
  *     tags={"Tariffs"},
  *     @OA\Parameter(
  *         name="id",
- *         in="path",
- *         description="ID of tariff in database",
- *         required=true,
+ *         in="query",
+ *         description="ID of tariff in the database",
+ *         required=false,
  *         @OA\Schema(
  *             type="integer",
  *             format="int64",
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="hash",
+ *         in="query",
+ *         description="Hash of tariff in the database",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string"
  *         )
  *     ),
  *     @OA\Response(response=200, description="OK"),

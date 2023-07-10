@@ -19,7 +19,7 @@ class ApiTariffResource extends JsonResource
             'community_id' => $this->community_id,
             'tariff_is_payable' => $this->tariff_is_payable,
             'test_period' => $this->test_period,
-            'bot command' => config('telegram_bot.bot.botFullName'). ' ' . $variant->inline_link,
+            'bot command' => $variant ? config('telegram_bot.bot.botFullName'). ' ' . $variant->inline_link : null,
             'main_image' => $this->main_image,
             'thanks_image' => $this->thanks_image,
             'thanks_message_is_active' => $this->thanks_message_is_active,
@@ -30,6 +30,7 @@ class ApiTariffResource extends JsonResource
             'price' =>$variant->price,
             'chat_name' => $community->title,
             'followers' => $community->followers()->count(),
+            'tariff_page' => config('app.frontend_url').$this->resource::FRONTEND_TARIFF_PAGE.$this->inline_link,
         ];
     }
 }
