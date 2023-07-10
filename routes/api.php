@@ -75,12 +75,10 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/courses/pay/{hash}', [ApiCourseController::class, 'pay']);
     Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
     Route::post('/send_demo_email', [MailSender::class, 'sendDemoEmail']);
-
     Route::get('/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
-
-    Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])->name('api.publications.show_by_uuid');
-
     Route::post('/pay/donate', [ApiNewDonateController::class, 'processDonatePayment']);
+    Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])
+        ->name('api.publications.show_by_uuid')->middleware('api');
 });
 
 /** TODO fastFIX  */
@@ -249,6 +247,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/tariff', [ApiTariffController::class, 'store']);
     Route::get('/tariffs', [ApiTariffController::class, 'list']);
     Route::delete('/tariff/{id}', [ApiTariffController::class, 'destroy']);
+    Route::patch('/tariff/setActivity', [ApiTariffController::class, 'setActivity']);
 
 
 });
@@ -336,14 +335,6 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
     /** Получение уникальных посетителей платёжной страницы за период времени в формате Y-m-d*/
     Route::get('hosts/{community}/{count}/{rank}/{beforeTime?}', 'StatisticController@getHostsPeriod')->name('api.get.hosts');
 
-    Route::group(['prefix' => 'questions'], function () {
-        Route::post('list', 'ApiQuestionController@list')->name('api.question.list');
-        Route::post('get', 'ApiQuestionController@get')->name('api.question.get');
-        Route::post('add', 'ApiQuestionController@add')->name('api.question.add');
-        Route::post('store', 'ApiQuestionController@store')->name('api.question.store');
-        Route::post('delete', 'ApiQuestionController@delete')->name('api.question.delete');
-        Route::post('do', 'ApiQuestionController@do')->name('api.question.do');
-    });
     Route::group(['prefix' => 'communities'], function () {
         Route::post('list', 'CommunityController@list')->name('api.community.list');
         Route::post('get', 'CommunityController@get')->name('api.community.get');

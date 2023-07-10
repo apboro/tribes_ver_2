@@ -525,7 +525,7 @@ class TariffRepository implements TariffRepositoryContract
         $variant->title = $data['title'];
         $variant->price = $data['price'];
         $variant->period = 30;
-        $variant->isActive = true;
+        $variant->isActive = $data['tariff_is_payable'];
         $this->generateLink($variant);
         $variant->save();
 

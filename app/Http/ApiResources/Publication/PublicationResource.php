@@ -23,6 +23,9 @@ class PublicationResource extends JsonResource
             'background_image' => $this->resource->background_image,
             'price' => $this->resource->price,
             'author_id' => $this->resource->author_id,
+            'last_visit' => $request->user('sanctum') && $this->resource->lastVisit($request->user('sanctum')->id) ?
+                $this->resource->lastVisit($request->user('sanctum')->id)->last_visited : null,
+            'is_favourite' => $request->user('sanctum') && $this->resource->isFavourite($request->user('sanctum')->id),
             'parts' => PublicationPartCollection::make($this->resource->parts)->toArray($request)
         ];
     }

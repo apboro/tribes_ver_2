@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Storage;
  *     @OA\RequestBody(
  *      @OA\JsonContent(
  *           @OA\Property(property="community_id", type="integer", example="1"),
- *           @OA\Property(property="test_period_is_active", type="boolean", example="true"),
+ *           @OA\Property(property="test_period_is_active", type="boolean", example="false"),
  *           @OA\Property(property="title", type="string", example="My best tariff"),
  *           @OA\Property(property="tariff_is_payable", type="boolean", example="true"),
  *           @OA\Property(property="main_description", type="string", example="Pay me pls"),
