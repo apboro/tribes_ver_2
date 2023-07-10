@@ -40,6 +40,7 @@ class SetNewTelegramUsers implements ShouldQueue
     public function handle()
     {
         try {
+            sleep(4);
             $community = Community::whereHas('connection', function ($query) {
                 $query->where('chat_id', '-' . $this->chatId)->orWhere('chat_id', '-100' . $this->chatId)->orWhere('chat_id', $this->chatId);
             })->first();
@@ -143,9 +144,9 @@ class SetNewTelegramUsers implements ShouldQueue
     protected function getGroupRole($participant)
     {
         $className = $participant->participant->className;
-        if ($className === 'chatParticipantAdmin')
+        if ($className === 'ChatParticipantAdmin')
             $role = 'administrator';
-        elseif ($className === 'chatParticipantCreator')
+        elseif ($className === 'ChatParticipantCreator')
             $role = 'creator';
         else
             $role = 'member';
