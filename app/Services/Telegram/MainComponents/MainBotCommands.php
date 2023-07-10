@@ -190,16 +190,16 @@ class MainBotCommands
                     } else {
                         $ctx->replyHTML($messageForMember, Menux::Get('custom'));
                     }
-//                if (!empty($ctx->var('paymentId'))) {
-//                    $this->connectionTariff($ctx);
-//                }
+                if (!empty($ctx->var('paymentId'))) {
+                    $this->connectionTariff($ctx);
+                }
                 }
                 $this->save_log(
                     TelegramBotActionHandler::START_BOT,
                     TelegramBotActionHandler::ACTION_SEND_HELLO_MESSAGE,
                     $ctx);
             };
-
+            //handle start with donate
                 $this->bot->onText('/start donate-{donate_hash:string}_{amount:integer}', function (Context $ctx){
                     Log::debug('In start donate');
                     $donate = Donate::where('inline_link', $ctx->var('donate_hash'))->first();
@@ -211,14 +211,22 @@ class MainBotCommands
                         'telegram_user_id' =>$ctx->getUserID(),
                     ];
                     $dataRandom = [
-                        'min_price' => $donate->getRandomVariant()->min_price,
-                        'max_price' => $donate->getRandomVariant()->max_price,
+                        'min_price' => $donate->getRandomSumVariant()->min_price,
+                        'max_price' => $donate->getRandomSumVariant()->max_price,
                         'donate_id' => $donate->id,
                         'telegram_user_id' =>$ctx->getUserID(),
                     ];
                     $menu->row()->uBtn('Внести донат', $ctx->var('amount') == 0 ? $donate->getDonatePaymentLinkRandom($dataRandom) : $donate->getDonatePaymentLink($data));
                     $ctx->reply('Ссылка для доната ' . "\n\n", $menu);
                 });
+
+            //handle start with tariff
+            $this->bot->onText('/start tariff-{tariff_hash:string}', function (Context $ctx){
+                Log::debug('In start tariff');
+                $tariff = Tariff::where('inline_link', $ctx->var('tariff_hash'))->first();
+                [$text, $menu] = $this->tariffButton($tariff->community);
+                $ctx->replyHTML($text, $menu);
+            });
 
 
 //          $this->bot->onText('/start {paymentId?}', $start);
@@ -1388,11 +1396,7 @@ class MainBotCommands
                 $title = ($variant->title) ? $variant->title . ' — ' : '';
                 $period = ($variant->period) ? '/Дней:' . $variant->period : '';
                 $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
-                    'amount' => $variant->price,
-                    'currency' => 0,
-                    'type' => 'tariff',
-                    'telegram_user_id' => null,
-                    'inline_link' => PseudoCrypt::hash($variant->id, 8),
+                    'tariff' => $community->tariff->inline_link,
                 ]));
             }
             return [$text, $menu];
