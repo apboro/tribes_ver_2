@@ -41,4 +41,15 @@ class Publication extends Model
     {
         return $this->hasMany(VisitedPublication::class);
     }
+
+    public function lastVisit(int $user_id)
+    {
+        return $this->hasMany(VisitedPublication::class)->where('user_id', $user_id)->first();
+    }
+
+    public function isFavourite(int $user_id)
+    {
+        return $this->hasMany(FavouritePublication::class)->where('user_id', $user_id)->first();
+    }
+
 }
