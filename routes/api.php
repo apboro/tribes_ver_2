@@ -247,6 +247,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/tariff', [ApiTariffController::class, 'store']);
     Route::get('/tariffs', [ApiTariffController::class, 'list']);
     Route::delete('/tariff/{id}', [ApiTariffController::class, 'destroy']);
+    Route::put('/tariff/{id}', [ApiTariffController::class, 'update']);
     Route::patch('/tariff/setActivity', [ApiTariffController::class, 'setActivity']);
 
 

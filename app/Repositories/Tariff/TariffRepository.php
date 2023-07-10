@@ -3,6 +3,7 @@
 namespace App\Repositories\Tariff;
 
 use App\Helper\PseudoCrypt;
+use App\Http\ApiRequests\ApiRequest;
 use App\Models\Community;
 use App\Models\Tariff;
 use App\Models\TariffVariant;
@@ -502,7 +503,7 @@ class TariffRepository implements TariffRepositoryContract
         return $baseAttributes;
     }
 
-    public function storeOrUpdate($data): Tariff
+    public function store($data): Tariff
     {
         $community = Community::find($data['community_id']);
 
@@ -528,6 +529,24 @@ class TariffRepository implements TariffRepositoryContract
         $variant->isActive = $data['tariff_is_payable'] ?? false;
         $this->generateLink($variant);
         $variant->save();
+
+        return $this->tariffModel;
+    }
+
+    public function update(ApiRequest $request): Tariff
+    {
+
+        $this->tariffModel = Tariff::find($request->id);
+        $data = $request->all();
+        $variant_data['title'] = $data['title'] ?? null;
+        $variant_data['price'] = $data['price'] ?? null;
+        $variant = $this->tariffModel->variants()->first();
+        $variant->fill(array_filter($variant_data));
+        $variant->save();
+
+        unset($data['price']);
+        $this->tariffModel->fill($data);
+        $this->tariffModel->save();
 
         return $this->tariffModel;
     }
