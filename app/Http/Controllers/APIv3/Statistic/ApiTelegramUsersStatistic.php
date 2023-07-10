@@ -31,7 +31,7 @@ class ApiTelegramUsersStatistic extends Controller
 
 
     /**
-     * @param ApiMemberStatisticRequest $request
+     * @param ApiMemberStatisticChartsRequest $request
      * @return ApiResponse
      */
 
@@ -39,7 +39,8 @@ class ApiTelegramUsersStatistic extends Controller
     {
 
         $active_user = $this->statisticRepository->getActiveUsers(
-            $request->input('community_ids') ?? []
+            $request->input('community_ids') ?? [],
+            $request
         );
         $current_members = $this->statisticRepository->currentMembersChart(
             $request->input('community_ids') ?? [],
