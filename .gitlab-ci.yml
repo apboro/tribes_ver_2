@@ -53,7 +53,7 @@ deploy_stage:
   extends:
   - .base_template
   - .commit_versions_template
-  - .common_deploy
+  - .production_deploy
   variables: 
     DEPLOYMENT: staging-spodial
   when: manual
