@@ -20,14 +20,14 @@ class TelegramMessagesSemanticRepository
         $start = $this->getStartDate($request->input('period') ?? 'week')->toDateTimeString();
         $end = $this->getEndDate()->toDateTimeString();
 
-        $community = Community::find($request->get('community_id'));
-        if (!$community){
-            return false;
+        if ($request->input('community_id')){
+            $chat_ids = [Community::find($request->input('community_id'))->connection->chat_id];
+        } else {
+            $chat_ids = Community::owned()->with('connection')->get()->pluck('connection.chat_id')->toArray();
         }
-        $chat_id = $community->connection->chat_id;
 
         $semanticsForPeriod = Semantic::query()
-            ->where('chat_id', $chat_id)
+            ->whereIn('chat_id', $chat_ids)
             ->where('messages_from_datetime', '>=', $start)
             ->where('messages_from_datetime', '<=', $end)
             ->get();

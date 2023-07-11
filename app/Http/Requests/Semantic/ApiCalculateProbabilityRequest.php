@@ -23,7 +23,7 @@ class ApiCalculateProbabilityRequest extends ApiRequest
     {
         return [
             'period'  => ['string'],
-            'community_id' => ['required','integer']
+            'community_id' => ['integer']
         ];
     }
 }
