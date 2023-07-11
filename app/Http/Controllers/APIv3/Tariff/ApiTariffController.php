@@ -89,7 +89,7 @@ class ApiTariffController extends Controller
         $variant = $tariff->variants()->first();
 
         if (!$tariff->tariff_is_payable && $variant->isActive) {
-            return ApiResponse::error('common.tariff_inactive');
+            return ApiResponse::error('tariff.tariff_inactive');
         }
 
         ### Регистрация плательщика #####
@@ -104,12 +104,11 @@ class ApiTariffController extends Controller
                 'phone_confirmed' => false,
             ]);
 
+
         if ($v = $user->telegramMeta) {
             if ($v = $v->tariffVariant()->first()) {
-                if ($v->title === 'Пробный период') {
-                    return $request->wantsJson() ?
-                        response()->json(['success' => 'false', 'message' => 'Вы уже использовали пробный период', 'redirect' => route('404')]) :
-                        redirect()->back(404)->withErrors('Вы уже использовали пробный период');
+                if ($v->used_trial) {
+                    return ApiResponse::error('tariff.tariff_trial_used');
                 }
             }
         }

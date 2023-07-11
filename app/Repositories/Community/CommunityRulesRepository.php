@@ -278,6 +278,10 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
     protected function handleOnboardingRule($rule)
     {
         try {
+//            if (isset($rules['restrictMessageSending'])) {
+//                $duration = Carbon::now()->addSeconds($rules['restrictMessageSending']['duration'])->timestamp;
+//            }
+
             Log::debug('in onboardingRule handler', [$this->messageDTO, $rule]);
             $rules = json_decode($rule->rules, true);
             Log::debug('onboarding $rules', [$rules]);
