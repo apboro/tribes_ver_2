@@ -46,7 +46,8 @@ class ApiTelegramMessageStatistic extends Controller
         $columnNames = $this->statisticRepository::EXPORT_FIELDS;
 
         $builder = $this->statisticRepository->getListForFile(
-            $request->input('community_ids') ?? []
+            $request->input('community_ids') ?? [],
+            $request
         );
 
         return $this->fileSendService->sendFile(

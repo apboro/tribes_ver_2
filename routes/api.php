@@ -79,6 +79,7 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/pay/donate', [ApiNewDonateController::class, 'processDonatePayment']);
     Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])
         ->name('api.publications.show_by_uuid')->middleware('api');
+    Route::post('/pay/tariff', [ApiTariffController::class, 'payForTariff']);
 });
 
 /** TODO fastFIX  */

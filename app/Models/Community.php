@@ -144,15 +144,6 @@ class Community extends Model
         return route('community.donate.form', ['hash' => $this->hash]) . $params;
     }
 
-    public function getTariffPayLink($data = null)
-    {
-        $params = '';
-        if ($data && is_array($data)) {
-            $params = '?' . http_build_query($data);
-        }
-        return route('community.tariff.form', ['community' => $this]) . $params;
-    }
-
     public function getTariffPaymentLink($data = null)
     {
         $params = '';
@@ -160,7 +151,7 @@ class Community extends Model
             $params = '?' . http_build_query($data);
         }
 
-        return route('community.tariff.confirmSubscription', ['hash' => $data['inline_link']]) . $params;
+        return config('app.frontend_url').$params;
     }
 
     public function isTelegram()

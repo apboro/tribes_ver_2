@@ -175,7 +175,7 @@ class Donate extends Model
         return $this->belongsTo(User::class,'user_id', 'id');
     }
 
-    public function getRandomVariant()
+    public function getRandomSumVariant()
     {
         return $this->variants()->where('variant_name', 'random_sum')->first();
     }

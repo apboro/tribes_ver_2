@@ -20,10 +20,6 @@ class ApiSemanticController extends Controller
     {
         $statistics = $this->semanticRepository->calculateProbability($request);
 
-        if (!$statistics) {
-            return ApiResponse::error('Не удалось составить статисткику для данного чата');
-        }
-
         return ApiResponse::list()->items($statistics);
     }
 }
