@@ -269,11 +269,11 @@ class Telegram extends Messenger
                 $community->is_active = true;
 
                 if ($community->wasRecentlyCreated) {
-                    $tariff = new Tariff();
-                    $this->tariffRepository->generateLink($tariff);
-                    $baseAttributes = Tariff::baseData();
-                    $baseAttributes['inline_link'] = $tariff->inline_link;
-                    $community->tariff()->create($baseAttributes);
+//                    $tariff = new Tariff();
+//                    $this->tariffRepository->generateLink($tariff);
+//                    $baseAttributes = Tariff::baseData();
+//                    $baseAttributes['inline_link'] = $tariff->inline_link;
+//                    $community->tariff()->create($baseAttributes);
                     $community->statistic()->create([
                         'community_id' => $community->id
                     ]);
