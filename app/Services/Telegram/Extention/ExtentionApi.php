@@ -78,9 +78,9 @@ class ExtentionApi extends Api implements ExtentionApiInterface
             Logg::debug('Lets send mess with return params', [$params]);
             $url = self::TELEGRAM_BASE_URL . '/bot' . $this->token . '/sendMessage';
 
-           $response = Http::post($url, $params);
+            $response = Http::post($url, $params);
 
-           return $response->json();
+            return $response->json();
 
         } catch (\Exception $e) {
             Logg::channel('telegram-bot-log')
@@ -130,7 +130,7 @@ class ExtentionApi extends Api implements ExtentionApiInterface
             $pinMessage = [
                 'chat_id' => $chatId,
                 'message_id' => $messageId,
-    //            'disable_notification' => true, // default  muted false
+                //            'disable_notification' => true, // default  muted false
             ];
 
             $response = Http::post(self::TELEGRAM_BASE_URL . '/bot' . $this->token . '/pinChatMessage', $pinMessage);
@@ -196,7 +196,7 @@ class ExtentionApi extends Api implements ExtentionApiInterface
                 "telegram_id" => $userId,
                 "type" => 4
             ]);
-            $telegramUserCommunity= TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $userId);
+            $telegramUserCommunity = TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $userId);
             $telegramUserCommunity->exit_date = time();
             $telegramUserCommunity->status = 'banned';
             $telegramUserCommunity->save();
@@ -250,11 +250,12 @@ class ExtentionApi extends Api implements ExtentionApiInterface
 
         if ($telegramUserInList) $telegramUserInList->delete();
 
-        $telegramUserCommunity= TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $userId);
+        $telegramUserCommunity = TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $userId);
         $telegramUserCommunity->status = null;
         $telegramUserCommunity->save();
-
-        return $this->unbanChatMember($params);
+        if ($community->connection->chat_type === 'supergroup') {
+            return $this->unbanChatMember($params);
+        }
     }
 
     /**
