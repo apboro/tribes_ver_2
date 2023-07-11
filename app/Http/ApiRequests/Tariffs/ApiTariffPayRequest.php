@@ -28,7 +28,8 @@ class ApiTariffPayRequest extends ApiRequest
     {
         return  [
             'id' =>'required|exists:tariffs,id',
-            'e-mail' => 'required|string|email'
+            'e-mail' => 'required|string|email',
+            'is_test_period' => 'boolean'
         ];
     }
 

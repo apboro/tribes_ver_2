@@ -29,4 +29,5 @@ return [
     'inline_command' => 'Инлайн команда данного тарифа',
     'inline_command_all_tariffs' => 'Инлайн команда всех тарифных планов:',
     'tariff_inactive' => 'Тариф не активен.',
+    'tariff_trial_used' => 'Вы уже исчерпали тестовый период'
 ];
