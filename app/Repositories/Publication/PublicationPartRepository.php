@@ -4,6 +4,7 @@ namespace App\Repositories\Publication;
 
 
 use App\Http\ApiRequests\Publication\ApiPublicationPartStoreRequest;
+use App\Http\ApiRequests\Publication\ApiPublicationPartUpdateRequest;
 use App\Models\PublicationPart;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,6 +30,24 @@ class PublicationPartRepository
             'text' => $request->input('text'),
             'order' => $request->input('order')
         ]);
+        return $publication_part;
+    }
+
+
+    public function update(ApiPublicationPartUpdateRequest $request, int $id)
+    {
+        $file_path = null;
+        if ($request->input('type') != $this::MEDIA_TYPE_TEXT) {
+            $file_path = $request->file('file') ? Storage::disk('public')->putFile('publication_images', $request->file('file')) : null;
+        }
+        $publication_part = PublicationPart::find($id);
+        $publication_part->fill([
+            'type' => $request->input('type'),
+            'file_path' => $file_path,
+            'text' => $request->input('text'),
+            'order' => $request->input('order')
+        ]);
+        $publication_part->save();
         return $publication_part;
     }
 }
