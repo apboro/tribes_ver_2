@@ -190,38 +190,41 @@ class MainBotCommands
                     } else {
                         $ctx->replyHTML($messageForMember, Menux::Get('custom'));
                     }
-                if (!empty($ctx->var('paymentId'))) {
-                    $this->connectionTariff($ctx);
-                }
                 }
                 $this->save_log(
                     TelegramBotActionHandler::START_BOT,
                     TelegramBotActionHandler::ACTION_SEND_HELLO_MESSAGE,
                     $ctx);
             };
+            //handle start with payment
+            $this->bot->onText('/start payment-{paymentId:string}', function (Context $ctx) {
+                $this->connectionTariff($ctx);
+            });
+
+
             //handle start with donate
-                $this->bot->onText('/start donate-{donate_hash:string}_{amount:integer}', function (Context $ctx){
-                    Log::debug('In start donate');
-                    $donate = Donate::where('inline_link', $ctx->var('donate_hash'))->first();
-                    $menu = Menux::Create('link')->inline();
-                    if (!$donate) return;
-                    $data = [
-                        'amount' => $ctx->var('amount'),
-                        'donate_id' => $donate->id,
-                        'telegram_user_id' =>$ctx->getUserID(),
-                    ];
-                    $dataRandom = [
-                        'min_price' => $donate->getRandomSumVariant()->min_price,
-                        'max_price' => $donate->getRandomSumVariant()->max_price,
-                        'donate_id' => $donate->id,
-                        'telegram_user_id' =>$ctx->getUserID(),
-                    ];
-                    $menu->row()->uBtn('Внести донат', $ctx->var('amount') == 0 ? $donate->getDonatePaymentLinkRandom($dataRandom) : $donate->getDonatePaymentLink($data));
-                    $ctx->reply('Ссылка для доната ' . "\n\n", $menu);
-                });
+            $this->bot->onText('/start donate-{donate_hash:string}_{amount:integer}', function (Context $ctx) {
+                Log::debug('In start donate');
+                $donate = Donate::where('inline_link', $ctx->var('donate_hash'))->first();
+                $menu = Menux::Create('link')->inline();
+                if (!$donate) return;
+                $data = [
+                    'amount' => $ctx->var('amount'),
+                    'donate_id' => $donate->id,
+                    'telegram_user_id' => $ctx->getUserID(),
+                ];
+                $dataRandom = [
+                    'min_price' => $donate->getRandomSumVariant()->min_price,
+                    'max_price' => $donate->getRandomSumVariant()->max_price,
+                    'donate_id' => $donate->id,
+                    'telegram_user_id' => $ctx->getUserID(),
+                ];
+                $menu->row()->uBtn('Внести донат', $ctx->var('amount') == 0 ? $donate->getDonatePaymentLinkRandom($dataRandom) : $donate->getDonatePaymentLink($data));
+                $ctx->reply('Ссылка для доната ' . "\n\n", $menu);
+            });
 
             //handle start with tariff
-            $this->bot->onText('/start tariff-{tariff_hash:string}', function (Context $ctx){
+            $this->bot->onText('/start tariff-{tariff_hash:string}', function (Context $ctx) {
                 Log::debug('In start tariff');
                 $tariff = Tariff::where('inline_link', $ctx->var('tariff_hash'))->first();
                 [$text, $menu] = $this->tariffButton($tariff->community);
@@ -519,7 +522,7 @@ class MainBotCommands
 
                 $image = $donate->image;
                 $description = $donate->description ?? '';
-                $message->text($description . '<a href="' . config('app.frontend_url') .'/'. $image . '">&#160</a>');
+                $message->text($description . '<a href="' . config('app.url') . '/' . $image . '">&#160</a>');
 
                 $message->parseMode('HTML');
                 $article->title($donate->title);
@@ -527,10 +530,11 @@ class MainBotCommands
                     $article->description(mb_strimwidth($donate->description, 0, 55, "..."));
 
                 $article->inputMessageContent($message);
-                $article->thumbUrl('' . config('app.frontend_url') .'/' . $image);
+                $article->thumbUrl('' . config('app.url') . '/' . $image);
 
                 $menu = Menux::Create('a')->inline();
-                foreach ($donate->variants as $variant) {
+                $variants = $donate->variants()->orderBy('id')->get();
+                foreach ($variants as $variant) {
                     if ($variant->price && $variant->isActive !== false) {
                         $key = array_search($variant->currency, Donate::$currency);
 
@@ -539,14 +543,14 @@ class MainBotCommands
                         if ($variant->description) {
                             $menu->row()->btn(
                                 $variant->price . $currencyLabel . ' — ' . $variant->description,
-                                'donate-'.$donate->inline_link.'_'.$variant->price
+                                'donate-' . $donate->inline_link . '_' . $variant->price
                             );
                         } else {
-                            $menu->row()->btn($variant->price . $currencyLabel, 'donate-'.$donate->inline_link.'_'.$variant->price);
+                            $menu->row()->btn($variant->price . $currencyLabel, 'donate-' . $donate->inline_link . '_' . $variant->price);
                         }
                     } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
                         $variantDesc = $variant->description ?? 'Произвольная сумма';
-                        $menu->row()->btn($variantDesc, 'donate-'.$donate->inline_link.'_0');
+                        $menu->row()->btn($variantDesc, 'donate-' . $donate->inline_link . '_0');
                     }
                 }
 
@@ -569,7 +573,7 @@ class MainBotCommands
         try {
             $this->bot->onAction('{donate_hash}_{amount}', function (Context $ctx) {
                 Log::debug('In donate answer query');
-                $ctx->ansCallback('', false, 't.me/'.config('telegram_bot.bot.botName').'?start='. $ctx->var('donate_hash').'_'.$ctx->var('amount'));
+                $ctx->ansCallback('', false, 't.me/' . config('telegram_bot.bot.botName') . '?start=' . $ctx->var('donate_hash') . '_' . $ctx->var('amount'));
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -1272,7 +1276,7 @@ class MainBotCommands
                     $invite = ($link)
                         ? "\n" . 'Чтобы вступить в сообщество, нажмите сюда: <a href="' . $link . '">Подписаться</a>' : '';
 
-                    $message = $payment->community->tariff->thanks_description ?? '';
+                    $message = $payment->community->tariff->thanks_message ?? '';
 
                     $image = ($payment->community->tariff->getThanksImage()) ? ' <a href="' . route('main') . $payment->community->tariff->getThanksImage()->url . '">&#160</a>' : '';
                     $variant = $payment->community->tariff->variants()->find($payment->payable_id);
