@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\Tariff;
 
+use App\Events\ApiUserRegister;
 use App\Http\ApiRequests\Tariffs\ApiTariffActivateRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffDestroyRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffListRequest;
@@ -12,13 +13,12 @@ use App\Http\ApiRequests\Tariffs\ApiTariffUpdateRequest;
 use App\Http\ApiResources\ApiTariffResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tariff\TariffFormPayRequest;
 use App\Models\Community;
 use App\Models\Tariff;
 use App\Models\User;
 use App\Repositories\Tariff\TariffRepositoryContract;
-use App\Services\SMTP\Mailer;
 use App\Services\Tinkoff\Payment as Pay;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -103,27 +103,17 @@ class ApiTariffController extends Controller
                 'password' => Hash::make($password),
                 'phone_confirmed' => false,
             ]);
-
-
         if ($v = $user->telegramMeta) {
             if ($v = $v->tariffVariant()->first()) {
-                if ($v->used_trial) {
+                if ($request->input('try_trial') && $v->used_trial) {
                     return ApiResponse::error('tariff.tariff_trial_used');
                 }
             }
         }
-
         if ($user->wasRecentlyCreated) {
-            $token = $user->createTempToken();
-
             $user->tinkoffSync();
-            $user->hashMake();
-
-
-            $v = view('mail.registration')->with(['login' => $email, 'password' => $password])->render();
-            new Mailer('Сервис ' . env('APP_NAME'), $v, 'Регистрация', $email);
+            Event::dispatch(new ApiUserRegister($user, $password));
         }
-
         ### /Регистрация плательщика #####
 
         $p = new Pay();
@@ -134,18 +124,9 @@ class ApiTariffController extends Controller
 
         $payment = $p->pay();
         if ($payment) {
-            return $request->ajax() ? response()->json([
-                'status' => 'ok',
-                'redirect' => $payment->paymentUrl
-            ]) : redirect()->to($payment->paymentUrl);
+            return ApiResponse::common(['redirect' => $payment->paymentUrl]);
         } else {
-            $this->telegramLogService->sendLogMessage(
-                'При инициализации оплаты тарифа произошла ошибка Payment:' . ($payment->id ?? null)
-            );
-            return $request->ajax() ? response()->json([
-                'status' => 'error',
-                'redirect' => 'Ошибка сервера'
-            ]) : redirect()->to($payment->paymentUrl);
+            return ApiResponse::error('common.tariff.tariff_payment_error');
         }
     }
 }

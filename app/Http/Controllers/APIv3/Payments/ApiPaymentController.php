@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\APIv3\Payments;
 
 use App\Events\SubscriptionMade;
+use App\Events\TariffPayedEvent;
 use App\Helper\PseudoCrypt;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendEmails;
 use App\Models\Payment;
 use App\Repositories\Payment\PaymentRepository;
 use App\Services\TelegramLogService;
@@ -38,13 +40,19 @@ class ApiPaymentController extends Controller
     public function successPayment(Request $request, $hash)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
+        $redirectUrl = '';
         if ($payment->status === 'CONFIRMED' && $payment->type === 'subscription') {
             Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
-            $redirectUrl = $request->success_url ?? env('FRONTEND_URL').'/app/subscriptions?payment_result=success';
+            $redirectUrl = $request->success_url ?? config('app.frontend_url').'/app/subscriptions?payment_result=success';
         }
 
         if ($payment->status === 'CONFIRMED' && $payment->type === 'donate') {
-            $redirectUrl = $request->success_url ?? env('FRONTEND_URL').'/app/subscriptions?payment_result=success';
+            $redirectUrl = $request->success_url ?? config('app.frontend_url').'/app/subscriptions?payment_result=success';
+        }
+
+        if ($payment->status === 'CONFIRMED' && $payment->type === 'tariff') {
+            $redirectUrl = $request->success_url ?? config('app.frontend_url').'/app/subscriptions?payment_result=success';
+            Event::dispatch(new TariffPayedEvent($payment->payer, $payment->payable, $payment));
         }
         Log::debug('successPayment $redirectUrl - '. $redirectUrl);
 

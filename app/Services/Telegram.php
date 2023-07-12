@@ -70,7 +70,6 @@ class Telegram extends Messenger
 
                     $ty = self::registerTelegramUser($telegram_id, $payment->user_id, $userName, $firstName, $lastName);
 
-
                     if (!$ty->communities()->find($community->id)) {
                         $ty->communities()->attach($community, [
                             'role' => 'member',

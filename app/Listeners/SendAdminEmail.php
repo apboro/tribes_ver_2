@@ -21,6 +21,6 @@ class SendAdminEmail
             'user_name' => $event->user->name ? $event->user->name : null,
             'user_email' => $event->user->email ? $event->user->email : null,
         ])->render();
-        new Mailer('Сервис ' . env('APP_NAME'), $v, 'Удаление пользователя', 'info@spodial.com');
+        new Mailer('Сервис ' . config('app.name'), $v, 'Удаление пользователя', 'info@spodial.com');
     }
 }
