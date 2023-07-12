@@ -36,6 +36,7 @@ class CommunityResource extends JsonResource
             "created_at" => $this->resource->created_at->timestamp,
             "updated_at" => $this->resource->updated_at->timestamp,
             "balance" => $this->resource->balance,
+            "followers" => $this->resource->followers()->count(),
             "knowledge" => [
                 'id' => $knowledge->id ?? null,
                 'name' => $knowledge->name ?? null
