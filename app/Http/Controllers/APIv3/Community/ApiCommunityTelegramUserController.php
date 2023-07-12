@@ -130,6 +130,12 @@ class ApiCommunityTelegramUserController extends Controller
             });
         }
 
+        if (!empty($request->input('telegram_id'))) {
+            $query->where(function ($query) use ($request) {
+                $query->where('telegram_id', $request->input('telegram_id'));
+            });
+        }
+
         if (!empty($request->input('name'))) {
             $query->where(function ($query) use ($request) {
                 $query->where('first_name', 'ilike', '%' . $request->input('name') . '%')

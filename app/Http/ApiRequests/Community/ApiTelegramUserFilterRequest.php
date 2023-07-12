@@ -40,6 +40,15 @@ use OpenApi\Annotations as OA;
  *         )
  *     ),
  *     @OA\Parameter(
+ *         name="telegram_id",
+ *         in="query",
+ *         description="Telegram User telegram_id",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string",
+ *         )
+ *     ),
+ *     @OA\Parameter(
  *         name="name",
  *         in="query",
  *         description="Telegram User Name",
@@ -116,6 +125,7 @@ class ApiTelegramUserFilterRequest extends ApiRequest
         return [
             'name' => 'string',
             'user_name' => 'string',
+            'telegram_id' => 'integer',
             'accession_date_from' => 'date_format:Y-m-d|nullable',
             'accession_date_to' => 'date_format:Y-m-d|nullable',
             'community_id' => 'integer|min:0',
