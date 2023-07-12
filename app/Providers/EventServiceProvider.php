@@ -11,6 +11,7 @@ use App\Events\FeedBackCreate;
 use App\Events\NewChatUserJoin;
 use App\Events\RemindPassword;
 use App\Events\SubscriptionMade;
+use App\Events\TariffPayedEvent;
 use App\Events\UserDeleteEvent;
 use App\Listeners\AssignStartSubscription;
 use App\Listeners\CreateCommunityListener;
@@ -20,6 +21,7 @@ use App\Listeners\NewChatUserBlackListCheck;
 use App\Listeners\RemindPasswordListener;
 use App\Listeners\SendAdminEmail;
 use App\Listeners\SubscriptionListener;
+use App\Listeners\TariffPayedListener;
 use App\Listeners\UserRegisterSendEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -63,6 +65,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserDeleteEvent::class => [
             SendAdminEmail::class
+        ],
+        TariffPayedEvent::class => [
+            TariffPayedListener::class
         ]
 
     ];

@@ -38,6 +38,6 @@ class RemindPasswordListener
             );
         }
         $v = view('mail.remind_password')->with(['password' => $event->password])->render();
-        new Mailer('Сервис ' . env('APP_NAME'), $v, 'Восстановление доступа', $event->user->email);
+        new Mailer('Сервис ' . config('app.name'), $v, 'Восстановление доступа', $event->user->email);
     }
 }
