@@ -8,18 +8,25 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Post(
- *  path="/api/v3/publication-parts",
- *  operationId="publication-part-add",
- *  summary="Add publication part",
+ *  path="/api/v3/publication-parts/{id}",
+ *  operationId="publication-part-update",
+ *  summary="Update publication part",
  *  security={{"sanctum": {} }},
  *  tags={"Publication part"},
+ *     @OA\Parameter(name="id",in="path",
+ *         description="ID of publication part in database",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *             format="int64",
+ *         )
+ *     ),
  *     @OA\RequestBody(
  *         description="
  *          type - enum from [1 (text),2 (video mp4),3 (audio),4 (image png, jpg, jpeg, gif),5(other file pptx, pdf, excel, doc), 6 (header)]",
  * @OA\MediaType(
  *             mediaType="multipart/form-data",
  *             @OA\Schema(
- *                 @OA\Property(property="publication_id",type="integer",example="1"),
  *                 @OA\Property(property="type",type="integer",example="1"),
  *                 @OA\Property(property="order",type="integer",example="1"),
  *                 @OA\Property(property="text",type="string"),
@@ -30,14 +37,24 @@ use OpenApi\Annotations as OA;
  * @OA\Response(response=200, description="OK")
  *)
  */
-class ApiPublicationPartStoreRequest extends ApiRequest
+class ApiPublicationPartUpdateRequest extends ApiRequest
 {
+
+    public function all($keys = null)
+    {
+        $data = parent::all();
+        $data['id'] = $this->route('id');
+
+        return $data;
+    }
+
+
     public function rules(): array
     {
         return [
+            'id' => 'required|integer|exists:publication_parts,id',
             'type' => 'required',
             'order' => 'required',
-            'publication_id' => 'required|integer|exists:publications,id',
             'text' => Rule::when($this->type == 1 || $this->type == 6, 'required|max:50000'),
             'file' => [
                 Rule::when($this->type == 2, 'required|mimes:mp4|max:2100000'),

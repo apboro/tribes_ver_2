@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIv3\Publication;
 
 use App\Http\ApiRequests\Publication\ApiPublicationPartDeleteRequest;
 use App\Http\ApiRequests\Publication\ApiPublicationPartStoreRequest;
+use App\Http\ApiRequests\Publication\ApiPublicationPartUpdateRequest;
 use App\Http\ApiResources\Publication\PublicationPartResourse;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -61,5 +62,19 @@ class ApiPublicationPartController extends Controller
         }
         $publication_part->delete();
         return ApiResponse::success();
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param ApiPublicationPartUpdateRequest $request
+     * @param int $id
+     * @return ApiResponse
+     */
+    public function update(ApiPublicationPartUpdateRequest $request, int $id): ApiResponse
+    {
+        $publication_part = $this->repository->update($request, $id);
+        return ApiResponse::common(PublicationPartResourse::make($publication_part)->toArray($request));
     }
 }

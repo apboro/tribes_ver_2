@@ -237,6 +237,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
 
     Route::post('/publication-parts', [ApiPublicationPartController::class, 'store'])->name('api.publication_parts.create');
+    Route::post('/publication-parts/{id}', [ApiPublicationPartController::class, 'update'])->name('api.publication_parts.update');
     Route::delete('/publication-parts/{id}', [ApiPublicationPartController::class, 'destroy'])->name('api.publication_parts.delete');
 
 
