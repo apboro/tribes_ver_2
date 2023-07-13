@@ -80,6 +80,7 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])
         ->name('api.publications.show_by_uuid')->middleware('api');
     Route::post('/pay/tariff', [ApiTariffController::class, 'payForTariff']);
+    Route::get('/show/tariff', [ApiTariffController::class, 'show']);
 });
 
 /** TODO fastFIX  */
@@ -245,7 +246,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::get('/visited/publications', [ApiVisitedPublicationController::class, 'list'])->name('api.publications.visited.list');
 
-    Route::get('/show/tariff', [ApiTariffController::class, 'show']);
     Route::post('/tariff', [ApiTariffController::class, 'store']);
     Route::get('/tariffs', [ApiTariffController::class, 'list']);
     Route::delete('/tariff/{id}', [ApiTariffController::class, 'destroy']);
