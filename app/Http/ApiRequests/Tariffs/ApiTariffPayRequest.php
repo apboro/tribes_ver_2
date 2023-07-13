@@ -17,6 +17,7 @@ use OpenApi\Annotations as OA;
  *        @OA\JsonContent(
  *                 @OA\Property(property="id",type="integer", example="1"),
  *                 @OA\Property(property="e-mail",type="string", example="test@dev.com"),
+ *                 @OA\Property(property="try_trial",type="boolean", example="true"),
  *                 ),
  *         ),
  *   @OA\Response(response=200, description="OK")

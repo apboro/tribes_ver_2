@@ -25,7 +25,7 @@ class TariffVariant extends Model
 
     protected $guarded = [];
 
-    protected $fillable = ['recurrent_attempt', 'price'];
+    protected $fillable = ['recurrent_attempt', 'price', 'tariff_id', 'title','price','period','isActive','inline_link'];
 
     protected $table = 'tarif_variants';
 

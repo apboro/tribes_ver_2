@@ -10,7 +10,7 @@ class ApiTariffResource extends JsonResource
 {
     public function toArray($request)
     {
-        $variant = $this->variants()->first();
+        $variant = $this->variants()->orderBy('id')->first();
         $community = $this->community;
 
         return [

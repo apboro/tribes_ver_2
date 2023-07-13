@@ -73,11 +73,11 @@ class ApiTariffController extends Controller
         $communities = Community::owned()->findMany($request->input('community_ids'));
         foreach ( $communities as $community ){
             $tariff = $community->tariff()->first();
-            $tariff->tariff_is_payable = $request->is_active;
-            $tariff->save();
-            $tariffVariant = $tariff->variants()->first();
-            $tariffVariant->isActive = $request->is_active;
-            $tariffVariant->save();
+            $tariff->update(['tariff_is_payable' => $request->is_active]);
+            $tariff->variants->each(function ($v) use ($request) {
+                $v->isActive = $request->is_active;
+                $v->save();
+            });
         }
 
         return ApiResponse::success('common.success');

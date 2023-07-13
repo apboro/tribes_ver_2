@@ -142,4 +142,9 @@ class TelegramUser extends Model
     {
         return $this->user_name ?? 'not user name';
     }
+
+    public function connections()
+    {
+        return $this->hasMany(TelegramConnection::class, 'telegram_user_id', 'telegram_id');
+    }
 }
