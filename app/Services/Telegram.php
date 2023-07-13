@@ -75,7 +75,6 @@ class Telegram extends Messenger
                             'role' => 'member',
                             'accession_date' => time()
                         ]);
-                        //                        $botService->unKickUser($telegram_id, $community->connection->chat_id);
                     } else {
                         $ty->communities()->updateExistingPivot($community, [
                             'role' => 'member',
@@ -104,8 +103,9 @@ class Telegram extends Messenger
                     $payment->save();
                 } else return false;
             } else {
-                $communityId = str_replace('trial', '', $paymentId);
-                $community = Community::find($communityId);
+                $paymentIdCutTrial = str_replace('trial', '', $paymentId);
+                $payment = Payment::find($paymentIdCutTrial);
+                $community = $payment->community;
                 if ($community) {
                     $ty = self::registerTelegramUser($telegram_id, NULL, $userName, $firstName, $lastName);
                     if (!$ty->communities()->find($community->id)) {

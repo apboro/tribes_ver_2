@@ -52,7 +52,7 @@ class ApiPaymentController extends Controller
 
         if ($payment->status === 'CONFIRMED' && $payment->type === 'tariff') {
             $redirectUrl = $request->success_url ?? config('app.frontend_url').'/app/subscriptions?payment_result=success';
-            Event::dispatch(new TariffPayedEvent($payment->payer, $payment->payable, $payment));
+            Event::dispatch(new TariffPayedEvent($payment->payer, $payment));
         }
         Log::debug('successPayment $redirectUrl - '. $redirectUrl);
 

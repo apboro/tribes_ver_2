@@ -505,7 +505,7 @@ class TariffRepository implements TariffRepositoryContract
 
     public function store($data): Tariff
     {
-        $community = Community::find($data['community_id']);
+        $community = Community::owned()->findOrFail($data['community_id']);
 
         $this->initTariffModel($community);
 
@@ -521,21 +521,22 @@ class TariffRepository implements TariffRepositoryContract
         $this->tariffModel->user_id = Auth::user()->id;
         $this->tariffModel->save();
 
-        $variant = $this->tariffModel->variants()->first() ?? new TariffVariant;
-        $variant->tariff_id = $this->tariffModel->id;
-        $variant->title = $data['title'] ?? null;
-        $variant->price = $data['price'] ?? null;
-        $variant->period = 30;
-        $variant->isActive = $data['tariff_is_payable'] ?? false;
-        $this->generateLink($variant);
-        $variant->save();
+        $variants = $this->tariffModel->variants()->orderBy('id')->get() ?? $this->generateVariants($data);
+        if (!empty($variants)) {
+            foreach ($variants as $variant) {
+                $variant->title = $variant->title === 'Пробный период' ? 'Пробный период' : $data['title'] ?? null;
+                $variant->price = $variant->price == 0 ? 0 : $data['price'] ?? null;
+                $variant->period = $variant->period === 3 ? 3 : 30;
+                $variant->isActive = $data['tariff_is_payable'] ?? false;
+                $variant->save();
+            }
+        }
 
         return $this->tariffModel;
     }
 
     public function update(ApiRequest $request): Tariff
     {
-
         $this->tariffModel = Tariff::find($request->id);
         $data = $request->all();
         $variant_data['title'] = $data['title'] ?? null;
@@ -549,6 +550,27 @@ class TariffRepository implements TariffRepositoryContract
         $this->tariffModel->save();
 
         return $this->tariffModel;
+    }
+
+    public function generateVariants($data)
+    {
+        TariffVariant::create([
+            'tariff_id' => $this->tariffModel->id,
+            'title' => $data['title'] ?? null,
+            'price' => $data['price'],
+            'period' => 30,
+            'isActive' => $data['tariff_is_payable'] ?? false,
+            'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp.rand(1,99999999999), 8),
+        ]);
+        TariffVariant::create([
+            'tariff_id' => $this->tariffModel->id,
+            'title' => 'Пробный период',
+            'price' => 0,
+            'period' => 3,
+            'isActive' => $data['test_period_is_active'] ?? false,
+            'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp.rand(1,99999999999), 8),
+        ]);
+
     }
 
 }

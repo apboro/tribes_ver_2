@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * @OA\Post(
- *  path="/api/v3/tariff",
+ *  path="/api/v3/tariff?XDEBUG_SESSION_START=PHPSTORM",
  *  operationId="tariff_store",
- *  summary="Store or Update tariff",
+ *  summary="Store tariff",
  *  security={{"sanctum": {} }},
  *  tags={"Tariffs"},
  *     @OA\RequestBody(

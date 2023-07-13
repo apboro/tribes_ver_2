@@ -180,11 +180,11 @@ class MainBotCommands
                     . 'Используйте встроенную клавиатуру ниже, чтобы начать.';
 
                 // in private to bot
-                $custoMenu = Menux::Get('custom');
+                $custoMenu = Menux::Get('main');
                 $custoMenu->default();
 
                 if ($this->isPrivateMessageToBot($ctx)) {
-                    if (TelegramUser::isCommunityUserOwner($ctx->getUserID())) {
+                    if (TelegramUser::where('telegram_id', $ctx->getUserID())->firstOrNew()->connections()->first()) {
 //                    $ctx->ansInlineQuery()
                         $ctx->replyHTML($messageUserOwner, Menux::Get('owner'));
                     } else {
@@ -931,7 +931,7 @@ class MainBotCommands
     protected function mySubscriptions()
     {
         try {
-            $this->bot->onHears('📂Мои подписки', function (Context $ctx) {
+            $this->bot->onHears('Мои подписки', function (Context $ctx) {
                 $menu = Menux::Create('links')->inline();
                 $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
                 if ($communities->first()) {
@@ -1362,20 +1362,19 @@ class MainBotCommands
             Menux::Create('menu', 'main')
                 ->row()->btn('Личный кабинет') // +
                 ->row()->btn(self::KNOWLEDGE_BASE)
-                ->row()->btn('Поддержка'); // +
-//                ->row()->btn('Репутация'); //
+                ->row()->btn('Поддержка');
 //                ->row()->btn('Подключить чат к Spodial');
-//                ->row()->btn('🕹️Мои сообщества');
-//                ->row()->btn('📂Мои подписки');
             Menux::Create('menuCustom', 'custom')
                 ->row()->btn('Личный кабинет')
                 ->row()->btn(self::KNOWLEDGE_BASE)
+                ->row()->btn('Мои подписки')
                 ->row()->btn('Поддержка');
 
             Menux::Create('menuOwner', 'owner')
                 ->row()->btn('Личный кабинет')
                 ->row()->btn(self::KNOWLEDGE_BASE)
                 ->row()->btn('Поддержка')
+                ->row()->btn('Мои подписки')
                 ->row()->btn('Репутация');
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());

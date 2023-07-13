@@ -12,13 +12,11 @@ class TariffPayedEvent
     use Dispatchable;
 
     public User $user;
-    public Tariff $tariff;
     public Payment $payment;
 
-    public function __construct(User $user, Tariff $tariff, Payment $payment)
+    public function __construct(User $user, Payment $payment)
     {
         $this->user = $user;
-        $this->tariff = $tariff;
         $this->payment = $payment;
     }
 }
