@@ -151,7 +151,7 @@ class Community extends Model
             $params = '?' . http_build_query($data);
         }
 
-        return config('app.frontend_url').$params;
+        return config('app.frontend_url').Tariff::FRONTEND_TARIFF_PAGE.$this->inline_link.$params;
     }
 
     public function isTelegram()
