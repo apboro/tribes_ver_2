@@ -48,7 +48,7 @@ class ApiTariffController extends Controller
     public function show(ApiTariffShowRequest $request)
     {
         if ($request->id) {
-            $tariff = Tariff::owned()->findOrFail($request->id);
+            $tariff = Tariff::findOrFail($request->id);
         } elseif ($request->hash) {
             $tariff = Tariff::where('inline_link', $request->hash)->firstOrFail();
         }
