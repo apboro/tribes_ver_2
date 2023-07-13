@@ -355,7 +355,7 @@ class MainBotCommands
     protected function inlineCommand()
     {
         try {
-            $donates = Donate::all();
+            $donates = Donate::active()->get();
             foreach ($donates as $donate) {
                 if (!$donate)
                     return false;
