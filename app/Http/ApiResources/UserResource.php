@@ -50,6 +50,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request): array
     {
+
         return [
             'id' => $this->resource->id,
             'name' => $this->resource->name,
@@ -57,7 +58,7 @@ class UserResource extends JsonResource
             'phone' => $this->phone_confirmed ? '+7 ' . $this->resource->phoneNumber($this->resource->phone) : null,
             'phone_confirmed' => $this->phone_confirmed,
             'birthdate' => $this->resource->birthdate ? Carbon::parse($this->resource->birthdate)->format('d.m.Y') : null,
-            'gender' => $this->resource->gender,
+            'gender' => $this->resource->gender, 
             'country' => $this->resource->country,
             'telegram_accounts' => new TelegramAccountCollection($this->resource->telegramData()),
             'subscription' => new SubscriptionResource($this->subscription),

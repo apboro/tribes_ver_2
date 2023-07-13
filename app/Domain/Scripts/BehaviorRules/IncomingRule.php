@@ -27,20 +27,28 @@ final class IncomingRule
 
         /** @var TelegramConnection $telegramConnections */
         $telegramConnections = TelegramConnection::where('id', '=', $community->connection_id)->first();
-
+ 
         $chatId = $telegramConnections->chat_id;
         $content = $communityRule->content;
 
-        $imageUrl = env('APP_URL') . '/'. $communityRule->content_image_path;
-        log::info('image url:'. $imageUrl);
+        if ($communityRule->content_image_path !== NULL){
+            $imageUrl = config('app.url') . '/'. $communityRule->content_image_path;
+            if (app()->isLocal()) {
+                $imageUrl = env('DEV_IMAGE', 'https://spodial.com/assets/images/logo.png');
+            }
+            log::info('image url:'. $imageUrl);
 
-        /** @var stdClass $response */
-        $response = $this->telegramApi->sendImage($chatId, $imageUrl, $content);
-
-        TelegramResponseErrorLogger::check($response, 'IncomingRule send image');
+            /** @var stdClass $response */
+            $response = $this->telegramApi->sendImage($chatId, $imageUrl, $content);
+            TelegramResponseErrorLogger::check($response, 'IncomingRule send image');
+            $messageId = $response->result->message_id;
+        } else {
+            $response = $this->telegramApi->sendMessWithReturn($chatId, $content);
+            $messageId = $response['result']['message_id'];
+        }
 
         /** @var stdClass $responsePin */
-        $responsePin = $this->telegramApi->pinMessage($chatId,$response->result->message_id);
+        $responsePin = $this->telegramApi->pinMessage($chatId, $messageId);
 
         TelegramResponseErrorLogger::check($responsePin, 'IncomingRule pin message');
     }
