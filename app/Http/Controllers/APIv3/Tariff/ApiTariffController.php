@@ -50,7 +50,7 @@ class ApiTariffController extends Controller
         if ($request->id) {
             $tariff = Tariff::owned()->findOrFail($request->id);
         } elseif ($request->hash) {
-            $tariff = Tariff::owned()->where('inline_link', $request->hash)->firstOrFail();
+            $tariff = Tariff::where('inline_link', $request->hash)->firstOrFail();
         }
         return ApiResponse::common(ApiTariffResource::make($tariff));
     }
