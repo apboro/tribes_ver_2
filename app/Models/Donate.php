@@ -153,6 +153,11 @@ class Donate extends Model
         return $query->where('user_id', '=', Auth::user()->id);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('donate_is_active', true);
+    }
+
     public function getDonatePaymentLink($data = null)
     {
         $params = '';
