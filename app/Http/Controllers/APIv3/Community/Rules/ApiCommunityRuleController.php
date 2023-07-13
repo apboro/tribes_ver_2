@@ -44,8 +44,25 @@ class ApiCommunityRuleController extends Controller
         return ApiResponse::list()->items(ApiCommunityRuleCollection::make($community_rules)->toArray($request));
     }
 
+
     /**
-     *
+     * Добавляет в очередь задачи при создании/обновлении правил поведения 
+     * @param $request
+     * @param $community_rule
+     */
+    private function createBehaviorRuleJobs($request, $community_rule)
+    {
+        if ($request->input('content')) {
+            $communitiesList = $request->input('community_ids', []);
+            foreach ($communitiesList as $communityId) {
+                BehaviorIncomeRuleJob::dispatch($community_rule, $communityId);
+            }
+        }
+    }
+
+
+    /**
+     * 
      * @param ApiCommunityRuleStoreRequest $request
      * @return ApiResponse
      */
@@ -59,13 +76,7 @@ class ApiCommunityRuleController extends Controller
             return ApiResponse::error(trans('responses/common.add_error'));
         }
 
-        if($request->input('content')) {
-            $communitiesList = $request->input('community_ids', []);
-            log::info(json_encode($communitiesList, JSON_UNESCAPED_UNICODE));
-            foreach($communitiesList as $communityId){
-                BehaviorIncomeRuleJob::dispatch($community_rule, $communityId);
-            }
-        }
+        $this->createBehaviorRuleJobs($request, $community_rule);
 
         return ApiResponse::common(
             ApiCommunityRuleResource::make($community_rule)->toArray($request)
@@ -98,16 +109,18 @@ class ApiCommunityRuleController extends Controller
      */
     public function update(ApiCommunityRuleEditRequest $request, string $uuid): ApiResponse
     {
-        Log::info('update api comunication ');
-
         /** @var CommunityRule $community_rule */
         $community_rule = CommunityRule::where('uuid', $uuid)
             ->where('user_id', Auth::user()->id)
             ->first();
+
         if ($community_rule == null) {
             return ApiResponse::notFound(trans('responses/common.not_found'));
-        }
+        } 
         $community_rule = $this->communityRuleRepository->updateCommunityRule($community_rule, $request);
+
+        $this->createBehaviorRuleJobs($request, $community_rule);
+
         return ApiResponse::common(
             ApiCommunityRuleResource::make($community_rule)->toArray($request)
         );
@@ -116,12 +129,10 @@ class ApiCommunityRuleController extends Controller
     public function delete(ApiCommunityRuleDeleteRequest $request)
     {
         $moderation_rule = CommunityRule::where('user_id', Auth::user()->id)->where('uuid', $request->moderation_uuid)->first();
-        if ($moderation_rule){
+        if ($moderation_rule) {
             $moderation_rule->delete();
             return ApiResponse::success('common.deleted');
         }
         return ApiResponse::error('common.not_found');
     }
-
-
 }
