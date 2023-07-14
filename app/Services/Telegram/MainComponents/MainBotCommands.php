@@ -398,7 +398,15 @@ class MainBotCommands
             $supportMessage = function (Context $ctx) {
                 $message = $ctx->var('message');
                 if ($message != '' ?? $this->isPrivateBot($ctx)) {
-                    SendEmails::dispatch('info@spodial.com', $message, 'Cервис Spodial', '<p></p>');
+
+                    preg_match_all('/([^ ]*)[ ]*([^ ]*)[ ]*([^ ]*)[ ]*(.*)/s', trim($message), $res, PREG_SET_ORDER );
+                    $html = '<p>Телефон: "' . ($res[0][1] ?? '') . '"<br>
+                            Почта: "' . ($res[0][2] ?? '') . '"<br>
+                            Юзернейм: "' . ($res[0][3] ?? '') . '"<br>
+                            Текст: "' . ($res[0][4] ?? '') . '"</p>';
+
+                    SendEmails::dispatch('info@spodial.com', 'Обращение в службу поддержки', 'Cервис Spodial', $html);
+
                     SendTeleMessageToChatFromBot::dispatch(config('telegram_bot.bot.botName'), '6172841852', $message);
                     $ctx->replyHTML('Жаль, что вы с этим столкнулись! Я передал сообщение в службу  ' . "\n"
                         . 'поддержки, с вами свяжутся при первой же возможности. ');
