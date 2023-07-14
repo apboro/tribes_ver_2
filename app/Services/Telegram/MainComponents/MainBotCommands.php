@@ -16,6 +16,7 @@ use App\Models\Payment;
 use App\Models\Tariff;
 use App\Models\TariffVariant;
 use App\Models\TelegramUser;
+use App\Models\TelegramUserList;
 use App\Models\TelegramUserReputation;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Payment\PaymentRepositoryContract;
@@ -204,23 +205,7 @@ class MainBotCommands
 
             //handle start with donate
             $this->bot->onText('/start donate-{donate_hash:string}_{amount:integer}', function (Context $ctx) {
-                Log::debug('In start donate');
-                $donate = Donate::where('inline_link', $ctx->var('donate_hash'))->first();
-                $menu = Menux::Create('link')->inline();
-                if (!$donate) return;
-                $data = [
-                    'amount' => $ctx->var('amount'),
-                    'donate_id' => $donate->id,
-                    'telegram_user_id' => $ctx->getUserID(),
-                ];
-                $dataRandom = [
-                    'min_price' => $donate->getRandomSumVariant()->min_price,
-                    'max_price' => $donate->getRandomSumVariant()->max_price,
-                    'donate_id' => $donate->id,
-                    'telegram_user_id' => $ctx->getUserID(),
-                ];
-                $menu->row()->uBtn('Внести донат', $ctx->var('amount') == 0 ? $donate->getDonatePaymentLinkRandom($dataRandom) : $donate->getDonatePaymentLink($data));
-                $ctx->reply('Ссылка для доната ' . "\n\n", $menu);
+                $this->donateButtons($ctx);
             });
 
             //handle start with tariff
@@ -239,6 +224,28 @@ class MainBotCommands
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
+
+    public function donateButtons($ctx)
+    {
+        Log::debug('In start donate');
+        $donate = Donate::where('inline_link', $ctx->var('donate_hash'))->first();
+        $menu = Menux::Create('link')->inline();
+        if (!$donate) return;
+        $data = [
+            'amount' => $ctx->var('amount'),
+            'donate_id' => $donate->id,
+            'telegram_user_id' => $ctx->getUserID(),
+        ];
+        $dataRandom = [
+            'min_price' => $donate->getRandomSumVariant()->min_price,
+            'max_price' => $donate->getRandomSumVariant()->max_price,
+            'donate_id' => $donate->id,
+            'telegram_user_id' => $ctx->getUserID(),
+        ];
+        $menu->row()->uBtn('Внести донат', $ctx->var('amount') == 0 ? $donate->getDonatePaymentLinkRandom($dataRandom) : $donate->getDonatePaymentLink($data));
+        $ctx->reply('Ссылка для доната ' . "\n\n", $menu);
+    }
+
 
     protected function startOnGroup()
     {
@@ -434,21 +441,29 @@ class MainBotCommands
     private function inlineTariffQuery()
     {
         try {
-            $this->bot->onInlineQuery('t-{hash}', function (Context $ctx) {
+            $this->bot->onInlineQuery('t-{tariffHash}-{communityHash}', function (Context $ctx) {
 
-                $tariff = Tariff::where('inline_link', $ctx->var('hash'))->first();
-                $community = $tariff->community;
+                $communityId = PseudoCrypt::unhash($ctx->var('communityHash'));
+                $adminsOfGroup = TelegramUserList::getAdmins($communityId);
+                if (!in_array($ctx->getUserID(), $adminsOfGroup)) {
+                    return;
+                }
+
+                $tariff = Tariff::query()
+                    ->where('inline_link', $ctx->var('tariffHash'))
+                    ->where('community_id', $communityId)
+                    ->first();
+                $community = Community::find($communityId);
                 $result = new Result();
                 $article = new Article(1);
                 $message = new InputTextMessageContent();
                 $message->parseMode('HTML');
 
-                //todo для всех активных не персональных тарифов сообщества
-                $image = $tariff->getMainImage() ? $tariff->getMainImage()->url : '';
+                $image = $tariff->main_image ?? null;
                 $description = $tariff->main_description ?? '&#160';
                 $article->description($description);
-                $message->text($description . '<a href="' . route('main') . $image . '">&#160</a>');
-                $article->thumbUrl('' . route('main') . $image);
+                $message->text($description . '<a href="' . config('app.frontend_url') . $image . '">&#160</a>');
+                $article->thumbUrl('' . config('app.frontend_url') . $image);
                 [$text, $menu] = $this->tariffButton($community);
 
                 $article->title($community->title);
@@ -489,7 +504,7 @@ class MainBotCommands
                 $article->thumbUrl('' . config('app.url') . '/' . $image);
 
                 $menu = Menux::Create('a')->inline();
-                $variants = $donate->variants()->orderBy('id')->get();
+                $variants = $donate->variants()->get();
                 foreach ($variants as $variant) {
                     if ($variant->price && $variant->isActive !== false) {
                         $key = array_search($variant->currency, Donate::$currency);

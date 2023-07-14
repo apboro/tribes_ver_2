@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\Tariff;
 use App\Models\TariffVariant;
+use App\Models\TelegramUserTariffVariant;
 use App\Models\User;
 use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Tinkoff\Payment as Pay;
@@ -105,17 +106,15 @@ class ApiTariffController extends Controller
                 'phone_confirmed' => false,
             ]);
 
-
         $userTelegramAccountsIds = $user->telegramMeta()->pluck('id')->toArray();
-        $userTarifVariants = TariffVariant::whereIn('telegram_user_id', $userTelegramAccountsIds)->get()->toArray();
+
         if ($request->input('try_trial')) {
-            $trialVariant = $tariff->getTrialVariant();
-             if (TariffVariant::where()) {
-                        if ($trialVariant) {
-                            return ApiResponse::error('tariff.tariff_trial_used');
-                        }
-                    }
-                }
+            $userHasTrialTariff = TelegramUserTariffVariant::whereIn('telegram_user_id', $userTelegramAccountsIds)
+                ->where('tarif_variants_id', $tariff->getTrialVariant()->id)->first();
+            if ($userHasTrialTariff && $userHasTrialTariff->used_trial) {
+                return ApiResponse::error(trans('tariff.tariff_trial_used'));
+            }
+        }
         if ($user->wasRecentlyCreated) {
             $user->tinkoffSync();
             Event::dispatch(new ApiUserRegister($user, $password));

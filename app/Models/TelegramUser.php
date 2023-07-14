@@ -65,7 +65,7 @@ class TelegramUser extends Model
 
     function tariffVariant()
     {
-        return $this->belongsToMany(TariffVariant::class, 'telegram_users_tarif_variants', 'telegram_user_id', 'tarif_variants_id')->withPivot(['days', 'isAutoPay', 'prompt_time', 'created_at', 'recurrent_attempt']);
+        return $this->belongsToMany(TariffVariant::class, 'telegram_users_tarif_variants', 'telegram_user_id', 'tarif_variants_id')->withPivot(['days', 'isAutoPay', 'prompt_time', 'created_at', 'recurrent_attempt', 'used_trial']);
     }
 
     function getTariffById($id)
