@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Exceptions\Invalid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,6 +42,13 @@ class TelegramUserList extends Model
             Community::class,
             'community_id'
         );
+    }
+    public function scopeGetAdmins(Builder $query, int $communityId)
+    {
+        return $query->where('community_id', $communityId)
+            ->where('type', 2)->get()
+            ->pluck('telegram_id')
+            ->toArray();
     }
 
     public function telegramUser()

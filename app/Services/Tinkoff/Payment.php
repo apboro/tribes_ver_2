@@ -185,11 +185,11 @@ class Payment
         $this->orderId = $this->payment->id . date("_md_s");
 
         $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
-        if ($params['Amount'] == 0 && $this->payFor === 'App\Models\TariffVariant') {
+        if ($params['Amount'] == 0 && $this->type === 'tariff') {
             $this->comment = 'trial';
             $resp = (object)[
                 'PaymentId' => rand(1000000000, 9999999999),
-                'PaymentURL' => route('payment.success', ['hash' => PseudoCrypt::hash($this->payment->id), 'telegram_id' => $this->telegram_id]),
+                'PaymentURL' =>  route('payment.success', ['hash' => PseudoCrypt::hash($this->payment->id)]),
                 'Status' => 'CONFIRMED',
                 'ErrorCode' => null,
                 'Success' => true,

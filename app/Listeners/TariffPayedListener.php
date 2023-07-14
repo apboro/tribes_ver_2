@@ -18,7 +18,12 @@ class TariffPayedListener
 
     public function handle(TariffPayedEvent $event): void
     {
-        $v = view('mail.telegram_invitation')->withPayment($event->payment)->render();
+        if ($event->payment->comment == 'trial'){
+            $variant = $event->payment->community->tariff->getTrialVariant();
+            $v = view('mail.telegram_invitation_trial')->withPayment($event->payment)->withVariant($variant)->render();
+        } else {
+            $v = view('mail.telegram_invitation')->withPayment($event->payment)->render();
+        }
         try {
             SendEmails::dispatch($event->user->email, 'Приглашение', 'Сервис ' . config('app.name'), $v);
         } catch (Exception $e) {

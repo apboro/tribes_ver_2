@@ -15,6 +15,8 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\Tariff;
+use App\Models\TariffVariant;
+use App\Models\TelegramUserTariffVariant;
 use App\Models\User;
 use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Tinkoff\Payment as Pay;
@@ -27,7 +29,7 @@ class ApiTariffController extends Controller
 
     private TariffRepositoryContract $tariffRepository;
 
-    public function __construct(TariffRepositoryContract  $tariffRepository)
+    public function __construct(TariffRepositoryContract $tariffRepository)
     {
         $this->tariffRepository = $tariffRepository;
     }
@@ -71,7 +73,7 @@ class ApiTariffController extends Controller
     public function setActivity(ApiTariffActivateRequest $request)
     {
         $communities = Community::owned()->findMany($request->input('community_ids'));
-        foreach ( $communities as $community ){
+        foreach ($communities as $community) {
             $tariff = $community->tariff()->first();
             $tariff->update(['tariff_is_payable' => $request->is_active]);
             $tariff->variants->each(function ($v) use ($request) {
@@ -94,7 +96,7 @@ class ApiTariffController extends Controller
 
         ### Регистрация плательщика #####
         $password = Str::random(8);
-        $email = strtolower($request['email']);
+        $email = strtolower($request['e-mail']);
         $user = User::firstOrCreate(['email' => $email],
             [
                 'name' => explode('@', $email)[0],
@@ -103,11 +105,14 @@ class ApiTariffController extends Controller
                 'password' => Hash::make($password),
                 'phone_confirmed' => false,
             ]);
-        if ($v = $user->telegramMeta) {
-            if ($v = $v->tariffVariant()->first()) {
-                if ($request->input('try_trial') && $v->used_trial) {
-                    return ApiResponse::error('tariff.tariff_trial_used');
-                }
+
+        $userTelegramAccountsIds = $user->telegramMeta()->pluck('id')->toArray();
+
+        if ($request->input('try_trial')) {
+            $userHasTrialTariff = TelegramUserTariffVariant::whereIn('telegram_user_id', $userTelegramAccountsIds)
+                ->where('tarif_variants_id', $tariff->getTrialVariant()->id)->first();
+            if ($userHasTrialTariff && $userHasTrialTariff->used_trial) {
+                return ApiResponse::error(trans('tariff.tariff_trial_used'));
             }
         }
         if ($user->wasRecentlyCreated) {
@@ -117,8 +122,8 @@ class ApiTariffController extends Controller
         ### /Регистрация плательщика #####
 
         $p = new Pay();
-        $p->amount($variant->price * 100)
-            ->payFor($variant)
+        $p->amount($request->input('try_trial') ? 0 : $variant->price * 100)
+            ->payFor($request->input('try_trial') ? $tariff->getTrialVariant() : $variant)
             ->recurrent(true)
             ->payer($user);
 

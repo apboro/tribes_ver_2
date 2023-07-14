@@ -35,13 +35,10 @@ class CommunityRepository implements CommunityRepositoryContract
             $list->where('title', 'ilike', '%' . $request->input('name') . '%');
         }
 
-        if ($request->input('tags_names') !== null) {
-            $tagsNames = explode(",", $request->input('tags_names')[0]);
-            if (!empty(array_filter($request->input('tags_names')))) {
-                $list->whereHas('tags', function ($query) use ($tagsNames) {
-                    $query->whereIn('name', $tagsNames);
-                }, '=', count($tagsNames));
-            }
+        if (!empty($request->input('tags_names'))) {
+            $list->whereHas('tags', function ($query) use ($request) {
+                $query->whereIn('name', $request->input('tags_names'));
+            });
         }
 
         if ($request->has('rules_uuids')) {

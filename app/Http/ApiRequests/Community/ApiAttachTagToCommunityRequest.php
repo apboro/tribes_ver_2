@@ -14,18 +14,10 @@ use OpenApi\Annotations as OA;
  *  security={{"sanctum": {} }},
  *  tags={"Chats Tags"},
  *     @OA\RequestBody(
- *         @OA\MediaType(
- *             mediaType="application/json",
- *             encoding={
- *                  "tags[]": {
- *                      "explode": true,
- *                  },
- *              },
- *             @OA\Schema(
- *                 @OA\Property(property="tags[]",type="array", @OA\Items(type="string")),
+ *           @OA\JsonContent(
+ *                 @OA\Property(property="tags",type="array", @OA\Items(type="string")),
  *                 @OA\Property(property="community_id",type="integer", example=1),
  *             ),
- *         )
  *     ),
  *      @OA\Response(response=200, description="Ok"),
  *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),

@@ -43,20 +43,25 @@ class ApiPaymentController extends Controller
         $redirectUrl = '';
         if ($payment->status === 'CONFIRMED' && $payment->type === 'subscription') {
             Event::dispatch(new SubscriptionMade($payment->payer, $payment->payable));
-            $redirectUrl = $request->success_url ?? config('app.frontend_url').'/app/subscriptions?payment_result=success';
+            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/subscriptions?payment_result=success';
         }
 
         if ($payment->status === 'CONFIRMED' && $payment->type === 'donate') {
-            $redirectUrl = $request->success_url ?? config('app.frontend_url').'/app/subscriptions?payment_result=success';
+            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/subscriptions?payment_result=success';
         }
 
         if ($payment->status === 'CONFIRMED' && $payment->type === 'tariff') {
-            $redirectUrl = $request->success_url ?? config('app.frontend_url').'/app/subscriptions?payment_result=success';
-            Event::dispatch(new TariffPayedEvent($payment->payer, $payment));
+
+            $tariff = $payment->community->tariff;
+
+            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/public/tariff/' . $tariff->inline_link . '/thanks?' . http_build_query([
+                'paymentId' => PseudoCrypt::hash($payment->id)
+            ]);
         }
-        Log::debug('successPayment $redirectUrl - '. $redirectUrl);
+        Event::dispatch(new TariffPayedEvent($payment->payer, $payment));
+
+        Log::debug('successPayment $redirectUrl - ' . $redirectUrl);
 
         return redirect($redirectUrl);
     }
-
 }

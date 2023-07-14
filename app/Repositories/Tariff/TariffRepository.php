@@ -521,7 +521,7 @@ class TariffRepository implements TariffRepositoryContract
         $this->tariffModel->user_id = Auth::user()->id;
         $this->tariffModel->save();
 
-        $variants = $this->tariffModel->variants()->orderBy('id')->get() ?? $this->generateVariants($data);
+        $variants = $this->tariffModel->variants()->get() ?? $this->generateVariants($data);
         if (!empty($variants)) {
             foreach ($variants as $variant) {
                 $variant->title = $variant->title === 'Пробный период' ? 'Пробный период' : $data['title'] ?? null;

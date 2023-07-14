@@ -2,6 +2,7 @@
 
 namespace App\Http\ApiResources;
 
+use App\Helper\PseudoCrypt;
 use App\Models\Tariff;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -10,7 +11,7 @@ class ApiTariffResource extends JsonResource
 {
     public function toArray($request)
     {
-        $variant = $this->variants()->orderBy('id')->first();
+        $variant = $this->variants()->first();
         $community = $this->community;
 
         return [
@@ -20,7 +21,7 @@ class ApiTariffResource extends JsonResource
             'community_id' => $this->community_id,
             'tariff_is_payable' => $this->tariff_is_payable,
             'test_period' => $this->test_period,
-            'bot command' => $variant ? config('telegram_bot.bot.botFullName'). ' t-' . $variant->inline_link : null,
+            'bot command' => config('telegram_bot.bot.botFullName'). ' t-' . $this->inline_link.'-'.PseudoCrypt::hash($this->community->id),
             'main_image' => $this->main_image,
             'thanks_image' => $this->thanks_image,
             'thanks_message_is_active' => $this->thanks_message_is_active,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIv3\Publication;
 
 use App\Http\ApiRequests\Publication\ApiPublicationDeleteRequest;
 use App\Http\ApiRequests\Publication\ApiPublicationListRequest;
+use App\Http\ApiRequests\Publication\ApiPublicationPublicListRequest;
 use App\Http\ApiRequests\Publication\ApiPublicationShowForAllRequest;
 use App\Http\ApiRequests\Publication\ApiPublicationShowRequest;
 use App\Http\ApiRequests\Publication\ApiPublicationStoreRequest;
@@ -45,6 +46,12 @@ class ApiPublicationController extends Controller
             return ApiResponse::notFound('common.not_found');
         }
         $publication = Publication::where('author_id', $user->author->id)->get();
+        return ApiResponse::common(PublicationResource::collection($publication)->toArray($request));
+    }
+
+    public function publicList(ApiPublicationPublicListRequest $request): ApiResponse
+    {
+        $publication = Publication::where('author_id', $request->id)->get();
         return ApiResponse::common(PublicationResource::collection($publication)->toArray($request));
     }
 

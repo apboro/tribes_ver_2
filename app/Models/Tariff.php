@@ -33,7 +33,12 @@ class Tariff extends Model
 
     function variants()
     {
-        return $this->hasMany(TariffVariant::class, 'tariff_id', 'id');
+        return $this->hasMany(TariffVariant::class, 'tariff_id', 'id')->orderBy('id');
+    }
+
+    public function scopeGetTrialVariant($query)
+    {
+        return $this->variants()->where('title', 'Пробный период')->first();
     }
 
     public function scopeOwned($query)
