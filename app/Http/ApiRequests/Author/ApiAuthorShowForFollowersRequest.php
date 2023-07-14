@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Get(
- *     path="/api/v3/author/{id}",
+ *     path="/api/v3/public/author/{id}",
  *     operationId="show-author-for-followers",
  *     summary= "Show author",
  *     security= {{"sanctum": {} }},

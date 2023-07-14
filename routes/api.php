@@ -75,12 +75,13 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/courses/pay/{hash}', [ApiCourseController::class, 'pay']);
     Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
     Route::post('/send_demo_email', [MailSender::class, 'sendDemoEmail']);
-    Route::get('/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
+    Route::get('/public/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
     Route::post('/pay/donate', [ApiNewDonateController::class, 'processDonatePayment']);
     Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])
         ->name('api.publications.show_by_uuid')->middleware('api');
     Route::post('/pay/tariff', [ApiTariffController::class, 'payForTariff']);
     Route::get('/show/tariff', [ApiTariffController::class, 'show']);
+    Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.publications.list');
 });
 
 /** TODO fastFIX  */

@@ -52,7 +52,7 @@ class ApiNewDonateUpdateRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:120',
+            'title' => 'string|max:120',
             "random_sum_min" => 'sometimes|integer|min:50',
             "random_sum_max" => 'sometimes|integer|max:100000',
             "fix_sum_1" => 'sometimes|integer|min:50',
