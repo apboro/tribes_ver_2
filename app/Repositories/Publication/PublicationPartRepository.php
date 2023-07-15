@@ -41,12 +41,15 @@ class PublicationPartRepository
             $file_path = $request->file('file') ? Storage::disk('public')->putFile('publication_images', $request->file('file')) : null;
         }
         $publication_part = PublicationPart::find($id);
-        $publication_part->fill([
+        $array_to_fill = [
             'type' => $request->input('type'),
-            'file_path' => $file_path,
             'text' => $request->input('text'),
             'order' => $request->input('order')
-        ]);
+        ];
+        if ($request->exists('file')) {
+            $array_to_fill['file_path'] = $file_path;
+        }
+        $publication_part->fill($array_to_fill);
         $publication_part->save();
         return $publication_part;
     }
