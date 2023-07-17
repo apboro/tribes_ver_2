@@ -3,9 +3,13 @@
 namespace App\Models;
 
 
+use App\Filters\QueryFilter;
 use Database\Factories\DonateFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -58,6 +62,11 @@ class Donate extends Model
     function variants()
     {
         return $this->hasMany(DonateVariant::class, 'donate_id', 'id');
+    }
+
+    public function payments(): HasManyThrough
+    {
+        return $this->hasManyThrough(Payment::class, DonateVariant::class, 'donate_id', 'payable_id');
     }
 
     function getSumDonateByIndex()

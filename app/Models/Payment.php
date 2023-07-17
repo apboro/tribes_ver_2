@@ -70,6 +70,12 @@ class Payment extends Model
         return trim($this->getAttributes()['OrderId']);
     }
 
+    public function scopeDonationConfirmed($query)
+    {
+        return $query->where('type', 'donate')
+            ->where('status', 'CONFIRMED');
+    }
+
     public function community()
     {
         return $this->belongsTo(Community::class, 'community_id');
