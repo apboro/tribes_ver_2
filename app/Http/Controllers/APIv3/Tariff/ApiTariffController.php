@@ -36,8 +36,10 @@ class ApiTariffController extends Controller
 
     public function list(ApiTariffListRequest $request)
     {
-        $tariffs = Tariff::owned()->orderByDesc('updated_at')->get();
-        return ApiResponse::common(ApiTariffResource::collection($tariffs)->toArray($request));
+        $tariffs = $this->tariffRepository->filter($request)->get();
+
+        return ApiResponse::listPagination(['Access-Control-Expose-Headers'=>'Items-Count', 'Items-Count'=>$tariffs->count()])
+            ->items(ApiTariffResource::collection($tariffs));
     }
 
     public function store(ApiTariffStoreRequest $request)

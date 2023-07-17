@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Donate;
 
+use App\Http\ApiRequests\ApiRequest;
 use App\Models\Donate;
 use App\Models\DonateVariant;
 use App\Repositories\File\FileRepositoryContract;
@@ -12,10 +13,12 @@ use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use Askoldex\Teletant\Exception\TeletantException;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DonateRepository implements DonateRepositoryContract
 {
@@ -279,4 +282,23 @@ class DonateRepository implements DonateRepositoryContract
         $this->donateModel->description = $data['description'] ?? null;
         $this->donateModel->donate_is_active = $data['donate_is_active'] ?? false;
     }
+
+    public function filter(ApiRequest $request)
+    {
+        return Donate::with(['payments' => function ($query) {
+            $query->donationConfirmed();
+        }])
+            ->withSum(['payments as payments_sum' => function ($query) {
+                $query->donationConfirmed()->select(DB::raw('COALESCE(SUM(add_balance), 0)'));
+            }], 'add_balance')
+            ->withCount(['payments' => function ($query) {
+                $query->donationConfirmed();
+            }])
+            ->orderBy($request->sort_field ?? 'id', $request->sort_direction ?? 'asc')
+            ->when($request->search, function (Builder $q) use ($request) {
+                $q->where('title', 'ilike', '%' . $request->input('search') . '%');
+            })->skip($request->offset)->take($request->limit)->get();
+
+    }
+
 }

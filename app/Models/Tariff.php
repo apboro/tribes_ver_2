@@ -5,6 +5,8 @@ namespace App\Models;
 use Database\Factories\TariffFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\Auth;
 
 /** @method TariffFactory factory()
@@ -34,6 +36,12 @@ class Tariff extends Model
     function variants()
     {
         return $this->hasMany(TariffVariant::class, 'tariff_id', 'id')->orderBy('id');
+    }
+
+    public function tariffCommunityUsers(): HasManyThrough
+    {
+        return $this->hasManyThrough(TelegramUserCommunity::class, Community::class, 'id', 'community_id','community_id')
+            ->whereNull('exit_date')->whereRole('member');
     }
 
     public function scopeGetTrialVariant($query)

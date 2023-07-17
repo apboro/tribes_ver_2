@@ -36,9 +36,10 @@ class TariffRepository implements TariffRepositoryContract
     public function __construct(
         FileRepositoryContract $fileRepo,
         TelegramMainBotService $mainServiceBot,
-        FileUploadService $fileUploadService,
-        FileEntity $fileEntity
-    ) {
+        FileUploadService      $fileUploadService,
+        FileEntity             $fileEntity
+    )
+    {
         $this->fileRepo = $fileRepo;
         $this->mainServiceBot = $mainServiceBot;
         $this->fileUploadService = $fileUploadService;
@@ -60,7 +61,7 @@ class TariffRepository implements TariffRepositoryContract
             'community_id' => $community->id
         ]);
 
-        
+
         if ($ips->first() == NULL) {
             UserIp::create([
                 'ip' => $request->getClientIp(),
@@ -169,7 +170,7 @@ class TariffRepository implements TariffRepositoryContract
                 $date1 = new DateTime(now()->format('Y-m-d'));
                 $date2 = new DateTime($request->date_payment[$tyId]);
                 $difference = date_diff($date1, $date2);
-                
+
                 $days = $variant->period - $difference->days;
                 if ($days < 0) {
                     $days = 0;
@@ -186,6 +187,7 @@ class TariffRepository implements TariffRepositoryContract
             }
         }
     }
+
     /**
      * Обновить количество дней пользователю
      */
@@ -233,7 +235,7 @@ class TariffRepository implements TariffRepositoryContract
                             'excluded' => $excluded,
                             'accession_date' => time()
                         ]);
-                    
+
                     }
                 }
             }
@@ -244,7 +246,7 @@ class TariffRepository implements TariffRepositoryContract
 
     public function getList(TariffFilter $filters, $community)
     {
-        if(empty($community)){
+        if (empty($community)) {
             return (new Community())->followers()->paginate();
         }
         $followers = $community->followers();
@@ -253,9 +255,9 @@ class TariffRepository implements TariffRepositoryContract
     }
 
 
-    public function getTariffVariantsByCommunities(array $communityIds,$isActive = true,$isPersonal = null): Collection
+    public function getTariffVariantsByCommunities(array $communityIds, $isActive = true, $isPersonal = null): Collection
     {
-        $builder =  TariffVariant::where('price', '>', 0)
+        $builder = TariffVariant::where('price', '>', 0)
             ->orderBy('number_button', 'ASC');
         if ($communityIds[0] == 'all') {
             $builder->whereHas('tariff', function ($query) {
@@ -269,8 +271,8 @@ class TariffRepository implements TariffRepositoryContract
             });
         }
         $builder->where('isActive', $isActive);
-        if($isPersonal !== null){
-            $builder->where('isPersonal',$isPersonal);
+        if ($isPersonal !== null) {
+            $builder->where('isPersonal', $isPersonal);
         }
 
         return $builder->get();
@@ -291,7 +293,7 @@ class TariffRepository implements TariffRepositoryContract
         $variant->price = $data['tariff_cost'];
         $variant->period = $data['tariff_pay_period'];
         $variant->isPersonal = $data['isPersonal'] ?? false;
-        if($variant->isPersonal) {
+        if ($variant->isPersonal) {
             $variant->isActive = true;
         } else {
             $variant->isActive = $data['tariff'] ?? false;
@@ -299,7 +301,7 @@ class TariffRepository implements TariffRepositoryContract
         $variant->number_button = $data['number_button'] ?? null;
         $variant->arbitrary_term = $data['arbitrary_term'] ?? false;
 
-        if(empty( $variant->inline_link)) {
+        if (empty($variant->inline_link)) {
             $this->generateLink($variant);
         }
         $variant->save();
@@ -313,7 +315,7 @@ class TariffRepository implements TariffRepositoryContract
      */
     public function generateLink($variant)
     {
-        $variant->inline_link = PseudoCrypt::hash(Carbon::now()->timestamp.rand(1,99999999999), 8);
+        $variant->inline_link = PseudoCrypt::hash(Carbon::now()->timestamp . rand(1, 99999999999), 8);
     }
 
     //если заводим первый тариф, то всех юзеров к нему привязываем
@@ -331,7 +333,7 @@ class TariffRepository implements TariffRepositoryContract
     public function activate($variantId, $activate)
     {
         $variant = TariffVariant::find($variantId);
-        $variant->isActive = $activate??false;
+        $variant->isActive = $activate ?? false;
         $variant->save();
     }
 
@@ -416,13 +418,13 @@ class TariffRepository implements TariffRepositoryContract
                             $this->tariffModel->welcome_image_id = $f->id;
                             break;
                         case 'reminder':
-                            $this->tariffModel->reminder_image_id  = $f->id;
+                            $this->tariffModel->reminder_image_id = $f->id;
                             break;
                         case 'success':
-                            $this->tariffModel->thanks_image_id  = $f->id;
+                            $this->tariffModel->thanks_image_id = $f->id;
                             break;
                         case 'publication':
-                            $this->tariffModel->publication_image_id  = $f->id;
+                            $this->tariffModel->publication_image_id = $f->id;
                             break;
                     }
                 }
@@ -436,13 +438,13 @@ class TariffRepository implements TariffRepositoryContract
                             $this->tariffModel->welcome_image_id = 0;
                             break;
                         case 'success':
-                            $this->tariffModel->thanks_image_id  = 0;
+                            $this->tariffModel->thanks_image_id = 0;
                             break;
                         case 'reminder':
-                            $this->tariffModel->reminder_image_id  = 0;
+                            $this->tariffModel->reminder_image_id = 0;
                             break;
                         case 'publication':
-                            $this->tariffModel->publication_image_id  = 0;
+                            $this->tariffModel->publication_image_id = 0;
                             break;
                     }
                 }
@@ -474,15 +476,15 @@ class TariffRepository implements TariffRepositoryContract
     {
         $this->tariffModel->main_image_id = 0;
         $this->tariffModel->welcome_image_id = 0;
-        $this->tariffModel->thanks_image_id  = 0;
-        $this->tariffModel->reminder_image_id  = 0;
-        $this->tariffModel->publication_image_id  = 0;
+        $this->tariffModel->thanks_image_id = 0;
+        $this->tariffModel->reminder_image_id = 0;
+        $this->tariffModel->publication_image_id = 0;
     }
 
     private function initTariffModel($community)
     {
         $this->tariffModel = $community->tariff()->firstOrNew();
-        if(empty($this->tariffModel->inline_link)) {
+        if (empty($this->tariffModel->inline_link)) {
             $this->generateLink($this->tariffModel);
         }
     }
@@ -494,7 +496,8 @@ class TariffRepository implements TariffRepositoryContract
         }
     }
 
-    public function createTarif($community){
+    public function createTarif($community)
+    {
         $tariff = new Tariff();
         $this->initTariffModel($community);
         $baseAttributes = Tariff::baseData();
@@ -560,7 +563,7 @@ class TariffRepository implements TariffRepositoryContract
             'price' => $data['price'],
             'period' => 30,
             'isActive' => $data['tariff_is_payable'] ?? false,
-            'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp.rand(1,99999999999), 8),
+            'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp . rand(1, 99999999999), 8),
         ]);
         TariffVariant::create([
             'tariff_id' => $this->tariffModel->id,
@@ -568,9 +571,35 @@ class TariffRepository implements TariffRepositoryContract
             'price' => 0,
             'period' => 3,
             'isActive' => $data['test_period_is_active'] ?? false,
-            'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp.rand(1,99999999999), 8),
+            'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp . rand(1, 99999999999), 8),
         ]);
 
+    }
+
+    public function filter(ApiRequest $request)
+    {
+        $builder = Tariff::owned()->with(['community', 'tariffCommunityUsers']);
+
+        $builder->when($request->community_title, function ($query) use ($request) {
+            $query->whereHas('community', function ($q) use ($request) {
+                $q->where('title', 'ilike', '%' . $request->community_title . '%');
+            });
+        });
+        $builder->when($request->tariff_title, function ($query) use ($request) {
+            $query->where('tariffs.title', 'ilike', '%' . $request->tariff_title . '%');
+        });
+        $builder->select(['tariffs.*', 'tarif_variants.price'])
+            ->leftJoin('tarif_variants', function ($join) {
+                $join->on('tariffs.id', '=', 'tarif_variants.tariff_id')
+                    ->where('tarif_variants.price', '!=', 0);
+            })->withCount('tariffCommunityUsers as followers');
+
+        $builder->orderBy($request->sort_field ?? 'id', $request->sort_direction ?? 'asc');
+
+        $builder->skip($request->offset)
+            ->take($request->limit);
+
+        return $builder;
     }
 
 }

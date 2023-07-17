@@ -13,7 +13,9 @@ use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Donate\DonateRepositoryContract;
 use App\Repositories\Payment\PaymentRepository;
 use App\Services\Tinkoff\Payment as Pay;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ApiNewDonateController extends Controller
 {
@@ -30,9 +32,11 @@ class ApiNewDonateController extends Controller
 
     public function list(ApiNewDonateListRequest $request)
     {
-        $donates = Donate::owned()->get();
+        $donates = $this->donateRepo->filter($request);
+        $count = $donates->count();
 
-        return ApiResponse::common(ApiDonatesResource::collection($donates)->toArray($request));
+        return ApiResponse::listPagination(['Access-Control-Expose-Headers' => 'Items-Count', 'Items-Count' => $count])
+            ->items(ApiDonatesResource::collection($donates));
     }
 
     public function store(ApiNewDonateStoreRequest $request)
