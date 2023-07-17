@@ -57,8 +57,8 @@ class ApiPaymentController extends Controller
             $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/public/tariff/' . $tariff->inline_link . '/thanks?' . http_build_query([
                 'paymentId' => PseudoCrypt::hash($payment->id)
             ]);
+            Event::dispatch(new TariffPayedEvent($payment->payer, $payment));
         }
-        Event::dispatch(new TariffPayedEvent($payment->payer, $payment));
 
         Log::debug('successPayment $redirectUrl - ' . $redirectUrl);
 
