@@ -24,24 +24,23 @@ use App\Http\Controllers\Manager\Filters\UsersFilter;
 use App\Models\Administrator;
 use App\Models\User;
 use App\Models\UserSettings;
-use App\Services\File\FileSendService;
+use App\Services\File\FIlePrepareService;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 class ApiManagerUserController extends Controller
 {
 
-    private FileSendService $fileSendService;
+    private FIlePrepareService $FIlePrepareService;
 
     public function __construct(
-        FileSendService $fileSendService
+        FIlePrepareService $FIlePrepareService
     )
     {
 
-        $this->fileSendService = $fileSendService;
+        $this->FIlePrepareService = $FIlePrepareService;
     }
 
 
@@ -227,7 +226,7 @@ class ApiManagerUserController extends Controller
     /**
      * @param ApiUserManagerExportRequest $request
      * @param UsersFilter $filter
-     * @return StreamedResponse
+     * @return ApiResponse
      * @throws StatisticException
      */
     public function export(ApiUserManagerExportRequest $request, UsersFilter $filter)
@@ -271,13 +270,20 @@ class ApiManagerUserController extends Controller
                 'attribute' => 'commission',
             ],
         ];
-        return $this->fileSendService->sendFile(
+
+        $prepare_result = $this->FIlePrepareService->prepareFile(
             User::query(),
             $names,
             UserForManagerResource::class,
             $request->get('type', 'csv'),
             'users'
         );
+        if (!$prepare_result['result']) {
+            return ApiResponse::error($prepare_result['message']);
+        }
+        return ApiResponse::common([
+            'file_path' => $prepare_result['file_path']
+        ]);
     }
 
 }
