@@ -66,7 +66,7 @@ class TinkoffApi
 
     public function __construct($terminalKey, $secretKey)
     {
-        if (config('tinkoff.test')) {
+        if (config('tinkoff.test') && !Str::contains($terminalKey, 'DEMO')) {
             $this->api_url = config('tinkoff.urls.test_url');
             $this->api_e2c_url = config('tinkoff.urls.test_e2c_url');
         } else {
