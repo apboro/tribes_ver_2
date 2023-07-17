@@ -47,12 +47,16 @@ class ApiPublicationUpdateRequest extends ApiRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'id' => 'required|integer|exists:publications,id',
             'title' => 'required|string',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'background_image' => 'nullable|image|max:10240',
-            'price' => 'nullable|integer',
+            'price' => 'sometimes|nullable|numeric',
         ];
+        if ($this->get('price') === "null") {
+            unset($rules['price']);
+        }
+        return $rules;
     }
 }

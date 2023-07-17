@@ -42,7 +42,6 @@ class ApiPublicationStoreRequest extends ApiRequest
             'description' => 'nullable|string',
             'background_image' => 'nullable|image|max:10240',
             'price' => 'nullable|integer',
-            'parts' => 'nullable|array',
         ];
     }
 
