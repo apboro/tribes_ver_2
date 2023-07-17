@@ -57,11 +57,11 @@ class ApiPublicationPartUpdateRequest extends ApiRequest
             'order' => 'required',
             'text' => Rule::when($this->type == 1 || $this->type == 6, 'required|max:50000'),
             'file' => [
-                Rule::when($this->type == 2, 'required|mimes:mp4|max:2100000'),
-                Rule::when($this->type == 3, 'required'),
-                Rule::when($this->type == 4, 'required|image|max:10000'),
-                Rule::when($this->type == 5, 'required|mimes:|max:100000'),
+                Rule::when($this->type == 2, 'sometimes|nullable|mimes:mp4|max:2100000'),
+                Rule::when($this->type == 3, 'sometimes|nullable'),
+                Rule::when($this->type == 4, 'sometimes|nullable|image|max:10000'),
+                Rule::when($this->type == 5, 'sometimes|nullable|mimes:|max:100000'),
             ],
-        ];;
+        ];
     }
 }

@@ -22,7 +22,7 @@ class PublicationRepository
         $create_array = [
             'author_id' => $author->id,
             'is_active' => $request->boolean('is_active'),
-            'description' => $request->input('description') ?? 'Описание',
+            'description' => $request->input('description'),
             'title' => $request->input('title') ?? 'Новый пост',
             'price' => $request->input('price')
         ];
@@ -47,7 +47,7 @@ class PublicationRepository
             'is_active' => $request->boolean('is_active'),
             'description' => $request->input('description'),
             'title' => $request->input('title'),
-            'price' => $request->input('price')
+            'price' => $request->input('price') === "null" ? null : $request->input('price')
         ];
 
         if ($request->exists('background_image')) {
