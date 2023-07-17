@@ -51,7 +51,7 @@ class ApiPublicationController extends Controller
 
     public function publicList(ApiPublicationPublicListRequest $request): ApiResponse
     {
-        $publication = Publication::where('author_id', $request->id)->get();
+        $publication = Publication::where('author_id', $request->author)->get();
         return ApiResponse::common(PublicationResource::collection($publication)->toArray($request));
     }
 
