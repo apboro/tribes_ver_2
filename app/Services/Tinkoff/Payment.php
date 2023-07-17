@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffApi;
+use Illuminate\Support\Facades\Log;
 
 
 /**
@@ -206,7 +207,7 @@ class Payment
 //            if(isset($resp->SpAccumulationId, $this->payment)){
 //                $this->accumulation($resp->SpAccumulationId);
 //            }
-
+            Log::debug('tinkoff resp in pay is', [$resp]);
             $this->payment->OrderId = $this->orderId;
             $this->payment->paymentId = $resp->PaymentId;
             $this->payment->paymentUrl = $resp->PaymentURL;
