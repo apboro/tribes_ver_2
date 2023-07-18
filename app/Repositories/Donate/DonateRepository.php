@@ -285,7 +285,7 @@ class DonateRepository implements DonateRepositoryContract
 
     public function filter(ApiRequest $request)
     {
-        return Donate::with(['payments' => function ($query) {
+        return Donate::owned()->with(['payments' => function ($query) {
             $query->donationConfirmed();
         }])
             ->withSum(['payments as payments_sum' => function ($query) {
