@@ -5,6 +5,7 @@ use App\Http\Controllers\APIv3\ApiFileController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
+use App\Http\Controllers\APIv3\ApiWebinarController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityTagController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityTelegramUserController;
@@ -253,6 +254,11 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::put('/tariff/{id}', [ApiTariffController::class, 'update']);
     Route::patch('/tariff/setActivity', [ApiTariffController::class, 'setActivity']);
 
+    Route::post('/webinars', [ApiWebinarController::class, 'store'])->name('api.webinar.store');
+    Route::delete('/webinars/{id}', [ApiWebinarController::class, 'destroy'])->name('api.webinar.delete');
+    Route::post('/webinars/{id}', [ApiWebinarController::class, 'update'])->name('api.webinar.update');
+    Route::get('/webinars', [ApiWebinarController::class, 'list'])->name('api.webinar.list');
+    Route::get('/webinars/{id}', [ApiWebinarController::class, 'show'])->name('api.webinar.show');
 
 });
 
