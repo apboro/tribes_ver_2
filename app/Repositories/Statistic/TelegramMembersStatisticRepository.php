@@ -291,11 +291,12 @@ class TelegramMembersStatisticRepository
             ->select([
                 DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
                 "$tu.user_name as nick_name",
+                "$tuc.exit_date as exit_date",
                 DB::raw("$tuc.accession_date as accession_date"),
                 "$tu.photo_url as image"
             ]);
 
-        $builder->groupBy("$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tu.photo_url");
+        $builder->groupBy("$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tu.photo_url", "$tuc.exit_date");
         if (!empty($communityIds)) {
             $builder->whereIn("$tuc.community_id", $communityIds);
         }
