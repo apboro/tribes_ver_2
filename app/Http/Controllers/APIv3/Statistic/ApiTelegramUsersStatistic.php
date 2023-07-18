@@ -57,7 +57,7 @@ class ApiTelegramUsersStatistic extends Controller
         $members = $this->statisticRepository->getMembersList($request->input('community_ids') ?? []);
 
         return ApiResponse::common([
-            'totalMembers' => $current_members->max('users'),
+            'totalMembers' => $members->whereNull('exit_date')->get()->count(),
             'activeMembers' => [
                 'value' => $active_user->count(),
                 'delta' => $current_members->max('users') > 0 ?
@@ -77,7 +77,7 @@ class ApiTelegramUsersStatistic extends Controller
                     : 0,
             ],
             'series' => [$current_members],
-            'members' => $members->get()->unique('nick_name')->values()
+            'members' => $members->whereNull('exit_date')->get()
         ]);
     }
 
