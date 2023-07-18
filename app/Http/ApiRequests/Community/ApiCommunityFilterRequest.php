@@ -4,6 +4,7 @@ namespace App\Http\ApiRequests\Community;
 
 
 use App\Http\ApiRequests\ApiRequest;
+use Illuminate\Support\Str;
 
 /**
  * @OA\Get(
@@ -115,9 +116,9 @@ class ApiCommunityFilterRequest extends ApiRequest
 
     public function prepareForValidation(): void
     {
-        if (is_string($this->tags_names)){
+        if (isset($this->tags_names[0]) && Str::contains($this->tags_names[0], ',')){
         $this->merge([
-            'tags_names' => explode(',', $this->tags_names)
+            'tags_names' => explode(',', $this->tags_names[0])
         ]);
     }
     }
