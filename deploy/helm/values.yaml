@@ -219,6 +219,8 @@ config:
     client:
       name: "webcaster_name"
       password: "webcaster_password"
+  webinar:
+    key: "to_be_filled"
   elk:
     enabled: "false"
     hosts: "localhost:9200"
