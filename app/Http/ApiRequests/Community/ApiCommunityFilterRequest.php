@@ -7,7 +7,7 @@ use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\Get(
- *  path="/api/v3/user/chats?XDEBUG_SESSION_START=PHPSTORM",
+ *  path="/api/v3/user/chats",
  *  operationId="community-filter",
  *  summary="Filter communities of auth user",
  *  security={{"sanctum": {} }},

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\APIv3\Semantic;
+namespace App\Http\Controllers\APIv3\Statistic;
 
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;

@@ -4,6 +4,7 @@ namespace App\Filters\API;
 
 use App\Filters\QueryFilter;
 use App\Helper\ArrayHelper;
+use App\Http\ApiRequests\Statistic\ApiPaymentsStatisticRequest;
 use Illuminate\Http\Request;
 
 abstract class QueryAPIFilter extends QueryFilter
@@ -35,7 +36,7 @@ abstract class QueryAPIFilter extends QueryFilter
 
     public function filters() : array
     {
-        $filters = $this->request->get('filter', []);
+        $filters = $this->request->filter;
         //фильтры сортировки по умолчанию
         $filters['sort'] = $filters['sort']??['name'=>$this->_sortingName('default')];
         return $filters;
@@ -43,7 +44,7 @@ abstract class QueryAPIFilter extends QueryFilter
 
     public function replace(array $params): void
     {
-        $filter = $this->request->get('filter',[]);
+        $filter = $this->request->filter;
         $all = $this->request->all();
         $filter = array_merge($filter,$params);
         $all = array_merge($all,['filter'=>$filter]);
@@ -53,7 +54,7 @@ abstract class QueryAPIFilter extends QueryFilter
     /**
      * @return Request
      */
-    public function getRequest(): Request
+    public function getRequest(): ApiPaymentsStatisticRequest
     {
         return $this->request;
     }

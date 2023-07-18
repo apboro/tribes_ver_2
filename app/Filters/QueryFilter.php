@@ -2,10 +2,12 @@
 
 namespace App\Filters;
 
+use App\Http\ApiRequests\Statistic\ApiPaymentsMembersRequest;
+use App\Http\ApiRequests\Statistic\ApiPaymentsStatisticRequest;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Str;
 
 abstract class QueryFilter
@@ -16,7 +18,7 @@ abstract class QueryFilter
 
     protected $splitter = ',';
 
-    public function __construct(Request $request)
+    public function __construct(ApiPaymentsMembersRequest $request)
     {
         $this->request = $request;
     }
