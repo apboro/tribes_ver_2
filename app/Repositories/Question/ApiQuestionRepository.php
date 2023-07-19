@@ -59,6 +59,14 @@ class ApiQuestionRepository
         return $question;
     }
 
+    public function listAi(array $communities)
+    {
+        return Question::whereIn('community_id', $communities)
+                            ->where('category_id', '=' , null)
+                            ->where('knowledge_id', '=', null)
+                            ->get();
+    }
+
     public function list(ApiQuestionListRequest $request, $id)
     {
         /** @var Question $question */
