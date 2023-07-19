@@ -294,7 +294,7 @@ class DonateRepository implements DonateRepositoryContract
             ->withCount(['payments' => function ($query) {
                 $query->donationConfirmed();
             }])
-            ->orderBy($request->sort_field ?? 'id', $request->sort_direction ?? 'asc')
+            ->orderBy($request->sort_field ?? 'updated_at', $request->sort_direction ?? 'desc')
             ->when($request->search, function (Builder $q) use ($request) {
                 $q->where('title', 'ilike', '%' . $request->input('search') . '%');
             })->skip($request->offset)->take($request->limit)->get();

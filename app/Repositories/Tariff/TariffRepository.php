@@ -524,8 +524,8 @@ class TariffRepository implements TariffRepositoryContract
         $this->tariffModel->user_id = Auth::user()->id;
         $this->tariffModel->save();
 
-        $variants = $this->tariffModel->variants()->get() ?? $this->generateVariants($data);
-        if (!empty($variants)) {
+        $variants = $this->tariffModel->variants()->get();
+        if ($variants->isNotEmpty()) {
             foreach ($variants as $variant) {
                 $variant->title = $variant->title === 'Пробный период' ? 'Пробный период' : $data['title'] ?? null;
                 $variant->price = $variant->price == 0 ? 0 : $data['price'] ?? null;
@@ -533,6 +533,9 @@ class TariffRepository implements TariffRepositoryContract
                 $variant->isActive = $data['tariff_is_payable'] ?? false;
                 $variant->save();
             }
+        } else {
+            $this->generateVariants($data);
+
         }
 
         return $this->tariffModel;
@@ -540,7 +543,7 @@ class TariffRepository implements TariffRepositoryContract
 
     public function update(ApiRequest $request): Tariff
     {
-        $this->tariffModel = Tariff::find($request->id);
+        $this->tariffModel = Tariff::findOrFail($request->id);
         $data = $request->all();
         $variant_data['title'] = $data['title'] ?? null;
         $variant_data['price'] = $data['price'] ?? null;
