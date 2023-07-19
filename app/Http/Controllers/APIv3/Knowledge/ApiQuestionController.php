@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\APIv3\Knowledge;
 
+use App\Http\ApiRequests\Question\ApiQuestionAiListRequest;
 use App\Http\ApiRequests\Question\ApiQuestionDeleteRequest;
 use App\Http\ApiRequests\Question\ApiQuestionListRequest;
 use App\Http\ApiRequests\Question\ApiQuestionShowRequest;
@@ -11,6 +12,7 @@ use App\Http\ApiRequests\Question\ApiQuestionUpdateRequest;
 use App\Http\ApiResources\Knowledge\ApiQuestionCollection;
 use App\Http\ApiResources\Knowledge\ApiQuestionResource;
 use App\Http\ApiResponses\ApiResponse;
+use App\Models\User;
 use App\Repositories\Question\ApiQuestionRepository;
 
 class ApiQuestionController
@@ -31,6 +33,21 @@ class ApiQuestionController
         }
 
         return ApiResponse::common(ApiQuestionResource::make($question)->toArray($request));
+    }
+
+    public function listAi(ApiQuestionAiListRequest $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+        $communities = $user->getOwnCommunities()->pluck('id')->toArray();
+
+        $questions = $this->apiQuestionRepository->listAi($communities);
+
+        if (!$questions) {
+            return ApiResponse::error('Список пуст');
+        }
+
+        return ApiResponse::list()->items(ApiQuestionCollection::make($questions)->toArray($request));
     }
 
     public function list(ApiQuestionListRequest $request, int $id)
