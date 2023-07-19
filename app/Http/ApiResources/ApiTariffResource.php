@@ -31,7 +31,7 @@ class ApiTariffResource extends JsonResource
             'updated_at' => $this->updated_at,
             'price' => $variant ? $variant->price : null,
             'chat_name' => $community->title,
-            'followers' => $community->followers()->count(),
+            'followers' => $this->tariffCommunityUsers()->count(),
             'community_image' => $community->image,
             'tariff_page' => config('app.frontend_url').Tariff::FRONTEND_TARIFF_PAGE.$this->inline_link,
         ];
