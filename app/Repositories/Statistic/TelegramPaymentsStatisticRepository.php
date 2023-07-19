@@ -138,11 +138,11 @@ class TelegramPaymentsStatisticRepository
                     "$tu.first_name",
                     "$tu.user_name"
                 ]
-            )->where(function ($query) {
-                $query->whereHasMorph('payable', [TariffVariant::class, Publication::class], function ($query) {
-                    $query->where('title', "Пробный период");
-                })->orWhereHasMorph('payable', [DonateVariant::class], function ($query) {
-                        $query->where('description', "na doktorskuyu");
+            )->where(function ($query) use ($filter){
+                $query->whereHasMorph('payable', [TariffVariant::class, Publication::class], function ($query) use ($filter){
+                    $query->where('title', 'ilike', '%'.$filter['search'].'%');
+                })->orWhereHasMorph('payable', [DonateVariant::class], function ($query) use ($filter){
+                        $query->where('description', 'ilike', '%'.$filter['search'].'%');
                     });
             });
 
