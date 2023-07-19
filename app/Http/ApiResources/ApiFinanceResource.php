@@ -11,7 +11,7 @@ class ApiFinanceResource extends JsonResource
     {
         return [
             "id" => $this->resource->id,
-            "amount" => $this->resource->amount/100 . ' '. Donate::$currency_labels['rub'],
+            "amount" => $this->resource->amount,
             "type" => $this->getTypeName($this->resource->type),
             "buy_date" => $this->resource->buy_date,
             "payable_title" => $this->resource->payable->title ?? $this->resource->payable->description ?? '—',

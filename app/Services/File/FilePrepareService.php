@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\File;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-class FIlePrepareService
+class FilePrepareService
 {
     /**
      * @param Builder|\Illuminate\Database\Eloquent\Builder $builder $builder

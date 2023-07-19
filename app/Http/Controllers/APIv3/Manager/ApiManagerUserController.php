@@ -24,7 +24,7 @@ use App\Http\Controllers\Manager\Filters\UsersFilter;
 use App\Models\Administrator;
 use App\Models\User;
 use App\Models\UserSettings;
-use App\Services\File\FIlePrepareService;
+use App\Services\File\FilePrepareService;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -33,10 +33,10 @@ use Illuminate\Support\Str;
 class ApiManagerUserController extends Controller
 {
 
-    private FIlePrepareService $FIlePrepareService;
+    private FilePrepareService $FIlePrepareService;
 
     public function __construct(
-        FIlePrepareService $FIlePrepareService
+        FilePrepareService $FIlePrepareService
     )
     {
 
