@@ -146,7 +146,7 @@ class SetNewTelegramUsers implements ShouldQueue
 
     protected function getGroupRole($participant)
     {
-        log::info('getGroupRole: ', json_encode($participant, JSON_UNESCAPED_UNICODE));
+        log::info('getGroupRole: ' . json_encode($participant, JSON_UNESCAPED_UNICODE));
         $className = $participant->participant->className;
         if ($className === 'ChatParticipantAdmin')
             $role = 'administrator';
