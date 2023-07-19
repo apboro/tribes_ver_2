@@ -235,6 +235,7 @@ class UserBot
     protected function requestSimpleGet($address)
     {
         $url = env('MTPROTO_HOST') . $address;
+        log::info('url: ' . $url);
 
         return Http::get(env('MTPROTO_HOST') . $address);
     }
