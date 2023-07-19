@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Statistic;
 
+use App\Models\Donate;
+use App\Models\Payment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -11,15 +13,16 @@ class FinanceResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "amount" => $this->resource->amount,
-            "type" => [
-                'value' => $this->resource->type,
-                'name' => $this->getTypeName($this->resource->type),
-            ],
+            "id" => $this->resource->id,
+            "amount" => $this->resource->amount/100 . ' '. Donate::$currency_labels['rub'],
+            "type" => $this->getTypeName($this->resource->type),
             "buy_date" => $this->resource->buy_date,
-            "status" => $this->resource->payable->title ?? '-',
-            "tele_login" => $this->resource->tele_login,
+            "payable_title" => $this->resource->payable->title ?? $this->resource->payable->description ?? '—',
+            "telegram_id" => $this->resource->tele_login,
+            "photo_url" => $this->resource->photo_url,
             "first_name" => $this->resource->first_name,
+            "user_name" => $this->resource->user_name,
+            "email" => $this->resource->email
         ];
     }
 
@@ -27,8 +30,8 @@ class FinanceResource extends JsonResource
     {
         $list = [
             "donate" => 'Донат',
-            "tariff" => 'Оплата подписки',
-            "course" => 'Медиа товар',
+            "tariff" => 'Тариф',
+            "course" => 'Медиатовар',
             "payout" => 'Вывод средств',
         ];
         return $list[$code]?? 'Не определено';

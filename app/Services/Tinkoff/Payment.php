@@ -140,12 +140,14 @@ class Payment
     {
         if ($user) {
             if ($this->type == 'donate') {
-                $this->payer = TelegramUser::where('telegram_id', $user)->first();
+                $telegramUser = TelegramUser::where('telegram_id', $user)->first();
+                $this->payer = $telegramUser !== null ? $telegramUser->user_id : null;
                 $this->telegram_id = $user;
                 return $this;
+            } else {
+                $this->payer = $user;
+                $this->telegram();
             }
-            $this->payer = $user;
-            $this->telegram();
         }
         return $this;
     }

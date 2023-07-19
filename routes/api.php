@@ -31,10 +31,11 @@ use App\Http\Controllers\APIv3\Publication\ApiFavouritePublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationPartController;
 use App\Http\Controllers\APIv3\Publication\ApiVisitedPublicationController;
-use App\Http\Controllers\APIv3\Semantic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiExportAllData;
+use App\Http\Controllers\APIv3\Statistic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramModerationStatistic;
+use App\Http\Controllers\APIv3\Statistic\ApiTelegramPaymentsStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramUsersStatistic;
 use App\Http\Controllers\APIv3\Subscription\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\Subscription\ApiUserSubscriptionController;
@@ -203,19 +204,19 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::get('/statistic/members', [ApiTelegramUsersStatistic::class, 'members'])->name('api.statistic.members');
     Route::get('/statistic/members/export', [ApiTelegramUsersStatistic::class, 'exportMembers'])->name('api.statistic.members.export');
-
     Route::get('/statistic/messages/users', [ApiTelegramMessageStatistic::class, 'messages'])->name('api.statistic.messages');
     Route::get('/statistic/messages/charts', [ApiTelegramMessageStatistic::class, 'messageCharts'])->name('api.statistic.messages.charts');
     Route::get('/statistic/messages/export', [ApiTelegramMessageStatistic::class, 'exportMessages'])->name('api.statistic.messages.export');
-
     Route::get('/statistic/semantic/export', [ApiSemanticController::class, 'exportSemantic']);
     Route::get('/statistic/semantic/charts', [ApiSemanticController::class, 'charts']);
-
     Route::get('/statistic/moderation/users', [ApiTelegramModerationStatistic::class, 'userList'])->name('api.statistic.moderation.user_list');
     Route::get('/statistic/moderation/export', [ApiTelegramModerationStatistic::class, 'exportModeration'])->name('api.statistic.moderation.export');
-
     Route::get('/statistic/export-all-data', [ApiExportAllData::class, 'exportAllData'])->name('api.statistic.export.all_data');
+    Route::get('/statistic/payments-list', [ApiTelegramPaymentsStatistic::class, 'paymentsList']);
+    Route::get('/statistic/payments-charts', [ApiTelegramPaymentsStatistic::class, 'paymentsCharts']);
+    Route::get('/statistic/export-payments', [ApiTelegramPaymentsStatistic::class, 'exportPayments']);
 
+    
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
 
     Route::post('/file', [ApiFileController::class, 'upload']);
@@ -368,7 +369,7 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
         Route::post('views-list', 'MediaStatisticController@viewsList')->name('api.media-statistic.views-list');
     });
 
-    Route::group(['prefix' => 'tele-statistic'], function () {
+    Route::group(['prefix' => 'api/tele-statistic'], function () {
         Route::post('members', 'TeleDialogStatisticController@members')->name('api.tele-statistic.members');
         Route::post('member-charts', 'TeleDialogStatisticController@memberCharts')->name('api.tele-statistic.member-charts');
 
@@ -381,8 +382,6 @@ Route::middleware('auth:sanctum')->namespace('App\Http\Controllers\API')->group(
         Route::post('export-members', 'TeleDialogStatisticController@exportMembers')->name('api.tele-statistic.export-members');
         Route::post('export-messages', 'TeleMessageStatisticController@exportMessages')->name('api.tele-statistic.export-messages');
         Route::post('export-payments', 'FinanceStatisticController@exportPayments')->name('api.tele-statistic.export-payments');
-
-
     });
 
 });

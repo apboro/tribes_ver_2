@@ -5,7 +5,10 @@ namespace App\Repositories\Statistic;
 use App\Filters\API\FinanceChartFilter;
 use App\Filters\API\FinanceFilter;
 use App\Helper\ArrayHelper;
+use App\Models\DonateVariant;
 use App\Models\Payment;
+use App\Models\Publication;
+use App\Models\TariffVariant;
 use App\Repositories\Statistic\DTO\ChartData;
 use Carbon\Carbon;
 use Exception;
@@ -15,7 +18,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
+class TelegramPaymentsStatisticRepository
 {
 
     public function getPaymentsCharts(array $communityIds, FinanceChartFilter $filter, string $type): ChartData
@@ -32,8 +35,8 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $p = 'payments';
 
         $sub = DB::table(DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d(dt)"))
-            ->leftJoin($p, function (JoinClause $join) use($p, $scale) {
-                $join->on( DB::raw("$p.created_at"), '>=', 'd.dt')
+            ->leftJoin($p, function (JoinClause $join) use ($p, $scale) {
+                $join->on(DB::raw("$p.created_at"), '>=', 'd.dt')
                     ->on(DB::raw("$p.created_at"), '<', DB::raw("(d.dt + '$scale'::interval)"));
             })
             //$join->on( DB::raw("extract('epoch' from $p.created_at - INTERVAL '3 hours')"), '>=', 'd.dt')
@@ -42,7 +45,7 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
                 DB::raw("SUM($p.amount) as balance"),
             ])
             ->orderBy('d.dt');
-        $sub->whereIn("$p.community_id" , $communityIds);
+        $sub->whereIn("$p.community_id", $communityIds);
         if ($type == 'all') {
             $sub->where("$p.type", '!=', 'payout');
         } else {
@@ -53,8 +56,8 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
 
-        $builder = DB::table( DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d1(dt)") )
-            ->leftJoin(DB::raw("({$sub->toSql()}) as sub"),'sub.dt','=','d1.dt')
+        $builder = DB::table(DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d1(dt)"))
+            ->leftJoin(DB::raw("({$sub->toSql()}) as sub"), 'sub.dt', '=', 'd1.dt')
             ->select([
                 DB::raw("d1.dt as scale"),
                 DB::raw("coalesce(sub.balance,0) as balance"),
@@ -71,16 +74,16 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
 
         $totalAmount = DB::table($p)
             ->select(DB::raw("SUM(amount) as s"))
-            ->whereIn('community_id',$communityIds)
-            ->where('status',"=",'CONFIRMED')
-            ->where('type','!=','payout')
+            ->whereIn('community_id', $communityIds)
+            ->where('status', "=", 'CONFIRMED')
+            ->where('type', '!=', 'payout')
             ->value('s');
         $chart->addAdditionParam('total_amount', $totalAmount);
 
         return $chart;
     }
 
-    public function getPaymentsList(array $communityIds, FinanceFilter $filter): LengthAwarePaginator
+    public function getPaymentsList(array $communityIds, FinanceFilter $filter): Builder
     {
         $builder = $this->queryPayments($communityIds, $filter);
 
@@ -89,10 +92,10 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
         Log::debug("FinanceStatisticRepository::getPaymentsList", [
             'filter' => $filterData,
         ]);
-        $perPage = $filterData['per-page'] ?? 15;
-        $page = $filterData['page'] ?? 1;
+        $offset = $filterData['offset'] ?? null;
+        $limit = $filterData['limit'] ?? null;
 
-        return $builder->paginate($perPage, ['*'], 'page', $page);
+        return $builder->orderBy('id')->skip($offset)->take($limit);
     }
 
     public function getPaymentsListForFile(array $communityIds, FinanceFilter $filter): Builder
@@ -110,23 +113,39 @@ class FinanceStatisticRepository implements FinanceStatisticRepositoryContract
     {
         $p = 'payments';
         $tu = 'telegram_users';
+        $u = 'users';
 
         $builder = Payment::where('community_id', $communityIds)
-        ->where('status', 'CONFIRMED')
-        ->leftJoin($tu,function ($join) use ($p,$tu) {
-            $join->on("$tu.telegram_id", '=', "$p.telegram_user_id")
-                ->on("$tu.user_id", '=',"$p.user_id",'OR');
-        })
-        ->select(
-            ['amount',
-            'type', 
-            "payments.created_at as buy_date", 
-            'status',
-            "payable_id",
-            "payable_type",
-            "$tu.user_name as tele_login", 
-            "$tu.first_name"]
-        );
+            ->where('status', 'CONFIRMED')
+            ->where('amount', '!=', 0)
+            ->leftJoin($tu, function ($join) use ($p, $tu) {
+                $join->on("$tu.telegram_id", '=', "$p.telegram_user_id")
+                    ->on("$tu.user_id", '=', "$p.user_id", 'OR');
+            })->leftJoin($u, function ($join) use ($p, $u) {
+                $join->on("$u.id", '=', "$p.user_id");
+            })
+            ->select(
+                ['payments.id',
+                    'email',
+                    'photo_url',
+                    'amount',
+                    'type',
+                    "payments.created_at as buy_date",
+                    'status',
+                    "payable_id",
+                    "payable_type",
+                    "$tu.user_name as tele_login",
+                    "$tu.first_name",
+                    "$tu.user_name"
+                ]
+            )->where(function ($query) use ($filter){
+                $query->whereHasMorph('payable', [TariffVariant::class, Publication::class], function ($query) use ($filter){
+                    $query->where('title', 'ilike', '%'.$filter['search'].'%');
+                })->orWhereHasMorph('payable', [DonateVariant::class], function ($query) use ($filter){
+                        $query->where('description', 'ilike', '%'.$filter['search'].'%');
+                    });
+            });
+
         $builder = $filter->apply($builder);
         return $builder;
     }
