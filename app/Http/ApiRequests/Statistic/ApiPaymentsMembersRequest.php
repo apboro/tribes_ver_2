@@ -43,6 +43,7 @@ class ApiPaymentsMembersRequest extends ApiRequest
             'filter'=> [
                 'offset' => $this->request->get('offset'),
                 'limit' => $this->request->get('limit'),
+                'search' => $this->request->get('search'),
                 'period' => $this->request->get('period'),
                 'sort'=>[
                     'name'=> $this->request->get('sort_name'),
