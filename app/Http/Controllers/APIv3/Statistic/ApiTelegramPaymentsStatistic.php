@@ -8,6 +8,8 @@ use App\Helper\ArrayHelper;
 use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiRequests\Statistic\ApiPaymentsMembersRequest;
 use App\Http\ApiRequests\Statistic\ApiPaymentsStatisticRequest;
+use App\Http\ApiResources\ApiFinanceResource;
+use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\TeleDialogStatRequest;
 use App\Http\Resources\Statistic\FinanceResource;
@@ -52,9 +54,9 @@ class ApiTelegramPaymentsStatistic
 
     public function paymentsList(ApiPaymentsMembersRequest $request, FinanceFilter $filter)
     {
-        $payments = $this->financeRepository->getPaymentsList($this->getCommunityIds($request),$filter);
+        $payments = $this->financeRepository->getPaymentsList($filter);
 
-        return (new FinancesResource($payments->get()));
+        return ApiResponse::listPagination(['Access-Control-Expose-Headers'=>'Items-Count', 'Items-Count'=>$payments->count()])->items(ApiFinanceResource::collection($payments->get()));
     }
 
     public function exportPayments(TeleDialogStatRequest $request, FinanceFilter $filter)
@@ -87,7 +89,7 @@ class ApiTelegramPaymentsStatistic
             ],
         ];
         $type = $request->get('export_type');
-        $membersBuilder = $this->financeRepository->getPaymentsListForFile($this->getCommunityIds($request),$filter);
+        $membersBuilder = $this->financeRepository->getPaymentsListForFile($filter);
         return $this->fileSendService->sendFile($membersBuilder, $columnNames,FinanceResource::class,$type,'members');
     }
 

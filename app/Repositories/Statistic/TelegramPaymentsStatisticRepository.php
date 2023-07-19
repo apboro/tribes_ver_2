@@ -83,9 +83,9 @@ class TelegramPaymentsStatisticRepository
         return $chart;
     }
 
-    public function getPaymentsList(array $communityIds, FinanceFilter $filter): Builder
+    public function getPaymentsList(FinanceFilter $filter): Builder
     {
-        $builder = $this->queryPayments($communityIds, $filter);
+        $builder = $this->queryPayments($filter);
 
         $filterData = $filter->filters();
 
@@ -98,9 +98,9 @@ class TelegramPaymentsStatisticRepository
         return $builder->orderBy('id')->skip($offset)->take($limit);
     }
 
-    public function getPaymentsListForFile(array $communityIds, FinanceFilter $filter): Builder
+    public function getPaymentsListForFile(FinanceFilter $filter): Builder
     {
-        return $this->queryPayments($communityIds, $filter);
+        return $this->queryPayments($filter);
     }
 
     /**
@@ -109,15 +109,20 @@ class TelegramPaymentsStatisticRepository
      * @return Builder|Builder
      * @throws Exception
      */
-    protected function queryPayments(array $communityIds, FinanceFilter $filter)
+    protected function queryPayments(FinanceFilter $filter)
     {
+        $filterData = $filter->filters();
+        $start = $filter->getStartDate($filterData['period'] ?? 'week')->toDateTimeString();
+        $end = $filter->getEndDate()->toDateTimeString();
         $p = 'payments';
         $tu = 'telegram_users';
         $u = 'users';
 
-        $builder = Payment::where('community_id', $communityIds)
+        $builder = Payment::owned()
             ->where('status', 'CONFIRMED')
             ->where('amount', '!=', 0)
+            ->where('payments.created_at','<', $end)
+            ->where('payments.created_at','>', $start)
             ->leftJoin($tu, function ($join) use ($p, $tu) {
                 $join->on("$tu.telegram_id", '=', "$p.telegram_user_id")
                     ->on("$tu.user_id", '=', "$p.user_id", 'OR');
@@ -125,7 +130,9 @@ class TelegramPaymentsStatisticRepository
                 $join->on("$u.id", '=', "$p.user_id");
             })
             ->select(
-                ['payments.id',
+                [
+                    'payments.id',
+                    'payments.community_id as community_id',
                     'email',
                     'photo_url',
                     'amount',
@@ -134,19 +141,38 @@ class TelegramPaymentsStatisticRepository
                     'status',
                     "payable_id",
                     "payable_type",
-                    "$tu.user_name as tele_login",
                     "$tu.first_name",
                     "$tu.user_name"
                 ]
-            )->where(function ($query) use ($filter){
-                $query->whereHasMorph('payable', [TariffVariant::class, Publication::class], function ($query) use ($filter){
-                    $query->where('title', 'ilike', '%'.$filter['search'].'%');
-                })->orWhereHasMorph('payable', [DonateVariant::class], function ($query) use ($filter){
-                        $query->where('description', 'ilike', '%'.$filter['search'].'%');
-                    });
-            });
+            );
+        if($filterData['community_id']){
+            $builder->where('community_id', $filterData['community_id']);
+        }
 
-        $builder = $filter->apply($builder);
+        if ($filterData['search_field'] == 'payable_title') {
+            $builder->where(function ($query) use ($filterData) {
+                $query->whereHasMorph('payable', [TariffVariant::class, Publication::class], function ($query) use ($filterData) {
+                    $query->where('title', 'ilike', '%' . $filterData['search_query'] . '%');
+                })->orWhereHasMorph('payable', [DonateVariant::class], function ($query) use ($filterData) {
+                    $query->where('description', 'ilike', '%' . $filterData['search_query'] . '%');
+                });
+            });
+        }
+
+        if ($filterData['search_field'] == 'type') {
+            $builder->where('type', 'ilike', '%' . $filterData['search_query'] . '%');
+        }
+        if ($filterData['search_field'] == 'name') {
+            $builder->where('name', 'ilike', '%' . $filterData['search_query'] . '%');
+        }
+        if ($filterData['search_field'] == 'username') {
+            $builder->where('user_name', 'ilike', '%' . $filterData['search_query'] . '%');
+        }
+        if ($filterData['search_field'] == 'email') {
+            $builder->where('email', 'ilike', '%' . $filterData['search_query'] . '%');
+        }
+
+        $builder->orderBy($filterData['sort']['name'] ?? 'id', $filterData['sort']['rule'] ?? 'asc' );
         return $builder;
     }
 }

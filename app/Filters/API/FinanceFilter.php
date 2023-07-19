@@ -55,7 +55,7 @@ class FinanceFilter extends QueryAPIFilter
         if (in_array($value, $this->allowedPeriods())) {
             switch ($value) {
                 case self::DAY:
-                    return $this->getEndDate()->subDay();
+                    return $this->getEndDate()->startOfDay();
                 case self::WEEK:
                     return $this->getEndDate()->subWeek();
                 case self::MONTH:
