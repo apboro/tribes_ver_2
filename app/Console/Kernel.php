@@ -17,13 +17,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('send:donate')->everyMinute()->timezone('Europe/Moscow');
+//        $schedule->command('send:donate')->everyMinute()->timezone('Europe/Moscow');
         $schedule->command('check:tariff')->everyMinute()->timezone('Europe/Moscow')->appendOutputTo(storage_path('logs/checktariff.log'));
         $schedule->command('check:course')->everyMinute()->timezone('Europe/Moscow');
         $schedule->command('check:subscription')->everyMinute()->timezone('Europe/Moscow')->appendOutputTo(storage_path('logs/checksubscription.log'));
-        env('USE_TRIAL_PERIOD', true) ?
-            $schedule->command('check:trial')->everyMinute()->timezone('Europe/Moscow')
-            : null;
+        $schedule->command('check:trial')->everyMinute()->timezone('Europe/Moscow');
         $schedule->command('tariff:decrement')->dailyAt('23:59')->timezone('Europe/Moscow');
         $schedule->command('send:deactivated:tariff')->dailyAt('10:00')->timezone('Europe/Moscow');
         $schedule->command('send:subscription')->dailyAt('10:30')->timezone('Europe/Moscow');
