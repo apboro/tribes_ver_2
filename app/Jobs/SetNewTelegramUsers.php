@@ -53,6 +53,9 @@ class SetNewTelegramUsers implements ShouldQueue
                 if ($connection->access_hash !== null and $connection->userBotStatus === 'administrator') {
 
                     $participants = $userBot->getUsersInChannel($chat_id, $connection->access_hash, $limit, $offset);
+                   log::info('get users in $chat_id:' . json_encode($chat_id, JSON_UNESCAPED_UNICODE));
+                   log::info('get users in channel:' . json_encode($participants, JSON_UNESCAPED_UNICODE));
+
                     $this->getChannelUsers($community, $participants);
                     if (isset($participants[0]->users->count)) {
                         $count = $participants[0]->users->count;
@@ -143,6 +146,7 @@ class SetNewTelegramUsers implements ShouldQueue
 
     protected function getGroupRole($participant)
     {
+        log::info('getGroupRole: ', json_encode($participant, JSON_UNESCAPED_UNICODE));
         $className = $participant->participant->className;
         if ($className === 'ChatParticipantAdmin')
             $role = 'administrator';
