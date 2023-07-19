@@ -1,14 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Statistic;
+namespace App\Http\ApiResources;
 
 use App\Models\Donate;
-use App\Models\Payment;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @property object $resource */
-class FinanceResource extends JsonResource
+class ApiFinanceResource extends JsonResource
 {
     public function toArray($request)
     {

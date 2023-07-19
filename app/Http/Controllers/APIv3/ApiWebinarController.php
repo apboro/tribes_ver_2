@@ -35,7 +35,7 @@ class ApiWebinarController extends Controller
      */
     public function list(ApiWebinarsListRequest $request): ApiResponse
     {
-        $webinars = $this->webinarRepository->list();
+        $webinars = $this->webinarRepository->list($request);
         $count = $webinars->count();
         return ApiResponse::listPagination(
             [
