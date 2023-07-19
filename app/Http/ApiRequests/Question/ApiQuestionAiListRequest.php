@@ -8,7 +8,7 @@ use App\Http\ApiRequests\ApiRequest;
 /**
  * @OA\Get (
  *  path="/api/v3/question/list",
- *  operationId="questions-list",
+ *  operationId="questions-ai-list",
  *  summary="List of questions on Ai",
  *  security={{"sanctum": {} }},
  *  tags={"Question"},
