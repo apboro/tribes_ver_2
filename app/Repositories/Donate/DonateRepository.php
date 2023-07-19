@@ -277,10 +277,10 @@ class DonateRepository implements DonateRepositoryContract
 
     public function saveModel($data)
     {
-        $this->donateModel->title = $data['title'];
-        $this->donateModel->image = $data['image'] ?? null;
-        $this->donateModel->description = $data['description'] ?? null;
-        $this->donateModel->donate_is_active = $data['donate_is_active'] ?? false;
+        $this->donateModel->title = $data['title'] ?? $this->donateModel->title;
+        $this->donateModel->image = $data['image'] ?? $this->donateModel->image;
+        $this->donateModel->description = $data['description'] ?? $this->donateModel->description;
+        $this->donateModel->donate_is_active = $data['donate_is_active'] ?? $this->donateModel->donate_is_active;
     }
 
     public function filter(ApiRequest $request)
