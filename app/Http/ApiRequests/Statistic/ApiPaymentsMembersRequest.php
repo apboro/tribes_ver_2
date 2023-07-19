@@ -7,7 +7,7 @@ use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\Get(
- *  path="/api/v3/statistic/payments-list?XDEBUG_SESSION_START=PHPSTORM",
+ *  path="/api/v3/statistic/payments-list",
  *  operationId="statistic-payments-list",
  *  summary="Show statistic list of payments of Auth user",
  *  security={{"sanctum": {} }},
