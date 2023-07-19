@@ -121,7 +121,7 @@ class WebinarRepository
     {
         /**@var User $user */
         $user = Auth::user();
-        $webinars = Webinar::query()->where('author_id', $user->author->id);
+        $webinars = Webinar::query()->select('webinars.*',DB::raw("'".$request->input('type')."' as type"))->where('author_id', $user->author->id);
         switch ($request->input('type')){
             case 'online':
                 $webinars->where(DB::raw('start_at::timestamp'),'<=',Carbon::now()->format('Y-m-d H:i:s'));
@@ -134,6 +134,7 @@ class WebinarRepository
                 $webinars->where(DB::raw('end_at::timestamp'),'<',Carbon::now()->format('Y-m-d H:i:s'));
                 break;
         }
+
         return $webinars;
     }
 
