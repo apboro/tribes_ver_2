@@ -87,7 +87,7 @@ class ApiNewDonateController extends Controller
 
             //оплата фикс суммы
             if ($variant->isStatic) {
-                if ($variant->price === $amount) {
+                if ($variant->price == $amount) {
                     $p = new Pay();
                     $p->amount($amount * 100)
                         ->payFor($variant)
