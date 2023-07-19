@@ -26,7 +26,7 @@ class Tariff extends Model
 
     protected $with = ['variants'];
 
-    const FRONTEND_TARIFF_PAGE = '/app/public/tariff';
+    const FRONTEND_TARIFF_PAGE = '/app/public/tariff/';
     
     function community()
     {

@@ -25,7 +25,6 @@ class ApiModerationStatisticChartRequest extends ApiRequest
         return [
             'period' => 'string|in:day,week,month,year',
             'community_id' => 'integer',
-            'community_id.*' => 'integer|exists:communities,id',
         ];
     }
 
