@@ -72,6 +72,7 @@ class SetNewTelegramUsers implements ShouldQueue
                     log::info('else $connection->access_hash !== null and $connection->userBotStatus == administrator');
 
                     $participants = $userBot->getUsersInChannel($chat_id);
+                    log::info('$participants : ' . json_encode($participants, JSON_UNESCAPED_UNICODE));
 //                    $participants =  json_decode(file_get_contents(storage_path('users.log')));
                     $this->getUsersForGroup($community, $participants);
                 }
