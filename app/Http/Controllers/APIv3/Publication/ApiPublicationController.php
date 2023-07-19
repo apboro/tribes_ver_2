@@ -127,21 +127,9 @@ class ApiPublicationController extends Controller
 
     public function showByUuid(ApiPublicationShowForAllRequest $request, string $uuid)
     {
-
-
         $publication = Publication::where('uuid', $uuid)->first();
         if ($publication == null) {
             return ApiResponse::notFound('common.not_found');
-        }
-        if ($request->bearerToken() !== null) {
-            $user = User::where('api_token', $request->bearerToken())->first();
-            if ($user !== null) {
-                VisitedPublication::updateOrCreate([
-                    'user_id' => $user->id,
-                    'publication_id' => $publication->id
-                ], ['last_visited' => Carbon::now()]);
-            }
-
         }
 
         return ApiResponse::common(PublicationResource::make($publication)->toArray($request));

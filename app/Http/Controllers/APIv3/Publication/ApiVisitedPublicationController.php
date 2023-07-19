@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\APIv3\Publication;
 
 use App\Http\ApiRequests\Publication\ApiVisitedPublicationListRequest;
+use App\Http\ApiRequests\Publication\ApiVisitedPublicationStoreRequest;
 use App\Http\ApiResources\Publication\PublicationCollection;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Publication;
+use App\Models\VisitedPublication;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class ApiVisitedPublicationController extends Controller
@@ -31,6 +34,15 @@ class ApiVisitedPublicationController extends Controller
         new PublicationCollection($publications->skip($request->offset ?? 0)->take($request->limit ?? 3)->orderBy('id')->get()
         ))->toArray($request));
 
+    }
+
+    public function store(ApiVisitedPublicationStoreRequest $request){
+        $user = Auth::user();
+        VisitedPublication::updateOrCreate([
+            'user_id' => $user->id,
+            'publication_id' => $request->input('publication_id')
+        ], ['last_visited' => Carbon::now()]);
+        return ApiResponse::success();
     }
 
 }
