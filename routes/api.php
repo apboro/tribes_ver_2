@@ -246,6 +246,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/favourite/publications', [ApiFavouritePublicationController::class, 'list'])->name('api.publications.favorite.list');
 
     Route::get('/visited/publications', [ApiVisitedPublicationController::class, 'list'])->name('api.publications.visited.list');
+    Route::post('/visited/publications', [ApiVisitedPublicationController::class, 'store'])->name('api.publications.visited.list');
 
     Route::post('/tariff', [ApiTariffController::class, 'store']);
     Route::get('/tariffs', [ApiTariffController::class, 'list']);
