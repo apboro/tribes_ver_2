@@ -10,6 +10,7 @@ use App\Repositories\Telegram\TeleMessageReactionRepositoryContract;
 use App\Repositories\Telegram\TeleMessageRepositoryContract;
 use App\Repositories\Telegram\TelePostRepositoryContract;
 use App\Services\TelegramLogService;
+use Log;
 
 class Event
 {
@@ -31,6 +32,7 @@ class Event
 
     public function handler($updates)
     {
+        Log::info('income updates: ' . $updates);
         $updates = json_decode($updates);
         if (gettype($updates) == 'array') {
             foreach ($updates as $update) {
