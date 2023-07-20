@@ -17,7 +17,7 @@ class TelegramUserListSeeder extends Seeder
     {
         $this->faker = Faker::create();
         /** @var TelegramUserList $telegram_black_list */
-        TelegramUserList::factory()->count(1000)->create();
+        TelegramUserList::factory()->count(200)->create();
 
     }
 }

@@ -23,7 +23,7 @@ class ViolationSeeder extends Seeder
         $faker = Faker::create();
         $communities = Community::all();
 
-        for ($z = 0; $z < 1000; $z++) {
+        for ($z = 0; $z < 100; $z++) {
             $comminity = $faker->randomElement($communities);
             if (count($comminity->followers)) {
                 Violation::create([

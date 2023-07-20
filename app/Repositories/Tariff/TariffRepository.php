@@ -527,9 +527,10 @@ class TariffRepository implements TariffRepositoryContract
         $variants = $this->tariffModel->variants()->get();
         if ($variants->isNotEmpty()) {
             foreach ($variants as $variant) {
+                $period = app()->environment('local') ? 1 : 30;
                 $variant->title = $variant->title === 'Пробный период' ? 'Пробный период' : $data['title'] ?? null;
                 $variant->price = $variant->price == 0 ? 0 : $data['price'] ?? null;
-                $variant->period = $variant->period === 3 ? 3 : 30;
+                $variant->period = $variant->period == 3 ? 3 : $period;
                 $variant->isActive = $data['tariff_is_payable'] ?? false;
                 $variant->save();
             }
@@ -560,11 +561,12 @@ class TariffRepository implements TariffRepositoryContract
 
     public function generateVariants($data)
     {
+        $period = app()->environment('local') ? 1 : 30;
         TariffVariant::create([
             'tariff_id' => $this->tariffModel->id,
             'title' => $data['title'] ?? null,
             'price' => $data['price'],
-            'period' => 30,
+            'period' => $period,
             'isActive' => $data['tariff_is_payable'] ?? false,
             'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp . rand(1, 99999999999), 8),
         ]);
