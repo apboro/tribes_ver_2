@@ -76,9 +76,7 @@ class ApiPaymentController extends Controller
             ]);
 
             Event::dispatch(new BuyPublicaionEvent($publication, $user));
-            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/public/tariff/' . $tariff->inline_link . '/thanks?' . http_build_query([
-                'paymentId' => PseudoCrypt::hash($payment->id)
-            ]);
+            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/author/post/' . $publication->uuid;
         }
 
 
