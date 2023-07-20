@@ -63,25 +63,28 @@ class CheckSubscription extends Command
         $userSubscriptions = UserSubscription::all();
         foreach ($userSubscriptions as $userSubscription)
         {
-            if (Carbon::createFromTimestamp($userSubscription->expiration_date) < Carbon::now())
-            {
-                if ($userSubscription->isRecurrent) {
-                    $p = new Pay();
-                    $p->amount($userSubscription->subscription->price * 100)
-                        ->charged(true)
-                        ->payFor($userSubscription->subscription)
-                        ->payer($userSubscription->user);
-                    $payment = $p->pay();
+            try {
+                if (Carbon::createFromTimestamp($userSubscription->expiration_date) < Carbon::now()) {
+                    if ($userSubscription->isRecurrent) {
+                        $p = new Pay();
+                        $p->amount($userSubscription->subscription->price * 100)
+                            ->charged(true)
+                            ->payFor($userSubscription->subscription)
+                            ->payer($userSubscription->user);
+                        $payment = $p->pay();
 
-                    if ($payment) {
-                        Log::info('Payment for subscription ' . $userSubscription->id . ' success');
-                        SubscriptionMade::dispatch($userSubscription->user, $userSubscription->subscription);
+                        if ($payment) {
+                            Log::info('Payment for subscription ' . $userSubscription->id . ' success');
+                            SubscriptionMade::dispatch($userSubscription->user, $userSubscription->subscription);
+                        } else {
+                            SubscriptionMade::dispatch($userSubscription->user, Subscription::find(1));
+                        }
                     } else {
                         SubscriptionMade::dispatch($userSubscription->user, Subscription::find(1));
                     }
-                } else {
-                    SubscriptionMade::dispatch($userSubscription->user, Subscription::find(1));
                 }
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
             }
         }
 

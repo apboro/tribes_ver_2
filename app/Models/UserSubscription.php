@@ -33,4 +33,6 @@ class UserSubscription extends Model
     {
         return $this->belongsTo(Subscription::class, 'subscription_id', 'id');
     }
+
+
 }

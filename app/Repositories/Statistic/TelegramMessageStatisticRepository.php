@@ -2,16 +2,20 @@
 
 namespace App\Repositories\Statistic;
 
+use App\Filters\API\TeleMessagesChartFilter;
 use App\Filters\API\TeleMessagesFilter;
+use App\Helper\ArrayHelper;
 use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageStatisticChartRequest;
 use App\Models\Community;
 use App\Models\Semantic;
+use App\Repositories\Statistic\DTO\ChartData;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TelegramMessageStatisticRepository
 {
@@ -115,6 +119,7 @@ class TelegramMessageStatisticRepository
     {
         $start = $this->getStartDate($request->input('period') ?? 'week')->toDateTimeString();
         $end = $this->getEndDate()->toDateTimeString();
+        $scale = $this->getScale($request->input('period'));
 
         $tc = 'telegram_connections';
         $tm = 'telegram_messages';
@@ -128,7 +133,9 @@ class TelegramMessageStatisticRepository
                     ->on("$tm.group_chat_id", '=', 'telegram_connections.comment_chat_id', 'OR');
             })
             ->join('communities', 'communities.connection_id', "=", "telegram_connections.id")
-            ->join($tu, "$tm.telegram_user_id", "=", "$tu.telegram_id")
+            ->join($tu, "$tm.telegram_user_id", "=", "$tu.telegram_id");
+        $subQuery->whereDate(DB::raw('telegram_messages.created_at'), '>=', $start);
+        $subQuery->whereDate(DB::raw('telegram_messages.created_at'), '<=', $end)
             ->select([
                 DB::raw("distinct($tm.telegram_user_id) as telegram_id"),
                 "$tm.group_chat_id",
@@ -145,8 +152,7 @@ class TelegramMessageStatisticRepository
                 "$tu.last_name",
                 "$tu.user_name",
             );
-        $subQuery->whereDate(DB::raw('telegram_messages.created_at'), '>=', $start);
-        $subQuery->whereDate(DB::raw('telegram_messages.created_at'), '<=', $end);
+
         $subQuery->where('communities.owner', Auth::user()->id);
         if (!empty($request->input('community_ids'))) {
             $subQuery->whereIn('communities.id', $request->input('community_ids'));
@@ -160,7 +166,7 @@ class TelegramMessageStatisticRepository
                 DB::raw('MIN(subquery.message_date) as message_date'),
                 DB::raw('MIN(subquery.nick_name) as nick_name'),
                 DB::raw('MIN(subquery.name) as name'),
-                DB::raw("JSON_AGG(json_build_object('message_date', subquery.message_date)) AS messages")
+                DB::raw("JSON_AGG(json_build_object('message_date', subquery.message_date, 'user_telegram_id', subquery.telegram_id)) AS messages")
             )
             ->groupBy('subquery.telegram_id');
     }
@@ -195,6 +201,7 @@ class TelegramMessageStatisticRepository
             case self::MONTH:
                 return "1 day";
             case self::WEEK:
+                return '1 day';
             default:
                 return "4 hour";//день
         }
@@ -233,6 +240,59 @@ class TelegramMessageStatisticRepository
         if ($tonalities < -0.33) {
             return 'Негативная';
         }
+    }
+
+
+    public function getUserMessageChart(ApiRequest $request): ChartData
+    {
+        $scale = $this->getScale($request->input('period'));
+        $start = $this->getStartDate($request->period ?? 'week')->toDateTimeString();
+        $end = $this->getEndDate()->toDateTimeString();
+
+        $tm = 'telegram_messages';
+        $tc = 'telegram_connections';
+        $com = 'communities';
+
+        $telegramUsers = $request->telegram_users_id;
+
+        $query = DB::table(DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d1(dt)"))
+            ->select('d1.dt as scale');
+
+        foreach ($telegramUsers as $user_id) {
+            $subquery = DB::table(DB::raw("generate_series('$start'::timestamp, '$end'::timestamp, '$scale'::interval) as d(dt)"))
+                ->leftJoin('telegram_messages', function (JoinClause $join) use ($scale, $user_id) {
+                    $join->on(DB::raw("to_timestamp(telegram_messages.message_date)"), '>=', 'd.dt')
+                        ->on(DB::raw("to_timestamp(telegram_messages.message_date)"), '<', DB::raw("(d.dt + '$scale'::interval)"))
+                        ->where('telegram_messages.telegram_user_id', $user_id);
+                })
+                ->select([
+                    DB::raw("d.dt"),
+                    DB::raw("COUNT(distinct(telegram_messages.message_id)) as messages"),
+                ])
+                ->join('telegram_connections', function (JoinClause $join) {
+                    $join->on('telegram_messages.group_chat_id', '=', 'telegram_connections.chat_id')
+                        ->orOn('telegram_messages.group_chat_id', '=', 'telegram_connections.comment_chat_id');
+                })
+                ->join('communities', 'communities.connection_id', "=", "telegram_connections.id")
+                ->groupBy("d.dt");
+
+            if (!empty($request->community_ids)) {
+                $subquery->whereIn("communities.id", $request->community_ids);
+            }
+
+            $query->leftJoinSub($subquery, "sub_user_$user_id", function ($join) use ($user_id){
+                $join->on("sub_user_$user_id.dt", '=', 'd1.dt');
+            })
+                ->addSelect(DB::raw("coalesce(sub_user_$user_id.messages, 0) as messages_user_$user_id"));
+        }
+
+        $result = $query->orderBy('d1.dt')->get();
+
+        $chart = new ChartData();
+        $chart->initChart($result);
+        $chart->addAdditionParam('count_new_message', array_sum(ArrayHelper::getColumn($result, 'messages')));
+
+        return $chart;
     }
 
 }
