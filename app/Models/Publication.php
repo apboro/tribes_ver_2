@@ -52,4 +52,15 @@ class Publication extends Model
         return $this->hasMany(FavouritePublication::class)->where('user_id', $user_id)->first();
     }
 
+    function author()
+    {
+        return $this->belongsTo(Author::class, 'author_id');
+    }
+
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'payable');
+    }
+
+
 }

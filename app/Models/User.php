@@ -248,6 +248,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id')->withPivot(['byed_at', 'expired_at']);
     }
 
+    function publications()
+    {
+        return $this->belongsToMany(Publication::class, 'publication_user', 'user_id', 'publication_id')->withPivot(['byed_at', 'expired_at']);
+    }
+
     public function phoneNumber($phone)
     {
         return "(" . substr($phone, 0, 3) . ") " . substr($phone, 3, 3) . " " . substr($phone, 6);
