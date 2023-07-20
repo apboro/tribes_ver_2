@@ -203,18 +203,6 @@ class ApiPublicationController extends Controller
             return ApiResponse::error('common.user_create_error');
         }
 
-        if ($publication->price === 0 || $publication->price === null) {
-            $user->publications()->attach($publication->id, [
-                'cost' => $publication->price === null ? 0 : $publication->price,
-                'byed_at' => Carbon::now(),
-                'expired_at' => Carbon::now()->addDays(365),
-            ]);
-
-            Event::dispatch(new BuyPublicaionEvent($publication, $user));
-
-            return ApiResponse::success();
-        }
-
         $payment = $this->tinkoff_payment->doPayment($user, $publication, $publication->price * 100,'');
 
         if ($payment === false) {
