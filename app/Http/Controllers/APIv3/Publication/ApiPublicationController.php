@@ -79,7 +79,7 @@ class ApiPublicationController extends Controller
         if ($user->author == null) {
             return ApiResponse::notFound('common.not_found');
         }
-        $publication = Publication::where('author_id', $user->author->id)->get();
+        $publication = Publication::where('author_id', $user->author->id)->orderBy('updated_at')->get();
         return ApiResponse::common(PublicationResource::collection($publication)->toArray($request));
     }
 
@@ -89,7 +89,7 @@ class ApiPublicationController extends Controller
      */
     public function publicList(ApiPublicationPublicListRequest $request): ApiResponse
     {
-        $publication = Publication::where('author_id', $request->author)->get();
+        $publication = Publication::where('author_id', $request->author)->orderBy('updated_at')->get();
         return ApiResponse::common(PublicationResource::collection($publication)->toArray($request));
     }
 
@@ -180,13 +180,12 @@ class ApiPublicationController extends Controller
 
     /**
      * @param ApiPublicationPayRequest $request
-     * @return ApiResponse
      */
-    public function pay(ApiPublicationPayRequest $request): ApiResponse
+    public function pay(ApiPublicationPayRequest $request)
     {        
 
         /** @var Publication $publication */
-        $publication = Publication::where('uuid', '=', $request->input('uuid'))->first();
+        $publication = Publication::where('uuid', '=', $request->uuid)->first();
 
         if ($publication === null) {
             return ApiResponse::notFound('validation.course.not_found');
@@ -206,14 +205,10 @@ class ApiPublicationController extends Controller
         $payment = $this->tinkoff_payment->doPayment($user, $publication, $publication->price * 100,'');
 
         if ($payment === false) {
-            $this->telegramLogService->sendLogMessage(
-                'При инициализации оплаты тарифа произошла ошибка Payment'
-            );
             return ApiResponse::error('common.error_while_pay');
         }
-        return ApiResponse::common([
-            'redirect' => $payment->paymentUrl
-        ]);
+
+        return redirect()->to($payment->paymentUrl);
     }
 
     /**
@@ -242,9 +237,10 @@ class ApiPublicationController extends Controller
             'phone_confirmed' => false,
         ]);
 
-        $user->tinkoffSync();
-
-        Event::dispatch(new ApiUserRegister($user, $password));
+        if ($user->wasRecentlyCreated) {
+            $user->tinkoffSync();
+            Event::dispatch(new ApiUserRegister($user, $password));
+        }
 
         return $user;
     }

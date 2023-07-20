@@ -12,12 +12,21 @@ use OpenApi\Annotations as OA;
  *  summary="Pay publication by uuid",
  *  security={{"sanctum": {} }},
  *  tags={"Publication"},
+ *     @OA\Parameter(
+ *         name="uuid",
+ *         in="path",
+ *         description="publication uuid",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="string",
+ *             example="05a47c05-598a-4581-8315-1da5a5b5f92a"
+ *         )
+ *     ),
  *     @OA\RequestBody(
  *         @OA\MediaType(
  *             mediaType="application/json",
  *             @OA\Schema(
  *                 @OA\Property(property="email", type="string", example="test@test.com"),
- *                 @OA\Property(property="hash",  type="string", example="1qwe123"),
  *             ),
  *         )
  *     ),
@@ -30,7 +39,6 @@ class ApiPublicationPayRequest extends ApiRequest
     {
         return [
             'email' => 'required|email',
-            'uuid' => 'required'
         ];
     }
 
