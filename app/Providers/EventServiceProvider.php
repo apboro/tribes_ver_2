@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\ApiUserRegister;
 use App\Events\BuyCourse;
 use App\Events\BuyCourseListener;
+use App\Events\BuyPublicaionEvent;
 use App\Events\CreateCommunity;
 use App\Events\FeedBackAnswer;
 use App\Events\FeedBackCreate;
@@ -14,6 +15,7 @@ use App\Events\SubscriptionMade;
 use App\Events\TariffPayedEvent;
 use App\Events\UserDeleteEvent;
 use App\Listeners\AssignStartSubscription;
+use App\Listeners\BuyPublicationListener;
 use App\Listeners\CreateCommunityListener;
 use App\Listeners\FeedBackAnswerListener;
 use App\Listeners\FeedBackListener;
@@ -59,6 +61,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         BuyCourse::class => [
             BuyCourseListener::class
+        ],
+        BuyPublicaionEvent::class => [
+            BuyPublicationListener::class
         ],
         NewChatUserJoin::class => [
             NewChatUserBlackListCheck::class

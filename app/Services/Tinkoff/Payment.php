@@ -10,6 +10,7 @@ use App\Models\Community;
 use App\Models\Course;
 use App\Models\DonateVariant;
 use App\Models\Payment as P;
+use App\Models\Publication;
 use App\Models\Subscription;
 use App\Models\TariffVariant;
 use App\Models\TelegramUser;
@@ -83,6 +84,9 @@ class Payment
             case $payFor instanceof Course:
                 $this->type = 'course';
                 break;
+            case $payFor instanceof Publication:
+                $this->type = 'publication';
+                break;
             case $payFor instanceof Subscription:
                 $this->type = 'subscription';
                 break;
@@ -90,9 +94,10 @@ class Payment
                 TelegramLogService::staticSendLogMessage("Оплата на свободную сумму");
                 return false;
         }
+
         $this->payFor = $payFor;
 
-        if ($this->type != 'subscription') {
+        if ($this->type != 'subscription' && $this->type != 'publication') {
             $this->community();
         }
 
@@ -109,7 +114,6 @@ class Payment
     public function community()
     {
         $relation = $this->type;
-
         $this->community = $this->payFor->$relation()->first()->community()->first() ?? null;
         $this->author();
 
@@ -182,7 +186,7 @@ class Payment
         $this->payment->from = $this->type == 'donate' ? $this->payer->user_name : $this->payer->name;
         $this->payment->telegram_user_id = $this->telegram_id ?? null;
         $this->payment->community_id = $this->community ? $this->community->id : null;
-        $this->payment->author = ($this->type == 'subscription') ? null : $this->payFor->getAuthor()->id;
+        $this->payment->author = ($this->type == 'subscription') || ($this->type == 'publication') ? null : $this->payFor->getAuthor()->id;
         $this->payment->add_balance = $this->amount / 100;
         $this->payment->save();
         $this->orderId = $this->payment->id . date("_md_s");
@@ -224,6 +228,7 @@ class Payment
             if ($this->payFor) {
                 $this->payFor->payments()->save($this->payment);
             }
+
             $this->payment->payer()->associate($this->payer)->save();
 
             if ($this->charged) {
@@ -249,6 +254,7 @@ class Payment
                     return false;
                 }
             }
+
             $this->payFor->payments()->save($this->payment);
             $this->payment->payer()->associate($this->payer)->save();
 
@@ -335,8 +341,11 @@ class Payment
     {
 
         $this->amount($cost * 100);
+
+
         $this->payFor($payFor);
         $this->payer($payer);
+
         if ($success_url) {
             $this->success_url = $success_url;
         }
