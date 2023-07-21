@@ -474,7 +474,7 @@ class MainBotCommands
                 $article->thumbUrl('' . config('app.frontend_url') . $image);
                 [$text, $menu] = $this->tariffButton($community);
 
-                $article->title($community->title);
+                $article->title($community->title ?? 'Тариф');
                 $article->inputMessageContent($message);
 
                 $article->keyboard($menu->getAsObject());
@@ -504,7 +504,7 @@ class MainBotCommands
                 $message->text($description . '<a href="' . config('app.url') . '/' . $image . '">&#160</a>');
 
                 $message->parseMode('HTML');
-                $article->title($donate->title);
+                $article->title($donate->title ?? 'Донат');
                 $article->description($donate->description ? mb_strimwidth($donate->description, 0, 55, "...") : 'Донат');
 
                 $article->inputMessageContent($message);
