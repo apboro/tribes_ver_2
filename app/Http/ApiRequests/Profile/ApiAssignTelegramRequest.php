@@ -36,9 +36,9 @@ class ApiAssignTelegramRequest extends ApiRequest
     {
         return [
             'id' => 'required|integer',
-            'first_name' => 'required|string',
-            'username' => 'required|string',
-            'auth_date' => 'required|integer',
+            'first_name' => 'string',
+            'username' => 'string',
+            'auth_date' => 'integer',
             'hash' => 'string',
         ];
     }
