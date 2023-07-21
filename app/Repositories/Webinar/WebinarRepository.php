@@ -3,6 +3,7 @@
 namespace App\Repositories\Webinar;
 
 use App\Http\ApiRequests\Webinars\ApiWebinarsListRequest;
+use App\Http\ApiRequests\Webinars\ApiWebinarsPublicListRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsStoreRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsUpdateRequest;
 use App\Models\User;
@@ -122,6 +123,25 @@ class WebinarRepository
         /**@var User $user */
         $user = Auth::user();
         $webinars = Webinar::query()->select('webinars.*',DB::raw("'".$request->input('type')."' as type"))->where('author_id', $user->author->id);
+        switch ($request->input('type')){
+            case 'online':
+                $webinars->where(DB::raw('start_at::timestamp'),'<=',Carbon::now()->format('Y-m-d H:i:s'));
+                $webinars->where(DB::raw('end_at::timestamp'),'>=',Carbon::now()->format('Y-m-d H:i:s'));
+                break;
+            case 'planned':
+                $webinars->where(DB::raw('start_at::timestamp'),'>',Carbon::now()->format('Y-m-d H:i:s'));
+                break;
+            case 'ended':
+                $webinars->where(DB::raw('end_at::timestamp'),'<',Carbon::now()->format('Y-m-d H:i:s'));
+                break;
+        }
+
+        return $webinars;
+    }
+
+    public function publicList(ApiWebinarsPublicListRequest $request)
+    {
+        $webinars = Webinar::query()->select('webinars.*',DB::raw("'".$request->input('type')."' as type"))->where('author_id', $request->author);
         switch ($request->input('type')){
             case 'online':
                 $webinars->where(DB::raw('start_at::timestamp'),'<=',Carbon::now()->format('Y-m-d H:i:s'));

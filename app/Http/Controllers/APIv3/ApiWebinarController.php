@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIv3;
 
 use App\Http\ApiRequests\Webinars\ApiWebinarsDeleteRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsListRequest;
+use App\Http\ApiRequests\Webinars\ApiWebinarsPublicListRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsShowRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsStoreRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsUpdateRequest;
@@ -37,13 +38,30 @@ class ApiWebinarController extends Controller
     {
         $webinars = $this->webinarRepository->list($request);
         $count = $webinars->count();
+        $webinars = $webinars
+        ->skip($request->offset ?? 0)
+        ->take($request->limit ?? 3)
+        ->orderBy('created_at', 'DESC')->get();
         return ApiResponse::listPagination(
             [
                 'Access-Control-Expose-Headers' => 'Items-Count',
                 'Items-Count' => $count
-            ])->items((
-        new WebinarCollection($webinars->skip($request->offset ?? 0)->take($request->limit ?? 3)->orderBy('created_at', 'DESC')->get()
-        ))->toArray($request));
+            ])->items(new WebinarCollection($webinars));
+    }
+
+    public function publicList(ApiWebinarsPublicListRequest $request): ApiResponse
+    {
+        $webinars = $this->webinarRepository->publicList($request);
+        $count = $webinars->count();
+        $webinars = $webinars
+            ->skip($request->offset ?? 0)
+            ->take($request->limit ?? 3)
+            ->orderBy('created_at', 'DESC')->get();
+        return ApiResponse::listPagination(
+            [
+                'Access-Control-Expose-Headers' => 'Items-Count',
+                'Items-Count' => $count
+            ])->items(new WebinarCollection($webinars));
     }
 
 
