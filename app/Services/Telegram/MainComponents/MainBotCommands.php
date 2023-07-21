@@ -468,7 +468,7 @@ class MainBotCommands
                 $message->parseMode('HTML');
 
                 $image = $tariff->main_image ?? null;
-                $description = $tariff->main_description ?? '&#160';
+                $description = $tariff->main_description ?? 'Тариф&#160';
                 $article->description($description);
                 $message->text($description . '<a href="' . config('app.frontend_url') . $image . '">&#160</a>');
                 $article->thumbUrl('' . config('app.frontend_url') . $image);
@@ -505,8 +505,7 @@ class MainBotCommands
 
                 $message->parseMode('HTML');
                 $article->title($donate->title);
-                if ($donate->description)
-                    $article->description(mb_strimwidth($donate->description, 0, 55, "..."));
+                $article->description($donate->description ? mb_strimwidth($donate->description, 0, 55, "...") : 'Донат');
 
                 $article->inputMessageContent($message);
                 $article->thumbUrl('' . config('app.url') . '/' . $image);
