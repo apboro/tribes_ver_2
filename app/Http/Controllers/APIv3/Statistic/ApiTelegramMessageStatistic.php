@@ -11,20 +11,21 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Statistic\MemberChartsResource;
 use App\Repositories\Statistic\TelegramMessageStatisticRepository;
+use App\Services\File\FilePrepareService;
 use App\Services\File\FileSendService;
 
 class ApiTelegramMessageStatistic extends Controller
 {
     private TelegramMessageStatisticRepository $statisticRepository;
-    private FileSendService $fileSendService;
+    private FilePrepareService $filePrepareService;
 
     public function __construct(
         TelegramMessageStatisticRepository $statisticRepository,
-        FileSendService                    $fileSendService
+        FilePrepareService $filePrepareService
     )
     {
         $this->statisticRepository = $statisticRepository;
-        $this->fileSendService = $fileSendService;
+        $this->filePrepareService = $filePrepareService;
     }
 
     public function messageCharts(ApiMessageStatisticChartRequest $request): ApiResponse
@@ -49,13 +50,10 @@ class ApiTelegramMessageStatistic extends Controller
     {
         $columnNames = $this->statisticRepository::EXPORT_FIELDS;
 
-        $builder = $this->statisticRepository->getListForFile(
-            $request->input('community_ids') ?? [],
-            $request
-        );
+        $builder = $this->statisticRepository->getListForFile($request->input('community_ids') ?? [],$request);
 
-        return $this->fileSendService->sendFile(
-            $builder->orderBy('count_messages', 'DESC'),
+        return $this->filePrepareService->prepareFile(
+            $builder->orderBy('message_date'),
             $columnNames,
             ExportMessageResource::class,
             $request->get('export_type', 'csv'),

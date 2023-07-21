@@ -42,9 +42,9 @@ class TelegramModerationStatisticRepository
         return $builder;
     }
 
-    public function getListForFile(array $communityIds): Builder
+    public function getListForFile(array $communityIds, $request): Builder
     {
-        return $this->queryMessages($communityIds);
+        return $this->queryMessages($communityIds, $request);
     }
 
     public function getModerationChart(ApiModerationStatisticChartRequest $request)
@@ -122,7 +122,7 @@ class TelegramModerationStatisticRepository
      * @return \Illuminate\Database\Eloquent\Builder|Builder
      * @throws \Exception
      */
-    protected function queryMessages(array $communityIds, $request = null)
+    protected function queryMessages(array $communityIds, $request)
     {
 
         $start = $this->getStartDate($request->input('period') ?? 'week')->toDateTimeString();

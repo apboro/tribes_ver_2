@@ -39,18 +39,6 @@ class TelegramMembersStatisticRepository
             'attribute' => 'comm_name',
             'title' => 'Название сообщества'
         ],
-        [
-            'attribute' => 'c_put_reactions',
-            'title' => 'Количество реакций оставил'
-        ],
-        [
-            'attribute' => 'c_got_reactions',
-            'title' => 'Количество реакций получил'
-        ],
-        [
-            'attribute' => 'utility',
-            'title' => 'Полезность'
-        ],
     ];
 
     const DAY = 'day';
@@ -291,12 +279,23 @@ class TelegramMembersStatisticRepository
             ->select([
                 DB::raw("CONCAT ($tu.first_name,' ', $tu.last_name) as name"),
                 "$tu.user_name as nick_name",
+                "$tu.telegram_id as tele_id",
+                "$com.title as comm_name",
                 "$tuc.exit_date as exit_date",
+                DB::raw("COUNT(distinct($tm.message_id)) as c_messages"),
                 DB::raw("$tuc.accession_date as accession_date"),
                 "$tu.photo_url as image"
             ]);
 
-        $builder->groupBy("$tu.first_name", "$tu.last_name", "$tu.user_name", "$tuc.accession_date", "$tu.photo_url", "$tuc.exit_date");
+        $builder->groupBy("$tu.first_name",
+            "$tu.last_name",
+            "$tu.user_name",
+            "$tuc.accession_date",
+            "$tu.photo_url",
+            "$tuc.exit_date",
+            "$tu.telegram_id",
+            "$com.title"
+        );
         if (!empty($communityIds)) {
             $builder->whereIn("$tuc.community_id", $communityIds);
         }

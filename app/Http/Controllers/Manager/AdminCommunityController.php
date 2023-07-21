@@ -16,7 +16,7 @@ class AdminCommunityController extends Controller
 {
     private CommunityRepository $communityRepository;
 
-    private FileSendService $fileSendService;
+    private FilePrepareService $filePrepareService;
 
     public function __construct(
         CommunityRepository $communityRepository,

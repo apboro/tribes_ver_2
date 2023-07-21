@@ -10,23 +10,25 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Statistic\MemberResource;
 use App\Repositories\Statistic\TelegramMembersStatisticRepository;
+use App\Services\File\FilePrepareService;
 use App\Services\File\FileSendService;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApiTelegramUsersStatistic extends Controller
 {
     private TelegramMembersStatisticRepository $statisticRepository;
-    private FileSendService $fileSendService;
+    private FilePrepareService $filePrepareService;
 
     /**
      * @param TelegramMembersStatisticRepository $statisticRepository
      * @param FileSendService $fileSendService
      */
 
-    public function __construct(TelegramMembersStatisticRepository $statisticRepository, FileSendService $fileSendService)
+    public function __construct(TelegramMembersStatisticRepository $statisticRepository,
+                                FilePrepareService $filePrepareService)
     {
         $this->statisticRepository = $statisticRepository;
-        $this->fileSendService = $fileSendService;
+        $this->filePrepareService = $filePrepareService;
     }
 
 
@@ -84,14 +86,12 @@ class ApiTelegramUsersStatistic extends Controller
     /**
      * @throws StatisticException
      */
-    public function exportMembers(
-        ApiMemberStatisticExportRequest $request
-    ): StreamedResponse
+    public function exportMembers(ApiMemberStatisticExportRequest $request)
     {
         $columnNames = $this->statisticRepository::EXPORT_FIELDS;
         $membersBuilder = $this->statisticRepository->getListForFile($request->input('community_ids') ?? []);
 
-        return $this->fileSendService->sendFile(
+        return $this->filePrepareService->prepareFile(
             $membersBuilder,
             $columnNames,
             MemberResource::class,

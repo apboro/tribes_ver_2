@@ -9,13 +9,14 @@ use App\Http\ApiResources\ExportModerationResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Repositories\Statistic\TelegramModerationStatisticRepository;
+use App\Services\File\FilePrepareService;
 use App\Services\File\FileSendService;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApiTelegramModerationStatistic extends Controller
 {
     private TelegramModerationStatisticRepository $statisticRepository;
-    private FileSendService $fileSendService;
+    private FilePrepareService $filePrepareService;
 
     /**
      * @param TelegramModerationStatisticRepository $statisticRepository
@@ -24,11 +25,11 @@ class ApiTelegramModerationStatistic extends Controller
 
     public function __construct(
         TelegramModerationStatisticRepository $statisticRepository,
-        FileSendService                       $fileSendService
+        FilePrepareService $filePrepareService
     )
     {
         $this->statisticRepository = $statisticRepository;
-        $this->fileSendService = $fileSendService;
+        $this->filePrepareService = $filePrepareService;
     }
 
 
@@ -48,14 +49,13 @@ class ApiTelegramModerationStatistic extends Controller
         return ApiResponse::common($current_moderation_chart);
     }
 
-    public function exportModeration(ApiModerationStatisticExportRequest $request): StreamedResponse
+    public function exportModeration(ApiModerationStatisticExportRequest $request)
     {
         $columnNames = $this->statisticRepository::EXPORT_FIELDS;
 
-        $membersBuilder = $this->statisticRepository->getListForFile($request->input('community_ids') ?? []);
+        $membersBuilder = $this->statisticRepository->getListForFile($request->input('community_ids') ?? [], $request);
 
-
-        return $this->fileSendService->sendFile(
+        return $this->filePrepareService->prepareFile(
             $membersBuilder,
             $columnNames,
             ExportModerationResource::class,

@@ -12,6 +12,7 @@ use OpenApi\Annotations as OA;
  *  summary="Export statistic",
  *  security={{"sanctum": {} }},
  *  tags={"Statistic Moderation"},
+ *  @OA\Parameter(name="period",in="query",description="Period (day, week, month, year)",required=false,@OA\Schema(type="string",)),
  *  @OA\Parameter(name="export_type",in="query",description="Export format",required=false,@OA\Schema(type="string",)),
  *  @OA\Parameter(name="community_ids[]",in="query",description="Community Array",required=false,@OA\Schema(type="array",@OA\Items(type="integer"))),
  * @OA\Response(response=200, description="OK"),
@@ -32,6 +33,7 @@ class ApiModerationStatisticExportRequest extends FormRequest
             'community_ids' => 'array',
             'community_ids.*' => 'integer|exists:communities,id',
             'export_type' => 'string|in:xlsx,csv',
+            'period' => 'string|in:day,week,month,year'
         ];
     }
 }

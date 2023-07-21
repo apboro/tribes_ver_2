@@ -55,9 +55,7 @@ class TelegramMessageStatisticRepository
 
     public function getListForFile(array $communityIds, $request): Builder
     {
-        $builder = $this->queryMessages($communityIds, $request);
-        $builder->orderBy('count_messages', 'DESC');
-        return $builder;
+        return $this->queryMessages($communityIds, $request);
     }
 
     public function getMessageChart(ApiMessageStatisticChartRequest $request)
@@ -166,7 +164,7 @@ class TelegramMessageStatisticRepository
                 DB::raw('MIN(subquery.message_date) as message_date'),
                 DB::raw('MIN(subquery.nick_name) as nick_name'),
                 DB::raw('MIN(subquery.name) as name'),
-                DB::raw("JSON_AGG(json_build_object('message_date', subquery.message_date, 'user_telegram_id', subquery.telegram_id)) AS messages")
+                DB::raw('cast (SUM(subquery.count_messages) as integer) as count_messages')
             )
             ->groupBy('subquery.telegram_id');
     }

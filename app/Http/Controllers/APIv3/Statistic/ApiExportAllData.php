@@ -96,7 +96,7 @@ class ApiExportAllData extends Controller
                 }
                 $files_to_delete = [];
                 foreach ($this->settings_array as $value) {
-                    $builder = $value['repository']->getListForFile($request->input('community_ids') ?? []);
+                    $builder = $value['repository']->getListForFile($request->input('community_ids') ?? [], $request);
                     $full_file_path = storage_path() . "/app/statistic/" . $value['csv_file_name'];
                     $files_to_delete[] = $full_file_path;
                     $this->exportCsv($full_file_path, $value['export_fields'], $builder, $value['resource_class']);
@@ -115,8 +115,8 @@ class ApiExportAllData extends Controller
                 foreach ($this->settings_array as $type => $value) {
                     $new_sheet = new Worksheet($spreadsheet, $value['xlsx_sheet_name']);
                     $spreadsheet->addSheet($new_sheet);
-                    $builder = $value['repository']->getListForFile($request->input('community_ids') ?? []);
-                    $this->prepareSheet($value['export_fields'], $new_sheet, $builder, $value['resource_class']);
+                    $builder = $value['repository']->getListForFile($request->input('community_ids') ?? [], $request);
+                    $this->prepareSheet($value['export_fields'], $new_sheet, $builder->orderBy($builder->columns[0]), $value['resource_class']);
                 }
 
                 $writer = new Xlsx($spreadsheet);
