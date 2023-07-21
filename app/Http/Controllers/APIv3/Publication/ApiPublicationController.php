@@ -56,8 +56,8 @@ class ApiPublicationController extends Controller
      */
     public function __construct(
         PublicationRepository $publicationRepository,
-        TelegramLogService $telegramLogService,
-        Payment            $tinkoff_payment
+        TelegramLogService    $telegramLogService,
+        Payment               $tinkoff_payment
     )
     {
         $this->publicationRepository = $publicationRepository;
@@ -182,7 +182,7 @@ class ApiPublicationController extends Controller
      * @param ApiPublicationPayRequest $request
      */
     public function pay(ApiPublicationPayRequest $request)
-    {        
+    {
 
         /** @var Publication $publication */
         $publication = Publication::where('uuid', '=', $request->uuid)->first();
@@ -202,13 +202,13 @@ class ApiPublicationController extends Controller
             return ApiResponse::error('common.user_create_error');
         }
 
-        $payment = $this->tinkoff_payment->doPayment($user, $publication, $publication->price,'');
+        $payment = $this->tinkoff_payment->doPayment($user, $publication, $publication->price, '');
 
         if ($payment === false) {
             return ApiResponse::error('common.error_while_pay');
         }
 
-        return redirect()->to($payment->paymentUrl);
+        return ApiResponse::common(['redirect' => $payment->paymentUrl]);
     }
 
     /**
