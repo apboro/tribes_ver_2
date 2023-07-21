@@ -53,7 +53,7 @@ class ApiTelegramMessageStatistic extends Controller
         $builder = $this->statisticRepository->getListForFile($request->input('community_ids') ?? [],$request);
 
         return $this->filePrepareService->prepareFile(
-            $builder->orderBy('message_date'),
+            $builder,
             $columnNames,
             ExportMessageResource::class,
             $request->get('export_type', 'csv'),

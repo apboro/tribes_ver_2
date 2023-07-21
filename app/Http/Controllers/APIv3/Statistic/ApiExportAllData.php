@@ -116,7 +116,7 @@ class ApiExportAllData extends Controller
                     $new_sheet = new Worksheet($spreadsheet, $value['xlsx_sheet_name']);
                     $spreadsheet->addSheet($new_sheet);
                     $builder = $value['repository']->getListForFile($request->input('community_ids') ?? [], $request);
-                    $this->prepareSheet($value['export_fields'], $new_sheet, $builder->orderBy($builder->columns[0]), $value['resource_class']);
+                    $this->prepareSheet($value['export_fields'], $new_sheet, $builder, $value['resource_class']);
                 }
 
                 $writer = new Xlsx($spreadsheet);
