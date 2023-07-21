@@ -470,8 +470,8 @@ class MainBotCommands
                 $image = $tariff->main_image ?? null;
                 $description = $tariff->main_description ?? 'Тариф&#160';
                 $article->description($description);
-                $message->text($description . '<a href="' . config('app.frontend_url') . $image . '">&#160</a>');
-                $article->thumbUrl('' . config('app.frontend_url') . $image);
+                $message->text($description . '<a href="' . config('app.url') . '/'. $image . '">&#160</a>');
+                $article->thumbUrl('' . config('app.url') .'/'. $image);
                 [$text, $menu] = $this->tariffButton($community);
 
                 $article->title($community->title ?? 'Тариф');
@@ -1377,9 +1377,7 @@ class MainBotCommands
                 $price = ($variant->price) ? $variant->price . '₽' : '';
                 $title = ($variant->title) ? $variant->title . ' — ' : '';
                 $period = ($variant->period) ? '/Дней:' . $variant->period : '';
-                $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink([
-                    'tariff' => $community->tariff->inline_link,
-                ]));
+                $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink($community->tariff->inline_link));
             }
             return [$text, $menu];
         } catch (\Exception $e) {

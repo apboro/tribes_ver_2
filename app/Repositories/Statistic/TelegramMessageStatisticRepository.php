@@ -55,7 +55,7 @@ class TelegramMessageStatisticRepository
 
     public function getListForFile(array $communityIds, $request): Builder
     {
-        return $this->queryMessages($communityIds, $request);
+        return $this->queryMessages($communityIds, $request)->orderBy('message_date');
     }
 
     public function getMessageChart(ApiMessageStatisticChartRequest $request)

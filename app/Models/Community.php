@@ -146,12 +146,8 @@ class Community extends Model
 
     public function getTariffPaymentLink($data = null)
     {
-        $params = '';
-        if ($data && is_array($data)) {
-            $params = '?' . http_build_query($data);
-        }
 
-        return config('app.frontend_url').Tariff::FRONTEND_TARIFF_PAGE.$this->inline_link.$params;
+        return config('app.frontend_url').Tariff::FRONTEND_TARIFF_PAGE.$data;
     }
 
     public function isTelegram()
