@@ -33,9 +33,6 @@ final class IncomingRule
 
         if ($communityRule->content_image_path !== NULL){
             $imageUrl = config('app.url') . '/'. $communityRule->content_image_path;
-            if (app()->isLocal()) {
-                $imageUrl = env('DEV_IMAGE', 'https://spodial.com/assets/images/logo.png');
-            }
             log::info('image url:'. $imageUrl);
 
             /** @var stdClass $response */
