@@ -202,7 +202,7 @@ class ApiPublicationController extends Controller
             return ApiResponse::error('common.user_create_error');
         }
 
-        $payment = $this->tinkoff_payment->doPayment($user, $publication, $publication->price * 100,'');
+        $payment = $this->tinkoff_payment->doPayment($user, $publication, $publication->price,'');
 
         if ($payment === false) {
             return ApiResponse::error('common.error_while_pay');
