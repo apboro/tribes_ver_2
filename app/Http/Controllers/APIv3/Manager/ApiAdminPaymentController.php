@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class ApiAdminPaymentController extends Controller
 {
 
-    private FileSendService $fileSendService;
+    private FilePrepareService $filePrepareService;
 
     public function __construct(
         FileSendService $fileSendService

@@ -3,6 +3,7 @@
 namespace App\Http\ApiResources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
 class ExportModerationResource extends JsonResource
 {
@@ -15,7 +16,7 @@ class ExportModerationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "action_date" => $this->resource->action_date,
+            "action_date" => Carbon::createFromTimestamp($this->resource->action_date),
             "name" => $this->resource->name,
             "nick_name" => $this->resource->nick_name,
             "action" => $this->resource->action,

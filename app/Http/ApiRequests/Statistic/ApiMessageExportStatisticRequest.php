@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Get(
- *  path="/api/v3/statistic/messages/export",
+ *  path="/api/v3/statistic/messages/export?XDEBUG_SESSION_START=PHPSTORM",
  *  operationId="statistic-message-export",
  *  summary="Export statistic message",
  *  security={{"sanctum": {} }},
