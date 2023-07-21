@@ -79,9 +79,6 @@ class ApiPaymentController extends Controller
             $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/author/post/' . $publication->uuid;
         }
 
-
-        Event::dispatch(new TariffPayedEvent($payment->payer, $payment));
-
         Log::debug('successPayment $redirectUrl - ' . $redirectUrl);
 
         return redirect($redirectUrl);
