@@ -38,13 +38,13 @@ class ApiPublicationPartStoreRequest extends ApiRequest
             'type' => 'required',
             'order' => 'required',
             'publication_id' => 'required|integer|exists:publications,id',
-            'text' => Rule::when($this->type == 1 || $this->type == 6, 'required|max:50000'),
+            'text' => Rule::when($this->type == 1 || $this->type == 6, 'max:50000'),
             'file' => [
                 Rule::when($this->type == 2, 'required|mimes:mp4|max:2100000'),
                 Rule::when($this->type == 3, 'required'),
                 Rule::when($this->type == 4, 'required|image|max:10000'),
                 Rule::when($this->type == 5, 'required|mimes:|max:100000'),
             ],
-        ];;
+        ];
     }
 }

@@ -27,7 +27,7 @@ class PublicationPartRepository
             'publication_id' => $request->input('publication_id'),
             'type' => $request->input('type'),
             'file_path' => $file_path,
-            'text' => $request->input('text'),
+            'text' => $request->input('text') ?? null,
             'order' => $request->input('order')
         ]);
         return $publication_part;
