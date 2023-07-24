@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\APIv3;
 
 use App\Http\ApiRequests\Webinars\ApiWebinarsDeleteRequest;
+use App\Http\ApiRequests\Webinars\ApiWebinarShowByUuidRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsListRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsShowRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsStoreRequest;
@@ -108,5 +109,20 @@ class ApiWebinarController extends Controller
             return ApiResponse::error('Ошибка удаления');
         }
         return ApiResponse::success();
+    }
+
+
+    /**
+     * @param ApiWebinarShowByUuidRequest $request
+     * @param int $id
+     * @return ApiResponse
+     */
+    public function showByUuid(ApiWebinarShowByUuidRequest $request, string $id): ApiResponse
+    {
+        $webinar = $this->webinarRepository->showByUuid($id);
+        if ($webinar === null) {
+            return ApiResponse::notFound('common.not_found');
+        }
+        return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
     }
 }

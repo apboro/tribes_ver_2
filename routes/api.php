@@ -83,6 +83,8 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/pay/tariff', [ApiTariffController::class, 'payForTariff']);
     Route::get('/show/tariff', [ApiTariffController::class, 'show']);
     Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.publications.list');
+    Route::get('/webinar/{uuid}', [ApiWebinarController::class, 'showByUuid'])
+        ->name('api.webinar.show_by_uuid')->middleware('api');
 });
 
 /** TODO fastFIX  */
