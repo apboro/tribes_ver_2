@@ -13,19 +13,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Manager\Filters\CommunityFilter;
 use App\Http\Resources\Manager\CommunityResource;
 use App\Models\Community;
+use App\Services\File\FIlePrepareService;
 use App\Services\File\FileSendService;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApiAdminCommunityController extends Controller
 {
 
-    private FileSendService $fileSendService;
+    private FIlePrepareService $FIlePrepareService;
 
     public function __construct(
-        FileSendService $fileSendService
+        FIlePrepareService $FIlePrepareService
     )
     {
-        $this->fileSendService = $fileSendService;
+        $this->FIlePrepareService = $FIlePrepareService;
     }
 
     /**
@@ -63,10 +64,10 @@ class ApiAdminCommunityController extends Controller
 
     /**
      * @param ApiAdminCommunityExportRequest $request
-     * @return StreamedResponse
+     * @return ApiResponse
      * @throws StatisticException
      */
-    public function export(ApiAdminCommunityExportRequest $request)
+    public function export(ApiAdminCommunityExportRequest $request):ApiResponse
     {
         $names = [
             [
@@ -99,14 +100,19 @@ class ApiAdminCommunityController extends Controller
             ],
         ];
 
-        return $this->fileSendService->sendFile(
+        $prepare_result = $this->FIlePrepareService->prepareFile(
             Community::with('communityOwner', 'connection')->withCount('followers'),
             $names,
             CommunityResource::class,
             $request->get('type', 'csv'),
             'communities'
         );
+        if (!$prepare_result['result']) {
+            return ApiResponse::error($prepare_result['message']);
+        }
+        return ApiResponse::common([
+            'file_path' => $prepare_result['file_path']
+        ]);
     }
-
 
 }
