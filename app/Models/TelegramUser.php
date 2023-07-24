@@ -53,9 +53,17 @@ class TelegramUser extends Model
         return $filters->apply($builder);
     }
 
-    function communities()
+    function communities(array $lists = [])
     {
-        return $this->belongsToMany(Community::class, 'telegram_users_community', 'telegram_user_id', 'community_id', 'telegram_id', 'id')->withPivot(['accession_date', 'exit_date', 'warnings_count', 'status', 'role']);
+        if (empty($lists))
+            return $this->belongsToMany(Community::class, 'telegram_users_community', 'telegram_user_id', 'community_id', 'telegram_id', 'id')->withPivot(['accession_date', 'exit_date', 'warnings_count', 'status', 'role']);
+        else
+            return $this->belongsToMany(Community::class, 'telegram_users_community', 'telegram_user_id', 'community_id', 'telegram_id', 'id')
+                ->withPivot(['accession_date', 'exit_date', 'warnings_count', 'status', 'role'])
+                ->leftJoin('telegram_user_lists', function ($join) {
+                    $join->on('telegram_user_lists.telegram_id', '=', 'telegram_users_community.telegram_user_id')
+                    ->on('telegram_user_lists.community_id', '=', 'telegram_users_community.community_id');
+                })->whereIn("telegram_user_lists.type", $lists);
     }
 
     public function publicName()
