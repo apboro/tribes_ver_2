@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiLMSFeedbackController;
 use App\Http\Controllers\ApiRulesTemplateController;
 use App\Http\Controllers\APIv3\ApiFileController;
 use App\Http\Controllers\APIv3\ApiProjectController;
@@ -265,6 +266,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/webinars/{id}', [ApiWebinarController::class, 'update'])->name('api.webinar.update');
     Route::get('/webinars', [ApiWebinarController::class, 'list'])->name('api.webinar.list');
     Route::get('/webinars/{id}', [ApiWebinarController::class, 'show'])->name('api.webinar.show');
+
+    Route::post('/lms_feedback/{publication}', [ApiLMSFeedbackController::class, 'store']);
 
 });
 
