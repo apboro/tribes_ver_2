@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\APIv3\Manager;
 
-use App\Exceptions\StatisticException;
 use App\Http\ApiRequests\Admin\ApiAdminCustomersRequest;
 use App\Http\ApiRequests\Admin\ApiAdminPaymentListRequest;
 use App\Http\ApiResources\Admin\AdminCustomerCollection;
@@ -13,8 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Manager\Filters\PaymentsFilter;
 use App\Http\Requests\ApiPaymentManagerExportRequest;
 use App\Models\Payment;
-use App\Services\File\FileSendService;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Services\File\FilePrepareService;
 
 
 class ApiAdminPaymentController extends Controller
@@ -23,11 +21,11 @@ class ApiAdminPaymentController extends Controller
     private FilePrepareService $filePrepareService;
 
     public function __construct(
-        FileSendService $fileSendService
+        FilePrepareService $filePrepareService
     )
     {
 
-        $this->fileSendService = $fileSendService;
+        $this->filePrepareService = $filePrepareService;
     }
 
 
@@ -63,10 +61,9 @@ class ApiAdminPaymentController extends Controller
 
     /**
      * @param ApiPaymentManagerExportRequest $request
-     * @return StreamedResponse
-     * @throws StatisticException
+     * @return ApiResponse
      */
-    public function export(ApiPaymentManagerExportRequest $request)
+    public function export(ApiPaymentManagerExportRequest $request): ApiResponse
     {
         $names = [
             [
@@ -94,13 +91,19 @@ class ApiAdminPaymentController extends Controller
                 'attribute' => 'type',
             ],
         ];
-        return $this->fileSendService->sendFile(
+        $prepare_result = $this->filePrepareService->prepareFile(
             Payment::query(),
             $names,
             AdminPaymentResource::class,
             $request->get('type', 'csv'),
             'payments'
         );
+        if (!$prepare_result['result']) {
+            return ApiResponse::error($prepare_result['message']);
+        }
+        return ApiResponse::common([
+            'file_path' => $prepare_result['file_path']
+        ]);
     }
 
 }
