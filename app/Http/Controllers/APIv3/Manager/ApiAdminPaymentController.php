@@ -2,22 +2,17 @@
 
 namespace App\Http\Controllers\APIv3\Manager;
 
-use App\Exceptions\StatisticException;
 use App\Http\ApiRequests\Admin\ApiAdminCustomersRequest;
 use App\Http\ApiRequests\Admin\ApiAdminPaymentListRequest;
 use App\Http\ApiResources\Admin\AdminCustomerCollection;
 use App\Http\ApiResources\Admin\AdminPaymentCollection;
 use App\Http\ApiResources\Admin\AdminPaymentResource;
-use App\Http\ApiResources\Admin\UserForManagerResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Manager\Filters\PaymentsFilter;
 use App\Http\Requests\ApiPaymentManagerExportRequest;
 use App\Models\Payment;
-use App\Models\User;
-use App\Services\File\FIlePrepareService;
-use App\Services\File\FileSendService;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Services\File\FilePrepareService;
 
 
 class ApiAdminPaymentController extends Controller

@@ -13,9 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Manager\Filters\CommunityFilter;
 use App\Http\Resources\Manager\CommunityResource;
 use App\Models\Community;
-use App\Services\File\FIlePrepareService;
-use App\Services\File\FileSendService;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Services\File\FilePrepareService;
 
 class ApiAdminCommunityController extends Controller
 {
