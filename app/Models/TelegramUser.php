@@ -140,7 +140,7 @@ class TelegramUser extends Model
 
     public function getTelegramUserName()
     {
-        return $this->user_name ?? 'not user name';
+        return $this->user_name ? $this->user_name : 'not user name';
     }
 
     public function connections()

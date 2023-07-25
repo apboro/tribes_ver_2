@@ -19,7 +19,7 @@ class TelegramUserReputation extends Model
 
     public function telegramUser()
     {
-        return $this->belongsTo(TelegramUser::class)->withDefault();
+        return $this->belongsTo(TelegramUser::class, 'telegram_user_id', 'telegram_id')->withDefault();
     }
 
     public static function getUsersByCondition(string $direction, int $communityId)
