@@ -22,13 +22,14 @@ class ApiCommunityTelegramUserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $arr_to_search = [
-            $request->boolean('banned') ? TelegramUserListsRepositry::TYPE_BAN_LIST : null,
-            $request->boolean('muted') ? TelegramUserListsRepositry::TYPE_MUTE_LIST : null,
-            $request->boolean('whitelisted') ? TelegramUserListsRepositry::TYPE_WHITE_LIST : null,
-        ];
+        $arr_to_search = [];
+        if ($request->boolean('banned')) $arr_to_search[] = TelegramUserListsRepositry::TYPE_BAN_LIST;
+        if ($request->boolean('muted')) $arr_to_search[] = TelegramUserListsRepositry::TYPE_MUTE_LIST;
+        if ($request->boolean('whitelisted')) $arr_to_search[] = TelegramUserListsRepositry::TYPE_WHITE_LIST;
 
-        $communitiesList = $this->resource->communities()->where('owner', Auth::user()->id)
+        $communitiesList = $this->resource
+            ->communities($arr_to_search)        
+            ->where('owner', Auth::user()->id)
             ->where('is_active', true)
             ->where(function ($query) use ($arr_to_search){
                 $query->where('telegram_users_community.exit_date', '=', null)
