@@ -174,6 +174,10 @@ class Telegram extends Messenger
                 $community = $connection->community()->first();
             $ty = TelegramUser::where('telegram_id', $t_user_id)->first() ?? null;
             if ($community && $ty) {
+                $userCommunity = TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $t_user_id);
+                if ($userCommunity->role == 'administrator' || $userCommunity->role == 'creator') {
+                    $this->removeUserFromWhiteList($community->id, $t_user_id);
+                }
                 $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
                 if ($variantForThisCommunity) {
                     //ставить exit_date в состояние false, не удалять подписку пользователя
@@ -348,6 +352,81 @@ protected function addAuthorOnCommunity(Community $community)
         ]);
 }
 
+    /** Изменение статуса ПОЛЬЗОВАТЕЛЯ (администратор, участник...)
+     *  
+     * @return void
+     */
+    public static function userChangeStatus($tUserId, $ChatId, $newStatus, $oldStatus): void
+    {
+        if ($community = Community::getCommunityByChatId($ChatId)) {
+            if ($newStatus == 'administrator' || $newStatus == 'creator') {
+                self::addUserToWhiteList($community->id, $tUserId);
+            }
+            if (($oldStatus == 'administrator') && ($newStatus != 'administrator') && ($newStatus != 'creator')) {
+                self::removeUserFromWhiteList($community->id, $tUserId);
+            }
+        }
+    }
+
+    /** Изменение статуса БОТА (администратор, участник...)
+     *   
+     * @return void
+     */
+    public static function botChangeStatus($tBotId, $ChatId, $newStatus, $oldStatus): void
+    {
+        if ($community = Community::getCommunityByChatId($ChatId)) {
+            if ($newStatus == 'member' && $oldStatus == 'administrator') {
+                self::removeAllAdminAndCreatorFromWhiteList($community->id);
+            }
+            if ($newStatus == 'administrator' && $oldStatus == 'member') {
+                self::addUserToWhiteList($community->id, $tBotId);
+            }
+        }
+    }
+
+    /**
+     * Добавление пользователя в белый список
+     * @param $communityId
+     * @param $tUserId
+     * @return void
+     */
+    public static function addUserToWhiteList($communityId, $tUserId): void
+    {
+        TelegramUserList::updateOrCreate([
+            'telegram_id' => $tUserId,
+            'community_id' => $communityId,
+        ], ['type' => TelegramUserList::TYPE_WHITE_LIST]);
+    }
+
+    /**
+     * Удаление пользователя из белого списка
+     * @param $communityId
+     * @param $tUserId
+     * @return void
+     */
+    public static function removeUserFromWhiteList($communityId, $tUserId): void
+    {
+        TelegramUserList::where('telegram_id', $tUserId)
+            ->where('community_id', $communityId)
+            ->where('type', TelegramUserList::TYPE_WHITE_LIST)
+            ->delete();
+    }
+
+    /**
+     * Удаление всех админов и создателя из белого списка по id группы
+     * @param int $communityId - внутренний id в системe
+     * @return void
+     */
+    public static function removeAllAdminAndCreatorFromWhiteList(int $communityId): void
+    {
+        $usersList = TelegramUserCommunity::where('community_id', $communityId)->orWhere(function ($query) {
+            $query->where('role', 'administrator')->where('role', 'creator');
+        })->get();
+        foreach ($usersList as $user) {
+            self::removeUserFromWhiteList($communityId, $user->telegram_user_id);
+        }
+    }
+
 /**
  * Fast solution
  *
@@ -355,22 +434,13 @@ protected function addAuthorOnCommunity(Community $community)
  *
  * @return void
  */
-private function addAuthorAndChatBotOnWhiteList(Community $community)
+private static function addAuthorAndChatBotOnWhiteList(Community $community)
 {
     $ty = TelegramUser::where('user_id', $community->owner)->first();
     if ($ty) {
-        $community->telegramUserList->create([
-            'community_id' => $community->id,
-            'telegram_id' => $ty->telegram_id,
-            'type' => TelegramUserList::TYPE_WHITE_LIST
-        ]);
+        self::addUserToWhiteList($community->id, $ty->telegram_id);
     }
-
-    $community->telegramUserList->create([
-        'community_id' => $community->id,
-        'telegram_id' => config('telegram_bot.bot.botId'),
-        'type' => TelegramUserList::TYPE_WHITE_LIST
-    ]);
+    self::addUserToWhiteList($community->id, config('telegram_bot.bot.botId'));
 }
 
 public
@@ -455,6 +525,11 @@ static function userBotEnterGroupEvent($telegram_user_id, $chat_id,  $chatType, 
                 Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chat_id', 'chatTitle', 'chatType'));
             }
         }
+
+        if ($community = Community::getCommunityByChatId($chat_id)) {
+            self::addUserToWhiteList($community->id, $telegram_user_id);
+        }
+
     } catch (Exception $e) {
         Log::error($e);
     }
@@ -497,6 +572,11 @@ static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chat
                 Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chat_id', 'chatTitle', 'chatType'));
             }
         }
+
+        if ($community = Community::getCommunityByChatId($chat_id)) {
+            self::addUserToWhiteList($community->id, $telegram_user_id);
+        }
+
     } catch (Exception $e) {
         Log::error($e);
     }

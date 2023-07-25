@@ -49,6 +49,8 @@ class MainBotEvents
         'chanelChatCreated',
         'makeBotAdmin',
         'makeUserBotAdmin',
+        'userChangeStatus',
+        'botChangeStatus',
         'newChatPhoto',
         'deleteChat',
         'newChatTitle',
@@ -429,6 +431,57 @@ class MainBotEvents
         }
     }
 
+    /**
+     *  Событие изменения статуса пользователя (администратор, участник...) 
+     * 
+     * @return void
+     */
+    protected function userChangeStatus(): void
+    {
+        try {
+            $userId = $this->data->chat_member->new_chat_member->user->id ?? null;
+            $newStatus = $this->data->chat_member->new_chat_member->status ?? null;
+            $oldStatus = $this->data->chat_member->old_chat_member->status ?? null;
+            $chatId = $this->data->chat_member->chat->id ?? null;
+
+            if ($userId && $newStatus && $oldStatus && $chatId) {
+                $mainBotId  = config('telegram_user_bot.user_bot.id');
+                $isDifferentStatus = $newStatus != $oldStatus;
+                $isNotChatBot = $userId != $this->bot->botId;
+                $isNotUserBot = $userId != $mainBotId;
+                if ($isNotUserBot && $isNotChatBot && $isDifferentStatus) {
+                    Telegram::userChangeStatus($userId, $chatId, $newStatus, $oldStatus);
+                }
+            }
+        } catch (Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    /** 
+     * Событие изменения статуса чат бота (администратор, участник...)  
+     * 
+     * @return void
+     */
+    protected function botChangeStatus(): void
+    {
+        try {
+            $chatMember = $this->data->my_chat_member;
+            $userId = $chatMember->new_chat_member->user->id ?? null;
+            $newStatus = $chatMember->new_chat_member->status ?? null;
+            $oldStatus = $chatMember->old_chat_member->status ?? null;
+            $chatId = $chatMember->chat->id ?? null;
+
+            if ($userId && $oldStatus && $newStatus  && $chatId) {
+                if ($userId == $this->bot->botId && $oldStatus != $newStatus) {
+                    Telegram::botChangeStatus($this->bot->botId, $chatId, $newStatus, $oldStatus);
+                }
+            }
+        } catch (Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
     /** Событие изменения или добавления фотографии группы или канала*/
     protected
     function newChatPhoto()
@@ -482,6 +535,7 @@ class MainBotEvents
                         'chat_id' => $this->data->my_chat_member->chat->id
                     ]);
                     Telegram::deactivateCommunity($this->data->my_chat_member->chat->id);
+                    Telegram::removeAllAdminAndCreatorFromWhiteList($this->data->my_chat_member->chat->id);
                 }
             }
         } catch (Exception $e) {
