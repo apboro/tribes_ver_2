@@ -13,6 +13,7 @@ class LMSFeedback extends Model
         'user_id',
         'author_id',
         'publication_id',
+        'webinar_id',
         'like_material',
         'enough_material',
         'what_to_add',

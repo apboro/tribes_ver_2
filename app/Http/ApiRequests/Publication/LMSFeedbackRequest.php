@@ -8,12 +8,12 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Post(
- *  path="/api/v3/lms_feedback/{publication}",
+ *  path="/api/v3/lms_feedback/{id}",
  *  operationId="lms_feedback_store",
  *  summary="Add feedback to LMS",
  *  security={{"sanctum": {} }},
  *  tags={"Publication"},
- *     @OA\Parameter(name="publication", in="path", description="Publication ID", required=false,@OA\Schema(type="integer")),
+ *     @OA\Parameter(name="id", in="path", description="Webinar or Publication ID", required=false,@OA\Schema(type="integer")),
  *     @OA\RequestBody(
  *        @OA\JsonContent(
  *                 @OA\Property(
@@ -36,7 +36,12 @@ use OpenApi\Annotations as OA;
  *                     description="Если all_ok = true, присылать пустой массив options",
  *                     type="object",
  *                 ),
- *              example={"like_material": "yes", "enough_material": "not_enough", "what_to_add": {"all_ok": true, "options": {"add_audio_video", "add_images", "add_text", "make_webinar"} },"what_to_remove": {"all_ok": false,"options": {"not_interesting", "less_audio", "less_video", "less_images", "less_text", "less_webinars"}}}
+ *               @OA\Property(
+ *                     property="type",
+ *                     description="Type of post (publication, webinar)",
+ *                     type="string",
+ *                 ),
+ *              example={"type":"webinar", "like_material": "yes", "enough_material": "not_enough", "what_to_add": {"all_ok": true, "options": {"add_audio_video", "add_images", "add_text", "make_webinar"} },"what_to_remove": {"all_ok": false,"options": {"not_interesting", "less_audio", "less_video", "less_images", "less_text", "less_webinars"}}}
  *            ),
  *     ),
  * @OA\Response(response=200, description="OK")
@@ -49,6 +54,7 @@ class LMSFeedbackRequest extends ApiRequest
         return [
             'like_material' => 'string',
             'enough_material'=> 'string',
+            'type' =>'string|in:post,webinar'
         ];
     }
 
