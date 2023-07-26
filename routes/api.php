@@ -88,7 +88,6 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.publications.list');
     Route::get('/webinar/{uuid}', [ApiWebinarController::class, 'showByUuid'])
         ->name('api.webinar.show_by_uuid')->middleware('api');
-
     Route::post('/publication/pay/{uuid}', [ApiPublicationController::class, 'pay']);
 });
 
@@ -245,6 +244,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/publications/{id}', [ApiPublicationController::class, 'destroy'])->name('api.publications.delete');
     Route::post('/publications/{id}', [ApiPublicationController::class, 'update'])->name('api.publications.update');
     Route::get('/publications/{id}', [ApiPublicationController::class, 'show'])->name('api.publications.show');
+    Route::get('/publications/check_feedback/{id}', [ApiPublicationController::class, 'checkFeedback']);
 
     Route::post('/publication-parts', [ApiPublicationPartController::class, 'store'])->name('api.publication_parts.create');
     Route::post('/publication-parts/{id}', [ApiPublicationPartController::class, 'update'])->name('api.publication_parts.update');
@@ -269,7 +269,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/webinars', [ApiWebinarController::class, 'list'])->name('api.webinar.list');
     Route::get('/webinars/{id}', [ApiWebinarController::class, 'show'])->name('api.webinar.show');
 
-    Route::post('/lms_feedback/{publication}', [ApiLMSFeedbackController::class, 'store']);
+    Route::post('/lms_feedback/{id}', [ApiLMSFeedbackController::class, 'store']);
 
 });
 

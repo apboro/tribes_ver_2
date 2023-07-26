@@ -5,6 +5,7 @@ namespace App\Http\Controllers\APIv3\Publication;
 use App\Events\ApiUserRegister;
 use App\Events\BuyCourse;
 use App\Events\BuyPublicaionEvent;
+use App\Http\ApiRequests\ApiCheckPostFeedbackRequest;
 use App\Http\ApiRequests\Publication\ApiPublicationDeleteRequest;
 use App\Http\ApiRequests\Publication\ApiPublicationListRequest;
 use App\Http\ApiRequests\Publication\ApiPublicationPayRequest;
@@ -16,9 +17,11 @@ use App\Http\ApiRequests\Publication\ApiPublicationUpdateRequest;
 use App\Http\ApiResources\Publication\PublicationResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Models\LMSFeedback;
 use App\Models\Publication;
 use App\Models\User;
 use App\Models\VisitedPublication;
+use App\Models\Webinar;
 use App\Repositories\Course\CourseRepository;
 use App\Repositories\Publication\PublicationRepository;
 use App\Services\TelegramLogService;
@@ -243,5 +246,14 @@ class ApiPublicationController extends Controller
         }
 
         return $user;
+    }
+
+    public function checkFeedback(ApiCheckPostFeedbackRequest $request)
+    {
+        $user = Auth::user();
+        $publication = $request->type === 'webinar' ? Webinar::findOrFail($request->id) : Publication::findOrFail($request->id);
+        $fb = LMSFeedback::where('user_id', $user->id)->where($request->type.'_id',$publication->id)->first();
+        return ApiResponse::common(['result' => $fb ? 'made_feedback' : 'not_made_feedback',
+            'time_of_webinar_start' => $request->type === 'webinar' ? $publication->start_at : 'post dont have start time']);
     }
 }

@@ -62,5 +62,11 @@ class Publication extends Model
         return $this->morphMany(Payment::class, 'payable');
     }
 
+    public function feedbacks()
+    {
+        return $this->hasMany(LMSFeedback::class);
+
+    }
+
 
 }
