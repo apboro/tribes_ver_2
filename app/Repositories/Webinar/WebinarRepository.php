@@ -158,4 +158,12 @@ class WebinarRepository
         return $webinars;
     }
 
+    public function showByUuid($uuid){
+        $webinar = Webinar::where('uuid', $uuid)->first();
+        if ($webinar === null) {
+            return null;
+        }
+        return $webinar;
+    }
+
 }
