@@ -54,6 +54,8 @@ class MainBotCommands
     private const KNOWLEDGE_BASE_BOT = 'base';
     private const SUPPORT_BOT = 'support';
 
+    private const REPUTATION = 'Репутация'; //🚀
+
     protected MainBot $bot;
     private CommunityRepositoryContract $communityRepo;
     private TelegramConnectionRepositoryContract $connectionRepo;
@@ -568,8 +570,8 @@ class MainBotCommands
                         $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
                         if ($communities->first()) {
                             foreach ($communities as $community) {
-                                if ($community->communityReputationRule->show_rating_tables) {
-                                    $menu->btn($community->title, 'community_rep ' . $community->id);
+                                if ($community->communityReputationRule && $community->communityReputationRule->show_rating_tables) {
+                                    $menu->row()->btn($community->title, 'community_rep ' . $community->id);
                                 }
                             }
                             $ctx->reply('Выберите один из чатов с включенной репутацией.', $menu);
@@ -589,9 +591,11 @@ class MainBotCommands
                     $reputationUsers = TelegramUserReputation::getUsersByCondition('community_id', $communityId);
                     $str = '';
                     $c = 1;
-                    foreach ($reputationUsers as $userRep) {
-                        $str .= $c . '. ' . $userRep->telegramUser->getTelegramUserName() . ' ' . $userRep->reputation_count . "\n\n";
-                        $c++;
+                    if ($reputationUsers) {
+                        foreach ($reputationUsers as $userRep) {
+                            $str .= $c . '. ' . $userRep->telegramUser->getTelegramUserName() . ' ' . $userRep->reputation_count . "\n\n";
+                            $c++;
+                        }
                     }
 
                     $ctx->reply('Рейтинг ТОП-10 участников чата ' . $community->title . "\n\n" . $str);
@@ -600,8 +604,7 @@ class MainBotCommands
                 }
             };
 
-            $this->bot->onText('Репутация', $reputation);
-//            $this->bot->onAction('1', $reputationCommunities);
+            $this->bot->onText(self::REPUTATION, $reputation);
             $this->bot->onAction('community_rep {id}', $reputationCommunities);
         } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -1353,7 +1356,7 @@ class MainBotCommands
                 ->row()->btn(self::KNOWLEDGE_BASE)
                 ->row()->btn('Поддержка')
                 ->row()->btn('Мои подписки')
-                ->row()->btn('Репутация');
+                ->row()->btn(self::REPUTATION);
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
