@@ -24,14 +24,16 @@ class ApiVisitedPublicationController extends Controller
     public function list(ApiVisitedPublicationListRequest $request): ApiResponse
     {
         $user = Auth::user();
-        $publications = Publication::with('visited')->whereRelation('visited', 'user_id', $user->id);
+        $publications = Publication::with('visited')->whereRelation('visited', 'user_id', $user->id)
+                    ->join('visited_publications','visited_publications.publication_id','=','publications.id')
+                    ->orderBy('visited_publications.created_at','DESC');
         $count = $publications->count();
         return ApiResponse::listPagination(
             [
                 'Access-Control-Expose-Headers' => 'Items-Count',
                 'Items-Count' => $count
             ])->items((
-        new PublicationCollection($publications->skip($request->offset ?? 0)->take($request->limit ?? 3)->orderBy('id')->get()
+        new PublicationCollection($publications->skip($request->offset ?? 0)->take($request->limit ?? 3)->get()
         ))->toArray($request));
 
     }
