@@ -60,7 +60,7 @@ class ApiPublicationPartUpdateRequest extends ApiRequest
                 Rule::when($this->type == 2, 'sometimes|nullable|mimes:mp4|max:2100000'),
                 Rule::when($this->type == 3, 'sometimes|nullable'),
                 Rule::when($this->type == 4, 'sometimes|nullable|image|max:10000'),
-                Rule::when($this->type == 5, 'sometimes|nullable|mimes:|max:100000'),
+                Rule::when($this->type == 5, 'sometimes|nullable|max:100000'),
             ],
         ];
     }

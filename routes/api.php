@@ -86,6 +86,8 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/show/tariff', [ApiTariffController::class, 'show']);
     Route::get('/public/webinars/{author}', [ApiWebinarController::class, 'publicList']);
     Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.publications.list');
+    Route::get('/webinar/{uuid}', [ApiWebinarController::class, 'showByUuid'])
+        ->name('api.webinar.show_by_uuid')->middleware('api');
 
     Route::post('/publication/pay/{uuid}', [ApiPublicationController::class, 'pay']);
 });
@@ -221,7 +223,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/statistic/payments-charts', [ApiTelegramPaymentsStatistic::class, 'paymentsCharts']);
     Route::get('/statistic/export-payments', [ApiTelegramPaymentsStatistic::class, 'exportPayments']);
 
-    
+
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
 
     Route::post('/file', [ApiFileController::class, 'upload']);
