@@ -6,6 +6,7 @@ use App\Http\ApiRequests\Publication\ApiFavouritePublicationDeleteRequest;
 use App\Http\ApiRequests\Publication\ApiFavouritePublicationListRequest;
 use App\Http\ApiRequests\Publication\ApiFavouritePublicationStoreRequest;
 use App\Http\ApiResources\Publication\PublicationCollection;
+use App\Http\ApiResources\Publication\PublicationResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\FavouritePublication;
@@ -24,14 +25,18 @@ class ApiFavouritePublicationController extends Controller
     public function list(ApiFavouritePublicationListRequest $request): ApiResponse
     {
         $user = Auth::user();
-        $publications = Publication::with('favourites')->whereRelation('favourites', 'user_id', $user->id);
+        $publications = Publication::with('favourites')->whereRelation('favourites', 'user_id', $user->id)
+            ->leftJoin('favourite_publications','favourite_publications.publication_id','=','publications.id')
+            ->orderBy('favourite_publications.created_at','DESC')
+        ;
+
         $count = $publications->count();
         return ApiResponse::listPagination(
             [
                 'Access-Control-Expose-Headers' => 'Items-Count',
                 'Items-Count' => $count
             ])->items((
-        new PublicationCollection($publications->skip($request->offset ?? 0)->take($request->limit ?? 3)->orderBy('id')->get()
+         PublicationResource::collection($publications->skip($request->offset ?? 0)->take($request->limit ?? 3)->get()
         ))->toArray($request));
 
     }
