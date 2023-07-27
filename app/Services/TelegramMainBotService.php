@@ -11,6 +11,7 @@ use App\Services\Telegram\MainComponents\MainBotCommands;
 use App\Services\Telegram\MainComponents\MainBotEvents;
 use App\Services\Telegram\MainComponents\MessageObserver;
 use App\Services\Telegram\MainComponents\TelegramMidlwares;
+use App\Services\Telegram\TelegramMtproto\UserBot;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -167,7 +168,10 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
 
     public function muteUser(string $botName, int $userId, int $chatId, int $time)
     {
-        $this->getApiCommandsForBot($botName)->muteUser($userId, $chatId, $time);
+        $userBot = new UserBot;
+        $userBot->muteUser($userId, $chatId);
+        log::info('user_id: ' . $userId . ' -  chat_id: ' . $chatId );
+//        $this->getApiCommandsForBot($botName)->muteUser($userId, $chatId, $time);
     }
 
     public function deleteUserMessage(string $botName, int $message_id, int $chatId)

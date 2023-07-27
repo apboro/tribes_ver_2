@@ -58,6 +58,30 @@ class TelegramMessageStatisticRepository
         return $this->queryMessages($communityIds, $request)->orderBy('message_date');
     }
 
+    /**
+     * get message statistic
+     *
+     * @param string $start
+     *
+     * @param string $end
+     *
+     * @return array
+     */
+    public function getMessagesStatistic(string $start, string $end): array
+    {
+        log::info('start: ' . $start . ' end: ' . $end);
+
+        return DB::select("
+        SELECT
+        EXTRACT(DOW FROM created_at) AS day_of_week,
+        (FLOOR((EXTRACT(HOUR FROM created_at) / 4)) + 1) AS hour_interval,
+        COUNT(*) AS count
+        FROM telegram_messages
+        WHERE created_at BETWEEN '$start' AND '$end'
+        GROUP BY 1, 2
+        ORDER BY 1, 2;");
+    }
+
     public function getMessageChart(ApiMessageStatisticChartRequest $request)
     {
 
