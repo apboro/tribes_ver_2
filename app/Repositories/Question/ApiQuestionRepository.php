@@ -113,6 +113,22 @@ class ApiQuestionRepository
         return $question;
     }
 
+    public function showAi(int $id)
+    {
+        /** @var QuestionAi $question */
+        $question = QuestionAi::query()
+            ->where('id', $id)
+//            ->where('author_id', Auth::user()->id)
+            ->first();
+
+        if (!$question) {
+            return false;
+        }
+
+        return $question;
+    }
+
+
     public function update(ApiQuestionUpdateRequest $request, int $id)
     {
         /** @var Question $question */

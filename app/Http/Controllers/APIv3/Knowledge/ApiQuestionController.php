@@ -56,6 +56,18 @@ class ApiQuestionController
 //        return ApiResponse::list()->items(ApiQuestionCollection::make($questions)->toArray($request));
     }
 
+    public function showAi(ApiQuestionShowRequest $request, int $id)
+    {
+        $question = $this->apiQuestionRepository->showAi($id);
+
+        if (!$question) {
+            return ApiResponse::error('Не удалось показать вопрос');
+        }
+
+        return ApiResponse::common(ApiQuestionResource::make($question)->toArray($request));
+
+    }
+
     public function storeQuestionAI(ApiQuestionStoreRequest $request)
     {
         try {
