@@ -12,8 +12,13 @@ use App\Http\ApiRequests\Question\ApiQuestionUpdateRequest;
 use App\Http\ApiResources\Knowledge\ApiQuestionCollection;
 use App\Http\ApiResources\Knowledge\ApiQuestionResource;
 use App\Http\ApiResponses\ApiResponse;
+use App\Models\Knowledge\Question;
+use App\Models\Knowledge\QuestionAI;
 use App\Models\User;
 use App\Repositories\Question\ApiQuestionRepository;
+use Exception;
+use Log;
+use Illuminate\Http\Response;
 
 class ApiQuestionController
 {
@@ -47,7 +52,24 @@ class ApiQuestionController
             return ApiResponse::error('Список пуст');
         }
 
-        return ApiResponse::list()->items(ApiQuestionCollection::make($questions)->toArray($request));
+        return response()->json($questions);
+//        return ApiResponse::list()->items(ApiQuestionCollection::make($questions)->toArray($request));
+    }
+
+    public function storeQuestionAI(ApiQuestionStoreRequest $request)
+    {
+        try {
+            $question = $this->apiQuestionRepository->add($request);
+            $questionAiId = $request->get('id', 0);
+
+            QuestionAI::setMovedQuestionStatus($questionAiId, $question->id);
+
+            return response()->json(['message' => 'ok']);
+        } catch (Exception $exception) {
+            Log::error($exception);
+
+            return response()->json(['message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function list(ApiQuestionListRequest $request, int $id)
