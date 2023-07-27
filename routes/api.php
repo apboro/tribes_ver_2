@@ -196,7 +196,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/chats/rank/{uuid}', [ApiRankRuleController::class, 'show'])->name('chats.rank.show');
 
     Route::get('/question/list', [ApiQuestionController::class, 'listAi']);
-    Route::get('/question/ai', [ApiQuestionController::class, 'showAi']);
+    Route::get('/question/ai/{id}', [ApiQuestionController::class, 'showAi']);
     Route::post('/question/ai', [ApiQuestionController::class, 'storeQuestionAI']);
     Route::get('/question/list/{id}', [ApiQuestionController::class, 'list']);
     Route::post('/question', [ApiQuestionController::class, 'store']);
