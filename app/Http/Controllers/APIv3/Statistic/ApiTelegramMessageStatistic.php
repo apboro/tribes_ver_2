@@ -96,8 +96,8 @@ class ApiTelegramMessageStatistic extends Controller
         }
 
         return [
-            'start' => $start->format('d-m-Y 00:00:00'),
-            'end' => $end->format('d-m-Y 23:59:59'),
+            'start' => $start->format('Y-m-d 00:00:00'),
+            'end' => $end->format('Y-m-d 23:59:59'),
         ];
     }
 }
