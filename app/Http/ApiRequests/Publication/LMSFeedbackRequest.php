@@ -38,10 +38,10 @@ use OpenApi\Annotations as OA;
  *                 ),
  *               @OA\Property(
  *                     property="type",
- *                     description="Type of post (publication, webinar)",
+ *                     description="Type of post (post, webinar)",
  *                     type="string",
  *                 ),
- *              example={"type":"webinar", "like_material": "yes", "enough_material": "not_enough", "what_to_add": {"all_ok": true, "options": {"add_audio_video", "add_images", "add_text", "make_webinar"} },"what_to_remove": {"all_ok": false,"options": {"not_interesting", "less_audio", "less_video", "less_images", "less_text", "less_webinars"}}}
+ *              example={"type":"post", "like_material": "yes", "enough_material": "not_enough", "what_to_add": {"all_ok": true, "options": {"add_audio_video", "add_images", "add_text", "make_webinar"} },"what_to_remove": {"all_ok": false,"options": {"not_interesting", "less_audio", "less_video", "less_images", "less_text", "less_webinars"}}}
  *            ),
  *     ),
  * @OA\Response(response=200, description="OK")
