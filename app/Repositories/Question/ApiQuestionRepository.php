@@ -9,10 +9,12 @@ use App\Http\ApiRequests\Question\ApiQuestionStoreRequest;
 use App\Http\ApiRequests\Question\ApiQuestionUpdateRequest;
 use App\Models\Knowledge\Answer;
 use App\Models\Knowledge\Question;
+use App\Models\Knowledge\QuestionAI;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Log;
 
 class ApiQuestionRepository
 {
@@ -61,10 +63,18 @@ class ApiQuestionRepository
 
     public function listAi(array $communities)
     {
-        return Question::whereIn('community_id', $communities)
-                            ->where('category_id', '=' , null)
-                            ->where('knowledge_id', '=', null)
-                            ->get();
+        log::info('list ai fro community ids:'. json_encode($communities, JSON_UNESCAPED_UNICODE));
+
+        $questionAI = QuestionAI::whereIn('community_id', $communities)->where('status', '=', 1)->get();
+
+        $questionsIdList = QuestionAI::whereIn('community_id', $communities)
+                                      ->where('status', '=' , 2)
+                                      ->whereNotNull('questions_id')
+                                      ->pluck('questions_id');
+
+        $question = Question::whereIn('id', $questionsIdList)->get();
+
+        return ['questions_ai' => $questionAI, 'questions' => $question];
     }
 
     public function list(ApiQuestionListRequest $request, $id)
