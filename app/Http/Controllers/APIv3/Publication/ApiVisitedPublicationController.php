@@ -25,8 +25,8 @@ class ApiVisitedPublicationController extends Controller
     {
         $user = Auth::user();
         $publications = Publication::with('visited')->whereRelation('visited', 'user_id', $user->id)
-                    ->join('visited_publications','visited_publications.publication_id','=','publications.id')
-                    ->orderBy('visited_publications.created_at','DESC');
+            ->join('visited_publications', 'visited_publications.publication_id', '=', 'publications.id')
+            ->orderBy('visited_publications.last_visited', 'DESC');
         $count = $publications->count();
         return ApiResponse::listPagination(
             [
@@ -38,7 +38,8 @@ class ApiVisitedPublicationController extends Controller
 
     }
 
-    public function store(ApiVisitedPublicationStoreRequest $request){
+    public function store(ApiVisitedPublicationStoreRequest $request)
+    {
         $user = Auth::user();
         VisitedPublication::updateOrCreate([
             'user_id' => $user->id,
