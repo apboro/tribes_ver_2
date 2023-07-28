@@ -31,4 +31,5 @@ return [
     'tariff_inactive' => 'Тариф не активен',
     'tariff_trial_used' => 'Вы уже исчерпали тестовый период',
     'tariff_payment_error' => 'Ошибка при оплате тарифа',
+    'tariff_already_active' => 'Тариф уже оплачен'
 ];

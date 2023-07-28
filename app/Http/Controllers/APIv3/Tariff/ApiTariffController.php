@@ -117,6 +117,17 @@ class ApiTariffController extends Controller
                 return ApiResponse::error(trans('tariff.tariff_trial_used'));
             }
         }
+
+        $userHasPayedTariff = TelegramUserTariffVariant::query()
+            ->whereIn('telegram_user_id', $userTelegramAccountsIds)
+            ->whereIn('tarif_variants_id', $tariff->variants()->pluck('id')->toArray())
+            ->where('days', '>', 0)
+            ->first();
+
+        if ($userHasPayedTariff)
+            return ApiResponse::error(trans('tariff.tariff_already_active'));
+
+
         if ($user->wasRecentlyCreated) {
             $user->tinkoffSync();
             Event::dispatch(new ApiUserRegister($user, $password));
