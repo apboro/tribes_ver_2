@@ -64,8 +64,9 @@ class ApiQuestionController
             return ApiResponse::error('Не удалось показать вопрос');
         }
 
-        return ApiResponse::common(ApiQuestionResource::make($question)->toArray($request));
+        return response()->json($question);
 
+//        return ApiResponse::common(ApiQuestionResource::make($question)->toArray($request));
     }
 
     public function storeQuestionAI(ApiQuestionStoreRequest $request)
