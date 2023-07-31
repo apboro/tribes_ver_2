@@ -4,6 +4,7 @@ namespace App\Models\Knowledge;
 
 use App\Filters\QueryFilter;
 use App\Helper\PseudoCrypt;
+use App\Models\Community;
 use App\Models\QuestionCategory;
 use App\Traits\Searchable;
 use Carbon\Carbon;
@@ -108,5 +109,10 @@ class Question extends Model
     public function getCategoryName(int $id): string
     {
         return QuestionCategory::query()->where('id', $id)->pluck('name')->first();
+    }
+
+    public function communities()
+    {
+        return $this->hasOne(Community::class, 'id', 'community_id');
     }
 }

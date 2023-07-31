@@ -118,6 +118,17 @@ class ApiQuestionController
         return ApiResponse::common(ApiQuestionResource::make($question)->toArray($request));
     }
 
+    public function deleteQuestionAI(ApiQuestionDeleteRequest $request, int $id)
+    {
+        $isSuccess = $this->apiQuestionRepository->deleteAi($id);
+
+        if (!$isSuccess) {
+            return ApiResponse::error('Не удалось удалить вопрос');
+        }
+
+        return ApiResponse::success('Вопрос успешно удален');
+    }
+
     public function delete(ApiQuestionDeleteRequest $request, int $id)
     {
         $isSuccess = $this->apiQuestionRepository->delete($id);
