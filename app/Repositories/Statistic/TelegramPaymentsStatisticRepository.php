@@ -21,6 +21,41 @@ use Illuminate\Support\Facades\Log;
 class TelegramPaymentsStatisticRepository
 {
 
+    /**
+     * Возвращает сумму оплат указанного типа для указанных групп (копейки) 
+     * @param array $communityIds массив с id групп
+     * @param string $type тип оплаты
+     * @return int
+     */
+    public function getPaymentsSummAllTime(array $communityIds, string $type): int
+    {
+        return (int) Payment::whereIn('community_id', $communityIds)
+            ->whereStatus('CONFIRMED')
+            ->whereType($type)
+            ->select(DB::raw("SUM(amount) as sum"))
+            ->first()->sum;
+    }
+
+    /**
+     * Builder запроса для вывода всех выплат авторизованному пользователю, копейки. Limit и offset.
+     * @return Builder
+     */
+    public function getPayoutsList(FinanceFilter $filter): Builder
+    {
+        $filterData = $filter->filters();
+        $offset = $filterData['offset'] ?? null;
+        $limit = $filterData['limit'] ?? null;
+
+        return Payment::select('paymentId', 'created_at', 'amount', DB::raw('1234 as card'))
+            ->whereStatus('CONFIRMED')
+            ->where('user_id', auth()->user()->id)
+            ->whereType('payout')
+            ->orderByDesc('created_at')
+            ->skip($offset)
+            ->take($limit);
+    }
+
+
     public function getPaymentsCharts(array $communityIds, FinanceChartFilter $filter, string $type): ChartData
     {
         $filterData = $filter->filters();

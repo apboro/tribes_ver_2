@@ -10,6 +10,7 @@ use App\Http\ApiRequests\Statistic\ApiExportFinancesRequest;
 use App\Http\ApiRequests\Statistic\ApiPaymentsMembersRequest;
 use App\Http\ApiRequests\Statistic\ApiPaymentsStatisticRequest;
 use App\Http\ApiResources\ApiFinanceResource;
+use App\Http\ApiResources\ApiFinancePayoutResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Resources\Statistic\FinancesChartsResource;
 use App\Models\Community;
@@ -32,6 +33,30 @@ class ApiTelegramPaymentsStatistic
     {
         $this->financeRepository = $financeRepository;
         $this->filePrepareService = $filePrepareService;
+    }
+
+    /**
+     * Возвращает суммы оплат за все время для указанных типов платежей
+     * @param $types - массив типов платежей
+     * @return ApiResponse
+     */
+    public function paymentsSummAllTime(array $types = ['tariff', 'donate', 'course']): ApiResponse
+    {
+        $communityIds = Community::where('owner', Auth::user()->id)->pluck('id')->toArray();
+        foreach ($types as $type) {
+            $payments[$type] = $this->financeRepository->getPaymentsSummAllTime($communityIds, $type);
+        }
+        return ApiResponse::common(['summ' => array_sum($payments)] + $payments);
+    }
+
+    /**
+     * Все выплаты авторизованному пользователю. Limit и offset.
+     * @return ApiResponse
+     */
+    public function payoutsList(FinanceFilter $filter)
+    {
+        $payouts = $this->financeRepository->getPayoutsList($filter);
+        return ApiResponse::listPagination(['Access-Control-Expose-Headers' => 'Items-Count', 'Items-Count' => $payouts->count()])->items(ApiFinancePayoutResource::collection($payouts->get()));
     }
 
     public function paymentsCharts(ApiPaymentsStatisticRequest $request, FinanceChartFilter $filter)
