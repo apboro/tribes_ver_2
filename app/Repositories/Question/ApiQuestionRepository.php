@@ -72,7 +72,8 @@ class ApiQuestionRepository
                                       ->whereNotNull('questions_id')
                                       ->pluck('questions_id');
 
-        $question = Question::whereIn('id', $questionsIdList)->get();
+        $question = Question::whereIn('id', $questionsIdList)
+            ->with('knowledge', 'questionCategory', 'communities')->get();
 
         return ['questions_ai' => $questionAI, 'questions' => $question];
     }
@@ -166,6 +167,20 @@ class ApiQuestionRepository
         $question->knowledge->touch();
 
         return $question;
+    }
+
+    public function deleteAi(int $id)
+    {
+        /** @var QuestionAi $questionAi */
+        $questionAi = QuestionAi::query()
+            ->where('id', $id)
+            ->first();
+
+        if (!$questionAi) {
+            return false;
+        }
+
+        return $questionAi->delete();
     }
 
     public function delete(int $id)
