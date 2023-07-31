@@ -224,8 +224,9 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/statistic/payments-list', [ApiTelegramPaymentsStatistic::class, 'paymentsList']);
     Route::get('/statistic/payments-charts', [ApiTelegramPaymentsStatistic::class, 'paymentsCharts']);
     Route::get('/statistic/export-payments', [ApiTelegramPaymentsStatistic::class, 'exportPayments']);
-
-
+    Route::get('/statistic/payments-all-time', [ApiTelegramPaymentsStatistic::class, 'paymentsSummAllTime']);
+    Route::get('/statistic/payments-payouts', [ApiTelegramPaymentsStatistic::class, 'payoutsList']);
+    
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
 
     Route::post('/file', [ApiFileController::class, 'upload']);
