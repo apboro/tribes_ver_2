@@ -2,6 +2,7 @@
 
 namespace App\Models\Knowledge;
 
+use App\Models\Community;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,11 @@ class QuestionAI extends Model
     use HasFactory;
 
     protected $table = 'questions_ai';
+
+    public function communities()
+    {
+        return $this->hasOne(Community::class, 'id', 'community_id');
+    }
 
     public static function setMovedQuestionStatus(int $questionAiId, int $questionId ): void
     {

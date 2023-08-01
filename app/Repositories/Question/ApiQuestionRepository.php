@@ -65,7 +65,7 @@ class ApiQuestionRepository
     {
         log::info('list ai fro community ids:'. json_encode($communities, JSON_UNESCAPED_UNICODE));
 
-        $questionAI = QuestionAI::whereIn('community_id', $communities)->where('status', '=', 1)->get();
+        $questionAI = QuestionAI::whereIn('community_id', $communities)->where('status', '=', 1)->with('communities')->get();
 
         $questionsIdList = QuestionAI::whereIn('community_id', $communities)
                                       ->where('status', '=' , 2)
