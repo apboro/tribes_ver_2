@@ -9,6 +9,8 @@ use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiRequests\Statistic\ApiExportFinancesRequest;
 use App\Http\ApiRequests\Statistic\ApiPaymentsMembersRequest;
 use App\Http\ApiRequests\Statistic\ApiPaymentsStatisticRequest;
+use App\Http\ApiRequests\Statistic\ApiPaymentsSummAllTimeRequest;
+use App\Http\ApiRequests\Statistic\ApiPayoutsListRequest;
 use App\Http\ApiResources\ApiFinanceResource;
 use App\Http\ApiResources\ApiFinancePayoutResource;
 use App\Http\ApiResponses\ApiResponse;
@@ -40,9 +42,10 @@ class ApiTelegramPaymentsStatistic
      * @param $types - массив типов платежей
      * @return ApiResponse
      */
-    public function paymentsSummAllTime(array $types = ['tariff', 'donate', 'course']): ApiResponse
+    public function paymentsSummAllTime(ApiPaymentsSummAllTimeRequest $request): ApiResponse
     {
         $communityIds = Community::where('owner', Auth::user()->id)->pluck('id')->toArray();
+        $types = ['tariff', 'donate', 'course'];
         foreach ($types as $type) {
             $payments[$type] = $this->financeRepository->getPaymentsSummAllTime($communityIds, $type);
         }
@@ -53,7 +56,7 @@ class ApiTelegramPaymentsStatistic
      * Все выплаты авторизованному пользователю. Limit и offset.
      * @return ApiResponse
      */
-    public function payoutsList(FinanceFilter $filter)
+    public function payoutsList(ApiPayoutsListRequest $request,FinanceFilter $filter)
     {
         $payouts = $this->financeRepository->getPayoutsList($filter);
         return ApiResponse::listPagination(['Access-Control-Expose-Headers' => 'Items-Count', 'Items-Count' => $payouts->count()])->items(ApiFinancePayoutResource::collection($payouts->get()));
