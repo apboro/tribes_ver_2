@@ -45,17 +45,8 @@ class ApiQuestionController
     {
         /** @var User $user */
         $user = $request->user();
-//        $communities = $user->getOwnCommunities()->pluck('id')->toArray();
-        $communities = $user->communities()->with('connection')->get();
-        $chatIdList = [];
-        foreach($communities as $commnity) {
-            $chatIdList[] = $commnity->chat_id;
-        }
-//        TelegramConnection::whereIn('co');
-//        dd($communities);
-//        $communities = $user->getOwnCommunities()->connection->pluck('id')->toArray();
 
-        $questions = $this->apiQuestionRepository->listAi($chatIdList);
+        $questions = $this->apiQuestionRepository->listAi($user->getCommunitiesChatIdList());
 
         if (!$questions) {
             return ApiResponse::error('Список пуст');

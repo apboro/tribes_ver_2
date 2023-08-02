@@ -17,6 +17,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
+use Log;
 
 /**
  * @property int $id
@@ -79,6 +80,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getCommunitiesChatIdList(): array
+    {
+        $communities = $this->communities()->with('connection')->get();
+        $chatIdList = [];
+
+        foreach($communities as $community) {
+            log::info('list $communities  ids:'. $community->id);
+            $chatIdList[] = $community->chat_id;
+        }
+
+        return $chatIdList;
+    }
 
     public function scopeFilter(Builder $builder, QueryFilter $filters)
     {
