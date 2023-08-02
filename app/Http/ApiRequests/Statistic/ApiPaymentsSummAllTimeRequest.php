@@ -5,7 +5,7 @@ namespace App\Http\ApiRequests\Statistic;
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Patch(
+ * @OA\Get(
  *  path="/api/v3/statistic/payments-all-time",
  *  operationId="statistic-payments-all-time",
  *  summary="Finance statistic: tariff, donate, course",
