@@ -83,12 +83,11 @@ class User extends Authenticatable
 
     public function getCommunitiesChatIdList(): array
     {
-        $communities = $this->communities()->with('connection')->get();
+        $communities = $this->communities()->get();
         $chatIdList = [];
 
         foreach($communities as $community) {
-            log::info('list $communities  ids:'. $community->id);
-            $chatIdList[] = $community->chat_id;
+            $chatIdList[] = $community->connection()->first()->chat_id;
         }
 
         return $chatIdList;
