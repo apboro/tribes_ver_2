@@ -14,6 +14,7 @@ use App\Http\ApiResources\Knowledge\ApiQuestionResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Models\Knowledge\Question;
 use App\Models\Knowledge\QuestionAI;
+use App\Models\TelegramConnection;
 use App\Models\User;
 use App\Repositories\Question\ApiQuestionRepository;
 use Exception;
@@ -44,9 +45,17 @@ class ApiQuestionController
     {
         /** @var User $user */
         $user = $request->user();
-        $communities = $user->getOwnCommunities()->pluck('id')->toArray();
+//        $communities = $user->getOwnCommunities()->pluck('id')->toArray();
+        $communities = $user->communities()->with('connection')->get();
+        $chatIdList = [];
+        foreach($communities as $commnity) {
+            $chatIdList[] = $commnity->chat_id;
+        }
+//        TelegramConnection::whereIn('co');
+//        dd($communities);
+//        $communities = $user->getOwnCommunities()->connection->pluck('id')->toArray();
 
-        $questions = $this->apiQuestionRepository->listAi($communities);
+        $questions = $this->apiQuestionRepository->listAi($chatIdList);
 
         if (!$questions) {
             return ApiResponse::error('Список пуст');
