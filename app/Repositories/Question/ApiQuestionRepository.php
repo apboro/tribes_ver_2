@@ -63,7 +63,7 @@ class ApiQuestionRepository
 
     public function listAi(array $communities)
     {
-        log::info('list ai fro community ids:'. json_encode($communities, JSON_UNESCAPED_UNICODE));
+        log::info('list ai from community ids:'. json_encode($communities, JSON_UNESCAPED_UNICODE));
 
         $questionAI = QuestionAI::whereIn('community_id', $communities)->where('status', '=', 1)->with('communities')->get();
 
