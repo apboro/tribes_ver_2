@@ -5,7 +5,7 @@ namespace App\Http\ApiRequests\Statistic;
 use App\Http\ApiRequests\ApiRequest;
 
 /**
- * @OA\Patch(
+ * @OA\Get(
  *  path="/api/v3/statistic/payments-payouts",
  *  operationId="statistic-payments-payouts",
  *  summary="Show all payouts",
