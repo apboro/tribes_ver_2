@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiLMSFeedbackController;
 use App\Http\Controllers\ApiRulesTemplateController;
+use App\Http\Controllers\APIv3\Analytics\CoursesAnalyticsController;
 use App\Http\Controllers\APIv3\ApiFileController;
 use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
@@ -135,6 +136,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
     Route::patch('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
+
+    Route::get('/content/analytics/readers', [CoursesAnalyticsController::class, 'getReaders']);
 
     Route::get('/chats/tags', [ApiTagController::class, 'index']);
     Route::get('/chats/tags/{id}', [ApiTagController::class, 'show']);

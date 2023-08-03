@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
@@ -323,7 +324,75 @@ class User extends Authenticatable
 
     public function author()
     {
-        return $this->hasOne(Author::class);
+        return $this->hasOne(Author::class, 'user_id', 'id');
+    }
+
+    public function getContentVisitStatistic()
+    {
+        $authorId = $this->author ? $this->author->id : null;
+        $publicationIdList = Publication::where('author_id', '=', $authorId)->pluck('id')->toArray();
+        $readersIdList = VisitedPublication::WhereIn('publication_id', $publicationIdList)->pluck('user_id')->toArray();
+
+       return [
+            'agesRanges' =>  self::getReadersAgeRanges($readersIdList),
+            'countries' => self::getReadersCoutries($readersIdList),
+            'genders' => self::getReadersGenderRanges($readersIdList),
+        ];
+    }
+
+    private static function getReadersAgeRanges(array $userIdList)
+    {
+        $userIdList = self::prepare($userIdList);
+
+        return DB::select("SELECT
+            CASE
+                WHEN EXTRACT(YEAR FROM birthdate) BETWEEN EXTRACT(YEAR FROM CURRENT_DATE) - 24 AND EXTRACT(YEAR FROM CURRENT_DATE) - 18 THEN '18-24'
+                WHEN EXTRACT(YEAR FROM birthdate) BETWEEN EXTRACT(YEAR FROM CURRENT_DATE) - 34 AND EXTRACT(YEAR FROM CURRENT_DATE) - 25 THEN '25-34'
+                WHEN EXTRACT(YEAR FROM birthdate) BETWEEN EXTRACT(YEAR FROM CURRENT_DATE) - 44 AND EXTRACT(YEAR FROM CURRENT_DATE) - 35 THEN '35-44'
+                WHEN EXTRACT(YEAR FROM birthdate) BETWEEN EXTRACT(YEAR FROM CURRENT_DATE) - 54 AND EXTRACT(YEAR FROM CURRENT_DATE) - 45 THEN '45-54'
+                ELSE 'Не указан'
+                END AS age_range,
+            COUNT(*) AS users_count
+        FROM users
+        WHERE id IN $userIdList
+        GROUP BY age_range;");
+    }
+
+    private static function getReadersGenderRanges(array $userIdList)
+    {
+        $userIdList = self::prepare($userIdList);
+
+        return DB::select("SELECT
+                CASE
+                    WHEN gender = 'f' THEN 'Женщины'
+                    WHEN gender = 'm' THEN 'Мужчины'
+                    ELSE 'Не указан'
+                    END AS gender_range,
+                COUNT(*) AS users_count
+                FROM users
+                WHERE id IN $userIdList
+                GROUP BY gender_range;");
+    }
+
+    private static function getReadersCoutries(array $userIdList)
+    {
+        $userIdList = self::prepare($userIdList);
+        return DB::select("SELECT
+                    CASE WHEN country IS NULL THEN 'Не указана'
+                        ELSE country END,
+                        COUNT(*) AS users_count
+                    FROM users
+                    WHERE id IN $userIdList
+                    GROUP BY country
+                    ORDER BY users_count DESC;");
+    }
+
+    public static function prepare(array $whereIn): string
+    {
+        $sel = '(' . implode(',', $whereIn);
+        $sel .= ')';
+
+        return $sel;
     }
 }
 
