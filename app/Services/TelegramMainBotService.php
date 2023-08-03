@@ -168,9 +168,9 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
 
     public function muteUser(string $botName, int $userId, int $chatId, int $time)
     {
-        $userBot = new UserBot;
-        $userBot->muteUser($userId, $chatId);
-        log::info('user_id: ' . $userId . ' -  chat_id: ' . $chatId );
+    //    $userBot = new UserBot;
+    //    $userBot->muteUser($userId, $chatId);
+        log::info('muteUser user_id: ' . $userId . ' -  chat_id: ' . $chatId );
 //        $this->getApiCommandsForBot($botName)->muteUser($userId, $chatId, $time);
     }
 
