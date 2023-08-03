@@ -62,14 +62,11 @@ class CheckTariff extends Command
                 if ($follower) {
                     if ($user->tariffVariant->first()) {
                         foreach ($user->tariffVariant as $variant) {
+                            /** @var TariffVariant $variant*/
                             if ($variant->price == 0 && $variant->period == $variant->tariff->test_period)
                                 continue;
-                            /** @var TariffVariant $variant*/
-                            //echo "var{$variant->title} \n";
                             if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
-                                
                                 $userName = $user->user_name;
-                                //echo "job for {$variant->title} \n";
                                 if ($variant->pivot->days < 1) {
                                     if ($variant->pivot->isAutoPay === true) {
                                         if(false/*todo проверить через бот состоит ли пользователь в группе на данный момент*/){

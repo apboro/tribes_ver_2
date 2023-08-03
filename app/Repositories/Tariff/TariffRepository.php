@@ -536,7 +536,6 @@ class TariffRepository implements TariffRepositoryContract
             }
         } else {
             $this->generateVariants($data);
-
         }
 
         return $this->tariffModel;
@@ -565,7 +564,7 @@ class TariffRepository implements TariffRepositoryContract
         TariffVariant::create([
             'tariff_id' => $this->tariffModel->id,
             'title' => $data['title'] ?? null,
-            'price' => $data['price'],
+            'price' => $data['price'] ?? 0,
             'period' => $period,
             'isActive' => $data['tariff_is_payable'] ?? false,
             'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp . rand(1, 99999999999), 8),
