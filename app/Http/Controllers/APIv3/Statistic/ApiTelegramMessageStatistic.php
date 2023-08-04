@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\Statistic;
 
+use App\Helper\QueryHelper;
 use App\Http\ApiRequests\Statistic\ApiMessageExportStatisticRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageStatisticChartRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageUserStatisticRequest;
@@ -32,7 +33,7 @@ class ApiTelegramMessageStatistic extends Controller
 
     public function messageCharts(ApiMessageStatisticChartRequest $request): ApiResponse
     {
-        $period = $this->getCurrentPeriodDates($request->input('period', 'day'));
+        $period = QueryHelper::buildPeriodDates($request->input('period', 'day'));
 
 //        $chartMessagesData = $this->statisticRepository->getMessageChart($request);
         $chartMessagesData = $this->statisticRepository->getMessagesStatistic($period['start'], $period['end']);
@@ -66,38 +67,4 @@ class ApiTelegramMessageStatistic extends Controller
         );
     }
 
-    /**
-     * get current period start end data
-     *
-     * @param string $criteria
-     *
-     * @return array
-     */
-    private function getCurrentPeriodDates(string $criteria): array
-    {
-        $now = Carbon::now();
-        log::info('criteria:' . $criteria);
-        switch ($criteria) {
-            case 'week':
-                $start  = $now->copy()->startOfWeek();
-                $end = $now->copy()->endOfWeek();
-                break;
-            case 'month':
-                $start  = $now->copy()->firstOfMonth();
-                $end = $now->copy()->endOfMonth();
-                break;
-            case 'year':
-                $start  = $now->copy()->startOfYear();
-                $end = $now->copy()->endOfYear();
-                break;
-            default: // day
-                $start = $now;
-                $end = $now;
-        }
-
-        return [
-            'start' => $start->format('Y-m-d 00:00:00'),
-            'end' => $end->format('Y-m-d 23:59:59'),
-        ];
-    }
 }
