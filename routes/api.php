@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiLMSFeedbackController;
+use App\Http\Controllers\APIv3\Lms\ApiLmsRecommendationController;
 use App\Http\Controllers\ApiRulesTemplateController;
 use App\Http\Controllers\APIv3\ApiFileController;
 use App\Http\Controllers\APIv3\ApiProjectController;
@@ -274,6 +275,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/webinars/{id}', [ApiWebinarController::class, 'show'])->name('api.webinar.show');
 
     Route::post('/lms_feedback/{id}', [ApiLMSFeedbackController::class, 'store']);
+    Route::get('/lms_recommendation', [ApiLmsRecommendationController::class, 'getRecommendation']);
 
 });
 
