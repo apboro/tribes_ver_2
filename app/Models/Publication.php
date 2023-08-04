@@ -68,5 +68,11 @@ class Publication extends Model
 
     }
 
+    public static function getVisitedUserIdList(int $authorId): array
+    {
+        $publicationIdList = self::where('author_id', '=', $authorId)->pluck('id')->toArray();
+
+        return VisitedPublication::WhereIn('publication_id', $publicationIdList)->pluck('user_id')->toArray();
+    }
 
 }

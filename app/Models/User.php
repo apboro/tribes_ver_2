@@ -4,6 +4,7 @@ namespace App\Models;
 
 //use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Filters\QueryFilter;
+use App\Helper\QueryHelper;
 use App\Services\SMTP\Mailer;
 use App\Services\TinkoffE2C;
 use Carbon\Carbon;
@@ -327,23 +328,25 @@ class User extends Authenticatable
         return $this->hasOne(Author::class, 'user_id', 'id');
     }
 
-    public function getContentVisitStatistic()
+    public function getContentVisitStatistic(string $period)
     {
         $authorId = $this->author ? $this->author->id : null;
-        $publicationIdList = Publication::where('author_id', '=', $authorId)->pluck('id')->toArray();
-        $readersIdList = VisitedPublication::WhereIn('publication_id', $publicationIdList)->pluck('user_id')->toArray();
+        $readersIdList = Publication::getVisitedUserIdList($authorId);
 
-       return [
-            'agesRanges' =>  self::getReadersAgeRanges($readersIdList),
-            'countries' => self::getReadersCoutries($readersIdList),
-            'genders' => self::getReadersGenderRanges($readersIdList),
+        $period = QueryHelper::buildPeriodDates($period);
+        $userIdList = QueryHelper::prepareWhereInListToStringParameter($readersIdList);
+        $start = $period[QueryHelper::START_DATA_PERIOD];
+        $end = $period[QueryHelper::END_DATA_PERIOD];
+
+        return [
+            'agesRanges' => self::getReadersAgeRanges($userIdList, $start, $end),
+            'countries' => self::getReadersCoutries($userIdList, $start, $end),
+            'genders' => self::getReadersGenderRanges($userIdList, $start, $end),
         ];
     }
 
-    private static function getReadersAgeRanges(array $userIdList)
+    private static function getReadersAgeRanges(string $userIdList, string $start, string $end)
     {
-        $userIdList = self::prepare($userIdList);
-
         return DB::select("SELECT
             CASE
                 WHEN EXTRACT(YEAR FROM birthdate) BETWEEN EXTRACT(YEAR FROM CURRENT_DATE) - 24 AND EXTRACT(YEAR FROM CURRENT_DATE) - 18 THEN '18-24'
@@ -355,13 +358,12 @@ class User extends Authenticatable
             COUNT(*) AS users_count
         FROM users
         WHERE id IN $userIdList
+        AND created_at BETWEEN '$start' AND '$end'
         GROUP BY age_range;");
     }
 
-    private static function getReadersGenderRanges(array $userIdList)
+    private static function getReadersGenderRanges(string $userIdList, string $start, string $end)
     {
-        $userIdList = self::prepare($userIdList);
-
         return DB::select("SELECT
                 CASE
                     WHEN gender = 'f' THEN 'Женщины'
@@ -371,28 +373,21 @@ class User extends Authenticatable
                 COUNT(*) AS users_count
                 FROM users
                 WHERE id IN $userIdList
+                AND created_at BETWEEN '$start' AND '$end'
                 GROUP BY gender_range;");
     }
 
-    private static function getReadersCoutries(array $userIdList)
+    private static function getReadersCoutries(string $userIdList, string $start, string $end)
     {
-        $userIdList = self::prepare($userIdList);
         return DB::select("SELECT
                     CASE WHEN country IS NULL THEN 'Не указана'
                         ELSE country END,
                         COUNT(*) AS users_count
                     FROM users
                     WHERE id IN $userIdList
+                    AND created_at BETWEEN '$start' AND '$end'
                     GROUP BY country
                     ORDER BY users_count DESC;");
-    }
-
-    public static function prepare(array $whereIn): string
-    {
-        $sel = '(' . implode(',', $whereIn);
-        $sel .= ')';
-
-        return $sel;
     }
 }
 

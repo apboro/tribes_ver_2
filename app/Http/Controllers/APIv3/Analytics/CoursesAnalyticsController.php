@@ -17,7 +17,9 @@ class CoursesAnalyticsController extends Controller
         try {
             /** @var User $user */
             $user = $request->user();
-            $visitStatistic = $user->getContentVisitStatistic();
+            $period = $request->input('period', 'day');
+
+            $visitStatistic = $user->getContentVisitStatistic($period);
 
             return ApiResponse::common(new JsonResponse($visitStatistic));
 
