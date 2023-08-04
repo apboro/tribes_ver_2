@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *  operationId="lms_recommendation",
  *  summary="Lms recommendation page",
  *  security={{"sanctum": {} }},
- *  tags={},
+ *  tags={"LMS recommendation"},
  *     @OA\Parameter(
  *         name="community_ids[]",
  *         in="query",

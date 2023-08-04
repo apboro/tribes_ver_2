@@ -110,6 +110,9 @@ class LmsRecommendationRepository
      */
     private function getVisitedPublicationsCount($publications): int
     {
+        if (empty($publications)) {
+            return 0;
+        }
         return VisitedPublication::whereIn('publication_id', $publications)->count() ?? 0;
     }
 
@@ -125,7 +128,7 @@ class LmsRecommendationRepository
     /**
      * Количество чиитателей
      */
-    private function getReadersCount(int $publications, int $webinars): int
+    private function getReadersCount(array $publications, array $webinars): int
     {
         $visitedPublications = $this->getVisitedPublicationsCount($publications);
         $visitedWebinars = $this->getVisitedWebinarsCount($webinars);
