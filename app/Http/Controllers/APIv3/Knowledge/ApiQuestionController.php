@@ -74,8 +74,9 @@ class ApiQuestionController
         try {
             $question = $this->apiQuestionRepository->add($request);
             $questionAiId = $request->get('id', 0);
+            $communityId= $request->get('community_id', 0);
 
-            QuestionAI::setMovedQuestionStatus($questionAiId, $question->id);
+            QuestionAI::setMovedQuestionStatus($questionAiId, $question->id, $communityId);
 
             return response()->json(['message' => 'ok']);
         } catch (Exception $exception) {
