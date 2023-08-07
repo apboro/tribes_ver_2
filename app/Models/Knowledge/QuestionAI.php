@@ -22,7 +22,7 @@ class QuestionAI extends Model
         $questionAi = self::where('id', '=', $questionAiId)->first();
         $questionAi->questions_id = $questionId;
         $questionAi->status = 2;
-        $questionAi->communityId = $communityId;
+        $questionAi->community_id = $communityId;
         $questionAi->save();
     }
 }
