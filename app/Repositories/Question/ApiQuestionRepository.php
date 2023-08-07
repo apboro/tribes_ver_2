@@ -77,7 +77,7 @@ class ApiQuestionRepository
         /** @var  $questionAI */
         $questionAI = QuestionAI::whereIn('community_id', $chatIdList)->where('status', '=', 1)->get();
         $questionAI = $questionAI->map(function ($item) use ($chatCommunities){
-            $item->community = $chatCommunities[$item->community_id];
+            $item->communities = $chatCommunities[$item->community_id];
 
             return $item;
         });
