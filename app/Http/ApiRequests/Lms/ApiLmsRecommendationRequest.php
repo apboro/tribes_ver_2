@@ -13,18 +13,18 @@ use OpenApi\Annotations as OA;
  *  security={{"sanctum": {} }},
  *  tags={"LMS recommendation"},
  *     @OA\Parameter(
- *         name="community_ids[]",
+ *         name="publication_id",
  *         in="query",
- *         description="Community Array",
+ *         description="Publication Array",
  *         required=false,
- *         @OA\Schema(type="array",@OA\Items(type="integer"))
+ *         @OA\Schema(type="integer", format="int64")
  *     ),
  *     @OA\Parameter(
- *         name="webinar_ids[]",
+ *         name="webinar_id",
  *         in="query",
  *         description="Webinar Array",
  *         required=false,
- *         @OA\Schema(type="array",@OA\Items(type="integer"))
+ *         @OA\Schema(type="integer", format="int64")
  *     ),
  * @OA\Response(response=200, description="OK"),
  * @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch"))
