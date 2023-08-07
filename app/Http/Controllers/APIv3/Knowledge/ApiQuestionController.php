@@ -46,7 +46,7 @@ class ApiQuestionController
         /** @var User $user */
         $user = $request->user();
 
-        $questions = $this->apiQuestionRepository->listAi($user->getCommunitiesChatIdList());
+        $questions = $this->apiQuestionRepository->listAi($user->communities()->get());
 
         if (!$questions) {
             return ApiResponse::error('Список пуст');

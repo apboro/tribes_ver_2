@@ -11,6 +11,7 @@ use App\Models\Knowledge\Answer;
 use App\Models\Knowledge\Question;
 use App\Models\Knowledge\QuestionAI;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -61,13 +62,27 @@ class ApiQuestionRepository
         return $question;
     }
 
-    public function listAi(array $communities)
+    public function listAi(Collection $communities)
     {
-        log::info('list ai from community ids:'. json_encode($communities, JSON_UNESCAPED_UNICODE));
+        $chatIdList = [];
+        $chatCommunities = [];
 
-        $questionAI = QuestionAI::whereIn('community_id', $communities)->where('status', '=', 1)->with('communities')->get();
+        foreach($communities as $community) {
+            $chatId = $community->connection()->first()->chat_id;
+            $chatIdList[] = $chatId;
+            $chatCommunities[$chatId] = $community;
+        }
+        log::info('list ai from community ids:'. json_encode($chatIdList, JSON_UNESCAPED_UNICODE));
 
-        $questionsIdList = QuestionAI::whereIn('community_id', $communities)
+        /** @var  $questionAI */
+        $questionAI = QuestionAI::whereIn('community_id', $chatIdList)->where('status', '=', 1)->get();
+        $questionAI = $questionAI->map(function ($item) use ($chatCommunities){
+            $item->community = $chatCommunities[$item->community_id];
+
+            return $item;
+        });
+
+        $questionsIdList = QuestionAI::whereIn('community_id', $chatIdList)
                                       ->where('status', '=' , 2)
                                       ->whereNotNull('questions_id')
                                       ->pluck('questions_id');
