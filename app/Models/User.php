@@ -81,18 +81,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function getCommunitiesChatIdList(): array
-    {
-        $communities = $this->communities()->get();
-        $chatIdList = [];
-
-        foreach($communities as $community) {
-            $chatIdList[] = $community->connection()->first()->chat_id;
-        }
-
-        return $chatIdList;
-    }
-
     public function scopeFilter(Builder $builder, QueryFilter $filters)
     {
         return $filters->apply($builder);
@@ -177,7 +165,7 @@ class User extends Authenticatable
         return $this->hasMany(TelegramUser::class, 'user_id', 'id');
     }
 
-    function communities()
+    public function communities()
     {
         return $this->hasMany(Community::class, 'owner', 'id');
     }
