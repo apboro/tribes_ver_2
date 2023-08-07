@@ -7,6 +7,7 @@ use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiRequests\Question\ApiQuestionListRequest;
 use App\Http\ApiRequests\Question\ApiQuestionStoreRequest;
 use App\Http\ApiRequests\Question\ApiQuestionUpdateRequest;
+use App\Models\Community;
 use App\Models\Knowledge\Answer;
 use App\Models\Knowledge\Question;
 use App\Models\Knowledge\QuestionAI;
@@ -137,13 +138,15 @@ class ApiQuestionRepository
 //            ->where('author_id', Auth::user()->id)
             ->first();
 
+        $community = Community::getCommunityByChatId($question->community_id);
+        $question->communities = $community;
+
         if (!$question) {
             return false;
         }
 
         return $question;
     }
-
 
     public function update(ApiQuestionUpdateRequest $request, int $id)
     {
