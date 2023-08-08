@@ -14,14 +14,20 @@ use App\Http\ApiRequests\Lms\ApiLmsRecommendationRequest;
 class LmsRecommendationRepository
 {
 
-    protected $community_ids;
+    protected $publication_ids;
     protected $webinar_ids;
     protected $author;
 
     public function __construct(ApiLmsRecommendationRequest $request)
     {
-        $this->community_ids = $request->community_ids ?? [];
-        $this->webinar_ids = $request->webinar_ids ?? [];
+        $this->publication_ids = [];
+        if (isset($request->publication_id)) {
+            $this->publication_ids = [$request->publication_id];
+        }
+        $this->webinar_ids = [];
+        if (isset($request->webinar_id)) {
+            $this->webinar_ids = [$request->webinar_id];
+        }
         $this->author =  Auth::user()->author;
     }
 
@@ -30,10 +36,10 @@ class LmsRecommendationRepository
      */
     private function countWhatTo(&$what, $feedback)
     {
-        if ($feedback['all_ok']) {
+        if (isset($feedback['all_ok'])) {
             $what['all_ok'] = ($what['all_ok'] ?? 0) + 1;
         } else {
-            if (is_iterable($feedback['options'])) {
+            if (isset($feedback['options']) && is_iterable($feedback['options'])) {
                 foreach ($feedback['options'] as $value) {
                     $what[$value] = ($what[$value] ?? 0) + 1;
                 }
@@ -47,8 +53,8 @@ class LmsRecommendationRepository
     private function getFeedbacks()
     {
         return LMSFeedback::where('author_id', $this->author->id)
-            ->when(!empty($this->community_ids), function ($query) {
-                return $query->whereIn('publication_id', $this->community_ids);
+            ->when(!empty($this->publication_ids), function ($query) {
+                return $query->whereIn('publication_id', $this->publication_ids);
             })
             ->when(!empty($this->webinar_ids), function ($query) {
                 return $query->whereIn('webinar_id', $this->webinar_ids);
@@ -66,10 +72,18 @@ class LmsRecommendationRepository
         $whatToAdd = [];
         $whatToRemove = [];
         foreach ($feedbacks as $feedback) {
-            $likeMaterial[$feedback->like_material] = ($likeMaterial[$feedback->like_material] ?? 0) + 1;
-            $enoughMaterial[$feedback->enough_material] = ($enoughMaterial[$feedback->enough_material] ?? 0) + 1;
-            $this->countWhatTo($whatToAdd, $feedback->what_to_add);
-            $this->countWhatTo($whatToRemove, $feedback->what_to_remove);
+            if (isset($feedback->like_material)){
+                $likeMaterial[$feedback->like_material] = ($likeMaterial[$feedback->like_material] ?? 0) + 1;
+            }
+            if (isset($feedback->enough_material)){
+                $enoughMaterial[$feedback->enough_material] = ($enoughMaterial[$feedback->enough_material] ?? 0) + 1;
+            }
+            if (isset($feedback->what_to_add)){
+                $this->countWhatTo($whatToAdd, $feedback->what_to_add);
+            }
+            if (isset($feedback->what_to_remove)){
+                $this->countWhatTo($whatToRemove, $feedback->what_to_remove);
+            }
         }
         return  [
             'likeMaterial' => $likeMaterial,
@@ -86,8 +100,8 @@ class LmsRecommendationRepository
     {
         return $this->author->publications()
             ->select('id')
-            ->when((!empty($this->webinar_ids) || !empty($this->community_ids)), function ($query) {
-                return $query->whereIn('id', $this->community_ids);
+            ->when((!empty($this->webinar_ids) || !empty($this->publication_ids)), function ($query) {
+                return $query->whereIn('id', $this->publication_ids);
             })
             ->get()->pluck('id')->toArray() ?? [];
     }
@@ -99,7 +113,7 @@ class LmsRecommendationRepository
     {
         return $this->author->webinars()
             ->select('id')
-            ->when((!empty($this->webinar_ids) || !empty($this->community_ids)), function ($query) {
+            ->when((!empty($this->webinar_ids) || !empty($this->publication_ids)), function ($query) {
                 return $query->whereIn('id', $this->webinar_ids);
             })
             ->get()->pluck('id')->toArray() ?? [];
@@ -169,5 +183,38 @@ class LmsRecommendationRepository
             'readers' => $allReaders,
             'activeReaders' => $activeReaders,
         ] + $this->getMaterialsStat($feedbacks);
+    }
+
+
+
+    /**
+     * Массив публикаций с тайтлами
+     */
+    private function getPublicationListWithNames(): array
+    {
+        return $this->author->publications()
+            ->select('id', 'title')
+            ->get()->pluck('title', 'id')->toArray() ?? [];
+    }
+
+    /**
+     * Массив публикаций с тайтлами
+     */
+    private function getWebinarListWithNames(): array
+    {
+        return $this->author->webinars()
+            ->select('id', 'title')
+            ->get()->pluck('title', 'id')->toArray() ?? [];
+    }
+
+
+    /**
+     * Возвращает массив публикаций и вебинаров
+     * @return array
+     */
+    public function getPublicationAndWebinarList(): array
+    {
+        return ["publications" =>$this->getPublicationListWithNames(),
+                "webinars" => $this->getWebinarListWithNames()];
     }
 }

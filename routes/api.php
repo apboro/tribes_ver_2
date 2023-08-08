@@ -279,6 +279,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/lms_feedback/{id}', [ApiLMSFeedbackController::class, 'store']);
     Route::get('/lms_recommendation', [ApiLmsRecommendationController::class, 'getRecommendation']);
+    Route::get('/publication_and_webinar_list', [ApiLmsRecommendationController::class, 'getPublicationAndWebinarList']);
 
 });
 
