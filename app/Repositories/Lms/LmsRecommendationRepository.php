@@ -190,21 +190,21 @@ class LmsRecommendationRepository
     /**
      * Массив публикаций с тайтлами
      */
-    private function getPublicationListWithNames(): array
+    private function getPublicationListWithNames()
     {
         return $this->author->publications()
             ->select('id', 'title')
-            ->get()->pluck('title', 'id')->toArray() ?? [];
+            ->get();
     }
 
     /**
      * Массив публикаций с тайтлами
      */
-    private function getWebinarListWithNames(): array
+    private function getWebinarListWithNames() 
     {
         return $this->author->webinars()
             ->select('id', 'title')
-            ->get()->pluck('title', 'id')->toArray() ?? [];
+            ->get();
     }
 
 
