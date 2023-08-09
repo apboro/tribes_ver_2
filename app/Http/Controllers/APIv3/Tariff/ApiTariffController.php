@@ -38,7 +38,12 @@ class ApiTariffController extends Controller
     {
         $tariffs = $this->tariffRepository->filter($request)->get();
 
-        return ApiResponse::listPagination(['Access-Control-Expose-Headers'=>'Items-Count', 'Items-Count'=>$tariffs->count()])
+        $itemCount = $this->tariffRepository->filter($request)
+            ->skip(null)
+            ->take(null)
+            ->count();
+
+        return ApiResponse::listPagination(['Access-Control-Expose-Headers'=>'Items-Count', 'Items-Count'=>$itemCount])
             ->items(ApiTariffResource::collection($tariffs));
     }
 

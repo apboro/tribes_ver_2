@@ -33,7 +33,7 @@ class ApiNewDonateController extends Controller
     public function list(ApiNewDonateListRequest $request)
     {
         $donates = $this->donateRepo->filter($request);
-        $count = $donates->count();
+        $count = $this->donateRepo->itemCount($request);
 
         return ApiResponse::listPagination(['Access-Control-Expose-Headers' => 'Items-Count', 'Items-Count' => $count])
             ->items(ApiDonatesResource::collection($donates));
