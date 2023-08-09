@@ -65,6 +65,7 @@ class CheckSubscription extends Command
         {
             try {
                 if (Carbon::createFromTimestamp($userSubscription->expiration_date) < Carbon::now()) {
+                    Log::info('Payment for subscription ' . json_encode($userSubscription, JSON_UNESCAPED_UNICODE));
                     if ($userSubscription->isRecurrent) {
                         $p = new Pay();
                         $p->amount($userSubscription->subscription->price * 100)
