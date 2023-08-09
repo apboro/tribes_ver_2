@@ -198,17 +198,20 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                     ->where('community_id', '=', $this->community->id)
                     ->first();
 
-                if ($telegramUserListed->type == TelegramUserList::TYPE_WHITE_LIST) {
-                    Log::debug('User in White List, EXIT RULES', [$telegramUserListed]);
-                    return;
-                }
+                if ($telegramUserListed) {
+                    if (isset($telegramUserListed->type)) {
+                        if ($telegramUserListed->type == TelegramUserList::TYPE_WHITE_LIST) {
+                            Log::debug('User in White List, EXIT RULES', [$telegramUserListed]);
+                            return;
+                        }
 
-                if ($telegramUserListed->type == TelegramUserList::TYPE_MUTE_LIST) {
-                    Log::debug('User in Mute List ', [$telegramUserListed]);
-                    $this->actionRunner('delete_message', $this->messageDTO);
-                    return;
+                        if ($telegramUserListed->type == TelegramUserList::TYPE_MUTE_LIST) {
+                            Log::debug('User in Mute List ', [$telegramUserListed]);
+                            $this->actionRunner('delete_message', $this->messageDTO);
+                            return;
+                        }
+                    }
                 }
-
                 $this->telegramUserCommunity = TelegramUserCommunity::where('telegram_user_id', $this->messageDTO->telegram_user_id)
                     ->where('community_id', $this->messageDTO->chat_id)
                     ->first();
