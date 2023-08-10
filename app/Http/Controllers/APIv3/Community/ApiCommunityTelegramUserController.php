@@ -39,18 +39,17 @@ class ApiCommunityTelegramUserController extends Controller
      */
     public function detachUser(ApiCommunityTelegramUserDetachRequest $request): ApiResponse
     {
+        $communityId = $request->input('community_id');
+
         /** @var TelegramUser $telegram_user */
         $telegram_user = TelegramUser::where('telegram_id', '=', $request->input('telegram_id'))->first();
 
         /** @var Community $community */
-        $community = Community::where('id', '=', $request->input('community_id'))->first();
+        $community = Community::where('id', '=', $communityId)->first();
 
-        $telegram_user->communities()->detach($community);
-        $this->telegramMainBotService->kickUser(
-            config('telegram_bot.bot.botName'),
-            $telegram_user->telegram_id,
-            $community->connection->chat_id
-        );
+        $telegram_user->communities()->detach($community);       
+        $this->telegramUserListsRepositry->detachByCommunityId($communityId, $telegram_user->telegram_id);
+
         return ApiResponse::success();
     }
 
