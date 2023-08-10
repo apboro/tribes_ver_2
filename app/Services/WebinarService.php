@@ -62,6 +62,8 @@ class WebinarService
     {
         $sign = $this->prepareSign($params);
         $params['sign'] = $sign;
+        $params['cid'] = 'Spodial';
+
         return http_build_query($params);
     }
 
