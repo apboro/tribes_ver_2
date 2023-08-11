@@ -295,27 +295,37 @@ class TinkoffApi
 
     private function _sendRequest($api_url, $args)
     {
+        Log:info('I am in _sendRequest');
         $this->error = '';
         if (is_array($args)) {
             $args = json_encode($args);
         }
 
-        if (env('APP_ENV') === 'testing') {
+        if (env('PAY_TEST')) {
             $testArgs = json_decode($args, true);
-            Log::debug('tinkoff api send request', [
+            Log::debug('Tinkoff api send moq request', [
                 'api_url' => $api_url,
                 'args' => $testArgs
             ]);
-            $path = Str::afterLast(rtrim($api_url, '/'), '/');
+
+            // $path = Str::afterLast(rtrim($api_url, '/'), '/');
+            $path = Str::afterLast($api_url, 'tinkoff.ru/');
+            
             // создание хеша для тестового файла данных по платежу можно опираться только на путь и сумму платежа
             // потому что все остальные параметры в $args являются динамическими,
             // потому автотесты платежей разделять по Amount, каждый тест должен иметь свою сумму
-            $file_name = md5($path . $testArgs['Amount']);
+            // Но есть проблема: во время запроса на выплату "Payment" суммы нет, т.к. она передается в "init"...
+            $amount = $testArgs['Amount'] ?? 500000;
+            $file_name = md5($path . $amount);
             $storage = Storage::disk('test_data');
-            return $storage->exists("payment/$file_name.json") ?
+            Log::info('FAKE RESPONSE FILE NAME: ' . $file_name);
+
+            $this->response = $storage->exists("payment/$file_name.json") ?
                 $storage->get("payment/$file_name.json") :
                 $storage->get("payment/file.json");
+            Log::info($this->response);
 
+            return $this->response;
         } else if ($curl = curl_init()) {
             curl_setopt($curl, CURLOPT_URL, $api_url);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
