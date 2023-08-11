@@ -30,6 +30,7 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
+use App\Http\Controllers\APIv3\Payments\ApiPayoutController;
 use App\Http\Controllers\APIv3\Publication\ApiFavouritePublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationPartController;
@@ -127,6 +128,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/payment-cards', [ApiPaymentCardController::class, 'index']);
     Route::post('/payment-cards', [ApiPaymentCardController::class, 'store']);
     Route::delete('/payment-cards', [ApiPaymentCardController::class, 'delete']);
+
+    Route::post('/payout', [ApiPayoutController::class, 'payout']);
 
     Route::get('/courses', [ApiCourseController::class, 'index']);
     Route::get('/courses/{id}', [ApiCourseController::class, 'show']);
