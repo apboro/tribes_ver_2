@@ -150,6 +150,14 @@ class TelegramUserListsRepositry
         }
     }
 
+    public function detachByCommunityId(int $communityId, int $telegramId): void
+    {
+        TelegramUserList::query()
+            ->where('telegram_id', '=', $telegramId)
+            ->where('community_id', '=', $communityId)
+            ->delete();
+    }
+
     public
     function filter(ApiRequest $request, int $type = self::TYPE_BAN_LIST)
     {
