@@ -10,7 +10,7 @@ use App\Http\ApiResources\PaymentCardResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Services\Tinkoff\TinkoffE2C;
+use App\Services\TinkoffE2C;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TinkoffApi
 {
@@ -69,9 +70,11 @@ class TinkoffApi
         if (config('tinkoff.test') && !Str::contains($terminalKey, 'DEMO')) {
             $this->api_url = config('tinkoff.urls.test_url');
             $this->api_e2c_url = config('tinkoff.urls.test_e2c_url');
+            Log::info('Tinkoff use test urls');
         } else {
             $this->api_url = config('tinkoff.urls.real_url');
             $this->api_e2c_url = config('tinkoff.urls.real_e2c_url');
+            Log::info('Tinkoff use real urls');
         }
         $this->terminalKey = $terminalKey;
         $this->secretKey = $secretKey;
@@ -213,10 +216,6 @@ class TinkoffApi
                     $args['TerminalKey'] = $this->terminalKey;
                 }
 
-                if (!array_key_exists('Token', $args)) {
-                    $args['Token'] = $this->_genToken($args);
-                }
-
                 $args = $this->updateSecuresData($args);
 
                 if (!array_key_exists('X509SerialNumber', $args)) {
@@ -299,7 +298,7 @@ class TinkoffApi
 
     private function _sendRequest($api_url, $args)
     {
-        Log:info('I am in _sendRequest');
+        Log::info('I am in _sendRequest');
         $this->error = '';
         if (is_array($args)) {
             $args = json_encode($args);
@@ -307,7 +306,7 @@ class TinkoffApi
 
         if (env('PAY_TEST')) {
             $testArgs = json_decode($args, true);
-            Log::debug('Tinkoff api send moq request', [
+            Log::debug('Tinkoff api send fake request', [
                 'api_url' => $api_url,
                 'args' => $testArgs
             ]);
@@ -331,6 +330,13 @@ class TinkoffApi
 
             return $this->response;
         } else if ($curl = curl_init()) {
+
+            $logArgs = json_decode($args, true);
+            Log::debug('Tinkoff api send real request', [
+                'api_url' => $api_url,
+                'args' => $logArgs
+            ]);
+
             curl_setopt($curl, CURLOPT_URL, $api_url);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -350,6 +356,7 @@ class TinkoffApi
             $out = curl_exec($curl);
 
             $this->response = $out;
+            Log::info($this->response);
             $json = json_decode($out);
 
             if ($json) {

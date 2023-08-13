@@ -6,6 +6,8 @@ namespace App\Services;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class TinkoffApi
 {
@@ -70,7 +72,7 @@ class TinkoffApi
 //        $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/';
         $this->terminalKey = $terminalKey;
         $this->secretKey = $secretKey;
-
+        Log::info('Tinkoff use hardcode urls');
 //        if (env('TINKOFF_TEST') && $need_test) {
 //            $this->api_url = 'https://rest-api-test.tinkoff.ru/v2/';
 //            $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/v2/';
@@ -294,12 +296,45 @@ class TinkoffApi
 
     private function _sendRequest($api_url, $args)
     {
+        Log:info('I am in _sendRequest service/TinkoffApi');
         $this->error = '';
         if (is_array($args)) {
             $args = json_encode($args);
         }
 
-        if ($curl = curl_init()) {
+        if (env('PAY_TEST')) {
+            $testArgs = json_decode($args, true);
+            Log::debug('Tinkoff api send moq request', [
+                'api_url' => $api_url,
+                'args' => $testArgs
+            ]);
+
+            // $path = Str::afterLast(rtrim($api_url, '/'), '/');
+            $path = Str::afterLast($api_url, 'tinkoff.ru/');
+            
+            // создание хеша для тестового файла данных по платежу можно опираться только на путь и сумму платежа
+            // потому что все остальные параметры в $args являются динамическими,
+            // потому автотесты платежей разделять по Amount, каждый тест должен иметь свою сумму
+            // Но есть проблема: во время запроса на выплату "Payment" суммы нет, т.к. она передается в "init"...
+            $amount = $testArgs['Amount'] ?? 500000;
+            $file_name = md5($path . $amount);
+            $storage = Storage::disk('test_data');
+            Log::info('FAKE RESPONSE FILE NAME: ' . $file_name);
+
+            $this->response = $storage->exists("payment/$file_name.json") ?
+                $storage->get("payment/$file_name.json") :
+                $storage->get("payment/file.json");
+            Log::info($this->response);
+
+            return $this->response;
+        } else if ($curl = curl_init()) {
+
+            $logArgs = json_decode($args, true);
+            Log::debug('Tinkoff api send real request Service/TinkoffApi', [
+                'api_url' => $api_url,
+                'args' => $logArgs
+            ]);
+
             curl_setopt($curl, CURLOPT_URL, $api_url);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -313,6 +348,7 @@ class TinkoffApi
             $out = curl_exec($curl);
 
             $this->response = $out;
+            Log::info($this->response);
             $json = json_decode($out);
 
             if ($json) {
