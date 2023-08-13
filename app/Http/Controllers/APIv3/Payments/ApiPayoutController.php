@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\ApiRequests\Payment\PayOutRequest;
 use App\Models\Accumulation;
 use App\Services\Tinkoff\TinkoffE2C;
+use App\Services\TinkoffE2C as TinkoffE2CCard;
 use App\Models\User;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -16,10 +17,12 @@ class ApiPayoutController extends Controller
 {
  
     public TinkoffE2C $e2c;
+    public TinkoffE2CCard $etcCard;
 
     public function __construct()
     {
         $this->e2c = new TinkoffE2C();
+        $this->etcCard = new TinkoffE2CCard();
     }
 
     public function payout(PayOutRequest $request)
@@ -45,11 +48,24 @@ class ApiPayoutController extends Controller
             ]);
         }
 
+        Log::debug('Получаем номер карты для сохранения');
         // Получаем номер карты для сохранения
-        $this->e2c->GetCardList(Auth::user()->getCustomerKey());
-        $cards = $this->e2c->response();
-        $cardNumber = $cards['data'][0]->Pan ?? null;
+        $this->etcCard->GetCardList(Auth::user()->getCustomerKey());
+        $cards = $this->etcCard->response();
 
+        $cardNumber = null;
+        if (isset($cards['data']) && is_array($cards['data'])) {
+            $cardNumber = $cards['data'][0]->Pan ?? null;
+        } 
+        Log::debug(json_encode($cards));
+        if (!$cardNumber) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Привязанная карта не найдена.'
+            ]);
+        }
+
+        Log::debug('Инициализация вывода');
         $orderId = Auth::user()->id . date("_md_s");
         $params = [
             'Amount' => $accumulation->amount,
