@@ -130,7 +130,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/payment-cards', [ApiPaymentCardController::class, 'delete']);
 
     Route::post('/payout', [ApiPayoutController::class, 'payout']);
-
+    Route::get('/payout/cards-and-accumulation', [ApiPayoutController::class, 'cardAndAccumulationForPayout']);
+    
     Route::get('/courses', [ApiCourseController::class, 'index']);
     Route::get('/courses/{id}', [ApiCourseController::class, 'show']);
     Route::post('/courses', [ApiCourseController::class, 'store']);

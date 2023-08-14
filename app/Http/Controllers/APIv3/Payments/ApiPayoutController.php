@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIv3\Payments;
 
 use App\Http\Controllers\Controller;
 use App\Http\ApiRequests\Payment\PayOutRequest;
+use App\Http\ApiRequests\Payment\CardAndAccumulationForPayoutRequest;
 use App\Models\Accumulation;
 use App\Services\Tinkoff\TinkoffE2C;
 use App\Services\TinkoffE2C as TinkoffE2CCard;
@@ -12,6 +13,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Http\ApiResponses\ApiResponse;
 
 class ApiPayoutController extends Controller
 {
@@ -23,6 +25,31 @@ class ApiPayoutController extends Controller
     {
         $this->e2c = new TinkoffE2C();
         $this->etcCard = new TinkoffE2CCard();
+    }
+
+    /**
+     * Вывод списка карт и активного Accumulation
+     */
+    public function cardAndAccumulationForPayout(CardAndAccumulationForPayoutRequest $request)
+    {
+        $cardsList = [];
+        $this->etcCard->GetCardList(Auth::user()->getCustomerKey());
+        $cards = $this->etcCard->response();
+        if (isset($cards['data']) && is_array($cards['data'])) {
+            foreach ($cards['data'] as $card){
+                $cardsList[] = ['CardId' => $card->CardId ?? null,
+                                'Pan' => $card->Pan ?? null,
+                                'Status' => $card->Status ?? null 
+                                ];
+            }
+        } 
+
+        $accumulation = Accumulation::select('SpAccumulationId', 'amount')
+                                    ->where('user_id', Auth::user()->id)
+                                    ->where('status', 'active')
+                                    ->first();
+                 
+    return ApiResponse::common(['cards' => $cardsList, 'accumulation' => $accumulation]);
     }
 
     public function payout(PayOutRequest $request)
