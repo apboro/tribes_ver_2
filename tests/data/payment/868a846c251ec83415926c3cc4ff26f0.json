@@ -1,10 +1,18 @@
 [
   {
-  "CardId": "881900",
-  "Pan": "518223******0036",
-  "Status": "D",
-  "RebillId": "",
-  "CardType": 0,
-  "ExpDate": "1122"
-  }
+    "CardId": "881900",
+    "Pan": "518223******0036",
+    "Status": "D",
+    "RebillId": "",
+    "CardType": 0,
+    "ExpDate": "1122"
+    },
+    {
+      "CardId": "11223344",
+      "Pan": "112233******4455",
+      "Status": "D",
+      "RebillId": "",
+      "CardType": 0,
+      "ExpDate": "3344"
+      }
 ]
