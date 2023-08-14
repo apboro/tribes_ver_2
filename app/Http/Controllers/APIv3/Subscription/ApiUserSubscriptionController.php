@@ -10,6 +10,7 @@ use App\Http\ApiResponses\ApiResponseError;
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Models\UserSubscription;
 use App\Repositories\Subscription\SubscriptionRepository;
 use App\Services\TelegramLogService;
 use App\Services\Tinkoff\Payment as TinkoffPayment;
@@ -41,10 +42,18 @@ class ApiUserSubscriptionController extends Controller
     public function payForSubscription(ApiSubscriptionPayRequest $request)
     {
         /** @var User $user */
-
         $user = Auth::user();
+        $subscriptionType = $request->input('subscription_id');
 
-        $subscription = Subscription::find($request->input('subscription_id'));
+        $userSubscription = UserSubscription::where('user_id', '=', $user->id)
+                            ->where('subscription_id', '=', $subscriptionType)
+                            ->where('expiration_date', '>' , time())->first();
+
+        if($userSubscription) {
+            return ApiResponse::error('Тариф активен');
+        }
+
+        $subscription = Subscription::find($subscriptionType);
 
         $success_url = $request->success_url ?? null;
 
