@@ -43,10 +43,14 @@ class ApiTelegramMessageStatistic extends Controller
         $message_members_statistic = $messages->get();
         $user_messages_chart = !empty($request->telegram_users_id) ? $this->statisticRepository->getUserMessageChart($request) : null;
 
+        $totalMessages = array_reduce($chartMessagesData, function ($carry, $item) {
+            return $carry + $item->count ?? 0;
+        }) ?? 0;
+
         return ApiResponse::common([
             'messages_tonality' => $chartMessagesTonality,
             'message_statistic' => $chartMessagesData,
-            'total_messages' => count($chartMessagesData),
+            'total_messages' => $totalMessages,
             'message_members_statistic' => $message_members_statistic,
             'user_messages_chart' => $user_messages_chart ? (new ApiMemberChartsResource($user_messages_chart)) : null,
         ]);
