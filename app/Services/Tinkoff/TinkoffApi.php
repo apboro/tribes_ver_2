@@ -216,6 +216,14 @@ class TinkoffApi
                     $args['TerminalKey'] = $this->terminalKey;
                 }
 
+                if (!array_key_exists('Token', $args)) {
+                    $token =  $this->_genToken($args);
+                    $args['Token'] = $this->_genToken($args);
+                    log::info('set Token: '. json_encode($args, JSON_UNESCAPED_UNICODE));
+                }
+
+                log::info('allowed Token: '. json_encode($args['Token'], JSON_UNESCAPED_UNICODE));
+
                 $args = $this->updateSecuresData($args);
 
                 if (!array_key_exists('X509SerialNumber', $args)) {
