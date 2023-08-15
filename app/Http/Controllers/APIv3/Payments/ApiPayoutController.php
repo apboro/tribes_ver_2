@@ -66,7 +66,7 @@ class ApiPayoutController extends Controller
             ]);
         }
 
-        $minPayout = config('tinkoff.minPayout', 500) * 100;
+        $minPayout = config('tinkoff.minPayout', 5) * 100;
         $maxPayout = config('tinkoff.maxPayout', 100000) * 100;
         if (($accumulation->amount < $minPayout) || ($accumulation->amount > $maxPayout)){
             return response()->json([
