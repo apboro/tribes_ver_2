@@ -56,6 +56,7 @@ class CheckTariff extends Command
     {
         try {
             $telegramUsers = TelegramUser::with('tariffVariant')->get();
+
             foreach ($telegramUsers as $user) {
                 //echo "user{$user->user_id} \n";
                 $follower = User::find($user->user_id);
@@ -63,7 +64,7 @@ class CheckTariff extends Command
                     if ($user->tariffVariant->first()) {
                         foreach ($user->tariffVariant as $variant) {
                             /** @var TariffVariant $variant*/
-                            if ($variant->price == 0 && $variant->period == $variant->tariff->test_period)
+                            if ($variant->price === 0 && $variant->period === $variant->tariff->test_period)
                                 continue;
                             if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
                                 $userName = $user->user_name;
