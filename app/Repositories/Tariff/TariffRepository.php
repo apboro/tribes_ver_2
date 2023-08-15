@@ -592,6 +592,9 @@ class TariffRepository implements TariffRepositoryContract
         $builder->when($request->tariff_title, function ($query) use ($request) {
             $query->where('tariffs.title', 'ilike', '%' . $request->tariff_title . '%');
         });
+        $builder->when(isset($request->tariff_is_payable), function ($query) use ($request) {
+            $query->where('tariffs.tariff_is_payable', (bool)$request->tariff_is_payable);
+        });
         $builder->select(['tariffs.*', 'tarif_variants.price'])
             ->leftJoin('tarif_variants', function ($join) {
                 $join->on('tariffs.id', '=', 'tarif_variants.tariff_id')

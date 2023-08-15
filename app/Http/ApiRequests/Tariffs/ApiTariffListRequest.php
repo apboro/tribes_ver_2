@@ -17,6 +17,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     @OA\Parameter(name="sort_direction",in="query",description="sort_type(asc, desc)",required=false,@OA\Schema(type="string")),
  *     @OA\Parameter(name="community_title",in="query",description="search by community title", required=false,@OA\Schema(type="string")),
  *     @OA\Parameter(name="tariff_title",in="query",description="search by tariff title", required=false,@OA\Schema(type="string")),
+ *     @OA\Parameter(name="tariff_is_payable",in="query",description="search by status (tariff payable)", required=false,@OA\Schema(type="integer")),
  *     @OA\Response(response=200, description="OK"),
  *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  * )

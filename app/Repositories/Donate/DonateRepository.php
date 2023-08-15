@@ -294,11 +294,19 @@ class DonateRepository implements DonateRepositoryContract
             ->withCount(['payments' => function ($query) {
                 $query->donationConfirmed();
             }])
-            ->orderBy($request->sort_field ?? 'updated_at', $request->sort_direction ?? 'desc')
+            ->orderBy($request->sort_field ?? 'created_at', $request->sort_direction ?? 'desc')
             ->when($request->search, function (Builder $q) use ($request) {
                 $q->where('title', 'ilike', '%' . $request->input('search') . '%');
             })->skip($request->offset)->take($request->limit)->get();
 
+    }
+
+    public function itemCount(ApiRequest $request)
+    {
+        return Donate::owned()
+            ->when($request->search, function (Builder $q) use ($request) {
+                $q->where('title', 'ilike', '%' . $request->input('search') . '%');
+            })->count();
     }
 
 }
