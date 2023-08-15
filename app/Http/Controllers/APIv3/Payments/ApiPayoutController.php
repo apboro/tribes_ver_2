@@ -95,7 +95,7 @@ class ApiPayoutController extends Controller
         Log::debug('Инициализация вывода');
         $orderId = Auth::user()->id . date("_md_s");
         $params = [
-            'Amount' => $accumulation->amount,
+            'Amount' => $accumulation->amount * 100,
             'OrderId' => $orderId,
             'CardId' => $request['cardId'],
             'DATA' => [
