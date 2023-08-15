@@ -28,7 +28,7 @@ class LmsRecommendationRepository
         if (isset($request->webinar_id)) {
             $this->webinar_ids = [$request->webinar_id];
         }
-        $this->author =  Auth::user()->author;
+        $this->author = Auth::user()->author;
     }
 
     /**
@@ -36,11 +36,12 @@ class LmsRecommendationRepository
      */
     private function countWhatTo(&$what, $feedback)
     {
-        if (isset($feedback['all_ok'])) {
+        if (isset($feedback['all_ok']) && $feedback['all_ok']) {
             $what['all_ok'] = ($what['all_ok'] ?? 0) + 1;
-        } else {
-            if (isset($feedback['options']) && is_iterable($feedback['options'])) {
-                foreach ($feedback['options'] as $value) {
+        }
+        if (isset($feedback['options']) && is_iterable($feedback['options'])) {
+            foreach ($feedback['options'] as $value) {
+                if ($value) {
                     $what[$value] = ($what[$value] ?? 0) + 1;
                 }
             }
@@ -85,6 +86,7 @@ class LmsRecommendationRepository
                 $this->countWhatTo($whatToRemove, $feedback->what_to_remove);
             }
         }
+
         return  [
             'likeMaterial' => $likeMaterial,
             'enoughMaterial' => $enoughMaterial,
@@ -140,7 +142,7 @@ class LmsRecommendationRepository
     }
 
     /**
-     * Количество чиитателей
+     * Количество читателей
      */
     private function getReadersCount(array $publications, array $webinars): int
     {
