@@ -44,12 +44,17 @@ class ApiPayoutController extends Controller
             }
         } 
 
+        /** @var Accumulation $accumulation */
         $accumulation = Accumulation::select('SpAccumulationId', 'amount')
                                     ->where('user_id', Auth::user()->id)
                                     ->where('status', 'active')
                                     ->first();
-                 
-    return ApiResponse::common(['cards' => $cardsList, 'accumulation' => $accumulation]);
+
+        if (isset($accumulation->amount)) {
+            $accumulation->amount /= 100;
+        }
+
+        return ApiResponse::common(['cards' => $cardsList, 'accumulation' => $accumulation]);
     }
 
     public function payout(PayOutRequest $request)
