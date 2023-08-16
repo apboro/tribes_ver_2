@@ -9,6 +9,8 @@ use App\Http\ApiRequests\ApiRequest;
 use App\Http\ApiRequests\Statistic\ApiMessageStatisticChartRequest;
 use App\Models\Community;
 use App\Models\Semantic;
+use App\Models\User;
+use App\Models\TelegramConnection;
 use App\Repositories\Statistic\DTO\ChartData;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -67,9 +69,17 @@ class TelegramMessageStatisticRepository
      *
      * @return array
      */
-    public function getMessagesStatistic(string $start, string $end): array
+    public function getMessagesStatistic(string $start, string $end, ?int $communityId): array
     {
         log::info('start: ' . $start . ' end: ' . $end);
+
+        if (!$communityId) {
+            $user = User::findOrFail(Auth::user()->id);
+            $communitiesIds = $user->communities->pluck('connection_id')->toArray();
+        } else { 
+            $communitiesIds[] = $communityId;
+        }
+        $groupChatIds = TelegramConnection::select('chat_id')->whereIn('id', $communitiesIds)->get();
 
         return DB::select("
         SELECT
@@ -77,7 +87,7 @@ class TelegramMessageStatisticRepository
         (FLOOR((EXTRACT(HOUR FROM created_at) / 4)) + 1) AS hour_interval,
         COUNT(*) AS count
         FROM telegram_messages
-        WHERE created_at BETWEEN '$start' AND '$end'
+        WHERE created_at BETWEEN '$start' AND '$end' AND group_chat_id IN (' . implode(',', $groupChatIds) . ')
         GROUP BY 1, 2
         ORDER BY 1, 2;");
     }
