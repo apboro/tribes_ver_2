@@ -23,6 +23,7 @@ use Carbon\Carbon;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -113,6 +114,7 @@ class PaymentController extends Controller
 //        }
 
         if ($data['Status'] == 'REFUNDED') {
+            Log::log('Tinkoff notify Request status Status Попытка вывода средств ' . json_encode($data));
             TelegramLogService::staticSendLogMessage("Попытка вывода средств " . json_encode($data));
             return response('OK', 200);
         }
@@ -122,6 +124,7 @@ class PaymentController extends Controller
         }
 
         if ($this->accessor($request)) {
+
             $payment = Payment::where('OrderId', $request['OrderId'])->where('paymentId', $request['PaymentId'])->first();
 
             if (!$payment) {
@@ -144,6 +147,7 @@ class PaymentController extends Controller
 
         } else {
             //todo сделать через Исключение
+            Log::log('Tinkoff notifyБанк обратился c уведомлением, но не прошел проверку ' . json_encode($data));
             (new PaymentException("Банк обратился c уведомлением, но не прошел проверку " . json_encode($data)))->report();
 
         }
@@ -155,9 +159,11 @@ class PaymentController extends Controller
         if (
             $request->TerminalKey == null
         ) {
+            log::info('accessor TerminalKey is null');
             $this->telegramLogService->sendLogMessage(json_encode($request->all()));
             return false;
         } else {
+            log::info('accessor TerminalKey ok');
             return true;
         }
     }
