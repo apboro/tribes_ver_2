@@ -34,9 +34,10 @@ class ApiTelegramMessageStatistic extends Controller
     public function messageCharts(ApiMessageStatisticChartRequest $request): ApiResponse
     {
         $period = QueryHelper::buildPeriodDates($request->input('period', 'day'));
+        $communityId = $request->community_id ?? null;
 
 //        $chartMessagesData = $this->statisticRepository->getMessageChart($request);
-        $chartMessagesData = $this->statisticRepository->getMessagesStatistic($period['start'], $period['end']);
+        $chartMessagesData = $this->statisticRepository->getMessagesStatistic($period['start'], $period['end'], $communityId);
         $chartMessagesTonality = $this->statisticRepository->getMessagesTonality($request);
 
         $messages = $this->statisticRepository->getMessagesList($request->input('community_ids') ?? [], $request);
