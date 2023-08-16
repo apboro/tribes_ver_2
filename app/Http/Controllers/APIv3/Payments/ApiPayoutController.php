@@ -104,7 +104,7 @@ class ApiPayoutController extends Controller
 
         $results = [];
         foreach ($accumulations as $accumulation) {
-            $results = $this->processPayout($accumulation, $request['cardId'], $cardNumber);
+            $results[] = $this->processPayout($accumulation, $request['cardId'], $cardNumber);
         }
 
         return response()->json($results);
