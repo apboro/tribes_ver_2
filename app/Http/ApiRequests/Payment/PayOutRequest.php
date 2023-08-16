@@ -16,14 +16,6 @@ use Illuminate\Foundation\Http\FormRequest;
  *         required=true,
  *         @OA\Schema(type="integer", format="int64")
  *     ),
- *    @OA\Parameter(
- *         name="accumulationId",
- *         in="query",
- *         description="Id of accumulation",
- *         required=true,
- *         @OA\Schema(type="integer", format="int64")
- *     ),
- *
  *     @OA\Response(response=200, description="OK"),
  *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  * )
@@ -48,16 +40,14 @@ class PayOutRequest extends FormRequest
     public function rules()
     {
         return [
-            'cardId' => ['required'],
-            'accumulationId' => ['required'],
+            'cardId' => ['required']
         ];
     }
 
     public function messages()
     {
         return [
-            'cardId.required' => 'Номер карты обязателен для заполнения',
-            'accumulationId.required' => 'ID накопления обязателен для заполнения',
+            'cardId.required' => 'Номер карты обязателен для заполнения'
         ];
     }
 }
