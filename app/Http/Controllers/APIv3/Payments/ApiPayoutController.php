@@ -102,22 +102,12 @@ class ApiPayoutController extends Controller
             ]);
         }
 
+        $results = [];
         foreach ($accumulations as $accumulation) {
-            $result = $this->processPayout($accumulation, $request['cardId'], $cardNumber);
-            if ($result['status'] == 'error') {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $result['message'] ?? '',
-                    'details' => $result['details'] ?? '',
-                ]);
-            }
+            $results = $this->processPayout($accumulation, $request['cardId'], $cardNumber);
         }
 
-        return response()->json([
-            'status' => 'ok',
-            'message' => 'Выплата на карту осуществлена'
-        ]);
-
+        return response()->json($results);
     }
 
     /**
@@ -177,7 +167,7 @@ class ApiPayoutController extends Controller
                 ];
             } else {
                 // Неуспешная выплата
-                Log::debug('Payout status ERROR');
+                Log::error('Payout error: ' . json_encode($resp));
                 $message = $resp['data']->Message ?? null;
                 $details = $resp['data']->Details ?? null;
 
@@ -188,7 +178,7 @@ class ApiPayoutController extends Controller
                 ];
             }
         } else {
-            Log::debug('Payout status NOT CHECKED');
+            Log::error('Payout error (status not checked): ' . json_encode($resp));
             $message = $resp['data']->Message ?? null;
             $details = $resp['data']->Details ?? null;
 
