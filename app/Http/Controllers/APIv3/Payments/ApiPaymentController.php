@@ -52,7 +52,7 @@ class ApiPaymentController extends Controller
         }
 
         if ($payment->status === 'CONFIRMED' && $payment->type === 'donate') {
-            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/public/donate/'.$payment->payable_id.'/thanks';
+            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/public/donate/thanks';
         }
 
         if ($payment->status === 'CONFIRMED' && $payment->type === 'tariff') {
