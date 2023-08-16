@@ -162,7 +162,7 @@ class Payment
         log::info('start pay');
         if ($this->charged) { // Запрос на рекуррентный платёж, без подтверждения покупателем
 
-            if (isset($this->payFor, $this->payer)) { // Если указано за что платить и кто плательщик
+            if (isset($this->payFor) && isset($this->payer)) { // Если указано за что платить и кто плательщик
 
                 $this->payment = new P();
                 $rebildPayment = $this->payment->tariffs()
@@ -174,15 +174,11 @@ class Payment
                     $this->community = $rebildPayment->community()->first();
                     $this->author = $this->community->owner()->first();
                 } else {
-                    $message = "Рекурент основной платёж не найден Тариф: " . $this->payFor->id . ", Плательщик: " . $this->payer->id;
-                    Log::error($message);
-                    TelegramLogService::staticSendLogMessage($message);
+                    TelegramLogService::staticSendLogMessage("Рекурент основной платёж не найден Тариф: " . $this->payFor->id . ", Плательщик: " . $this->payer->id);
                 }
 
             } else {
-                $message = "Рекурент без указания кому и за что" . json_encode([$this->payFor, $this->payer]);
-                Log::error($message);
-                TelegramLogService::staticSendLogMessage($message);
+                TelegramLogService::staticSendLogMessage("Рекурент без указания кому и за что" . json_encode([$this->payFor, $this->payer]));
             }
         }
 
@@ -198,7 +194,7 @@ class Payment
         $this->orderId = $this->payment->id . date("_md_s");
 
         $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
-        if ($params['Amount'] === 0 && $this->type === 'tariff') {
+        if ($params['Amount'] == 0 && $this->type === 'tariff') {
             $this->comment = 'trial';
             $resp = (object)[
                 'PaymentId' => rand(1000000000, 9999999999),
