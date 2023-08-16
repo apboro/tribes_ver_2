@@ -16,6 +16,7 @@ use App\Services\Tinkoff\Payment as Pay;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ApiNewDonateController extends Controller
 {
@@ -87,7 +88,9 @@ class ApiNewDonateController extends Controller
 
             //оплата фикс суммы
             if ($variant->isStatic) {
+                Log::info('is isStatic');
                 if ($variant->price == $amount) {
+                    Log::info('proce ammout: ' . $variant->pric . ' - '. $amount);
                     $p = new Pay();
                     $p->amount($amount * 100)
                         ->payFor($variant)
@@ -102,6 +105,7 @@ class ApiNewDonateController extends Controller
                     return redirect()->to($payment->paymentUrl);
                 }
             } else {
+                Log::info('else is isStatic');
                 //оплата рандом суммы после ввода на фронте
                 $p = new Pay();
                 $p->amount($amount * 100)
