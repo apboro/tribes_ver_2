@@ -74,6 +74,7 @@ class Payment
 
     public function payFor($payFor)
     {
+        log::info('pay for :' . $payFor);
         switch ($payFor) {
             case $payFor instanceof TariffVariant:
                 $this->type = 'tariff';
@@ -158,9 +159,10 @@ class Payment
 
     public function pay()
     {
+        log::info('start pay');
         if ($this->charged) { // Запрос на рекуррентный платёж, без подтверждения покупателем
 
-            if (isset($this->payFor) && isset($this->payer)) { // Если указано за что платить и кто плательщик
+            if (isset($this->payFor, $this->payer)) { // Если указано за что платить и кто плательщик
 
                 $this->payment = new P();
                 $rebildPayment = $this->payment->tariffs()
@@ -172,11 +174,15 @@ class Payment
                     $this->community = $rebildPayment->community()->first();
                     $this->author = $this->community->owner()->first();
                 } else {
-                    TelegramLogService::staticSendLogMessage("Рекурент основной платёж не найден Тариф: " . $this->payFor->id . ", Плательщик: " . $this->payer->id);
+                    $message = "Рекурент основной платёж не найден Тариф: " . $this->payFor->id . ", Плательщик: " . $this->payer->id;
+                    Log::error($message);
+                    TelegramLogService::staticSendLogMessage($message);
                 }
 
             } else {
-                TelegramLogService::staticSendLogMessage("Рекурент без указания кому и за что" . json_encode([$this->payFor, $this->payer]));
+                $message = "Рекурент без указания кому и за что" . json_encode([$this->payFor, $this->payer]);
+                Log::error($message);
+                TelegramLogService::staticSendLogMessage($message);
             }
         }
 
@@ -192,7 +198,7 @@ class Payment
         $this->orderId = $this->payment->id . date("_md_s");
 
         $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
-        if ($params['Amount'] == 0 && $this->type === 'tariff') {
+        if ($params['Amount'] === 0 && $this->type === 'tariff') {
             $this->comment = 'trial';
             $resp = (object)[
                 'PaymentId' => rand(1000000000, 9999999999),
@@ -230,7 +236,7 @@ class Payment
             }
 
             $this->payment->payer()->associate($this->payer)->save();
-
+            log::info('end');
             if ($this->charged) {
                 $chargeRes = $this->tinkoff->payTerminal->Charge([
                     'PaymentId' => $this->payment->paymentId,
@@ -257,7 +263,7 @@ class Payment
 
             $this->payFor->payments()->save($this->payment);
             $this->payment->payer()->associate($this->payer)->save();
-
+            log::info('end');  ///gifed17368@v1zw.com
             return $this->payment;
         } else {
             TelegramLogService::staticSendLogMessage("Оплата по карте с ошибкой: " . json_encode($resp, JSON_UNESCAPED_UNICODE));
@@ -340,6 +346,7 @@ class Payment
     public function doPayment($payer, $payFor, $cost, $success_url)
     {
 
+        log::info('doPayment');
         $this->amount($cost * 100);
 
 
@@ -352,6 +359,7 @@ class Payment
         if ($this->type == 'subscription') {
             $this->recurrent = true;
         }
+
         return $this->pay();
     }
 
