@@ -22,7 +22,7 @@ class TelegramPaymentsStatisticRepository
 {
 
     /**
-     * Возвращает сумму оплат указанного типа для указанных копилок (копейки) 
+     * Возвращает сумму оплат указанного типа для указанных копилок
      * @param array $accumulationIds массив с accumulationId
      * @param string $type тип оплаты
      * @return int
@@ -33,11 +33,11 @@ class TelegramPaymentsStatisticRepository
             ->whereStatus('CONFIRMED')
             ->whereType($type)
             ->select(DB::raw("SUM(amount) as sum"))
-            ->first()->sum;
+            ->first()->sum / 100;
     }
 
     /**
-     * Вывод всех выплат авторизованному пользователю, копейки. Limit и offset.
+     * Вывод всех выплат авторизованному пользователю. Limit и offset.
      * @return Builder
      */
     public function getPayoutsList(FinanceFilter $filter)
@@ -46,7 +46,7 @@ class TelegramPaymentsStatisticRepository
         $offset = $filterData['offset'] ?? null;
         $limit = $filterData['limit'] ?? null;
 
-        return Payment::select('paymentId', 'created_at', 'amount', DB::raw('card_number as card'))
+        return Payment::select('paymentId', 'created_at', DB::raw('amount / 100 as amount'), DB::raw('card_number as card'))
             ->whereStatus('COMPLETED')
             ->where('user_id', auth()->user()->id)
             ->whereType('payout')
