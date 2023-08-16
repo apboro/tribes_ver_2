@@ -16,6 +16,7 @@ use App\Http\ApiResources\ApiFinancePayoutResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Resources\Statistic\FinancesChartsResource;
 use App\Models\Community;
+use App\Models\Accumulation;
 use App\Models\User;
 use App\Repositories\Statistic\TelegramPaymentsStatisticRepository;
 use App\Services\File\FilePrepareService;
@@ -38,16 +39,20 @@ class ApiTelegramPaymentsStatistic
     }
 
     /**
-     * Возвращает суммы оплат за все время для указанных типов платежей
+     * Возвращает суммы оплат для указанных типов платежей, которые можно вывести
      * @param $types - массив типов платежей
      * @return ApiResponse
      */
     public function paymentsSummAllTime(ApiPaymentsSummAllTimeRequest $request): ApiResponse
     {
-        $communityIds = Community::where('owner', Auth::user()->id)->pluck('id')->toArray();
+        $accumulationIds = Accumulation::whereUserId(Auth::user()->id)
+                                        ->whereStatus('active')
+                                        ->pluck('SpAccumulationId')
+                                        ->toArray();
+
         $types = ['tariff', 'donate', 'course'];
         foreach ($types as $type) {
-            $payments[$type] = $this->financeRepository->getPaymentsSummAllTime($communityIds, $type);
+            $payments[$type] = $this->financeRepository->getPaymentsSumm($accumulationIds, $type);
         }
         return ApiResponse::common(['summ' => array_sum($payments)] + $payments);
     }
@@ -59,7 +64,9 @@ class ApiTelegramPaymentsStatistic
     public function payoutsList(ApiPayoutsListRequest $request,FinanceFilter $filter)
     {
         $payouts = $this->financeRepository->getPayoutsList($filter);
-        return ApiResponse::listPagination(['Access-Control-Expose-Headers' => 'Items-Count', 'Items-Count' => $payouts->count()])->items(ApiFinancePayoutResource::collection($payouts->get()));
+        $payoutsCount = $this->financeRepository->getPayoutsCount();
+
+        return ApiResponse::listPagination(['Access-Control-Expose-Headers' => 'Items-Count', 'Items-Count' => $payoutsCount])->items(ApiFinancePayoutResource::collection($payouts));
     }
 
     public function paymentsCharts(ApiPaymentsStatisticRequest $request, FinanceChartFilter $filter)

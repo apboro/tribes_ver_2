@@ -22,14 +22,14 @@ class TelegramPaymentsStatisticRepository
 {
 
     /**
-     * Возвращает сумму оплат указанного типа для указанных групп (копейки) 
-     * @param array $communityIds массив с id групп
+     * Возвращает сумму оплат указанного типа для указанных копилок (копейки) 
+     * @param array $accumulationIds массив с accumulationId
      * @param string $type тип оплаты
      * @return int
      */
-    public function getPaymentsSummAllTime(array $communityIds, string $type): int
+    public function getPaymentsSumm(array $accumulationIds, string $type): int
     {
-        return (int) Payment::whereIn('community_id', $communityIds)
+        return (int) Payment::whereIn('SpAccumulationId', $accumulationIds)
             ->whereStatus('CONFIRMED')
             ->whereType($type)
             ->select(DB::raw("SUM(amount) as sum"))
@@ -37,24 +37,36 @@ class TelegramPaymentsStatisticRepository
     }
 
     /**
-     * Builder запроса для вывода всех выплат авторизованному пользователю, копейки. Limit и offset.
+     * Вывод всех выплат авторизованному пользователю, копейки. Limit и offset.
      * @return Builder
      */
-    public function getPayoutsList(FinanceFilter $filter): Builder
+    public function getPayoutsList(FinanceFilter $filter)
     {
         $filterData = $filter->filters();
         $offset = $filterData['offset'] ?? null;
         $limit = $filterData['limit'] ?? null;
 
-        return Payment::select('paymentId', 'created_at', 'amount', DB::raw('1234 as card'))
-            ->whereStatus('CONFIRMED')
+        return Payment::select('paymentId', 'created_at', 'amount', DB::raw('card_number as card'))
+            ->whereStatus('COMPLETED')
             ->where('user_id', auth()->user()->id)
             ->whereType('payout')
             ->orderByDesc('created_at')
             ->skip($offset)
-            ->take($limit);
+            ->take($limit)
+            ->get();
     }
 
+    /**
+     * Количество выплат авторизованному пользователю, копейки
+     * @return Builder
+     */
+    public function getPayoutsCount()
+    {
+        return Payment::whereStatus('COMPLETED')
+            ->where('user_id', auth()->user()->id)
+            ->whereType('payout')
+            ->count();
+    }
 
     public function getPaymentsCharts(array $communityIds, FinanceChartFilter $filter, string $type): ChartData
     {
