@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  *  @method AccumulationFactory factory()
+ *
+ * @property amount
  */
 class Accumulation extends Model
 {
