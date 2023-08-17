@@ -73,7 +73,7 @@ class ApiTelegramPaymentsStatistic
     {
         $chartPaymentsData = $this->financeRepository->getPaymentsCharts($this->getCommunityIds($request), $filter, $type = 'all');
         $coursePaymentsData = $this->financeRepository->getPaymentsCharts($this->getCommunityIds($request), $filter, $type = 'course');
-        $donatePaymentsData = $this->financeRepository->getPaymentsCharts($this->getCommunityIds($request), $filter, $type = 'donate');
+        $donatePaymentsData = $this->financeRepository->getPaymentsCharts([], $filter, $type = 'donate');
         $tariffPaymentsData = $this->financeRepository->getPaymentsCharts($this->getCommunityIds($request), $filter, $type = 'tariff');
 
         $chartPaymentsData->includeChart($coursePaymentsData, ['balance' => 'course_balance']);
