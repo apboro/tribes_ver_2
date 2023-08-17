@@ -43,6 +43,7 @@ class TelegramLogService implements TelegramLogServiceContract
             $service = new self(app(MainBotCollection::class));
             $service->sendLogMessage($text);
         } catch (Exception $e) {
+            log::info('not send message tr: '. $text);
             Log::channel('telegram-bot-log')->alert('Telegram log trouble: '.$e->getMessage());
         }
     }
