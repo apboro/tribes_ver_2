@@ -79,7 +79,7 @@ class TelegramMessageStatisticRepository
         } else { 
             $communitiesIds[] = $communityId;
         }
-        $groupChatIds = TelegramConnection::select('chat_id')->whereIn('id', $communitiesIds)->get();
+        $groupChatIds = TelegramConnection::select('chat_id')->whereIn('id', $communitiesIds)->get()->pluck('chat_id')->toArray();
 
         return DB::select("
         SELECT
@@ -87,7 +87,7 @@ class TelegramMessageStatisticRepository
         (FLOOR((EXTRACT(HOUR FROM created_at) / 4)) + 1) AS hour_interval,
         COUNT(*) AS count
         FROM telegram_messages
-        WHERE created_at BETWEEN '$start' AND '$end' AND group_chat_id IN (' . implode(',', $groupChatIds) . ')
+        WHERE created_at BETWEEN '$start' AND '$end' AND group_chat_id IN ('" . implode("','", $groupChatIds) . "')
         GROUP BY 1, 2
         ORDER BY 1, 2;");
     }
