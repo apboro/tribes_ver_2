@@ -126,8 +126,10 @@ class TelegramPaymentsStatisticRepository
 
         $totalAmount = DB::table($p)
             ->select(DB::raw("SUM(amount) as s"))
-            ->whereIn('community_id', $communityIds)
-            ->orWhereNull('community_id')
+            ->where(function ($query) use ($communityIds) {
+                $query->whereIn('community_id', $communityIds)
+                    ->orWhereNull('community_id');
+            })
             ->where('status', "=", 'CONFIRMED')
             ->where('type', '!=', 'payout')
             ->value('s');
