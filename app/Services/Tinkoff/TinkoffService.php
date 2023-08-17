@@ -42,15 +42,20 @@ class TinkoffService
     {
         DB::beginTransaction();
         try {
-
+            Log::info('Tinkoff $data' .   json_encode($data, JSON_UNESCAPED_UNICODE));
+            Log::info('Tinkoff $payment' .   json_encode($payment, JSON_UNESCAPED_UNICODE));
+            Log::info('Tinkoff $previous_status' .   json_encode($previous_status, JSON_UNESCAPED_UNICODE));
             if(isset($data->SpAccumulationId)){
-                TelegramLogService::staticSendLogMessage("Запрос на пополнение копилки " . $data->SpAccumulationId . " на сумму" . $payment->amount / 100 . "рублей" );
+                Log::info('=== isset($data->SpAccumulationId)');
+                    TelegramLogService::staticSendLogMessage("Запрос на пополнение копилки " . $data->SpAccumulationId . " на сумму" . $payment->amount / 100 . "рублей" );
 
+                 // рекурентный платеж - авто снятие денег  настройка
                 $accumulation = Accumulation::where('SpAccumulationId', (int)$data->SpAccumulationId)->where('status', 'active')->first();
 
                 if(!$accumulation){
-
+                    Log::info('=== not avto pament');
                     if(Accumulation::where('SpAccumulationId', (int)$data->SpAccumulationId)->count()){
+                        Log::info("Рассинхронизация копилок. Тинькофф пытается оформить платёж в закрытую копилку. ID копилки: " . $data->SpAccumulationId );
                         TelegramLogService::staticSendLogMessage("Рассинхронизация копилок. Тинькофф пытается оформить платёж в закрытую копилку. ID копилки: " . $data->SpAccumulationId );
                         return true;
                     }
@@ -62,7 +67,7 @@ class TinkoffService
                         'ended_at' => Carbon::now()->endOfDay()->modify('last day of this month'),
                         'status' => 'active',
                     ]);
-
+                    Log::info('=== Accumulation::create status => active'  . $accumulation->id);
                     // todo выбрасывать Ексепшн, если не удалось создать $accumulation увеличить информативность исключений
                 }
 
@@ -71,16 +76,18 @@ class TinkoffService
             $previous_status = trim($previous_status); // todo в базе почему то тип char, надо убрать, ставит кучу пробелов
 
             if ($previous_status != $new_status) {
+                Log::info('=== $previous_status != $new_status');
                 $community = $payment->community ?? null;
                 if (($previous_status == 'FORM_SHOWED' || $previous_status == 'NEW' || $previous_status == 'AUTHORIZED') && ($new_status == 'CONFIRMED' || $new_status == 'AUTHORIZED')) {
                     $decoder = [
                         'tariff' => 'тариф',
                         'donate' => 'донат'
                     ];
-
+                    Log::info('===IF $previous_status == FORM_SHOWED || $previous_status == NEW || ........');
                     $community = $payment->community()->first() ?? null;
                     $payer = User::find($payment->user_id);
                     if($payment->payable()->first() instanceof Course){
+                        Log::info('=== $payment->payable()->first() instanceof Course');
                         $course = $payment->payable()->first();
 
                         $payer->courses()->attach($course->id, [
@@ -103,25 +110,28 @@ class TinkoffService
                     TelegramLogService::staticSendLogMessage("В копилку с ID " . $accumulation->id . " зачислено " . $payment->amount / 100 . " р.");
 
                     if($community){
-                        TelegramLogService::staticSendLogMessage(
-                            "Tinkoff: совершен платёж за " .
+                        $message = "Tinkoff: совершен платёж за " .
                             ($community ? $decoder[$payment->type] : 'за что то') .
                             " в сообщество " . $community->title . " От плательщика " .
-                            ($payer ? $payer->email : 'Аноним') . ' на сумму ' . $payment->amount / 100 . 'рублей'
-                        );
+                            ($payer ? $payer->email : 'Аноним') . ' на сумму ' . $payment->amount / 100 . 'рублей';
+                        Log::info($message);
+                        TelegramLogService::staticSendLogMessage($message);
 
                     } else {
                         if($course){
-                            TelegramLogService::staticSendLogMessage(
-                                "Tinkoff: совершен платёж за Медиаконтент ( " .
+                            $message = "Tinkoff: совершен платёж за Медиаконтент ( " .
                                 $course->title . " ) в От плательщика " .
                                 ($payer ? $payer->email : 'Аноним') .
-                                ' на сумму ' . $payment->amount / 100 . 'рублей'
+                                ' на сумму ' . $payment->amount / 100 . 'рублей';
+                            Log::info($message);
+                            TelegramLogService::staticSendLogMessage(
+                                $message
                             );
                         }
                     }
 
                     if(isset($accumulation)){
+                        Log::info('134 isset($accumulation)');
                         $add = ($accumulation->getTribesCommission() != 100)
                             ? $payment->amount / 100 * (100-$accumulation->getTribesCommission())
                             : 0
@@ -129,13 +139,16 @@ class TinkoffService
                         $accumulation->addition($add);
                     }
                     if($community){
+                        Log::info('$community addition');
                         $community->addition($payment->add_balance);
                     }
                     /** успешная оплата */
 
                 }
                 if ($previous_status == 'CONFIRMED' && $new_status == 'REFUNDED') {
+                    Log::info('$previous_status == CONFIRMED && $new_status == REFUNDED');
                     if($community) {
+                        Log::info('$community subtraction');
                         $community->subtraction($payment->add_balance);
                     }
                     if(isset($accumulation)){
@@ -168,14 +181,15 @@ class TinkoffService
 
             }
             DB::commit();
+            Log::info('commit');
             return true;
         } catch (\Exception $e) {
             DB::rollback();
             //переделать на репор от
-            TelegramLogService::staticSendLogMessage(
-                "Платёж " . $payment->id . " завершился неуспешно, Администрация в курсе" .
-                json_encode($e->getMessage())
-            );
+            $message = "Платёж " . $payment->id . " завершился неуспешно, Администрация в курсе" .
+                json_encode($e->getMessage());
+            Log::info($message);
+            TelegramLogService::staticSendLogMessage($message);
             return false;
         }
     }

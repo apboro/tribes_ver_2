@@ -124,10 +124,11 @@ class PaymentController extends Controller
         }
 
         if ($this->accessor($request)) {
-
+            Log::log('Tinkoff intered to accesor' . json_encode($data));
             $payment = Payment::where('OrderId', $request['OrderId'])->where('paymentId', $request['PaymentId'])->first();
 
             if (!$payment) {
+                Log::log('Tinkoff paymend not found r' .   json_encode($request['OrderId'], JSON_UNESCAPED_UNICODE));
                 (new PaymentException("NOTY: Платёж с OrderId " . $request['OrderId'] . " и PaymentId " .
                     $request['PaymentId'] . " не найден"))->report();
                 return response('OK', 200);
