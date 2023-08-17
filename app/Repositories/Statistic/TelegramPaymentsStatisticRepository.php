@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -70,6 +71,8 @@ class TelegramPaymentsStatisticRepository
 
     public function getPaymentsCharts(array $communityIds, FinanceChartFilter $filter, string $type): ChartData
     {
+        $userId = Auth::user()->id;
+
         $filterData = $filter->filters();
         Log::debug("FinanceStatisticRepository::getBuilderForFinance", [
             'filter' => $filterData,
@@ -132,6 +135,7 @@ class TelegramPaymentsStatisticRepository
             })
             ->where('status', "=", 'CONFIRMED')
             ->where('type', '!=', 'payout')
+            ->where('author', '=', $userId)
             ->value('s');
         $chart->addAdditionParam('total_amount', $totalAmount);
 
