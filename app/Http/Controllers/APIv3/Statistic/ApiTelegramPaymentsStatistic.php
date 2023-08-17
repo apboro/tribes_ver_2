@@ -40,21 +40,31 @@ class ApiTelegramPaymentsStatistic
 
     /**
      * Возвращает суммы оплат для указанных типов платежей, которые можно вывести
-     * @param $types - массив типов платежей
      * @return ApiResponse
      */
     public function paymentsSummAllTime(ApiPaymentsSummAllTimeRequest $request): ApiResponse
     {
-        $accumulationIds = Accumulation::whereUserId(Auth::user()->id)
+        $accumulations = Accumulation::select('SpAccumulationId', 'amount')
+                                        ->whereUserId(Auth::user()->id)
                                         ->whereStatus('active')
-                                        ->pluck('SpAccumulationId')
-                                        ->toArray();
+                                        ->get();
+        $accumulationIds = [];
+        $summ = 0;
+        foreach ($accumulations as $accumulation){
+            $accumulationIds[] = $accumulation['SpAccumulationId'];
+            $summ = $summ + $accumulation['amount'];
+        }
+        $summ = $summ / 100;
+
+        $acc = new Accumulation;
+        $acc->user_id = Auth::user()->id;
+        $rateCommission = (100 - $acc->getTribesCommission()) / 100;
 
         $types = ['tariff', 'donate', 'course'];
         foreach ($types as $type) {
-            $payments[$type] = $this->financeRepository->getPaymentsSumm($accumulationIds, $type);
+            $payments[$type] = $this->financeRepository->getPaymentsSumm($accumulationIds, $type) * $rateCommission;
         }
-        return ApiResponse::common(['summ' => array_sum($payments)] + $payments);
+        return ApiResponse::common(['summ' => $summ] + $payments);
     }
 
     /**
