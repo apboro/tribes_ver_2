@@ -115,12 +115,16 @@ class TinkoffService
 //                    TelegramLogService::staticSendLogMessage("В копилку с ID " . $accumulation->id . " зачислено " . $payment->amount / 100 . " р.");
 
                     if($community){
+                        Log::info('$payment->type:' . $payment->type);
+                        Log::info('$decoder:' . json_encode($decoder, JSON_UNESCAPED_UNICODE));
+                        Log::info('$community->title:' . json_encode($community->title, JSON_UNESCAPED_UNICODE));
+                        Log::info('$payer->email :' . json_encode($payer->email,  JSON_UNESCAPED_UNICODE));
                         $message = "Tinkoff: совершен платёж за " .
                             ($community ? $decoder[$payment->type] : 'за что то') .
                             " в сообщество " . $community->title . " От плательщика " .
                             ($payer ? $payer->email : 'Аноним') . ' на сумму ' . $payment->amount / 100 . 'рублей';
                         Log::info($message);
-                        TelegramLogService::staticSendLogMessage($message);
+                        //TelegramLogService::staticSendLogMessage($message);
 
                     } else {
                         if($course){
@@ -129,9 +133,7 @@ class TinkoffService
                                 ($payer ? $payer->email : 'Аноним') .
                                 ' на сумму ' . $payment->amount / 100 . 'рублей';
                             Log::info($message);
-                            TelegramLogService::staticSendLogMessage(
-                                $message
-                            );
+//                            TelegramLogService::staticSendLogMessage($message);
                         }
                     }
                     log::info('________________ after 1 $community ');
