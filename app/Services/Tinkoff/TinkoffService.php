@@ -127,7 +127,7 @@ class TinkoffService
                         //TelegramLogService::staticSendLogMessage($message);
 
                     } else {
-                        if($course){
+                        if ($course = $payment->payable()->first()){
                             $message = "Tinkoff: совершен платёж за Медиаконтент ( " .
                                 $course->title . " ) в От плательщика " .
                                 ($payer ? $payer->email : 'Аноним') .
