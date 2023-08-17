@@ -138,12 +138,14 @@ class TinkoffService
                     }
                     log::info('________________ after 1 $community ');
                     if(isset($accumulation)){
-                        Log::info('134 isset($accumulation)');
-                        $add = ($accumulation->getTribesCommission() != 100)
-                            ? $payment->amount / 100 * (100-$accumulation->getTribesCommission())
-                            : 0
-                        ;
-                        $accumulation->addition($add);
+                        if ($previous_status != 'CONFIRMED' && $new_status == 'CONFIRMED') {
+                            Log::info('134 isset($accumulation)');
+                            $add = ($accumulation->getTribesCommission() != 100)
+                                ? $payment->amount / 100 * (100-$accumulation->getTribesCommission())
+                                : 0
+                            ;
+                            $accumulation->addition($add);
+                        }
                     }
                     log::info('________________ after $accumulation ');
                     if($community){
