@@ -86,6 +86,7 @@ class TinkoffService
                     Log::info('===IF $previous_status == FORM_SHOWED || $previous_status == NEW || ........');
                     $community = $payment->community()->first() ?? null;
                     $payer = User::find($payment->user_id);
+                    Log::info('$payment->payable()->first() : '. json_encode($payment->payable()->first(), JSON_UNESCAPED_UNICODE));
                     if($payment->payable()->first() instanceof Course){
                         Log::info('=== $payment->payable()->first() instanceof Course');
                         $course = $payment->payable()->first();
@@ -106,8 +107,12 @@ class TinkoffService
                         }
 
                     }
+                    log::info('________________ after $payment->payable()->first() ');
 
-                    TelegramLogService::staticSendLogMessage("В копилку с ID " . $accumulation->id . " зачислено " . $payment->amount / 100 . " р.");
+                    $message = "В копилку с ID " . $accumulation->id . " зачислено " . $payment->amount / 100 . " р.";
+                    log::info($message);
+
+//                    TelegramLogService::staticSendLogMessage("В копилку с ID " . $accumulation->id . " зачислено " . $payment->amount / 100 . " р.");
 
                     if($community){
                         $message = "Tinkoff: совершен платёж за " .
@@ -129,7 +134,7 @@ class TinkoffService
                             );
                         }
                     }
-
+                    log::info('________________ after 1 $community ');
                     if(isset($accumulation)){
                         Log::info('134 isset($accumulation)');
                         $add = ($accumulation->getTribesCommission() != 100)
@@ -138,6 +143,7 @@ class TinkoffService
                         ;
                         $accumulation->addition($add);
                     }
+                    log::info('________________ after $accumulation ');
                     if($community){
                         Log::info('$community addition');
                         $community->addition($payment->add_balance);
