@@ -79,7 +79,17 @@ class TelegramMessageStatisticRepository
         } else { 
             $communitiesIds[] = $communityId;
         }
-        $groupChatIds = TelegramConnection::select('chat_id')->whereIn('id', $communitiesIds)->get()->pluck('chat_id')->toArray();
+
+        $groupChatIds = [];
+        $communities = Community::with('connection')
+                                ->where('owner', Auth::user()->id)
+                                ->whereIn('id', $communitiesIds)
+                                ->get();
+        foreach ($communities as $community) {
+            if (isset($community->connection->chat_id)) {
+                $groupChatIds[] = $community->connection->chat_id;
+            }
+        }
 
         return DB::select("
         SELECT
