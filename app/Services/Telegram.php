@@ -547,13 +547,16 @@ static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chat
         $telegramConnectionExists = TelegramConnection::query()
             ->where('chat_id', $chat_id)
             ->where('telegram_user_id', $telegram_user_id)
+            ->where('status', '!=', 'init')
             ->first();
 
         $telegramConnectionNew = TelegramConnection::where('telegram_user_id', $telegram_user_id)->whereStatus('init')->first();
 
         if ($telegramConnectionExists) {
             if ($telegramConnectionNew) {
-                $telegramConnectionNew->delete();
+                if ($telegramConnectionExists->id != $telegramConnectionNew->id) {
+                    $telegramConnectionNew->delete();
+                }
             }
             Log::debug('Бот добавлен в имеющуюся в БД группу', compact('chat_id', 'chatTitle', 'chatType'));
         } else {
@@ -566,6 +569,10 @@ static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chat
                 $telegramConnectionNew->isAdministrator = false;
                 $telegramConnectionNew->isChannel = $isChannel;
                 $telegramConnectionNew->isGroup = !$isChannel;
+
+                if ($telegramConnectionNew->botStatus == 'administrator'){
+                    $telegramConnectionNew->status = 'connected';
+                }
 
                 $telegramConnectionNew->photo_url = $photo_url;
                 $telegramConnectionNew->save();
@@ -591,6 +598,11 @@ static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id)
         $telegramConnection = TelegramConnection::where('chat_id', $chat_id)
             ->where('telegram_user_id', $telegram_user_id)
             ->first();
+        if (!$telegramConnection) {
+            $telegramConnectionNew = TelegramConnection::where('telegram_user_id', $telegram_user_id)->whereStatus('init')->first();
+            $telegramConnectionNew->botStatus = $status;
+            $telegramConnectionNew->save();
+        }
         Log::debug('botGetPermissionsEvent', compact('telegramConnection'));
         if ($telegramConnection) {
             $telegramConnection->botStatus = $status;

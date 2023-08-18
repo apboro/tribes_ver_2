@@ -138,16 +138,16 @@ class MainBotEvents
      * @TODO after test fix logs
      */
     protected function userBotAddedToGroup()
-    {
-        log::info('User Bot Added To Group');
+    { 
         try {
             $str = json_encode($this->data, JSON_UNESCAPED_UNICODE);
-            log::info('$this->data' . $str);
-            log::info('config(telegram_user_bot.user_bot.id)' . config('telegram_user_bot.user_bot.id'));
 //            if (isset($this->data->message->new_chat_member->id)) {
             if (isset($this->data->chat_member->new_chat_member->user->id)) {
                 $chatId = $this->data->chat_member->chat->id;
                 if ($this->data->chat_member->new_chat_member->user->id == config('telegram_user_bot.user_bot.id')) {
+                    log::info('User Bot Added To Group');
+                    log::info('$this->data' . $str);
+                    log::info('config(telegram_user_bot.user_bot.id)' . config('telegram_user_bot.user_bot.id'));
                     $this->bot->logger()->debug('Добавление Юзер Бота в уже существующую ГРУППУ', ArrayHelper::toArray($this->data->chat_member->chat));
                     Telegram::userBotEnterGroupEvent(
                         $this->data->chat_member->from->id,
@@ -178,7 +178,7 @@ class MainBotEvents
             && $this->data->callback_query->data === "captcha_button") {
             $member = $this->data->callback_query->from;
             $chatId = $this->data->callback_query->message->chat->id;
-            Log::debug('New chat user with captcha, $member', [$member]);
+            Log::info('New chat user with captcha, $member', [$member]);
 
             $community = Community::whereHas('connection', function ($q) use ($chatId) {
                 $q->where('chat_id', $chatId);
@@ -256,6 +256,7 @@ class MainBotEvents
                 $chatId = $this->data->message->chat->id;
                 $new_member_id = $this->data->message->new_chat_member->id;
                 $member = $this->data->message->new_chat_member;
+                Log::info('Новый пользователь newChatUser()');
 
                 Log::channel('telegram_bot_action_log')->
                 log('info', '', [
@@ -395,7 +396,7 @@ class MainBotEvents
     {
         try {
             $str = json_encode($this->data, JSON_UNESCAPED_UNICODE);
-            log::info('$this->data' . $str);
+            //log::info('$this->data' . $str);
             if (isset($this->data->chat_member)) {
                 if (
                     $this->data->chat_member->new_chat_member->user->id == config('telegram_user_bot.user_bot.id') &&
@@ -450,6 +451,7 @@ class MainBotEvents
                 $isNotChatBot = $userId != $this->bot->botId;
                 $isNotUserBot = $userId != $mainBotId;
                 if ($isNotUserBot && $isNotChatBot && $isDifferentStatus) {
+                    Log::info('Событие изменения статуса пользователя userChangeStatus()');
                     Telegram::userChangeStatus($userId, $chatId, $newStatus, $oldStatus);
                 }
             }
@@ -474,6 +476,7 @@ class MainBotEvents
 
             if ($userId && $oldStatus && $newStatus  && $chatId) {
                 if ($userId == $this->bot->botId && $oldStatus != $newStatus) {
+                    Log::info('Событие изменения статуса чат бота botChangeStatus()');
                     Telegram::botChangeStatus($this->bot->botId, $chatId, $newStatus, $oldStatus);
                 }
             }
@@ -493,6 +496,7 @@ class MainBotEvents
                 $chat = $this->data->channel_post;
             }
             if (isset($chat)) {
+                Log::info('Событие изменения или добавления фотографии группы или канала newChatPhoto()');
                 $chatId = $chat->chat->id;
                 $idPhoto = $chat->new_chat_photo[2]->file_id;
                 $urnPhoto = $this->bot->Api()->getFile([
@@ -575,6 +579,7 @@ class MainBotEvents
         try {
             if (isset($this->data->message->left_chat_member)) {
                 if ($this->data->message->left_chat_member->id != config('telegram_bot.bot.botId')) {
+                    Log::info('Событие удаления пользователя из группы deleteUser()');
                     $telegram = new Telegram(app(TariffRepositoryContract::class));
                     $this->bot->logger()->debug('Delete user with:', [$this->data->message->chat->id, $this->data->message->left_chat_member->id]);
                     $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
@@ -604,6 +609,7 @@ class MainBotEvents
                 $community = NULL;
             }
             if ($community) {
+                Log::info('Событие изменения названия группы или канала newChatTitle()');
                 Log::channel('telegram_bot_action_log')->log('info', '', [
                     'event' => TelegramBotActionHandler::EVENT_NEW_CHAT_TITLE,
                     'chat_id' => $community->chat->id
