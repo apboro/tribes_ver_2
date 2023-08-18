@@ -75,10 +75,11 @@ class TelegramMessageStatisticRepository
 
         if (!$communityId) {
             $user = User::findOrFail(Auth::user()->id);
-            $communitiesIds = $user->communities->pluck('connection_id')->toArray();
+            $communitiesIds = $user->communities->pluck('id')->toArray();
         } else { 
             $communitiesIds[] = $communityId;
         }
+        log::info(json_encode($communitiesIds, JSON_UNESCAPED_UNICODE));
 
         $groupChatIds = [];
         $communities = Community::with('connection')
