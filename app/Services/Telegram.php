@@ -574,7 +574,9 @@ static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chat
         }
 
         if ($community = Community::getCommunityByChatId($chat_id)) {
-            self::addUserToWhiteList($community->id, $telegram_user_id);
+            if ($telegram_user_id == config('telegram_user_bot.user_bot.id') || $telegram_user_id == config('telegram_bot.bot.botId')){
+                self::addUserToWhiteList($community->id, $telegram_user_id);
+            }
         }
 
     } catch (Exception $e) {
