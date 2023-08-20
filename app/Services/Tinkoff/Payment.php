@@ -259,7 +259,7 @@ class Payment
 
             $this->payFor->payments()->save($this->payment);
             $this->payment->payer()->associate($this->payer)->save();
-            log::info('end');  ///gifed17368@v1zw.com
+
             return $this->payment;
         } else {
             TelegramLogService::staticSendLogMessage("Оплата по карте с ошибкой: " . json_encode($resp, JSON_UNESCAPED_UNICODE));
