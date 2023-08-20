@@ -44,10 +44,6 @@ class ApiCommunityTelegramUserController extends Controller
         /** @var TelegramUser $telegram_user */
         $telegram_user = TelegramUser::where('telegram_id', '=', $request->input('telegram_id'))->first();
 
-        /** @var Community $community */
-        $community = Community::where('id', '=', $communityId)->first();
-
-        $telegram_user->communities()->detach($community);       
         $this->telegramUserListsRepositry->detachByCommunityId($communityId, $telegram_user->telegram_id);
 
         return ApiResponse::success();
