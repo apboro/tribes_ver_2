@@ -58,26 +58,22 @@ class ApiTelegramUsersStatistic extends Controller
 
         $members = $this->statisticRepository->getMembersList($request->input('community_ids') ?? []);
 
+        $totalMembers = $members->whereNull('exit_date')->get()->count();
+
+        $activeMembers['value'] = $active_user->count();
+        $activeMembers['delta'] = $totalMembers > 0 ? number_format($activeMembers['value'] * 100 / $totalMembers, 2) : 0;
+
+        $joinMembers['value'] = $join_users->sum('users'); //$join_users->count()
+        $joinMembers['delta'] = $totalMembers > 0 ? number_format($joinMembers['value'] * 100 / $totalMembers, 2) : 0;
+
+        $leftMembers['value'] = $exit_users->sum('users');
+        $leftMembers['delta'] = $totalMembers > 0 ? number_format($leftMembers['value'] * 100 / $totalMembers, 2) : 0;
+
         return ApiResponse::common([
-            'totalMembers' => $members->whereNull('exit_date')->get()->count(),
-            'activeMembers' => [
-                'value' => $active_user->count(),
-                'delta' => $current_members->max('users') > 0 ?
-                    number_format($active_user->count() / $current_members->max('users') * 100, 2)
-                    : 0,
-            ],
-            'joinMembers' => [
-                'value' => $join_users->sum('users'),//$join_users->count(),
-                'delta' => $current_members->max('users') > 0 ?
-                    number_format($join_users->sum('users') / $current_members->max('users') * 100, 2)
-                    : 0,
-            ],
-            'leftMembers' => [
-                'value' => $exit_users->sum('users'),
-                'delta' => $current_members->max('users') > 0 ?
-                    number_format($exit_users->sum('users') / $current_members->max('users') * 100, 2)
-                    : 0,
-            ],
+            'totalMembers' => $totalMembers,
+            'activeMembers' => $activeMembers,
+            'joinMembers' => $joinMembers,
+            'leftMembers' => $leftMembers,
             'series' => [$current_members],
             'members' => $members->whereNull('exit_date')->get()
         ]);
