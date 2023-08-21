@@ -39,50 +39,33 @@ class ApiTelegramUsersStatistic extends Controller
 
     public function members(ApiMemberStatisticChartsRequest $request): ApiResponse
     {
+        $communityIds = $request->input('community_ids') ?? [];
 
-        $active_user = $this->statisticRepository->getActiveUsers(
-            $request->input('community_ids') ?? [],
-            $request
-        );
-        $current_members = $this->statisticRepository->currentMembersChart(
-            $request->input('community_ids') ?? [],
-            $request
-        );
-        $join_users = $this->statisticRepository->getJoiningMembersChart(
-            $request->input('community_ids') ?? [],
-            $request
-        );
-        $exit_users = $this->statisticRepository->getExitingMembersChart(
-            $request->input('community_ids') ?? [],
-            $request);
+        $active_user = $this->statisticRepository->getActiveUsers($communityIds, $request);
+        $current_members = $this->statisticRepository->currentMembersChart($communityIds, $request);
+        $join_users = $this->statisticRepository->getJoiningMembersChart($communityIds, $request);
+        $exit_users = $this->statisticRepository->getExitingMembersChart($communityIds, $request);
 
         $members = $this->statisticRepository->getMembersList($request->input('community_ids') ?? []);
+        $totalMembers = $members->whereNull('exit_date')->get()->count();
 
         return ApiResponse::common([
-            'totalMembers' => $members->whereNull('exit_date')->get()->count(),
-            'activeMembers' => [
-                'value' => $active_user->count(),
-                'delta' => $current_members->max('users') > 0 ?
-                    number_format($active_user->count() / $current_members->max('users') * 100, 2)
-                    : 0,
-            ],
-            'joinMembers' => [
-                'value' => $join_users->sum('users'),//$join_users->count(),
-                'delta' => $current_members->max('users') > 0 ?
-                    number_format($join_users->sum('users') / $current_members->max('users') * 100, 2)
-                    : 0,
-            ],
-            'leftMembers' => [
-                'value' => $exit_users->sum('users'),
-                'delta' => $current_members->max('users') > 0 ?
-                    number_format($exit_users->sum('users') / $current_members->max('users') * 100, 2)
-                    : 0,
-            ],
+            'totalMembers' => $totalMembers,
+            'activeMembers' => $this->calcStatisticForMembers($active_user->count(), $totalMembers),
+            'joinMembers' => $this->calcStatisticForMembers($join_users->sum('users'), $totalMembers),
+            'leftMembers' => $this->calcStatisticForMembers($exit_users->sum('users'), $totalMembers),
             'series' => [$current_members],
             'members' => $members->whereNull('exit_date')->get()
         ]);
     }
 
+    private function calcStatisticForMembers($count, int $total): array
+    {
+        $delta = $total > 0 ? number_format($count * 100 / $total, 2) : 0;
+        return ['value' => $count, 'delta' => $delta];
+    }
+
+    
     /**
      * @throws StatisticException
      */
