@@ -74,7 +74,7 @@ class TelegramPaymentsStatisticRepository
         $userId = Auth::user()->id;
 
         $filterData = $filter->filters();
-        Log::debug("FinanceStatisticRepository::getBuilderForFinance", [
+        Log::debug("FinanceStatisticRepository::getBuilderForFinance -  type:" . $type, [
             'filter' => $filterData,
         ]);
 
@@ -108,6 +108,7 @@ class TelegramPaymentsStatisticRepository
         }
 
         $sub->where(["$p.status" => "CONFIRMED"]);
+        $sub->where("$p.author", '=', $userId);
         $sub->groupBy("d.dt");
         $sub = $filter->apply($sub);
 
@@ -128,13 +129,20 @@ class TelegramPaymentsStatisticRepository
         $chart->addAdditionParam($type, array_sum(ArrayHelper::getColumn($result, 'balance')));
 
         $totalAmount = DB::table($p)
-            ->select(DB::raw("SUM(amount) as s"))
-            ->where(function ($query) use ($communityIds) {
-                $query->whereIn('community_id', $communityIds)
-                    ->orWhereNull('community_id');
-            })
-            ->where('status', "=", 'CONFIRMED')
-            ->where('type', '!=', 'payout')
+            ->select(DB::raw("SUM(amount) as s"));
+                if ($type === 'donate') {
+                    $totalAmount->whereNull('community_id');
+                }else{
+                    $totalAmount->whereIn('community_id',$communityIds);
+                }
+            $totalAmount
+            ->where(function ($query)  use ($type) {
+                if ($type === 'all') {
+                    $query->where('type', '!=', 'payout');
+                }else{
+                    $query->where('type', '=', $type);
+                }
+            })->where('status', "=", 'CONFIRMED')
             ->where('author', '=', $userId)
             ->value('s');
         $chart->addAdditionParam('total_amount', $totalAmount);
