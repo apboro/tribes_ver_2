@@ -152,10 +152,25 @@ class TelegramUserListsRepositry
 
     public function detachByCommunityId(int $communityId, int $telegramId): void
     {
-        TelegramUserList::query()
-            ->where('telegram_id', '=', $telegramId)
-            ->where('community_id', '=', $communityId)
-            ->delete();
+        $community = Community::where('id', $communityId)->first();
+        $community_telegram_chat_id = $community->connection->chat_id;
+        $this->telegramMainBotService->kickUser(
+            config('telegram_bot.bot.botName'),
+            $telegramId,
+            $community_telegram_chat_id
+        );
+        $this->telegramMainBotService->unKickUser(
+            config('telegram_bot.bot.botName'),
+            $telegramId,
+            $community_telegram_chat_id
+        );
+        $telegramUserCommunity = TelegramUserCommunity::where('telegram_user_id', $telegramId)
+            ->where('community_id', $community->id)->first();
+        if ($telegramUserCommunity) {
+            $telegramUserCommunity->exit_date = time();
+            $telegramUserCommunity->status = 'kicked';
+            $telegramUserCommunity->save();
+        }
     }
 
     public

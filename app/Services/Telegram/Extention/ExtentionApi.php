@@ -197,9 +197,11 @@ class ExtentionApi extends Api implements ExtentionApiInterface
                 "type" => 4
             ]);
             $telegramUserCommunity = TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $userId);
-            $telegramUserCommunity->exit_date = time();
-            $telegramUserCommunity->status = 'banned';
-            $telegramUserCommunity->save();
+            if ($telegramUserCommunity){
+                $telegramUserCommunity->exit_date = time();
+                $telegramUserCommunity->status = 'banned';
+                $telegramUserCommunity->save();
+            }
             return $this->invokeAction('banChatMember', [
                 'chat_id' => $chatId,
                 'user_id' => $userId
@@ -251,8 +253,10 @@ class ExtentionApi extends Api implements ExtentionApiInterface
         if ($telegramUserInList) $telegramUserInList->delete();
 
         $telegramUserCommunity = TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $userId);
-        $telegramUserCommunity->status = null;
-        $telegramUserCommunity->save();
+        if ($telegramUserCommunity) {
+            $telegramUserCommunity->status = null;
+            $telegramUserCommunity->save();
+        }
         if ($community->connection->chat_type === 'supergroup') {
             return $this->unbanChatMember($params);
         }
