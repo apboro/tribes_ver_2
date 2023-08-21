@@ -98,7 +98,11 @@ class TelegramPaymentsStatisticRepository
         if ($type === 'donate') {
             $sub->whereNull("$p.community_id");
         }else{
-            $sub->whereIn("$p.community_id", $communityIds);
+            $sub->where(function ($query) use ($communityIds) {
+                $query->whereIn('community_id', $communityIds)
+                    ->orWhereNull('community_id');
+            });
+//            $sub->whereIn("$p.community_id", $communityIds);
         }
 
         if ($type == 'all') {
