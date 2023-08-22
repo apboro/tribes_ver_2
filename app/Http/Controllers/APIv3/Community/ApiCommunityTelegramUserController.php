@@ -150,10 +150,15 @@ class ApiCommunityTelegramUserController extends Controller
                 $request->boolean('whitelisted') ? TelegramUserListsRepositry::TYPE_WHITE_LIST : 0,
             ];
 
-            $query->whereHas('userList', function ($query) use ($request, $arr_to_search) {
+            $query->whereExists(function ($query)  use ($request, $arr_to_search) {
+                $query->select(DB::raw(1))
+                    ->from('telegram_users_community')
+                    ->join('telegram_user_lists', 'telegram_user_lists.community_id', '=', 'telegram_users_community.community_id')
+                    ->whereColumn('telegram_user_lists.telegram_id', 'telegram_users_community.telegram_user_id')
+                    ->whereColumn('telegram_user_lists.telegram_id', 'telegram_users.telegram_id');
                 $query->whereIn('type', $arr_to_search);
                 if (!empty($request->input('community_id'))) {
-                    $query->where('community_id', '=', $request->input('community_id'));
+                    $query->where('telegram_user_lists.community_id', '=', $request->input('community_id'));
                 }
             });
         }
