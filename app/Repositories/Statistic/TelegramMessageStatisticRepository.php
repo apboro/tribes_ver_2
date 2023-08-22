@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class TelegramMessageStatisticRepository
+class TelegramMessageStatisticRepository extends TelegramStatisticRepository
 {
 
     const EXPORT_FIELDS = [
@@ -44,11 +44,6 @@ class TelegramMessageStatisticRepository
             'title' => 'Количество сообщений'
         ],
     ];
-
-    const DAY = 'day';
-    const WEEK = 'week';
-    const MONTH = 'month';
-    const YEAR = 'year';
 
     public function getMessagesList(array $communityIds, $request): Builder
     {
@@ -212,27 +207,6 @@ class TelegramMessageStatisticRepository
                 DB::raw('cast (SUM(subquery.count_messages) as integer) as count_messages')
             )
             ->groupBy('subquery.telegram_id');
-    }
-
-
-    public function getStartDate($value): ?Carbon
-    {
-        switch ($value) {
-            case self::DAY:
-                return $this->getEndDate()->startOfDay();
-            case self::WEEK:
-                return $this->getEndDate()->sub('6 days')->startOfDay();
-            case self::MONTH:
-                return $this->getEndDate()->sub('30 days')->startOfDay();
-            case self::YEAR:
-                return $this->getEndDate()->sub('11 months')->startOfMonth();
-        }
-        return null;
-    }
-
-    public function getEndDate(): Carbon
-    {
-        return Carbon::now();
     }
 
     public function getScale($period)

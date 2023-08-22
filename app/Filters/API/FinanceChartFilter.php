@@ -60,13 +60,13 @@ class FinanceChartFilter extends QueryAPIFilter
         if (in_array($value, $this->allowedPeriods())) {
             switch ($value) {
                 case self::DAY:
-                    return $this->getEndDate()->sub('23 hours')->startOfHour();
+                    return $this->getEndDate()->startOfDay();
                 case self::WEEK:
-                    return $this->getEndDate()->sub('6 days')->startOfDay();
+                    return $this->getEndDate()->startOfWeek();
                 case self::MONTH:
-                    return $this->getEndDate()->sub('30 days')->startOfDay();
+                    return $this->getEndDate()->startOfMonth();
                 case self::YEAR:
-                    return $this->getEndDate()->sub('11 months')->startOfMonth();
+                    return $this->getEndDate()->startOfYear();
                     break;
             }
         }
