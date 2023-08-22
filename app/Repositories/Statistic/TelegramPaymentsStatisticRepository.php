@@ -47,7 +47,7 @@ class TelegramPaymentsStatisticRepository
         $offset = $filterData['offset'] ?? null;
         $limit = $filterData['limit'] ?? null;
 
-        return Payment::select('paymentId', 'created_at', DB::raw('amount / 100 as amount'), DB::raw('card_number as card'))
+        return Payment::select('paymentId', 'created_at', DB::raw('round(amount/100::decimal, 2) as amount'), DB::raw('card_number as card'))
             ->whereStatus('COMPLETED')
             ->where('user_id', auth()->user()->id)
             ->whereType('payout')
