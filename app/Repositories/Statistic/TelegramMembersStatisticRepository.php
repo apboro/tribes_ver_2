@@ -9,7 +9,7 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class TelegramMembersStatisticRepository
+class TelegramMembersStatisticRepository extends TelegramStatisticRepository
 {
 
     const EXPORT_FIELDS = [
@@ -40,11 +40,6 @@ class TelegramMembersStatisticRepository
             'title' => 'Название сообщества'
         ],
     ];
-
-    const DAY = 'day';
-    const WEEK = 'week';
-    const MONTH = 'month';
-    const YEAR = 'year';
 
     public function getMembersList(array $community_ids): Builder
     {
@@ -317,26 +312,6 @@ class TelegramMembersStatisticRepository
             default:
                 return "1 days";//день
         }
-    }
-
-    public function getStartDate($value): ?Carbon
-    {
-        switch ($value) {
-            case self::DAY:
-                return $this->getEndDate()->startOfDay();
-            case self::MONTH:
-                return $this->getEndDate()->sub('30 days')->startOfDay();
-            case self::YEAR:
-                return $this->getEndDate()->sub('11 months')->startOfMonth();
-            case self::WEEK:
-                return $this->getEndDate()->sub('6 days')->startOfDay();
-        }
-        return null;
-    }
-
-    public function getEndDate(): Carbon
-    {
-        return Carbon::now();
     }
 
 }
