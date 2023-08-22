@@ -297,16 +297,11 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
             if (isset($rules['restrictMessageSending'])) {
                 $communityId = Community::getCommunityByChatId($this->messageDTO->chat_id)->id ?? null;
 
-                $telegramUser = TelegramUserCommunity::select('accession_date')
+                $accessionDate = TelegramUserCommunity::select('accession_date')
                                 ->where('telegram_user_id', $this->messageDTO->telegram_user_id)
                                 ->where('community_id', $communityId)
-                                ->first();
-
-                if ($telegramUser) {
-                    $accessionDate = $telegramUser->accession_date ?? 0;
-                } else {
-                    $accessionDate = 0;
-                }
+                                ->first()
+                                ->accession_date ?? 0;
 
                 if ($accessionDate + $rules['restrictMessageSending']['duration'] > time()) {
                     Log::info('Rule restrictMessageSending - delete message');
