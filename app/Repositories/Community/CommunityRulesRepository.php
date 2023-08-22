@@ -286,16 +286,32 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
     protected function handleOnboardingRule($rule)
     {
         try {
-//            if (isset($rules['restrictMessageSending'])) {
-//                $duration = Carbon::now()->addSeconds($rules['restrictMessageSending']['duration'])->timestamp;
-//            }
-
             Log::debug('in onboardingRule handler', [$this->messageDTO, $rule]);
             $rules = json_decode($rule->rules, true);
             Log::debug('onboarding $rules', [$rules]);
 
             if (isset($rules['joinLimitation']) && $this->messageDTO->new_chat_member_id) {
                 $this->massEnterBlock($rules);
+            }
+
+            if (isset($rules['restrictMessageSending'])) {
+                $communityId = Community::getCommunityByChatId($this->messageDTO->chat_id)->id ?? null;
+
+                $telegramUser = TelegramUserCommunity::select('accession_date')
+                                ->where('telegram_user_id', $this->messageDTO->telegram_user_id)
+                                ->where('community_id', $communityId)
+                                ->first();
+
+                if ($telegramUser) {
+                    $accessionDate = $telegramUser->accession_date ?? 0;
+                } else {
+                    $accessionDate = 0;
+                }
+
+                if ($accessionDate + $rules['restrictMessageSending']['duration'] > time()) {
+                    Log::info('Rule restrictMessageSending - delete message');
+                    $this->actionRunner('delete_message', $this->messageDTO);
+                }
             }
 
             if (
