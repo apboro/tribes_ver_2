@@ -154,9 +154,12 @@ class ApiCommunityTelegramUserController extends Controller
                 $query->select(DB::raw(1))
                     ->from('telegram_users_community')
                     ->join('telegram_user_lists', 'telegram_user_lists.community_id', '=', 'telegram_users_community.community_id')
+                    ->join('communities', 'communities.id', '=', 'telegram_users_community.community_id')
                     ->whereColumn('telegram_user_lists.telegram_id', 'telegram_users_community.telegram_user_id')
                     ->whereColumn('telegram_user_lists.telegram_id', 'telegram_users.telegram_id');
                 $query->whereIn('type', $arr_to_search);
+                $query->where('communities.owner', Auth::user()->id);
+
                 if (!empty($request->input('community_id'))) {
                     $query->where('telegram_user_lists.community_id', '=', $request->input('community_id'));
                 }
