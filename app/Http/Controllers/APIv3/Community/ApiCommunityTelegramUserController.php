@@ -65,14 +65,8 @@ class ApiCommunityTelegramUserController extends Controller
         })->where('owner', '=', Auth::user()->id)->get();
 
         foreach ($communities as $community) {
-            $this->telegramMainBotService->kickUser(
-                config('telegram_bot.bot.botName'),
-                $telegram_user->telegram_id,
-                $community->connection->chat_id
-            );
+            $this->telegramUserListsRepositry->detachByCommunityId($community->id, $telegram_user->telegram_id);
         }
-
-        $telegram_user->communities()->detach($communities);
 
         return ApiResponse::success();
     }
