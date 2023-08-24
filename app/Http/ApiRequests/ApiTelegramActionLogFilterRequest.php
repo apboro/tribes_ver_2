@@ -56,7 +56,7 @@ namespace App\Http\ApiRequests;
  *         )
  *     ),
  *  @OA\Parameter(
- *         name="action_date_from",
+ *         name="date_from",
  *         in="query",
  *         description="Start date of action to search",
  *         required=false,
@@ -65,7 +65,7 @@ namespace App\Http\ApiRequests;
  *         )
  *     ),
  *    @OA\Parameter(
- *         name="action_date_to",
+ *         name="date_to",
  *         in="query",
  *         description="End date of action to search",
  *         required=false,
@@ -96,8 +96,8 @@ class ApiTelegramActionLogFilterRequest extends ApiRequest
             'user_name' =>'string',
             'tag_names'=>'array',
             'events'=>'array',
-            'action_date_from'=>'date_format:Y-m-d',
-            'action_date_to'=>'date_format:Y-m-d',
+            'date_from'=>'date_format:Y-m-d',
+            'date_to'=>'date_format:Y-m-d',
             'community_title'=>'string'
         ];
     }
@@ -105,8 +105,8 @@ class ApiTelegramActionLogFilterRequest extends ApiRequest
     public function messages(): array
     {
         return [
-            'action_date_from.date_format'=>$this->localizeValidation('date.incorrect_format'),
-            'action_date_to.date_format'=>$this->localizeValidation('date.incorrect_format'),
+            'date_from.date_format'=>$this->localizeValidation('date.incorrect_format'),
+            'date_to.date_format'=>$this->localizeValidation('date.incorrect_format'),
             'tags.array'=>$this->localizeValidation('tag.array_incorrect_format')
         ];
     }
