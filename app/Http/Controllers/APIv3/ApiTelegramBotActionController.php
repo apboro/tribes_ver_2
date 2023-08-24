@@ -35,12 +35,12 @@ class ApiTelegramBotActionController extends Controller
             }
         }
 
-        if (!empty($request->input('action_date_from'))) {
-            $list->whereDate('created_at', '>=', $request->input('action_date_from'));
+        if (!empty($request->input('date_from'))) {
+            $list->whereDate('created_at', '>=', $request->input('date_from'));
         }
 
-        if (!empty($request->input('action_date_to'))) {
-            $list->whereDate('created_at', '<=', $request->input('action_date_to'));
+        if (!empty($request->input('date_to'))) {
+            $list->whereDate('created_at', '<=', $request->input('date_to'));
         }
 
         if (!empty($request->input('community_title'))) {
