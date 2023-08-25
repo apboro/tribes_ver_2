@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class WebinarService
 {
@@ -19,7 +20,11 @@ class WebinarService
         $http_query_string = $this->prepareHttpQuery($add_params);
 
         $client = new Client();
-        $res = $client->post($this->base_url . 'webinars?' . $http_query_string);
+        $url = $this->base_url . 'webinars?' . $http_query_string;
+
+        log::info('webinar url: ' . json_encode($url, JSON_UNESCAPED_UNICODE));
+
+        $res = $client->post($url);
         if ($res->getStatusCode() !== 200) {
             return false;
         }
@@ -60,9 +65,11 @@ class WebinarService
 
     private function prepareHttpQuery(array $params)
     {
-        $sign = $this->prepareSign($params);
-        $params['sign'] = $sign;
         $params['cid'] = 'spodial';
+        $sign = $this->prepareSign($params);
+        log::info('md5='.$sign );
+        $params['sign'] = $sign;
+        log::info('params:' , $params);
 
         return http_build_query($params);
     }
@@ -72,9 +79,11 @@ class WebinarService
         ksort($params);
         $string = "";
         foreach ($params as $key => $value) {
+            log::info('key: '. $key . ' val: ' . $value);
             $string .= $key . '=' . $value;
         }
         $string .= $this->apikey;
+        log::info($string);
         return md5($string);
     }
 
