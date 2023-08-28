@@ -96,8 +96,8 @@ class ApiTelegramActionLogFilterRequest extends ApiRequest
             'user_name' =>'string',
             'tag_names'=>'array',
             'events'=>'array',
-            'date_from'=>'date_format:Y-m-d',
-            'date_to'=>'date_format:Y-m-d',
+            'date_from'=>'integer',
+            'date_to'=>'integer',
             'community_title'=>'string'
         ];
     }
