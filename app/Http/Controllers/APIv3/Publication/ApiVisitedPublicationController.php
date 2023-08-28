@@ -11,6 +11,7 @@ use App\Models\Publication;
 use App\Models\VisitedPublication;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ApiVisitedPublicationController extends Controller
 {
@@ -24,18 +25,30 @@ class ApiVisitedPublicationController extends Controller
     public function list(ApiVisitedPublicationListRequest $request): ApiResponse
     {
         $user = Auth::user();
-        $publications = Publication::with('visited')->whereRelation('visited', 'user_id', $user->id)
-            ->join('visited_publications', 'visited_publications.publication_id', '=', 'publications.id')
-            ->orderBy('visited_publications.last_visited', 'DESC');
-        $count = $publications->count();
+
+        $innerSql = 'SELECT publication_id, max(last_visited) as lv
+                    FROM "visited_publications"
+                    WHERE "user_id" = ' . $user->id . '
+                    group BY publication_id
+                    ORDER BY lv DESC';
+
+        $publicationSql = 'select * 
+                    from (' . $innerSql . ') as t
+                    inner join "publications" on "t"."publication_id" = "publications"."id"
+                    order by lv DESC ';
+
+        $offset = (int)$request->offset ?? 0;
+        $limit = (int)$request->limit ?? 3;
+
+        $publications = DB::select($publicationSql . ' limit ' . $limit . ' offset ' . $offset);
+        $count = DB::select('select count(*) as count from (' . $innerSql . ') as t')[0]->count;
+
         return ApiResponse::listPagination(
             [
                 'Access-Control-Expose-Headers' => 'Items-Count',
                 'Items-Count' => $count
-            ])->items((
-        new PublicationCollection($publications->skip($request->offset ?? 0)->take($request->limit ?? 3)->get()
-        ))->toArray($request));
-
+            ]
+        )->items((new PublicationCollection($publications))->toArray($request));
     }
 
     public function store(ApiVisitedPublicationStoreRequest $request)
