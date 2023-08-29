@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,5 +31,19 @@ class Webinar extends Model
     public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class);
+    }
+
+    public function prepareType()
+    {
+       $nowTime = Carbon::now()->format('Y-m-d H:i:s');
+       $this->type = '';
+
+        if ($this->start_at <= $nowTime && $this->end_at >= $nowTime) {
+            $this->type = 'online';
+        } elseif ($this->start_at > $nowTime) {
+            $this->type = 'planned';
+        } elseif ($this->end_at < $nowTime) {
+            $this->type = 'ended';
+        }
     }
 }

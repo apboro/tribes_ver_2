@@ -111,10 +111,15 @@ class WebinarRepository
     {
         /**@var User $user */
         $user = Auth::user();
+        /** @var Webinar $webinar */
         $webinar = Webinar::where('author_id', $user->author->id)->where('id', $id)->first();
+
         if ($webinar === null) {
             return null;
         }
+
+        $webinar->prepareType();
+
         return $webinar;
     }
 
@@ -158,11 +163,15 @@ class WebinarRepository
         return $webinars;
     }
 
-    public function showByUuid($uuid){
+    public function showByUuid($uuid)
+    {
+        /** @var Webinar $webinar */
         $webinar = Webinar::where('uuid', $uuid)->first();
         if ($webinar === null) {
             return null;
         }
+        $webinar->prepareType();
+
         return $webinar;
     }
 
