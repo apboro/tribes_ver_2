@@ -46,4 +46,9 @@ class Webinar extends Model
             $this->type = 'ended';
         }
     }
+
+    public function favourites()
+    {
+        return $this->hasMany(FavouriteWebinar::class);
+    }
 }
