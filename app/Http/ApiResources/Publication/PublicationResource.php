@@ -15,6 +15,16 @@ class PublicationResource extends JsonResource
      */
     public function toArray($request)
     {
+        $addInfo = [];
+        if (!isset($this->resource->lv)) {
+            $addInfo = [
+                'last_visit' => $request->user('sanctum') && $this->resource->lastVisit($request->user('sanctum')->id) ?
+                    $this->resource->lastVisit($request->user('sanctum')->id)->last_visited : null,
+                'is_favourite' => $request->user('sanctum') && $this->resource->isFavourite($request->user('sanctum')->id),
+                'parts' => PublicationPartCollection::make($this->resource->parts)->toArray($request)
+            ];
+        }
+
         return [
             'id' => $this->resource->id,
             'uuid' => $this->resource->uuid,
@@ -24,11 +34,7 @@ class PublicationResource extends JsonResource
             'background_image' => $this->resource->background_image,
             'price' => $this->resource->price,
             'author_id' => $this->resource->author_id,
-            'author_name' => $this->resource->author->name,
-            'last_visit' => $request->user('sanctum') && $this->resource->lastVisit($request->user('sanctum')->id) ?
-                $this->resource->lastVisit($request->user('sanctum')->id)->last_visited : null,
-            'is_favourite' => $request->user('sanctum') && $this->resource->isFavourite($request->user('sanctum')->id),
-            'parts' => PublicationPartCollection::make($this->resource->parts)->toArray($request)
-        ];
+            'author_name' => $this->resource->author->name ?? '',
+            ] + $addInfo;
     }
 }
