@@ -9,6 +9,7 @@ use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiWebinarController;
+use App\Http\Controllers\APIv3\Webinar\ApiFavouriteWebinarController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityTagController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityTelegramUserController;
@@ -275,6 +276,9 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::put('/tariff/{id}', [ApiTariffController::class, 'update']);
     Route::patch('/tariff/setActivity', [ApiTariffController::class, 'setActivity']);
 
+    Route::get('/webinars/favourite', [ApiFavouriteWebinarController::class, 'list'])->name('api.webinars.favorite.list');
+    Route::post('/webinars/favourite', [ApiFavouriteWebinarController::class, 'store'])->name('api.webinars.favorite.create');
+    Route::delete('/webinars/favourite/{id}', [ApiFavouriteWebinarController::class, 'destroy'])->name('api.webinars.favorite.delete');
     Route::post('/webinars', [ApiWebinarController::class, 'store'])->name('api.webinar.store');
     Route::delete('/webinars/{id}', [ApiWebinarController::class, 'destroy'])->name('api.webinar.delete');
     Route::post('/webinars/{id}', [ApiWebinarController::class, 'update'])->name('api.webinar.update');
