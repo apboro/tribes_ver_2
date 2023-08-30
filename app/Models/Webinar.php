@@ -51,4 +51,15 @@ class Webinar extends Model
     {
         return $this->hasMany(FavouriteWebinar::class);
     }
+
+    public function prepareIsFavourite($userId)
+    {
+        $this->is_favourite = $this->hasOne(FavouriteWebinar::class)->where('user_id', $userId)->first() ? true : false;
+    }
+
+    public function hidePassword()
+    {
+        unset($this->password);
+    }    
+
 }

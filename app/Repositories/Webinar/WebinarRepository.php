@@ -119,6 +119,8 @@ class WebinarRepository
         }
 
         $webinar->prepareType();
+        $webinar->prepareIsFavourite($user->id);
+        $webinar->hidePassword();
 
         return $webinar;
     }
@@ -171,6 +173,11 @@ class WebinarRepository
             return null;
         }
         $webinar->prepareType();
+        $userId = request()->user('sanctum')->id ?? null;
+        if ($userId) {
+            $webinar->prepareIsFavourite($userId); 
+        }
+        $webinar->hidePassword();
 
         return $webinar;
     }
