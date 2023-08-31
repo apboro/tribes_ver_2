@@ -120,7 +120,6 @@ class WebinarRepository
 
         $webinar->prepareType();
         $webinar->prepareIsFavourite($user->id);
-        $webinar->hidePassword();
 
         return $webinar;
     }
@@ -177,7 +176,6 @@ class WebinarRepository
         if ($userId) {
             $webinar->prepareIsFavourite($userId); 
         }
-        $webinar->hidePassword();
 
         return $webinar;
     }
