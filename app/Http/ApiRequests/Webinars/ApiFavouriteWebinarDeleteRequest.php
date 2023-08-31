@@ -27,6 +27,14 @@ use OpenApi\Annotations as OA;
 final class ApiFavouriteWebinarDeleteRequest extends ApiRequest
 {
 
+    public function all($keys = null)
+    {
+        $data = parent::all();
+        $data['id'] = $this->route('id');
+
+        return $data;
+    }
+
     public function rules(): array
     {
         return [
