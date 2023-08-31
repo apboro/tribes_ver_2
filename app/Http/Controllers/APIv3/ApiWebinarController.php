@@ -9,11 +9,19 @@ use App\Http\ApiRequests\Webinars\ApiWebinarsPublicListRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsShowRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsStoreRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsUpdateRequest;
+use App\Http\ApiRequests\Webinars\ApiWebinarPayRequest;
 use App\Http\ApiResources\Webinar\WebinarCollection;
 use App\Http\ApiResources\Webinar\WebinarResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Repositories\Webinar\WebinarRepository;
+use App\Models\Webinar;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Services\Tinkoff\Payment;
 
 class ApiWebinarController extends Controller
 {
@@ -143,4 +151,35 @@ class ApiWebinarController extends Controller
         }
         return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
     }
+
+    /**
+     * @param ApiWebinarPayRequest $request
+     */
+    public function pay(ApiWebinarPayRequest $request)
+    {
+        $webinar = Webinar::where('uuid', '=', $request->uuid)->first();
+
+        if ($webinar === null) {
+            return ApiResponse::notFound('validation.course.not_found');
+        }
+
+        $password = Str::random(8);
+        $email = $request->input('email');
+
+        $user = User::easyRegister($email, $password);
+
+        if ($user === null) {
+            return ApiResponse::error('common.user_create_error');
+        }
+
+        $tinkoffPayment = new Payment();
+        $payment = $tinkoffPayment->doPayment($user, $webinar, $webinar->price, '');
+
+        if ($payment === false) {
+            return ApiResponse::error('common.error_while_pay');
+        }
+
+        return ApiResponse::common(['redirect' => $payment->paymentUrl]);
+    }
+
 }

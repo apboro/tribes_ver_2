@@ -11,6 +11,7 @@ use App\Models\Course;
 use App\Models\DonateVariant;
 use App\Models\Payment as P;
 use App\Models\Publication;
+use App\Models\Webinar;
 use App\Models\Subscription;
 use App\Models\TariffVariant;
 use App\Models\TelegramUser;
@@ -88,6 +89,9 @@ class Payment
             case $payFor instanceof Publication:
                 $this->type = 'publication';
                 break;
+            case $payFor instanceof Webinar:
+                $this->type = 'webinar';
+                break;                
             case $payFor instanceof Subscription:
                 $this->type = 'subscription';
                 break;
@@ -98,7 +102,7 @@ class Payment
 
         $this->payFor = $payFor;
 
-        if ($this->type != 'subscription' && $this->type != 'publication') {
+        if ($this->type != 'subscription' && $this->type != 'publication' && $this->type != 'webinar') {
             $this->community();
         }
 
@@ -188,7 +192,7 @@ class Payment
         $this->payment->from = $this->type == 'donate' ? $this->payer->user_name : $this->payer->name;
         $this->payment->telegram_user_id = $this->telegram_id ?? null;
         $this->payment->community_id = $this->community ? $this->community->id : null;
-        $this->payment->author = ($this->type == 'subscription') || ($this->type == 'publication') ? null : $this->payFor->getAuthor()->id;
+        $this->payment->author = ($this->type == 'subscription') || ($this->type == 'publication') || ($this->type == 'webinar') ? null : $this->payFor->getAuthor()->id;
         $this->payment->add_balance = $this->amount / 100;
         $this->payment->save();
         $this->orderId = $this->payment->id . date("_md_s");

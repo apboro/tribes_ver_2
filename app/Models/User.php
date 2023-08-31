@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Event;
+use App\Events\ApiUserRegister;
 use Log;
 
 /**
@@ -257,6 +259,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Publication::class, 'publication_user', 'user_id', 'publication_id')->withPivot(['byed_at', 'expired_at']);
     }
 
+    function webinars()
+    {
+        return $this->belongsToMany(Webinar::class, 'webinar_user', 'user_id', 'webinar_id')->withPivot(['byed_at', 'expired_at']);
+    }
+
     public function phoneNumber($phone)
     {
         return "(" . substr($phone, 0, 3) . ") " . substr($phone, 3, 3) . " " . substr($phone, 6);
@@ -376,6 +383,37 @@ class User extends Authenticatable
                     AND created_at BETWEEN '$start' AND '$end'
                     GROUP BY country
                     ORDER BY users_count DESC;");
+    }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return User
+     */
+    public static function easyRegister(string $email, string $password): User
+    {
+        $user = User::where('email', $email)->first();
+
+        if ($user !== null) {
+            return $user;
+        }
+
+        /** @var User $user */
+        $user = User::create([
+            'email' => strtolower($email),
+            'name' => explode('@', $email)[0],
+            'code' => 0000,
+            'phone' => null,
+            'password' => Hash::make($password),
+            'phone_confirmed' => false,
+        ]);
+
+        if ($user->wasRecentlyCreated) {
+            $user->tinkoffSync();
+            Event::dispatch(new ApiUserRegister($user, $password));
+        }
+
+        return $user;
     }
 }
 
