@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 class WebinarService
 {
+    public const CID = 'spodial';
     private $base_url = "https://wbnr.su:50443/api/";
     private $apikey;
 
@@ -15,29 +17,49 @@ class WebinarService
         $this->apikey = config('webinars.api_key');
     }
 
-    public function add(array $add_params)
+    public function setWebinarRole(string $meet, User $user, string $role)
     {
-        $http_query_string = $this->prepareHttpQuery($add_params);
+        $params = [
+            'meet'     => $meet,
+            'outer_id' => $user->id,
+            'email'    => $user->email,
+            'name'     => $user->name,
+            'role'     => $role,
+        ];
 
+        return $this->sendRequest('rooms', $params);
+    }
+
+    private function sendRequest(string $apiMethod, array $queryParams)
+    {
+        $httpQuery = $this->prepareHttpQuery($queryParams);
         $client = new Client();
-        $url = $this->base_url . 'webinars?' . $http_query_string;
+        $url = $this->base_url . $apiMethod .'?' . $httpQuery;
 
         log::info('webinar url: ' . json_encode($url, JSON_UNESCAPED_UNICODE));
 
         $res = $client->post($url);
         if ($res->getStatusCode() !== 200) {
+            log::error('webinar '. $apiMethod.' response  status:'.  $res->getStatusCode());
             return false;
         }
+
         $room_data = json_decode($res->getBody());
         if (empty($room_data) || empty($room_data->room)) {
+            log::error('webinar '. $apiMethod .'body status:'.  $res->getStatusCode());
             return false;
         }
+
         return $room_data->room;
+    }
+
+    public function add(array $add_params)
+    {
+        return $this->sendRequest('webinars', $add_params);
     }
 
     public function update(array $update_params)
     {
-
         $http_query_string = $this->prepareHttpQuery($update_params);
 
         $client = new Client();
@@ -65,7 +87,7 @@ class WebinarService
 
     private function prepareHttpQuery(array $params)
     {
-        $params['cid'] = 'spodial';
+        $params['cid'] = self::CID;
         $sign = $this->prepareSign($params);
         log::info('md5='.$sign );
         $params['sign'] = $sign;
@@ -86,5 +108,4 @@ class WebinarService
         log::info($string);
         return md5($string);
     }
-
 }

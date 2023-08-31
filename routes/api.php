@@ -285,6 +285,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/webinars/{id}', [ApiWebinarController::class, 'update'])->name('api.webinar.update');
     Route::get('/webinars', [ApiWebinarController::class, 'list'])->name('api.webinar.list');
     Route::get('/webinars/{id}', [ApiWebinarController::class, 'show'])->name('api.webinar.show');
+    Route::get('/webinars/register-user/{id}', [ApiWebinarController::class, 'registerWbnrUser']);
 
     Route::post('/lms_feedback/{id}', [ApiLMSFeedbackController::class, 'store']);
     Route::get('/lms_recommendation', [ApiLmsRecommendationController::class, 'getRecommendation']);

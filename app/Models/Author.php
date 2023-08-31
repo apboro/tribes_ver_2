@@ -22,4 +22,9 @@ class Author extends Model
     {
      return $this->hasMany(Webinar::class);   
     }
+
+    public function isUserAuthor(int $userId): bool
+    {
+       return Author::where('user_id', $userId)->first() !== null;
+    }
 }

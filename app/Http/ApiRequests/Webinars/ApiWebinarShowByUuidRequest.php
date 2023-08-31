@@ -21,6 +21,23 @@ use OpenApi\Annotations as OA;
  *     ),
  *   @OA\Response(response=200, description="OK")
  *)
+ *
+ * @OA\GET(
+ *   path="/api/v3/register-user/{uuid}",
+ *   operationId="webinar-show-by-uuid",
+ *   summary="Show webinar by uuid",
+ *   security={{"sanctum": {} }},
+ *   tags={"Webinars"},
+ *      @OA\Parameter(name="uuid",in="path",
+ *          description="Uuid of webinar in database",
+ *          required=true,
+ *          @OA\Schema(
+ *              type="string",
+ *          )
+ *      ),
+ *    @OA\Response(response=200, description="OK")
+ * )
+ *
  */
 class ApiWebinarShowByUuidRequest extends ApiRequest
 {
