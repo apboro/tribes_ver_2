@@ -30,6 +30,7 @@ class ApiPaymentController extends Controller
     private TelegramLogService $telegramLogService;
     private TinkoffService $tinkoff;
 
+    const WEBINAR_BUY_EXPIRATION = 365;
 
     public function __construct(
         PaymentRepository      $paymentRepo,
@@ -88,7 +89,7 @@ class ApiPaymentController extends Controller
             $user->webinars()->attach($webinar->id, [
                 'cost' => $webinar->price === null ? 0 : $webinar->price,
                 'byed_at' => Carbon::now(),
-                'expired_at' => Carbon::now()->addDays(365),
+                'expired_at' => Carbon::now()->addDays(self::WEBINAR_BUY_EXPIRATION),
             ]);
 
             Event::dispatch(new BuyWebinarEvent($webinar, $user));

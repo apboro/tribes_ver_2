@@ -16,23 +16,8 @@ class BuyWebinarEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * @var Webinar $webinar
-     */
     public Webinar $webinar;
-
-    /**
-     * @var User $user
-     */
-
     public User $user;
-
-    /**
-     * Create a new event instance.
-     *
-     * @param Webinar $webinar
-     * @param User $user
-     */
 
     public function __construct(Webinar $webinar,User $user)
     {

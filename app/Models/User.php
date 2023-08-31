@@ -22,6 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Event;
 use App\Events\ApiUserRegister;
 use Log;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -390,13 +391,17 @@ class User extends Authenticatable
      * @param string $password
      * @return User
      */
-    public static function easyRegister(string $email, string $password): User
+    public static function easyRegister(string $email, string $password = null): User
     {
         $user = User::where('email', $email)->first();
 
         if ($user !== null) {
             return $user;
         }
+        
+        if ($password === null){
+            $password = Str::random(8);
+        }        
 
         /** @var User $user */
         $user = User::create([

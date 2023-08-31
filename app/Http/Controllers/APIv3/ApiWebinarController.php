@@ -163,10 +163,7 @@ class ApiWebinarController extends Controller
             return ApiResponse::notFound('validation.course.not_found');
         }
 
-        $password = Str::random(8);
-        $email = $request->input('email');
-
-        $user = User::easyRegister($email, $password);
+        $user = User::easyRegister($request->input('email'));
 
         if ($user === null) {
             return ApiResponse::error('common.user_create_error');
