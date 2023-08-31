@@ -6,6 +6,7 @@ use App\Events\ApiUserRegister;
 use App\Events\BuyCourse;
 use App\Events\BuyCourseListener;
 use App\Events\BuyPublicaionEvent;
+use App\Events\BuyWebinarEvent;
 use App\Events\CreateCommunity;
 use App\Events\FeedBackAnswer;
 use App\Events\FeedBackCreate;
@@ -16,6 +17,7 @@ use App\Events\TariffPayedEvent;
 use App\Events\UserDeleteEvent;
 use App\Listeners\AssignStartSubscription;
 use App\Listeners\BuyPublicationListener;
+use App\Listeners\BuyWebinarListener;
 use App\Listeners\CreateCommunityListener;
 use App\Listeners\FeedBackAnswerListener;
 use App\Listeners\FeedBackListener;
@@ -64,6 +66,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         BuyPublicaionEvent::class => [
             BuyPublicationListener::class
+        ],
+        BuyWebinarEvent::class => [
+            BuyWebinarListener::class
         ],
         NewChatUserJoin::class => [
             NewChatUserBlackListCheck::class

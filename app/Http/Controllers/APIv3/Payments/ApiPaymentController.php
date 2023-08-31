@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\APIv3\Payments;
 
 use App\Events\BuyPublicaionEvent;
+use App\Events\BuyWebinarEvent;
 use App\Events\SubscriptionMade;
 use App\Events\TariffPayedEvent;
 use App\Helper\PseudoCrypt;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\SendEmails;
 use App\Models\Payment;
 use App\Models\Publication;
+use App\Models\Webinar;
 use App\Models\User;
 use App\Repositories\Payment\PaymentRepository;
 use App\Services\TelegramLogService;
@@ -28,6 +30,7 @@ class ApiPaymentController extends Controller
     private TelegramLogService $telegramLogService;
     private TinkoffService $tinkoff;
 
+    const WEBINAR_BUY_EXPIRATION = 365;
 
     public function __construct(
         PaymentRepository      $paymentRepo,
@@ -77,6 +80,20 @@ class ApiPaymentController extends Controller
 
             Event::dispatch(new BuyPublicaionEvent($publication, $user));
             $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/courses/member/post/' . $publication->uuid;
+        }
+
+        if ($payment->status === 'CONFIRMED' && $payment->type === 'webinar') {
+
+            $user = $payment->payer;
+            $webinar = Webinar::find($payment->payable_id);
+            $user->webinars()->attach($webinar->id, [
+                'cost' => $webinar->price === null ? 0 : $webinar->price,
+                'byed_at' => Carbon::now(),
+                'expired_at' => Carbon::now()->addDays(self::WEBINAR_BUY_EXPIRATION),
+            ]);
+
+            Event::dispatch(new BuyWebinarEvent($webinar, $user));
+            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/courses/member/webinar/' . $webinar->uuid;
         }
 
         Log::debug('successPayment $redirectUrl - ' . $redirectUrl);

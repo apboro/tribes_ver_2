@@ -93,6 +93,7 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/webinar/{uuid}', [ApiWebinarController::class, 'showByUuid'])
         ->name('api.webinar.show_by_uuid')->middleware('api');
     Route::post('/publication/pay/{uuid}', [ApiPublicationController::class, 'pay']);
+    Route::post('/webinar/pay/{uuid}', [ApiWebinarController::class, 'pay']);
 });
 
 /** TODO fastFIX  */
