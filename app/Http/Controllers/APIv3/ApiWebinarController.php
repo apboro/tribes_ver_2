@@ -22,19 +22,25 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Services\Tinkoff\Payment;
+use App\Services\WebinarService;
 
 class ApiWebinarController extends Controller
 {
 
+    const DEFAULT_OFFSET = 0;
+    const DEFAULT_COUNT_WEBINARS = 3;
+
     private WebinarRepository $webinarRepository;
+    private WebinarService $webinarService;
 
     /**
      * @param WebinarRepository $webinarRepository
      */
 
-    public function __construct(WebinarRepository $webinarRepository)
+    public function __construct(WebinarRepository $webinarRepository, WebinarService $webinarService)
     {
         $this->webinarRepository = $webinarRepository;
+        $this->webinarService = $webinarService;
     }
 
     /**
@@ -82,10 +88,16 @@ class ApiWebinarController extends Controller
      */
     public function store(ApiWebinarsStoreRequest $request): ApiResponse
     {
+        /**@var User $user */
+        $user = Auth::user();
+
         $webinar = $this->webinarRepository->add($request);
+        $this->webinarService->setWebinarRole($webinar->external_id, $user, 'admin');
+
         if ($webinar === null) {
             return ApiResponse::error('add_error');
         }
+
         return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
     }
 
@@ -99,9 +111,29 @@ class ApiWebinarController extends Controller
     public function show(ApiWebinarsShowRequest $request, int $id): ApiResponse
     {
         $webinar = $this->webinarRepository->show($id);
+
         if ($webinar === null) {
             return ApiResponse::notFound('common.not_found');
         }
+
+        return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
+    }
+
+    public function registerWbnrUser(ApiWebinarShowByUuidRequest $request, string $id)
+    {
+        /**@var User $user */
+        $user = Auth::user();
+
+        /** @var Webinar $webinar */
+        $webinar = $this->webinarRepository->showByUuid($id);
+
+        $role = $webinar->getUserRole($user->id);
+        $this->webinarService->setWebinarRole($webinar->external_id, $user, $role);
+
+        if ($webinar === null) {
+            return ApiResponse::notFound('common.not_found');
+        }
+
         return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
     }
 
@@ -115,9 +147,11 @@ class ApiWebinarController extends Controller
     public function update(ApiWebinarsUpdateRequest $request, int $id): ApiResponse
     {
         $webinar = $this->webinarRepository->update($request, $id);
+
         if ($webinar === null) {
             return ApiResponse::error('add_error');
         }
+
         return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
     }
 
@@ -139,16 +173,21 @@ class ApiWebinarController extends Controller
 
 
     /**
+     * Show by uuid
+     *
      * @param ApiWebinarShowByUuidRequest $request
-     * @param int $id
+     * @param string $id
+     *
      * @return ApiResponse
      */
     public function showByUuid(ApiWebinarShowByUuidRequest $request, string $id): ApiResponse
     {
         $webinar = $this->webinarRepository->showByUuid($id);
+
         if ($webinar === null) {
             return ApiResponse::notFound('common.not_found');
         }
+
         return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
     }
 
