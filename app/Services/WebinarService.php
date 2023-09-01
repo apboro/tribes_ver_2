@@ -15,12 +15,13 @@ class WebinarService
 
     public function __construct()
     {
-        $this->redirectUrl = null;
         $this->apikey = config('webinars.api_key');
     }
 
     public function setWebinarRole(string $meet, User $user, string $role)
     {
+        $this->redirectUrl = null;
+
         $params = [
             'meet'     => $meet,
             'outer_id' => $user->id,
