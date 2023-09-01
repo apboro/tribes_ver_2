@@ -27,10 +27,17 @@ class WebinarService
             'role'     => $role,
         ];
 
-        return $this->sendRequest('rooms', $params);
+        $this->setSpecificUrl();
+
+        return $this->sendRequest('rooms', $params, 'get');
     }
 
-    private function sendRequest(string $apiMethod, array $queryParams)
+    private function setSpecificUrl(): void
+    {
+        $this->base_url = str_replace('api/',  '',$this->base_url);
+    }
+
+    private function sendRequest(string $apiMethod, array $queryParams, $method = 'post')
     {
         $httpQuery = $this->prepareHttpQuery($queryParams);
         $client = new Client();
@@ -38,7 +45,14 @@ class WebinarService
 
         log::info('webinar url: ' . json_encode($url, JSON_UNESCAPED_UNICODE));
 
-        $res = $client->post($url);
+        switch ($method) {
+            case 'get':
+                $res = $client->get($url);
+                break;
+            default:
+                $res = $client->post($url);
+        }
+
         if ($res->getStatusCode() !== 200) {
             log::error('webinar '. $apiMethod.' response  status:'.  $res->getStatusCode());
             return false;

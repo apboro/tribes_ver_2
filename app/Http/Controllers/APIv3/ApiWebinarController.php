@@ -6,6 +6,7 @@ use App\Http\ApiRequests\Webinars\ApiWebinarsDeleteRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarShowByUuidRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsListRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsPublicListRequest;
+use App\Http\ApiRequests\Webinars\ApiWebinarsSetUserRoleRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsShowRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsStoreRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsUpdateRequest;
@@ -119,13 +120,13 @@ class ApiWebinarController extends Controller
         return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
     }
 
-    public function registerWbnrUser(ApiWebinarShowByUuidRequest $request, string $id)
+    public function registerWbnrUser(ApiWebinarsSetUserRoleRequest $request, string $uuid)
     {
         /**@var User $user */
         $user = Auth::user();
 
         /** @var Webinar $webinar */
-        $webinar = $this->webinarRepository->showByUuid($id);
+        $webinar = $this->webinarRepository->showByUuid($uuid);
 
         $role = $webinar->getUserRole($user->id);
         $this->webinarService->setWebinarRole($webinar->external_id, $user, $role);
