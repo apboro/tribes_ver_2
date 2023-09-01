@@ -20,7 +20,7 @@ class WebinarService
 
     public function setWebinarRole(string $meet, User $user, string $role)
     {
-        $this->redirectUrl = null;
+        $this->redirectUrl = 'null';
 
         $params = [
             'meet'     => $meet,
