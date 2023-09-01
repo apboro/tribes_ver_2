@@ -89,7 +89,7 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/pay/tariff', [ApiTariffController::class, 'payForTariff']);
     Route::get('/show/tariff', [ApiTariffController::class, 'show']);
     Route::get('/public/webinars/{author}', [ApiWebinarController::class, 'publicList']);
-    Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.publications.list');
+    Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.public.publications.list');
     Route::get('/webinar/{uuid}', [ApiWebinarController::class, 'showByUuid'])
         ->name('api.webinar.show_by_uuid')->middleware('api');
     Route::post('/publication/pay/{uuid}', [ApiPublicationController::class, 'pay']);
@@ -269,7 +269,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/favourite/publications', [ApiFavouritePublicationController::class, 'list'])->name('api.publications.favorite.list');
 
     Route::get('/visited/publications', [ApiVisitedPublicationController::class, 'list'])->name('api.publications.visited.list');
-    Route::post('/visited/publications', [ApiVisitedPublicationController::class, 'store'])->name('api.publications.visited.list');
+    Route::post('/visited/publications', [ApiVisitedPublicationController::class, 'store'])->name('api.publications.visited.store');
 
     Route::post('/tariff', [ApiTariffController::class, 'store']);
     Route::get('/tariffs', [ApiTariffController::class, 'list']);
@@ -284,8 +284,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/webinars/{id}', [ApiWebinarController::class, 'destroy'])->name('api.webinar.delete');
     Route::post('/webinars/{id}', [ApiWebinarController::class, 'update'])->name('api.webinar.update');
     Route::get('/webinars', [ApiWebinarController::class, 'list'])->name('api.webinar.list');
+    Route::get('/webinars/register-user/{uuid}', [ApiWebinarController::class, 'registerWbnrUser']);
     Route::get('/webinars/{id}', [ApiWebinarController::class, 'show'])->name('api.webinar.show');
-    Route::get('/webinars/register-user/{id}', [ApiWebinarController::class, 'registerWbnrUser']);
 
     Route::post('/lms_feedback/{id}', [ApiLMSFeedbackController::class, 'store']);
     Route::get('/lms_recommendation', [ApiLmsRecommendationController::class, 'getRecommendation']);
