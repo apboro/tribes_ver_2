@@ -44,6 +44,7 @@ class WebinarRepository
         return Webinar::create([
             'author_id' => $user->author->id,
             'title' => $request->input('title'),
+            'price' => $request->input('price'),
             'description' => $request->input('description'),
             'external_id' => $add_result->id,
             'external_url' => $add_result->url,
@@ -93,6 +94,7 @@ class WebinarRepository
         $fill_array = [
             'title' => $request->input('title'),
             'description' => $request->input('description'),
+            'price' => $request->input('price'),
             'external_url' => $update_result->url,
             'start_at' => $request->input('start_at'),
             'end_at' => $request->input('end_at'),
