@@ -11,9 +11,11 @@ class WebinarService
     public const CID = 'spodial';
     private $base_url = "https://wbnr.su:50443/api/";
     private $apikey;
+    public string $redirectUrl;
 
     public function __construct()
     {
+        $this->redirectUrl = null;
         $this->apikey = config('webinars.api_key');
     }
 
@@ -29,7 +31,13 @@ class WebinarService
 
         $this->setSpecificUrl();
 
-        return $this->sendRequest('rooms', $params, 'get');
+        $result = $this->sendRequest('rooms', $params, 'get');
+        if($role !== 'admin') {
+            log::info('not admin');
+            return $this->redirectUrl;
+        }
+        log::info('is admin');
+        return $result;
     }
 
     private function setSpecificUrl(): void
@@ -42,6 +50,8 @@ class WebinarService
         $httpQuery = $this->prepareHttpQuery($queryParams);
         $client = new Client();
         $url = $this->base_url . $apiMethod .'?' . $httpQuery;
+
+        $this->redirectUrl = $url;
 
         log::info('webinar url: ' . json_encode($url, JSON_UNESCAPED_UNICODE));
 

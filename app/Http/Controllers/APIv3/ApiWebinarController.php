@@ -129,7 +129,9 @@ class ApiWebinarController extends Controller
         $webinar = $this->webinarRepository->showByUuid($uuid);
 
         $role = $webinar->getUserRole($user->id);
-        $this->webinarService->setWebinarRole($webinar->external_id, $user, $role);
+        $redirect = $this->webinarService->setWebinarRole($webinar->external_id, $user, $role);
+
+        $webinar->redirectUrl = $redirect;
 
         if ($webinar === null) {
             return ApiResponse::notFound('common.not_found');
