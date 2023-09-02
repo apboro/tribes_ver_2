@@ -18,9 +18,11 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Webinar\WebinarRepository;
 use App\Models\Webinar;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Services\Tinkoff\Payment;
 use App\Services\WebinarService;
@@ -85,6 +87,7 @@ class ApiWebinarController extends Controller
      * Store a newly created resource in storage.
      *
      * @param ApiWebinarsStoreRequest $request
+     *
      * @return ApiResponse
      */
     public function store(ApiWebinarsStoreRequest $request): ApiResponse
@@ -92,14 +95,23 @@ class ApiWebinarController extends Controller
         /**@var User $user */
         $user = Auth::user();
 
-        $webinar = $this->webinarRepository->add($request);
-        $this->webinarService->setWebinarRole($webinar->external_id, $user, 'admin');
+        try {
+            $webinar = $this->webinarRepository->add($request);
+            $this->webinarService->setWebinarRole($webinar->external_id, $user, 'admin');
 
-        if ($webinar === null) {
-            return ApiResponse::error('add_error');
+            if ($webinar === null) {
+                return ApiResponse::error('add_error');
+            }
+
+            return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
+        } catch (Exception $e) {
+            $response = $e->getResponse();
+            $error = json_decode($response->getBody()->getContents(), true, );
+            $errorMessage = $error['errors']['room'][0] ?? 'another error by wbnr';
+            log::error('webinar store Exception:'.  $errorMessage);
+
+            return  ApiResponse::error($errorMessage);
         }
-
-        return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
     }
 
     /**
