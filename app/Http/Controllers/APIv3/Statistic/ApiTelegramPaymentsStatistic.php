@@ -60,10 +60,13 @@ class ApiTelegramPaymentsStatistic
         $acc->user_id = Auth::user()->id;
         $rateCommission = (100 - $acc->getTribesCommission()) / 100;
 
-        $types = ['tariff', 'donate', 'course'];
+        $types = ['tariff', 'donate'];
         foreach ($types as $type) {
             $payments[$type] = $this->financeRepository->getPaymentsSumm($accumulationIds, $type) * $rateCommission;
         }
+        $payments['course'] = $this->financeRepository->getPaymentsSumm($accumulationIds, 'webinar') * $rateCommission + 
+                                $this->financeRepository->getPaymentsSumm($accumulationIds, 'publication') * $rateCommission;
+
         return ApiResponse::common(['summ' => $summ] + $payments);
     }
 
