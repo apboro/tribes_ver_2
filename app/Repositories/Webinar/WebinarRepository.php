@@ -12,6 +12,7 @@ use App\Services\WebinarService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class WebinarRepository
@@ -33,12 +34,13 @@ class WebinarRepository
             'start_at' => $request->input('start_at'),
             'end_at' => $request->input('end_at'),
         ];
+
         $add_result = $this->webinarService->add($api_add_array);
         if ($add_result === false) {
+            log::error('result null');
             return null;
         }
-       // var_dump($add_result);
-       // die();
+
         $background_image = $request->file('background_image') ? Storage::disk('public')->putFile('webinar_image', $request->file('background_image')) : null;
 
         return Webinar::create([
