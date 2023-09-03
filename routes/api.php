@@ -42,6 +42,7 @@ use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramModerationStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramPaymentsStatistic;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramUsersStatistic;
+use App\Http\Controllers\APIv3\Statistic\ApiPublicationStatistic;
 use App\Http\Controllers\APIv3\Subscription\ApiSubscriptionController;
 use App\Http\Controllers\APIv3\Subscription\ApiUserSubscriptionController;
 use App\Http\Controllers\APIv3\Tariff\ApiTariffController;
@@ -236,7 +237,10 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/statistic/export-payments', [ApiTelegramPaymentsStatistic::class, 'exportPayments']);
     Route::get('/statistic/payments-all-time', [ApiTelegramPaymentsStatistic::class, 'paymentsSummAllTime']);
     Route::get('/statistic/payments-payouts', [ApiTelegramPaymentsStatistic::class, 'payoutsList']);
-    
+    Route::get('/statistic/publications', [ApiPublicationStatistic::class, 'statistic']);
+    Route::post('/statistic/publication-time', [ApiPublicationStatistic::class, 'saveViewTime']);
+    Route::get('/statistic/publication-export', [ApiPublicationStatistic::class, 'export']);
+
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
 
     Route::post('/file', [ApiFileController::class, 'upload']);
