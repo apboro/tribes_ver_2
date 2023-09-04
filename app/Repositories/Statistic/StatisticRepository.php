@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Statistic;
 use App\Models\TelegramUser;
 use Illuminate\Support\Facades\DB;
+use App\Models\StatisticPublication;
+use Carbon\Carbon;
 
 class StatisticRepository implements StatisticRepositoryContract
 {
@@ -251,5 +253,94 @@ class StatisticRepository implements StatisticRepositoryContract
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
             return 0;
         }
+    }
+
+   /**
+    * Сохраняет длительность просмотра поста
+    */
+    public static function saveViewTimePublication($publication_id, $seconds)
+    {
+        $currentDate = date('Y-m-d');
+        $statPost = StatisticPublication::where('publication_id', $publication_id)
+            ->where('current_date', $currentDate)
+            ->first();
+        if ($statPost === null) {
+            $statPost = new StatisticPublication();
+            $statPost->publication_id = $publication_id;
+            $statPost->current_date = $currentDate;
+            $statPost->seconds = 0;
+        }
+        $statPost->seconds = $statPost->seconds + $seconds;
+        $statPost->save();
+    }
+
+    /**
+    * Добавляет в статистику 1 просмотр поста
+    */
+    public static function addViewPublication($publication_id)
+    {
+        $currentDate = date('Y-m-d');
+        $statPost = StatisticPublication::where('publication_id', $publication_id)->first();
+        if ($statPost === null) {
+            $statPost = new StatisticPublication();
+            $statPost->publication_id = $publication_id;
+            $statPost->current_date = $currentDate;
+            $statPost->view = 0;
+        }
+        $statPost->view = $statPost->view + 1;
+        $statPost->save();
+    }
+
+    /**
+    * Получает статистику по просмотрам и времени постов
+    *    
+    * @param user
+    * @param period - day, week, month, year
+    * @param sort - asc, desc
+    * @param limit - ограничение записей
+    */
+    public static function getStstisticPublication($user, $period = 'week', $sort = 'desc', $limit = 5)
+    {
+        $communityIds = $user->getOwnCommunities()->pluck('id')->toArray();
+        if (!in_array($period, ['day', 'week', 'month', 'year'])) {
+            $period = 'week';
+        }
+        $startDate = Carbon::now()->{'startOf' . ucfirst($period)}();
+        $sqlLimit = ($limit === null ? '' : ' LIMIT ' . $limit);
+
+        $sqlHost = 'select t1.*, publications.title 
+            from (SELECT publication_id, count(*) as host
+            FROM "visited_publications"
+            WHERE publication_id IN (' . implode(', ', $communityIds) . ')
+            AND last_visited > \'' . $startDate . '\'
+            group BY publication_id) as t1
+            inner join "publications" on "t1"."publication_id" = "publications"."id" 
+            ORDER BY host ' . $sort . $sqlLimit;
+
+        $sqlView = 'select t2.view, t2.publication_id, publications.title 
+            from (select publication_id, sum(view) as view
+            from statistic_publications
+            WHERE publication_id IN (' . implode(', ', $communityIds) . ')
+            AND statistic_publications.current_date > \'' . $startDate . '\'
+            GROUP BY publication_id
+            ORDER BY view ' . $sort . ') as t2
+            inner join "publications" on "t2"."publication_id" = "publications"."id"
+            ORDER BY view ' . $sort . $sqlLimit;
+
+        $sqlTime = 'select t3.seconds, t3.publication_id, publications.title 
+            from (select publication_id, to_char(make_interval(secs => sum(seconds) / sum(view)), \'MI:SS\') as seconds
+            from statistic_publications
+            WHERE publication_id IN (' . implode(', ', $communityIds) . ')
+            AND statistic_publications.current_date > \'' . $startDate . '\'
+            GROUP BY publication_id
+            ORDER BY seconds ' . $sort . ') as t3
+            inner join "publications" on "t3"."publication_id" = "publications"."id"
+            ORDER BY seconds ' . $sort . $sqlLimit;
+
+        return  [
+            'host' => DB::select($sqlHost),
+            'view' => DB::select($sqlView),
+            'time' => DB::select($sqlTime)
+        ];
     }
 }

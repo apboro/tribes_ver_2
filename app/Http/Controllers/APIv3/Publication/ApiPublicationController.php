@@ -15,6 +15,7 @@ use App\Http\ApiRequests\Publication\ApiPublicationShowRequest;
 use App\Http\ApiRequests\Publication\ApiPublicationStoreRequest;
 use App\Http\ApiRequests\Publication\ApiPublicationUpdateRequest;
 use App\Http\ApiResources\Publication\PublicationResource;
+use App\Repositories\Statistic\StatisticRepository;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\LMSFeedback;
@@ -126,6 +127,8 @@ class ApiPublicationController extends Controller
         if ($publication === null) {
             return ApiResponse::notFound('not_found');
         }
+        StatisticRepository::addViewPublication($publication->id);
+
         return ApiResponse::common(PublicationResource::make($publication)->toArray($request));
     }
 
@@ -177,6 +180,7 @@ class ApiPublicationController extends Controller
         if ($publication == null) {
             return ApiResponse::notFound('common.not_found');
         }
+        StatisticRepository::addViewPublication($publication->id);
 
         return ApiResponse::common(PublicationResource::make($publication)->toArray($request));
     }
