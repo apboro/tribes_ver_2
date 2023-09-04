@@ -328,7 +328,7 @@ class StatisticRepository implements StatisticRepositoryContract
             ORDER BY view ' . $sort . $sqlLimit;
 
         $sqlTime = 'select t3.seconds, t3.publication_id, publications.title 
-            from (select publication_id, to_char(make_interval(secs => sum(seconds) / sum(view)), \'MI:SS\') as seconds
+            from (select publication_id, (sum(seconds) / sum(view)) as seconds
             from statistic_publications
             WHERE publication_id IN (' . implode(', ', $publicationIds) . ')
             AND statistic_publications.current_date > \'' . $startDate . '\'
