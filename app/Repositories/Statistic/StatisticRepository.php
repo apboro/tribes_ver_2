@@ -301,7 +301,7 @@ class StatisticRepository implements StatisticRepositoryContract
     */
     public static function getStstisticPublication($user, $period = 'week', $sort = 'desc', $limit = 5)
     {
-        $communityIds = $user->getOwnCommunities()->pluck('id')->toArray();
+        $publicationIds = $user->author->publications()->get()->pluck('id')->toArray();
         if (!in_array($period, ['day', 'week', 'month', 'year'])) {
             $period = 'week';
         }
@@ -311,7 +311,7 @@ class StatisticRepository implements StatisticRepositoryContract
         $sqlHost = 'select t1.*, publications.title 
             from (SELECT publication_id, count(*) as host
             FROM "visited_publications"
-            WHERE publication_id IN (' . implode(', ', $communityIds) . ')
+            WHERE publication_id IN (' . implode(', ', $publicationIds) . ')
             AND last_visited > \'' . $startDate . '\'
             group BY publication_id) as t1
             inner join "publications" on "t1"."publication_id" = "publications"."id" 
@@ -320,7 +320,7 @@ class StatisticRepository implements StatisticRepositoryContract
         $sqlView = 'select t2.view, t2.publication_id, publications.title 
             from (select publication_id, sum(view) as view
             from statistic_publications
-            WHERE publication_id IN (' . implode(', ', $communityIds) . ')
+            WHERE publication_id IN (' . implode(', ', $publicationIds) . ')
             AND statistic_publications.current_date > \'' . $startDate . '\'
             GROUP BY publication_id
             ORDER BY view ' . $sort . ') as t2
@@ -330,7 +330,7 @@ class StatisticRepository implements StatisticRepositoryContract
         $sqlTime = 'select t3.seconds, t3.publication_id, publications.title 
             from (select publication_id, to_char(make_interval(secs => sum(seconds) / sum(view)), \'MI:SS\') as seconds
             from statistic_publications
-            WHERE publication_id IN (' . implode(', ', $communityIds) . ')
+            WHERE publication_id IN (' . implode(', ', $publicationIds) . ')
             AND statistic_publications.current_date > \'' . $startDate . '\'
             GROUP BY publication_id
             ORDER BY seconds ' . $sort . ') as t3
