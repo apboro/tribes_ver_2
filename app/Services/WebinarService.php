@@ -47,10 +47,9 @@ class WebinarService
      */
     private function parseMeet(string $webinarUrl)
     {
-        $meet = null;
         parse_str(parse_url($webinarUrl)['query'], $meet);
 
-        return $meet['meet'];
+        return $meet['meet'] ?? null;
     }
 
     private function sendRequest(string $apiMethod, array $queryParams, $method = 'post')
