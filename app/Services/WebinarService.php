@@ -8,42 +8,49 @@ use Illuminate\Support\Facades\Log;
 
 class WebinarService
 {
-    public const CID = 'spodial';
+    public const CID = 'Spodial';
     private $base_url = "https://wbnr.su:50443/api/";
     private $apikey;
-    public string $redirectUrl;
 
     public function __construct()
     {
         $this->apikey = config('webinars.api_key');
     }
 
-    public function setWebinarRole(string $meet, User $user, string $role)
+    public function prepareExternalWebinarUrl(string $webinarUrl, User $user, string $role)
     {
-        $this->redirectUrl = 'null';
+        $meet = $this->parseMeet($webinarUrl);
+        log::info('parse meet: ' . $meet);
 
         $params = [
             'meet'     => $meet,
-            'outer_id' => $user->id,
-            'email'    => $user->email,
             'name'     => $user->name,
+            'email'    => $user->email,
+            'outer_id' => $user->id,
             'role'     => $role,
         ];
 
-        $this->setSpecificUrl();
+        $url = $webinarUrl . '&' .$this->prepareHttpQuery($params);
 
-        $result = $this->sendRequest('rooms', $params, 'get');
         if($role !== 'admin') {
             log::info('not admin');
-            return $this->redirectUrl;
         }
         log::info('is admin');
-        return $result;
+
+        return $url;
     }
 
-    private function setSpecificUrl(): void
+    /**
+     * @param string $webinarUrl
+     *
+     * @return array|mixed|string|string[]|null
+     */
+    private function parseMeet(string $webinarUrl)
     {
-        $this->base_url = str_replace('api/',  '',$this->base_url);
+        $meet = null;
+        parse_str(parse_url($webinarUrl)['query'], $meet);
+
+        return $meet['meet'];
     }
 
     private function sendRequest(string $apiMethod, array $queryParams, $method = 'post')
@@ -51,8 +58,6 @@ class WebinarService
         $httpQuery = $this->prepareHttpQuery($queryParams);
         $client = new Client();
         $url = $this->base_url . $apiMethod .'?' . $httpQuery;
-
-        $this->redirectUrl = $url;
 
         log::info('webinar url: ' . json_encode($url, JSON_UNESCAPED_UNICODE));
 

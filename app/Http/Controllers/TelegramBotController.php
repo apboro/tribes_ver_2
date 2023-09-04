@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\TelegramException;
+use App\Models\MainWebHookData;
 use App\Models\TestData;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
@@ -32,10 +33,15 @@ class TelegramBotController extends Controller
         $botName = config('telegram_bot.bot.botName');
 
         if (env('GRAB_TEST_DATA') === true) {
-            $time = time();
-            $acosData = json_decode($data, true);
-            $updId = $acosData['update_id'] ?? '';
-            Storage::disk('telegram_data')->put("message_{$botName}_upd{$updId}_{$time}.json", $data);
+//            $time = time();
+//            $acosData = json_decode($data, true);
+//            $updId = $acosData['update_id'] ?? '';
+//            Storage::disk('telegram_data')->put("message_{$botName}_upd{$updId}_{$time}.json", $data);
+
+//            MainWebHookData::create(['data' => $request->collect()]);
+            $data = new MainWebHookData();
+            $data->data = $request->collect();
+            $data->save();
         }
 
         $this->mainBotService->run($botName, $request->collect());

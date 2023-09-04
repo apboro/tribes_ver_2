@@ -92,12 +92,8 @@ class ApiWebinarController extends Controller
      */
     public function store(ApiWebinarsStoreRequest $request): ApiResponse
     {
-        /**@var User $user */
-        $user = Auth::user();
-
         try {
             $webinar = $this->webinarRepository->add($request);
-            $this->webinarService->setWebinarRole($webinar->external_id, $user, 'admin');
 
             if ($webinar === null) {
                 return ApiResponse::error('add_error');
@@ -140,14 +136,15 @@ class ApiWebinarController extends Controller
         /** @var Webinar $webinar */
         $webinar = $this->webinarRepository->showByUuid($uuid);
 
-        $role = $webinar->getUserRole($user->id);
-        $redirect = $this->webinarService->setWebinarRole($webinar->external_id, $user, $role);
-
-        $webinar->redirectUrl = $redirect;
-
         if ($webinar === null) {
             return ApiResponse::notFound('common.not_found');
         }
+
+        $role = $webinar->getUserRole($user->id);
+        $redirect = $this->webinarService->prepareExternalWebinarUrl($webinar->external_url, $user, $role);
+
+        $webinar->redirectUrl = $redirect;
+
 
         return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
     }
