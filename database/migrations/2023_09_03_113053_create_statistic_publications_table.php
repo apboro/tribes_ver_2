@@ -19,8 +19,8 @@ class CreateStatisticPublicationsTable extends Migration
             $table->id();
             $table->date('current_date');
             $table->integer('publication_id');
-            $table->integer('view')->nullable();
-            $table->integer('seconds')->nullable();
+            $table->integer('view')->default(0);
+            $table->integer('seconds')->default(0);
         });
     }
 
