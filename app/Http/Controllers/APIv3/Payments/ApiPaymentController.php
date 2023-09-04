@@ -93,7 +93,7 @@ class ApiPaymentController extends Controller
             ]);
 
             Event::dispatch(new BuyWebinarEvent($webinar, $user));
-            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/courses/member/webinar/' . $webinar->uuid;
+            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/courses/member/webinar-preview/' . $webinar->uuid;
         }
 
         Log::debug('successPayment $redirectUrl - ' . $redirectUrl);
