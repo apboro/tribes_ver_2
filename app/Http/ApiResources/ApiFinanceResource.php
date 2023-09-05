@@ -28,6 +28,8 @@ class ApiFinanceResource extends JsonResource
             "donate" => 'Донат',
             "tariff" => 'Тариф',
             "course" => 'Медиатовар',
+            "publication" => 'Публикация',
+            "webinar" => 'Вебинар',
             "payout" => 'Вывод средств',
         ];
         return $list[$code]?? 'Не определено';

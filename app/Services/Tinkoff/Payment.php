@@ -186,13 +186,20 @@ class Payment
             }
         }
 
+        $userPayment = null;
+        if ($this->type == 'tariff' || $this->type == 'donate' || $this->type == 'course') {
+            $userPayment = $this->payFor->getAuthor()->id;
+        } elseif ($this->type == 'publication' || $this->type == 'webinar') {
+            $userPayment =  $this->payFor->author->user_id;
+        }
+
         $this->payment = new P();
         $this->payment->type = $this->type;
         $this->payment->amount = $this->amount;
         $this->payment->from = $this->type == 'donate' ? $this->payer->user_name : $this->payer->name;
         $this->payment->telegram_user_id = $this->telegram_id ?? null;
         $this->payment->community_id = $this->community ? $this->community->id : null;
-        $this->payment->author = ($this->type == 'subscription') || ($this->type == 'publication') || ($this->type == 'webinar') ? null : $this->payFor->getAuthor()->id;
+        $this->payment->author = $userPayment;
         $this->payment->add_balance = $this->amount / 100;
         $this->payment->save();
         $this->orderId = $this->payment->id . date("_md_s");
