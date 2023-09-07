@@ -1235,10 +1235,16 @@ class MainBotCommands
         }
     }
 
-    private
-    function connectionTariff(Context $ctx)
+    private function connectionTariff(Context $ctx)
     {
         try {
+            $trial = strpos($ctx->var('paymentId'), 'trial');
+            $payId = PseudoCrypt::unhash( str_replace('trial', '', $ctx->var('paymentId') ));
+            $payment = Payment::where('id', $payId)->where('activated', false)->first();
+            if (!$payment) {
+                return false;
+                }
+
             Telegram::paymentUser(
                 $ctx->getUserID(),
                 $ctx->getUsername(),
@@ -1248,9 +1254,6 @@ class MainBotCommands
                 $this->bot->getExtentionApi()
             );
 
-            $trial = strpos($ctx->var('paymentId'), 'trial');
-            $payId = PseudoCrypt::unhash($ctx->var('paymentId'));
-            $payment = $this->paymentRepo->getPaymentById($payId);
             if ($trial === false) {
                 if ($payment && $payment->type == 'tariff') {
                     $link = $this->createAndSaveInviteLink($payment->community->connection);
@@ -1294,8 +1297,7 @@ class MainBotCommands
                     SendTeleMessageToChatFromBot::dispatch(config('telegram_bot.bot.botName'), $authorTeleUserId, $message);
                 }
             } else {
-                $communityId = str_replace('trial', '', $ctx->var('paymentId'));
-                $community = $this->communityRepo->getCommunityById($communityId);
+                $community = $payment->community;
                 if ($community) {
                     $link = $this->createAndSaveInviteLink($community->connection);
                     $invite = ($link) ? "\n" . 'чтобы вступить в сообщество, нажмите сюда: <a href="' . $link . '">Подписаться</a>' : '';

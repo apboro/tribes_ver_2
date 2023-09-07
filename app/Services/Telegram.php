@@ -56,18 +56,22 @@ class Telegram extends Messenger
     public static function paymentUser($telegram_id, $userName, $firstName, $lastName, $paymentId, $botService)
     {
         try {
-            $payId = PseudoCrypt::unhash($paymentId);
+            $payId = PseudoCrypt::unhash(str_replace('trial', '', $paymentId));
 
             $trial = strpos($paymentId, 'trial');
+            $payment = Payment::where('id', $payId)->where('activated', false)->first();
+            if (!$payment) {
+                return false;
+                }
+            $community = $payment->community;
+            if (!$community) {
+                return false;
+                }
+
             if ($trial === false) {
-                $payment = Payment::where('id', $payId)->where('activated', false)->first();
-
                 if ($payment && $payment->type == 'tariff' && ($payment->status == 'CONFIRMED' || $payment->status == 'AUTHORIZED')) {
-
                     $payment->telegram_user_id = $telegram_id;
                     $payment->save();
-                    $community = $payment->community;
-
                     $ty = self::registerTelegramUser($telegram_id, $payment->user_id, $userName, $firstName, $lastName);
 
                     if (!$ty->communities()->find($community->id)) {
@@ -103,9 +107,6 @@ class Telegram extends Messenger
                     $payment->save();
                 } else return false;
             } else {
-                $paymentIdCutTrial = str_replace('trial', '', $paymentId);
-                $payment = Payment::find($paymentIdCutTrial);
-                $community = $payment->community;
                 if ($community) {
                     $ty = self::registerTelegramUser($telegram_id, NULL, $userName, $firstName, $lastName);
                     if (!$ty->communities()->find($community->id)) {
@@ -117,10 +118,12 @@ class Telegram extends Messenger
                     if ($ty->tariffVariant()->where('tariff_id', $community->tariff->id)->first() == NULL) {
                         foreach ($community->tariff->variants as $variant) {
                             if ($variant->price == 0 && $variant->isActive == true) {
-                                $ty->tariffVariant()->attach($variant, ['days' => $community->tariff->test_period, 'prompt_time' => date('H:i')]);
+                                $ty->tariffVariant()->attach($variant, ['days' => $community->tariff->test_period, 'prompt_time' => date('H:i'), 'used_trial' => true]);
                             }
                         }
                     }
+                $payment->activated = true;
+                $payment->save();                    
                 }
             }
         } catch (Exception $e) {
