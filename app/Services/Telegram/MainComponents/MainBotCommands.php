@@ -1311,6 +1311,9 @@ class MainBotCommands
                             $date = date('d.m.Y H:i', strtotime("+$variant->period days")) ?? 'Неизвестно';
                         }
                     }
+                    if (!isset($variantName)) {
+                        $ctx->replyHTML('Тестовый тариф отключен.'); 
+                    }
                     $defMassage = "\n\n" . 'Сообщество: ' . $community->title . "\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
 
 //                    $ctx->replyHTML($image . $message . $defMassage . $invite); //отключить приветствие в боте после подписки
