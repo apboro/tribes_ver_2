@@ -13,6 +13,8 @@ use App\Models\TelegramUserCommunity;
 use App\Models\TelegramUserList;
 use App\Models\TelegramUserReputation;
 use App\Models\Violation;
+use App\Models\ActionsDictionary;
+use App\Models\TelegramConnection;
 use App\Repositories\Telegram\DTO\MessageDTO;
 use App\Services\TelegramMainBotService;
 use Carbon\Carbon;
@@ -135,12 +137,21 @@ class CommunityRulesRepository implements CommunityRulesRepositoryContract
                         ]);
 
                         if ($rule->max_violation_times && $warnings > $rule->max_violation_times) {
-                            $this->botService->kickUser(
-                                env('TELEGRAM_BOT_NAME'),
-                                $this->messageDTO->telegram_user_id,
-                                $this->messageDTO->chat_id);
+                            $needAction = ActionsDictionary::where('id', $rule->action)->first();
+                            if ($needAction->type == 'mute_user'){
+                                $communityId = TelegramConnection::where('chat_id', $this->messageDTO->chat_id)->first()->community->id;
+                                TelegramUserList::updateOrCreate(
+                                    ['telegram_id' => $this->messageDTO->telegram_user_id, 'community_id' => $communityId],
+                                    ['type' => TelegramUserList::TYPE_MUTE_LIST]
+                                    );
+                            }
+                            if ($needAction->type == 'ban_user'){
+                                $this->botService->kickUser(
+                                    env('TELEGRAM_BOT_NAME'),
+                                    $this->messageDTO->telegram_user_id,
+                                    $this->messageDTO->chat_id);                                
+                            }
                         }
-
                     }
                 }
             }
