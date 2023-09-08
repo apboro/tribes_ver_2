@@ -470,7 +470,7 @@ class MainBotCommands
                 $message->parseMode('HTML');
 
                 $image = $tariff->main_image ?? null;
-                $description = $tariff->main_description ?? ' ';
+                $description = $tariff->main_description ?? 'Тариф';
                 $article->description($description);
                 $message->text($description . '<a href="' . config('app.url') . '/'. $image . '">&#160</a>');
                 $article->thumbUrl('' . config('app.url') .'/'. $image);
