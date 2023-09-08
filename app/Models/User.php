@@ -391,13 +391,13 @@ class User extends Authenticatable
      * @param string $password
      * @return User
      */
-    public static function easyRegister(string $email, string $password = null): User
+    public static function easyRegister(string $email, string $password = null): ?User
     {
-        $user = User::where('email', $email)->first();
+        $user = User::where('email', $email)->withTrashed()->first();
 
         if ($user !== null) {
-            return $user;
-        }
+            return $user->deleted_at === null ? $user : null;
+        }  
         
         if ($password === null){
             $password = Str::random(8);
