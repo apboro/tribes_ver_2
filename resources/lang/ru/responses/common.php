@@ -51,6 +51,7 @@ return [
     'course_update_error' => 'Ошибка обновления медиа контента',
     'error_while_pay' => 'При инициализации оплаты тарифа произошла ошибка Payment',
     'user_create_error' => 'Ошибка при добавлении пользователя',
+    'register_email_error' => 'Невозможно совершить покупку на данную почту',
     'telegram_user' => [
         'delete_error' => 'Ошибка удаления telegram user'
     ],

@@ -198,15 +198,11 @@ class ApiPublicationController extends Controller
             return ApiResponse::notFound('validation.course.not_found');
         }
 
-        $password = Str::random(8);
         $email = $request->input('email');
-
-        /** @var User $user */
-
-        $user = $this->easy_register_user($email, $password);
+        $user = User::easyRegister($email);
 
         if ($user === null) {
-            return ApiResponse::error('common.user_create_error');
+            return ApiResponse::error('common.register_email_error');
         }
 
         $payment = $this->tinkoff_payment->doPayment($user, $publication, $publication->price, '');
@@ -216,40 +212,6 @@ class ApiPublicationController extends Controller
         }
 
         return ApiResponse::common(['redirect' => $payment->paymentUrl]);
-    }
-
-    /**
-     * @param string $email
-     * @param string $password
-     * @return User
-     */
-    public static function easy_register_user(string $email, string $password): User
-    {
-
-        /** @var User $user */
-
-        $user = User::where('email', $email)->first();
-
-        if ($user !== null) {
-            return $user;
-        }
-
-        /** @var User $user */
-        $user = User::create([
-            'email' => strtolower($email),
-            'name' => explode('@', $email)[0],
-            'code' => 0000,
-            'phone' => null,
-            'password' => Hash::make($password),
-            'phone_confirmed' => false,
-        ]);
-
-        if ($user->wasRecentlyCreated) {
-            $user->tinkoffSync();
-            Event::dispatch(new ApiUserRegister($user, $password));
-        }
-
-        return $user;
     }
 
     public function checkFeedback(ApiCheckPostFeedbackRequest $request)
