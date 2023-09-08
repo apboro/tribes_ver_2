@@ -1313,6 +1313,7 @@ class MainBotCommands
                     }
                     if (!isset($variantName)) {
                         $ctx->replyHTML('Тестовый тариф отключен.'); 
+                        return false;
                     }
                     $defMassage = "\n\n" . 'Сообщество: ' . $community->title . "\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
 
