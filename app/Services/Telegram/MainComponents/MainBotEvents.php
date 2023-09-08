@@ -219,6 +219,11 @@ class MainBotEvents
                 'accession_date' => time()
             ]);
         }
+       
+        if ($member->id == config('telegram_user_bot.user_bot.id') || $member->id == config('telegram_bot.bot.botId') ) {
+            Telegram::addUserToWhiteList($community->id, $member->id);
+        }
+
         $this->sendGreeting($chatId, $community);
         Event::dispatch(new NewChatUserJoin($chatId, $member->id));
     }
