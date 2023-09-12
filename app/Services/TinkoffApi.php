@@ -306,7 +306,7 @@ class TinkoffApi
             $args = json_encode($args);
         }
 
-        if (env('PAY_TEST', false)) {
+        if (env('PAY_TEST') == 'yes') {
             $testArgs = json_decode($args, true);
             Log::debug('Tinkoff api send moq request', [
                 'api_url' => $api_url,
