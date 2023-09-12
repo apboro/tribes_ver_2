@@ -177,11 +177,14 @@ class Payment
                 if ($rebildPayment) { // Если платёж найден - находим Community и владельца
                     $this->community = $rebildPayment->community()->first();
                     $this->author = $this->community->owner()->first();
+                    Log::debug('Find $rebildPayment', [$rebildPayment]);
                 } else {
+                    Log::debug('Not find $rebildPayment');
                     TelegramLogService::staticSendLogMessage("Рекурент основной платёж не найден Тариф: " . $this->payFor->id . ", Плательщик: " . $this->payer->id);
                 }
 
             } else {
+                Log::debug('Рекурент без указания кому и за что');
                 TelegramLogService::staticSendLogMessage("Рекурент без указания кому и за что" . json_encode([$this->payFor, $this->payer]));
             }
         }
@@ -222,6 +225,8 @@ class Payment
             }
         }
 
+        Log::debug('Запрос INIT завершен.', [$resp]);
+
         if (isset($resp->Success) && $resp->Success) {
 //            if(isset($resp->SpAccumulationId, $this->payment)){
 //                $this->accumulation($resp->SpAccumulationId);
@@ -243,16 +248,18 @@ class Payment
             }
 
             $this->payment->payer()->associate($this->payer)->save();
-            log::info('end');
+            log::info('end without charge');
             if ($this->charged) {
+                log::debug('It is charge payment');
                 $chargeRes = $this->tinkoff->payTerminal->Charge([
                     'PaymentId' => $this->payment->paymentId,
                     'RebillId' => !empty($rebildPayment->RebillId) ? $rebildPayment->RebillId : null,
                 ]);
                 $chargeRes = json_decode($chargeRes);
+                log::debug('$chargeRes, context', [$chargeRes]);
 
                 if (isset($chargeRes->Success) && $chargeRes->Success) {
-
+                    log::debug('Charge Success!');
                     $previous_status = $this->payment->status;
                     $this->payment->status = $chargeRes->Status;
                     $this->payment->SpAccumulationId = $chargeRes->SpAccumulationId ?? null;

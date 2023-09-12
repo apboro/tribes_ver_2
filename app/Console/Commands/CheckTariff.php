@@ -55,15 +55,19 @@ class CheckTariff extends Command
     public function handle()
     {
         try {
+            Log::debug('Start tarif extention, ' . date('H:i'));
             $telegramUsers = TelegramUser::with('tariffVariant')->get();
 
             foreach ($telegramUsers as $user) {
+                Log::debug('user id = ' . $user->user_id);
                 //echo "user{$user->user_id} \n";
                 $follower = User::find($user->user_id);
                 if ($follower) {
+                    Log::debug('find follower');
                     if ($user->tariffVariant->first()) {
                         foreach ($user->tariffVariant as $variant) {
                             /** @var TariffVariant $variant*/
+                            Log::debug('tarif variant for this follower (context)', [$variant]);
                             if ($variant->price === 0 && $variant->period === $variant->tariff->test_period)
                                 continue;
                             if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
@@ -87,6 +91,7 @@ class CheckTariff extends Command
                                                     ->charged(true)
                                                     ->payFor($variant)
                                                     ->payer($follower);
+                                                Log::debug('Start tinkoff', [$p]);
                                                 $payment = $p->pay();
                                                 $payId = $payment->id ?? 'undefined';
 //                                            }
@@ -99,6 +104,7 @@ class CheckTariff extends Command
                                         $payment = NULL;
                                     }
                                     if ($payment) {
+                                        Log::debug('Payment ended.', [$payment]);
                                         $lastName = $user->last_name ?? '';
                                         $firstName = $user->first_name ?? '';
                                         $this->telegramService->sendMessageFromBot(
