@@ -306,13 +306,14 @@ class TinkoffApi
 
     private function _sendRequest($api_url, $args)
     {
-        Log::info('I am in _sendRequest');
+        Log::info('I am in _sendRequest', [$api_url, $args]);
         $this->error = '';
         if (is_array($args)) {
             $args = json_encode($args);
         }
 
-        if (env('PAY_TEST')) {
+        Log::debug('PAY_TEST : ' . env('PAY_TEST') . ', PAY_TEST(false) ' . env('PAY_TEST', false));
+        if (env('PAY_TEST', false)) {
             $testArgs = json_decode($args, true);
             Log::debug('Tinkoff api send fake request', [
                 'api_url' => $api_url,
