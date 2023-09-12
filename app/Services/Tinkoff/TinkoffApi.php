@@ -312,8 +312,8 @@ class TinkoffApi
             $args = json_encode($args);
         }
 
-        Log::debug('PAY_TEST : ' . env('PAY_TEST') . ', PAY_TEST(false) ' . env('PAY_TEST', false));
-        if (env('PAY_TEST') == 'yes') {
+        Log::debug('YES: PAY_TEST : ' . env('PAY_TEST') . ', PAY_TEST(false) ' . env('PAY_TEST', false));
+        if (env('PAY_TEST') === 'yes') {
             $testArgs = json_decode($args, true);
             Log::debug('Tinkoff api send fake request', [
                 'api_url' => $api_url,
