@@ -100,7 +100,8 @@ Route::prefix('api/v3')->group(function () {
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () {
-    Route::get('/check/subscription', [ApiSubscriptionController::class, 'check']);
+    Route::get('/check/user/subscription', [ApiSubscriptionController::class, 'check']);
+    Route::get('/show/user/subscription', [ApiSubscriptionController::class, 'userShowSubscription']);
 });
 /** TODO fastFIX  */
 //Route::get('/api/v3/question/{id}', [ApiQuestionController::class, 'show']);
