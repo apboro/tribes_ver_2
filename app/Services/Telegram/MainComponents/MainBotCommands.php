@@ -495,19 +495,19 @@ class MainBotCommands
     {
         try {
             $this->bot->onInlineQuery($donate->inline_link, function (Context $ctx) use ($donate) {
-                Log::debug('start donate callback query ' . $donate->inline_link);
+                Log::debug('start donate callback query ' . $donate->inline_link, [$donate]);
 
                 $result = new Result();
                 $article = new Article(1);
                 $message = new InputTextMessageContent();
 
                 $image = $donate->image;
-                $description = $donate->description ?? '';
+                $description = trim($donate->description) ? $donate->description : 'Донат';
                 $message->text($description . '<a href="' . config('app.url') . '/' . $image . '">&#160</a>');
 
                 $message->parseMode('HTML');
-                $article->title($donate->title ?? 'Донат');
-                $article->description($donate->description ? mb_strimwidth($donate->description, 0, 55, "...") : 'Донат');
+                $article->title(trim($donate->title) ? $donate->title : 'Донат');
+                $article->description(mb_strlen($description)>55 ? mb_strimwidth($description, 0, 55, "...") : $description);
 
                 $article->inputMessageContent($message);
                 $article->thumbUrl('' . config('app.url') . '/' . $image);
@@ -536,7 +536,7 @@ class MainBotCommands
 
                 $article->keyboard($menu->getAsObject());
                 $result->add($article);
-                Log::debug('Sending query answer', [$result]);
+                Log::debug('Sending query answer', [$result, $message, $article]);
                 $ctx->Api()->answerInlineQuery([
                     'inline_query_id' => $ctx->getInlineQueryID(),
                     'results' => (string)$result,
