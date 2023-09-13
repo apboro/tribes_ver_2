@@ -609,4 +609,31 @@ class TariffRepository implements TariffRepositoryContract
         return $builder;
     }
 
+    /**
+     * Информация об оплаченном тарифу по хэшам: инфо про тариф + инфо про пользователя
+     */
+    public function getPayedTariffWithUser($tariffHash, $paymentHash)
+    {
+        $paymentId = PseudoCrypt::unhash($paymentHash);   
+        $payment = Payment::find($paymentId);  
+          
+        $tariff = Tariff::select('title',
+                                'main_description',
+                                'welcome_description',
+                                'welcome_image_id',
+                                'thanks_message',
+                                'main_image',
+                                'thanks_image',
+                                'thanks_description',
+                                'inline_link')->where('inline_link', $tariffHash)->firstOrFail();
+        $tariff['tariff_page'] = config('app.frontend_url').Tariff::FRONTEND_TARIFF_PAGE.$tariff->inline_link;
+            
+        $payer = ['name' => $payment->payer->name,
+                'email' => $payment->payer->email];
+        $data = ['tarif' => $tariff,
+                'payer' =>$payer];
+
+        return $data;
+    }
+
 }

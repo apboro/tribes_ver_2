@@ -89,6 +89,7 @@ Route::prefix('api/v3')->group(function () {
         ->name('api.publications.show_by_uuid')->middleware('api');
     Route::post('/pay/tariff', [ApiTariffController::class, 'payForTariff']);
     Route::get('/show/tariff', [ApiTariffController::class, 'show']);
+    Route::get('/show/tariff_payed', [ApiTariffController::class, 'showPayed']);    
     Route::get('/public/webinars/{author}', [ApiWebinarController::class, 'publicList']);
     Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.public.publications.list');
     Route::get('/webinar/{uuid}', [ApiWebinarController::class, 'showByUuid'])

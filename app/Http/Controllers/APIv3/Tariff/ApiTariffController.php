@@ -10,6 +10,7 @@ use App\Http\ApiRequests\Tariffs\ApiTariffPayRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffShowRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffStoreRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffUpdateRequest;
+use App\Http\ApiRequests\Tariffs\ApiTariffShowPayedRequest;
 use App\Http\ApiResources\ApiTariffResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -18,11 +19,13 @@ use App\Models\Tariff;
 use App\Models\TariffVariant;
 use App\Models\TelegramUserTariffVariant;
 use App\Models\User;
+use App\Models\Payment;
 use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Tinkoff\Payment as Pay;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Helper\PseudoCrypt;
 
 class ApiTariffController extends Controller
 {
@@ -52,6 +55,12 @@ class ApiTariffController extends Controller
         $data = $request->all();
         $tariff = $this->tariffRepository->store($data);
         return ApiResponse::common(ApiTariffResource::make($tariff));
+    }
+
+    public function showPayed(ApiTariffShowPayedRequest $request)
+    {
+        $data = $this->tariffRepository->getPayedTariffWithUser($request->hash, $request->paymentId);
+        return ApiResponse::common($data);
     }
 
     public function show(ApiTariffShowRequest $request)
