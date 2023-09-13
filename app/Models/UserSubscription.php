@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @property integer user_id
@@ -34,5 +35,29 @@ class UserSubscription extends Model
         return $this->belongsTo(Subscription::class, 'subscription_id', 'id');
     }
 
+    public function isExpiredDate(): bool
+    {
+       return Carbon::createFromTimestamp($this->expiration_date) < Carbon::now();
+    }
 
+    public static function getByUser(int $userId): self
+    {
+        return UserSubscription::where('user_id', $userId)->first();
+    }
+
+    public static function setPerioud(int $userId, string $type, $days = 30)
+    {
+        $expirationDate = Carbon::now()->addDays(env('SUBSCRIPTION_PERIOD', $days))->timestamp;
+
+        $subscription = self::firstOrNew(['user_id' => $userId]);
+        $subscription->subscription_id = $type;
+        $subscription->expiration_date = $expirationDate;
+        $subscription->save();
+    }
+
+    public static function checkPeriod(int $userId): bool
+    {
+        log::info('check period bu user id: ' . $userId);
+        return self::getByUser($userId)->isExpiredDate();
+    }
 }
