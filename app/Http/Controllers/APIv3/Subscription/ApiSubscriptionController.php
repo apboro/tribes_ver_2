@@ -52,6 +52,16 @@ class ApiSubscriptionController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function userShowSubscription()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $subscription = $user->subscription ?? null;
+
+        return new JsonResponse(['subscription' => $subscription], Response::HTTP_OK);
+    }
+
     /**  Show subscription information*/
     public function show(ApiShowSubscriptionRequest $request)
     {
