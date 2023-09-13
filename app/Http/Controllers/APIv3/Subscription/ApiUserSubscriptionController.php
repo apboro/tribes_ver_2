@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\APIv3\Subscription;
 
+use App\Http\ApiRequests\ApiAssignSubscriptionRequest;
 use App\Http\ApiRequests\Subscription\ApiChangeSubscriptionRecurrentRequest;
 use App\Http\ApiRequests\Subscription\ApiSubscriptionPayRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\ApiResponses\ApiResponseCommon;
 use App\Http\ApiResponses\ApiResponseError;
+use App\Http\ApiResponses\ApiResponseSuccess;
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
 use App\Models\User;
@@ -38,7 +40,25 @@ class ApiUserSubscriptionController extends Controller
 
     /**
      * TODO tests
+     * TODO Listener
+     *
+     * @param ApiAssignSubscriptionRequest $request
+     * @return ApiResponseError|ApiResponseSuccess
      */
+    public function assignSubscriptionToUser(ApiAssignSubscriptionRequest $request)
+    {
+        $user = Auth::user();
+        if ($user->subscription) {
+            return ApiResponse::error('subscription.already_subscribed');
+        }
+        $subscription = Subscription::find($request['subscription_id']);
+        if ($subscription) {
+            $this->subscriptionRepository->assignToUser($user->id, $subscription->id);
+        }
+
+        return ApiResponse::success('subscription.successfully_subscribed');
+    }
+
     public function payForSubscription(ApiSubscriptionPayRequest $request)
     {
         /** @var User $user */
