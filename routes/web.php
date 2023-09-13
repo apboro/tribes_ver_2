@@ -6,7 +6,9 @@ use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\TelegramUserBotController;
 use App\Http\Controllers\TestBotController;
 use App\Http\Controllers\UserBotFormController;
+use App\Models\UserSubscription;
 use App\Services\Tinkoff\TinkoffMockServer;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +50,25 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
     // Авторизованные роуты
     Route::middleware('auth')->namespace('App\Http\Controllers')->group(function () {
+
+        Route::get('/trial/reset', function(){
+
+            $user = Auth::user();
+            if($user->email !== 'suppport@tribes.fabit.ru') {
+                die('нет прав');
+            }
+
+            $userSubscriptionList = UserSubscription::all();
+            $date = Carbon::now();
+            $date->addDays(30);
+
+            foreach($userSubscriptionList as $userSubscription) {
+                $userSubscription->expiration_date = $date->timestamp;
+                $userSubscription->save();
+            }
+
+            dd(count($userSubscriptionList));
+        });
 
         //New Design Routes
         Route::get('/analytics/subscribers/{project?}/{community?}', 'ProjectController@subscribers')->name('project.analytics.subscribers');
