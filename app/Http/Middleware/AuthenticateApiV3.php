@@ -30,7 +30,7 @@ class AuthenticateApiV3 extends Middleware
 
         if ($this->subscriptionService->isExpiredDate($request->user())){
             log::info('Expired Date');
-            return ApiResponse::forbidden('Пробный переуд истек, Приобрите подписку');
+            return ApiResponse::forbidden('subscription.expired_data');
         }
 
         return $next($request);
