@@ -95,8 +95,13 @@ Route::prefix('api/v3')->group(function () {
         ->name('api.webinar.show_by_uuid')->middleware('api');
     Route::post('/publication/pay/{uuid}', [ApiPublicationController::class, 'pay']);
     Route::post('/webinar/pay/{uuid}', [ApiWebinarController::class, 'pay']);
+
+    Route::get('/subscriptions_list', [ApiSubscriptionController::class, 'index']);
 });
 
+Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () {
+    Route::get('/check/subscription', [ApiSubscriptionController::class, 'check']);
+});
 /** TODO fastFIX  */
 //Route::get('/api/v3/question/{id}', [ApiQuestionController::class, 'show']);
 Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
@@ -139,7 +144,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/courses/{id}', [ApiCourseController::class, 'show']);
     Route::post('/courses', [ApiCourseController::class, 'store']);
     Route::put('/courses/{id}', [ApiCourseController::class, 'update']);
-    Route::get('/subscriptions_list', [ApiSubscriptionController::class, 'index']);
+
     Route::post('/subscription', [ApiSubscriptionController::class, 'show']);
     Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);

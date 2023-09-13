@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\Subscription;
 
+use App\Domain\Entity\User\Service\SubscriptionService;
 use App\Http\ApiRequests\ApiAssignSubscriptionRequest;
 use App\Http\ApiRequests\Subscription\ApiEditSubscriptionRequest;
 use App\Http\ApiRequests\Subscription\ApiListSubscriptionsRequest;
@@ -13,16 +14,22 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\ApiResponses\ApiResponseList;
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
+use App\Models\User;
 use App\Repositories\Subscription\SubscriptionRepository;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiSubscriptionController extends Controller
 {
 
     private SubscriptionRepository $subscriptionRepository;
+    private SubscriptionService $subscriptionService;
 
-    public function __construct(SubscriptionRepository $subscriptionRepository)
+    public function __construct(SubscriptionRepository $subscriptionRepository, SubscriptionService $subscriptionService)
     {
         $this->subscriptionRepository = $subscriptionRepository;
+        $this->subscriptionService = $subscriptionService;
     }
     /**
      * Display a listing of the resource.
@@ -32,6 +39,17 @@ class ApiSubscriptionController extends Controller
     {
         $subscriptions = Subscription::all();
         return ApiResponse::list()->items($subscriptions);
+    }
+
+    public function check(Response $response): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $expiredStatus = $this->subscriptionService->isExpiredDate($user);
+
+        return new JsonResponse([
+            'expired_status' => $expiredStatus
+        ], Response::HTTP_OK);
     }
 
     /**  Show subscription information*/
