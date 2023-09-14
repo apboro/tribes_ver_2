@@ -610,30 +610,21 @@ class TariffRepository implements TariffRepositoryContract
     }
 
     /**
-     * Информация об оплаченном тарифу по хэшам: инфо про тариф + инфо про пользователя
+     * Информация о тарифе по хэшу
      */
-    public function getPayedTariffWithUser($tariffHash, $paymentHash)
+    public function getTariffByHash(string $tariffHash): Tariff
     {
-        $paymentId = PseudoCrypt::unhash($paymentHash);   
-        $payment = Payment::find($paymentId);  
-          
-        $tariff = Tariff::select('title',
+        $tariff = Tariff::select('id',
+                                'title',
                                 'main_description',
                                 'welcome_description',
                                 'welcome_image_id',
-                                'thanks_message',
                                 'main_image',
-                                'thanks_image',
-                                'thanks_description',
-                                'inline_link')->where('inline_link', $tariffHash)->firstOrFail();
-        $tariff['tariff_page'] = config('app.frontend_url').Tariff::FRONTEND_TARIFF_PAGE.$tariff->inline_link;
-            
-        $payer = ['name' => $payment->payer->name,
-                'email' => $payment->payer->email];
-        $data = ['tarif' => $tariff,
-                'payer' =>$payer];
+                                'inline_link')->where('inline_link', $tariffHash)->first();
+        if ($tariff) {                  
+            $tariff['tariff_page'] = config('app.frontend_url').Tariff::FRONTEND_TARIFF_PAGE.$tariff->inline_link;
+        }
 
-        return $data;
+        return $tariff;
     }
-
 }

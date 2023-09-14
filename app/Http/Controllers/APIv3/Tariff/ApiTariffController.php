@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Helper\PseudoCrypt;
+use Illuminate\Support\Facades\Log;
 
 class ApiTariffController extends Controller
 {
@@ -59,8 +60,27 @@ class ApiTariffController extends Controller
 
     public function showPayed(ApiTariffShowPayedRequest $request)
     {
-        $data = $this->tariffRepository->getPayedTariffWithUser($request->hash, $request->paymentId);
-        return ApiResponse::common($data);
+        try {
+            $tariff = $this->tariffRepository->getTariffByHash($request->tariffHash);
+
+            $paymentId = PseudoCrypt::unhash($request->paymentHash);
+            $payment = Payment::where('id', $paymentId)->where('payable_id', $tariff->id)->first();
+            $payer = [
+                'name' => $payment->payer->name,
+                'email' => $payment->payer->email
+            ];
+
+            $data = [
+                'tarif' => $tariff,
+                'payer' => $payer
+            ];
+
+            return ApiResponse::common($data);
+        } catch (\Throwable $e) {
+            Log::error('Ошибка при показе платежа и пользователя по хэшу, showPayed', [$request]);
+
+            return ApiResponse::error('common.not_found');
+        }
     }
 
     public function show(ApiTariffShowRequest $request)

@@ -12,16 +12,16 @@ use App\Http\ApiRequests\ApiRequest;
  *     security={{"sanctum": {} }},
  *     tags={"Tariffs"},
  *     @OA\Parameter(
- *         name="paymentId",
+ *         name="paymentHash",
  *         in="query",
- *         description="ID (hash) of payment in the database",
+ *         description="Hash of payment in the database",
  *         required=true,
  *         @OA\Schema(
  *             type="string"
  *         )
  *     ),
  *     @OA\Parameter(
- *         name="hash",
+ *         name="tariffHash",
  *         in="query",
  *         description="Hash of tariff in the database",
  *         required=true,
@@ -39,8 +39,8 @@ class ApiTariffShowPayedRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'hash' => 'required',
-            'paymentId' => 'required'
+            'tariffHash' => 'required|exists:tariffs,inline_link',
+            'paymentHash' => 'required'
         ];
     }
 
