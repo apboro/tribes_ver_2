@@ -102,6 +102,7 @@ Route::prefix('api/v3')->group(function () {
 Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () {
     Route::get('/check/user/subscription', [ApiSubscriptionController::class, 'check']);
     Route::get('/show/user/subscription', [ApiSubscriptionController::class, 'userShowSubscription']);
+    Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
 });
 /** TODO fastFIX  */
 //Route::get('/api/v3/question/{id}', [ApiQuestionController::class, 'show']);
@@ -148,7 +149,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
 
     Route::post('/subscription', [ApiSubscriptionController::class, 'show']);
     Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
-    Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
+
     Route::patch('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
 
     Route::get('/content/analytics/readers', [CoursesAnalyticsController::class, 'getReaders']);
