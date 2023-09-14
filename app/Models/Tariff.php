@@ -38,6 +38,16 @@ class Tariff extends Model
         return $this->hasMany(TariffVariant::class, 'tariff_id', 'id')->orderBy('id');
     }
 
+    function variantTest()
+    {
+        return $this->variants()->where('isTest', true);
+    }
+
+    function variantPaid()
+    {
+        return $this->variants()->where('isTest', false);
+    }
+
     public function tariffCommunityUsers(): HasManyThrough
     {
         return $this->hasManyThrough(TelegramUserCommunity::class, Community::class, 'id', 'community_id','community_id')
