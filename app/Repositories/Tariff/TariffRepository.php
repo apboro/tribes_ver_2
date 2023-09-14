@@ -609,4 +609,22 @@ class TariffRepository implements TariffRepositoryContract
         return $builder;
     }
 
+    /**
+     * Информация о тарифе по хэшу
+     */
+    public function getTariffByHash(string $tariffHash): Tariff
+    {
+        $tariff = Tariff::select('id',
+                                'title',
+                                'main_description',
+                                'welcome_description',
+                                'welcome_image_id',
+                                'main_image',
+                                'inline_link')->where('inline_link', $tariffHash)->first();
+        if ($tariff) {                  
+            $tariff['tariff_page'] = config('app.frontend_url').Tariff::FRONTEND_TARIFF_PAGE.$tariff->inline_link;
+        }
+
+        return $tariff;
+    }
 }

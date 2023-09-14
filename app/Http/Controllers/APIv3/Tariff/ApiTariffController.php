@@ -10,6 +10,7 @@ use App\Http\ApiRequests\Tariffs\ApiTariffPayRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffShowRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffStoreRequest;
 use App\Http\ApiRequests\Tariffs\ApiTariffUpdateRequest;
+use App\Http\ApiRequests\Tariffs\ApiTariffShowPayedRequest;
 use App\Http\ApiResources\ApiTariffResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -18,11 +19,14 @@ use App\Models\Tariff;
 use App\Models\TariffVariant;
 use App\Models\TelegramUserTariffVariant;
 use App\Models\User;
+use App\Models\Payment;
 use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Tinkoff\Payment as Pay;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Helper\PseudoCrypt;
+use Illuminate\Support\Facades\Log;
 
 class ApiTariffController extends Controller
 {
@@ -52,6 +56,31 @@ class ApiTariffController extends Controller
         $data = $request->all();
         $tariff = $this->tariffRepository->store($data);
         return ApiResponse::common(ApiTariffResource::make($tariff));
+    }
+
+    public function showPayed(ApiTariffShowPayedRequest $request)
+    {
+        try {
+            $tariff = $this->tariffRepository->getTariffByHash($request->tariffHash);
+
+            $paymentId = PseudoCrypt::unhash($request->paymentHash);
+            $payment = Payment::where('id', $paymentId)->where('payable_id', $tariff->id)->first();
+            $payer = [
+                'name' => $payment->payer->name,
+                'email' => $payment->payer->email
+            ];
+
+            $data = [
+                'tarif' => $tariff,
+                'payer' => $payer
+            ];
+
+            return ApiResponse::common($data);
+        } catch (\Throwable $e) {
+            Log::error('Ошибка при показе платежа и пользователя по хэшу, showPayed', [$request]);
+
+            return ApiResponse::error('common.not_found');
+        }
     }
 
     public function show(ApiTariffShowRequest $request)
