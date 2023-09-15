@@ -42,4 +42,18 @@ class TelegramConnection extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    /**
+     * Удаление инофрмации о юзерботе при его выходе из группы
+     */
+    public static function deleteUserBotFromChat(int $chatId)
+    {
+        $connection = TelegramConnection::where('chat_id', $chatId)->first();
+        $connection->userBotStatus = NULL;
+        $connection->is_there_userbot = false;
+        if ($connection->status == 'completed') {
+            $connection->status = 'connected';
+        }
+        $connection->save();
+    }
 }

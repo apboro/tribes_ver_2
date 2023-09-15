@@ -188,6 +188,10 @@ class Telegram extends Messenger
                 }
                 if ($ty->getCommunityById($community->id))
                     $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time()]);
+
+                if ($t_user_id == config('telegram_user_bot.user_bot.id')) {
+                    TelegramConnection::deleteUserBotFromChat($chat_id);
+                }
             }
         } catch (Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
