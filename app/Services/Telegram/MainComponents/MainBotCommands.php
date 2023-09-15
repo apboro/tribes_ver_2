@@ -878,7 +878,7 @@ class MainBotCommands
         try {
             $cabinet = function (Context $ctx) {
                 $menu = Menux::Create('links')->inline();
-                $menu->row()->uBtn('Перейти в личный кабинет', route('main'));
+                $menu->row()->uBtn('Перейти в личный кабинет', config('app.frontend_url'));
                 $ctx->reply('Для того чтобы перейти в личный кабинет перейдите по ссылке', $menu);
                 $this->save_log(
                     TelegramBotActionHandler::PERSONAL_AREA,
