@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Services\Telegram;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -147,9 +148,9 @@ class SetNewTelegramUsers implements ShouldQueue
 
     protected function getGroupRole($participant)
     {
-        log::info('getGroupRole: ' . json_encode($participant, JSON_UNESCAPED_UNICODE));
         $className = $participant->participant->className;
-        if ($className === 'ChatParticipantAdmin')
+        log::info('++++++++++++++= $className: ' . $className);
+        if ($className === 'ChatParticipantAdmin') //channelParticipantAdmin
             $role = 'administrator';
         elseif ($className === 'ChatParticipantCreator')
             $role = 'creator';
@@ -159,18 +160,22 @@ class SetNewTelegramUsers implements ShouldQueue
         return $role;
     }
 
-    protected function saveUser($community, $user, $accession_date, $role)
+    protected function saveUser($community, $participantUser, $accession_date, $role)
     {
         $ty = TelegramUser::firstOrCreate([
-            'telegram_id' => $user->id
+            'telegram_id' => $participantUser->id
         ]);
-        $ty->user_name  = $user->username ?? $ty->user_name;
-        $ty->first_name  = $user->first_name ?? $ty->first_name;
-        $ty->last_name   = $user->last_name ??  $ty->last_name;
+
+        $ty->user_name  = $participantUser->username ?? $ty->user_name;
+        $ty->first_name  = $participantUser->firstName ?? $ty->first_name;
+        $ty->last_name   = $participantUser->lastName ??  $ty->last_name;
         $ty->save();
 
-        if (!$ty->communities()->find($community->id)){
+        if (!$ty->communities()->find($community->id)) {
             $ty->communities()->attach($community, ['role' => $role, 'accession_date' => $accession_date ?? time()]);
+            if ($role === 'administrator') {
+                Telegram::addUserToWhiteList($community->id, $ty->telegram_id);
+            }
         } else {
             $ty->communities()->updateExistingPivot($community->id, ['exit_date' => null]);
         }
