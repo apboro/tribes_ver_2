@@ -545,11 +545,20 @@ class TariffRepository implements TariffRepositoryContract
     {
         $this->tariffModel = Tariff::findOrFail($request->id);
         $data = $request->all();
-        $variant_data['title'] = $data['title'] ?? null;
-        $variant_data['price'] = $data['price'] ?? null;
-        $variant = $this->tariffModel->variants()->first();
-        $variant->fill(array_filter($variant_data));
-        $variant->save();
+        $data['tariff_is_payable'] = $request->tariff_is_payable ?? false;
+        $data['test_period_is_active'] = $request->test_period_is_active ?? false;
+
+        $variant_data = ['title' => $data['title'] ?? null,
+                        'price' => $data['price'] ?? null];
+
+        $variantPaid = $this->tariffModel->variantPaid()->first();
+        $variantPaid->fill(array_filter($variant_data));
+        $variantPaid->isActive = $data['tariff_is_payable'];
+        $variantPaid->save();
+
+        $variantTest = $this->tariffModel->variantTest()->first();
+        $variantTest->isActive = $data['test_period_is_active'];
+        $variantTest->save();
 
         unset($data['price']);
         $this->tariffModel->fill($data);
@@ -568,6 +577,7 @@ class TariffRepository implements TariffRepositoryContract
             'period' => $period,
             'isActive' => $data['tariff_is_payable'] ?? false,
             'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp . rand(1, 99999999999), 8),
+            'isTest' => false
         ]);
         TariffVariant::create([
             'tariff_id' => $this->tariffModel->id,
@@ -576,6 +586,7 @@ class TariffRepository implements TariffRepositoryContract
             'period' => 3,
             'isActive' => $data['test_period_is_active'] ?? false,
             'inline_link' => PseudoCrypt::hash(Carbon::now()->timestamp . rand(1, 99999999999), 8),
+            'isTest' => true
         ]);
 
     }
