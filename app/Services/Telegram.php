@@ -181,17 +181,19 @@ class Telegram extends Messenger
                 if ($userCommunity->role == 'administrator' || $userCommunity->role == 'creator') {
                     $this->removeUserFromWhiteList($community->id, $t_user_id);
                 }
-                $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
+               /* $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
                 if ($variantForThisCommunity) {
                     //ставить exit_date в состояние false, не удалять подписку пользователя
                     //$ty->tariffVariant()->detach($variantForThisCommunity->id);
-                }
+                }*/
                 if ($ty->getCommunityById($community->id))
                     $ty->communities()->updateExistingPivot($community->id, ['exit_date' => time()]);
 
                 if ($t_user_id == config('telegram_user_bot.user_bot.id')) {
+                    Log::debug('User bot exits ' . config('telegram_user_bot.user_bot.id'));
                     TelegramConnection::deleteUserBotFromChat($chat_id);
                 }
+                Log::debug('deleteUser end');
             }
         } catch (Exception $e) {
             TelegramLogService::staticSendLogMessage('Ошибка' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
