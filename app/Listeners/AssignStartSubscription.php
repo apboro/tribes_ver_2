@@ -21,7 +21,7 @@ class AssignStartSubscription
     public function handle(ApiUserRegister $event)
     {
         /** @var Subscription|null $subscription */
-        $subscription = Subscription::query()->where('slug', 'start')->first();
+        $subscription = Subscription::query()->where('slug', 'trial_period')->first();
         try {
             $this->subscriptionRepository->assignToUser($event->user->id, $subscription->id);
         } catch (Exception $e) {
