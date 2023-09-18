@@ -21,6 +21,9 @@ class UserSubscription extends Model
 {
     use HasFactory;
 
+    public const TRIAL_PLAN_ID = 1;
+    public const PAY_PLAN_ID = 2;
+
     protected $table='users_subscriptions';
 
     protected $guarded =[];

@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\APIv3\Donates\ApiNewDonateController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\System\AdminController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\TelegramUserBotController;
 use App\Http\Controllers\TestBotController;
 use App\Http\Controllers\UserBotFormController;
+use App\Models\Subscription;
 use App\Models\UserSubscription;
 use App\Services\Tinkoff\TinkoffMockServer;
 use Illuminate\Support\Carbon;
@@ -51,24 +53,8 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     // Авторизованные роуты
     Route::middleware('auth')->namespace('App\Http\Controllers')->group(function () {
 
-        Route::get('/trial/reset', function(){
-
-            $user = Auth::user();
-            if($user->email !== 'suppport@tribes.fabit.ru') {
-                die('нет прав');
-            }
-
-            $userSubscriptionList = UserSubscription::all();
-            $date = Carbon::now();
-            $date->addDays(30);
-
-            foreach($userSubscriptionList as $userSubscription) {
-                $userSubscription->expiration_date = $date->timestamp;
-                $userSubscription->save();
-            }
-
-            dd(count($userSubscriptionList));
-        });
+        Route::get('/subscription/update',  [AdminController::class, 'updateSubscriptionPlans']);
+        Route::get('/reset/subscription/plan/for/all/users', [AdminController::class, 'resetTrialForAllUsers']);
 
         //New Design Routes
         Route::get('/analytics/subscribers/{project?}/{community?}', 'ProjectController@subscribers')->name('project.analytics.subscribers');
