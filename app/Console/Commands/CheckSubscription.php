@@ -60,13 +60,15 @@ class CheckSubscription extends Command
      */
     public function handle()
     {
+        Log::info('CheckSubscription');
         $userSubscriptions = UserSubscription::all();
         foreach ($userSubscriptions as $userSubscription)
         {
             try {
                 if (Carbon::createFromTimestamp($userSubscription->expiration_date) < Carbon::now()) {
-                    Log::info('Payment for subscription ' . json_encode($userSubscription, JSON_UNESCAPED_UNICODE));
-                    if ($userSubscription->isRecurrent) {
+                    Log::info('date expiated subscription ' . json_encode($userSubscription, JSON_UNESCAPED_UNICODE));
+                    $isPayPlan = $userSubscription->subscription_id === UserSubscription::PAY_PLAN_ID;
+                    if ($userSubscription->isRecurrent && $isPayPlan) {
                         $p = new Pay();
                         $p->amount($userSubscription->subscription->price * 100)
                             ->charged(true)
@@ -78,13 +80,17 @@ class CheckSubscription extends Command
                             Log::info('Payment for subscription ' . $userSubscription->id . ' success');
                             SubscriptionMade::dispatch($userSubscription->user, $userSubscription->subscription);
                         } else {
-                            SubscriptionMade::dispatch($userSubscription->user, Subscription::find(1));
+//                            SubscriptionMade::dispatch($userSubscription->user, Subscription::find(1));
+                            //TODO TBS-1667 add log telegran or email or slack
+                            Log::error('payment user subscription error');
                         }
-                    } else {
-                        SubscriptionMade::dispatch($userSubscription->user, Subscription::find(1));
+                    } elseif($userSubscription->subscription_id === UserSubscription::TRIAL_PLAN_ID) {
+                        $userSubscription->isRecurrent = false;
+                        $userSubscription->save();
                     }
                 }
             } catch (\Exception $e) {
+                //TODO TBS-1667 add log telegran or email or slack
                 Log::error($e->getMessage());
             }
         }
