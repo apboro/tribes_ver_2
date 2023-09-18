@@ -13,8 +13,8 @@ use Illuminate\Support\Carbon;
  */
 final class AdminController extends Controller
 {
-    public const TRIAL_PERIOD_ID = 1;
-    public const PAY_PERIOD_ID = 2;
+    public const TRIAL_PLAN_ID = 1;
+    public const PAY_PLAN_ID = 2;
 
     /**
      * TODO move to configs
@@ -22,7 +22,7 @@ final class AdminController extends Controller
      * @var array
      */
     private const SUBSCRIPTION_PLANS = [
-        self::TRIAL_PERIOD_ID => [
+        self::TRIAL_PLAN_ID => [
             'name'        => 'Пробный период',
             'slug'        => 'trial_plan',
             'description' => '[{"name": "Управление сообществами","description" : null},{"name": "Создание курсов (LMS)","description": null},{"name": "Аналитика сообществ","description": null},{"name": "Комиссия с продаж","description":"15%"}]',
@@ -33,7 +33,7 @@ final class AdminController extends Controller
             'commission'  => 15,
             'file_id'     => null,
         ],
-        self::PAY_PERIOD_ID   => [
+        self::PAY_PLAN_ID => [
             'name'        => 'Платный период',
             'slug'        => 'pay_plan',
             'description' => '[{"name": "Управление сообществами","description" : null},{"name": "Создание курсов (LMS)","description": null},{"name": "Аналитика сообществ","description": null},{"name": "Комиссия с продаж","description":"10%"}]',
