@@ -529,7 +529,11 @@ class TariffRepository implements TariffRepositoryContract
             foreach ($variants as $variant) {
                 $period = app()->environment('local') ? 1 : 30;
                 $variant->title = $variant->title === 'Пробный период' ? 'Пробный период' : $data['title'] ?? null;
-                $variant->price = $variant->price == 0 ? 0 : $data['price'] ?? null;
+                if ($variant->isTest) {
+                    $variant->price = 0;
+                } else {
+                    $variant->price = $data['price'] ?? 0;
+                }
                 $variant->period = $variant->period == 3 ? 3 : $period;
                 $variant->isActive = $data['tariff_is_payable'] ?? false;
                 $variant->save();
