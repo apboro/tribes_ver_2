@@ -506,7 +506,7 @@ class TariffRepository implements TariffRepositoryContract
         return $baseAttributes;
     }
 
-    public function store($data): Tariff
+    public function store(array $data): Tariff
     {
         $community = Community::owned()->findOrFail($data['community_id']);
 
@@ -528,11 +528,12 @@ class TariffRepository implements TariffRepositoryContract
         if ($variants->isNotEmpty()) {
             foreach ($variants as $variant) {
                 $period = app()->environment('local') ? 1 : 30;
-                $variant->title = $variant->title === 'Пробный период' ? 'Пробный период' : $data['title'] ?? null;
                 if ($variant->isTest) {
                     $variant->price = 0;
+                    $variant->title = 'Пробный период';
                 } else {
                     $variant->price = $data['price'] ?? 0;
+                    $variant->title = $data['title'];
                 }
                 $variant->period = $variant->period == 3 ? 3 : $period;
                 $variant->isActive = $data['tariff_is_payable'] ?? false;
