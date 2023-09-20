@@ -503,6 +503,7 @@ class MainBotEvents
             if (isset($chat)) {
                 Log::info('Событие изменения или добавления фотографии группы или канала newChatPhoto()');
                 $chatId = $chat->chat->id;
+                $telegramId = $chat->from->id ?? 0;
                 $idPhoto = $chat->new_chat_photo[2]->file_id;
                 $urnPhoto = $this->bot->Api()->getFile([
                     'file_id' => $idPhoto
@@ -518,7 +519,8 @@ class MainBotEvents
                 Log::channel('telegram_bot_action_log')->
                 log('info', '', [
                     'event' => TelegramBotActionHandler::EVENT_NEW_CHAT_PHOTO,
-                    'chat_id' => $chatId
+                    'chat_id' => $chatId,
+                    'telegram_id' => $telegramId,
                 ]);
             }
         } catch (Exception $e) {
