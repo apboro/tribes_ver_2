@@ -11,7 +11,9 @@ class ApiTariffResource extends JsonResource
 {
     public function toArray($request)
     {
-        $variant = $this->variants()->first();
+        $variantPaid = $this->variantPaid()->first();
+        $variantTest = $this->variantTest()->first();
+
         $community = $this->community;
 
         return [
@@ -22,6 +24,8 @@ class ApiTariffResource extends JsonResource
             'tariff_is_payable' => $this->tariff_is_payable,
             'test_period' => $this->test_period,
             'bot command' => config('telegram_bot.bot.botFullName'). ' t-' . $this->inline_link.'-'.PseudoCrypt::hash($this->community->id),
+            'link_buy' => $variantPaid ? 'https://t.me/' . str_replace('@', '', config('telegram_bot.bot.botFullName')) . '?start=tariff-' . $this->inline_link . '_' . $variantPaid->inline_link : null,
+            'link_test' => $variantTest ? 'https://t.me/' . str_replace('@', '', config('telegram_bot.bot.botFullName')) . '?start=tariff-' . $this->inline_link . '_' . $variantTest->inline_link : null,
             'main_image' => $this->main_image,
             'thanks_image' => $this->thanks_image,
             'thanks_message_is_active' => $this->thanks_message_is_active,
@@ -29,7 +33,7 @@ class ApiTariffResource extends JsonResource
             'test_period_is_active' => $this->test_period_is_active,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'price' => $variant ? $variant->price : null,
+            'price' => $variantPaid ? $variantPaid->price : null,
             'chat_name' => $community->title,
             'followers' => $this->tariffCommunityUsers()->count(),
             'community_image' => $community->image,
