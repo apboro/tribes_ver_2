@@ -261,7 +261,7 @@ class MainBotCommands
 
         $menu = Menux::Create('link')->inline();
 
-        $menu->row()->uBtn('Оплатить тариф', Tariff::preparePaymentLink($community->tariff->id, $variant->isTest, $ctx->getUserID()));
+        $menu->row()->uBtn('Оплатить тариф', Tariff::preparePaymentLink($community->tariff->inline_link, $variant->isTest, $ctx->getUserID()));
         $buttonName = $this->getTariffButtonName($variant->title, $variant->price, $variant->period);
         $ctx->reply($buttonName . "\n\n", $menu);
     }
