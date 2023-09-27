@@ -16,6 +16,7 @@ use OpenApi\Annotations as OA;
  *     @OA\RequestBody(
  *        @OA\JsonContent(
  *                 @OA\Property(property="id",type="integer", example="1"),
+ *                 @OA\Property(property="telegram_user_id",type="string", example="1234567890"),
  *                 @OA\Property(property="e-mail",type="string", example="test@dev.com"),
  *                 @OA\Property(property="try_trial",type="boolean", example="true"),
  *                 ),
@@ -30,6 +31,7 @@ class ApiTariffPayRequest extends ApiRequest
         return  [
             'id' =>'required|exists:tariffs,id',
             'e-mail' => 'required|string|email',
+            'telegram_user_id' => 'required',
             'try_trial' => 'boolean'
         ];
     }

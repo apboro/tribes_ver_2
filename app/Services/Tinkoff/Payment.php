@@ -139,6 +139,12 @@ class Payment
         $this->telegram_id = $tu ? $tu->telegram_id : null;
     }
 
+    public function setTelegramId($telegramId)
+    {
+        $this->telegram_id = $telegramId;
+
+        return $this;
+    }
 
     public function accumulation()
     {

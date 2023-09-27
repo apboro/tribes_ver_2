@@ -155,4 +155,9 @@ class TelegramUser extends Model
     {
         return $this->hasMany(TelegramConnection::class, 'telegram_user_id', 'telegram_id');
     }
+
+    public static function findByTelegramId(int $telegramId)
+    {
+        return self::where('telegram_id', $telegramId)->first();
+    }   
 }

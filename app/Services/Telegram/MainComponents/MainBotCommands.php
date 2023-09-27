@@ -18,6 +18,7 @@ use App\Models\TariffVariant;
 use App\Models\TelegramUser;
 use App\Models\TelegramUserList;
 use App\Models\TelegramUserReputation;
+use App\Models\TelegramUserTariffVariant;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Payment\PaymentRepositoryContract;
 use App\Repositories\Telegram\TelegramConnectionRepositoryContract;
@@ -200,22 +201,17 @@ class MainBotCommands
                     $ctx);
             };
             //handle start with payment
-            $this->bot->onText('/start payment-{paymentId:string}', function (Context $ctx) {
+            /*$this->bot->onText('/start payment-{paymentId:string}', function (Context $ctx) {
                 $this->connectionTariff($ctx);
-            });
-
+            });*/
 
             //handle start with donate
             $this->bot->onText('/start donate-{donate_hash:string}_{amount:integer}', function (Context $ctx) {
                 $this->donateButtons($ctx);
             });
 
-            //handle start with tariff
-            $this->bot->onText('/start tariff-{tariff_hash:string}', function (Context $ctx) {
-                Log::debug('In start tariff');
-                $tariff = Tariff::where('inline_link', $ctx->var('tariff_hash'))->first();
-                [$text, $menu] = $this->tariffButton($tariff->community);
-                $ctx->replyHTML($text, $menu);
+            $this->bot->onText('/start tariff-{tariff_hash:string}_{variant_hash:string}', function (Context $ctx) {
+                $this->tariffBuyButton($ctx);
             });
 
 
@@ -225,6 +221,49 @@ class MainBotCommands
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
+    }
+
+    private function getTariffButtonName(?string $title, ?string $price, ?string $period): string
+    {
+        return ($title ? $title . ' — ' : '') . ($price ? $price . '₽' : '') . ($price && $period ? '/' : '') . ($period ? 'Дней:' . $period : '');
+    }
+
+    private function tariffBuyButton(Context $ctx)
+    {
+        $tariff = Tariff::where('inline_link', $ctx->var('tariff_hash'))->first();
+        if (!$tariff) {
+            return null;
+        }
+        $community = $tariff->community;
+        if (!$community) {
+            return null;
+        }
+
+        $variant = $community->tariff->variants()
+            ->where('isActive', true)
+            ->where('isPersonal', false)
+            ->where('inline_link', $ctx->var('variant_hash'))
+            ->first();
+        if (!$variant) {
+            $ctx->reply("Тарифы не установлены для сообщества\n\n");
+            return null;
+        }
+
+        $userBuyedTariff = TelegramUserTariffVariant::findBuyedTariffByTelegramUserId($ctx->getUserID(), $variant->id);
+        if ($userBuyedTariff) {
+            if ($variant->isTest) {
+                $ctx->reply("Вы уже использовали тестовый период данного тарифа\n\n");
+            } else {
+                $ctx->reply("Данный тариф уже куплен, автопродление включено.\n\n");
+            }
+            return null;
+        }
+
+        $menu = Menux::Create('link')->inline();
+
+        $menu->row()->uBtn('Оплатить тариф', Tariff::preparePaymentLink($community->tariff->id, $variant->isTest, $ctx->getUserID()));
+        $buttonName = $this->getTariffButtonName($variant->title, $variant->price, $variant->period);
+        $ctx->reply($buttonName . "\n\n", $menu);
     }
 
     public function donateButtons($ctx)
@@ -452,41 +491,51 @@ class MainBotCommands
     {
         try {
             $this->bot->onInlineQuery('t-{tariffHash}-{communityHash}', function (Context $ctx) {
-
                 $communityId = PseudoCrypt::unhash($ctx->var('communityHash'));
-                $adminsOfGroup = TelegramUserList::getAdmins($communityId);
-                if (!in_array($ctx->getUserID(), $adminsOfGroup)) {
-                    return;
-                }
-
+                $community = Community::find($communityId);
                 $tariff = Tariff::query()
                     ->where('inline_link', $ctx->var('tariffHash'))
                     ->where('community_id', $communityId)
                     ->first();
-                $community = Community::find($communityId);
+
                 $result = new Result();
                 $article = new Article(1);
                 $message = new InputTextMessageContent();
-                $message->parseMode('HTML');
 
                 $image = $tariff->main_image ?? null;
                 $description = $tariff->main_description ?? 'Тариф';
-                $article->description($description);
-                $message->text($description . '<a href="' . config('app.url') . '/'. $image . '">&#160</a>');
-                $article->thumbUrl('' . config('app.url') .'/'. $image);
-                [$text, $menu] = $this->tariffButton($community);
+                $message->text($description . '<a href="' . config('app.url') . '/' . $image . '">&#160</a>')
+                        ->parseMode('HTML');
+                $article->title($community->title ?? 'Тариф')
+                        ->description($description)
+                        ->inputMessageContent($message)
+                        ->thumbUrl('' . config('app.url') . '/' . $image);
 
-                $article->title($community->title ?? 'Тариф');
-                $article->inputMessageContent($message);
+                $menu = Menux::Create('a')->inline();
+                $variants = $community->tariff->variants()
+                    ->where('isActive', true)
+                    ->where('isPersonal', false)
+                    ->get();
+                if ($variants->count() == 0) {
+                    $ctx->reply("Тарифы не установлены для сообщества\n\n");
+                    return null;
+                }
+
+                foreach ($variants as $variant) {
+                    $buttonName = $this->getTariffButtonName($variant->title, $variant->price, $variant->period);
+                    $menu->row()->btn($buttonName, 'tariff-' . $community->tariff->inline_link . '_' . $variant->inline_link);
+                }
 
                 $article->keyboard($menu->getAsObject());
                 $result->add($article);
+                Log::debug('Sending answer, inlineTariffQuery', [$result, $message, $article]);
                 $ctx->Api()->answerInlineQuery([
                     'inline_query_id' => $ctx->getInlineQueryID(),
                     'results' => (string)$result,
                 ]);
             });
         } catch (\Exception $e) {
+            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
@@ -1368,11 +1417,10 @@ class MainBotCommands
         }
     }
 
-    private
-    function tariffButton($community, $userId = NULL)
+    private function tariffButton($community, $userId = NULL)
     {
         try {
-            $menu = Menux::Create('links')->inline();
+            $menu = Menux::Create('a')->inline();
             $text = 'Доступные тарифы';
             $variants = $community->tariff->variants()
                 ->where('isActive', true)
@@ -1386,7 +1434,7 @@ class MainBotCommands
                 $price = ($variant->price) ? $variant->price . '₽' : '';
                 $title = ($variant->title) ? $variant->title . ' — ' : '';
                 $period = ($variant->period) ? '/Дней:' . $variant->period : '';
-                $menu->row()->uBtn($title . $price . $period, $community->getTariffPaymentLink($community->tariff->inline_link));
+                $menu->row()->Btn($title . $price . $period, 'tariff-' . $community->tariff->inline_link);
             }
             return [$text, $menu];
         } catch (\Exception $e) {

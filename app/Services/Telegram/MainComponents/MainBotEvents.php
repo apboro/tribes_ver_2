@@ -473,7 +473,7 @@ class MainBotEvents
     protected function botChangeStatus(): void
     {
         try {
-            $chatMember = $this->data->my_chat_member;
+            $chatMember = $this->data->my_chat_member ?? null;
             $userId = $chatMember->new_chat_member->user->id ?? null;
             $newStatus = $chatMember->new_chat_member->status ?? null;
             $oldStatus = $chatMember->old_chat_member->status ?? null;

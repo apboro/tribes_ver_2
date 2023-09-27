@@ -330,4 +330,18 @@ class ExtentionApi extends Api implements ExtentionApiInterface
         return $this->invokeAction('deleteMessage', $params);
 
     }
+
+     /**
+     * Пригласительная ссылка для выдачи N раз
+     */
+    public static function createLinkToChat(int $chatId, $limit = 1)
+    {
+       $params = [
+            'chat_id' => $chatId,
+            'member_limit' => $limit
+        ];
+        $inviteLink = Http::post(self::TELEGRAM_BASE_URL . '/bot' . config('telegram_bot.bot.token') . '/createChatInviteLink', $params)['result']['invite_link'];  
+       
+        return $inviteLink;
+    }
 }
