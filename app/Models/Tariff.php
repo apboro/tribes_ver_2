@@ -126,7 +126,7 @@ class Tariff extends Model
 
     public static function preparePaymentLink(string $inlineLink, bool $TryTrial, int $telegramUserId): string
     {
-        $params['telegrm_user_id'] = $telegramUserId;
+        $params['telegram_user_id'] = $telegramUserId;
         if ($TryTrial) {
             $params['try_trial'] = $TryTrial;
         }
