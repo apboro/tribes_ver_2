@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\Auth;
+use App\Helper\PseudoCrypt;
 
 /** @method TariffFactory factory()
  * @property mixed $main_image
@@ -38,14 +39,19 @@ class Tariff extends Model
         return $this->hasMany(TariffVariant::class, 'tariff_id', 'id')->orderBy('id');
     }
 
-    function variantTest()
+    public function variantTest()
     {
         return $this->variants()->where('isTest', true);
     }
 
-    function variantPaid()
+    public function variantPaid()
     {
         return $this->variants()->where('isTest', false);
+    }
+
+    public function getVariantByPaidType(bool $isPaid)
+    {
+        return $this->variants()->where('isTest', !$isPaid)->first();
     }
 
     public function tariffCommunityUsers(): HasManyThrough
@@ -116,5 +122,16 @@ class Tariff extends Model
     {
         $bot = $bot ?? env('TELEGRAM_BOT_NAME', '');
         return "@$bot {$this->inline_link}";
+    }
+
+    public static function preparePaymentLink(int $tariffId, bool $TryTrial, int $telegramUserId): string
+    {
+        $params['telegrm_user_id'] = $telegramUserId;
+        if ($TryTrial) {
+            $params['try_trial'] = $TryTrial;
+        }
+        $hash = PseudoCrypt::hash($tariffId, 8);
+        
+        return config('app.frontend_url') . Tariff::FRONTEND_TARIFF_PAGE . $hash . '/pay/' . '?' . http_build_query($params);
     }
 }

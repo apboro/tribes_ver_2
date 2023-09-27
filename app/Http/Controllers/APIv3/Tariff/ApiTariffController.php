@@ -124,55 +124,30 @@ class ApiTariffController extends Controller
     public function payForTariff(ApiTariffPayRequest $request)
     {
         $tariff = Tariff::findOrFail($request->id);
-        $variant = $tariff->variants()->first();
+               
+        $variant = $tariff->getVariantByPaidType(!$request->input('try_trial'));
 
         if (!$tariff->tariff_is_payable && $variant->isActive) {
             return ApiResponse::error('tariff.tariff_inactive');
         }
 
-        ### Регистрация плательщика #####
-        $password = Str::random(8);
-        $email = strtolower($request['e-mail']);
-        $user = User::firstOrCreate(['email' => $email],
-            [
-                'name' => explode('@', $email)[0],
-                'code' => 0000,
-                'phone' => null,
-                'password' => Hash::make($password),
-                'phone_confirmed' => false,
-            ]);
+        $user = User::easyRegister(strtolower($request['e-mail']));
 
-        $userTelegramAccountsIds = $user->telegramMeta()->pluck('id')->toArray();
-
-        if ($request->input('try_trial')) {
-            $userHasTrialTariff = TelegramUserTariffVariant::whereIn('telegram_user_id', $userTelegramAccountsIds)
-                ->where('tarif_variants_id', $tariff->getTrialVariant()->id)->first();
-            if ($userHasTrialTariff && $userHasTrialTariff->used_trial) {
+        $userBuyedTariff = TelegramUserTariffVariant::findBuyedTariffByTelegramUserId($request->telegram_user_id, $variant->id);
+        if ($userBuyedTariff) {
+            if ($variant->isTest) {
                 return ApiResponse::error(trans('tariff.tariff_trial_used'));
+            } else {
+                return ApiResponse::error(trans('tariff.tariff_already_active'));
             }
         }
 
-        $userHasPayedTariff = TelegramUserTariffVariant::query()
-            ->whereIn('telegram_user_id', $userTelegramAccountsIds)
-            ->whereIn('tarif_variants_id', $tariff->variants()->pluck('id')->toArray())
-            ->where('days', '>', 0)
-            ->first();
-
-        if ($userHasPayedTariff)
-            return ApiResponse::error(trans('tariff.tariff_already_active'));
-
-
-        if ($user->wasRecentlyCreated) {
-            $user->tinkoffSync();
-            Event::dispatch(new ApiUserRegister($user, $password));
-        }
-        ### /Регистрация плательщика #####
-
         $p = new Pay();
-        $p->amount($request->input('try_trial') ? 0 : $variant->price * 100)
-            ->payFor($request->input('try_trial') ? $tariff->getTrialVariant() : $variant)
+        $p->amount($variant->isTest ? 0 : $variant->price * 100)
+            ->payFor($variant)
             ->recurrent(true)
-            ->payer($user);
+            ->payer($user)
+            ->setTelegramId($request->telegram_user_id);
 
         $payment = $p->pay();
         if ($payment) {

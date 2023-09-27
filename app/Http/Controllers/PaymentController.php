@@ -26,6 +26,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Event;
+use App\Events\TariffPayedEvent;
 
 
 class PaymentController extends Controller
@@ -143,6 +145,13 @@ class PaymentController extends Controller
 
             if(TinkoffService::checkStatus($request, $payment, $previous_status)){
 //                TelegramLogService::staticSendLogMessage("Notify from tinkoff: ". json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+                // События при успешно проведенном платеже
+                if ($data['Status'] == 'CONFIRMED') {
+                    if ($payment->type == 'tariff') {
+                        Event::dispatch(new TariffPayedEvent($payment));
+                    }
+                }
+
                 return response('OK', 200);
             }
 
