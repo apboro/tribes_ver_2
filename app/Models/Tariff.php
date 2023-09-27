@@ -124,14 +124,13 @@ class Tariff extends Model
         return "@$bot {$this->inline_link}";
     }
 
-    public static function preparePaymentLink(int $tariffId, bool $TryTrial, int $telegramUserId): string
+    public static function preparePaymentLink(string $inlineLink, bool $TryTrial, int $telegramUserId): string
     {
         $params['telegrm_user_id'] = $telegramUserId;
         if ($TryTrial) {
             $params['try_trial'] = $TryTrial;
         }
-        $hash = PseudoCrypt::hash($tariffId, 8);
         
-        return config('app.frontend_url') . Tariff::FRONTEND_TARIFF_PAGE . $hash . '/pay/' . '?' . http_build_query($params);
+        return config('app.frontend_url') . Tariff::FRONTEND_TARIFF_PAGE . $inlineLink . '/pay/' . '?' . http_build_query($params);
     }
 }
