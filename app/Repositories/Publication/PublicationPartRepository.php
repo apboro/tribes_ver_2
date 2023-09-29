@@ -23,6 +23,10 @@ class PublicationPartRepository
         if ($request->input('type') != $this::MEDIA_TYPE_TEXT) {
             $file_path = $request->file('file') ? Storage::disk('public')->putFile('publication_images', $request->file('file')) : null;
         }
+        if ($request->input('type') == 1 && empty($request->input('text'))) {
+            return new PublicationPart;
+        }
+
         $publication_part = PublicationPart::create([
             'publication_id' => $request->input('publication_id'),
             'type' => $request->input('type'),
@@ -30,6 +34,7 @@ class PublicationPartRepository
             'text' => $request->input('text') ?? null,
             'order' => $request->input('order')
         ]);
+        
         return $publication_part;
     }
 
