@@ -503,7 +503,7 @@ class MainBotCommands
                 $message = new InputTextMessageContent();
 
                 $image = $tariff->main_image ?? null;
-                $description = $tariff->main_description ?? 'Тариф';
+                $description = strip_tags($tariff->main_description) ?? 'Тариф';
                 $message->text($description . '<a href="' . config('app.url') . '/' . $image . '">&#160</a>')
                         ->parseMode('HTML');
                 $article->title($community->title ?? 'Тариф')
@@ -551,7 +551,7 @@ class MainBotCommands
                 $message = new InputTextMessageContent();
 
                 $image = $donate->image;
-                $description = trim($donate->description) ? $donate->description : 'Донат';
+                $description = trim(strip_tags($donate->description)) ? strip_tags($donate->description) : 'Донат';
                 $message->text($description . '<a href="' . config('app.url') . '/' . $image . '">&#160</a>');
 
                 $message->parseMode('HTML');
@@ -569,16 +569,16 @@ class MainBotCommands
 
                         $currencyLabel = Donate::$currency_labels[$key];
 
-                        if ($variant->description) {
+                        if (strip_tags($variant->description)) {
                             $menu->row()->btn(
-                                $variant->price . $currencyLabel . ' — ' . $variant->description,
+                                $variant->price . $currencyLabel . ' — ' . strip_tags($variant->description),
                                 'donate-' . $donate->inline_link . '_' . $variant->price
                             );
                         } else {
                             $menu->row()->btn($variant->price . $currencyLabel, 'donate-' . $donate->inline_link . '_' . $variant->price);
                         }
                     } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
-                        $variantDesc = $variant->description ?? 'Произвольная сумма';
+                        $variantDesc = strip_tags($variant->description) ?? 'Произвольная сумма';
                         $menu->row()->btn($variantDesc, 'donate-' . $donate->inline_link . '_0');
                     }
                 }
