@@ -135,14 +135,14 @@ class CheckTariff extends Command
                                         $tariff_variant_name = $variant->title;
                                         $community_name = $variant->community()->title;
 
-                                        if ($variant->pivot->recurrent_attempt >= 3) {
+                                        if ($variant->pivot->recurrent_attempt >= 3 || $user->hasLeaveCommunity($variant->tariff->community_id)) {
                                              $this->telegramService->kickUser(
                                                  config('telegram_bot.bot.botName'),
                                                  $user->telegram_id,
                                                  $variant->tariff->community->connection->chat_id
                                              );
                                              $user->communities()->detach($variant->tariff->community->id);
-
+                                             $user->tariffVariant()->detach($variant->id);
 
                                              if ($variant->tariff->tariff_notification) {
                                                  $this->telegramService->sendMessageFromBot(
