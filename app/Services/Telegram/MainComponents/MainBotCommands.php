@@ -1410,8 +1410,8 @@ class MainBotCommands
                 ->row()->btn('Личный кабинет')
                 ->row()->btn(self::KNOWLEDGE_BASE)
                 ->row()->btn('Поддержка')
-                ->row()->btn('Мои подписки')
-                ->row()->btn(self::REPUTATION);
+                ->row()->btn('Мои подписки');
+                //->row()->btn(self::REPUTATION);
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
