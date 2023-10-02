@@ -17,15 +17,18 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Repositories\Webinar\WebinarRepository;
 use App\Models\Webinar;
+use App\Models\VisitedWebinar;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Services\Tinkoff\Payment;
 use App\Services\WebinarService;
+use App\Http\ApiRequests\Webinars\ApiVisitedWebinarListRequest;
 
 class ApiWebinarController extends Controller
 {
@@ -230,4 +233,17 @@ class ApiWebinarController extends Controller
         return ApiResponse::common(['redirect' => $payment->paymentUrl]);
     }
 
+    public function listVisited(ApiVisitedWebinarListRequest $request): ApiResponse
+    {
+        $user = Auth::user();
+        $visitedVebinars = VisitedWebinar::getByUser($user->id, $request->offset, $request->limit);
+        $count = VisitedWebinar::countByUser($user->id);
+
+        return ApiResponse::listPagination(
+            [
+                'Access-Control-Expose-Headers' => 'Items-Count',
+                'Items-Count' => $count
+            ]
+        )->items((new WebinarCollection($visitedVebinars))->toArray($request));
+    }
 }
