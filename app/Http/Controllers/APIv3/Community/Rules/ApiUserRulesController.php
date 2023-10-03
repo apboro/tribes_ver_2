@@ -96,7 +96,7 @@ class ApiUserRulesController extends Controller
             ->with('communities')
             ->where('user_id', $user->id)
             ->when($request->has('rule_title'), function ($query) use ($request) {
-                $query->where('title', 'like', '%' . $request->input('rule_title') . '%');
+                $query->where('title', 'ilike', '%' . $request->input('rule_title') . '%');
             })
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));
@@ -106,7 +106,7 @@ class ApiUserRulesController extends Controller
         $ifThenRules = UserRule::where('user_id', $user->id)
             ->with(['communities'])
             ->when($request->has('rule_title'), function ($query) use ($request) {
-                $query->where('title', 'like', '%' . $request->input('rule_title') . '%');
+                $query->where('title', 'ilike', '%' . $request->input('rule_title') . '%');
             })
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));
@@ -117,7 +117,7 @@ class ApiUserRulesController extends Controller
         $antispamRules = Antispam::where('owner', $user->id)
             ->with('communities')
             ->when($request->has('rule_title'), function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->input('rule_title') . '%');
+                $query->where('name', 'ilike', '%' . $request->input('rule_title') . '%');
             })
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));
@@ -128,7 +128,7 @@ class ApiUserRulesController extends Controller
         $moderationRules = CommunityRule::where('user_id', $user->id)
             ->with(['communities', 'restrictedWords'])
             ->when($request->has('rule_title'), function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->input('rule_title') . '%');
+                $query->where('name', 'ilike', '%' . $request->input('rule_title') . '%');
             })
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));
@@ -139,7 +139,7 @@ class ApiUserRulesController extends Controller
         $reputationRules = CommunityReputationRules::where('user_id', $user->id)
             ->with(['communities', 'reputationWords'])
             ->when($request->has('rule_title'), function ($query) use ($request) {
-                $query->where('title', 'like', '%' . $request->input('rule_title') . '%');
+                $query->where('title', 'ilike', '%' . $request->input('rule_title') . '%');
             })
             ->when($request->has('rule_uuid'), function ($query) use ($request) {
                 $query->where('uuid', $request->input('rule_uuid'));
