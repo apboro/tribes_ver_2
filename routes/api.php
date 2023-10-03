@@ -298,6 +298,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/webinars', [ApiWebinarController::class, 'list'])->name('api.webinar.list');
     Route::get('/webinars/register-user/{uuid}', [ApiWebinarController::class, 'registerWbnrUser']);
     Route::get('/webinars/{id}', [ApiWebinarController::class, 'show'])->name('api.webinar.show');
+    Route::get('/visited/webinars', [ApiWebinarController::class, 'listVisited'])->name('api.webinars.visited');
 
     Route::post('/lms_feedback/{id}', [ApiLMSFeedbackController::class, 'store']);
     Route::get('/lms_recommendation', [ApiLmsRecommendationController::class, 'getRecommendation']);

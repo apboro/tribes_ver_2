@@ -8,6 +8,7 @@ use App\Http\ApiRequests\Webinars\ApiWebinarsStoreRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsUpdateRequest;
 use App\Models\User;
 use App\Models\Webinar;
+use App\Models\VisitedWebinar;
 use App\Services\WebinarService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -124,6 +125,7 @@ class WebinarRepository
 
         $webinar->prepareType();
         $webinar->prepareIsFavourite($user->id);
+        $this->addVisit($webinar->id, $user->id);
 
         return $webinar;
     }
@@ -179,9 +181,15 @@ class WebinarRepository
         $userId = request()->user('sanctum')->id ?? null;
         if ($userId) {
             $webinar->prepareIsFavourite($userId); 
+            $this->addVisit($webinar->id, $userId);
         }
 
         return $webinar;
     }
 
+    public function addVisit(int $webinarId, int $userId): void
+    {
+        VisitedWebinar::updateOrCreate(['user_id' => $userId, 'webinar_id' => $webinarId], 
+            ['last_visited' => Carbon::now()]);
+    }  
 }
