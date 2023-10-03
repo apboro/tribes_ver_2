@@ -28,10 +28,10 @@ class RulesObserver
 
     public function handleRules($data)
     {
-        Log::debug('RulesObserver::handleRules', $data);
+        Log::debug('RulesObserver::handleRules');
 
         try {
-            Log::debug('Before Message DTO', [$data]);
+//            Log::debug('Before Message DTO', [$data]);
             $dto = new MessageDTO();
             $dto->message_id = ArrayHelper::getValue($data,'message.message_id');
             $dto->telegram_user_id = ArrayHelper::getValue($data,'message.from.id');
@@ -50,7 +50,7 @@ class RulesObserver
             $dto->reply_from_id = ArrayHelper::getValue($data,'message.reply_to_message.from.id');
             $dto->message_date = ArrayHelper::getValue($data,'message.date');
 
-            Log::debug('Message DTO ready', [$dto]);
+//            Log::debug('Message DTO ready', [$dto]);
             $this->rulesRepository->handleRules($dto);
 
         } catch (Throwable $e){
