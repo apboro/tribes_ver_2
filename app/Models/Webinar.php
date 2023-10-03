@@ -72,4 +72,8 @@ class Webinar extends Model
         return $author->isUserAuthor($userId) ? 'admin' : 'user';
     }
 
+    public static function getByIds(array $ids)
+    {  
+        return self::whereIn('id', $ids)->get();
+    }
 }

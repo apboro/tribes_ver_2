@@ -236,7 +236,8 @@ class ApiWebinarController extends Controller
     public function listVisited(ApiVisitedWebinarListRequest $request): ApiResponse
     {
         $user = Auth::user();
-        $visitedVebinars = VisitedWebinar::getByUser($user->id, $request->offset, $request->limit);
+        $visitedVebinarsIds = VisitedWebinar::getIdsByUser($user->id, $request->offset, $request->limit);
+        $visitedVebinars = Webinar::getByIds($visitedVebinarsIds);
         $count = VisitedWebinar::countByUser($user->id);
 
         return ApiResponse::listPagination(

@@ -16,12 +16,12 @@ class VisitedWebinar extends Model
         return self::where('user_id', $userId)->count();
     }
 
-    public static function getByUser(int $userId, $offset = 0, $limit = 3)
+    public static function getIdsByUser(int $userId, $offset = 0, $limit = 3)
     {
         return self::where('user_id', $userId)
                     ->orderByDesc('last_visited')
                     ->offset($offset)
                     ->limit($limit)
-                    ->get();
+                    ->pluck('webinar_id')->toArray();
     } 
 }
