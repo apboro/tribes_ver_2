@@ -72,7 +72,7 @@ class TinkoffApi
 //        $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/';
         $this->terminalKey = $terminalKey;
         $this->secretKey = $secretKey;
-        Log::info('Tinkoff use hardcode urls');
+//        Log::info('Tinkoff use hardcode urls');
 //        if (env('TINKOFF_TEST') && $need_test) {
 //            $this->api_url = 'https://rest-api-test.tinkoff.ru/v2/';
 //            $this->api_e2c_url = 'https://rest-api-test.tinkoff.ru/e2c/v2/';

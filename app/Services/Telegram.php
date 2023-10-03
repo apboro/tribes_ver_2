@@ -270,7 +270,7 @@ class Telegram extends Messenger
             ->whereStatus('connected')
             ->get();
 
-        Log::debug('checkCommunityConnect', compact('telegramConnectionsOfUser'));
+//        Log::debug('checkCommunityConnect', compact('telegramConnectionsOfUser'));
 
         if ($telegramConnectionsOfUser->isNotEmpty()) {
             foreach ($telegramConnectionsOfUser as $telegramConnection) {
@@ -305,7 +305,7 @@ class Telegram extends Messenger
 
             return $telegramConnection;
         } else {
-            log::info('Check user bot status');
+//            log::info('Check user bot status');
             $telegramConnectionsOfUser = TelegramConnection::query()
                 ->where('telegram_user_id', $telegram_id)
                 ->where('userBotStatus', 'administrator')
@@ -462,6 +462,7 @@ function createCommunity($community)
 public
 function invokeCommunityConnect($user, $type, $telegram_id)
 {
+    log::info('_________ invokeCommunityConnect _______');
     /* @var $user User */
 
     $user_telegram_accounts = $user->telegramData();
@@ -483,6 +484,8 @@ function invokeCommunityConnect($user, $type, $telegram_id)
             'chat_type' => $type,
             'status' => 'init'
         ], ['hash' => $hash]);
+
+        log::info( 'telegram connection id:' . $tc->id);
 
         return [
             'original' => [
@@ -559,6 +562,7 @@ static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chat
             ->where('status', '!=', 'init')
             ->first();
 
+
         $telegramConnectionNew = TelegramConnection::where('telegram_user_id', $telegram_user_id)->whereStatus('init')->first();
 
         if ($telegramConnectionExists) {
@@ -586,6 +590,8 @@ static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chat
                 $telegramConnectionNew->photo_url = $photo_url;
                 $telegramConnectionNew->save();
                 Log::debug('сохранение данных в группе $chatId,$chatTitle,$chatType', compact('chat_id', 'chatTitle', 'chatType'));
+            }else{
+                Log::debug('________ группа не найденна ', compact('chat_id'));
             }
         }
 
@@ -601,16 +607,26 @@ static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chat
 }
 
 public
-static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id)
+static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id, $data = null)
 {
     try {
         $telegramConnection = TelegramConnection::where('chat_id', $chat_id)
             ->where('telegram_user_id', $telegram_user_id)
             ->first();
+
         if (!$telegramConnection) {
             $telegramConnectionNew = TelegramConnection::where('telegram_user_id', $telegram_user_id)->whereStatus('init')->first();
             $telegramConnectionNew->botStatus = $status;
             $telegramConnectionNew->save();
+
+            if($telegramConnectionNew->chat_id === null && $data !== null) {
+                log::info('chat_id is null');
+                $telegramConnection = $telegramConnectionNew;
+                $telegramConnection->chat_id = $data->my_chat_member->chat->id ?? null;
+                $telegramConnection->chat_title = $data->my_chat_member->chat->title ?? null;
+                $telegramConnection->chat_type = $data->my_chat_member->chat->type ?? null;
+                $telegramConnection->save();
+            }
         }
         Log::debug('botGetPermissionsEvent', compact('telegramConnection'));
         if ($telegramConnection) {
