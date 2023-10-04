@@ -578,7 +578,7 @@ class MainBotCommands
                             $menu->row()->btn($variant->price . $currencyLabel, 'donate-' . $donate->inline_link . '_' . $variant->price);
                         }
                     } elseif ($variant->min_price && $variant->max_price && $variant->isActive !== false) {
-                        $variantDesc = strip_tags($variant->description) ?? 'Произвольная сумма';
+                        $variantDesc = strip_tags($variant->description) != '' ? strip_tags($variant->description) : 'Произвольная сумма';
                         $menu->row()->btn($variantDesc, 'donate-' . $donate->inline_link . '_0');
                     }
                 }
