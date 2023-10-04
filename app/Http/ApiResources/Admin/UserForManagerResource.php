@@ -29,7 +29,7 @@ class UserForManagerResource extends JsonResource
             'payouts' => $this->resource->accumulation()
                     ->where('status', 'closed')
                     ->sum('amount') / 100 ?? '—',
-            'created_at' => $this->resource->created_at->timestamp,
+            'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
         ];
     }
