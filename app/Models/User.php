@@ -223,7 +223,7 @@ class User extends Authenticatable
         return $rubbles ? $amount / 100 : $amount;
     }
     
-    public static function getCommission($userId)
+    public static function getCommission(int $userId): int
     {
         $personalComission = UserSettings::findValueByUserIdAndName($userId, 'percent');
         if ($personalComission) {
