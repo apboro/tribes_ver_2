@@ -24,7 +24,7 @@ class UserForManagerResource extends JsonResource
             'is_blocked' => $this->resource->is_blocked,
             'locale' => $this->resource->locale,
             'role_index' => $this->resource->role_index,
-            'commission' => $this->resource->getTribesCommission(),
+            'commission' => User::getCommission($this->resource->id),
             'payins' => $this->resource->accumulation()->sum('amount') / 100,
             'payouts' => $this->resource->accumulation()
                     ->where('status', 'closed')

@@ -140,11 +140,14 @@ class TinkoffService
                     if(isset($accumulation)){
                         if ($previous_status != 'CONFIRMED' && $new_status == 'CONFIRMED') {
                             Log::info('134 isset($accumulation)');
-                            $add = ($accumulation->getTribesCommission() != 100)
-                                ? $payment->amount / 100 * (100-$accumulation->getTribesCommission())
+                            $comission = User::getCommission($accumulation->user_id);
+                            $add = ($comission != 100)
+                                ? $payment->amount / 100 * (100 - $comission)
                                 : 0
                             ;
                             $accumulation->addition($add);
+                            $payment->comission = $comission;
+                            $payment->save();
                         }
                     }
                     log::info('________________ after $accumulation ');
@@ -161,9 +164,11 @@ class TinkoffService
                         Log::info('$community subtraction');
                         $community->subtraction($payment->add_balance);
                     }
+
                     if(isset($accumulation)){
-                        $add = ($accumulation->getTribesCommission() != 100)
-                            ? $payment->amount / 100 * (100-$accumulation->getTribesCommission())
+                        $comission = $payment->comission !== null ? $payment->comission : User::getCommission($accumulation->user_id);
+                        $add = ($comission != 100)
+                            ? $payment->amount / 100 * (100  - $comission)
                             : 0
                         ;
                         $accumulation->subtraction($add);
