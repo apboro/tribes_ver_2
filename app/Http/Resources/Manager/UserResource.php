@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
             'locale' => $this->resource->locale,
-            'commission' =>  $this->resource->getTribesCommission(),
+            'commission' =>  User::getCommission($this->resource->user_id),
             'telegram' => $this->resource->telegramMeta->user_name ?? '—',
             'community_owner_num' => $this->resource->getOwnCommunities()->count() ?? '—',
             'is_blocked' => $this->resource->is_blocked,

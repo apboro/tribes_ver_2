@@ -26,4 +26,10 @@ class UserSettings extends Model
     {
         return UserSettings::where('user_id','=',$id)->get()->keyBy('name');
     }
+
+    public static function findValueByUserIdAndName(int $userId, string $name)
+    {
+        $record = self::where('user_id', $userId)->where('name', $name)->first();
+        return $record ? $record->value : null;
+    }  
 }

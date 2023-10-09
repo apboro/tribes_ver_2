@@ -26,15 +26,24 @@ class TelegramPaymentsStatisticRepository
      * Возвращает сумму оплат указанного типа для указанных копилок
      * @param array $accumulationIds массив с accumulationId
      * @param string $type тип оплаты
+     * @param int $comission комиссия
      * @return int
      */
-    public function getPaymentsSumm(array $accumulationIds, string $type): int
+    public function getPaymentsSumm(array $accumulationIds, string $type, int $comission): int
     {
-        return (int) Payment::whereIn('SpAccumulationId', $accumulationIds)
+        $sum = 0;
+        $payments = Payment::whereIn('SpAccumulationId', $accumulationIds)
             ->whereStatus('CONFIRMED')
             ->whereType($type)
-            ->select(DB::raw("SUM(amount) as sum"))
-            ->first()->sum / 100;
+            ->select('id', 'amount', 'comission')
+            ->get();
+
+        foreach ($payments as $payment) {
+            $pymentRateCommission = $payment->comission ? $payment->comission : $comission;
+            $sum += $payment->amount * ((100 - $pymentRateCommission) / 100);
+        }
+
+        return $sum / 100;
     }
 
     /**

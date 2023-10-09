@@ -222,12 +222,24 @@ class User extends Authenticatable
 
         return $rubbles ? $amount / 100 : $amount;
     }
-
-    function getTribesCommission()
+    
+    public static function getCommission(int $userId): int
     {
-        return (int)(UserSettings::findByUserId($this->id)->get('percent')->value ?? env('TRIBES_COMMISSION', 4));
-    }
+        $personalComission = UserSettings::findValueByUserIdAndName($userId, 'percent');
+        if ($personalComission) {
+            return $personalComission;
+        }
 
+        $userSubscription = self::whereId($userId)->with('activeSubscription')->first();
+        $subscription = Subscription::find($userSubscription->activeSubscription->subscription_id);
+        
+        if ($subscription->commission !== null && $subscription->commission > 0) {
+            return $subscription->commission;
+        }
+
+        return env('TRIBES_COMMISSION', 15);
+    }
+   
     public function sendPasswordResetNotification($token)
     {
         $v = view('mail.reset')->with(
@@ -302,6 +314,11 @@ class User extends Authenticatable
     public function payments()
     {
         return $this->hasMany(Payment::class, 'user_id');
+    }
+
+    public function activeSubscription()
+    {
+        return $this->hasOne(UserSubscription::class, 'user_id', 'id')->where('isActive', true);
     }
 
     public function subscription()

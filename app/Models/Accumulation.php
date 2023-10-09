@@ -30,11 +30,6 @@ class Accumulation extends Model
         return true;
     }
 
-    function getTribesCommission()
-    {
-        return UserSettings::findByUserId($this->user_id)->get('percent')->value ?? env('TRIBES_COMMISSION', 15);
-    }
-
     public function subtraction($summ)
     {
         $this->update(['amount' => $this->amount - $summ]);
