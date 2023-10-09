@@ -212,7 +212,7 @@ class ApiManagerUserController extends Controller
 
     public function list(ApiUserListManagerRequest $request, UsersFilter $filter): ApiResponse
     {
-        $users = User::with('telegramMeta', 'accumulation')->filter($filter);
+        $users = User::with('telegramMeta', 'accumulation', 'communities')->filter($filter);
         $count = $users->count();
 
         return ApiResponse::listPagination(
@@ -242,6 +242,14 @@ class ApiManagerUserController extends Controller
                 'attribute' => 'name',
             ],
             [
+                'title' => 'Юзернейм',
+                'attribute' => 'telegram_user_name',
+            ],
+            [
+                'title' => 'Имя в телеграм',
+                'attribute' => 'telegram_first_last_name',
+            ],
+            [
                 'title' => 'E-mail',
                 'attribute' => 'email',
             ],
@@ -269,10 +277,14 @@ class ApiManagerUserController extends Controller
                 'title' => 'Комиссия',
                 'attribute' => 'commission',
             ],
+            [
+                'title' => 'Группы',
+                'attribute' => 'communities',
+            ],
         ];
 
         $prepare_result = $this->FIlePrepareService->prepareFile(
-            User::query(),
+            User::with('telegramMeta', 'accumulation', 'communities'),
             $names,
             UserForManagerResource::class,
             $request->get('type', 'csv'),
