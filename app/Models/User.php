@@ -231,10 +231,11 @@ class User extends Authenticatable
         }
 
         $userSubscription = self::whereId($userId)->with('activeSubscription')->first();
-        $subscription = Subscription::find($userSubscription->activeSubscription->subscription_id);
-        
-        if ($subscription->commission !== null && $subscription->commission > 0) {
-            return $subscription->commission;
+        if ($userSubscription->activeSubscription !== null) {
+            $subscription = Subscription::find($userSubscription->activeSubscription->subscription_id);
+            if ($subscription->commission !== null && $subscription->commission > 0) {
+                return $subscription->commission;
+            }
         }
 
         return env('TRIBES_COMMISSION', 15);
