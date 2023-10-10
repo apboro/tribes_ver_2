@@ -29,6 +29,16 @@ class UserForManagerResource extends JsonResource
     return $result;
     }
 
+    private function findTelegramUserName()
+    {
+        $userNames = $this->resource->telegramMeta->pluck('user_name')->toArray();
+        if (count($userNames) == 0) {
+            return '';
+        }
+        
+        return '@' . implode(', @', $userNames);
+    }
+
     public function toArray($request)
     {
         return [
@@ -38,10 +48,7 @@ class UserForManagerResource extends JsonResource
             'phone' => $this->resource->phone,
             'community_owner_num' => count($this->resource->communities),
             'phone_confirmed' => $this->resource->phone_confirmed,
-            'telegram_user_name' => array_map(
-                                        fn($value) => '@' . $value,
-                                        $this->resource->telegramMeta->pluck('user_name')->toArray()
-                                    ),
+            'telegram_user_name' => $this->findTelegramUserName(),
             'telegram_first_last_name' => $this->findFirstLastName(), 
             'is_blocked' => $this->resource->is_blocked,
             'locale' => $this->resource->locale,
