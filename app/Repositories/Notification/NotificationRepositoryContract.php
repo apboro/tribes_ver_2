@@ -8,5 +8,5 @@ interface NotificationRepositoryContract
 
     public function tryActivateAccount($user, $code);
 
-    public static function sendConfirmationTo($user, $phone);
+    public static function sendConfirmationTo($user, $phoneCode, $phone);
 }
