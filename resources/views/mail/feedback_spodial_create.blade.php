@@ -64,49 +64,37 @@
                                         <td class="sm-px-24"
                                             style="mso-line-height-rule: exactly; border-radius: 4px; background-color: #ffffff; padding: 48px; text-align: left; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 16px; line-height: 24px; color: #626262;">
 
-
-                                            <p>
+                                        <ul>
+                                            <li>
                                                 ID обращения:
-                                            </p>
-                                            <p>
                                                 {{$feedback->id}}
-                                            </p>
+                                            </li>
 
-                                            <p>
+                                            <li>
                                                 Имя участника:
-                                            </p>
-                                            <p>
                                                 {{$feedback->name}}
-                                            </p>
+                                            </li>
 
-                                            <p>
+                                            <li>
                                                 Почта участника:
-                                            </p>
-                                            <p>
                                                 {{$feedback->email}}
-                                            </p>
+                                            </li>
 
-                                            <p>
+                                            <li>
                                                 Телефон участника:
-                                            </p>
-                                            <p>
                                                 {{$feedback->phone}}
-                                            </p>
+                                            </li>
 
-                                            <p>
+                                            <li>
                                                 Статус обращения:
-                                            </p>
-                                            <p>
                                                 {{$feedback->status}}
-                                            </p>
+                                            </li>
 
-                                            <p>
+                                            <li>
                                                 Ваш вопрос:
-                                            </p>
-                                            <p>
                                                 {{$feedback->text}}
-                                            </p>
-
+                                            </li>
+                                        </ul>
                                         </td>
                                     </tr>
                                 </table>
