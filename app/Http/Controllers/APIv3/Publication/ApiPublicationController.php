@@ -201,11 +201,16 @@ class ApiPublicationController extends Controller
         $email = $request->input('email');
         $user = User::easyRegister($email);
 
+        $successUrl = config('app.frontend_url') . '/app/auth/sign-in';
+        if (request()->user('sanctum') && $user->id == request()->user('sanctum')->id) {
+            $successUrl = '';
+        }
+
         if ($user === null) {
             return ApiResponse::error('common.register_email_error');
         }
 
-        $payment = $this->tinkoff_payment->doPayment($user, $publication, $publication->price, '');
+        $payment = $this->tinkoff_payment->doPayment($user, $publication, $publication->price, $successUrl);
 
         if ($payment === false) {
             return ApiResponse::error('common.error_while_pay');
