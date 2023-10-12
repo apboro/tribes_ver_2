@@ -62,9 +62,15 @@ class ApiTariffController extends Controller
     {
         try {
             $tariff = $this->tariffRepository->getTariffByHash($request->tariffHash);
+            $paymentId = PseudoCrypt::unhash($request->paymentHash);     
 
-            $paymentId = PseudoCrypt::unhash($request->paymentHash);
-            $payment = Payment::where('id', $paymentId)->where('payable_id', $tariff->id)->first();
+            $payment = Payment::where('id', $paymentId)->first();
+
+            $tariffVariant = TariffVariant::where('id', $payment->payable_id)->where('tariff_id', $tariff->id)->first();
+            if (!$tariffVariant) {
+                return ApiResponse::error('common.not_found');
+            }
+            
             $payer = [
                 'name' => $payment->payer->name,
                 'email' => $payment->payer->email
