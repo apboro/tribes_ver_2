@@ -26,7 +26,7 @@ class addPhoneCodeToSmsConfirmation extends Migration
     public function down()
     {
         Schema::table('sms_confirmation', function (Blueprint $table) {
-            $table->dropColumn('comission');
+            $table->dropColumn('phone_code');
         });
     }
 }
