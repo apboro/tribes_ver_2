@@ -80,49 +80,32 @@ class ApiNewDonateController extends Controller
         $amount = $request['amount'];
         $telegram_user_id = $request['telegram_user_id'];
         $donate = Donate::find($request['donate_id']);
+        $variant = $donate->findStaticVariantByPrice($amount) ?? $donate->findNotStaticVariant();
 
-        foreach ($donate->variants ?? [] as $variant) {
-            if (!$variant->isActive) {
-                continue;
+        if ($variant) {
+            Log::info('Оплата доната', ['variant' => $variant]);
+            if (!$variant->isStatic && ($variant->min_price > $amount || $variant->max_price < $amount)) {
+                return ApiResponse::error('Оплата не удалась'); 
             }
 
-            //оплата фикс суммы
+            $p = new Pay();
+            $p->amount($amount * 100)
+                ->payFor($variant)
+                ->payer($telegram_user_id);
+            $payment = $p->pay();
+            if (!$payment) {
+                return ApiResponse::error('Оплата не удалась');
+            }
+
             if ($variant->isStatic) {
-                Log::info('is isStatic');
-                if ($variant->price == $amount) {
-                    Log::info('proce ammout: ' . $variant->pric . ' - '. $amount);
-                    $p = new Pay();
-                    $p->amount($amount * 100)
-                        ->payFor($variant)
-                        ->payer($telegram_user_id);
-
-                    $payment = $p->pay();
-
-                    if (!$payment) {
-                        return ApiResponse::error('Оплата не удалась');
-                    }
-                    //редиректим по ссылке сразу на тинькофф
-                    return redirect()->to($payment->paymentUrl);
-                }
+                //редиректим по ссылке сразу на тинькофф
+                return redirect()->to($payment->paymentUrl);
             } else {
-                Log::info('else is isStatic');
-                //оплата рандом суммы после ввода на фронте
-                $p = new Pay();
-                $p->amount($amount * 100)
-                    ->payFor($variant)
-                    ->payer($telegram_user_id);
-
-                $payment = $p->pay();
-
-                if (!$payment) {
-                    return ApiResponse::error('Оплата не удалась');
-                }
                 //присылаем на фронт ссылку для редиректа
-                return ApiResponse::common([
-                    'redirect' => $payment->paymentUrl
-                ]);
+                return ApiResponse::common(['redirect' => $payment->paymentUrl]);
             }
         }
+
         return ApiResponse::error('Оплата не удалась');
     }
 
