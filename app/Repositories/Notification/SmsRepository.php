@@ -40,10 +40,12 @@ class SmsRepository implements NotificationRepositoryContract
 
     }
 
-    public static function sendConfirmationTo($user, $phone)
+    public static function sendConfirmationTo($user, $phoneCode, $phone)
     {
+
+        $phoneNumber = $phoneCode . $phone;
         $smsru = new SmsService();
-        $data = self::prepareSmsData($phone);
+        $data = self::prepareSmsData($phoneNumber);
         
         $sms = $smsru->phoneSendOne($data);
         
@@ -57,6 +59,7 @@ class SmsRepository implements NotificationRepositoryContract
             $sms_confirmation->fill([
                 'user_id' => $user->id,
                 'phone' => $phone,
+                'phone_code' => $phoneCode,
                 'code' => $sms->code,
                 'status' => $sms->status,
                 'sms_id' => $sms->call_id,

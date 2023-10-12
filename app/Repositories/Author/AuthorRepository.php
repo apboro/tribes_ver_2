@@ -43,16 +43,12 @@ class AuthorRepository implements AuthorRepositoryContract
 
         $user = User::find(Auth::user()->id);
 
-        $user->update([
-            'code' => str_replace($chars, '', $request['code']),
-            'phone' => str_replace($chars, '', $request['phone'])
-        ]);
+        $phoneCode = str_replace($chars, '', $request['code']);
+        $phone = str_replace($chars, '', $request['phone']);
 
-        $phone = str_replace($chars, '', $request['code'] . $request['phone']);
-
-        $sms = $this->notyRepo->sendConfirmationTo($user, $phone);
+        $sms = $this->notyRepo->sendConfirmationTo($user, $phoneCode, $phone);
 //        dd($sms);
-        if (isset($sms[0][$phone]['error']) && $sms[0][$phone]['error'] === "0") {
+        if (isset($sms[0][$phoneCode . $phone]['error']) && $sms[0][$phoneCode . $phone]['error'] === "0") {
             return true;
         } else return false;
     }

@@ -49,6 +49,7 @@ class ApiSendConfirmCodeRequest extends ApiRequest
         return [
             'phone.required' => $this->localizeValidation('phone.required'),
             'phone.integer' => $this->localizeValidation('phone.incorrect_format'),
+            'phone.unique' => $this->localizeValidation('phone.not_unique'),
             'code.required' => $this->localizeValidation('phone.code_required'),
             'code.integer' => $this->localizeValidation('phone.code_incorrect_format'),
         ];

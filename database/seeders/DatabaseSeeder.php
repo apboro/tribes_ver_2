@@ -46,7 +46,8 @@ class DatabaseSeeder extends Seeder
 
         (new SmsConfirmations([
             'user_id' => $user->id,
-            'phone' => 79056714805,
+            'phone' => 9056714805,
+            'phone_code' => 7,
             'status' => 'OK',
             'code' => 3221,
             'status_code' => null,
@@ -62,7 +63,8 @@ class DatabaseSeeder extends Seeder
 
         (new SmsConfirmations([
             'user_id' => $userTest->id,
-            'phone' => 79056714805,
+            'phone' => 9056714805,
+            'phone_code' => 7,
             'status' => 'OK',
             'code' => 3221,
             'status_code' => null,

@@ -7,7 +7,7 @@ return [
     'message_sent_error' => 'Что-то пошло не так, пожалуйста обратитесь в службу поддержки.',
 
     'confirm_sms_code_not_found' => 'Операция не найдена',
-    'confirm_send_is_blocked' => 'Отправка заблокирована',
+    'confirm_send_is_blocked' => 'Превышено количество попыток ввода кода подтверждения',
     'confirm_code_error' => 'Неверный код',
     'confirm_success' => 'Номер успешно подтверждён',
 ];
