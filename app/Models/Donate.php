@@ -194,5 +194,14 @@ class Donate extends Model
         return $this->variants()->where('variant_name', 'random_sum')->first();
     }
 
+    public function findStaticVariantByPrice(int $price)
+    {
+        return $this->variants()->where('isActive', true)->where('isStatic', true)->where('price', $price)->first();
+    }
+
+    public function findNotStaticVariant()
+    {
+        return $this->variants()->where('isActive', true)->where('isStatic', false)->first();
+    }
 
 }
