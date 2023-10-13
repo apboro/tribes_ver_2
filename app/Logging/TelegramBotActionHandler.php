@@ -14,6 +14,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
     const START_BOT = 'Команда /start отпавлена боту';
     const START_ON_GROUP = 'Команда /start отправлена в группу';
     const HELP_ON_CHAT = 'Команда /help отправлена в группу';
+    const BASE_ON_CHAT = 'Команда /base отправлена в группу';
     const GET_TELEGRAM_USER_ID = 'Узнать Telegram ID';
     const SET_COMMAND = 'setCommand';
     const GET_CHAT_ID = 'Узнать ID чата';
@@ -58,6 +59,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
     const ACTION_SEND_TARIFF_TO_CHAT = 'Отправлены тарифы в чат группы';
     const SEND_HELP_IN_CHAT = 'Отправлена команда /help в чат группы';
     const SEND_HELP_ON_BOT = 'Отправлена команда /help боту';
+    const SEND_BASE_IN_CHAT = 'Отправлена команда /base в чат группы';
     const SEND_DONATE_IN_CHAT = 'Отправлена команда /donate в чат группы';
     const SEND_DONATE_USER = 'Участник отправил пожертвование';
     const SEND_SUBSCRIPTION_ID = 'Отправлено id подписки';
@@ -77,6 +79,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
         'Команда /start отпавлена боту',
         'Команда /start отправлена в группу',
         'Команда /help отправлена в группу',
+        'Команда /base отправлена в группу',
         'Узнать Telegram ID',
         'Узнать ID чата',
         'User Бот стал админом в группе',
@@ -108,6 +111,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
         'Отправлены тарифы в чат группы',
         'Отправлена команда /help в чат группы',
         'Отправлена команда /help боту',
+        'Отправлена команда /base в чат группы',
         'Отправлена команда /donate в чат группы',
         'Участник отправил пожертвование',
         'Отправлено id подписки',
