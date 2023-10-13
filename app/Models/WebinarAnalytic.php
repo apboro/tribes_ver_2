@@ -14,22 +14,32 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed $role
  * @property mixed $attend
  */
-class WebinarAnalytics extends Model
+class WebinarAnalytic extends Model
 {
     use HasFactory;
 
+    /**
+     * @inheritdoc
+     */
     protected $table = 'webinar_analytics';
 
-    public static function saveIncomeStatistic(array $collection): void
+    /**
+     * @inheritdoc
+     */
+    protected $fillable = [
+        'room_id',
+        'user_name',
+        'user_email',
+        'user_outer_id',
+        'attend',
+        'ip',
+        'role',
+    ];
+
+    public static function saveIncomeStatistic(array $data): void
     {
         $self = new self();
-        $self->room_id = $collection['room_id'];
-        $self->user_name = $collection['user_name'];
-        $self->user_email = $collection['user_email'];
-        $self->user_outer_id = $collection['user_outer_id'];
-        $self->attend = $collection['attend'];
-        $self->ip = $collection['ip'];
-        $self->role = $collection['role'];
+        $self->fill($data);
         $self->save();
     }
 }

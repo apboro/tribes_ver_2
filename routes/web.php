@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::post('wbnr/webhook', [WebinarAnalyticController::class, 'handler']);
+Route::post('/wbnr/webhook', [WebinarAnalyticController::class, 'handler']);
 
 Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], function () {
 
