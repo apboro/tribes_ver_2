@@ -4,7 +4,7 @@ namespace App\Http\Controllers\APIv3\Webinar;
 
 use App\Http\ApiResponses\ApiResponseSuccess;
 use App\Http\Controllers\Controller;
-use App\Models\WebinarAnalytics;
+use App\Models\WebinarAnalytic;
 use App\Services\TelegramLogService;
 use Exception;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class WebinarAnalyticController extends Controller
             $all = $request->collect();
 
             if($all['event'] === 'export_stats') {
-                WebinarAnalytics::saveIncomeStatistic($this->prepare($all));
+                WebinarAnalytic::saveIncomeStatistic($this->prepare($all));
             }
 
         } catch (Exception $e) {
@@ -45,7 +45,7 @@ class WebinarAnalyticController extends Controller
      * @param Collection $all
      * @return mixed
      */
-    public function prepare(Collection $all)
+    public function prepare(Collection $all): array
     {
         $analytic = $all['stats'][0];
         $analytic['room_id'] = $all['room_id'];
