@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\APIv3\Donates\ApiNewDonateController;
+use App\Http\Controllers\APIv3\Webinar\WebinarAnalyticController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\System\AdminController;
 use App\Http\Controllers\TelegramBotController;
@@ -19,6 +20,8 @@ Route::get('/', function () {
 })->name('main');
 
 Auth::routes();
+
+Route::post('/wbnr/webhook', [WebinarAnalyticController::class, 'handler']);
 
 Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], function () {
 
