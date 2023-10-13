@@ -52,7 +52,7 @@ class MainBotCommands
     private const CONNECT_CHAT_TO_SPODIAL = 'Подключить чат к Spodial'; //🚀
 
     private const KNOWLEDGE_BASE = 'База знаний'; //🚀
-    private const KNOWLEDGE_BASE_BOT = 'base';
+    private const KNOWLEDGE_BASE_BOT = 'database';
     private const SUPPORT_BOT = 'support';
 
     private const REPUTATION = 'Репутация'; //🚀
@@ -705,8 +705,8 @@ class MainBotCommands
                 }
 
                 $this->save_log(
-                    TelegramBotActionHandler::HELP_ON_CHAT,
-                    TelegramBotActionHandler::SEND_HELP_IN_CHAT,
+                    TelegramBotActionHandler::BASE_ON_CHAT,
+                    TelegramBotActionHandler::SEND_BASE_IN_CHAT,
                     $ctx);
             };
 
@@ -934,7 +934,7 @@ class MainBotCommands
                     TelegramBotActionHandler::ACTION_SEND_PERSONAL_AREA,
                     $ctx);
             };
-            $this->bot->onHears(self::CABINET, $cabinet);
+            $this->bot->onText(self::CABINET, $cabinet);
             $this->bot->onCommand(self::CABINET_COMMAND, $cabinet);
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
