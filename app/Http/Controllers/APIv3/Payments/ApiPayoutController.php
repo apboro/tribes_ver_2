@@ -92,9 +92,12 @@ class ApiPayoutController extends Controller
 
         $cardNumber = null;
         if (isset($cards['data']) && is_array($cards['data'])) {
-            $cardNumber = $cards['data'][0]->Pan ?? null;
+            foreach ($cards['data'] as $cardInfo) {
+                if ($cardInfo->CardId == $request['cardId']) {
+                    $cardNumber = $cardInfo->Pan ?? null;
+                }
+            }
         } 
-        Log::debug(json_encode($cards));
         if (!$cardNumber) {
             return response()->json([
                 'status' => 'error',
@@ -116,7 +119,7 @@ class ApiPayoutController extends Controller
     private function processPayout($accumulation, $cardId, $cardNumber)
     {
         Log::debug('Инициализация вывода');
-        $orderId = Auth::user()->id . date("_md_s");
+        $orderId = Auth::user()->id . date("_md_s") . $accumulation->id;
         $params = [
             'Amount' => $accumulation->amount,
             'OrderId' => $orderId,
