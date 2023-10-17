@@ -322,20 +322,27 @@ class TinkoffApi
 
             // $path = Str::afterLast(rtrim($api_url, '/'), '/');
             $path = Str::afterLast($api_url, 'tinkoff.ru/');
-            
+       
             // создание хеша для тестового файла данных по платежу можно опираться только на путь и сумму платежа
             // потому что все остальные параметры в $args являются динамическими,
             // потому автотесты платежей разделять по Amount, каждый тест должен иметь свою сумму
             // Но есть проблема: во время запроса на выплату "Payment" суммы нет, т.к. она передается в "init"...
-            $amount = $testArgs['Amount'] ?? 500000;
-            $file_name = md5($path . $amount);
+            $amount = $testArgs['Amount'] ?? 0;
+
+            // Называем файл методом Тинька. Сумму передаем любую, в ответе заменяем на переданную.
+            //$file_name = md5($path . $amount);
+            $file_name = str_replace('/', '-', substr($path, 0, -1));
             $storage = Storage::disk('test_data');
             Log::info('FAKE RESPONSE FILE NAME: ' . $file_name);
 
             $this->response = $storage->exists("payment/$file_name.json") ?
                 $storage->get("payment/$file_name.json") :
                 $storage->get("payment/file.json");
-            Log::info($this->response);
+            
+            $this->response = str_replace('{Amount}', $amount ?? '', $this->response);
+            $this->response = str_replace('{OrderId}', $testArgs['OrderId'] ?? '', $this->response);
+            $this->response = str_replace('{CardId}', $testArgs['CardId'] ?? '', $this->response);
+            $this->response = str_replace('{PaymentId}', rand(1000000,9999999), $this->response);
 
             return $this->response;
         } else if ($curl = curl_init()) {

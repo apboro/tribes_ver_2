@@ -1,0 +1,9 @@
+{
+"Success": true,
+"ErrorCode": "0",
+"TerminalKey": "1642765329798",
+"Status": "CHECKED",
+"PaymentId": "{PaymentId}",
+"OrderId": "{OrderId}",
+"Amount": {Amount}
+}
