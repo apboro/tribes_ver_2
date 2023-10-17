@@ -30,7 +30,10 @@ class WebinarAnalyticController extends Controller
             $all = $request->collect();
 
             if($all['event'] === 'export_stats') {
-                WebinarAnalytic::saveIncomeStatistic($this->prepare($all));
+                $statisticUsersList = $this->prepare($all);
+                foreach($statisticUsersList as $user) {
+                    WebinarAnalytic::saveIncomeStatistic($user);
+                }
             }
 
         } catch (Exception $e) {
@@ -47,9 +50,13 @@ class WebinarAnalyticController extends Controller
      */
     public function prepare(Collection $all): array
     {
-        $analytic = $all['stats'][0];
-        $analytic['room_id'] = $all['room_id'];
+        $data = [];
 
-        return $analytic;
+        foreach ($all['stats'] as $user) {
+            $user['room_id'] = $all['room_id'];
+            $data[] = $user;
+        }
+
+        return $data;
     }
 }
