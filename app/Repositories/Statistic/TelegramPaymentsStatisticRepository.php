@@ -116,6 +116,11 @@ class TelegramPaymentsStatisticRepository
 
         if ($type == 'all') {
             $sub->where("$p.type", '!=', 'payout');
+        } elseif ($type == 'course') {
+            $sub->where(function($query) use ($p) {
+                $query->where("$p.type", 'publication')
+                      ->orWhere("$p.type", 'webinar');
+            });
         } else {
             $sub->where(["$p.type" => $type]);
         }
