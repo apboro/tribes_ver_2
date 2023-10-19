@@ -45,14 +45,15 @@ use Illuminate\Support\Str;
 
 class MainBotCommands
 {
-    private const CABINET = 'Личный кабинет'; //🚀
+    private const CABINET = 'Личный кабинет 🚀';
     private const CABINET_COMMAND = 'getspodial'; //🚀
-    private const SUPPORT = 'Поддержка'; //🚀
+    private const SUPPORT = 'Поддержка 🚀'; //
     private const SUPPORT_MESSAGE = '/issue'; //🚀
     private const CONNECT_CHAT_TO_SPODIAL = 'Подключить чат к Spodial'; //🚀
 
-    private const KNOWLEDGE_BASE = 'База знаний'; //🚀
+    private const KNOWLEDGE_BASE = 'База знаний 🚀';
     private const KNOWLEDGE_BASE_BOT = 'database';
+    private const MY_SUBSRUPTION = 'Мои подписки 🚀';
     private const SUPPORT_BOT = 'support';
 
     private const REPUTATION = 'Репутация'; //🚀
@@ -961,7 +962,7 @@ class MainBotCommands
     protected function mySubscriptions()
     {
         try {
-            $this->bot->onHears('Мои подписки', function (Context $ctx) {
+            $this->bot->onHears(self::MY_SUBSRUPTION, function (Context $ctx) {
                 $menu = Menux::Create('links')->inline();
                 $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
                 if ($communities->first()) {
@@ -1396,21 +1397,21 @@ class MainBotCommands
     {
         try {
             Menux::Create('menu', 'main')
-                ->row()->btn('Личный кабинет') // +
+                ->row()->btn(self::CABINET) // +
                 ->row()->btn(self::KNOWLEDGE_BASE)
-                ->row()->btn('Поддержка');
+                ->row()->btn(self::SUPPORT);
 //                ->row()->btn('Подключить чат к Spodial');
             Menux::Create('menuCustom', 'custom')
-                ->row()->btn('Личный кабинет')
+                ->row()->btn(self::CABINET)
                 ->row()->btn(self::KNOWLEDGE_BASE)
-                ->row()->btn('Мои подписки')
-                ->row()->btn('Поддержка');
+                ->row()->btn(self::MY_SUBSRUPTION)
+                ->row()->btn(self::SUPPORT);
 
             Menux::Create('menuOwner', 'owner')
-                ->row()->btn('Личный кабинет')
+                ->row()->btn(self::CABINET)
                 ->row()->btn(self::KNOWLEDGE_BASE)
-                ->row()->btn('Поддержка')
-                ->row()->btn('Мои подписки');
+                ->row()->btn(self::SUPPORT)
+                ->row()->btn(self::MY_SUBSRUPTION);
                 //->row()->btn(self::REPUTATION);
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
