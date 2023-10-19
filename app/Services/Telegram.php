@@ -177,8 +177,12 @@ class Telegram extends Messenger
                 $community = $connection->community()->first();
             $ty = TelegramUser::where('telegram_id', $t_user_id)->first() ?? null;
             if ($community && $ty) {
+                if ($ty->hasLeaveCommunity($community->id)) {
+                    Log::info('User already exited');
+                    return false; 
+                }
                 $userCommunity = TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $t_user_id);
-                if ($userCommunity->role == 'administrator' || $userCommunity->role == 'creator') {
+                if ($userCommunity && $userCommunity->role == 'administrator' || $userCommunity->role == 'creator') {
                     $this->removeUserFromWhiteList($community->id, $t_user_id);
                 }
                /* $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();

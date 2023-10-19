@@ -598,20 +598,35 @@ class MainBotEvents
     function deleteUser()
     {
         try {
-            if (isset($this->data->message->left_chat_member)) {
-                if ($this->data->message->left_chat_member->id != config('telegram_bot.bot.botId')) {
+            $userId = null;
+            $chatId = null;
+            // Уведомление chat_member
+            if (isset($this->data->chat_member)) {
+                $oldStatus = $this->data->chat_member->old_chat_member->status ?? null;
+                $newStatus = $this->data->chat_member->new_chat_member->status ?? null;
+                if ($oldStatus == 'member' && $newStatus == 'left') {
+                        $userId = $this->data->chat_member->new_chat_member->user->id ?? null;
+                        $chatId = $this->data->chat_member->chat->id ?? null;
+                    }
+            }
+            // Сообщение message
+            if (isset($this->data->message) && isset($this->data->message->left_chat_member)) {
+                $userId = $this->data->message->left_chat_member->id ?? null;
+                $chatId = $this->data->message->chat->id ?? null;
+            }
+            
+            if ($userId && $chatId && $userId  != config('telegram_bot.bot.botId')) {
                     Log::info('Событие удаления пользователя из группы deleteUser()');
                     $telegram = new Telegram(app(TariffRepositoryContract::class));
-                    $this->bot->logger()->debug('Delete user with:', [$this->data->message->chat->id, $this->data->message->left_chat_member->id]);
-                    $telegram->deleteUser($this->data->message->chat->id, $this->data->message->left_chat_member->id);
+                    $this->bot->logger()->debug('Delete user with:', [$chatId, $userId]);
+                    $telegram->deleteUser($chatId, $userId);
                     Log::channel('telegram_bot_action_log')->
-                    log('info', '', [
-                        'event' => TelegramBotActionHandler::EVENT_DELETE_USER,
-                        'telegram_id' => $this->data->message->left_chat_member->id,
-                        'chat_id' => $this->data->message->chat->id
-                    ]);
-                }
-            }
+                        log('info', '', [
+                            'event' => TelegramBotActionHandler::EVENT_DELETE_USER,
+                            'telegram_id' => $userId,
+                            'chat_id' => $chatId
+                        ]);
+                        }
         } catch (Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
