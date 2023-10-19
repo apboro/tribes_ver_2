@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3;
 
+use App\Http\ApiRequests\Webinars\ApiWebinarsAnalyticsRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsDeleteRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarShowByUuidRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsListRequest;
@@ -70,6 +71,29 @@ class ApiWebinarController extends Controller
             ])->items(new WebinarCollection($webinars));
     }
 
+    public function analytic(ApiWebinarsAnalyticsRequest $request)
+    {
+        try{
+            /**@var User $user */
+            $user = Auth::user();
+
+            $webinars = $this->webinarRepository->analytics($user->author->id);
+            $count = $webinars->count();
+
+            return ApiResponse::listPagination([
+                'Access-Control-Expose-Headers' => 'Items-Count',
+                'Items-Count'                   => $count
+            ])->items(new WebinarCollection($webinars));
+
+        } catch (Exception $e) {
+            $response = $e->getResponse();
+            $error = json_decode($response->getBody()->getContents(), true,);
+            log::error('webinar store Exception:' . $error);
+
+            return ApiResponse::error($error);
+        }
+    }
+
     public function publicList(ApiWebinarsPublicListRequest $request): ApiResponse
     {
         $webinars = $this->webinarRepository->publicList($request);
@@ -104,6 +128,7 @@ class ApiWebinarController extends Controller
 
             return ApiResponse::common(WebinarResource::make($webinar)->toArray($request));
         } catch (Exception $e) {
+            log::error('webinar store Exception:'.  $e);
             $response = $e->getResponse();
             $error = json_decode($response->getBody()->getContents(), true, );
             $errorMessage = $error['errors']['room'][0] ?? 'another error by wbnr';

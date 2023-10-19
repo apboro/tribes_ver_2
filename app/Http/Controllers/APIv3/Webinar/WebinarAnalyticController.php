@@ -48,7 +48,7 @@ class WebinarAnalyticController extends Controller
      * @param Collection $all
      * @return mixed
      */
-    public function prepare(Collection $all): array
+    private function prepare(Collection $all): array
     {
         $data = [];
 

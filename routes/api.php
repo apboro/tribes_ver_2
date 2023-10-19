@@ -293,6 +293,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/webinars/favourite', [ApiFavouriteWebinarController::class, 'store'])->name('api.webinars.favorite.create');
     Route::delete('/webinars/favourite/{id}', [ApiFavouriteWebinarController::class, 'destroy'])->name('api.webinars.favorite.delete');
     Route::post('/webinars', [ApiWebinarController::class, 'store'])->name('api.webinar.store');
+    Route::get('/webinars/analytic', [ApiWebinarController::class, 'analytic']);
     Route::delete('/webinars/{id}', [ApiWebinarController::class, 'destroy'])->name('api.webinar.delete');
     Route::post('/webinars/{id}', [ApiWebinarController::class, 'update'])->name('api.webinar.update');
     Route::get('/webinars', [ApiWebinarController::class, 'list'])->name('api.webinar.list');

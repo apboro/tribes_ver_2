@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Webinar extends Model
@@ -52,6 +53,11 @@ class Webinar extends Model
         } elseif ($this->end_at < $nowTime) {
             $this->type = 'ended';
         }
+    }
+
+    public function analytics(): HasMany
+    {
+        return $this->hasMany(WebinarAnalytic::class, 'room_id', 'external_id');
     }
 
     public function favourites()
