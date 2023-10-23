@@ -60,7 +60,7 @@ use Illuminate\Support\Str;
  *         )
  *     ),
  *     @OA\Parameter(
- *         name="tags_names[]",
+ *         name="tag_names[]",
  *         in="query",
  *         description="Community tags names",
  *         required=false,
@@ -98,7 +98,7 @@ class ApiCommunityFilterRequest extends ApiRequest
     {
         return [
             'name' => 'string',
-            'tags_names' => 'array',
+            'tag_names' => 'array',
             'date_from' => 'date_format:U',
             'date_to' => 'date_format:U',
             'rules_uuids' =>'array',
@@ -116,9 +116,9 @@ class ApiCommunityFilterRequest extends ApiRequest
 
     public function prepareForValidation(): void
     {
-        if (isset($this->tags_names[0]) && Str::contains($this->tags_names[0], ',')){
+        if (isset($this->tag_names[0]) && Str::contains($this->tag_names[0], ',')){
         $this->merge([
-            'tags_names' => explode(',', $this->tags_names[0])
+            'tag_names' => explode(',', $this->tag_names[0])
         ]);
     }
     }

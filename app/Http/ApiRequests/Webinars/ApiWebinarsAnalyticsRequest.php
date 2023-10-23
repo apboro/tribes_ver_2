@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\GET(
- *  path="/api/v3/webinar/analytic",
+ *  path="/api/v3/webinars/analytic",
  *  operationId="webinars-show-analytic",
  *  summary="Show webinar analytic",
  *  tags={"Webinars"},
