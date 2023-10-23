@@ -35,9 +35,9 @@ class CommunityRepository implements CommunityRepositoryContract
             $list->where('title', 'ilike', '%' . $request->input('name') . '%');
         }
 
-        if (!empty($request->input('tags_names'))) {
+        if (!empty($request->input('tag_names'))) {
             $list->whereHas('tags', function ($query) use ($request) {
-                $query->whereIn('name', $request->input('tags_names'));
+                $query->whereIn('name', $request->input('tag_names'));
             });
         }
 
