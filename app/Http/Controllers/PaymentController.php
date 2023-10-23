@@ -111,9 +111,10 @@ class PaymentController extends Controller
     {
         $data = $request->all();
         TelegramLogService::staticSendLogMessage("Notify from Tinkoff: " . json_encode($data));
-//        if (empty($data)) {
-//            return response('OK', 200);
-//        }
+        if (empty($data) || !isset($data['Status'])) {
+            Log::critical('Tinkoff notify пришел пустой', ['data' => $data]);
+            return response('OK', 200);
+        }
 
         if ($data['Status'] == 'REFUNDED') {
             Log::log('Tinkoff notify Request status Status Попытка вывода средств ' . json_encode($data));
