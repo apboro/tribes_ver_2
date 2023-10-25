@@ -11,8 +11,9 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class BuyWebinarListener
 {
-    public function handle(BuyWebinarEvent $event){
-        $v = view('mail.media_thanks_buyer')->withCourse($event->webinar)->render();
-        SendEmails::dispatch($event->user->email, 'Приглашение', 'Сервис ' . config('app.name'), $v);
+    public function handle(BuyWebinarEvent $event)
+    {
+        $v = view('mail.webinar_thanks_buyer', ['webinar' => $event->webinar])->render();
+        SendEmails::dispatch($event->user->email, 'Доступ к вебинару успешно оплачен', 'Сервис ' . config('app.name'), $v);
     }
 }

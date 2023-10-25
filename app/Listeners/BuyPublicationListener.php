@@ -11,8 +11,9 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class BuyPublicationListener
 {
-    public function handle(BuyPublicaionEvent $event){
-        $v = view('mail.media_thanks_buyer')->withCourse($event->publication)->render();
-        SendEmails::dispatch($event->user->email, 'Приглашение', 'Сервис ' . config('app.name'), $v);
+    public function handle(BuyPublicaionEvent $event)
+    {
+        $v = view('mail.publication_thanks_buyer', ['publication' => $event->publication])->render();
+        SendEmails::dispatch($event->user->email, 'Доступ к публикации успешно оплачен', 'Сервис ' . config('app.name'), $v);
     }
 }
