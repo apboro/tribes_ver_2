@@ -295,6 +295,13 @@ class ApiWebinarController extends Controller
         ];
 
         foreach ($webinars as $webinar) {
+
+            $webinarsList['webinars'][] = [
+                'start_at' => $webinar->start_at,
+                'end_at'   => $webinar->end_at,
+                'title'    => $webinar->title
+            ];
+
             $webinarsList['titles'][] = $webinar->title;
             $countMax = 0;
             $countMin = 0;
