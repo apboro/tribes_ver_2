@@ -130,12 +130,12 @@ class WebinarRepository
         return $webinar;
     }
 
-    public function analytics(int $authorId)
+    public function analytics(int $authorId,string $start, string $end)
     {
-        log::info('autor:'. $authorId);
-
         return Webinar::with('analytics')->where('author_id', $authorId)
-                    ->whereDate('end_at','<', now()->format('Y-m-d H:i:s'))->get();
+                    ->whereBetween('created_at', [$start, $end])
+                    ->whereDate('end_at','<', now()->format('Y-m-d H:i:s'))
+                    ->get();
     }
 
     public function list(ApiWebinarsListRequest $request)

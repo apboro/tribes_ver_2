@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3;
 
+use App\Helper\QueryHelper;
 use App\Http\ApiRequests\Webinars\ApiWebinarsAnalyticsRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarsDeleteRequest;
 use App\Http\ApiRequests\Webinars\ApiWebinarShowByUuidRequest;
@@ -76,14 +77,21 @@ class ApiWebinarController extends Controller
         try{
             /**@var User $user */
             $user = Auth::user();
+            $periodInput = $request->input('period', 'day');
+            Log::info('Get analytics by: ' . $periodInput);
+            $period = QueryHelper::buildPeriodDates($periodInput);
+            $start = $period[QueryHelper::START_DATA_PERIOD];
+            $end = $period[QueryHelper::END_DATA_PERIOD];
 
-            $webinars = $this->webinarRepository->analytics($user->author->id);
+            $webinars = $this->webinarRepository->analytics($user->author->id, $start, $end);
             $count = $webinars->count();
+
+            $webinarsList = $this->prepareToFormat($webinars);
 
             return ApiResponse::listPagination([
                 'Access-Control-Expose-Headers' => 'Items-Count',
                 'Items-Count'                   => $count
-            ])->items(new WebinarCollection($webinars));
+            ])->items(new WebinarCollection($webinarsList));
 
         } catch (Exception $e) {
             $response = $e->getResponse();
@@ -271,5 +279,38 @@ class ApiWebinarController extends Controller
                 'Items-Count' => $count
             ]
         )->items((new WebinarCollection($visitedVebinars))->toArray($request));
+    }
+
+    /**
+     * @param $webinars
+     *
+     * @return array|array[]
+     */
+    public function prepareToFormat($webinars): array
+    {
+        $webinarsList = [
+            'titles'   => [],
+            'data_low' => [],
+            'data_max' => [],
+        ];
+
+        foreach ($webinars as $webinar) {
+            $webinarsList['titles'][] = $webinar->title;
+            $countMax = 0;
+            $countMin = 0;
+
+            foreach ($webinar->analytics as $analytic) {
+                if ($analytic->attend) {
+                    $countMax++;
+                } else {
+                    $countMin++;
+                }
+            }
+
+            $webinarsList['data_max'][] = $countMax;
+            $webinarsList['data_low'][] = $countMin;
+        }
+
+        return $webinarsList;
     }
 }
