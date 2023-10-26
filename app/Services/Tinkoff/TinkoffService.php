@@ -98,8 +98,8 @@ class TinkoffService
                         ]);
 
                         // Уведомления о покупке автору и покупателю
-                        $v = view('mail.media_thanks_buyer')->withCourse($course)->render();
-                        new Mailer('Сервис Spodial', $v, 'Покупка ' .  $course->title, $payer->email);
+                       // $v = view('mail.media_thanks_buyer')->withCourse($course)->render();
+                       // new Mailer('Сервис Spodial', $v, 'Покупка ' .  $course->title, $payer->email);
 
                         if($course->shipping_noty){
                             $v = view('mail.media_thanks_author')->withCourse($course)->render();
