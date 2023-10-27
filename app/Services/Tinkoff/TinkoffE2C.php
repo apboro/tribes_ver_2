@@ -1,8 +1,10 @@
 <?php
 
-
 namespace App\Services\Tinkoff;
 
+use Illuminate\Support\Facades\Log;
+use App\Models\{Accumulation,
+                Payment};
 
 class TinkoffE2C
 {
@@ -80,6 +82,17 @@ class TinkoffE2C
         $this->apiE2C->removeCardA2C($params);
     }
 
+    /**
+     * Метод создает новую копилку на стороне Тинькова
+     */
+    public function createSpDeal()
+    {
+        $params = [
+            'Type' => "N1"
+        ];
+        $this->apiE2C->createSpDeal($params);
+    }
+
     public function response()
     {
         $r = [];
@@ -103,4 +116,72 @@ class TinkoffE2C
         }
         return $this->response()['status'] == 'ok';
     }
+    
+    private function initPayout(Accumulation $accumulation, string $cardId, string $orderId)
+    {
+        $this->init([
+            'Amount' => $accumulation->amount,
+            'OrderId' => $orderId,
+            'CardId' => $cardId,
+            'DATA' => [
+                'SpAccumulationId' => $accumulation->SpAccumulationId,
+                'SpFinalPayout' => true
+            ]
+        ]);
+
+        return $this->response();        
+    }
+
+    /**
+     * Вывод из копилки $accumulation на карту $cardId (id Tinkoff) с номером $cardNumber и закрытие копилки
+     */
+    public function processPayout(Accumulation $accumulation, string $cardId, string $cardNumber)
+    {
+        Log::debug('Инициализация вывода');
+        $user = $accumulation->user;
+        $orderId = $user->id . date("_md_s_") . $accumulation->id;
+        $resp = $this->initPayout($accumulation, $cardId, $orderId);
+
+        if ($resp['data']->Success && $resp['data']->Success &&
+             isset($resp['data']->Status) && $resp['data']->Status == 'CHECKED') {
+            Log::debug('Payout status CHECKED');
+            $paymentId = $resp['data']->PaymentId;
+            $payOutAmount = (int)$resp['data']->Amount;
+
+            $this->Pay($paymentId);
+            $resp = $this->response();
+
+            if (isset($resp['data']->Success) && $resp['data']->Success && 
+                isset($resp['data']->Status) && $resp['data']->Status == 'COMPLETED') {
+                Log::debug('Payout status COMPLETED');
+
+                // Успешная выплата
+                $accumulation->close();
+                Payment::createPayout($accumulation, $user, $payOutAmount, $orderId, $resp['data']->PaymentId, $cardNumber);
+
+                return [
+                    'status' => 'ok',
+                    'message' => 'Выплата на карту осуществлена'
+                ];
+            } else {
+                // Неуспешная выплата
+                Log::error('Payout error: ' . json_encode($resp));
+
+                return [
+                    'status' => 'error',
+                    'message' => $resp['data']->Message ?? null,
+                    'details' => $resp['data']->Details ?? null,
+                ];
+            }
+        } else {
+            Log::error('Payout error (status not checked): ' . json_encode($resp));
+
+            return [
+                'status' => 'error',
+                'message' => $resp['data']->Message ?? null,
+                'details' => $resp['data']->Details ?? null,
+            ];
+        }
+    }
+    
 }

@@ -344,12 +344,16 @@ class Payment
     private function checkAccumulation()
     {
         $params = [];
+        if ($this->accumulation === null) {
+            $this->accumulation= Accumulation::findUsersAccumulation($this->payFor->author->user_id);
+        } 
         if ($this->accumulation != null) {
             $params['DATA']['StartSpAccumulation'] = false;
             $params['DATA']['SpAccumulationId'] = $this->accumulation->SpAccumulationId;
         } else {
             $params['DATA']['StartSpAccumulation'] = true;
         }
+
         return $params;
     }
 

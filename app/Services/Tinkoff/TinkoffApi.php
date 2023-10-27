@@ -193,6 +193,11 @@ class TinkoffApi
         return $this->buildQuery('GetCardList', $args, true);
     }
 
+    public function createSpDeal($args)
+    {
+        return $this->buildQuery('createSpDeal', $args);
+    }
+
     public function paymentA2C($args)
     {
         return $this->buildQuery('Payment', $args, true);
