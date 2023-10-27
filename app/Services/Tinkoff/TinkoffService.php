@@ -45,32 +45,21 @@ class TinkoffService
             Log::info('Tinkoff $data' .   json_encode($data, JSON_UNESCAPED_UNICODE));
             Log::info('Tinkoff $payment' .   json_encode($payment, JSON_UNESCAPED_UNICODE));
             Log::info('Tinkoff $previous_status' .   json_encode($previous_status, JSON_UNESCAPED_UNICODE));
-            if(isset($data->SpAccumulationId)){
-                Log::info('=== isset($data->SpAccumulationId)');
-                    TelegramLogService::staticSendLogMessage("Запрос на пополнение копилки " . $data->SpAccumulationId . " на сумму" . $payment->amount / 100 . "рублей" );
 
-                 // рекурентный платеж - авто снятие денег  настройка
-                $accumulation = Accumulation::where('SpAccumulationId', (int)$data->SpAccumulationId)->where('status', 'active')->first();
+            if(isset($data->SpAccumulationId)){
+                TelegramLogService::staticSendLogMessage("Запрос на пополнение копилки " . $data->SpAccumulationId . " на сумму" . $payment->amount / 100 . "рублей" );
+                $accumulation = Accumulation::findAccumulation((int)$data->SpAccumulationId);
 
                 if(!$accumulation){
-                    Log::info('=== not avto pament');
-                    if(Accumulation::where('SpAccumulationId', (int)$data->SpAccumulationId)->count()){
-                        Log::info("Рассинхронизация копилок. Тинькофф пытается оформить платёж в закрытую копилку. ID копилки: " . $data->SpAccumulationId );
+                    if(Accumulation::isAccumulationExists((int)$data->SpAccumulationId)){
+                        Log::critical("Рассинхронизация копилок. Тинькофф пытается оформить платёж в закрытую копилку. ID копилки: " . $data->SpAccumulationId );
                         TelegramLogService::staticSendLogMessage("Рассинхронизация копилок. Тинькофф пытается оформить платёж в закрытую копилку. ID копилки: " . $data->SpAccumulationId );
                         return true;
                     }
 
-                    $accumulation = Accumulation::create([
-                        'user_id' => $payment->author,
-                        'SpAccumulationId' => $data->SpAccumulationId,
-                        'started_at' => Carbon::now(),
-                        'ended_at' => Carbon::now()->endOfDay()->modify('last day of this month'),
-                        'status' => 'active',
-                    ]);
-                    Log::info('=== Accumulation::create status => active'  . $accumulation->id);
-                    // todo выбрасывать Ексепшн, если не удалось создать $accumulation увеличить информативность исключений
+                    $accumulation = Accumulation::newAccumulation($payment->author, (int)$data->SpAccumulationId);
+                    Log::info('Создана новая копилка', ['accumulation' => $accumulation]);
                 }
-
             }
             $new_status = $data->Status;
             $previous_status = trim($previous_status); // todo в базе почему то тип char, надо убрать, ставит кучу пробелов
@@ -136,21 +125,18 @@ class TinkoffService
 //                            TelegramLogService::staticSendLogMessage($message);
                         }
                     }
-                    log::info('________________ after 1 $community ');
+
                     if(isset($accumulation)){
                         if ($previous_status != 'CONFIRMED' && $new_status == 'CONFIRMED') {
-                            Log::info('134 isset($accumulation)');
+                            Log::info('Зачисление денег в копилку');
                             $comission = User::getCommission($accumulation->user_id);
-                            $add = ($comission != 100)
-                                ? $payment->amount / 100 * (100 - $comission)
-                                : 0
-                            ;
+                            $add = $payment->amount / 100 * (100 - $comission);
                             $accumulation->addition($add);
                             $payment->comission = $comission;
                             $payment->save();
                         }
                     }
-                    log::info('________________ after $accumulation ');
+
                     if($community){
                         Log::info('$community addition');
                         $community->addition($payment->add_balance);
@@ -167,11 +153,8 @@ class TinkoffService
 
                     if(isset($accumulation)){
                         $comission = $payment->comission !== null ? $payment->comission : User::getCommission($accumulation->user_id);
-                        $add = ($comission != 100)
-                            ? $payment->amount / 100 * (100  - $comission)
-                            : 0
-                        ;
-                        $accumulation->subtraction($add);
+                        $remove = $payment->amount / 100 * (100  - $comission);
+                        $accumulation->subtraction($remove);
                     }
 
                     /** Возврат */

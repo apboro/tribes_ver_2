@@ -179,6 +179,27 @@ class Payment extends Model
         return explode('@', $email)[0];
     }
 
+    /**
+     * Создание записи при выводе денег из копилки
+     */
+    public static function createPayout(Accumulation $accumulation, User $user, int $payOutAmount, string $orderId, string $PaymentId, string $cardNumber): self
+    {
+        $payment = new self();
+        $payment->type = 'payout';
+        $payment->amount = $payOutAmount;
+        $payment->status = 'COMPLETED';
+        $payment->SpAccumulationId = $accumulation->SpAccumulationId;
+        $payment->user_id = $user->id;
+        $payment->author = $user->author()->id ?? null;
+        $payment->from = $user->name ?? 'Анонимный получаетль';
+        $payment->community_id = null;
+        $payment->add_balance = 0;
+        $payment->OrderId = $orderId;
+        $payment->paymentId = $PaymentId;
+        $payment->card_number = $cardNumber;
+        $payment->save();
 
+        return $payment;
+    }
 
 }
