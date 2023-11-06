@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\WebinarAnalytic;
 use App\Services\TelegramLogService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -22,12 +23,14 @@ class WebinarAnalyticController extends Controller
      *
      * @param Request $request
      *
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function handler(Request $request): void
+    public function handler(Request $request): JsonResponse
     {
         try{
-            $all = $request->collect();
+//            $all = $request->collect();
+            $all = file_get_contents("php://input");
+            $all = json_decode($all, true);
 
             if($all['event'] === 'export_stats') {
                 $statisticUsersList = $this->prepare($all);
@@ -40,6 +43,8 @@ class WebinarAnalyticController extends Controller
             Log::error($e->getMessage());
             TelegramLogService::staticSendLogMessage('Ошибка обработки вебхука от wbnr.ru: '. $e->getMessage());
         }
+
+        return response()->json(['success' => 'success'], 200);
     }
 
     /**
@@ -48,7 +53,7 @@ class WebinarAnalyticController extends Controller
      * @param Collection $all
      * @return mixed
      */
-    private function prepare(Collection $all): array
+    private function prepare(array $all): array
     {
         $data = [];
 
