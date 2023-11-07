@@ -504,13 +504,18 @@ class MainBotCommands
                 $message = new InputTextMessageContent();
 
                 $image = $tariff->main_image ?? null;
-                $description = strip_tags($tariff->main_description) ?? 'Тариф';
+                $description = strip_tags($tariff->main_description) ?? null;
+                if (empty($description)) {
+                    $description = 'Тариф';
+                }
                 $message->text($description . '<a href="' . config('app.url') . '/' . $image . '">&#160</a>')
                         ->parseMode('HTML');
                 $article->title($community->title ?? 'Тариф')
                         ->description($description)
-                        ->inputMessageContent($message)
-                        ->thumbUrl('' . config('app.url') . '/' . $image);
+                        ->inputMessageContent($message);
+                if ($image) {
+                    $article->thumbUrl(config('app.url') . '/' . $image);
+                }
 
                 $menu = Menux::Create('a')->inline();
                 $variants = $community->tariff->variants()
