@@ -47,7 +47,7 @@ class ApiUserRegisterRequest extends ApiRequest
     {
         return [
             'email' => 'required|email|unique:users',
-            'name' => 'max:150',
+            'name' => 'max:100',
         ];
     }
 
