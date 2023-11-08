@@ -96,6 +96,7 @@ class Payment
                 $this->type = 'subscription';
                 break;
             default:
+                log::error('Оплата на свободную сумму');
                 TelegramLogService::staticSendLogMessage("Оплата на свободную сумму");
                 return false;
         }
@@ -205,7 +206,7 @@ class Payment
         $this->payment = new P();
         $this->payment->type = $this->type;
         $this->payment->amount = $this->amount;
-        $this->payment->from = $this->type == 'donate' ? $this->payer->user_name : $this->payer->name;
+        $this->payment->from = $this->type === 'donate' ? $this->payer->user_name : $this->payer->name;
         $this->payment->telegram_user_id = $this->telegram_id ?? null;
         $this->payment->community_id = $this->community ? $this->community->id : null;
         $this->payment->author = $userPayment;
@@ -213,6 +214,7 @@ class Payment
         $this->payment->save();
         $this->orderId = $this->payment->id . date("_md_s");
 
+        log::info('params');
         $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
         if ($params['Amount'] == 0 && $this->type === 'tariff') {
             $this->comment = 'trial';
@@ -261,6 +263,7 @@ class Payment
                     'PaymentId' => $this->payment->paymentId,
                     'RebillId' => !empty($rebildPayment->RebillId) ? $rebildPayment->RebillId : null,
                 ]);
+
                 $chargeRes = json_decode($chargeRes);
                 log::debug('$chargeRes, context', [$chargeRes]);
 
@@ -276,7 +279,8 @@ class Payment
                 } else {
                     //todo сохранять в лог файл TelegramLogService::staticSendLogMessage заменить на
                     // \App\Exceptions\TelegramException::report() сделать похожий для платежей
-                    TelegramLogService::staticSendLogMessage("Charge ответил с ошибкой: " . json_encode($chargeRes, JSON_UNESCAPED_UNICODE));
+                    $this->sendLogs("Charge ответил с ошибкой: " . json_encode($chargeRes, JSON_UNESCAPED_UNICODE));
+
                     return false;
                 }
             }
@@ -285,8 +289,10 @@ class Payment
             $this->payment->payer()->associate($this->payer)->save();
 
             return $this->payment;
+
         } else {
-            TelegramLogService::staticSendLogMessage("Оплата по карте с ошибкой: " . json_encode($resp, JSON_UNESCAPED_UNICODE));
+            $this->sendLogs("Оплата по карте с ошибкой: " . json_encode($resp, JSON_UNESCAPED_UNICODE));
+
             return false;
         }
     }
@@ -343,17 +349,26 @@ class Payment
 
     private function checkAccumulation()
     {
+        log::info('checkAccumulation');
         $params = [];
         if ($this->accumulation === null) {
-            $this->accumulation= Accumulation::findUsersAccumulation($this->payFor->author->user_id);
-        } 
-        if ($this->accumulation != null) {
+            log::info('checkAccumulation 123');
+            if ($this->type === 'tariff' || $this->type === 'donate' || $this->type === 'course') {
+                $userOwner = $this->payFor->getAuthor()->id;
+            } elseif ($this->type === 'publication' || $this->type === 'webinar') {
+                $userOwner = $this->payFor->author->user_id;
+            }
+
+            $this->accumulation = Accumulation::findUsersAccumulation($userOwner);
+        }
+        log::info('checkAccumulation end 123');
+        if ($this->accumulation !== null) {
             $params['DATA']['StartSpAccumulation'] = false;
             $params['DATA']['SpAccumulationId'] = $this->accumulation->SpAccumulationId;
         } else {
             $params['DATA']['StartSpAccumulation'] = true;
         }
-
+        log::info('checkAccumulation end');
         return $params;
     }
 
@@ -387,5 +402,14 @@ class Payment
         return $this->pay();
     }
 
+    /**
+     * @param string $message
+     * @return void
+     */
+    public function sendLogs(string $message): void
+    {
+        log::error($message);
+        TelegramLogService::staticSendLogMessage($message);
+    }
 
 }
