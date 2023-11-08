@@ -343,7 +343,10 @@ class Payment
         ];
         $params['Receipt'] = $receipt;
 
-        $params = array_merge_recursive($params, $this->checkAccumulation());
+        if ($this->type !== 'subscription') {
+            $params = array_merge_recursive($params, $this->checkAccumulation());
+        }
+
         return array_merge_recursive($params, $this->checkRecurrent());
     }
 
@@ -351,6 +354,7 @@ class Payment
     {
         log::info('checkAccumulation');
         $params = [];
+
         if ($this->accumulation === null) {
             log::info('checkAccumulation 123');
             if ($this->type === 'tariff' || $this->type === 'donate' || $this->type === 'course') {
@@ -361,14 +365,18 @@ class Payment
 
             $this->accumulation = Accumulation::findUsersAccumulation($userOwner);
         }
+
         log::info('checkAccumulation end 123');
+
         if ($this->accumulation !== null) {
             $params['DATA']['StartSpAccumulation'] = false;
             $params['DATA']['SpAccumulationId'] = $this->accumulation->SpAccumulationId;
         } else {
             $params['DATA']['StartSpAccumulation'] = true;
         }
+
         log::info('checkAccumulation end');
+
         return $params;
     }
 
