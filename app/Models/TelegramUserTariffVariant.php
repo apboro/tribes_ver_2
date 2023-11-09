@@ -62,6 +62,11 @@ class TelegramUserTariffVariant extends Model
         return self::findByDaysAndTime(1, true);
     }    
 
+    public static function findEndPaids(): ?Collection
+    {
+        return self::findByDaysAndTime(0, false);
+    }  
+
     public function isTariffPayed(): bool
     {
         return (bool) self::where('telegram_user_id', $this->telegram_user_id)
