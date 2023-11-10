@@ -54,7 +54,7 @@ class CheckSubscription extends Command
     }
 
 
-    private function renewSubscription(UserSubscription $userSubscription)
+    private function reSubscription(UserSubscription $userSubscription)
     {
         if ($userSubscription->canBeRenew()) {
             $payment = (new Pay())->amount($userSubscription->subscription->price * 100)
@@ -86,7 +86,7 @@ class CheckSubscription extends Command
     {
         $userSubscriptions = UserSubscription::findActiveExpiredSubscriptions();
         foreach ($userSubscriptions as $userSubscription) {
-            $this->renewSubscription($userSubscription);
+            $this->reSubscription($userSubscription);
         }
 
         return 0;
