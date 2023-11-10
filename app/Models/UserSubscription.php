@@ -63,4 +63,23 @@ class UserSubscription extends Model
         log::info('check period bu user id: ' . $userId);
         return self::getByUser($userId)->isExpiredDate();
     }
+
+    public static function findActiveExpiredSubscriptions()
+    {
+        return self::where('isActive', true)
+            ->where('expiration_date', '<', time())
+            ->get();
+    }
+
+    public function deactivate()
+    {
+        $this->isRecurrent = false;
+        $this->isActive = false;
+        $this->save();
+    }
+
+    public function canBeRenew(): bool
+    {
+        return $this->subscription_id === self::PAY_PLAN_ID && $this->isRecurrent;
+    }
 }
