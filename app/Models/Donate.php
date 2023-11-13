@@ -8,6 +8,7 @@ use Database\Factories\DonateFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
@@ -59,7 +60,7 @@ class Donate extends Model
         return $this->belongsTo(Community::class, 'community_id');
     }
 
-    function variants()
+    function variants(): HasMany
     {
         return $this->hasMany(DonateVariant::class, 'donate_id', 'id');
     }
@@ -194,14 +195,23 @@ class Donate extends Model
         return $this->variants()->where('variant_name', 'random_sum')->first();
     }
 
-    public function findStaticVariantByPrice(int $price)
+    public function getVariant(int $price)
     {
-        return $this->variants()->where('isActive', true)->where('isStatic', true)->where('price', $price)->first();
+        return $this->getByPrice( $price) ?? $this->getNotFixed();
     }
 
-    public function findNotStaticVariant()
+    private function getByPrice(int $price)
     {
-        return $this->variants()->where('isActive', true)->where('isStatic', false)->first();
+        return $this->findVariant(true)->where('price', $price)->first();
     }
 
+    private function getNotFixed()
+    {
+        return $this->findVariant(false)->first();
+    }
+
+    private function findVariant(bool $isStatic): HasMany
+    {
+        return $this->variants()->where('isActive', true)->where('isStatic', $isStatic);
+    }
 }

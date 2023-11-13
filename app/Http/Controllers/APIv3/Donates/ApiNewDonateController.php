@@ -12,7 +12,9 @@ use App\Models\Donate;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Donate\DonateRepositoryContract;
 use App\Repositories\Payment\PaymentRepository;
+use App\Services\Pay\Services\PayService;
 use App\Services\Tinkoff\Payment as Pay;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -77,27 +79,28 @@ class ApiNewDonateController extends Controller
 
     public function processDonatePayment(ApiDonatePageRequest $request)
     {
+        $incomeRouteName = $request->route()->getName();
         $amount = $request['amount'];
-        $telegram_user_id = $request['telegram_user_id'];
+        $telegramUserId = $request['telegram_user_id'];
+
         $donate = Donate::find($request['donate_id']);
-        $variant = $donate->findStaticVariantByPrice($amount) ?? $donate->findNotStaticVariant();
+
+        $variant = $donate->getVariant($amount);
 
         if ($variant) {
             Log::info('Оплата доната', ['variant' => $variant]);
+
             if (!$variant->isStatic && ($variant->min_price > $amount || $variant->max_price < $amount)) {
                 return ApiResponse::error('Оплата не удалась'); 
             }
+//            dd($variant);
+            $payment = PayService::donate($amount, $variant, $telegramUserId);
 
-            $p = new Pay();
-            $p->amount($amount * 100)
-                ->payFor($variant)
-                ->payer($telegram_user_id);
-            $payment = $p->pay();
             if (!$payment) {
                 return ApiResponse::error('Оплата не удалась');
             }
 
-            if ($variant->isStatic) {
+            if ($incomeRouteName !== 'pay.donate.not.fixed') {
                 //редиректим по ссылке сразу на тинькофф
                 return redirect()->to($payment->paymentUrl);
             } else {
