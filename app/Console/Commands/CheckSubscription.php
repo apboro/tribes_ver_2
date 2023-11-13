@@ -53,6 +53,30 @@ class CheckSubscription extends Command
         $this->telegramLogService = $telegramLogService;
     }
 
+
+    private function reSubscription(UserSubscription $userSubscription)
+    {
+        if ($userSubscription->canBeRenew()) {
+            $payment = (new Pay())->amount($userSubscription->subscription->price * 100)
+                ->charged(true)
+                ->payFor($userSubscription->subscription)
+                ->payer($userSubscription->user)
+                ->pay();
+
+            if ($payment) {
+                Log::info('Payment for subscription ' . $userSubscription->id . ' success');
+                SubscriptionMade::dispatch($userSubscription->user, $userSubscription->subscription);
+
+                return true;
+            } 
+                Log::error('payment user subscription error');              
+        } 
+        $userSubscription->deactivate();
+
+        return false;
+    }
+
+
     /**
      * Execute the console command.
      *
@@ -60,39 +84,9 @@ class CheckSubscription extends Command
      */
     public function handle()
     {
-        Log::info('CheckSubscription');
-        $userSubscriptions = UserSubscription::all();
-        foreach ($userSubscriptions as $userSubscription)
-        {
-            try {
-                if (Carbon::createFromTimestamp($userSubscription->expiration_date) < Carbon::now()) {
-                    Log::info('date expiated subscription ' . json_encode($userSubscription, JSON_UNESCAPED_UNICODE));
-                    $isPayPlan = $userSubscription->subscription_id === UserSubscription::PAY_PLAN_ID;
-                    if ($userSubscription->isRecurrent && $isPayPlan) {
-                        $p = new Pay();
-                        $p->amount($userSubscription->subscription->price * 100)
-                            ->charged(true)
-                            ->payFor($userSubscription->subscription)
-                            ->payer($userSubscription->user);
-                        $payment = $p->pay();
-
-                        if ($payment) {
-                            Log::info('Payment for subscription ' . $userSubscription->id . ' success');
-                            SubscriptionMade::dispatch($userSubscription->user, $userSubscription->subscription);
-                        } else {
-//                            SubscriptionMade::dispatch($userSubscription->user, Subscription::find(1));
-                            //TODO TBS-1667 add log telegran or email or slack
-                            Log::error('payment user subscription error');
-                        }
-                    } elseif($userSubscription->subscription_id === UserSubscription::TRIAL_PLAN_ID) {
-                        $userSubscription->isRecurrent = false;
-                        $userSubscription->save();
-                    }
-                }
-            } catch (\Exception $e) {
-                //TODO TBS-1667 add log telegran or email or slack
-                Log::error($e->getMessage());
-            }
+        $userSubscriptions = UserSubscription::findActiveExpiredSubscriptions();
+        foreach ($userSubscriptions as $userSubscription) {
+            $this->reSubscription($userSubscription);
         }
 
         return 0;
