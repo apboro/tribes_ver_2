@@ -2,12 +2,17 @@
 
 namespace App\Console\Commands;
 
-use App\Models\TariffVariant;
-use App\Models\TelegramUser;
-use App\Models\User;
+use App\Models\{
+    TariffVariant,
+    TelegramUser,
+    User,
+    TelegramUserTariffVariant
+};
 use App\Services\SMTP\Mailer;
-use App\Services\TelegramLogService;
-use App\Services\TelegramMainBotService;
+use App\Services\{
+    TelegramLogService,
+    TelegramMainBotService
+};
 use App\Services\Tinkoff\Payment as Pay;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -40,12 +45,29 @@ class CheckTariff extends Command
     public function __construct(
         TelegramMainBotService $telegramService,
         TelegramLogService     $telegramLogService
-    )
-    {
+    ) {
         parent::__construct();
         $this->telegramService = $telegramService;
         $this->telegramLogService = $telegramLogService;
     }
+
+
+    private function removeFromCommunity(TelegramUserTariffVariant $buyedTariff): void
+    {
+        $this->telegramService->kickUser(
+            config('telegram_bot.bot.botName'),
+            $buyedTariff->telegramUser->telegram_id,
+            $buyedTariff->tariffVariant->tariff->community->connection->chat_id
+        );
+
+        $buyedTariff->telegramUser->communities()->updateExistingPivot($buyedTariff->tariffVariant->tariff->community_id, [
+            'excluded' => true,
+            'exit_date' => time()
+        ]);
+
+        $buyedTariff->telegramUser->tariffVariant()->detach($buyedTariff->tarif_variants_id);
+    }
+
 
     /**
      * Execute the console command.
@@ -55,134 +77,79 @@ class CheckTariff extends Command
     public function handle()
     {
         try {
-            Log::debug('Start tarif extention, ' . date('H:i'));
-            $telegramUsers = TelegramUser::with('tariffVariant')->get();
+            $buyedTariffs = TelegramUserTariffVariant::findEndPaids();
 
-            foreach ($telegramUsers as $user) {
-                Log::debug('user id = ' . $user->user_id);
-                //echo "user{$user->user_id} \n";
-                $follower = User::find($user->user_id);
-                if ($follower) {
-                    Log::debug('find follower');
-                    if ($user->tariffVariant->first()) {
-                        foreach ($user->tariffVariant as $variant) {
-                            /** @var TariffVariant $variant*/
-                            Log::debug('tarif variant for this follower (context)', [$variant]);
-                            if ($variant->price === 0 && $variant->period === $variant->tariff->test_period)
-                                continue;
-                            if (date('H:i') == $variant->pivot->prompt_time || $variant->period === 0) {
-                                $userName = $user->user_name;
-                                if ($variant->pivot->days < 1) {
-                                    if ($variant->pivot->isAutoPay === true) {
-                                        if(false/*todo проверить через бот состоит ли пользователь в группе на данный момент*/){
-                                            //если проверка что-то ответила, то обновить параметр exit_date
-                                        }
-                                        //  если участник покинул группу exit_date IS NOT NULL
-                                        //  то переводить подписку в состояние isAutoPay = false, платеж не создавать $payment = NULL;
+            foreach ($buyedTariffs as $buyedTariff) {
+                $telegramUser = $buyedTariff->telegramUser;
+                $tariffVariant = $buyedTariff->tariffVariant;
+                $tariff = $tariffVariant->tariff;
 
-                                        if ($user->hasLeaveCommunity($variant->tariff->community_id)) {
-                                            $payment = NULL;
-                                        } elseif ($variant->isActive) {
-                                                //echo "create pay {$variant->title} \n";
-                                                Log::channel('tinkoff')
-                                                    ->info(now() .' Oplata tarifa: follower_id - '. $follower->id .' summa: '.$variant->price * 100 . ' community_id - '. $variant->tariff->community_id);
-                                                $p = new Pay();
-                                                $p->amount($variant->price * 100)
-                                                    ->charged(true)
-                                                    ->payFor($variant)
-                                                    ->payer($follower);
-                                                Log::debug('Start tinkoff', [$p]);
-                                                $payment = $p->pay();
-                                                $payId = $payment->id ?? 'undefined';
-//                                            }
-                                        } else {
-                                            //если тариф вариант неактивный, то платеж не создавать
-                                            $payment = NULL;
-                                        }
+                // Пользователя нет в сообществе, он покинул сообщество или тариф не активен
+                if (!$telegramUser->getCommunityById($tariff->community_id) ||
+                            $telegramUser->hasLeaveCommunity($tariff->community_id) || 
+                            !$tariffVariant->isActive) {
+                    $this->removeFromCommunity($buyedTariff);
+                    continue;
+                }
 
-                                    } else {
-                                        $payment = NULL;
-                                    }
-                                    if ($payment) {
-                                        Log::debug('Payment ended.', [$payment]);
-                                        $lastName = $user->last_name ?? '';
-                                        $firstName = $user->first_name ?? '';
-                                        $this->telegramService->sendMessageFromBot(
-                                            config('telegram_bot.bot.botName'),
-                                            env('TELEGRAM_LOG_CHAT'),
-                                            "Рекуррентное списание от " . $firstName . $lastName . " в сообщество "
-                                        );
-                                        //todo
-                                        $payerName = $user->publicName() ?? '';
-                                        $tariffName = $variant->title ?? '';
-                                        $tariffCost = ($payment->amount / 100) ?? 0;
-                                        $tariffEndDate = Carbon::now()->addDays($variant->period)->format('d.m.Y') ?? '';
-                                        $message = "Участник $payerName оплатил $tariffName в сообществе {$payment->community->title},
-                                стоимость $tariffCost рублей действует до $tariffEndDate г.";
-                                         $this->telegramService->sendMessageFromBot(
-                                            config('telegram_bot.bot.botName'),
-                                            $payment->community->connection->telegram_user_id,
-                                            $message
-                                        );
+                // Оплатить
+                $follower = User::find($telegramUser->user_id);
+                $payment = (new Pay())->amount($tariffVariant->price * 100)
+                    ->charged(true)
+                    ->payFor($tariffVariant)
+                    ->payer($follower)
+                    ->pay();
 
-                                        $user->tariffVariant()->updateExistingPivot($variant->id, [
-                                            'days' => $variant->period,
-                                            'recurrent_attempt' => 0,
-                                            'prompt_time' => date('H:i')
-                                        ]);
-                                        Log::channel('tinkoff')->info('Next payment in days -'. $variant->period . ' at '. date('H:i'));
-                                    } else {
-                                        $tariff_variant_name = $variant->title;
-                                        $community_name = $variant->community()->title;
+                if ($payment) {
+                    Log::debug('Прошла рекурентная оплата за продление тарифа', [$payment]);
+                    // Обновляем срок оплаченного тарифа 
+                    $telegramUser->tariffVariant()->updateExistingPivot($tariffVariant->id, [
+                        'days' => $tariffVariant->period,
+                        'recurrent_attempt' => 0,
+                        'prompt_time' => date('H:i')
+                    ]);
 
-                                        if ($variant->pivot->recurrent_attempt >= 3 || $user->hasLeaveCommunity($variant->tariff->community_id)) {
-                                             $this->telegramService->kickUser(
-                                                 config('telegram_bot.bot.botName'),
-                                                 $user->telegram_id,
-                                                 $variant->tariff->community->connection->chat_id
-                                             );
-                                             $user->communities()->detach($variant->tariff->community->id);
-                                             $user->tariffVariant()->detach($variant->id);
+                    $tariffName = $tariffVariant->title ?? '';
+                    $tariffCost = ($payment->amount / 100) ?? 0;
 
-                                             if ($variant->tariff->tariff_notification) {
-                                                 $this->telegramService->sendMessageFromBot(
-                                                     config('telegram_bot.bot.botName'),
-                                                     $variant->tariff->community->connection->telegram_user_id,
-                                                     'Пользователь ' . $userName . ' был забанен в связи с неуплатой тарифа'
-                                                 );
-                                             }
-                                            $userTextMessageView = view('mail.kick_user', compact('tariff_variant_name', 'community_name'))->render();
-                                            $ownerTextMessageView = view('mail.kick_user', compact('userName','tariff_variant_name', 'community_name'))->render();
-                                            new Mailer('Сервис Spodial', $userTextMessageView, 'Вы исключены', $user->user->email);
-                                            new Mailer('Сервис Spodial', $ownerTextMessageView, 'Пользователь исключен', $variant->community()->communityOwner->email);
+                    // Сообщение владельцу сообщества
+                    $tariffEndDate = Carbon::now()->addDays($tariffVariant->period)->format('d.m.Y') ?? '';
+                    $message = "Участник " . $telegramUser->publicName() . " оплатил тариф \"$tariffName\" в сообществе {$payment->community->title}, стоимость $tariffCost рублей, действует до $tariffEndDate.";
+                    $this->telegramService->sendMessageFromChatBot(
+                        $payment->community->connection->telegram_user_id,
+                        $message
+                    );
 
-                                        } else {
-                                            $message = "Не удалось оплатить $variant->title в сообществе {$variant->tariff->community->title},
-                                стоимостью $variant->price руб.";
-                                            $this->telegramService->sendMessageFromBot(
-                                                config('telegram_bot.bot.botName'),
-                                                $user->telegram_id,
-                                                $message
-                                            );
+                    // Сообщение в ЛОГ
+                    $this->telegramService->sendMessageFromChatBot(
+                        env('TELEGRAM_LOG_CHAT'),
+                        "Рекуррентное списание $tariffCost рублей от " . $telegramUser->publicName() . " в сообщество \"$tariffName\"."
+                    );
+                } else {
+                    // Не удалось оплатить - логика 3х попыток оплаты
+                    $recurrentAttempt = $buyedTariff->recurrent_attempt + 1;
+                    $telegramUser->tariffVariant()->updateExistingPivot($tariffVariant->id, [
+                        'days' => 0,
+                        'recurrent_attempt' => $recurrentAttempt
+                    ]);
 
-                                            $user->tariffVariant()->updateExistingPivot($variant->id, [
-                                                'days' => 0,
-                                            ]);
-                                            $variant->pivot->increment('recurrent_attempt');
-
-                                            $userTextMessageView = view('mail.recurrent_bad_attempt', compact('tariff_variant_name', 'community_name'))->render();
-                                            $ownerTextMessageView = view('mail.recurrent_bad_attempt', compact('userName','tariff_variant_name', 'community_name'))->render();
-                                            new Mailer('Сервис Spodial', $userTextMessageView, 'Оплата не удалась', $user->user->email);
-                                            new Mailer('Сервис Spodial', $ownerTextMessageView, 'Оплата не удалась', $variant->community()->communityOwner->email);
-                                        }
-                                    }
-                                }
-                            }
+                    if ($recurrentAttempt < 3) {
+                        $message = "Не удалось оплатить $tariffVariant->title в сообществе {$tariff->community->title}, стоимость $tariffVariant->price руб.";
+                        $this->telegramService->sendMessageFromChatBot(
+                            $telegramUser->telegram_id,
+                            $message
+                        );
+                    } else {
+                        $this->removeFromCommunity($buyedTariff);
+                        if ($tariff->tariff_notification) {
+                            $this->telegramService->sendMessageFromChatBot(
+                                $tariff->community->connection->telegram_user_id,
+                                'Пользователь ' . $telegramUser->publicName() . ' был забанен в сообществе "' . $tariff->community->title . '" в связи с неуплатой тарифа'
+                            );
                         }
                     }
                 }
             }
-
         } catch (\Exception $e) {
             Log::channel('tinkoff')->error($e);
             $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
