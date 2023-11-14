@@ -3,7 +3,7 @@ return [
     'register' => [
         'email_already_use' => 'Такое значение поля email уже существует.',
         'incorrect_format' => 'Неверный формат',
-        'name_max_length' => 'Максимальная длина имени 40 символов',
+        'name_max_length' => 'Максимальная длина имени - 100 символов',
         'email_required' => 'email обязателен для заполнения',
         'phone_required' => 'Телефон обязателен для заполнения',
         'phone_already_use' => 'Номер телефона уже используется',
