@@ -3,7 +3,7 @@ return [
     'register'=>[
         'email_already_use'=>'Email already use',
         'incorrect_format'=>'Incorrect format',
-        'name_max_length'=>'Max name length 40 symbols',
+        'name_max_length'=>'Максимальная длина имени - 100 символов',
         'email_required'=>'email required',
         'phone_required'=>'Телефон обязателен для заполнения',
         'phone_already_use'=>'Номер телефона уже используется',
