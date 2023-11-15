@@ -7,7 +7,6 @@ use App\Http\ApiRequests\Payment\PayOutRequest;
 use App\Http\ApiRequests\Payment\CardAndAccumulationForPayoutRequest;
 use App\Models\Accumulation;
 use App\Services\Tinkoff\TinkoffE2C;
-use App\Services\TinkoffE2C as TinkoffE2CCard;
 use App\Models\User;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -18,14 +17,11 @@ use Illuminate\Support\Facades\DB;
 
 class ApiPayoutController extends Controller
 {
- 
     public TinkoffE2C $e2c;
-    public TinkoffE2CCard $etcCard;
 
     public function __construct()
     {
         $this->e2c = new TinkoffE2C();
-        $this->etcCard = new TinkoffE2CCard();
     }
 
     /**
@@ -33,7 +29,7 @@ class ApiPayoutController extends Controller
      */
     public function cardAndAccumulationForPayout(CardAndAccumulationForPayoutRequest $request)
     {
-        $cardsList = $this->etcCard->getCardsList(Auth::user());
+        $cardsList = $this->e2c->getCardsList(Auth::user());
         $amount = Accumulation::getSumByUser(Auth::user()->id) / 100;
 
         return ApiResponse::common(['cards' => $cardsList, 'amount' => $amount]);
@@ -63,7 +59,7 @@ class ApiPayoutController extends Controller
         }
 
         Log::debug('Получаем номер карты для сохранения');
-        $cardsList = $this->etcCard->getCardsList(Auth::user());
+        $cardsList = $this->e2c->getCardsList(Auth::user());
         foreach ($cardsList as $cardInfo) {
             if ($cardInfo['CardId'] == $request['cardId']) {
                 $cardNumber = $cardInfo['Pan'] ?? null;
