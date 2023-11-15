@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\PayOutRequest;
 use App\Models\Accumulation;
-use App\Services\TinkoffE2C;
+use App\Services\Tinkoff\TinkoffE2C;
 use App\Models\User;
 use App\Models\Payment;
 use Illuminate\Http\File;

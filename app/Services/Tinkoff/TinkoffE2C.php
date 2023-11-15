@@ -5,6 +5,7 @@ namespace App\Services\Tinkoff;
 use Illuminate\Support\Facades\Log;
 use App\Models\{Accumulation,
                 Payment};
+use App\Models\User;
 
 class TinkoffE2C
 {
@@ -183,5 +184,25 @@ class TinkoffE2C
             ];
         }
     }
-    
+
+    /**
+     * Возвращает список привязанных карт пользователя
+     */
+    public function getCardsList(User $user): array
+    {
+        $cardsList = [];
+        $this->GetCardList($user->getCustomerKey());
+        $cards = $this->response();
+        if (isset($cards['data']) && is_array($cards['data'])) {
+            foreach ($cards['data'] as $card){
+                $cardsList[] = ['CardId' => $card->CardId ?? null,
+                                'Pan' => $card->Pan ?? null,
+                                'Status' => $card->Status ?? null 
+                                ];
+            }
+        }
+
+        return $cardsList;
+    }
+
 }

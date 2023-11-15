@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Api\v3;
 
-use App\Services\TinkoffE2C;
+use App\Services\Tinkoff\TinkoffE2C;
 use Tests\TestCase;
 
 class ApiPaymentCardTest extends TestCase

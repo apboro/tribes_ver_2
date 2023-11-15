@@ -6,7 +6,7 @@ namespace App\Models;
 use App\Filters\QueryFilter;
 use App\Helper\QueryHelper;
 use App\Services\SMTP\Mailer;
-use App\Services\TinkoffE2C;
+use App\Services\Tinkoff\TinkoffE2C;
 use Carbon\Carbon;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;

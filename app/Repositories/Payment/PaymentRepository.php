@@ -12,7 +12,7 @@ use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffApi;
-use App\Services\TinkoffE2C;
+use App\Services\Tinkoff\TinkoffE2C;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
