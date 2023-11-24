@@ -12,7 +12,7 @@ use App\Models\Donate;
 use App\Repositories\Community\CommunityRepositoryContract;
 use App\Repositories\Donate\DonateRepositoryContract;
 use App\Repositories\Payment\PaymentRepository;
-use App\Services\Pay\Services\PayService;
+use App\Services\Pay\PayService;
 use App\Services\Tinkoff\Payment as Pay;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -94,7 +94,7 @@ class ApiNewDonateController extends Controller
                 return ApiResponse::error('Оплата не удалась'); 
             }
 //            dd($variant);
-            $payment = PayService::donate($amount, $variant, $telegramUserId);
+            $payment = PayService::buyDonate($amount, $variant, $telegramUserId);
 
             if (!$payment) {
                 return ApiResponse::error('Оплата не удалась');

@@ -28,9 +28,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Services\Tinkoff\Payment;
 use App\Services\WebinarService;
 use App\Http\ApiRequests\Webinars\ApiVisitedWebinarListRequest;
+use App\Services\Pay\PayService;
 
 class ApiWebinarController extends Controller
 {
@@ -256,8 +256,7 @@ class ApiWebinarController extends Controller
             return ApiResponse::error('common.user_create_error');
         }
 
-        $tinkoffPayment = new Payment();
-        $payment = $tinkoffPayment->doPayment($user, $webinar, $webinar->price, '');
+        $payment = PayService::buyWebinar($webinar->price, $webinar, $user);
 
         if ($payment === false) {
             return ApiResponse::error('common.error_while_pay');

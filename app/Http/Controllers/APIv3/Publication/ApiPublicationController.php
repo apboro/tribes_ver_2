@@ -26,12 +26,12 @@ use App\Models\Webinar;
 use App\Repositories\Course\CourseRepository;
 use App\Repositories\Publication\PublicationRepository;
 use App\Services\TelegramLogService;
-use App\Services\Tinkoff\Payment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Services\Pay\PayService;
 
 class ApiPublicationController extends Controller
 {
@@ -44,11 +44,6 @@ class ApiPublicationController extends Controller
 
 
     /**
-     * @var Payment $tinkoff_payment
-     */
-    private Payment $tinkoff_payment;
-
-    /**
      * @var PublicationRepository
      */
     private PublicationRepository $publicationRepository;
@@ -56,17 +51,14 @@ class ApiPublicationController extends Controller
     /**
      * @param PublicationRepository $publicationRepository
      * @param TelegramLogService $telegramLogService
-     * @param Payment $tinkoff_payment
      */
     public function __construct(
         PublicationRepository $publicationRepository,
-        TelegramLogService    $telegramLogService,
-        Payment               $tinkoff_payment
+        TelegramLogService    $telegramLogService
     )
     {
         $this->publicationRepository = $publicationRepository;
         $this->telegramLogService = $telegramLogService;
-        $this->tinkoff_payment = $tinkoff_payment;
     }
 
     /**
@@ -210,7 +202,7 @@ class ApiPublicationController extends Controller
             return ApiResponse::error('common.register_email_error');
         }
 
-        $payment = $this->tinkoff_payment->doPayment($user, $publication, $publication->price, $successUrl);
+        $payment = PayService::buyPublication($publication->price, $publication, $user, $successUrl);
 
         if ($payment === false) {
             return ApiResponse::error('common.error_while_pay');

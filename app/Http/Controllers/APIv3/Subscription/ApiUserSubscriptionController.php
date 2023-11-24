@@ -15,26 +15,21 @@ use App\Models\User;
 use App\Models\UserSubscription;
 use App\Repositories\Subscription\SubscriptionRepository;
 use App\Services\TelegramLogService;
-use App\Services\Tinkoff\Payment as TinkoffPayment;
 use Illuminate\Support\Facades\Auth;
-
+use App\Services\Pay\PayService;
 
 class ApiUserSubscriptionController extends Controller
 {
     private SubscriptionRepository $subscriptionRepository;
 
-    private TinkoffPayment $tinkoff_payment;
-
     private TelegramLogService $telegramLogService;
 
     public function __construct(
         SubscriptionRepository $subscriptionRepository,
-        TinkoffPayment         $tinkoff_payment,
         TelegramLogService $telegramLogService
     )
     {
         $this->subscriptionRepository = $subscriptionRepository;
-        $this->tinkoff_payment = $tinkoff_payment;
         $this->telegramLogService = $telegramLogService;
     }
 
@@ -77,7 +72,7 @@ class ApiUserSubscriptionController extends Controller
 
         $success_url = $request->success_url ?? null;
 
-        $payment = $this->tinkoff_payment->doPayment($user, $subscription, $subscription->price, $success_url);
+        $payment = PayService::buySubscription($subscription->price, $subscription, $user, $success_url);
 
         if ($payment === false) {
             $this->telegramLogService->sendLogMessage(

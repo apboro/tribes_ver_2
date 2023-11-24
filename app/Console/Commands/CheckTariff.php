@@ -13,6 +13,7 @@ use App\Services\{
     TelegramLogService,
     TelegramMainBotService
 };
+use App\Services\Pay\PayService;
 use App\Services\Tinkoff\Payment as Pay;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -94,11 +95,8 @@ class CheckTariff extends Command
 
                 // Оплатить
                 $follower = User::find($telegramUser->user_id);
-                $payment = (new Pay())->amount($tariffVariant->price * 100)
-                    ->charged(true)
-                    ->payFor($tariffVariant)
-                    ->payer($follower)
-                    ->pay();
+
+                $payment = PayService::extendTariff($tariffVariant->price, $tariffVariant, $follower, $telegramUser->telegram_id);
 
                 if ($payment) {
                     Log::debug('Прошла рекурентная оплата за продление тарифа', [$payment]);

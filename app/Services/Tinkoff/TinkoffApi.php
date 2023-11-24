@@ -207,6 +207,20 @@ class TinkoffApi
     {
         $url = $a2c ? $this->api_e2c_url : $this->api_url;
 
+        /*
+        // ДЛЯ ТЕСТА
+        $localUrl = '000000.ngrok-free.app';
+        if (isset($args["NotificationURL"])) {
+            $args["NotificationURL"] = str_replace('back.sp.test', $localUrl, $args["NotificationURL"]);
+        }
+        if (isset($args["FailURL"])) {
+            $args["FailURL"] = str_replace('sp.test', $localUrl, $args["FailURL"]);
+        }
+        if (isset($args["SuccessURL"])) {
+                $args["SuccessURL"] = str_replace('back.sp.test', $localUrl, $args["SuccessURL"]);
+        }
+        */
+
         if (is_array($args)) {
             if (!$a2c) {
                 if (!array_key_exists('TerminalKey', $args)) {
@@ -368,11 +382,10 @@ class TinkoffApi
                 'Content-Type: application/json',
             ));
 
-//            TelegramBotService::sendMessage(-612889716, $api_url );
-//            TelegramBotService::sendMessage(-612889716, $args );
-//
-//            Storage::prepend('Tinkoff_notify.log', 'req');
-//            Storage::prepend('Tinkoff_notify.log', json_encode($curl));
+            /*
+                $proxy = '192.168.0.1:32000';
+                curl_setopt($curl, CURLOPT_PROXY, $proxy);
+            */
 
             $out = curl_exec($curl);
 
