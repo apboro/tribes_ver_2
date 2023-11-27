@@ -35,7 +35,6 @@ class ApiPaymentController extends Controller
         $this->tinkoff = new TinkoffService();
     }
 
-    //TODO Tests
     public function successPayment(Request $request, $hash)
     {
         $payment = Payment::find(PseudoCrypt::unhash($hash));
@@ -46,21 +45,25 @@ class ApiPaymentController extends Controller
             return redirect($redirectUrl);
         }
 
+        $part = '';
         if ($payment->type === 'subscription') {
-            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/subscriptions?payment_result=success';
+            $part = '/app/subscriptions?payment_result=success';
         } elseif ($payment->type === 'donate') {
-            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/public/donate/thanks';
+            $part = '/app/public/donate/thanks';
         } elseif ($payment->type === 'tariff') {
-            $tariff = $payment->community->tariff;
-            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/app/public/tariff/' . $tariff->inline_link . '/thanks?' . http_build_query([
+            $part = '/app/public/tariff/' . $payment->community->tariff->inline_link . '/thanks?' . http_build_query([
                 'paymentId' => PseudoCrypt::hash($payment->id)
             ]);
         } elseif ($payment->type === 'publication') {
             $publication = Publication::find($payment->payable_id);
-            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/courses/member/post/' . $publication->uuid;
+            $part = '/courses/member/post/' . $publication->uuid;
         } elseif ($payment->type === 'webinar') {
             $webinar = Webinar::find($payment->payable_id);
-            $redirectUrl = $request->success_url ?? config('app.frontend_url') . '/courses/member/webinar-preview/' . $webinar->uuid;
+            $part = '/courses/member/webinar-preview/' . $webinar->uuid;
+        }
+
+        if ($part) {
+            $redirectUrl = $request->success_url ?? config('app.frontend_url') . $part;
         }
         Log::debug('successPayment $redirectUrl - ' . $redirectUrl);
 

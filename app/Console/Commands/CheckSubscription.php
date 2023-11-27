@@ -58,7 +58,7 @@ class CheckSubscription extends Command
     private function reSubscription(UserSubscription $userSubscription)
     {
         if ($userSubscription->canBeRenew()) {
-            $payment = PayService::extendSubscription($userSubscription->subscription->price, $userSubscription->subscription, $userSubscription->user);
+            $payment = PayService::prolongSubscription($userSubscription->subscription->price, $userSubscription->subscription, $userSubscription->user);
             if ($payment) {
                 Log::info('Payment for subscription ' . $userSubscription->id . ' success');
                 SubscriptionMade::dispatch($userSubscription->user, $userSubscription->subscription);

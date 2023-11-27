@@ -210,7 +210,7 @@ class Payment extends Model
         return $this;
     }
 
-    public static function findRebillPaymentId(int $payableId, string $relation, int $userId): ?self
+    public static function findRebillPayment(int $payableId, string $relation, int $userId): ?self
     {
         return self::where('payable_id', $payableId)
             ->where('type', $relation)

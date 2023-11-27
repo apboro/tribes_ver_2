@@ -96,7 +96,7 @@ class CheckTariff extends Command
                 // Оплатить
                 $follower = User::find($telegramUser->user_id);
 
-                $payment = PayService::extendTariff($tariffVariant->price, $tariffVariant, $follower, $telegramUser->telegram_id);
+                $payment = PayService::prolongTariff($tariffVariant->price, $tariffVariant, $follower, $telegramUser->telegram_id);
 
                 if ($payment) {
                     Log::debug('Прошла рекурентная оплата за продление тарифа', [$payment]);

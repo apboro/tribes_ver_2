@@ -30,7 +30,7 @@ class PayService
         return self::doPayment($amount, $payFor, $payer, $telegramId, '', true, false);
     }
 
-    public static function extendTariff(int $amount, $payFor, User $payer, ?int $telegramId)
+    public static function prolongTariff(int $amount, $payFor, User $payer, ?int $telegramId)
     {
         return self::doPayment($amount, $payFor, $payer, $telegramId, '', true, true);
     }
@@ -50,7 +50,7 @@ class PayService
         return self::doPayment($amount, $payFor, $payer, null,  $successUrl, true);
     }
 
-    public static function extendSubscription(int $amount, $payFor, User $payer)
+    public static function prolongSubscription(int $amount, $payFor, User $payer)
     {
         return self::doPayment($amount, $payFor, $payer, null,  '', true, true);
     }
@@ -58,50 +58,61 @@ class PayService
     public static function doPayment(int $amount, $payFor, ?User $payer, ?int $telegramId = null, ?string  $successUrl = '', ?bool $recurrent = false, ?bool $charged = false)
     {
         $type = self::findType($payFor);
-        $community = self::findCommunity($type, $payFor);
-        $authorId = self::findAuthorId($type, $payFor);
-        $accumulation = self::findAccumulation($type, $payFor);
-        $rebillId = $charged ? self::findRebillPaymentId($payFor, $payer, $type) : null;
-        $payment = self::createPaymentRecord($type, $amount * 100, $payer, $telegramId, $community, $authorId, $rebillId, $accumulation);
-        $orderId = $payment->id . date("_Ymd_His"); 
+        $payment = self::createPaymentRecord($type, $amount * 100, $payer, $telegramId, $payFor, $charged);
+        $orderId = $payment->id . date("_Ymd_His");
 
         if ($amount == 0 && $type === 'tariff') {
-            return self::saveFakeOrder($payment, $payFor, $payer, $orderId);
+            return self::saveFakeOrder($payment, $payFor, $payer, $orderId, $charged);
         }
 
-        $serviceName = self::getServiceName($type);
+        $serviceName = self::getDescriptionByType($type);
         $email = 'manager@spodial.com';
         $phone = '89524365064';
         $quantity = 1;
 
         return Pay::create()
-                ->setPayment($payment)
-                ->setOrderId($orderId)
-                ->payFor($payFor)
-                ->setPayer($payer)
-                ->setRecurrent($recurrent)
-                ->setCharged($charged)
-                ->setSuccessUrl($successUrl)
-                ->setServiceName($serviceName)
-                ->setEmail($email)
-                ->setPhone($phone)
-                ->setQuantity($quantity)
-                ->pay();
+            ->setPayment($payment)
+            ->setOrderId($orderId)
+            ->payFor($payFor)
+            ->setPayer($payer)
+            ->setRecurrent($recurrent)
+            ->setCharged($charged)
+            ->setSuccessUrl($successUrl)
+            ->setServiceName($serviceName)
+            ->setEmail($email)
+            ->setPhone($phone)
+            ->setQuantity($quantity)
+            ->pay();
     }
 
-    private static function createPaymentRecord(string $type, int $amount, User $payer, ?int $telegram_id, $community, ?int $authorId, ?int $rebillId, ?int $accumulation): Payment
+    private static function createPaymentRelations(Payment $payment, $payFor, User $payer)
     {
+        if ($payFor) {
+            $payFor->payments()->save($payment);
+        }
+        $payment->payer()->associate($payer)->save();
+    }
+
+    private static function createPaymentRecord(string $type, int $amount, User $payer, ?int $telegram_id, $payFor, ?bool $charged): Payment
+    {
+        $communityId = self::findCommunityId($type, $payFor);
+        $authorId = self::findAuthorId($type, $payFor);
+        $accumulation = self::findAccumulation($type, $payFor);
+        $rebillId = $charged ? self::findRebillPaymentId($payFor, $payer, $type) : null;
+
         $payment = new Payment();
         $payment->type = $type;
         $payment->amount = $amount;
         $payment->from = $type === 'donate' ? $payer->user_name : $payer->name;
         $payment->telegram_user_id = $telegram_id ?? null;
-        $payment->community_id = $community ? $community->id : null;
+        $payment->community_id = $communityId ? $communityId : null;
         $payment->author = $authorId;
         $payment->add_balance = $amount / 100;
         $payment->RebillId = $rebillId;
         $payment->SpAccumulationId = $accumulation;
         $payment->save();
+
+        self::createPaymentRelations($payment, $payFor, $payer);
 
         return $payment;
     }
@@ -120,37 +131,34 @@ class PayService
             'comment' => 'trial'
         ]);
 
-        if ($payFor) {
-            $payFor->payments()->save($payment);
-        }
-        $payment->payer()->associate($payer)->save();
+        self::createPaymentRelations($payment, $payFor, $payer);
 
         return $payment;
-    }   
+    }
 
-    private static function getServiceName(string $type): string
+    private static function getDescriptionByType(string $type): string
     {
-        if ($type=='tariff') {
-            return 'Оплата доступа в сообщество Telegram';     
-        } elseif ($type=='donate') {
-            return 'Перевод средств, как безвозмездное пожертвование';     
-        } elseif ($type=='publication') {
-            return 'Оплата медиатовара в системе Spodial';     
-        } elseif ($type=='webinar') {
-            return 'Оплата медиатовара в системе Spodial';     
-        } elseif ($type=='subscription') {
-            return 'Оплата за использование системы Spodial';     
+        if ($type == 'tariff') {
+            return 'Оплата доступа в сообщество Telegram';
+        } elseif ($type == 'donate') {
+            return 'Перевод средств, как безвозмездное пожертвование';
+        } elseif ($type == 'publication') {
+            return 'Оплата медиатовара в системе Spodial';
+        } elseif ($type == 'webinar') {
+            return 'Оплата медиатовара в системе Spodial';
+        } elseif ($type == 'subscription') {
+            return 'Оплата за использование системы Spodial';
         } else {
-            return 'Оплата за использование системы Spodial';   
+            return 'Оплата за использование системы Spodial';
         }
-    } 
+    }
 
     private static function findRebillPaymentId($payFor, User $user, string $relation): ?int
     {
-        $rebildPayment = Payment::findRebillPaymentId($payFor->id, $relation, $user->id);      
+        $rebildPayment = Payment::findRebillPayment($payFor->id, $relation, $user->id);
 
         return $rebildPayment ? $rebildPayment->RebillId : null;
-    }   
+    }
 
     private static function findAccumulation(string $relation, $payFor): ?Accumulation
     {
@@ -159,8 +167,8 @@ class PayService
         } elseif ($relation === 'publication' || $relation === 'webinar') {
             return Accumulation::findUsersAccumulation($payFor->author->user_id);
         }
-        
-        return null; 
+
+        return null;
     }
 
 
@@ -176,10 +184,10 @@ class PayService
         return null;
     }
 
-    private static function findCommunity(string $relation, $payFor)
+    private static function findCommunityId(string $relation, $payFor)
     {
         if ($relation != 'subscription' && $relation != 'publication' && $relation != 'webinar') {
-            return $payFor->$relation()->first()->community()->first() ?? null;
+            return $payFor->$relation()->first()->community()->first()->id ?? null;
         }
 
         return null;
@@ -195,12 +203,11 @@ class PayService
             case $payFor instanceof Publication:
                 return 'publication';
             case $payFor instanceof Webinar:
-                return 'webinar';               
+                return 'webinar';
             case $payFor instanceof Subscription:
                 return 'subscription';
             default:
                 return false;
-        }  
+        }
     }
-
 }

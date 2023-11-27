@@ -2,9 +2,7 @@
 
 namespace App\Services\Tinkoff;
 
-
 use App\Services\TelegramLogService;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -238,10 +236,10 @@ class TinkoffApi
                 if (!array_key_exists('Token', $args)) {
                     $token =  $this->_genToken($args);
                     $args['Token'] = $this->_genToken($args);
-                    log::info('set Token: '. json_encode($args, JSON_UNESCAPED_UNICODE));
+                    log::info('set Token: ' . json_encode($args, JSON_UNESCAPED_UNICODE));
                 }
 
-                log::info('allowed Token: '. json_encode($args['Token'], JSON_UNESCAPED_UNICODE));
+                log::info('allowed Token: ' . json_encode($args['Token'], JSON_UNESCAPED_UNICODE));
 
                 $args = $this->updateSecuresData($args);
 
@@ -341,7 +339,7 @@ class TinkoffApi
 
             // $path = Str::afterLast(rtrim($api_url, '/'), '/');
             $path = Str::afterLast($api_url, 'tinkoff.ru/');
-       
+
             // создание хеша для тестового файла данных по платежу можно опираться только на путь и сумму платежа
             // потому что все остальные параметры в $args являются динамическими,
             // потому автотесты платежей разделять по Amount, каждый тест должен иметь свою сумму
@@ -357,11 +355,11 @@ class TinkoffApi
             $this->response = $storage->exists("payment/$file_name.json") ?
                 $storage->get("payment/$file_name.json") :
                 $storage->get("payment/file.json");
-            
+
             $this->response = str_replace('{Amount}', $amount ?? '', $this->response);
             $this->response = str_replace('{OrderId}', $testArgs['OrderId'] ?? '', $this->response);
             $this->response = str_replace('{CardId}', $testArgs['CardId'] ?? '', $this->response);
-            $this->response = str_replace('{PaymentId}', rand(1000000,9999999), $this->response);
+            $this->response = str_replace('{PaymentId}', rand(1000000, 9999999), $this->response);
 
             return $this->response;
         } else if ($curl = curl_init()) {
@@ -406,7 +404,6 @@ class TinkoffApi
             curl_close($curl);
 
             return $out;
-
         } else {
             throw new HttpException('Can not create connection to ' . $api_url . ' with args ' . $args, 404);
         }

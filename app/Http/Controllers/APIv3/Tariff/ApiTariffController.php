@@ -148,8 +148,9 @@ class ApiTariffController extends Controller
                 return ApiResponse::error(trans('tariff.tariff_already_active'));
             }
         }
-
-        $payment = PayService::buyTariff($variant->isTest ? 0 : $variant->price, $variant, $user, $request->telegram_user_id);
+        
+        $price = $variant->isTest ? 0 : $variant->price;
+        $payment = PayService::buyTariff($price, $variant, $user, $request->telegram_user_id);
 
         if ($payment) {
             return ApiResponse::common(['redirect' => $payment->paymentUrl]);

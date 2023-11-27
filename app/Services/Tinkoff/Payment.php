@@ -6,8 +6,8 @@ use App\Helper\PseudoCrypt;
 use App\Models\Payment as P;
 use App\Services\TelegramLogService;
 use App\Services\Tinkoff\TinkoffApi;
-use Illuminate\Support\Facades\Log;
 use App\Services\Pay\PayReceiveService;
+use Illuminate\Support\Facades\Log;
 
 class Payment
 {
@@ -38,53 +38,53 @@ class Payment
         $this->callbackUrl = route('tinkoff.notify');
     }
 
-    public static function create()
+    public static function create(): Payment
     {
         return new self();
     }
 
-    public function setAmount($amount): Payment
+    public function setAmount(?int $amount): Payment
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    public function setSuccessUrl($url)
+    public function setSuccessUrl(?string $url): Payment
     {
         $this->successUrl = $url;
 
         return $this;
     }
 
-    public function setRecurrent($state = false): Payment
+    public function setRecurrent(bool $state = false): Payment
     {
         $this->recurrent = (bool)$state;
 
         return $this;
     }
 
-    public function setType($type)
+    public function setType(?string $type): Payment
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function payFor($payFor)
+    public function payFor($payFor): Payment
     {
         $this->payFor = $payFor;
 
         return $this;
     }
 
-    public function setCharged($charged = false): Payment
+    public function setCharged(bool $charged = false): Payment
     {
         $this->charged = $charged;
 
         return $this;
     }
-    
+
     public function setAccumulation($accumulation): Payment
     {
         $this->accumulation = $accumulation;
@@ -92,30 +92,30 @@ class Payment
         return $this;
     }
 
-    public function setTelegramId($telegramId)
+    public function setTelegramId(?int $telegramId): Payment
     {
         $this->telegram_id = $telegramId;
 
         return $this;
     }
-    
-    public function setPayer($payer)
+
+    public function setPayer($payer): Payment
     {
         $this->payer = $payer;
 
         return $this;
     }
 
-    public function setRebillId($rebillId)
+    public function setRebillId(?int $rebillId): Payment
     {
         $this->rebillId = $rebillId;
 
         return $this;
     }
 
-    public function setPayment($payment)
+    public function setPayment($payment): Payment
     {
-        $this->payment = $payment;      
+        $this->payment = $payment;
         if ($payment->telegram_user_id) {
             $this->setTelegramId($payment->telegram_user_id);
         }
@@ -134,46 +134,46 @@ class Payment
 
         return $this;
     }
-    
-    public function setOrderId($orderId)
-    {
-        $this->orderId = $orderId;      
-        
-        return $this;
-    }    
 
-    public function setServiceName($serviceName)
+    public function setOrderId(?string $orderId): Payment
     {
-        $this->serviceName = $serviceName;      
+        $this->orderId = $orderId;
 
         return $this;
     }
 
-    public function setEmail($email)
+    public function setServiceName(?string $serviceName): Payment
     {
-        $this->email = $email;      
+        $this->serviceName = $serviceName;
 
         return $this;
     }
 
-    public function setPhone($phone)
+    public function setEmail(?string $email): Payment
     {
-        $this->phone = $phone;      
+        $this->email = $email;
 
         return $this;
     }
 
-    public function setQuantity($quantity)
+    public function setPhone(?string $phone): Payment
     {
-        $this->quantity = $quantity;      
+        $this->phone = $phone;
 
         return $this;
     }
- 
+
+    public function setQuantity(?int $quantity): Payment
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
     public function pay()
     {
         log::info('Начало оплаты Тинькофф');
- 
+
         $params = $this->params(); // Генерируем параметры для оплаты исходя из входных параметров
 
         if ($this->type == 'subscription') {
@@ -193,20 +193,19 @@ class Payment
                 'token' => hash('sha256', $this->payment->id),
                 'error' => $resp->ErrorCode
             ]);
-            if ($this->payFor) {
-                $this->payFor->payments()->save($this->payment);
-            }
-            $this->payment->payer()->associate($this->payer)->save();
-            
+            //    if ($this->payFor) {
+            //        $this->payFor->payments()->save($this->payment);
+            //    }
+            //    $this->payment->payer()->associate($this->payer)->save();
+
             if ($this->charged) {
                 $charge = $this->payCharge();
                 if (!$charge) {
                     return false;
                 }
             }
-  
-            return $this->payment;
 
+            return $this->payment;
         } else {
             $this->sendLogs("Оплата по карте с ошибкой: " . json_encode($resp, JSON_UNESCAPED_UNICODE));
 
@@ -214,7 +213,7 @@ class Payment
         }
     }
 
-    private function payCharge():bool
+    private function payCharge(): bool
     {
         $chargeRes = $this->tinkoff->payTerminal->Charge([
             'PaymentId' => $this->payment->paymentId,
@@ -233,22 +232,22 @@ class Payment
                 'RebillId' => $chargeRes->RebillId ?? null,
             ]);
 
-            PayReceiveService::paymentDbTransaction($chargeRes, $this->payment, $previous_status);
+            PayReceiveService::paymentReceived($chargeRes, $this->payment, $previous_status);
         } else {
             $this->sendLogs("Charge ответил с ошибкой: " . json_encode($chargeRes, JSON_UNESCAPED_UNICODE));
 
             return false;
         }
 
-        if ($this->payFor) {
-            $this->payFor->payments()->save($this->payment);
-        }
-        $this->payment->payer()->associate($this->payer)->save();
+        //    if ($this->payFor) {
+        //        $this->payFor->payments()->save($this->payment);
+        //    }
+        //    $this->payment->payer()->associate($this->payer)->save();
 
         return true;
     }
 
-    private function params()
+    private function params(): array
     {
         $attaches = [];
 
@@ -298,7 +297,7 @@ class Payment
         return array_merge_recursive($params, $this->checkRecurrent());
     }
 
-    private function checkAccumulation()
+    private function checkAccumulation(): array
     {
         $params = [];
         if ($this->accumulation !== null) {
@@ -311,7 +310,7 @@ class Payment
         return $params;
     }
 
-    private function checkRecurrent()
+    private function checkRecurrent(): array
     {
         $params = [];
         if ($this->recurrent) {
@@ -330,5 +329,4 @@ class Payment
         log::error($message);
         TelegramLogService::staticSendLogMessage($message);
     }
-
 }
