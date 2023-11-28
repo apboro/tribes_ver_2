@@ -53,7 +53,7 @@ class PayReceiveService
         }
     }
 
-    public static function paymentReceived($data, Payment $payment, string $previousStatus): bool
+    public static function run($data, Payment $payment, string $previousStatus): bool
     {
         try {
             Log::debug('Banks data', ['data' => $data, 'payment' => $payment, 'previous_status' => $previousStatus]);

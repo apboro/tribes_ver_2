@@ -45,7 +45,7 @@ class PayService
         return self::doPayment($amount, $payFor, $payer, null,  $successUrl);
     }
 
-    public static function buySubscription(int $amount, $payFor, User $payer, string $successUrl)
+    public static function buySubscription(int $amount, $payFor, User $payer, ?string $successUrl)
     {
         return self::doPayment($amount, $payFor, $payer, null,  $successUrl, true);
     }
@@ -132,30 +132,28 @@ class PayService
         ]);
 
         self::createPaymentRelations($payment, $payFor, $payer);
+        PayReceiveService::actionAfterPayment($payment);
 
         return $payment;
     }
 
     private static function getDescriptionByType(string $type): string
     {
-        if ($type == 'tariff') {
-            return 'Оплата доступа в сообщество Telegram';
-        } elseif ($type == 'donate') {
-            return 'Перевод средств, как безвозмездное пожертвование';
-        } elseif ($type == 'publication') {
-            return 'Оплата медиатовара в системе Spodial';
-        } elseif ($type == 'webinar') {
-            return 'Оплата медиатовара в системе Spodial';
-        } elseif ($type == 'subscription') {
-            return 'Оплата за использование системы Spodial';
-        } else {
-            return 'Оплата за использование системы Spodial';
-        }
+        $names = [
+            'tariff' => 'Оплата доступа в сообщество Telegram',
+            'donate' => 'Перевод средств, как безвозмездное пожертвование',
+            'publication' => 'Оплата медиатовара в системе Spodial',
+            'webinar' => 'Оплата медиатовара в системе Spodial',
+            'subscription' => 'Оплата за использование системы Spodial',
+            'default' => 'Оплата за использование системы Spodial',
+        ];
+
+        return $names[$type] ?? $names['default'];
     }
 
     private static function findRebillPaymentId($payFor, User $user, string $relation): ?int
     {
-        $rebildPayment = Payment::findRebillPayment($payFor->id, $relation, $user->id);
+        $rebildPayment = Payment::findRebill($payFor->id, $relation, $user->id);
 
         return $rebildPayment ? $rebildPayment->RebillId : null;
     }

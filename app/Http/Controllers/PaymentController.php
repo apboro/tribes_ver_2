@@ -100,7 +100,7 @@ class PaymentController extends Controller
             $payment->RebillId = $request->RebillId ?? null;
             $payment->save();
 
-            $isSuccess = PayReceiveService::paymentReceived($request, $payment, $previousStatus);
+            $isSuccess = PayReceiveService::run($request, $payment, $previousStatus);
             if ($isSuccess) {
                 if ($payment->status == 'CONFIRMED') {
                     PayReceiveService::actionAfterPayment($payment);

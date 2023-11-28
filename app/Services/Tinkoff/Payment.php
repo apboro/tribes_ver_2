@@ -232,7 +232,7 @@ class Payment
                 'RebillId' => $chargeRes->RebillId ?? null,
             ]);
 
-            PayReceiveService::paymentReceived($chargeRes, $this->payment, $previous_status);
+            PayReceiveService::run($chargeRes, $this->payment, $previous_status);
         } else {
             $this->sendLogs("Charge ответил с ошибкой: " . json_encode($chargeRes, JSON_UNESCAPED_UNICODE));
 
