@@ -59,7 +59,8 @@ class PayService
     public static function doPayment(int $amount, $payFor, ?User $payer, ?int $telegramId = null, ?string  $successUrl = '', ?bool $recurrent = false, ?bool $charged = false)
     {
         $type = self::findType($payFor);
-        $payment = self::createPaymentRecord($type, $amount * 100, $payer, $telegramId, $payFor, $charged);
+        $accumulation = self::findAccumulation($type, $payFor);
+        $payment = self::createPaymentRecord($type, $amount * 100, $payer, $telegramId, $payFor, $accumulation, $charged);
         $orderId = $payment->id . date("_Ymd_His");
 
         if ($amount == 0 && $type === 'tariff') {
@@ -75,6 +76,7 @@ class PayService
             ->setPayment($payment)
             ->setOrderId($orderId)
             ->payFor($payFor)
+            ->setAccumulation($accumulation)
             ->setPayer($payer)
             ->setRecurrent($recurrent)
             ->setCharged($charged)
@@ -94,7 +96,7 @@ class PayService
         $payment->payer()->associate($payer)->save();
     }
 
-    private static function createPaymentRecord(string $type, int $amount, User $payer, ?int $telegram_id, $payFor, ?bool $charged = false): Payment
+    private static function createPaymentRecord(string $type, int $amount, User $payer, ?int $telegram_id, $payFor, $accumulation, ?bool $charged = false): Payment
     {
         Log::debug('Функция createPaymentRecord', [
             'type' => $type, 
@@ -106,7 +108,6 @@ class PayService
         ]);
         $communityId = self::findCommunityId($type, $payFor);
         $authorId = self::findAuthorId($type, $payFor);
-        $accumulation = self::findAccumulation($type, $payFor);
         $rebillId = $charged ? self::findRebillPaymentId($payFor, $payer, $type) : null;
 
         $payment = new Payment();
