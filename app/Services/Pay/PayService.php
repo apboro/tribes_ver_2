@@ -118,7 +118,9 @@ class PayService
         $payment->author = $authorId;
         $payment->add_balance = $amount / 100;
         $payment->RebillId = $rebillId;
-        $payment->SpAccumulationId = $accumulation;
+        if ($accumulation){
+            $payment->SpAccumulationId = $accumulation->SpAccumulationId;
+        }
         Log::debug('Payment перед созранением', ['payment' => $payment]);
         $payment->save();
 
