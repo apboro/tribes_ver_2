@@ -31,6 +31,14 @@ class TelegramUser extends Model
 {
     use HasFactory;
 
+    public const TELEGRAM_ID = 'telegram_id';
+
+    public const FIRST_NAME = 'first_name';
+
+    public const LAST_NAME = 'last_name';
+
+    public const USER_NAME = 'user_name';
+
     protected $guarded = [];
 
     protected $table = 'telegram_users';
@@ -159,5 +167,25 @@ class TelegramUser extends Model
     public static function findByTelegramId(int $telegramId)
     {
         return self::where('telegram_id', $telegramId)->first();
-    }   
+    }
+
+    public static function provideOneUser(array $tgUserData): self
+    {
+        $tgUserId = $tgUserData['tg_user_id'];
+
+        $tgUser = self::firstOrCreate([self::TELEGRAM_ID, '=', $tgUserId], [
+            self::TELEGRAM_ID => $tgUserId,
+            self::FIRST_NAME  => $tgUserData[self::FIRST_NAME],
+            self::LAST_NAME   => $tgUserData[self::LAST_NAME],
+            self::USER_NAME   => $tgUserData[self::USER_NAME]
+        ]);
+
+        if (!$tgUser->user) {
+            $password = $tgUserId . '@' . $tgUserId . '.loc';
+            $user = User::easyRegister($password);
+        }
+
+        return $tgUser;
+    }
+
 }

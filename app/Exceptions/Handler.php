@@ -76,6 +76,7 @@ class Handler extends ExceptionHandler
             $this->telegramLogService->sendLogMessage((string)view('telegram.report', $data));
         }
         Log::error(
+            json_encode($data, JSON_UNESCAPED_UNICODE) .
             $this->getExceptionTraceAsString($e) . PHP_EOL
             /*.$this->arrayToPrettyString($_SERVER)*/
         );
