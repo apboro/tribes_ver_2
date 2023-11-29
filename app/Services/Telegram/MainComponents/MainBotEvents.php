@@ -3,6 +3,7 @@
 namespace App\Services\Telegram\MainComponents;
 
 use App;
+use App\Domain\Entity\Telegram\TelegramConnectionEntity;
 use App\Events\NewChatUserJoin;
 use App\Exceptions\KnowledgeException;
 use App\Helper\ArrayHelper;
@@ -109,9 +110,10 @@ class MainBotEvents
     {
         try {
             if (isset($this->data->message->new_chat_member->id)) {
+                log::info('botAddedToGroup :    isset($this->data->message->new_chat_member->id) ');
                 $chatId = $this->data->message->chat->id;
                 $new_chat_member_id = $this->data->message->new_chat_member->id;
-                if ($new_chat_member_id == $this->bot->botId) {
+                if ($new_chat_member_id === $this->bot->botId) {
                     $this->bot->logger()->debug('Добавление бота в уже существующую ГРУППУ',
                         ['chat' => $chatId, 'tg' =>$this->data->message->from->id]);
 
@@ -130,9 +132,11 @@ class MainBotEvents
                         $this->data->message->chat->title,
                         $this->getPhoto($chatId)
                     );
+
+                    TelegramConnectionEntity::initCompleted($this->data->message->from->id);
+
                     Log::channel('telegram_bot_action_log')
-                        ->
-                        log('info', '', [
+                        ->log('info', '', [
                             'action' => TelegramBotActionHandler::EVENT_NEW_CHAT_MEMBER,
                             'event' => TelegramBotActionHandler::EVENT_NEW_CHAT_MEMBER,
                             'telegram_id' => $this->data->message->new_chat_member->id,
@@ -665,23 +669,24 @@ class MainBotEvents
      * @return string
      * @throws \Askoldex\Teletant\Exception\TeletantException
      */
-    protected
-    function getPhoto($chatId)
+    protected function getPhoto($chatId)
     {
         try {
             $photoId = $this->bot->getExtentionApi()->getChat(['chat_id' => $chatId])->photo()->bigFileId() ?? NULL;
-            if (!$photoId)
+            if (!$photoId) {
                 return '/images/no-image.svg';
+            }
 
             $photoPath = $this->bot->Api()->getFile([
                 'file_id' => $photoId
             ])->filePath() ?? NULL;
-            if (!$photoPath)
+            if (!$photoPath) {
                 return '/images/no-image.svg';
+            }
 
             return env('TELEGRAM_BASE_URL') . '/file/bot' . $this->bot->getToken() . '/' . $photoPath;
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('ERORR getPhoto ' . $e);
         }
     }
 

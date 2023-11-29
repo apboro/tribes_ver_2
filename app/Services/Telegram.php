@@ -2,17 +2,15 @@
 
 namespace App\Services;
 
+use App\Domain\Entity\Telegram\TelegramConnectionEntity;
 use App\Helper\PseudoCrypt;
 use App\Models\Community;
 use App\Models\Payment;
-use App\Models\Tariff;
 use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
 use App\Models\TelegramUserCommunity;
 use App\Models\TelegramUserList;
 use App\Models\User;
-use App\Repositories\Tariff\TariffRepository;
-use App\Repositories\Tariff\TariffRepositoryContract;
 use App\Services\Abs\Messenger;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -21,14 +19,6 @@ use Illuminate\Support\Facades\Log;
 class Telegram extends Messenger
 {
     protected $name = "Telegram";
-
-    //todo убрать статичность переделать на нормальные методы принадлежащие объекту
-    private TariffRepository $tariffRepository;
-
-    public function __construct(TariffRepositoryContract $tariffRepository)
-    {
-        $this->tariffRepository = $tariffRepository;
-    }
 
     public static function authorize(User $user)
     {
@@ -182,7 +172,7 @@ class Telegram extends Messenger
                     return false; 
                 }
                 $userCommunity = TelegramUserCommunity::getByCommunityIdAndTelegramUserId($community->id, $t_user_id);
-                if ($userCommunity && $userCommunity->role == 'administrator' || $userCommunity->role == 'creator') {
+                if (($userCommunity && $userCommunity->role === 'administrator') || $userCommunity->role == 'creator') {
                     $this->removeUserFromWhiteList($community->id, $t_user_id);
                 }
                /* $variantForThisCommunity = $ty->tariffVariant->where('tariff_id', $community->tariff->id)->first();
@@ -266,38 +256,50 @@ class Telegram extends Messenger
      * Проверка подключения сообщества
      * @param int $telegram_id
      */
-    public function checkCommunityConnect(int $telegram_id)
+    public function checkCommunityConnect(int $telegram_id, $user = null)
     {
+        if (!$user) {
+            log::info('user is null');
+            $user = Auth::user();
+        }else{
+            log::info('user not  null');
+            log::info('user id:' . $user->id);
+        }
+
         $telegramConnectionsOfUser = TelegramConnection::query()
             ->where('telegram_user_id', $telegram_id)
             ->where('botStatus', 'administrator')
             ->whereStatus('connected')
             ->get();
-
+        log::info('---  $telegramConnectionsOfUser ---');
 //        Log::debug('checkCommunityConnect', compact('telegramConnectionsOfUser'));
 
         if ($telegramConnectionsOfUser->isNotEmpty()) {
+            log::info('---  $telegramConnectionsOfUser->isNotEmpty() ---');
             foreach ($telegramConnectionsOfUser as $telegramConnection) {
                 /* @var $community Community */
 
-                $community = Community::firstOrCreate(['connection_id' => $telegramConnection->id]);
-                $community->owner = Auth::user()->id;
+                log::info('---  enter to foreach ---');
+                $community = Community::firstOrCreate(['connection_id' => $telegramConnection->id, 'owner' => $user->id,],
+                [
+                    'owner'     => $user->id,
+                    'is_active' => true,
+                ]);
+
                 $community->is_active = true;
 
                 if ($community->wasRecentlyCreated) {
-//                    $tariff = new Tariff();
-//                    $this->tariffRepository->generateLink($tariff);
-//                    $baseAttributes = Tariff::baseData();
-//                    $baseAttributes['inline_link'] = $tariff->inline_link;
-//                    $community->tariff()->create($baseAttributes);
                     $community->statistic()->create([
                         'community_id' => $community->id
                     ]);
                     $community->title = $telegramConnection->chat_title;
                     $community->image = self::saveCommunityPhoto($telegramConnection->photo_url, $telegramConnection->chat_id);
                     $this->addBot($community);
+                    log::info('________ addBot ______________');
                     $this->addAuthorOnCommunity($community);
+                    log::info('________  addAuthorOnCommunity ______________');
                     $community->generateHash();
+                    log::info('________  generateHash ______________');
                 }
 
                 $community->save();
@@ -357,6 +359,7 @@ protected function addBot(Community $community)
  */
 protected function addAuthorOnCommunity(Community $community)
 {
+    log::info('owner: ' . json_encode($community, JSON_UNESCAPED_UNICODE));
     $ty = TelegramUser::where('user_id', $community->owner)->first();
     if ($ty)
         $ty->communities()->attach($community, [
@@ -456,15 +459,13 @@ private static function addAuthorAndChatBotOnWhiteList(Community $community)
     self::addUserToWhiteList($community->id, config('telegram_bot.bot.botId'));
 }
 
-public
-function createCommunity($community)
+public function createCommunity($community)
 {
     $this->addBot($community);
     $this->addAuthorOnCommunity($community);
 }
 
-public
-function invokeCommunityConnect($user, $type, $telegram_id)
+public function invokeCommunityConnect($user, $type, $telegram_id)
 {
     log::info('_________ invokeCommunityConnect _______');
     /* @var $user User */
@@ -483,7 +484,7 @@ function invokeCommunityConnect($user, $type, $telegram_id)
         $type = $type ?? 'errorType';
         log::info('finded $user_telegram_accounts type: ' .$type);
         $tc = TelegramConnection::firstOrCreate([
-            'user_id' => Auth::user()->id,
+            'user_id' => $user->id,
             'telegram_user_id' => $td->telegram_id,
             'chat_type' => $type,
             'status' => 'init'
@@ -507,8 +508,7 @@ function invokeCommunityConnect($user, $type, $telegram_id)
     }
 }
 
-public
-static function userBotEnterGroupEvent($telegram_user_id, $chat_id,  $chatType, $chatTitle, $photo_url = null)
+public static function userBotEnterGroupEvent($telegram_user_id, $chat_id,  $chatType, $chatTitle, $photo_url = null)
 {
     log::info('User Bot Enter Group Event');
     try {
@@ -552,8 +552,7 @@ static function userBotEnterGroupEvent($telegram_user_id, $chat_id,  $chatType, 
 
 }
 
-public
-static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chatTitle, $photo_url = null)
+public static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chatTitle, $photo_url = null)
 {
     try {
         $isChannel = strpos($chatType, 'channel') !== false;
@@ -565,7 +564,6 @@ static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chat
             ->where('telegram_user_id', $telegram_user_id)
             ->where('status', '!=', 'init')
             ->first();
-
 
         $telegramConnectionNew = TelegramConnection::where('telegram_user_id', $telegram_user_id)->whereStatus('init')->first();
 
@@ -610,16 +608,24 @@ static function botEnterGroupEvent($telegram_user_id, $chat_id, $chatType, $chat
     }
 }
 
-public
-static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id, $data = null)
+public static function botGetPermissionsEvent($telegram_user_id, $status, $chat_id, $data = null)
 {
     try {
+        log::info('___ botGetPermissionsEvent  ___');
         $telegramConnection = TelegramConnection::where('chat_id', $chat_id)
             ->where('telegram_user_id', $telegram_user_id)
             ->first();
 
         if (!$telegramConnection) {
+            log::info('___ connection not finded ___');
             $telegramConnectionNew = TelegramConnection::where('telegram_user_id', $telegram_user_id)->whereStatus('init')->first();
+           if(!$telegramConnectionNew) {
+               Log::error('Not find TelegramConnection init ');
+               //TODO перезапустить инит ?
+//               TelegramConnectionEntity::initCompleted($telegram_user_id);
+               exit;
+           }
+
             $telegramConnectionNew->botStatus = $status;
             $telegramConnectionNew->save();
 

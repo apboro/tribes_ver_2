@@ -7,6 +7,7 @@ use App\Helper\ArrayHelper;
 use App\Helper\PseudoCrypt;
 use App\Jobs\SendEmails;
 use App\Jobs\SendTeleMessageToChatFromBot;
+use App\Jobs\Telegram\InitCommunityConnectionJob;
 use App\Logging\TelegramBotActionHandler;
 use App\Models\Community;
 use App\Models\Donate;
@@ -27,6 +28,7 @@ use App\Services\Telegram;
 use App\Services\Telegram\MainBot;
 use App\Services\TelegramLogService;
 use App\Traits\Declination;
+use Askoldex\Teletant\Addons\Keyboard;
 use Askoldex\Teletant\Context;
 use Askoldex\Teletant\Addons\Menux;
 use Askoldex\Teletant\Entities\Inline\Article;
@@ -42,7 +44,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-
 class MainBotCommands
 {
     private const CABINET = 'Личный кабинет 🚀';
@@ -57,6 +58,10 @@ class MainBotCommands
     private const SUPPORT_BOT = 'support';
 
     private const REPUTATION = 'Репутация'; //🚀
+    private const ADD_NEW_CHAT_TEXT = 'Добавить чат 🚀';
+    private const ADD_NEW_CHAT_COMMAND = 'new_chat';
+
+    private const BOT_INVITE_TO_GROUP_SETTINGS = 'startgroup&admin=promote_members+delete_messages+restrict_members+invite_users+pin_messages+manage_video_chats';
 
     protected MainBot $bot;
     private CommunityRepositoryContract $communityRepo;
@@ -70,7 +75,7 @@ class MainBotCommands
         'start' => 'Начало работы с ботом' . "\n",
         'myid' => 'Показывает ваш уникальный ID' . "\n",
         'chatid' => 'Показывает уникальный ID текущего чата' . "\n",
-        'tafiff' => 'Список тарифов сообщества',
+        'tariff' => 'Список тарифов сообщества',
         'donate' => 'Материальная помощь сообществу',
         'qa' => 'Найти ответ в Базе Знаний сообщества',
         'help' => 'help',
@@ -127,6 +132,7 @@ class MainBotCommands
         'getSpodial',
         'reputation',
         'getDonateData',
+        'addNewGroup',
     ])
     {
         foreach ($methods as $method) {
@@ -196,6 +202,7 @@ class MainBotCommands
                         $ctx->replyHTML($messageForMember, Menux::Get('custom'));
                     }
                 }
+
                 $this->save_log(
                     TelegramBotActionHandler::START_BOT,
                     TelegramBotActionHandler::ACTION_SEND_HELLO_MESSAGE,
@@ -607,8 +614,10 @@ class MainBotCommands
     {
         try {
             $this->bot->onAction('{donate_hash}_{amount}', function (Context $ctx) {
-                Log::debug('In donate answer query');
-                $ctx->ansCallback('', false, 't.me/' . config('telegram_bot.bot.botName') . '?start=' . $ctx->var('donate_hash') . '_' . $ctx->var('amount'));
+                $botName = config('telegram_bot.bot.botName');
+                Log::debug('In donate answer query: '. $botName);
+
+                $ctx->ansCallback('', false, 't.me/' . $botName . '?start=' . $ctx->var('donate_hash') . '_' . $ctx->var('amount'));
             });
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
@@ -667,6 +676,40 @@ class MainBotCommands
         }
     }
 
+    protected function addNewGroup()
+    {
+        try {
+            $base = function (Context $ctx) {
+                log::info('____________addNewGroup in chat bot:');
+                // in private to bot
+                if ($this->isPrivateMessageToBot($ctx)) {
+                    $link = 'https://t.me/' . trim($this->bot->botFullName, '@') . '?' . self::BOT_INVITE_TO_GROUP_SETTINGS;
+                    log::info('link:' . $link);
+
+                    $menu = Menux::Create('links')->inline();
+                    $menu->row()->uBtn('Добавить бота в чат', $link);
+                    $title = 'Добавьте  ' . $this->bot->botFullName . ' в чат и дайте ему права администратора. ';
+                    $ctx->reply($title, $menu);
+
+                    $data = [
+                        TelegramUser::TELEGRAM_ID => $ctx->getChatID(),
+                        TelegramUser::FIRST_NAME  => $ctx->getChat()->firstName(),
+                        TelegramUser::LAST_NAME   => $ctx->getChat()->lastName(),
+                        TelegramUser::USER_NAME   => $ctx->getChat()->username(),
+                    ];
+
+                    InitCommunityConnectionJob::dispatch('group', json_encode($data, JSON_UNESCAPED_UNICODE));
+                }
+            };
+
+            $this->bot->onText(self::ADD_NEW_CHAT_TEXT, $base);
+//            $this->bot->onCommand(self::ADD_NEW_CHAT_COMMAND, $base);
+        } catch (\Exception $e) {
+            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+//            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
     /**
      * @return void
      */
@@ -699,6 +742,10 @@ class MainBotCommands
                     }
                 } else {
                     $community = $this->communityRepo->getCommunityByChatId($ctx->getChatID());
+                    if($community === null) {
+                        log::error('command database ! community is null' );
+                       return;
+                    }
 
                     $link = $community->getPublicKnowledgeLink();
                     if ($link) {
@@ -972,7 +1019,7 @@ class MainBotCommands
                 $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
                 if ($communities->first()) {
                     foreach ($communities as $community) {
-                        $menu->row()->btn($community->title, 'subscription-' . $community->connection_id);
+                        $menu->row()->btn($community->title ?? 'btn', 'subscription-' . $community->connection_id);
                     }
                     $ctx->reply('Выберите подписку', $menu);
                 } else $ctx->reply('У вас нет подписок');
@@ -1401,23 +1448,42 @@ class MainBotCommands
     function createMenu()
     {
         try {
-            Menux::Create('menu', 'main')
+            $keybord = new Keyboard(Keyboard::INLINE);
+            Menux::Create('menu', 'main') //  в рамках группы
+//                ->row(Keyboard::btn('menu', 'calendar.ignore'), Keyboard::btn('Вт', 'calendar.ignore'));
                 ->row()->btn(self::CABINET) // +
                 ->row()->btn(self::KNOWLEDGE_BASE)
-                ->row()->btn(self::SUPPORT);
-//                ->row()->btn('Подключить чат к Spodial');
+                ->row()->btn(self::SUPPORT)
+                ->row()->btn('Подключить чат к Spodial');
             Menux::Create('menuCustom', 'custom')
-                ->row()->btn(self::CABINET)
-                ->row()->btn(self::KNOWLEDGE_BASE)
-                ->row()->btn(self::MY_SUBSRUPTION)
-                ->row()->btn(self::SUPPORT);
+                ->row(
+                    Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
+                    Keyboard::btn(self::CABINET))
+                ->row(
+                    Keyboard::btn(self::SUPPORT),
+                    Keyboard::btn(self::KNOWLEDGE_BASE),
+                    Keyboard::btn(self::MY_SUBSRUPTION)
+                );
+//                ->row()->btn(self::CABINET)
+//                ->row()->btn(self::KNOWLEDGE_BASE)
+//                ->row()->btn(self::MY_SUBSRUPTION)
+//                ->row()->btn(self::SUPPORT);
 
             Menux::Create('menuOwner', 'owner')
-                ->row()->btn(self::CABINET)
-                ->row()->btn(self::KNOWLEDGE_BASE)
-                ->row()->btn(self::SUPPORT)
-                ->row()->btn(self::MY_SUBSRUPTION);
-                //->row()->btn(self::REPUTATION);
+//                ->row(Keyboard::btn('menuOwner'), Keyboard::btn('Вт', 'calendar.ignore'));
+                    ->row(
+                        Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
+                        Keyboard::btn(self::CABINET))
+                    ->row(
+                        Keyboard::btn(self::SUPPORT),
+                        Keyboard::btn(self::KNOWLEDGE_BASE),
+                        Keyboard::btn(self::MY_SUBSRUPTION)
+                    );
+//                ->row()->btn(self::CABINET)
+//                ->row()->btn(self::KNOWLEDGE_BASE)
+//                ->row()->btn(self::SUPPORT)
+//                ->row()->btn(self::MY_SUBSRUPTION);
+//                ->row()->btn(self::REPUTATION);
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }

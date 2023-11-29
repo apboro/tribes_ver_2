@@ -438,5 +438,11 @@ class User extends Authenticatable
 
         return $user;
     }
+
+    public static function findByTelegramUserId(int $telegramUserId)
+    {
+        return (TelegramUser::findByTelegramId($telegramUserId))->user;
+    }
+
 }
 
