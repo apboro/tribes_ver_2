@@ -128,9 +128,6 @@ class Payment
         if ($payment->RebillId) {
             $this->setRebillId($payment->rebillId);
         }
-        if ($payment->SpAccumulationId) {
-            $this->setAccumulation($payment->SpAccumulationId);
-        }
 
         return $this;
     }
