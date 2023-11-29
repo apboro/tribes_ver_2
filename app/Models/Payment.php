@@ -202,4 +202,22 @@ class Payment extends Model
         return $payment;
     }
 
+    public function updateRecord(array $fields): self
+    {
+        $this->fill($fields);
+        $this->save();
+
+        return $this;
+    }
+
+    public static function findRebill(int $payableId, string $relation, int $userId): ?self
+    {
+        return self::where('payable_id', $payableId)
+            ->where('type', $relation)
+            ->where('user_id', $userId)
+            ->where('RebillId', '!=', 'null')
+            ->latest()
+            ->first();
+    }
+
 }

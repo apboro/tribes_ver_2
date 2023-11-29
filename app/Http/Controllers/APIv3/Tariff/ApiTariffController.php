@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Helper\PseudoCrypt;
 use Illuminate\Support\Facades\Log;
+use App\Services\Pay\PayService;
 
 class ApiTariffController extends Controller
 {
@@ -147,15 +148,10 @@ class ApiTariffController extends Controller
                 return ApiResponse::error(trans('tariff.tariff_already_active'));
             }
         }
+        
+        $price = $variant->isTest ? 0 : $variant->price;
+        $payment = PayService::buyTariff($price, $variant, $user, $request->telegram_user_id);
 
-        $p = new Pay();
-        $p->amount($variant->isTest ? 0 : $variant->price * 100)
-            ->payFor($variant)
-            ->recurrent(true)
-            ->payer($user)
-            ->setTelegramId($request->telegram_user_id);
-
-        $payment = $p->pay();
         if ($payment) {
             return ApiResponse::common(['redirect' => $payment->paymentUrl]);
         } else {

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Event;
+use App\Events\BuyWebinarEvent;
 
 class Webinar extends Model
 {
@@ -16,6 +18,8 @@ class Webinar extends Model
     protected $guarded = [];
 
     protected $hidden = ['password'];
+
+    public const BUY_EXPIRATION = 365;
 
     protected static function boot()
     {
@@ -81,5 +85,18 @@ class Webinar extends Model
     public static function getByIds(array $ids)
     {  
         return self::whereIn('id', $ids)->get();
+    }
+
+    public static function actionAfterPayment($payment)
+    {
+        $user = $payment->payer;
+        $webinar = Webinar::find($payment->payable_id);
+        $user->webinars()->attach($webinar->id, [
+            'cost' => $webinar->price === null ? 0 : $webinar->price,
+            'byed_at' => Carbon::now(),
+            'expired_at' => Carbon::now()->addDays(self::BUY_EXPIRATION),
+        ]);
+
+        Event::dispatch(new BuyWebinarEvent($webinar, $user));
     }
 }

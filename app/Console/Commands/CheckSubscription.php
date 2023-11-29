@@ -12,6 +12,7 @@ use App\Services\Tinkoff\Payment as Pay;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use App\Services\Pay\PayService;
 
 class CheckSubscription extends Command
 {
@@ -57,12 +58,7 @@ class CheckSubscription extends Command
     private function reSubscription(UserSubscription $userSubscription)
     {
         if ($userSubscription->canBeRenew()) {
-            $payment = (new Pay())->amount($userSubscription->subscription->price * 100)
-                ->charged(true)
-                ->payFor($userSubscription->subscription)
-                ->payer($userSubscription->user)
-                ->pay();
-
+            $payment = PayService::prolongSubscription($userSubscription->subscription->price, $userSubscription->subscription, $userSubscription->user);
             if ($payment) {
                 Log::info('Payment for subscription ' . $userSubscription->id . ' success');
                 SubscriptionMade::dispatch($userSubscription->user, $userSubscription->subscription);

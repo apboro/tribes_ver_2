@@ -40,4 +40,9 @@ class DonateVariant extends Model
         return $this->morphMany(Payment::class, 'payable');
     }
 
+    public static function actionAfterPayment($payment)
+    {
+        return true;
+    }
+
 }

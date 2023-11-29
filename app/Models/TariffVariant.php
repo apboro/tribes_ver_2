@@ -7,8 +7,8 @@ use Database\Factories\TariffVariantFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-
+use Illuminate\Support\Facades\Event;
+use App\Events\TariffPayedEvent;
 
 /** @method TariffVariantFactory factory()
  *  @property int $period;
@@ -78,5 +78,10 @@ class TariffVariant extends Model
     public function isDeactivate()
     {
         return !$this->isActive;
+    }
+
+    public static function actionAfterPayment($payment)
+    {
+        Event::dispatch(new TariffPayedEvent($payment));
     }
 }
