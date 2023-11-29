@@ -13,6 +13,7 @@ use App\Models\TelegramUser;
 use App\Models\User;
 use App\Models\Payment;
 use App\Helper\PseudoCrypt;
+use Illuminate\Support\Facades\Log;
 
 class PayService
 {
@@ -93,8 +94,16 @@ class PayService
         $payment->payer()->associate($payer)->save();
     }
 
-    private static function createPaymentRecord(string $type, int $amount, User $payer, ?int $telegram_id, $payFor, ?bool $charged): Payment
+    private static function createPaymentRecord(string $type, int $amount, User $payer, ?int $telegram_id, $payFor, ?bool $charged = false): Payment
     {
+        Log::debug('Функция createPaymentRecord', [
+            'type' => $type, 
+            'amount' => $amount, 
+            'payer' =>  $payer, 
+            'telegram_id' =>  $telegram_id, 
+            'payFor' => $payFor, 
+            'charged' => $charged     
+        ]);
         $communityId = self::findCommunityId($type, $payFor);
         $authorId = self::findAuthorId($type, $payFor);
         $accumulation = self::findAccumulation($type, $payFor);
@@ -110,6 +119,7 @@ class PayService
         $payment->add_balance = $amount / 100;
         $payment->RebillId = $rebillId;
         $payment->SpAccumulationId = $accumulation;
+        Log::debug('Payment перед созранением', ['payment' => $payment]);
         $payment->save();
 
         self::createPaymentRelations($payment, $payFor, $payer);
