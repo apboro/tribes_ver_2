@@ -71,7 +71,7 @@ class TelegramUserList extends Model
         );
     }
 
-    public static function findTypeAsName(int $communityId, int $telegramId): ?string
+    public static function findTypeName(int $communityId, int $telegramId): ?string
     {
         $typeNumber = self::where('community_id', $communityId)
                 ->where('telegram_id', $telegramId)

@@ -51,7 +51,7 @@ class ApiCommunityTelegramUserResource extends JsonResource
                 'role' => $community->pivot->role,
                 'accession_date' => $community->pivot->accession_date,
                 'chat_tags' => $community->tags,
-                'status' => TelegramUserList::findTypeAsName($community->id, $this->resource->telegram_id),
+                'status' => TelegramUserList::findTypeName($community->id, $this->resource->telegram_id),
             ];
         });
 
