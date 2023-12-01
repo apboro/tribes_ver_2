@@ -119,7 +119,6 @@ class ApiPublicationController extends Controller
         if ($publication === null) {
             return ApiResponse::notFound('not_found');
         }
-        StatisticRepository::addViewPublication($publication->id);
 
         return ApiResponse::common(PublicationResource::make($publication)->toArray($request));
     }

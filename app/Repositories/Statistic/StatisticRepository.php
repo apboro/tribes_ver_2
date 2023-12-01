@@ -277,16 +277,10 @@ class StatisticRepository implements StatisticRepositoryContract
     /**
     * Добавляет в статистику 1 просмотр поста
     */
-    public static function addViewPublication($publication_id)
+    public static function addViewPublication(int $publicationId)
     {
         $currentDate = date('Y-m-d');
-        $statPost = StatisticPublication::where('publication_id', $publication_id)->first();
-        if ($statPost === null) {
-            $statPost = new StatisticPublication();
-            $statPost->publication_id = $publication_id;
-            $statPost->current_date = $currentDate;
-            $statPost->view = 0;
-        }
+        $statPost = StatisticPublication::getDayStat($publicationId, $currentDate);
         $statPost->view = $statPost->view + 1;
         $statPost->save();
     }
