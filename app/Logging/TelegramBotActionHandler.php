@@ -34,7 +34,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
     const PERSONAL_AREA = 'Перейти в личный кабинет';
 
     const FAQ = 'faq';
-    const MY_SUBSCRIPTION = 'Вызов команды "Мои подписки"';
+    const MY_SUBSCRIPTION = 'Вызов команды "Мои чаты"';
     const SUBSCRIPTION_SEARCH = 'Поиск подписки';
     const SET_TARIFF_FOR_USER_BY_PAID_ID = 'setTariffForUserByPayId';
     const KNOWLEDGE_SEARCH = 'Поиск по базе знаний';
@@ -67,7 +67,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
     const ACTION_SEND_MATERIAL_AID = 'Отправить материальную помощь';
     const ACTION_SEND_PERSONAL_AREA = 'send personal area';
     const ACTION_SEND_FAQ = 'Команда faq';
-    const ACTION_SEND_MY_SUBSCRIPTION = 'Команда "Мои подписки';
+    const ACTION_SEND_MY_SUBSCRIPTION = 'Команда "Мои чаты';
     const ACTION_SEND_KNOWLEDGE = 'Команда вызова базы знаний';
     const ACTION_SAVE_QUESTION_ANSWER = 'Сохраненик вопрос-ответ';
     const ACTION_SEND_ACCESS = 'send access';
@@ -91,7 +91,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
         'Команда /help отпавлена боту',
         'Команда /donate отпавлена боту',
         'Материальная помощь',
-        'Вызов команды "Мои подписки"',
+        'Вызов команды "Мои чаты"',
         'Поиск подписки',
         'Поиск по базе знаний',
         'Бот добавлен в группу',
@@ -118,7 +118,7 @@ class TelegramBotActionHandler extends AbstractProcessingHandler
         'Установить тариф участнику',
         'Отправить материальную помощь',
         'Команда faq',
-        'Команда "Мои подписки',
+        'Команда "Мои чаты',
         'Команда вызова базы знаний',
         'Сохраненик вопрос-ответ',
         'Команда Отписаться'
