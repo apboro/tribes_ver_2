@@ -54,7 +54,7 @@ class MainBotCommands
 
     private const KNOWLEDGE_BASE = 'База знаний 🚀';
     private const KNOWLEDGE_BASE_BOT = 'database';
-    private const MY_SUBSRUPTION = 'Мои подписки 🚀';
+    private const MY_SUBSRUPTION = 'Мои чаты 🚀';
     private const SUPPORT_BOT = 'support';
 
     private const REPUTATION = 'Репутация'; //🚀
@@ -897,7 +897,7 @@ class MainBotCommands
                     $payment->telegram_user_id = $ctx->getUserID();
                     $payment->save();
                 } else {
-                    $ctx->reply('Ваша подписка уже активирована, что-бы получить ссылку на ресурс пройдите в раздел "Мои подписки".');
+                    $ctx->reply('Ваш тариф уже активирован, чтобы получить ссылку на ресурс пройдите в раздел "Мои чаты".');
                 }
 
                 if ($payment && $payment->type == 'tariff' && ($payment->status == 'CONFIRMED' || $payment->status == 'AUTHORIZED')) {
@@ -1021,8 +1021,8 @@ class MainBotCommands
                     foreach ($communities as $community) {
                         $menu->row()->btn($community->title ?? 'btn', 'subscription-' . $community->connection_id);
                     }
-                    $ctx->reply('Выберите подписку', $menu);
-                } else $ctx->reply('У вас нет подписок');
+                    $ctx->reply('Выберите чат', $menu);
+                } else $ctx->reply('У вас нет чатов');
                 $this->save_log(
                     TelegramBotActionHandler::MY_SUBSCRIPTION,
                     TelegramBotActionHandler::ACTION_SEND_MY_SUBSCRIPTION,
