@@ -71,13 +71,8 @@ class TelegramUserList extends Model
         );
     }
 
-    public static function findTypeName(int $communityId, int $telegramId): ?string
+    public function getTypeNameAttribute(): ?string
     {
-        $typeNumber = self::where('community_id', $communityId)
-                ->where('telegram_id', $telegramId)
-                ->first()->type ?? 0;
-        $name = array_search($typeNumber, self::TYPE_NAME_LIST);
-
-        return $name ? $name : null;
+        return array_search($this->type, self::TYPE_NAME_LIST);
     }
 }
