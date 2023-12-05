@@ -105,6 +105,24 @@ class MainBotEvents
 
     }
 
+    /**
+     * @return string
+     */
+    public function getAidedBotToGroupText(): string
+    {
+        $text = 'SpodialBot бот успешно добавлен в группу ' . $this->data->message->chat->title . "\n" .
+            "\n" .
+            'Для более детального сбора аналитики и возможностей модерации в личном кабинете spodial.com ' . "\n"
+            . 'необходимо также добавить в группу бота ' . $this->bot->botFullName . "\n" .
+            'с правами администратора.' . "\n"
+            . "\n"
+            . 'Инструкция по добавлению:' . "\n"
+            . '1. Добавьте пользователя с ником ' . $this->bot->botFullName . ' в группу.'  . "\n"
+            . '2. Назначьте пользователя администратором.';
+
+        return $text;
+    }
+
     /** Добавление бота в уже существующую ГРУППУ */
     protected function botAddedToGroup()
     {
@@ -134,6 +152,10 @@ class MainBotEvents
                     );
 
                     TelegramConnectionEntity::initCompleted($this->data->message->from->id);
+
+                    $message = $this->getAidedBotToGroupText();
+
+                    $this->bot->getExtentionApi()->sendMess($this->data->message->from->id, $message);
 
                     Log::channel('telegram_bot_action_log')
                         ->log('info', '', [
