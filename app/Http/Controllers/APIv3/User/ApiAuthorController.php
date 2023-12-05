@@ -5,6 +5,7 @@ namespace App\Http\Controllers\APIv3\User;
 use App\Http\ApiRequests\Author\ApiAuthorDelete;
 use App\Http\ApiRequests\Author\ApiAuthorShowForFollowersRequest;
 use App\Http\ApiRequests\Author\ApiAuthorShowRequest;
+use App\Http\ApiRequests\Author\ApiAuthorsShowListRequest;
 use App\Http\ApiRequests\Author\ApiAuthorStoreRequest;
 use App\Http\ApiRequests\Author\ApiAuthorUpdateRequest;
 use App\Http\ApiResources\AuthorResourse;
@@ -53,6 +54,13 @@ class ApiAuthorController extends Controller
         }
 
         return ApiResponse::common(AuthorResourse::make($author)->toArray($request));
+    }
+
+    public function list(ApiAuthorsShowListRequest $request)
+    {
+        $authorList = Author::all();
+
+        return ApiResponse::common(AuthorResourse::make($authorList)->toArray($request));
     }
 
     /**

@@ -83,6 +83,7 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/courses/pay/{hash}', [ApiCourseController::class, 'pay']);
     Route::get('/courses/show/{hash}', [ApiCourseController::class, 'show_for_all']);
     Route::post('/send_demo_email', [MailSender::class, 'sendDemoEmail']);
+    Route::post('/authors/list', [ApiAuthorController::class, 'list'])->name('api.authors.list');
     Route::get('/public/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
     Route::post('/pay/donate', [ApiNewDonateController::class, 'processDonatePayment'])->name('pay.donate.not.fixed');
     Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])
