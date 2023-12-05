@@ -8,6 +8,7 @@ use App\Models\Knowledge\Category;
 use App\Models\Knowledge\Knowledge;
 use App\Models\Knowledge\Question;
 use App\Models\Models\Tag;
+use App\Models\TelegramUserList;
 use App\Services\TelegramMainBotService;
 use Database\Factories\CommunityFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -394,4 +395,9 @@ class Community extends Model
     {
         return $this->hasOne(TelegramUserList::class, 'community_id', 'id')->withDefault();
     }
+
+    public function findTelegramUserList(int $telegramId): ?TelegramUserList
+    {
+        return $this->telegramUserList()->where('telegram_id', $telegramId)->first();
+    }   
 }

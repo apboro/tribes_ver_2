@@ -70,4 +70,9 @@ class TelegramUserList extends Model
             'telegram_id'
         );
     }
+
+    public function getTypeNameAttribute(): ?string
+    {
+        return array_search($this->type, self::TYPE_NAME_LIST);
+    }
 }
