@@ -104,6 +104,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () 
     Route::get('/check/user/subscription', [ApiSubscriptionController::class, 'check']);
     Route::get('/show/user/subscription', [ApiSubscriptionController::class, 'userShowSubscription']);
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
+    Route::post('/visited/publications', [ApiVisitedPublicationController::class, 'store'])->name('api.publications.visited.store');
+    Route::post('/statistic/publication-time', [ApiPublicationStatistic::class, 'saveViewTime']);
 });
 /** TODO fastFIX  */
 //Route::get('/api/v3/question/{id}', [ApiQuestionController::class, 'show']);
@@ -246,7 +248,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/statistic/payments-all-time', [ApiTelegramPaymentsStatistic::class, 'paymentsSummAllTime']);
     Route::get('/statistic/payments-payouts', [ApiTelegramPaymentsStatistic::class, 'payoutsList']);
     Route::get('/statistic/publications', [ApiPublicationStatistic::class, 'statistic']);
-    Route::post('/statistic/publication-time', [ApiPublicationStatistic::class, 'saveViewTime']);
     Route::get('/statistic/publication-export', [ApiPublicationStatistic::class, 'export']);
 
     Route::get('/chats/users/reputation', [TelegramUserReputationController::class, 'index']);
@@ -281,7 +282,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/favourite/publications', [ApiFavouritePublicationController::class, 'list'])->name('api.publications.favorite.list');
 
     Route::get('/visited/publications', [ApiVisitedPublicationController::class, 'list'])->name('api.publications.visited.list');
-    Route::post('/visited/publications', [ApiVisitedPublicationController::class, 'store'])->name('api.publications.visited.store');
 
     Route::post('/tariff', [ApiTariffController::class, 'store']);
     Route::get('/tariffs', [ApiTariffController::class, 'list']);
