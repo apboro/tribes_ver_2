@@ -143,8 +143,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'authorId' => [
+            'required' => 'Пользователь не является автором'
         ],
     ],
 

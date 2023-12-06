@@ -32,6 +32,7 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\Payments\ApiPayoutController;
+use App\Http\Controllers\APIv3\Product\ApiProductController;
 use App\Http\Controllers\APIv3\Publication\ApiFavouritePublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationPartController;
@@ -92,6 +93,8 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/show/tariff_payed', [ApiTariffController::class, 'showPayed']);    
     Route::get('/public/webinars/{author}', [ApiWebinarController::class, 'publicList']);
     Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.public.publications.list');
+    Route::get('/public/products/{author}', [ApiProductController::class, 'publicList'])->name('api.public.products.list');
+    Route::get('/product/{uuid}', [ApiProductController::class, 'showByUuid'])->name('api.products.show_by_uuid')->middleware('api');
     Route::get('/webinar/{uuid}', [ApiWebinarController::class, 'showByUuid'])
         ->name('api.webinar.show_by_uuid')->middleware('api');
     Route::post('/publication/pay/{uuid}', [ApiPublicationController::class, 'pay']);
@@ -264,6 +267,12 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::put('/authors', [ApiAuthorController::class, 'update'])->name('api.author.update');
     Route::get('/authors/{id}', [ApiAuthorController::class, 'show'])->name('api.author.show');
     Route::delete('/authors', [ApiAuthorController::class, 'destroy'])->name('api.author.delete');
+
+    Route::post('/products', [ApiProductController::class, 'store'])->name('api.products.create');
+    Route::get('/products/{id}', [ApiProductController::class, 'show'])->name('api.products.show');
+    Route::get('/products', [ApiProductController::class, 'list'])->name('api.products.list');
+    Route::delete('/products/{id}', [ApiProductController::class, 'destroy'])->name('api.products.destroy');
+    Route::post('/products/{id}', [ApiProductController::class, 'update'])->name('api.products.update');
 
     Route::get('/publications', [ApiPublicationController::class, 'list'])->name('api.publications.list');
     Route::post('/publications', [ApiPublicationController::class, 'store'])->name('api.publications.create');
