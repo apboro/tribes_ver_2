@@ -56,11 +56,11 @@ class ApiAuthorController extends Controller
         return ApiResponse::common(AuthorResourse::make($author)->toArray($request));
     }
 
-    public function list(ApiAuthorsShowListRequest $request)
+    public function list(ApiAuthorsShowListRequest $request): ApiResponse
     {
         $authorList = Author::all();
 
-        return ApiResponse::common(AuthorResourse::make($authorList)->toArray($request));
+        return ApiResponse::common(AuthorResourse::collection($authorList)->toArray($request));
     }
 
     /**
