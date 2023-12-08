@@ -7,13 +7,13 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\GET(
- *  path="/api/v3/product/{uuid}",
- *  operationId="product-show-by-uuid",
- *  summary="Show product by uuid",
+ *  path="/api/v3/public/product/{id}",
+ *  operationId="product-public-show-by-id",
+ *  summary="Show product by id (public)",
  *  security={{"sanctum": {} }},
  *  tags={"Product"},
- *     @OA\Parameter(name="uuid",in="path",
- *         description="Uuid of product in database",
+ *     @OA\Parameter(name="id",in="path",
+ *         description="Id of product in database",
  *         required=true,
  *         @OA\Schema(
  *             type="string",
@@ -22,18 +22,18 @@ use OpenApi\Annotations as OA;
  *   @OA\Response(response=200, description="OK")
  *)
  */
-class ApiProductShowByUUIDRequest extends ApiRequest
+class ApiProductPublicShowRequest extends ApiRequest
 {
 
     public function all($keys = null)
     {
-        return parent::all() + ['uuid' => $this->route('uuid')];
+        return ['id' => $this->route('id')] + parent::all();
     }
 
     public function rules(): array
     {
         return [
-            'uuid' => 'required|uuid|exists:products,uuid'
+            'id' => 'required|integer|exists:products,id'
         ];
     }
 }

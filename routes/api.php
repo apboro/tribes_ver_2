@@ -93,8 +93,8 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/show/tariff_payed', [ApiTariffController::class, 'showPayed']);    
     Route::get('/public/webinars/{author}', [ApiWebinarController::class, 'publicList']);
     Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.public.publications.list');
-    Route::get('/public/products/{author}', [ApiProductController::class, 'publicList'])->name('api.public.products.list');
-    Route::get('/product/{uuid}', [ApiProductController::class, 'showByUuid'])->name('api.products.show_by_uuid')->middleware('api');
+    Route::get('/public/products/{authorId}', [ApiProductController::class, 'publicList'])->name('api.public.products.list');
+    Route::get('/public/product/{id}', [ApiProductController::class, 'publicShow'])->name('api.products.show_by_uuid')->middleware('api');
     Route::get('/webinar/{uuid}', [ApiWebinarController::class, 'showByUuid'])
         ->name('api.webinar.show_by_uuid')->middleware('api');
     Route::post('/publication/pay/{uuid}', [ApiPublicationController::class, 'pay']);

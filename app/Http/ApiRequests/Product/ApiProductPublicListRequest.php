@@ -32,7 +32,7 @@ class ApiProductPublicListRequest extends ApiRequest
 {
     public function all($keys = null)
     {
-        return parent::all() + ['authorId' => $this->route('author')];
+        return ['authorId' => $this->route('authorId')] + parent::all();
     }
 
     public function rules(): array

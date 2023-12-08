@@ -30,10 +30,10 @@ class ApiProductDeleteRequest extends ApiRequest
 
     public function all($keys = null)
     {
-        return parent::all() + [
+        return [
                 'id' => $this->route('id'),
                 'authorId' => Auth::user()->author->id ?? null
-            ];
+                ] + parent::all();
     }
 
     public function rules(): array

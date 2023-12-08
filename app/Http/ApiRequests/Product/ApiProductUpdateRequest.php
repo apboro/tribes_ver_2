@@ -39,9 +39,9 @@ class ApiProductUpdateRequest extends ApiRequest
 {
     public function all($keys = null)
     {
-        return parent::all() + ['id' => $this->route('id'),
+        return ['id' => $this->route('id'),
                 'authorId' => Auth::user()->author->id ?? null
-            ];
+                ] + parent::all();
     }
 
     public function rules(): array

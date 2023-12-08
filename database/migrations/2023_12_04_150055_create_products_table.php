@@ -20,7 +20,6 @@ class CreateProductsTable extends Migration
             $table->integer('price')->nullable();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->uuid('uuid')->nullable();
             $table->timestamps();
         });
     }

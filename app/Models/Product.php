@@ -14,26 +14,7 @@ class Product extends Model
 
     protected $guarded = [];
 
-    const HOW_SHOW_DEFAULT = 10;
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->setAttributeUuid();
-        });
-    }
-
-    public function setAttributeUuid()
-    {
-        $this->attributes['uuid'] = Str::uuid();
-    }
-
-    public static function findByUUID(string $uuid): ?self
-    {
-        return self::where('uuid', $uuid)->first();
-    }
+    public const HOW_SHOW_DEFAULT = 10;
 
     private static function addFilter(array $filter): Builder
     {

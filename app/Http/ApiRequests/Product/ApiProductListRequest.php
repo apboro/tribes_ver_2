@@ -24,7 +24,7 @@ class ApiProductListRequest extends ApiRequest
 
     public function all($keys = null)
     {
-        return parent::all() + ['authorId' => Auth::user()->author->id ?? null];
+        return ['authorId' => Auth::user()->author->id ?? null] + parent::all();
     }
 
     public function rules(): array
