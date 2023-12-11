@@ -13,6 +13,7 @@ use App\Http\ApiResources\Product\ProductResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 class ApiProductController extends Controller
 {
