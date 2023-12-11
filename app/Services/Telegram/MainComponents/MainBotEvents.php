@@ -293,20 +293,22 @@ class MainBotEvents
     protected function newChatUser()
     {
         try {
-            if (isset($this->data->message->new_chat_member->id) &&
-                $this->data->message->new_chat_member->id !== $this->bot->botId) {
+            $member = $this->data->message->new_chat_member ?? null;
+            if (!$member) {
+                $member = $this->data->chat_member->new_chat_member->user ?? null;
+            }
 
-                $chatId = $this->data->message->chat->id;
-                $new_member_id = $this->data->message->new_chat_member->id;
-                $member = $this->data->message->new_chat_member;
+            $newMemberId = $member->id ?? null;
+
+            if ($member && $newMemberId !== $this->bot->botId) {
+                $chatId = $this->data->message->chat->id ?? $this->data->chat_member->chat->id;
                 Log::info('Новый пользователь newChatUser()');
-
-                Log::channel('telegram_bot_action_log')->
-                log('info', '', [
+                Log::channel('telegram_bot_action_log')->log('info', '', [
                     'event' => TelegramBotActionHandler::EVENT_NEW_CHAT_USER,
-                    'telegram_id' => $new_member_id,
+                    'telegram_id' => $newMemberId,
                     'chat_id' => $chatId
                 ]);
+
                 $community = Community::whereHas('connection', function ($q) use ($chatId) {
                     $q->where('chat_id', $chatId);
                 })->first();
@@ -324,7 +326,7 @@ class MainBotEvents
                         ]]];
                         $message = $this->bot->getExtentionApi()
                             ->sendMessWithReturn($chatId, 'Нажмите кнопку для вступления', false, $keyboard);
-                        Captcha::updateOrCreate(['chat_id' => $chatId, 'telegram_user_id' => $new_member_id],
+                        Captcha::updateOrCreate(['chat_id' => $chatId, 'telegram_user_id' => $newMemberId],
                             [
                                 'solved' => false,
                                 'message_id' => $message['result']['message_id'],
