@@ -84,8 +84,10 @@ class RunGpt extends Command
             $chatIds = TelegramConnection::getAllChats();
 
             foreach ($chatIds as $chatId) {
+                Log::info('Check chat ' . $chatId);
                 $tgMessages = TelegramMessage::findMessagesByTimePeriod($chatId,  $startTime,  $endTime);
                 if (count($tgMessages) > 0) {
+                    Log::info('Messages: ' . count($tgMessages));
                     $botQuestion = $this->prepareQuestion($tgMessages);
                     $botAnswer = $this->apiGpt->run($botQuestion);
                     $this->saveThemes($botAnswer, $chatId);
