@@ -16,6 +16,7 @@ use App\Models\Knowledge\Question;
 use App\Models\Payment;
 use App\Models\Tariff;
 use App\Models\TariffVariant;
+use App\Models\TelegramChatTheme;
 use App\Models\TelegramUser;
 use App\Models\TelegramUserList;
 use App\Models\TelegramUserReputation;
@@ -133,6 +134,7 @@ class MainBotCommands
         'reputation',
         'getDonateData',
         'addNewGroup',
+        'findThemes',
     ])
     {
         foreach ($methods as $method) {
@@ -227,6 +229,18 @@ class MainBotCommands
             $this->bot->onCommand('start', $start);
         } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    protected function findThemes()
+    {
+        try {
+            $this->bot->onText('/theme {date?}', function (Context $ctx) {
+                $message =  TelegramChatTheme::getMessageWithThemesByDataFormat($ctx->getChatID(), $ctx->var('date'), 'd.m.y');
+                $ctx->reply($message);
+            });
+        } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }

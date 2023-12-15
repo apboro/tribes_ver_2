@@ -56,4 +56,9 @@ class TelegramConnection extends Model
         }
         $connection->save();
     }
+
+    public static function getAllChats(): array
+    {
+        return self::select('chat_id')->pluck('chat_id')->toArray();
+    }
 }
