@@ -62,7 +62,7 @@ class MainBotCommands
     private const ADD_NEW_CHAT_TEXT = 'Добавить чат 🚀';
     private const ADD_NEW_CHAT_COMMAND = 'new_chat';
 
-    private const BOT_INVITE_TO_GROUP_SETTINGS = 'startgroup&admin=promote_members+delete_messages+restrict_members+invite_users+pin_messages+manage_video_chats';
+    private const BOT_INVITE_TO_GROUP_SETTINGS = 'startgroup&admin=promote_members+delete_messages+restrict_members+pin_messages+manage_video_chats';
 
     protected MainBot $bot;
     private CommunityRepositoryContract $communityRepo;
@@ -117,7 +117,7 @@ class MainBotCommands
         'tariffOnChat',
         'inlineCommand',
         'inlineTariffQuery',
-        'inlineAuthor',
+        'inlineShop',
         'donateOnChat',
         'helpOnChat',
         'helpOnBot',
@@ -497,12 +497,11 @@ class MainBotCommands
         }
     }
 
-    private function inlineAuthor()
+    private function inlineShop()
     {
         try {
-            $this->bot->onInlineQuery('author-{authorId}', function (Context $ctx) {
-                $authorId = (int)$ctx->var('authorId');
-                $authorId = 1;
+            $this->bot->onInlineQuery('s-{authorId}', function (Context $ctx) {
+                $authorId = PseudoCrypt::unhash($ctx->var('authorId'));
                 $author = Author::find($authorId);
                 if (!$author) {
                     return 0;
