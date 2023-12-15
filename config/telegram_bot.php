@@ -5,6 +5,7 @@ return [
         'botFullName' => '@' . env('TELEGRAM_BOT_NAME', 'Unit_for_factory_bot'),
         'botId' => env('TELEGRAM_BOT_ID'),
         'token' => env('TELEGRAM_BOT_TOKEN'),
+        'marketName' => env('MARKET_NAME', ''),
     ],
 
     'bot1' => [

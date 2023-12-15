@@ -229,3 +229,4 @@ config:
   forTester: "false"
   debugTinkoff: "false"
   mqprotoHost: "http://host:3000"
+  marketName: "placeholderMarket"
