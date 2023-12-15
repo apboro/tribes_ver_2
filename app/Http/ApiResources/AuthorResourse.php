@@ -2,6 +2,7 @@
 
 namespace App\Http\ApiResources;
 
+use App\Helper\PseudoCrypt;
 use App\Models\Author;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,6 +27,7 @@ class AuthorResourse extends JsonResource
             'name' => $this->resource->name,
             'about' => $this->resource->about,
             'photo' => $this->resource->photo,
+            'shop_inline' =>  config('telegram_bot.bot.botFullName') . ' s-' . PseudoCrypt::hash($this->resource->id),
         ];
     }
 }
