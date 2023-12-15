@@ -65,6 +65,7 @@ data:
   # USE_TRIAL_PERIOD: {{ quote .Values.config.useTrialPeriod }}
   # FOR_TESTER: {{ quote .Values.config.forTester }}
   DEBUG_TINKOFF: {{ quote .Values.config.tinkoff.debug }}
+  MARKET_NAME: {{ quote .Values.config.marketName }}
   # TELEGRAM_BOT_KN_TOKEN: {{ quote .Values.config.telegram.botKn.token }}
   # TELEGRAM_BOT_KN_HOOK_ON_FIRST_REQUEST: {{ quote .Values.config.telegram.botKn.hookOnFirstRequest }}
 
