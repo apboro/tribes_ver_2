@@ -9,6 +9,7 @@ use App\Jobs\SendEmails;
 use App\Jobs\SendTeleMessageToChatFromBot;
 use App\Jobs\Telegram\InitCommunityConnectionJob;
 use App\Logging\TelegramBotActionHandler;
+use App\Models\Author;
 use App\Models\Community;
 use App\Models\Donate;
 use App\Models\Knowledge\Category;
@@ -116,6 +117,7 @@ class MainBotCommands
         'tariffOnChat',
         'inlineCommand',
         'inlineTariffQuery',
+        'inlineAuthor',
         'donateOnChat',
         'helpOnChat',
         'helpOnBot',
@@ -491,6 +493,50 @@ class MainBotCommands
             });
 
         } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    private function inlineAuthor()
+    {
+        try {
+            $this->bot->onInlineQuery('author-{authorId}', function (Context $ctx) {
+                $authorId = (int)$ctx->var('authorId');
+                $authorId = 1;
+                $author = Author::find($authorId);
+                if (!$author) {
+                    return 0;
+                }
+
+                $result = new Result();
+                $article = new Article(1);
+                $message = new InputTextMessageContent();
+
+                $theme = $author->name ?? '';
+                $description = $author->about ?? 'Магазин';
+
+                $message->text($theme . "\n" . $description)->parseMode('HTML');
+                $article->title($theme)
+                        ->description($description)
+                        ->inputMessageContent($message);
+
+                if ($author->photo) {
+                    $article->thumbUrl(config('app.url') . '/' . $author->photo);
+                }
+                $menu = Menux::Create('a')->inline();
+                $menu->row()->btn('Смотреть товары автора', 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $authorId);
+
+                $article->keyboard($menu->getAsObject());
+                $result->add($article);
+
+                $ctx->Api()->answerInlineQuery([
+                    'inline_query_id' => $ctx->getInlineQueryID(),
+                    'results' => (string)$result,
+                ]);
+
+            });
+        } catch (\Exception $e) {
+            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }
