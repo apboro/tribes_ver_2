@@ -543,10 +543,10 @@ class MainBotCommands
                 $article = new Article(1);
                 $message = new InputTextMessageContent();
 
-                $theme = $author->name ?? '';
+                $theme = $author->name ?? 'Автор';
                 $description = $author->about ?? 'Магазин';
 
-                $message->text($theme . "\n" . $description)->parseMode('HTML');
+                $message->text($theme . "\n" . $description . '<a href="' . config('app.url') . '/storage/' . $author->photo . '">&#160</a>')->parseMode('HTML');
                 $article->title($theme)
                         ->description($description)
                         ->inputMessageContent($message);
@@ -554,6 +554,7 @@ class MainBotCommands
                 if ($author->photo) {
                     $article->thumbUrl(config('app.url') . '/' . $author->photo);
                 }
+
                 $menu = Menux::Create('a')->inline();
                 $menu->row()->btn('Смотреть товары автора', 'shop-' . $ctx->var('authorId') . '_author');
 
