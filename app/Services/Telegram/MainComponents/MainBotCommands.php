@@ -63,7 +63,7 @@ class MainBotCommands
     private const ADD_NEW_CHAT_TEXT = 'Добавить чат 🚀';
     private const ADD_NEW_CHAT_COMMAND = 'new_chat';
 
-    private const BOT_INVITE_TO_GROUP_SETTINGS = 'startgroup&admin=promote_members+delete_messages+restrict_members+invite_users+pin_messages+manage_video_chats';
+    private const BOT_INVITE_TO_GROUP_SETTINGS = 'startgroup&admin=delete_messages+restrict_members+invite_users+pin_messages+manage_video_chats';
 
     protected MainBot $bot;
     private CommunityRepositoryContract $communityRepo;
