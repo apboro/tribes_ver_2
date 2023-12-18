@@ -63,7 +63,7 @@ class MainBotCommands
     private const ADD_NEW_CHAT_TEXT = 'Добавить чат 🚀';
     private const ADD_NEW_CHAT_COMMAND = 'new_chat';
 
-    private const BOT_INVITE_TO_GROUP_SETTINGS = 'startgroup&admin=promote_members+delete_messages+restrict_members+pin_messages+manage_video_chats';
+    private const BOT_INVITE_TO_GROUP_SETTINGS = 'startgroup&admin=promote_members+delete_messages+restrict_members+invite_users+pin_messages+manage_video_chats';
 
     protected MainBot $bot;
     private CommunityRepositoryContract $communityRepo;
@@ -226,6 +226,9 @@ class MainBotCommands
                 $this->tariffBuyButton($ctx);
             });
 
+            $this->bot->onText('/start shop-{author_hash:string}_{role:string}', function (Context $ctx) {
+                $this->shopButton($ctx);
+            });
 
 //          $this->bot->onText('/start {paymentId?}', $start);
             $this->bot->onCommand('start', $start);
@@ -245,6 +248,21 @@ class MainBotCommands
         } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
+    }
+
+    private function shopButton(Context $ctx)
+    {
+        $authorId = PseudoCrypt::unhash($ctx->var('author_hash'));
+        $author = Author::find($authorId);
+        if (!$author) {
+            return null;
+        }
+
+        $description = ($author->name ?? 'Магазин') . "\n" . ($author->about ?? '');
+        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $authorId;
+        $menu = Menux::Create('link')->inline();
+        $menu->row()->uBtn('Открыть магазин', $link);
+        $ctx->reply($description . "\n\n", $menu);
     }
 
     private function getTariffButtonName(?string $title, ?string $price, ?string $period): string
@@ -537,7 +555,7 @@ class MainBotCommands
                     $article->thumbUrl(config('app.url') . '/' . $author->photo);
                 }
                 $menu = Menux::Create('a')->inline();
-                $menu->row()->btn('Смотреть товары автора', 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $authorId);
+                $menu->row()->btn('Смотреть товары автора', 'shop-' . $ctx->var('authorId') . '_author');
 
                 $article->keyboard($menu->getAsObject());
                 $result->add($article);
