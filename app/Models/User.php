@@ -409,7 +409,7 @@ class User extends Authenticatable
      * @param string $password
      * @return User
      */
-    public static function easyRegister(string $email, string $password = null): ?User
+    public static function easyRegister(string $email, string $password = null, string $phone = null): ?User
     {
         $user = User::where('email', $email)->withTrashed()->first();
 
@@ -426,7 +426,7 @@ class User extends Authenticatable
             'email' => strtolower($email),
             'name' => explode('@', $email)[0],
             'code' => 0000,
-            'phone' => null,
+            'phone' => $phone,
             'password' => Hash::make($password),
             'phone_confirmed' => false,
         ]);

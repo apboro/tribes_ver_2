@@ -8,6 +8,7 @@ use Database\Factories\TelegramUserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Log;
 
@@ -51,7 +52,7 @@ class TelegramUser extends Model
 
     protected $hidden = ['id', 'scene', 'scene_for_donate'];
 
-    function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -169,11 +170,11 @@ class TelegramUser extends Model
         return self::where('telegram_id', $telegramId)->first();
     }
 
-    public static function provideOneUser(array $tgUserData): self
+    public static function provideOneUser(array $tgUserData, array $userData): self
     {
-        $tgUserId = $tgUserData['tg_user_id'];
+        $tgUserId = $tgUserData['telegram_user_id'];
 
-        $tgUser = self::firstOrCreate([self::TELEGRAM_ID, '=', $tgUserId], [
+        $tgUser = self::firstOrCreate([self::TELEGRAM_ID => $tgUserId], [
             self::TELEGRAM_ID => $tgUserId,
             self::FIRST_NAME  => $tgUserData[self::FIRST_NAME],
             self::LAST_NAME   => $tgUserData[self::LAST_NAME],
@@ -181,11 +182,13 @@ class TelegramUser extends Model
         ]);
 
         if (!$tgUser->user) {
-            $password = $tgUserId . '@' . $tgUserId . '.loc';
-            $user = User::easyRegister($password);
+            /** @var User $user */
+            $user = User::easyRegister($userData['email'], null, $userData['phone']);
+            $tgUser->user_id = $user->id;
+            $tgUser->save();
+            $tgUser->load('user');
         }
 
         return $tgUser;
     }
-
 }

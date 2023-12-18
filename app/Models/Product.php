@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\Authorable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * @property $price
+ */
 class Product extends Model
 {
     use HasFactory;
@@ -15,6 +20,11 @@ class Product extends Model
     protected $guarded = [];
 
     public const HOW_SHOW_DEFAULT = 10;
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
+    }
 
     private static function addFilter(array $filter): Builder
     {

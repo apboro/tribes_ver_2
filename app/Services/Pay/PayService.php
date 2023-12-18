@@ -2,6 +2,7 @@
 
 namespace App\Services\Pay;
 
+use App\Models\Product;
 use App\Services\Tinkoff\Payment as Pay;
 use App\Models\DonateVariant;
 use App\Models\Publication;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 
 class PayService
 {
+    public const PRODUCT_TYPE_NAME = 'product';
 
     public static function buyDonate(int $amount, $variant, ?int $telegramUserId)
     {
@@ -54,6 +56,11 @@ class PayService
     public static function prolongSubscription(int $amount, $payFor, User $payer)
     {
         return self::doPayment($amount, $payFor, $payer, null,  '', true, true);
+    }
+
+    public static function buyProduct(int $amount, $payFor, User $payer, int $telegramId, string $successUrl)
+    {
+        return self::doPayment($amount, $payFor, $payer, $telegramId, $successUrl);
     }
 
     public static function doPayment(int $amount, $payFor, ?User $payer, ?int $telegramId = null, ?string  $successUrl = '', ?bool $recurrent = false, ?bool $charged = false)
@@ -153,12 +160,13 @@ class PayService
     private static function getDescriptionByType(string $type): string
     {
         $names = [
-            'tariff' => 'Оплата доступа в сообщество Telegram',
-            'donate' => 'Перевод средств, как безвозмездное пожертвование',
-            'publication' => 'Оплата медиатовара в системе Spodial',
-            'webinar' => 'Оплата медиатовара в системе Spodial',
-            'subscription' => 'Оплата за использование системы Spodial',
-            'default' => 'Оплата за использование системы Spodial',
+            'tariff'                => 'Оплата доступа в сообщество Telegram',
+            'donate'                => 'Перевод средств, как безвозмездное пожертвование',
+            'publication'           => 'Оплата медиатовара в системе Spodial',
+            'webinar'               => 'Оплата медиатовара в системе Spodial',
+            'subscription'          => 'Оплата за использование системы Spodial',
+            self::PRODUCT_TYPE_NAME => 'Оплата товара в системе Spodial',
+            'default'               => 'Оплата за использование системы Spodial',
         ];
 
         return $names[$type] ?? $names['default'];
@@ -175,13 +183,12 @@ class PayService
     {
         if ($relation === 'tariff' || $relation === 'donate' || $relation === 'course') {
             return Accumulation::findUsersAccumulation($payFor->getAuthor()->id);
-        } elseif ($relation === 'publication' || $relation === 'webinar') {
+        } elseif ($relation === 'publication' || $relation === 'webinar' || $relation === self::PRODUCT_TYPE_NAME) {
             return Accumulation::findUsersAccumulation($payFor->author->user_id);
         }
 
         return null;
     }
-
 
     private static function findAuthorId(string $relation, $payFor): ?int
     {
@@ -217,6 +224,8 @@ class PayService
                 return 'webinar';
             case $payFor instanceof Subscription:
                 return 'subscription';
+            case $payFor instanceof Product:
+                return self::PRODUCT_TYPE_NAME;
             default:
                 return false;
         }

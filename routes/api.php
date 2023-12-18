@@ -9,6 +9,7 @@ use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiWebinarController;
+use App\Http\Controllers\APIv3\Market\MarketController;
 use App\Http\Controllers\APIv3\Webinar\ApiFavouriteWebinarController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityTagController;
@@ -275,6 +276,9 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/products', [ApiProductController::class, 'list'])->name('api.products.list');
     Route::delete('/products/{id}', [ApiProductController::class, 'destroy'])->name('api.products.destroy');
     Route::post('/products/{id}', [ApiProductController::class, 'update'])->name('api.products.update');
+
+    Route::post('/market/product/buy', [MarketController::class, 'buy']);
+    Route::get('/market/show/order/{id}', [MarketController::class, 'showOrder']);
 
     Route::get('/publications', [ApiPublicationController::class, 'list'])->name('api.publications.list');
     Route::post('/publications', [ApiPublicationController::class, 'store'])->name('api.publications.create');
