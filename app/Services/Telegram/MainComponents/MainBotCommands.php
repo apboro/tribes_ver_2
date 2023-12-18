@@ -556,7 +556,7 @@ class MainBotCommands
                 }
 
                 $menu = Menux::Create('a')->inline();
-                $menu->row()->btn('Смотреть товары автора', 'shop-' . $ctx->var('authorId') . '_author');
+                $menu->row()->btn('Смотреть товары', 'shop-' . $ctx->var('authorId') . '_author');
 
                 $article->keyboard($menu->getAsObject());
                 $result->add($article);
