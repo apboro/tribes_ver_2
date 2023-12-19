@@ -555,8 +555,12 @@ class MainBotCommands
                     $article->thumbUrl(config('app.url') . '/' . $author->photo);
                 }
 
-                $menu = Menux::Create('a')->inline();
-                $menu->row()->btn('Смотреть товары', 'shop-' . $ctx->var('authorId') . '_author');
+                $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $authorId;
+                $menu = Menux::Create('link')->inline()->row()->uBtn('Открыть магазин', $link);
+                
+                // Команда для бота
+                // $menu = Menux::Create('a')->inline();
+                // $menu->row()->btn('Смотреть товары', 'shop-' . $ctx->var('authorId') . '_author');
 
                 $article->keyboard($menu->getAsObject());
                 $result->add($article);
