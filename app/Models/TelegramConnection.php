@@ -57,8 +57,8 @@ class TelegramConnection extends Model
         $connection->save();
     }
 
-    public static function getAllChats(): array
+    public static function getAllActiveChats(): array
     {
-        return self::select('chat_id')->pluck('chat_id')->toArray();
+        return self::select('chat_id')->where('botStatus', 'administrator')->where('status', '!=', 'init')->pluck('chat_id')->toArray();
     }
 }

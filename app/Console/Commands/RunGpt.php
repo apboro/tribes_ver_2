@@ -38,6 +38,7 @@ class RunGpt extends Command
         foreach ($tgMessages as $message) {
             $messageList .= 'Сообщение: "' . $message->text . "\"\n";
         }
+        Log::debug('Сообщения группы для определения темы', ['messages' => $messageList]);
 
         return 'Очисть контекст! Ниже будет текст переписки в чате. Определи 3 основные темы, о которых общались в данной переписке. ' .
             'Напиши только 3 темы, каждую с новой строки. После темы в скобках укажи количество сообщений по данной теме. ' .
@@ -47,6 +48,7 @@ class RunGpt extends Command
 
     private function prepareTheme(string $theme): array
     {
+        Log::debug('Тема для парсинга', ['theme' => $theme]);
         $quantity = 1;
         $findQuantity = preg_match('/^(.*)\(([0-9]+)\)$/', $theme, $result);
         if ($findQuantity) {
@@ -60,6 +62,7 @@ class RunGpt extends Command
         }
 
         $theme = trim($theme);
+        Log::debug('Тема после парсинга', ['theme' => $theme, 'quantity' => $quantity]);
 
         return [$theme, $quantity];
     }
@@ -69,10 +72,11 @@ class RunGpt extends Command
         $themes = explode("\n", $answer);
         foreach ($themes as $theme) {
             [$theme, $quantity] = $this->prepareTheme($theme);
-            if (empty($theme) || $theme === 'нет') {
+            if (empty($theme) || mb_strtolower($theme) === 'нет') {
                 continue;
+            } else {
+                TelegramChatTheme::add($chatId, $theme, $quantity);
             }
-            TelegramChatTheme::add($chatId, $theme, $quantity);
         }
     }
 
@@ -81,7 +85,7 @@ class RunGpt extends Command
         try {
             $startTime = date('Y-m-d H:i:s', time() - config('gpt.themesIntervalHours') * 3600);
             $endTime = date('Y-m-d H:i:s', time());
-            $chatIds = TelegramConnection::getAllChats();
+            $chatIds = TelegramConnection::getAllActiveChats();
 
             foreach ($chatIds as $chatId) {
                 Log::info('Check chat ' . $chatId);
@@ -93,15 +97,16 @@ class RunGpt extends Command
                     Log::info('Messages: ' . count($tgMessages));
                     $botQuestion = $this->prepareQuestion($tgMessages);
                     $botAnswer = $this->apiGpt->run($botQuestion);
+                    Log::debug('Ответ от бота', ['botAnswer' => $botAnswer]);
                     $this->saveThemes($botAnswer, $chatId);
-                    usleep(config('gpt.waitBetweenRequests')); 
+                    sleep(config('gpt.waitBetweenRequests')); 
+
+                    Log::debug('Отправляем сообщение в чат', ['chatId' => $chatId]);
+                    SendTeleMessageToChatFromBot::dispatch(
+                            config('telegram_bot.bot.botName'), 
+                            $chatId, 
+                            TelegramChatTheme::getMessageWithThemesByData($chatId, date('Y-m-d')));
                 }
-
-                SendTeleMessageToChatFromBot::dispatch(
-                        config('telegram_bot.bot.botName'), 
-                        $chatId, 
-                        TelegramChatTheme::getMessageWithThemesByData($chatId, date('Y-m-d')));
-
 
             }
 
