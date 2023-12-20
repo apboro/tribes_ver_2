@@ -204,7 +204,7 @@ class PayService
 
     private static function findCommunityId(string $relation, $payFor)
     {
-        if ($relation != 'subscription' && $relation != 'publication' && $relation != 'webinar') {
+        if ($relation != 'subscription' && $relation != 'publication' && $relation != 'webinar' && $relation != self::PRODUCT_TYPE_NAME) {
             return $payFor->$relation()->first()->community()->first()->id ?? null;
         }
 
