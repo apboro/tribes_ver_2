@@ -26,6 +26,11 @@ class Product extends Model
         return $this->belongsTo(Author::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'payment_id');
+    }
+
     private static function addFilter(array $filter): Builder
     {
         // $options = [ 'Параметр запроса' => ['field' => 'поле в БД', 'sql' => 'операция'] ]
