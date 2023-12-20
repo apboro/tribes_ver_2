@@ -25,8 +25,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('tariff:decrement')->dailyAt('23:59')->timezone('Europe/Moscow');
         $schedule->command('send:deactivated:tariff')->dailyAt('10:00')->timezone('Europe/Moscow');
         $schedule->command('send:subscription')->dailyAt('10:30')->timezone('Europe/Moscow');
-        //$schedule->command('run:gpt')->twiceDaily('9, 21')->timezone('Europe/Moscow')->runInBackground();
-        $schedule->command('run:gpt')->hourly()->timezone('Europe/Moscow')->runInBackground();
+        $schedule->command('run:gpt')->twiceDaily('9, 21')->timezone('Europe/Moscow')->runInBackground();
+        //$schedule->command('run:gpt')->hourly()->timezone('Europe/Moscow')->runInBackground();
 
         $schedule->command('check:admin')->dailyAt('23:59')->timezone('Europe/Moscow');
         $schedule->command('calculate:utility')->everyFiveMinutes()->timezone('Europe/Moscow');
