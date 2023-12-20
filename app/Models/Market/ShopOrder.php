@@ -2,7 +2,8 @@
 
 namespace App\Models\Market;
 
-use App\Helper\TokenHelper;
+use App\Models\Author;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\TelegramUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,17 +20,19 @@ class ShopOrder extends Model
 
     protected $table = 'shop_orders';
 
-    protected $hidden = ['pivot'];
-
     protected $fillable = [
         'telegram_user_id',
         'delivery_id',
-        'token',
     ];
 
-    public function card(): BelongsTo
+    public function payments()
     {
-        return $this->belongsTo(ShopOrderProductList::class, 'order_id');
+        return $this->morphMany(Payment::class, 'payable');
+    }
+
+    public function author()
+    {
+        return $this->product->first()->belongsTo(Author::class);
     }
 
     public function product(): BelongsToMany
@@ -51,6 +54,16 @@ class ShopOrder extends Model
         $order->product()->attach($product);
 
         return $order;
+    }
+
+    public function getPrice(): int
+    {
+        $price = 0;
+        foreach($this->product() as $product) {
+            $price += $product;
+        }
+
+        return $price;
     }
 
     public static function make(TelegramUser $user, ShopDelivery $shopDelivery): self

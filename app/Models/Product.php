@@ -23,12 +23,7 @@ class Product extends Model
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo(Author::class);
-    }
-
-    public function payments()
-    {
-        return $this->hasMany(Payment::class, 'payment_id');
+        return $this->belongsTo(Author::class, 'author_id');
     }
 
     private static function addFilter(array $filter): Builder

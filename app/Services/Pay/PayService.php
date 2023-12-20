@@ -2,7 +2,7 @@
 
 namespace App\Services\Pay;
 
-use App\Models\Product;
+use App\Models\Market\ShopOrder;
 use App\Services\Tinkoff\Payment as Pay;
 use App\Models\DonateVariant;
 use App\Models\Publication;
@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Log;
 
 class PayService
 {
-    public const PRODUCT_TYPE_NAME = 'product';
+    public const SHOP_ORDER_TYPE_NAME = 'shopOrder';
 
     public static function buyDonate(int $amount, $variant, ?int $telegramUserId)
     {
@@ -116,7 +116,6 @@ class PayService
         $communityId = self::findCommunityId($type, $payFor);
         $authorId = self::findAuthorId($type, $payFor);
         $rebillId = $charged ? self::findRebillPaymentId($payFor, $payer, $type) : null;
-
         $payment = new Payment();
         $payment->type = $type;
         $payment->amount = $amount;
@@ -160,13 +159,13 @@ class PayService
     private static function getDescriptionByType(string $type): string
     {
         $names = [
-            'tariff'                => 'Оплата доступа в сообщество Telegram',
-            'donate'                => 'Перевод средств, как безвозмездное пожертвование',
-            'publication'           => 'Оплата медиатовара в системе Spodial',
-            'webinar'               => 'Оплата медиатовара в системе Spodial',
-            'subscription'          => 'Оплата за использование системы Spodial',
-            self::PRODUCT_TYPE_NAME => 'Оплата товара в системе Spodial',
-            'default'               => 'Оплата за использование системы Spodial',
+            'tariff'                   => 'Оплата доступа в сообщество Telegram',
+            'donate'                   => 'Перевод средств, как безвозмездное пожертвование',
+            'publication'              => 'Оплата медиатовара в системе Spodial',
+            'webinar'                  => 'Оплата медиатовара в системе Spodial',
+            'subscription'             => 'Оплата за использование системы Spodial',
+            self::SHOP_ORDER_TYPE_NAME => 'Оплата товара в системе Spodial',
+            'default'                  => 'Оплата за использование системы Spodial',
         ];
 
         return $names[$type] ?? $names['default'];
@@ -183,7 +182,7 @@ class PayService
     {
         if ($relation === 'tariff' || $relation === 'donate' || $relation === 'course') {
             return Accumulation::findUsersAccumulation($payFor->getAuthor()->id);
-        } elseif ($relation === 'publication' || $relation === 'webinar' || $relation === self::PRODUCT_TYPE_NAME) {
+        } elseif ($relation === 'publication' || $relation === 'webinar' || $relation === self::SHOP_ORDER_TYPE_NAME) {
             return Accumulation::findUsersAccumulation($payFor->author->user_id);
         }
 
@@ -195,7 +194,7 @@ class PayService
         if ($relation == 'tariff' || $relation == 'donate' || $relation == 'course') {
             return $payFor->getAuthor()->id;
         }
-        if ($relation == 'publication' || $relation == 'webinar') {
+        if ($relation == 'publication' || $relation == 'webinar' || $relation === self::SHOP_ORDER_TYPE_NAME) {
             return  $payFor->author->user_id;
         }
 
@@ -204,7 +203,7 @@ class PayService
 
     private static function findCommunityId(string $relation, $payFor)
     {
-        if ($relation != 'subscription' && $relation != 'publication' && $relation != 'webinar' && $relation != self::PRODUCT_TYPE_NAME) {
+        if ($relation != 'subscription' && $relation != 'publication' && $relation != 'webinar' && $relation != self::SHOP_ORDER_TYPE_NAME) {
             return $payFor->$relation()->first()->community()->first()->id ?? null;
         }
 
@@ -224,8 +223,8 @@ class PayService
                 return 'webinar';
             case $payFor instanceof Subscription:
                 return 'subscription';
-            case $payFor instanceof Product:
-                return self::PRODUCT_TYPE_NAME;
+            case $payFor instanceof ShopOrder:
+                return self::SHOP_ORDER_TYPE_NAME;
             default:
                 return false;
         }
