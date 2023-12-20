@@ -11,7 +11,7 @@ use App\Http\ApiRequests\ApiRequest;
  *  summary="Buy product",
  *  security={{"sanctum": {} }},
  *  tags={"Market"},
- *     @OA\Parameter(name="telegram_user_id", in="query", description="telegram user id",required=true,@OA\Schema(type="string",)),
+ *     @OA\Parameter(name="telegram_user_id", in="query", description="telegram user id",required=true,@OA\Schema(type="integer",)),
  *     @OA\Parameter(name="product_id",in="query",description="product id",required=true,@OA\Schema(type="integer",)),
  *     @OA\Parameter(name="address",in="query",description="Delivery address",required=true,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="email",in="query",description="Delivery email",required=true,@OA\Schema(type="string",)),
@@ -27,7 +27,7 @@ class ApiBuyProductRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'telegram_user_id' => 'required|string',
+            'telegram_user_id' => 'required|integer',
             'product_id'       => 'required|integer|exists:products,id',
             'address'          => 'required|string',
             'email'            => 'required|string',
