@@ -14,7 +14,6 @@ use App\Models\Product;
  *  tags={"Market"},
  *     @OA\Parameter(name="id", in="path", description="order id",required=true,@OA\Schema(type="int",format="int64",)),
  *   @OA\Response(response=200, description="OK")
- *   @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  *)
  */
 class ApiShowOrderRequest extends ApiRequest
