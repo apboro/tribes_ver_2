@@ -40,10 +40,10 @@ class RunGpt extends Command
         }
         Log::debug('Сообщения группы для определения темы', ['messages' => $messageList]);
 
-        return 'Очисть контекст! Ниже будет текст переписки в чате. Определи 3 основные темы, о которых общались в данной переписке. ' .
+        return substr('Очисть контекст! Ниже будет текст переписки в чате. Определи 3 основные темы, о которых общались в данной переписке. ' .
             'Напиши только 3 темы, каждую с новой строки. После темы в скобках укажи количество сообщений по данной теме. ' .
             'Если не можешь написать 3 темы - пиши меньше. ' . 
-            'Если сообщения не содержат темы - напиши слово "нет" (и ничего кроме него). Текст переписки: ' . "\n\n" . $messageList;
+            'Если сообщения не содержат темы - напиши слово "нет" (и ничего кроме него). Текст переписки: ' . "\n\n" . $messageList, 0, 4090);
     }
 
     private function prepareTheme(string $theme): array
@@ -107,10 +107,7 @@ class RunGpt extends Command
                             $chatId, 
                             TelegramChatTheme::getMessageWithThemesByData($chatId, date('Y-m-d')));
                 }
-
             }
-
-            return 1;
         } catch (\Exception $e) {
             Log::alert('Исключение при запросе к ChatGPT', ['exception' => $e]);
             $this->telegramLogService->sendLogMessage('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
