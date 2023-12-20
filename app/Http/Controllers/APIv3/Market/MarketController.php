@@ -26,7 +26,7 @@ class MarketController extends Controller
         $order = ShopOrder::makeByUser($tgUser, $product, $request->getDeliveryAddress());
 
         $successUrl = '/market/status?orderId=' . $order->id;
-        $url = PayService::buyProduct($product->price, $product, $tgUser->user, $tgUser->telegram_id, $successUrl);
+        $url = PayService::buyProduct($order->getPrice(), $order, $tgUser->user, $tgUser->telegram_id, $successUrl);
 
         return ApiResponse::common(['redirect_url' => $url]);
     }
