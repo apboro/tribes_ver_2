@@ -103,6 +103,9 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/webinar/pay/{uuid}', [ApiWebinarController::class, 'pay']);
 
     Route::get('/subscriptions_list', [ApiSubscriptionController::class, 'index']);
+
+    Route::post('/market/product/buy', [MarketController::class, 'buy']);
+    Route::get('/market/show/order/{id}', [MarketController::class, 'showOrder']);
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () {
@@ -276,9 +279,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/products', [ApiProductController::class, 'list'])->name('api.products.list');
     Route::delete('/products/{id}', [ApiProductController::class, 'destroy'])->name('api.products.destroy');
     Route::post('/products/{id}', [ApiProductController::class, 'update'])->name('api.products.update');
-
-    Route::post('/market/product/buy', [MarketController::class, 'buy']);
-    Route::get('/market/show/order/{id}', [MarketController::class, 'showOrder']);
 
     Route::get('/publications', [ApiPublicationController::class, 'list'])->name('api.publications.list');
     Route::post('/publications', [ApiPublicationController::class, 'store'])->name('api.publications.create');
