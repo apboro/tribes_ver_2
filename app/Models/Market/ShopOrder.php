@@ -59,8 +59,8 @@ class ShopOrder extends Model
     public function getPrice(): int
     {
         $price = 0;
-        foreach($this->product() as $product) {
-            $price += $product;
+        foreach($this->product()->get() as $product) {
+            $price += $product->price;
         }
 
         return $price;
