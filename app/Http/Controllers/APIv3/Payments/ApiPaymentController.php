@@ -63,7 +63,7 @@ class ApiPaymentController extends Controller
             $webinar = Webinar::find($payment->payable_id);
             $part = '/courses/member/webinar-preview/' . $webinar->uuid;
         }  elseif ($payment->type === PayService::SHOP_ORDER_TYPE_NAME) {
-            $part = '/';
+            $redirectUrl = config('app.frontend_url') . $request->success_url;
         }
 
         if ($part) {
