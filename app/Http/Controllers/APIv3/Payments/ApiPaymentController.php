@@ -4,11 +4,13 @@ namespace App\Http\Controllers\APIv3\Payments;
 
 use App\Helper\PseudoCrypt;
 use App\Http\Controllers\Controller;
+use App\Models\Market\ShopOrder;
 use App\Models\Payment;
 use App\Models\Publication;
 use App\Models\Webinar;
 use App\Models\User;
 use App\Repositories\Payment\PaymentRepository;
+use App\Services\Pay\PayService;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffService;
@@ -60,6 +62,8 @@ class ApiPaymentController extends Controller
         } elseif ($payment->type === 'webinar') {
             $webinar = Webinar::find($payment->payable_id);
             $part = '/courses/member/webinar-preview/' . $webinar->uuid;
+        }  elseif ($payment->type === PayService::SHOP_ORDER_TYPE_NAME) {
+            $part = '/';
         }
 
         if ($part) {
