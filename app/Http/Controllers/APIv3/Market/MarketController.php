@@ -25,7 +25,12 @@ class MarketController extends Controller
 
         $order = ShopOrder::makeByUser($tgUser, $product, $request->getDeliveryAddress());
 
-        $successUrl = '/market/status/' . $order->id;
+        if ($request->input('is_mobile')) {
+            $successUrl = $order->id;
+        } else {
+            $successUrl = '/market/status/' . $order->id;
+        }
+
         $payment = PayService::buyProduct($order->getPrice(), $order, $tgUser->user, $tgUser->telegram_id, $successUrl);
 
         if ($payment === false) {

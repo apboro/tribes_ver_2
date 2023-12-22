@@ -63,14 +63,31 @@ class ApiPaymentController extends Controller
             $webinar = Webinar::find($payment->payable_id);
             $part = '/courses/member/webinar-preview/' . $webinar->uuid;
         }  elseif ($payment->type === PayService::SHOP_ORDER_TYPE_NAME) {
-            $redirectUrl = config('app.frontend_url') . $request->success_url;
+            $isUri = str_contains($request->success_url, '/');
+            if (!$isUri) {
+                $redirectUrl = $this->getMarketUrl() . $request->success_url;
+                $part = false;
+            } else {
+                $redirectUrl = config('app.frontend_url') . $request->success_url;
+            }
         }
 
         if ($part) {
             $redirectUrl = $request->success_url ?? config('app.frontend_url') . $part;
         }
+
         Log::debug('successPayment $redirectUrl - ' . $redirectUrl);
 
         return redirect($redirectUrl);
+    }
+
+    /**
+     * @return string
+     */
+    public function getMarketUrl(): string
+    {
+        return 'https://t.me/' .
+            config('telegram_bot.bot.botName') . '/' .
+            config('telegram_bot.bot.botName') . '?startapp=' . 'success-';
     }
 }
