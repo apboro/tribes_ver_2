@@ -38,6 +38,7 @@ class RunGpt extends Command
         foreach ($tgMessages as $message) {
             $messageList .= 'Сообщение: "' . $message->text . "\"\n";
         }
+        $messageList = preg_replace("/[^a-zа-я0-9\s\.\,\-\!\?\:\;]/iu", "", $messageList);
         Log::debug('Сообщения группы для определения темы', ['messages' => $messageList]);
 
         return substr('Очисть контекст! Ниже будет текст переписки в чате. Определи 3 основные темы, о которых общались в данной переписке. ' .
