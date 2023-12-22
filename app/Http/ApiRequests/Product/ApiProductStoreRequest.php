@@ -46,4 +46,10 @@ class ApiProductStoreRequest extends ApiRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'price.*' => 'Значение поля "Цена" должно быть целым числом.'
+        ];
+    }
 }
