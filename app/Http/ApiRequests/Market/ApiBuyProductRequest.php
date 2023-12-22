@@ -19,6 +19,7 @@ use App\Http\ApiRequests\ApiRequest;
  *     @OA\Parameter(name="first_name",in="query",description="Telegram first_name",required=false,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="last_name",in="query",description="Telegram last_name",required=false,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="username",in="query",description="Telegram username",required=false,@OA\Schema(type="string",)),
+ *     @OA\Parameter(name="platform",in="query",description="Telegram platform",required=false,@OA\Schema(type="boolean",)),
  *   @OA\Response(response=200, description="OK")
  *)
  */
@@ -35,6 +36,7 @@ class ApiBuyProductRequest extends ApiRequest
             'first_name'       => 'nullable|string',
             'last_name'        => 'nullable|string',
             'username'         => 'nullable|string',
+            'is_mobile'        => 'boolean',
         ];
     }
 
