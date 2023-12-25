@@ -33,9 +33,4 @@ class TelegramMessage extends Model
     {
         return $this->belongsToMany(TelegramDictReaction::class, 'telegram_message_reactions', 'message_id', 'reaction_id')->withPivot(['telegram_user_id', 'datetime_record']);
     }
-
-    public static function findMessagesByTimePeriod(string $chatId, string $startTime, string $endTime): Collection
-    {
-        return self::where('group_chat_id', $chatId)->whereBetween('created_at', [$startTime, $endTime])->get();
-    }
 }

@@ -41,7 +41,7 @@ class RunGpt extends Command
         $messageList = preg_replace("/[^a-zа-я0-9\s\.\,\-\!\?\:\;]/iu", "", $messageList);
         Log::debug('Сообщения группы для определения темы', ['messages' => $messageList]);
 
-        return substr('Очисть контекст! Ниже будет текст переписки в чате. Определи 3 основные темы, о которых общались в данной переписке. ' .
+        return mb_substr('Очисть контекст! Ниже будет текст переписки в чате. Определи 3 основные темы, о которых общались в данной переписке. ' .
             'Напиши только 3 темы, каждую с новой строки. После темы в скобках укажи количество сообщений по данной теме. ' .
             'Если не можешь написать 3 темы - пиши меньше. ' . 
             'Если сообщения не содержат темы - напиши слово "нет" (и ничего кроме него). Текст переписки: ' . "\n\n" . $messageList, 0, 4090);
@@ -86,27 +86,29 @@ class RunGpt extends Command
         try {
             $startTime = date('Y-m-d H:i:s', time() - config('gpt.themesIntervalHours') * 3600);
             $endTime = date('Y-m-d H:i:s', time());
-            $chatIds = TelegramConnection::getAllActiveChats();
+            $chats = TelegramConnection::getActiveChats();
 
-            foreach ($chatIds as $chatId) {
-                Log::info('Check chat ' . $chatId);
-                if (!$chatId) {
+            foreach ($chats as $chat) {
+                $isActive = ($chat->chat_id ?? false) && ($chat->community->communityGptOption->is_active ?? true);
+                if (!$isActive) {
                     continue;
                 }
-                $tgMessages = TelegramMessage::findMessagesByTimePeriod($chatId,  $startTime,  $endTime);
+                Log::info('Check chat ' . $chat->chat_id);
+
+                $tgMessages = $chat->findMessagesByTimePeriod($startTime,  $endTime);
                 if (count($tgMessages) > 0) {
                     Log::info('Messages: ' . count($tgMessages));
                     $botQuestion = $this->prepareQuestion($tgMessages);
                     $botAnswer = $this->apiGpt->run($botQuestion);
                     Log::debug('Ответ от бота', ['botAnswer' => $botAnswer]);
-                    $this->saveThemes($botAnswer, $chatId);
+                    $this->saveThemes($botAnswer, $chat->chat_id);
                     sleep(config('gpt.waitBetweenRequests')); 
 
-                    Log::debug('Отправляем сообщение в чат', ['chatId' => $chatId]);
+                    Log::debug('Отправляем сообщение в чат', ['chatId' => $chat->chat_id]);
                     SendTeleMessageToChatFromBot::dispatch(
                             config('telegram_bot.bot.botName'), 
-                            $chatId, 
-                            TelegramChatTheme::getMessageWithThemesByData($chatId, date('Y-m-d')));
+                            $chat->chat_id, 
+                            TelegramChatTheme::getMessageWithThemesByData($chat->chat_id, date('Y-m-d')));
                 }
             }
         } catch (\Exception $e) {

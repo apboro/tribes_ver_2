@@ -52,7 +52,8 @@ class TelegramChatTheme extends Model
         $messages = self::findChatsByData($chatId, $searchDate);
 
         return  'Темы в чате за ' . ($searchDate ?? 'сегодня') .
-            (($messages->count() == 0) ? ' не определены.' : ": \n" . self::prepareListThemes($messages));
+            (($messages->count() == 0) ? ' не определены.' : ": \n" . self::prepareListThemes($messages)) . "\n" .
+            'Для отключения рассылки тем переписки владелец/админ может воспользоваться /themesOn в чате c ' . config('telegram_bot.bot.botFullName');
     }
 
     public static function getMessageWithThemesByDataFormat(string $chatId, string $date, string $format): string

@@ -11,6 +11,7 @@ use App\Jobs\Telegram\InitCommunityConnectionJob;
 use App\Logging\TelegramBotActionHandler;
 use App\Models\Author;
 use App\Models\Community;
+use App\Models\CommunityGptOption;
 use App\Models\Donate;
 use App\Models\Knowledge\Category;
 use App\Models\Knowledge\Question;
@@ -18,6 +19,7 @@ use App\Models\Payment;
 use App\Models\Tariff;
 use App\Models\TariffVariant;
 use App\Models\TelegramChatTheme;
+use App\Models\TelegramConnection;
 use App\Models\TelegramUser;
 use App\Models\TelegramUserList;
 use App\Models\TelegramUserReputation;
@@ -137,6 +139,7 @@ class MainBotCommands
         'getDonateData',
         'addNewGroup',
         'findThemes',
+        'manageGpt',
     ])
     {
         foreach ($methods as $method) {
@@ -230,10 +233,71 @@ class MainBotCommands
                 $this->shopButton($ctx);
             });
 
+           $this->bot->onText('/start themeOnOff-{chatId:string}_{value:string}', function (Context $ctx) {
+                $this->switchGptThemeActive($ctx);
+            });
+
 //          $this->bot->onText('/start {paymentId?}', $start);
             $this->bot->onCommand('start', $start);
         } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    /**
+     * Включение или отключение функционала отправки тем от нейросети
+     */
+    private function switchGptThemeActive(Context $ctx)
+    {
+        try {
+            $community = Community::find($ctx->var('chatId'));
+            if (!$community) {
+                return false;
+            }
+
+            $isActive = (bool) $ctx->var('value');
+            $community->communityGptOption->themesOnOff($isActive);
+            $ctx->reply('Отправление тем для ' . ($community->title ?? 'чата') . ($isActive ? ' включено.' : ' отключено.'));
+        } catch (\Exception $e) {
+            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+        }
+    }
+
+    private function buildMessageManageGpt(Context $ctx, bool $isActive): void
+    {
+        if ($this->isPrivateMessageToBot($ctx)) {
+            $menu = Menux::Create('inline_keyboard')->inline();
+            $chats = TelegramConnection::getActiveChats($ctx->getUserID());
+
+            $showChats = false;
+            foreach ($chats as $chat) {
+                $isChatActive = $chat->community->communityGptOption->is_active ?? true;
+                if ($isChatActive === $isActive) {
+                    $showChats = true;
+                    $menu->row()->btn($chat->community->title ?? 'Чат', 'themeOnOff-' . $chat->community->id . '_' . !$isActive);
+                }
+            }
+
+            if ($showChats) {
+                $ctx->reply('Выберите чат, в котором хотите ' . ($isActive ? 'отключить' : 'включить') . ' сообщения с темами', $menu);
+            } else {
+                $ctx->reply('Чаты с ' . ($isActive ? 'отключеными' : 'включеными') . ' сообщениями с темами не найдены.');
+            }
+        }
+    }
+
+    protected function manageGpt(): void
+    {
+        try {
+            $this->bot->onCommand('themesOff', function (Context $ctx) {
+                $this->buildMessageManageGpt($ctx, false);
+            });
+
+            $this->bot->onCommand('themesOn', function (Context $ctx) {
+                $this->buildMessageManageGpt($ctx, true);
+            });
+        } catch (\Exception $e) {
             $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
         }
     }

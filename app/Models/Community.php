@@ -400,4 +400,9 @@ class Community extends Model
     {
         return $this->telegramUserList()->where('telegram_id', $telegramId)->first();
     }   
+
+    public function communityGptOption(): HasOne
+    {
+        return $this->HasOne(CommunityGptOption::class)->withDefault();
+    }
 }

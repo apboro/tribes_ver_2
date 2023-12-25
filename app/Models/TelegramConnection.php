@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\TelegramConnectionFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -61,4 +62,21 @@ class TelegramConnection extends Model
     {
         return self::select('chat_id')->where('botStatus', 'administrator')->where('status', '!=', 'init')->pluck('chat_id')->toArray();
     }
+
+    public static function getActiveChats(int $telegramUserId = null): Collection
+    {
+        return self::with('community')
+                ->when($telegramUserId, function ($q) use ($telegramUserId) {
+                    return $q->where('telegram_user_id', $telegramUserId);
+                })
+                ->where('botStatus', 'administrator')
+                ->where('status', '!=', 'init')
+                ->get();
+    }
+
+    function findMessagesByTimePeriod(string $startTime, string $endTime): Collection
+    {
+        return $this->messages()->whereBetween('created_at', [$startTime, $endTime])->get();
+    }
+
 }
