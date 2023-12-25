@@ -31,7 +31,8 @@ class FeedBackAnswerListener
      */
     public function handle(FeedBackAnswer $event)
     {
-        if ($user_telegram = $event->user->telegramData()) {
+        $user_telegram = $event->user->telegramData();
+        if (count($user_telegram) > 0 && isset($user_telegram[0]->telegram_id)) {
             $this->telegramService->sendMessageFromBot(
                 config('telegram_bot.bot.botName'),
                 $user_telegram[0]->telegram_id,
