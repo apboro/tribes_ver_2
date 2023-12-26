@@ -58,9 +58,16 @@ class ApiAuthorController extends Controller
 
     public function list(ApiAuthorsShowListRequest $request): ApiResponse
     {
-        $authorList = Author::all();
+        $filter = $request->validated();
+        $authorList = Author::findAuthorsWithProducts($filter);
+        $count = Author::countAuthorsWithProducts($filter);
 
-        return ApiResponse::common(AuthorResourse::collection($authorList)->toArray($request));
+        return ApiResponse::listPagination(
+                [
+                    'Access-Control-Expose-Headers' => 'Items-Count',
+                    'Items-Count' => $count
+                ]
+            )->items((AuthorResourse::collection($authorList))->toArray($request));
     }
 
     /**
