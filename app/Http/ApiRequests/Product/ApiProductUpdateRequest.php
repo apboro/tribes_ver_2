@@ -27,7 +27,8 @@ use Illuminate\Validation\Rule;
  *             @OA\Schema(
  *                 @OA\Property(property="title",type="string"),
  *                 @OA\Property(property="description",type="string"),
- *                 @OA\Property(property="price",type="integer")
+ *                 @OA\Property(property="price",type="integer"),
+ *                 @OA\Property(property="buyable",type="string"),
  *                 ),
  *             ),
  *         ),
@@ -56,6 +57,7 @@ class ApiProductUpdateRequest extends ApiRequest
             'title' => 'required|string',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:1',
+            'buyable' => 'string|in:true,false',
         ];
     }
 }
