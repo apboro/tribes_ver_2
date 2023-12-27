@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
  *                 @OA\Property(property="title",type="string"),
  *                 @OA\Property(property="description",type="string"),
  *                 @OA\Property(property="price",type="integer"),
- *                 @OA\Property(property="image",type="file"),
+ *                 @OA\Property(property="images",type="object", description="Array of images"),
  *                 ),
  *             ),
  *         ),
@@ -41,7 +41,8 @@ class ApiProductStoreRequest extends ApiRequest
             'authorId' => 'required|integer',
             'title' => 'required|string|min:1',
             'description' => 'nullable|string',
-            'image' => 'nullable|image',
+            'images' => 'array',
+            'images.*' => 'image|mimes:jpg,jpeg,png,gif,webp',
             'price' => 'required|integer|min:1',
         ];
     }

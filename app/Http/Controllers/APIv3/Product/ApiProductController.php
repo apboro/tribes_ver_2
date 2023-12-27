@@ -6,7 +6,9 @@ use App\Http\ApiRequests\Product\ApiProductDeleteRequest;
 use App\Http\ApiRequests\Product\ApiProductListRequest;
 use App\Http\ApiRequests\Product\ApiProductPublicListRequest;
 use App\Http\ApiRequests\Product\ApiProductPublicShowRequest;
+use App\Http\ApiRequests\Product\ApiProductRemoveImageRequest;
 use App\Http\ApiRequests\Product\ApiProductShowRequest;
+use App\Http\ApiRequests\Product\ApiProductStoreImageRequest;
 use App\Http\ApiRequests\Product\ApiProductStoreRequest;
 use App\Http\ApiRequests\Product\ApiProductUpdateRequest;
 use App\Http\ApiResources\Product\ProductResource;
@@ -18,9 +20,16 @@ use Illuminate\Support\Facades\Storage;
 class ApiProductController extends Controller
 {
 
-    private function prepareImage($request): array
+    private function prepareImages($request): array
     {
-        return ['image' => Storage::disk('public')->putFile('product_images', $request->file('image'))];
+        $images = [];
+        if ($request->file('images')) {
+            foreach ($request->file('images') as $key => $file) {
+                $images[] = Product::prepareImageRecord($key+1, Storage::disk('public')->putFile('product_images/' . $request->authorId, $file));
+            }
+        }
+
+        return ['images' => $images];
     }
 
     private function prepareProduct($request): array
@@ -31,18 +40,28 @@ class ApiProductController extends Controller
             'price' => $request->input('price')
         ];
 
-        if ($request->file('image')) {
-            $productArray = $productArray  + $this->prepareImage($request);
-        }
-
         return $productArray;
     }
 
     public function store(ApiProductStoreRequest $request): ApiResponse
     {
-        $product = Product::create(['author_id' => $request->authorId] + $this->prepareProduct($request));
+        $product = Product::create(['author_id' => $request->authorId] + $this->prepareProduct($request) + $this->prepareImages($request));
 
         return ApiResponse::common(ProductResource::make($product)->toArray($request));
+    }
+
+    public function storeImage(ApiProductStoreImageRequest $request): ApiResponse
+    {
+        $path = Storage::disk('public')->putFile('product_images/' . $request->authorId, $request->file('image'));
+
+        return ApiResponse::common(Product::find($request->id)->addImage($path));
+    }
+
+    public function removeImage(ApiProductRemoveImageRequest $request): ApiResponse
+    {
+        Product::find($request->id)->removeImage($request->image_id);
+
+        return ApiResponse::success('common.success');
     }
 
     public function show(ApiProductShowRequest $request, $id): ApiResponse
