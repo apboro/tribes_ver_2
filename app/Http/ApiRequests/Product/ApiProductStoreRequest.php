@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
  *                 @OA\Property(property="description",type="string"),
  *                 @OA\Property(property="price",type="integer"),
  *                 @OA\Property(property="images",type="object", description="Array of images"),
+ *                 @OA\Property(property="buyable",type="string"),
  *                 ),
  *             ),
  *         ),
@@ -44,6 +45,7 @@ class ApiProductStoreRequest extends ApiRequest
             'images' => 'array',
             'images.*' => 'image|mimes:jpg,jpeg,png,gif,webp',
             'price' => 'required|integer|min:1',
+            'buyable' => 'string|in:true,false',
         ];
     }
 
