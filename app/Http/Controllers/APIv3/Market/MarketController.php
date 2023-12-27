@@ -13,11 +13,20 @@ use App\Models\Market\ShopOrderProductList;
 use App\Models\Product;
 use App\Models\TelegramUser;
 use App\Services\Pay\PayService;
+use App\Services\Telegram\MainBot;
+use App\Services\Telegram\MainBotCollection;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
 class MarketController extends Controller
 {
+    private MainBotCollection $mainBot;
+
+    public function __construct(MainBotCollection $mainBot)
+    {
+       $this->mainBot = $mainBot;
+    }
+
     public function buy(ApiBuyProductRequest $request): ApiResponse
     {
         $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
@@ -33,6 +42,8 @@ class MarketController extends Controller
 
         $payment = PayService::buyProduct($order->getPrice(), $order, $tgUser->user, $tgUser->telegram_id, $successUrl);
 
+        $this->sendNotifications($tgUser, $product, $order);
+
         if ($payment === false) {
             return ApiResponse::error('common.error_while_pay');
         }
@@ -45,5 +56,16 @@ class MarketController extends Controller
         $orderCard = ShopOrder::find($id);
 
         return ApiResponse::common(ShopOrderResource::make($orderCard)->toArray($request));
+    }
+
+    private function sendNotifications(TelegramUser $tgUser, Product $product, ShopOrder $order)
+    {
+        $message = 'Заказа товара: ' . $product->title;
+        $messageBayer = 'Вы оплатили заказ - '. $product->title .' номер заказа: ' . $order->id;
+        $telegramId = $product->author->user->telegramMeta->first()->telegram_id;
+
+        $mainBot = $this->mainBot->getBotByName('spodial_test_bot');
+        $mainBot->getExtentionApi()->sendMess($telegramId, $message);
+        $mainBot->getExtentionApi()->sendMess($tgUser->telegram_id, $messageBayer);
     }
 }
