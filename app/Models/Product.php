@@ -21,6 +21,10 @@ class Product extends Model
 
     public const HOW_SHOW_DEFAULT = 10;
 
+    protected $casts = [
+        'images' => 'array'
+    ];
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class, 'author_id');
@@ -62,5 +66,47 @@ class Product extends Model
     public static function countByFilter(array $filter): int
     {
         return self::addFilter($filter)->count();
+    }
+
+    public static function prepareImageRecord(int $id, string $path): array
+    {
+        return ['id' => $id, 'file' => $path];
+    }
+
+    /**
+     * Добавляет изображение в товар
+     */
+    public function addImage(string $file): array
+    {
+        $images = $this->images ? $this->images : [];
+        $maxKey = (int)array_reduce($images,
+                    fn ($max, $item) => $max < $item['id'] ? $item['id'] : $max) + 1;
+
+        $images[] = self::prepareImageRecord($maxKey, $file);
+        $this->images = $images;
+        $this->save();
+
+        return ['id' => $maxKey, 'file' => $file];
+    }
+
+    /**
+     * Удаляет изображение из товара
+     */
+    public function removeImage(int $imageId): bool
+    {
+        if (!$this->images) {
+            return false;
+        }
+
+        $images = array_filter(
+            $this->images,
+            function ($item) use ($imageId) {
+                return $item['id'] !== $imageId;
+            }
+        );
+        $this->images = array_values($images);
+        $this->save();
+
+        return true;
     }
 }
