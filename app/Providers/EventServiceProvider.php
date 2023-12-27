@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\ApiUserRegister;
 use App\Events\BuyCourse;
 use App\Events\BuyCourseListener;
+use App\Events\BuyProductEvent;
 use App\Events\BuyPublicaionEvent;
 use App\Events\BuyWebinarEvent;
 use App\Events\CreateCommunity;
@@ -16,6 +17,7 @@ use App\Events\SubscriptionMade;
 use App\Events\TariffPayedEvent;
 use App\Events\UserDeleteEvent;
 use App\Listeners\AssignStartSubscription;
+use App\Listeners\BuyProductListener;
 use App\Listeners\BuyPublicationListener;
 use App\Listeners\BuyWebinarListener;
 use App\Listeners\CreateCommunityListener;
@@ -78,6 +80,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         TariffPayedEvent::class => [
             TariffPayedListener::class
+        ],
+        BuyProductEvent::class => [
+            BuyProductListener::class
         ]
 
     ];

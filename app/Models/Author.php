@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder;
 use App\Models\Publication;
 use App\Models\Webinar;
@@ -18,6 +19,11 @@ class Author extends Model
     public $guarded = [];
 
     public const HOW_SHOW_DEFAULT = 10;
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function publications()
     {
