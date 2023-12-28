@@ -42,7 +42,7 @@ class MarketController extends Controller
 
         $payment = PayService::buyProduct($order->getPrice(), $order, $tgUser->user, $tgUser->telegram_id, $successUrl);
 
-        $this->sendNotifications($tgUser, $product, $order);
+//        $this->sendNotifications($tgUser, $product, $order);
 
         if ($payment === false) {
             return ApiResponse::error('common.error_while_pay');
