@@ -63,8 +63,7 @@ class MarketController extends Controller
         $message = 'Заказа товара: ' . $product->title;
         $messageBayer = 'Вы оплатили заказ - '. $product->title .' номер заказа: ' . $order->id;
         $telegramId = $product->author->user->telegramMeta->first()->telegram_id;
-
-        $mainBot = $this->mainBot->getBotByName('spodial_test_bot');
+        $mainBot = $this->mainBot->getBotByName(config('telegram_bot.bot.botFullName'));
         $mainBot->getExtentionApi()->sendMess($telegramId, $message);
         $mainBot->getExtentionApi()->sendMess($tgUser->telegram_id, $messageBayer);
     }
