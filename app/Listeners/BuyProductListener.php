@@ -36,7 +36,7 @@ class BuyProductListener
         if (count($user_telegram) > 0 && isset($user_telegram[0]->telegram_id)) {
             $this->telegramService->sendMessageFromBot(
                 config('telegram_bot.bot.botName'),
-                427143658,
+                $user_telegram[0]->telegram_id,
                 $event->message
             );
         }
