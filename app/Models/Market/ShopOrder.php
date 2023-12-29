@@ -96,20 +96,24 @@ class ShopOrder extends Model
 
         $bayerUser = TelegramUser::findByTelegramId($self->telegram_user_id);
 
-        $messageForOwner = self::prepareMessageToOwner($self);
+        $messageForOwner = self::prepareMessageToOwner($self, null);
         $messageForBayer = self::prepareMessageToBayer($self);
 
         Event::dispatch(new BuyProductEvent($messageForOwner, $self->products->first()->author->user));
         Event::dispatch(new BuyProductEvent($messageForBayer, $bayerUser->user));
     }
 
-    public static function prepareMessageToOwner(self $self): string
+    public static function prepareMessageToOwner(self $self, string $email): string
     {
         $orders = self::getOrdersStringList($self);
+        $currentEmail = $self->delivery->email;
+        if($currentEmail !== $email) {
+            $currentEmail = $email;
+        }
 
         $phone = $self->delivery->phone;
         $phoneString = $phone ? '   - телефон: ' . $phone . "\n": '';
-        $userName = $order->telegramMeta->user_name ?? '';
+        $userName = $self->telegramMeta->user_name ?? '';
 
         $a = '<a href="http://t.me/'. $userName . '">'. $userName . '</a>';
         //TODO  <кол-во товара>
@@ -117,7 +121,7 @@ class ShopOrder extends Model
         . 'Контакты покупателя:' . "\n"
         . '   - телеграм: ' . $a . "\n"
         .  $phoneString
-        . '   - почта: ' . $self->delivery->email . "\n"
+        . '   - почта: ' . $currentEmail . "\n"
         . '   - адрес доставки:'. "\n"
         .  $self->delivery->address . "\n"
         .  "\n"
