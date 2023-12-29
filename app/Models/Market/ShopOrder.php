@@ -54,9 +54,9 @@ class ShopOrder extends Model
         return $this->belongsTo(ShopDelivery::class, 'id');
     }
 
-    public static function makeByUser(TelegramUser $user, Product $product, string $address): self
+    public static function makeByUser(TelegramUser $user, Product $product, string $address, $phone): self
     {
-        $shopDelivery = ShopDelivery::makeByUser($user, $address);
+        $shopDelivery = ShopDelivery::makeByUser($user, $address, $phone);
         /** @var ShopOrder $order */
         $order = self::make($user, $shopDelivery);
 
