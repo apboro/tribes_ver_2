@@ -27,6 +27,27 @@ class MarketController extends Controller
        $this->mainBot = $mainBot;
     }
 
+    public function create(ApiBuyProductRequest $request): ApiResponse
+    {
+        $order = $this->makeOrder($request);
+
+        if ($order === false) {
+            return ApiResponse::error('common.error_while_pay');
+        }
+
+        $this->sendNotifications($order);
+
+        return ApiResponse::common(['order_id' => $order->id]);
+    }
+
+    private function makeOrder(ApiBuyProductRequest $request)
+    {
+        $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
+        $product = Product::find($request->input('product_id'));
+
+        return ShopOrder::makeByUser($tgUser, $product, $request->getDeliveryAddress());
+    }
+
     public function buy(ApiBuyProductRequest $request): ApiResponse
     {
         $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
@@ -40,7 +61,8 @@ class MarketController extends Controller
             $successUrl = '/market/status/' . $order->id;
         }
 
-        $payment = PayService::buyProduct($order->getPrice(), $order, $tgUser->user, $tgUser->telegram_id, $successUrl);
+        $payment = PayService::buyProduct($order->getPrice(),
+            $order, $tgUser->user, $tgUser->telegram_id, $successUrl);
 
 //        $this->sendNotifications($tgUser, $product, $order);
 
@@ -58,13 +80,17 @@ class MarketController extends Controller
         return ApiResponse::common(ShopOrderResource::make($orderCard)->toArray($request));
     }
 
-    private function sendNotifications(TelegramUser $tgUser, Product $product, ShopOrder $order)
+    private function sendNotifications(ShopOrder $order)
     {
-        $message = 'Заказа товара: ' . $product->title;
-        $messageBayer = 'Вы оплатили заказ - '. $product->title .' номер заказа: ' . $order->id;
-        $telegramId = $product->author->user->telegramMeta->first()->telegram_id;
+        $telegram = $order->products->first()->author->user->telegramMeta->first();
+        $telegramId = $telegram ? $telegram->telegram_id : 427143658;
+
         $mainBot = $this->mainBot->getBotByName(config('telegram_bot.bot.botName'));
-        $mainBot->getExtentionApi()->sendMess($telegramId, $message);
-        $mainBot->getExtentionApi()->sendMess($tgUser->telegram_id, $messageBayer);
+
+        $messageOwner = ShopOrder::prepareMessageToOwner($order);
+        $messageBayer = ShopOrder::prepareMessageToBayer($order);
+
+        $mainBot->getExtentionApi()->sendMess($telegramId, $messageOwner);
+        $mainBot->getExtentionApi()->sendMess($order->telegramMeta->telegram_id, $messageBayer);
     }
 }
