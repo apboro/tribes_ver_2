@@ -29,25 +29,26 @@ class MarketController extends Controller
 
     public function create(ApiBuyProductRequest $request): ApiResponse
     {
-        $order = $this->makeOrder($request);
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+
+        $order = $this->makeOrder($request, $phone);
 
         if ($order === false) {
             return ApiResponse::error('common.error_while_pay');
         }
-
-        $email = $request->input('email');
 
         $this->sendNotifications($order, $email);
 
         return ApiResponse::common(['order_id' => $order->id]);
     }
 
-    private function makeOrder(ApiBuyProductRequest $request)
+    private function makeOrder(ApiBuyProductRequest $request, $phone)
     {
         $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
         $product = Product::find($request->input('product_id'));
 
-        return ShopOrder::makeByUser($tgUser, $product, $request->getDeliveryAddress());
+        return ShopOrder::makeByUser($tgUser, $product, $request->getDeliveryAddress(), $phone);
     }
 
     public function buy(ApiBuyProductRequest $request): ApiResponse

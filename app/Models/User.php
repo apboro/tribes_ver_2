@@ -165,7 +165,12 @@ class User extends Authenticatable
         return $this->telegramData() ? Carbon::createFromTimestamp($this->telegramData()->auth_date)->toDateTimeString() : null;
     }
 
-    function telegramMeta()
+    public function getFirstTelegramUser(): TelegramUser
+    {
+       return $this->telegramMeta()->first();
+    }
+
+    function telegramMeta(): HasMany
     {
         return $this->hasMany(TelegramUser::class, 'user_id', 'id');
     }

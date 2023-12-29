@@ -22,13 +22,13 @@ class ShopDelivery extends Model
         'phone',
     ];
 
-    public static function makeByUser(TelegramUser $user, string $address): self
+    public static function makeByUser(TelegramUser $user, string $address, $phone): self
     {
         return self::create([
             'telegram_user_id' => $user->telegram_id,
             'address'          => $address,
             'email'            => $user->user->email,
-            'phone'            => $user->user->phone,
+            'phone'            => $phone,
         ]);
     }
 }
