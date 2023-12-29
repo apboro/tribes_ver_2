@@ -35,7 +35,9 @@ class MarketController extends Controller
             return ApiResponse::error('common.error_while_pay');
         }
 
-        $this->sendNotifications($order);
+        $email = $request->input('email');
+
+        $this->sendNotifications($order, $email);
 
         return ApiResponse::common(['order_id' => $order->id]);
     }
@@ -80,14 +82,14 @@ class MarketController extends Controller
         return ApiResponse::common(ShopOrderResource::make($orderCard)->toArray($request));
     }
 
-    private function sendNotifications(ShopOrder $order)
+    private function sendNotifications(ShopOrder $order, string $email)
     {
         $telegram = $order->products->first()->author->user->telegramMeta->first();
         $telegramId = $telegram ? $telegram->telegram_id : 427143658;
 
         $mainBot = $this->mainBot->getBotByName(config('telegram_bot.bot.botName'));
 
-        $messageOwner = ShopOrder::prepareMessageToOwner($order);
+        $messageOwner = ShopOrder::prepareMessageToOwner($order,$email);
         $messageBayer = ShopOrder::prepareMessageToBayer($order);
 
         $mainBot->getExtentionApi()->sendMess($telegramId, $messageOwner);
