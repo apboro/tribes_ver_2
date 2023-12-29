@@ -34,6 +34,11 @@ class ShopOrder extends Model
         return $this->morphMany(Payment::class, 'payable');
     }
 
+    function telegramMeta()
+    {
+        return $this->hasOne(TelegramUser::class, 'telegram_id', 'telegram_user_id');
+    }
+
     public function author()
     {
         return $this->products->first()->belongsTo(Author::class);
@@ -91,24 +96,24 @@ class ShopOrder extends Model
 
         $bayerUser = TelegramUser::findByTelegramId($self->telegram_user_id);
 
-        $messageForOwner = self::prepareMessageToOwner($self, $payment);
-        $messageForBayer = self::prepareMessageToBayer($self, $payment);
+        $messageForOwner = self::prepareMessageToOwner($self);
+        $messageForBayer = self::prepareMessageToBayer($self);
 
         Event::dispatch(new BuyProductEvent($messageForOwner, $self->products->first()->author->user));
         Event::dispatch(new BuyProductEvent($messageForBayer, $bayerUser->user));
     }
 
-    private static function prepareMessageToOwner(self $self, Payment $payment): string
+    public static function prepareMessageToOwner(self $self): string
     {
         $orders = self::getOrdersStringList($self);
 
         $phone = $self->delivery->phone;
         $phoneString = $phone ? '   - телефон: ' . $phone . "\n": '';
-        $userName = $payment->telegramUser->user_name ?? '';
+        $userName = $order->telegramMeta->user_name ?? '';
 
         $a = '<a href="http://t.me/'. $userName . '">'. $userName . '</a>';
         //TODO  <кол-во товара>
-       $message = '<b> Оплачен заказ № ' . $self->id . '</b>' . "\n"
+       $message = '<b> Оформлен заказ № ' . $self->id . '</b>' . "\n"
         . 'Контакты покупателя:' . "\n"
         . '   - телеграм: ' . $a . "\n"
         .  $phoneString
@@ -119,12 +124,12 @@ class ShopOrder extends Model
         . 'Содержимое заказа:' . "\n"
         .  $orders
         .  "\n"
-        . 'Общая сумма: ' . $self->getPrice() . ' руб.';
+        . 'На сумму: ' . $self->getPrice() . ' руб.';
 
         return $message;
     }
 
-    private static function prepareMessageToBayer(self $self, Payment $payment): string
+    public static function prepareMessageToBayer(self $self): string
     {
         $orders = self::getOrdersStringList($self);
 
@@ -132,12 +137,12 @@ class ShopOrder extends Model
         $a = '<a href="' . $link . '">' . $self->author->name . '</a>';
 
         //TODO  <кол-во товара>
-        $message = '<b> Вы оплатили заказ № ' . $self->id . '</b>' . "\n"
+        $message = '<b> Вы оформили заказ № ' . $self->id . '</b>' . "\n"
         . 'Магазин: ' . $a  . "\n"
         . 'Содержимое заказа:' . "\n"
         .  $orders
         .  "\n"
-        . 'Общая сумма: ' . $self->getPrice() . ' руб.'
+        . 'На сумму: ' . $self->getPrice() . ' руб.'
         .  "\n"
         . 'Продавец скоро свяжется с Вами.';
 
