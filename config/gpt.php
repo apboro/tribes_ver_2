@@ -3,7 +3,7 @@
 return [
     'apiKey' => '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',
     'useProxy' => true,
-    'proxy' => 'YM2LPY4s:N8PtAHaC@166.1.180.167:63850',
+    'proxy' => 'RYGqZmxT:3NbTTf8n@46.3.66.248:60752',
     'options' => [
         'model' => 'gpt-3.5-turbo',
         'max_tokens' => 500,
