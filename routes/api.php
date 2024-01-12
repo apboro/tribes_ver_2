@@ -282,6 +282,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/products/{id}', [ApiProductController::class, 'update'])->name('api.products.update');
     Route::post('/products/image/{id}', [ApiProductController::class, 'storeImage'])->name('api.products.storeImage');
     Route::delete('/products/image/{id}', [ApiProductController::class, 'removeImage'])->name('api.products.removeImage');
+    Route::put('/products/image/first/{id}', [ApiProductController::class, 'setFirstImage'])->name('api.products.setFirstImage');
 
     Route::get('/publications', [ApiPublicationController::class, 'list'])->name('api.publications.list');
     Route::post('/publications', [ApiPublicationController::class, 'store'])->name('api.publications.create');

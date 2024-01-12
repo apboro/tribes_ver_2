@@ -7,6 +7,7 @@ use App\Http\ApiRequests\Product\ApiProductListRequest;
 use App\Http\ApiRequests\Product\ApiProductPublicListRequest;
 use App\Http\ApiRequests\Product\ApiProductPublicShowRequest;
 use App\Http\ApiRequests\Product\ApiProductRemoveImageRequest;
+use App\Http\ApiRequests\Product\ApiProductSetFirstImageRequest;
 use App\Http\ApiRequests\Product\ApiProductShowRequest;
 use App\Http\ApiRequests\Product\ApiProductStoreImageRequest;
 use App\Http\ApiRequests\Product\ApiProductStoreRequest;
@@ -19,7 +20,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ApiProductController extends Controller
 {
-
     private function prepareImages($request): array
     {
         $images = [];
@@ -117,4 +117,13 @@ class ApiProductController extends Controller
 
         return ApiResponse::common(ProductResource::make($product)->toArray($request));
     }
+
+    public function setFirstImage(ApiProductSetFirstImageRequest $request, string $id): ApiResponse
+    {
+        $product = Product::find($id);
+        $product->setFirstImage($request->image_id);
+
+        return ApiResponse::common(ProductResource::make($product)->toArray($request));
+    }
+
 }
