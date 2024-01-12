@@ -109,4 +109,12 @@ class Product extends Model
 
         return true;
     }
+
+    public function setFirstImage(int $imageId): void
+    {
+        $images = array_filter($this->images, fn ($item) => $item['id'] === $imageId) +
+                  array_filter($this->images, fn ($item) => $item['id'] !== $imageId);
+        $this->images = array_values($images);
+        $this->save();
+    }
 }
