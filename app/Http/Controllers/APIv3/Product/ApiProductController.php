@@ -25,7 +25,7 @@ class ApiProductController extends Controller
         $images = [];
         if ($request->file('images')) {
             foreach ($request->file('images') as $key => $file) {
-                $images[] = Product::prepareImageRecord($key+1, Storage::disk('public')->putFile('product_images/' . $request->authorId, $file));
+                $images[] = Product::prepareImageRecord($key+1, Storage::disk('public')->putFile('product_images/' . $request->shop_id, $file));
             }
         }
 
@@ -46,23 +46,26 @@ class ApiProductController extends Controller
 
     public function store(ApiProductStoreRequest $request): ApiResponse
     {
-        $product = Product::create(['author_id' => $request->authorId] + $this->prepareProduct($request) + $this->prepareImages($request));
+        $product = Product::create(['shop_id' => $request->shop_id] + $this->prepareProduct($request) + $this->prepareImages($request));
 
         return ApiResponse::common(ProductResource::make($product)->toArray($request));
     }
 
     public function storeImage(ApiProductStoreImageRequest $request): ApiResponse
     {
-        $path = Storage::disk('public')->putFile('product_images/' . $request->authorId, $request->file('image'));
+        $product = Product::find($request->id);
+        $path = Storage::disk('public')->putFile('product_images/' . $product->shop_id, $request->file('image'));
+        $product->addImage($path);
 
-        return ApiResponse::common(Product::find($request->id)->addImage($path));
+        return ApiResponse::common(ProductResource::make($product)->toArray($request));
     }
 
     public function removeImage(ApiProductRemoveImageRequest $request): ApiResponse
     {
-        Product::find($request->id)->removeImage($request->image_id);
+        $product = Product::find($request->id);
+        $product->removeImage($request->image_id);
 
-        return ApiResponse::success('common.success');
+        return ApiResponse::common(ProductResource::make($product)->toArray($request));
     }
 
     public function show(ApiProductShowRequest $request, $id): ApiResponse

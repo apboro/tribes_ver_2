@@ -35,15 +35,15 @@ use Illuminate\Validation\Rule;
  */
 class ApiProductSetFirstImageRequest extends ApiRequest
 {
-    private function getAuthorId()
+    private function getUserId()
     {
-        return Auth::user()->author->id;
+        return Auth::user()->id;
     }
 
-    private function checkProductAndAuthor()
+    private function checkProductAndUser()
     {
         return Rule::exists('products')->where(function ($query) {
-            return $query->where('author_id', $this->getAuthorId() ?? null);
+            return $query->whereIn('shop_id', Auth::user()->findShopsIds() ?? []);
             });
     }
 
@@ -51,7 +51,7 @@ class ApiProductSetFirstImageRequest extends ApiRequest
     {
         $all = [
             'id'        => $this->route('id'),
-            'authorId'  => $this->getAuthorId() ?? null
+            'userId'  => $this->getUserId() ?? null
         ];
 
         return $all + parent::all();
@@ -60,10 +60,10 @@ class ApiProductSetFirstImageRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'authorId' => 'required|integer',
+            'userId' => 'required|integer',
             'id' => [
                 'required', 'integer',
-                $this->checkProductAndAuthor(),
+                $this->checkProductAndUser(),
             ],
             'image_id' => 'required|integer',
         ];

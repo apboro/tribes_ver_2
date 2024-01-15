@@ -39,22 +39,21 @@ class ApiProductRemoveImageRequest extends ApiRequest
     public function all($keys = null)
     {
         return ['id' => $this->route('id'),
-                'authorId' => Auth::user()->author->id ?? null
+                'userId' => Auth::user()->id ?? null,
                 ] + parent::all();
     }
 
     public function rules(): array
     {
         return [
-            'authorId' => 'required|integer',
+            'userId' => 'required|integer',
             'id' => [
                 'required', 'integer',
-                Rule::exists('products')->where(function ($query) {
-                    return $query->where('author_id', Auth::user()->author->id ?? null);
+                 Rule::exists('products')->where(function ($query) {
+                    return $query->whereIn('shop_id', Auth::user()->findShopsIds() ?? []);
                 }),
             ],
             'image_id' => 'required|integer',
         ];
     }
-
 }

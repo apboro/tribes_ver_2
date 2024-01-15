@@ -34,7 +34,7 @@ class Product extends Model
     {
         // $options = [ 'Параметр запроса' => ['field' => 'поле в БД', 'sql' => 'операция'] ]
         $options = [
-            'authorId' => ['field' => 'author_id', 'sql' => '='],
+            'shop_id' => ['field' => 'shop_id', 'sql' => '='],
             'title' => ['field' => 'title', 'sql' => 'ilike'],
             'description' => ['field' => 'description', 'sql' => 'ilike'],
         ];
