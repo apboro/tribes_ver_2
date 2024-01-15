@@ -21,7 +21,7 @@ WORKDIR ${WORKDIR}
 
 RUN apk add --no-cache nginx gettext tzdata ca-certificates && rm /etc/nginx/http.d/*
 
-RUN apk --no-cache add php-pgsql postgresql14-dev pcre-dev libjpeg-turbo-dev libpng-dev php7-imagick libzip-dev freetype-dev php7-bcmath php7-curl curl-dev $PHPIZE_DEPS \
+RUN apk --no-cache add php-pgsql postgresql14-dev pcre-dev libjpeg-turbo-dev libpng-dev php7-imagick libzip-dev freetype-dev php7-bcmath php7-curl curl-dev php7-mysqli $PHPIZE_DEPS \
   && pecl install redis \
   && docker-php-ext-enable redis \
   && rm -rf /tmp/pear \
