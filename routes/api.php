@@ -38,6 +38,7 @@ use App\Http\Controllers\APIv3\Publication\ApiFavouritePublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationPartController;
 use App\Http\Controllers\APIv3\Publication\ApiVisitedPublicationController;
+use App\Http\Controllers\APIv3\Shop\ApiShopController;
 use App\Http\Controllers\APIv3\Statistic\ApiExportAllData;
 use App\Http\Controllers\APIv3\Statistic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
@@ -87,6 +88,7 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/send_demo_email', [MailSender::class, 'sendDemoEmail']);
     Route::get('/authors/list', [ApiAuthorController::class, 'list'])->name('api.authors.list');
     Route::get('/public/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
+    Route::get('/shops/list', [ApiShopController::class, 'list'])->name('api.shops.list');
     Route::post('/pay/donate', [ApiNewDonateController::class, 'processDonatePayment'])->name('pay.donate.not.fixed');
     Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])
         ->name('api.publications.show_by_uuid')->middleware('api');
@@ -95,7 +97,7 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/show/tariff_payed', [ApiTariffController::class, 'showPayed']);    
     Route::get('/public/webinars/{author}', [ApiWebinarController::class, 'publicList']);
     Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.public.publications.list');
-    Route::get('/public/products/{authorId}', [ApiProductController::class, 'publicList'])->name('api.public.products.list');
+    Route::get('/public/products/{shopId}', [ApiProductController::class, 'publicList'])->name('api.public.products.list');
     Route::get('/public/product/{id}', [ApiProductController::class, 'publicShow'])->name('api.products.show_by_uuid')->middleware('api');
     Route::get('/webinar/{uuid}', [ApiWebinarController::class, 'showByUuid'])
         ->name('api.webinar.show_by_uuid')->middleware('api');
@@ -275,6 +277,12 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/authors/{id}', [ApiAuthorController::class, 'show'])->name('api.author.show');
     Route::delete('/authors', [ApiAuthorController::class, 'destroy'])->name('api.author.delete');
 
+    Route::get('/shops/my', [ApiShopController::class, 'myList'])->name('api.shop.my');
+    Route::post('/shops', [ApiShopController::class, 'store'])->name('api.shop.create');
+    Route::put('/shops/{id}', [ApiShopController::class, 'update'])->name('api.shop.update');
+    Route::get('/shops/{id}', [ApiShopController::class, 'show'])->name('api.shop.show');
+    Route::delete('/shops/{id}', [ApiShopController::class, 'destroy'])->name('api.shop.delete');
+    
     Route::post('/products', [ApiProductController::class, 'store'])->name('api.products.create');
     Route::get('/products/{id}', [ApiProductController::class, 'show'])->name('api.products.show');
     Route::get('/products', [ApiProductController::class, 'list'])->name('api.products.list');

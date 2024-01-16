@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Http\ApiRequests\Product;
+namespace App\Http\ApiRequests\Shop;
 
 use App\Http\ApiRequests\ApiRequest;
-use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 /**
- * @OA\DELETE(
- *  path="/api/v3/products/{id}",
- *  operationId="product-delete",
- *  summary="Delete product",
- *  security={{"sanctum": {} }},
- *  tags={"Product"},
+ * @OA\Delete(
+ * path="/api/v3/shops",
+ * operationId="delete-shop",
+ * summary= "Delete shop",
+ * security= {{"sanctum": {} }},
+ * tags= {"Shop"},
  *     @OA\Parameter(name="id",in="path",
- *         description="ID of product in database",
+ *         description="ID of shop in database",
  *         required=true,
  *         @OA\Schema(
  *             type="integer",
@@ -25,9 +24,8 @@ use Illuminate\Validation\Rule;
  *   @OA\Response(response=200, description="OK")
  *)
  */
-class ApiProductDeleteRequest extends ApiRequest
+class ApiShopDelete extends ApiRequest
 {
-
     public function all($keys = null)
     {
         return [
@@ -42,15 +40,10 @@ class ApiProductDeleteRequest extends ApiRequest
             'userId' => 'required|integer',
             'id' => [
                 'required', 'integer',
-                Rule::exists('products')->where(function ($query) {
-                    return $query->whereIn('shop_id', Auth::user()->findShopsIds() ?? []);
+                Rule::exists('shops')->where(function ($query) {
+                    return $query->where('user_id', Auth::user()->id);
                 }),
             ],
         ];
     }
-
-
-
-
-
 }

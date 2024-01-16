@@ -449,5 +449,15 @@ class User extends Authenticatable
         return (TelegramUser::findByTelegramId($telegramUserId))->user;
     }
 
+    function shops(): HasMany
+    {
+        return $this->hasMany(Shop::class);
+    }
+
+    function findShopsIds(): array
+    {
+        return $this->shops()->pluck('id')->toArray();
+    }
+
 }
 

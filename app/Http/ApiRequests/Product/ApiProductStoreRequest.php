@@ -5,6 +5,7 @@ namespace App\Http\ApiRequests\Product;
 use App\Http\ApiRequests\ApiRequest;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 /**
  * @OA\Post(
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
  *         @OA\MediaType(
  *             mediaType="multipart/form-data",
  *             @OA\Schema(
+ *                 @OA\Property(property="shop_id",type="integer"),
  *                 @OA\Property(property="title",type="string"),
  *                 @OA\Property(property="description",type="string"),
  *                 @OA\Property(property="price",type="integer"),
@@ -33,13 +35,19 @@ class ApiProductStoreRequest extends ApiRequest
 
     public function all($keys = null)
     {
-        return ['authorId' => Auth::user()->author->id ?? null] + parent::all();
+        return ['userId' => Auth::user()->id ?? null] + parent::all();
     }
 
     public function rules(): array
     {
         return [
-            'authorId' => 'required|integer',
+            'userId' => 'required|integer',
+            'shop_id' => [
+                'required', 'integer',
+                Rule::exists('shops', 'id')->where(function ($query) {
+                    return $query->where('user_id', Auth::user()->id ?? null);
+                }),
+            ],
             'title' => 'required|string|min:1',
             'description' => 'nullable|string',
             'images' => 'array',

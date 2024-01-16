@@ -16,6 +16,7 @@ use App\Models\Donate;
 use App\Models\Knowledge\Category;
 use App\Models\Knowledge\Question;
 use App\Models\Payment;
+use App\Models\Shop;
 use App\Models\Tariff;
 use App\Models\TariffVariant;
 use App\Models\TelegramChatTheme;
@@ -229,7 +230,7 @@ class MainBotCommands
                 $this->tariffBuyButton($ctx);
             });
 
-            $this->bot->onText('/start shop-{author_hash:string}_{role:string}', function (Context $ctx) {
+            $this->bot->onText('/start shop-{shop_hash:string}_{role:string}', function (Context $ctx) {
                 $this->shopButton($ctx);
             });
 
@@ -316,14 +317,14 @@ class MainBotCommands
 
     private function shopButton(Context $ctx)
     {
-        $authorId = PseudoCrypt::unhash($ctx->var('author_hash'));
-        $author = Author::find($authorId);
-        if (!$author) {
+        $shopId = PseudoCrypt::unhash($ctx->var('shop_hash'));
+        $shop = Shop::find($shopId);
+        if (!$shop) {
             return null;
         }
 
-        $description = ($author->name ?? 'Магазин') . "\n" . ($author->about ?? '');
-        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $authorId;
+        $description = ($shop->name ?? 'Магазин') . "\n" . ($shop->about ?? '');
+        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $shopId;
         $menu = Menux::Create('link')->inline();
         $menu->row()->uBtn('Открыть магазин', $link);
         $ctx->reply($description . "\n\n", $menu);
@@ -596,10 +597,10 @@ class MainBotCommands
     private function inlineShop()
     {
         try {
-            $this->bot->onInlineQuery('s-{authorId}', function (Context $ctx) {
-                $authorId = PseudoCrypt::unhash($ctx->var('authorId'));
-                $author = Author::find($authorId);
-                if (!$author) {
+            $this->bot->onInlineQuery('s-{shopId}', function (Context $ctx) {
+                $shopId = PseudoCrypt::unhash($ctx->var('shopId'));
+                $shop = Shop::find($shopId);
+                if (!$shop) {
                     return 0;
                 }
 
@@ -607,25 +608,21 @@ class MainBotCommands
                 $article = new Article(1);
                 $message = new InputTextMessageContent();
 
-                $theme = $author->name ?? 'Автор';
-                $description = $author->about ?? 'Магазин';
+                $theme = $shop->name ?? 'Магазин';
+                $description = $shop->about ?? ' ';
 
-                $message->text($theme . "\n" . $description . '<a href="' . config('app.url') . '/storage/' . $author->photo . '">&#160</a>')->parseMode('HTML');
+                $message->text($theme . "\n" . $description . '<a href="' . config('app.url') . '/storage/' . $shop->photo . '">&#160</a>')->parseMode('HTML');
                 $article->title($theme)
                         ->description($description)
                         ->inputMessageContent($message);
 
-                if ($author->photo) {
-                    $article->thumbUrl(config('app.url') . '/' . $author->photo);
+                if ($shop->photo) {
+                    $article->thumbUrl(config('app.url') . '/' . $shop->photo);
                 }
 
-                $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $authorId;
+                $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $shopId;
                 $menu = Menux::Create('link')->inline()->row()->uBtn('Открыть магазин', $link);
                 
-                // Команда для бота
-                // $menu = Menux::Create('a')->inline();
-                // $menu->row()->btn('Смотреть товары', 'shop-' . $ctx->var('authorId') . '_author');
-
                 $article->keyboard($menu->getAsObject());
                 $result->add($article);
 
