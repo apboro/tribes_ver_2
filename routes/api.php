@@ -278,8 +278,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::delete('/authors', [ApiAuthorController::class, 'destroy'])->name('api.author.delete');
 
     Route::get('/shops/my', [ApiShopController::class, 'myList'])->name('api.shop.my');
+    Route::post('/shops/{id}', [ApiShopController::class, 'update'])->name('api.shop.update');
     Route::post('/shops', [ApiShopController::class, 'store'])->name('api.shop.create');
-    Route::put('/shops/{id}', [ApiShopController::class, 'update'])->name('api.shop.update');
     Route::get('/shops/{id}', [ApiShopController::class, 'show'])->name('api.shop.show');
     Route::delete('/shops/{id}', [ApiShopController::class, 'destroy'])->name('api.shop.delete');
     
