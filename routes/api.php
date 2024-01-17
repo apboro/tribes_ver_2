@@ -89,6 +89,7 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/authors/list', [ApiAuthorController::class, 'list'])->name('api.authors.list');
     Route::get('/public/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
     Route::get('/shops/list', [ApiShopController::class, 'list'])->name('api.shops.list');
+    Route::get('/shops/{id}', [ApiShopController::class, 'show'])->name('api.shop.show');
     Route::post('/pay/donate', [ApiNewDonateController::class, 'processDonatePayment'])->name('pay.donate.not.fixed');
     Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])
         ->name('api.publications.show_by_uuid')->middleware('api');
@@ -280,7 +281,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/shops/my', [ApiShopController::class, 'myList'])->name('api.shop.my');
     Route::post('/shops/{id}', [ApiShopController::class, 'update'])->name('api.shop.update');
     Route::post('/shops', [ApiShopController::class, 'store'])->name('api.shop.create');
-    Route::get('/shops/{id}', [ApiShopController::class, 'show'])->name('api.shop.show');
     Route::delete('/shops/{id}', [ApiShopController::class, 'destroy'])->name('api.shop.delete');
     
     Route::post('/products', [ApiProductController::class, 'store'])->name('api.products.create');
