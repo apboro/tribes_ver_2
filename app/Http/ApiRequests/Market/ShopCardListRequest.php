@@ -12,7 +12,7 @@ use App\Models\Product;
  *  summary="Card list",
  *  security={{"sanctum": {} }},
  *  tags={"Market"},
- *     @OA\Parameter(name="telegram_user_id", in="query", description="telegram user id",required=true,@OA\Schema(type="string",)),
+ *     @OA\Parameter(name="telegram_user_id", in="query", description="telegram user id",required=true,@OA\Schema(type="integer",)),
  *     @OA\Parameter(name="shop_id",in="query",description="shop id",required=true,@OA\Schema(type="integer",)),
  *   @OA\Response(response=200, description="OK")
  *)
@@ -32,7 +32,7 @@ class ShopCardListRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'telegram_user_id' => 'required|string',
+            'telegram_user_id' => 'required|integer',
             'shop_id'          => 'required|integer|exists:shops,id',
         ];
     }

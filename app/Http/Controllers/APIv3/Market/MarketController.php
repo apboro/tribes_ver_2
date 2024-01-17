@@ -89,7 +89,7 @@ class MarketController extends Controller
     {
         ShopCard::where([
             'id'               => $request->input('id'),
-            'telegram_user_id' => $request->input('shop_card_id'),
+            'telegram_user_id' => $request->input('telegram_user_id'),
             'shop_id'          => $request->input('shop_id'),
         ])->delete();
 
