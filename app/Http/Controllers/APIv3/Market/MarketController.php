@@ -4,22 +4,23 @@ namespace App\Http\Controllers\APIv3\Market;
 
 use App\Http\ApiRequests\Market\ApiBuyProductRequest;
 use App\Http\ApiRequests\Market\ApiShowOrderRequest;
-use App\Http\ApiResources\AuthorResourse;
+use App\Http\ApiRequests\Market\ShopCardDeleteRequest;
+use App\Http\ApiRequests\Market\ShopCardListRequest;
+use App\Http\ApiRequests\Market\ShopCardUpdateRequest;
 use App\Http\ApiResources\Market\ShopOrderResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Models\Market\ShopCard;
 use App\Models\Market\ShopOrder;
-use App\Models\Market\ShopOrderProductList;
 use App\Models\Product;
 use App\Models\TelegramUser;
 use App\Services\Pay\PayService;
-use App\Services\Telegram\MainBot;
 use App\Services\Telegram\MainBotCollection;
-use Exception;
-use Illuminate\Support\Facades\Log;
 
 class MarketController extends Controller
 {
+    public const SUPPORT_TELEGRAM_USER_ID = 427143658;
+
     private MainBotCollection $mainBot;
 
     public function __construct(MainBotCollection $mainBot)
@@ -56,7 +57,8 @@ class MarketController extends Controller
         $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
         $product = Product::find($request->input('product_id'));
 
-        $order = ShopOrder::makeByUser($tgUser, $product, $request->getDeliveryAddress());
+        $phone = $request->getUserDTO()['phone'];
+        $order = ShopOrder::makeByUser($tgUser, $product, $request->getDeliveryAddress(), $phone);
 
         if ($request->input('is_mobile')) {
             $successUrl = $order->id;
@@ -83,10 +85,38 @@ class MarketController extends Controller
         return ApiResponse::common(ShopOrderResource::make($orderCard)->toArray($request));
     }
 
+    public function deleteCardProduct(ShopCardDeleteRequest $request): ApiResponse
+    {
+        ShopCard::where([
+            'id'               => $request->input('id'),
+            'telegram_user_id' => $request->input('shop_card_id'),
+            'shop_id'          => $request->input('shop_id'),
+        ])->delete();
+
+        return ApiResponse::success('common.success');
+    }
+
+    public function getCard(ShopCardListRequest $request): ApiResponse
+    {
+        $userCard = ShopCard::with('product')->where([
+            'shop_id' => $request->getShopId(),
+            'telegram_user_id' => $request->getTgUserId()
+        ])->get()->toArray();
+
+        return ApiResponse::common($userCard);
+    }
+
+    public function updateCard(ShopCardUpdateRequest $request): ApiResponse
+    {
+        ShopCard::cardUpdateOrCreate($request->validated());
+
+        return ApiResponse::success('common.success');
+    }
+
     private function sendNotifications(ShopOrder $order, string $email)
     {
         $telegram = $order->products->first()->author->user->telegramMeta->first();
-        $telegramId = $telegram ? $telegram->telegram_id : 427143658;
+        $telegramId = $telegram ? $telegram->telegram_id : self::SUPPORT_TELEGRAM_USER_ID;
 
         $mainBot = $this->mainBot->getBotByName(config('telegram_bot.bot.botName'));
 
