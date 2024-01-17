@@ -89,7 +89,7 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/authors/list', [ApiAuthorController::class, 'list'])->name('api.authors.list');
     Route::get('/public/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
     Route::get('/shops/list', [ApiShopController::class, 'list'])->name('api.shops.list');
-    Route::get('/shops/{id}', [ApiShopController::class, 'show'])->name('api.shop.show');
+    Route::get('/shops/{id}', [ApiShopController::class, 'show'])->name('api.shop.show')->where('id', '[0-9]+');
     Route::post('/pay/donate', [ApiNewDonateController::class, 'processDonatePayment'])->name('pay.donate.not.fixed');
     Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])
         ->name('api.publications.show_by_uuid')->middleware('api');
