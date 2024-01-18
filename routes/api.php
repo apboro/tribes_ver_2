@@ -110,6 +110,7 @@ Route::prefix('api/v3')->group(function () {
     Route::post('/market/product/buy', [MarketController::class, 'buy']);
     Route::post('/market/product/order/create', [MarketController::class, 'create']);
     Route::get('/market/show/order/{id}', [MarketController::class, 'showOrder']);
+    Route::get('/market/show/orders/history', [MarketController::class, 'shopOrdersHistory']);
 
     Route::get('/market/card/list', [MarketController::class, 'getCard']);
     Route::post('/market/card/update', [MarketController::class, 'updateCard']);
