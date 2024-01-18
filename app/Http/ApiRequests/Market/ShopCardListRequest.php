@@ -16,6 +16,17 @@ use App\Models\Product;
  *     @OA\Parameter(name="shop_id",in="query",description="shop id",required=true,@OA\Schema(type="integer",)),
  *   @OA\Response(response=200, description="OK")
  *)
+ *
+ * @OA\GET(
+ *   path="/api/v3/market/show/orders/history",
+ *   operationId="market-orders-history",
+ *   summary="Orders list",
+ *   security={{"sanctum": {} }},
+ *   tags={"Market"},
+ *      @OA\Parameter(name="telegram_user_id", in="query", description="telegram user id",required=true,@OA\Schema(type="integer",)),
+ *      @OA\Parameter(name="shop_id",in="query",description="shop id",required=true,@OA\Schema(type="integer",)),
+ *    @OA\Response(response=200, description="OK")
+ * )
  */
 class ShopCardListRequest extends ApiRequest
 {

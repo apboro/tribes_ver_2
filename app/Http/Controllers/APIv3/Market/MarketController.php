@@ -32,8 +32,9 @@ class MarketController extends Controller
     {
         $email = $request->input('email');
         $phone = $request->input('phone');
+        $shopId = $request->input('shop_id');
 
-        $order = $this->makeOrder($request, $phone);
+        $order = $this->makeOrder($request, $phone, $shopId);
 
         if ($order === false) {
             return ApiResponse::error('common.error_while_pay');
@@ -44,21 +45,22 @@ class MarketController extends Controller
         return ApiResponse::common(['order_id' => $order->id]);
     }
 
-    private function makeOrder(ApiBuyProductRequest $request, $phone)
+    private function makeOrder(ApiBuyProductRequest $request, string $phone, int $shopId)
     {
         $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
-        $product = Product::find($request->input('product_id'));
 
-        return ShopOrder::makeByUser($tgUser, $product, $request->getDeliveryAddress(), $phone);
+        return ShopOrder::makeByUser($tgUser, $request->getProductIdList(), $request->getDeliveryAddress(), $phone, $shopId);
     }
 
     public function buy(ApiBuyProductRequest $request): ApiResponse
     {
         $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
-        $product = Product::find($request->input('product_id'));
 
         $phone = $request->getUserDTO()['phone'];
-        $order = ShopOrder::makeByUser($tgUser, $product, $request->getDeliveryAddress(), $phone);
+        $shopId = $request->input('shop_id');
+        $productIdList = $request->getProductIdList();
+
+        $order = ShopOrder::makeByUser($tgUser, $productIdList, $request->getDeliveryAddress(), $phone, $shopId);
 
         if ($request->input('is_mobile')) {
             $successUrl = $order->id;
@@ -83,6 +85,16 @@ class MarketController extends Controller
         $orderCard = ShopOrder::find($id);
 
         return ApiResponse::common(ShopOrderResource::make($orderCard)->toArray($request));
+    }
+
+    public function shopOrdersHistory(ShopCardListRequest $request): ApiResponse
+    {
+        $orderCard = ShopOrder::with('product')->where([
+            'shop_id' => $request->getShopId(),
+            'telegram_user_id' => $request->getTgUserId()
+        ])->get()->toArray();
+
+        return ApiResponse::common($orderCard);
     }
 
     public function deleteCardProduct(ShopCardDeleteRequest $request): ApiResponse

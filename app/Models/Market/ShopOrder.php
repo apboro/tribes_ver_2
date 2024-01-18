@@ -54,13 +54,14 @@ class ShopOrder extends Model
         return $this->belongsTo(ShopDelivery::class, 'id');
     }
 
-    public static function makeByUser(TelegramUser $user, Product $product, string $address, $phone): self
+    public static function makeByUser(TelegramUser $user, array $products, string $address, string $phone, int $shopId): self
     {
         $shopDelivery = ShopDelivery::makeByUser($user, $address, $phone);
         /** @var ShopOrder $order */
         $order = self::make($user, $shopDelivery);
 
-        $order->products()->attach($product);
+        $products = Product::where('shop_id', $shopId)->whereIn('id', $products)->get();
+        $order->products()->attach($products);
 
         return $order;
     }

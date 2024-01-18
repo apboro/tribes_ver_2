@@ -12,7 +12,7 @@ use App\Http\ApiRequests\ApiRequest;
  *  security={{"sanctum": {} }},
  *  tags={"Market"},
  *     @OA\Parameter(name="telegram_user_id", in="query", description="telegram user id",required=true,@OA\Schema(type="integer",)),
- *     @OA\Parameter(name="product_id",in="query",description="product id",required=true,@OA\Schema(type="integer",)),
+ *     @OA\Parameter(name="product_id_list",in="query",description="product id list",required=true,@OA\Schema(type="array",)),
  *     @OA\Parameter(name="address",in="query",description="Delivery address",required=true,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="email",in="query",description="Delivery email",required=true,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="phone",in="query",description="Delivery phone",required=false,@OA\Schema(type="string",)),
@@ -29,7 +29,8 @@ class ApiBuyProductRequest extends ApiRequest
     {
         return [
             'telegram_user_id' => 'required|integer',
-            'product_id'       => 'required|integer|exists:products,id',
+            'product_id_list'  => 'required|array',
+            'shop_id'          => 'required|integer',
             'address'          => 'required|string',
             'email'            => 'required|string',
             'phone'            => 'nullable|string',
@@ -63,6 +64,11 @@ class ApiBuyProductRequest extends ApiRequest
         return [
             'address' => $this->input('address'),
         ];
+    }
+
+    public function getProductIdList()
+    {
+        return $this->input('product_id_list', []);
     }
 
     public function getDeliveryAddress()
