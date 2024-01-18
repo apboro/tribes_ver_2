@@ -30,6 +30,11 @@ class Product extends Model
         return $this->belongsTo(Author::class, 'author_id');
     }
 
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(Shop::class);
+    }
+
     private static function addFilter(array $filter): Builder
     {
         // $options = [ 'Параметр запроса' => ['field' => 'поле в БД', 'sql' => 'операция'] ]

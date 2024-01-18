@@ -44,6 +44,11 @@ class ShopOrder extends Model
         return $this->products->first()->belongsTo(Author::class);
     }
 
+    public function getSellerId(): int
+    {
+        return $this->products->first()->shop->user_id;
+    }
+
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'shop_order_product_list', 'order_id');

@@ -182,8 +182,10 @@ class PayService
     {
         if ($relation === 'tariff' || $relation === 'donate' || $relation === 'course') {
             return Accumulation::findUsersAccumulation($payFor->getAuthor()->id);
-        } elseif ($relation === 'publication' || $relation === 'webinar' || $relation === self::SHOP_ORDER_TYPE_NAME) {
+        } elseif ($relation === 'publication' || $relation === 'webinar') {
             return Accumulation::findUsersAccumulation($payFor->author->user_id);
+        } elseif ($relation === self::SHOP_ORDER_TYPE_NAME) {
+            return Accumulation::findUsersAccumulation($payFor->getSellerId());
         }
 
         return null;
@@ -194,8 +196,11 @@ class PayService
         if ($relation == 'tariff' || $relation == 'donate' || $relation == 'course') {
             return $payFor->getAuthor()->id;
         }
-        if ($relation == 'publication' || $relation == 'webinar' || $relation === self::SHOP_ORDER_TYPE_NAME) {
+        if ($relation == 'publication' || $relation == 'webinar') {
             return  $payFor->author->user_id;
+        }
+        if ($relation === self::SHOP_ORDER_TYPE_NAME) {
+            return  $payFor->getSellerId();
         }
 
         return null;
