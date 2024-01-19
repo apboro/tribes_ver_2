@@ -25,7 +25,7 @@ class MarketController extends Controller
 
     public function __construct(MainBotCollection $mainBot)
     {
-       $this->mainBot = $mainBot;
+        $this->mainBot = $mainBot;
     }
 
     public function create(ApiBuyProductRequest $request): ApiResponse
@@ -35,6 +35,7 @@ class MarketController extends Controller
         $shopId = $request->input('shop_id');
 
         $order = $this->makeOrder($request, $phone, $shopId);
+        $order->setStatus(ShopOrder::TYPE_NOT_BUYBLE);
 
         if ($order === false) {
             return ApiResponse::error('common.error_while_pay');
@@ -61,6 +62,7 @@ class MarketController extends Controller
         $productIdList = $request->getProductIdList();
 
         $order = ShopOrder::makeByUser($tgUser, $productIdList, $request->getDeliveryAddress(), $phone, $shopId);
+        $order->setStatus(ShopOrder::TYPE_BUYBLE);
 
         if ($request->input('is_mobile')) {
             $successUrl = $order->id;
@@ -68,7 +70,7 @@ class MarketController extends Controller
             $successUrl = '/market/status/' . $order->id;
         }
 
-        $payment = PayService::buyProduct($order->getPrice(),
+        $payment = PayService::buyProduct($order->getPrice($shopId, $this->input('telegram_user_id')),
             $order, $tgUser->user, $tgUser->telegram_id, $successUrl);
 
 //        $this->sendNotifications($tgUser, $product, $order);
@@ -82,7 +84,8 @@ class MarketController extends Controller
 
     public function showOrder(ApiShowOrderRequest $request, int $id): ApiResponse
     {
-        $orderCard = ShopOrder::find($id);
+        $orderCard = ShopOrder::getOrder($id);
+//        dd($orderCard);
 
         return ApiResponse::common(ShopOrderResource::make($orderCard)->toArray($request));
     }
@@ -90,7 +93,7 @@ class MarketController extends Controller
     public function shopOrdersHistory(ShopCardListRequest $request): ApiResponse
     {
         $orderCard = ShopOrder::with('product')->where([
-            'shop_id' => $request->getShopId(),
+            'shop_id'          => $request->getShopId(),
             'telegram_user_id' => $request->getTgUserId()
         ])->get()->toArray();
 
@@ -111,7 +114,7 @@ class MarketController extends Controller
     public function getCard(ShopCardListRequest $request): ApiResponse
     {
         $userCard = ShopCard::with('product')->where([
-            'shop_id' => $request->getShopId(),
+            'shop_id'          => $request->getShopId(),
             'telegram_user_id' => $request->getTgUserId()
         ])->get()->toArray();
 
@@ -127,15 +130,15 @@ class MarketController extends Controller
 
     private function sendNotifications(ShopOrder $order, string $email)
     {
-        $telegram = $order->products->first()->author->user->telegramMeta->first();
-        $telegramId = $telegram ? $telegram->telegram_id : self::SUPPORT_TELEGRAM_USER_ID;
+        $shop = $order->getShop();
+        $shopOwnerTgId = $shop->getOwnerTg()->telegram_id ?? self::SUPPORT_TELEGRAM_USER_ID;
 
         $mainBot = $this->mainBot->getBotByName(config('telegram_bot.bot.botName'));
 
-        $messageOwner = ShopOrder::prepareMessageToOwner($order,$email);
+        $messageOwner = ShopOrder::prepareMessageToOwner($order, $email);
         $messageBayer = ShopOrder::prepareMessageToBayer($order);
 
-        $mainBot->getExtentionApi()->sendMess($telegramId, $messageOwner);
+        $mainBot->getExtentionApi()->sendMess($shopOwnerTgId, $messageOwner);
         $mainBot->getExtentionApi()->sendMess($order->telegramMeta->telegram_id, $messageBayer);
     }
 }

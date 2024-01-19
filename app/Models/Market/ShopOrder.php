@@ -7,6 +7,7 @@ use App\Events\FeedBackAnswer;
 use App\Models\Author;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\Shop;
 use App\Models\TelegramUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +22,34 @@ use Illuminate\Support\Facades\Event;
 class ShopOrder extends Model
 {
     use HasFactory;
+
+    private const BUYABLE_TITLE = 'Спасибо за покупку!';
+    private const BUYABLE_DESCRIPTION = 'Продавец получит ваш заказ и свяжется с вами в ближайшее время';
+    private const NOT_BUYABLE_TITLE = 'Вы оформили предзаказ';
+    private const NOT_BUYABLE_DESCRIPTION = 'Продавец получит ваш заказ и свяжется с вами в ближайшее время';
+
+    public const TYPE_BUYBLE = 1;
+    public const TYPE_NOT_BUYBLE = 2;
+    public const TYPE_REJECT = 0;
+
+
+    public const STATUS_NAME_LIST = [
+        0 => 'Отменён',
+        1 => 'Покупка',
+        2 => 'Предзаказ'
+    ];
+
+    public const STATUS_TYPE_TITLE = [
+        0 => '',
+        1 => self::BUYABLE_TITLE,
+        2 => self::NOT_BUYABLE_TITLE,
+    ];
+
+    public const STATUS_TYPE_DESCRIPTION = [
+        0 => '',
+        1 => self::BUYABLE_DESCRIPTION,
+        2 => self::NOT_BUYABLE_DESCRIPTION,
+    ];
 
     protected $table = 'shop_orders';
 
@@ -49,9 +78,31 @@ class ShopOrder extends Model
         return $this->products->first()->shop->user_id;
     }
 
+    public static function getOrder(int $id)
+    {
+        return self::where('id', $id)->with('products')->first();
+    }
+
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'shop_order_product_list', 'order_id');
+        return $this->belongsToMany(Product::class, 'shop_order_product_list', 'order_id')
+            ->withPivot('quantity','price' );
+    }
+
+    public function getFirstProduct(): Product
+    {
+        return $this->products->first();
+    }
+
+    public function getShop(): Shop
+    {
+        return $this->getFirstProduct()->getShop();
+    }
+
+    public function setStatus(string $status)
+    {
+        $this->status = $status;
+        $this->save();
     }
 
     public function delivery(): BelongsTo
@@ -59,23 +110,41 @@ class ShopOrder extends Model
         return $this->belongsTo(ShopDelivery::class, 'id');
     }
 
-    public static function makeByUser(TelegramUser $user, array $products, string $address, string $phone, int $shopId): self
+    public static function makeByUser(TelegramUser $tgUser, array $products, string $address, string $phone, int $shopId): self
     {
-        $shopDelivery = ShopDelivery::makeByUser($user, $address, $phone);
+        $shopDelivery = ShopDelivery::makeByUser($tgUser, $address, $phone);
         /** @var ShopOrder $order */
-        $order = self::make($user, $shopDelivery);
+        $order = self::make($tgUser, $shopDelivery);
 
-        $products = Product::where('shop_id', $shopId)->whereIn('id', $products)->get();
-        $order->products()->attach($products);
+        $userCardList = ShopCard::with('product')
+                                ->where('shop_id', $shopId)
+                                ->where('telegram_user_id', $tgUser->telegram_id)
+                                ->whereIn('id', $products)
+                                ->get();
+        $data = [];
+
+        foreach($userCardList as $card) {
+            $data[$card->product_id]  = [
+                'quantity' => $card->quantity,
+                'price'    => $card->product->price,
+            ];
+        }
+
+        $order->products()->attach($data);
 
         return $order;
     }
 
-    public function getPrice(): int
+    public function getPrice($shopId, $tgUserId): int
     {
+        $userCardList = ShopCard::with('product')->where([
+            'shop_id'          => $shopId,
+            'telegram_user_id' => $tgUserId
+        ])->get();
         $price = 0;
-        foreach($this->products()->get() as $product) {
-            $price += $product->price;
+
+        foreach ($userCardList as $userCardL) {
+            $price += $userCardL->product->price * $userCardL->quantity;
         }
 
         return $price;
@@ -120,12 +189,13 @@ class ShopOrder extends Model
         $phone = $self->delivery->phone;
         $phoneString = $phone ? '   - телефон: ' . $phone . "\n": '';
         $userName = $self->telegramMeta->user_name ?? '';
+        $shopId = $self->getShop()->id;
 
-        $a = '<a href="http://t.me/'. $userName . '">'. $userName . '</a>';
+        $tagA = '<a href="http://t.me/'. $userName . '">'. $userName . '</a>';
         //TODO  <кол-во товара>
        $message = '<b> Оформлен заказ № ' . $self->id . '</b>' . "\n"
         . 'Контакты покупателя:' . "\n"
-        . '   - телеграм: ' . $a . "\n"
+        . '   - телеграм: ' . $tagA . "\n"
         .  $phoneString
         . '   - почта: ' . $currentEmail . "\n"
         . '   - адрес доставки:'. "\n"
@@ -134,7 +204,7 @@ class ShopOrder extends Model
         . 'Содержимое заказа:' . "\n"
         .  $orders
         .  "\n"
-        . 'На сумму: ' . $self->getPrice() . ' руб.';
+        . 'На сумму: ' . $self->getPrice($shopId, $self->telegram_user_id) . ' руб.';
 
         return $message;
     }
@@ -142,9 +212,10 @@ class ShopOrder extends Model
     public static function prepareMessageToBayer(self $self): string
     {
         $orders = self::getOrdersStringList($self);
+        $shopId = $self->getShop()->id;
 
-        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '/?startapp=' . $self->author->id;;
-        $a = '<a href="' . $link . '">' . $self->author->name . '</a>';
+        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '/?startapp=' . $shopId;
+        $a = '<a href="' . $link . '">' . $self->getShop()->name . '</a>';
 
         //TODO  <кол-во товара>
         $message = '<b> Вы оформили заказ № ' . $self->id . '</b>' . "\n"
@@ -152,7 +223,7 @@ class ShopOrder extends Model
         . 'Содержимое заказа:' . "\n"
         .  $orders
         .  "\n"
-        . 'На сумму: ' . $self->getPrice() . ' руб.'
+        . 'На сумму: ' . $self->getPrice($shopId, $self->telegram_user_id) . ' руб.'
         .  "\n"
         . 'Продавец скоро свяжется с Вами.';
 
