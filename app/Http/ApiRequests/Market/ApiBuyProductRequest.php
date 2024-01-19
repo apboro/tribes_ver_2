@@ -33,7 +33,7 @@ class ApiBuyProductRequest extends ApiRequest
             'product_id_list'  => 'required|array',
             'shop_id'          => 'required|integer',
             'address'          => 'required|string',
-            'email'            => 'required|string',
+            'email'            => 'nullable|string',
             'phone'            => 'nullable|string',
             'first_name'       => 'nullable|string',
             'last_name'        => 'nullable|string',

@@ -17,6 +17,16 @@ class Shop extends Model
 
     public const LIMIT_SHOW_DEFAULT = 10;
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getOwnerTg()
+    {
+        return $this->user->telegramMeta->first();
+    }
+
     private static function getFilterRules(): array
     {
         return [

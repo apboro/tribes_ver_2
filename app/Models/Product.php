@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -25,14 +26,19 @@ class Product extends Model
         'images' => 'array'
     ];
 
+    public function shop(): HasOne
+    {
+        return $this->hasOne(Shop::class, 'id', 'shop_id');
+    }
+
+    public function getShop(): Shop
+    {
+        return $this->shop->first();
+    }
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class, 'author_id');
-    }
-
-    public function shop(): BelongsTo
-    {
-        return $this->belongsTo(Shop::class);
     }
 
     private static function addFilter(array $filter): Builder
