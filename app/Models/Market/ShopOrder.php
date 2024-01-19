@@ -119,7 +119,7 @@ class ShopOrder extends Model
         $userCardList = ShopCard::with('product')
                                 ->where('shop_id', $shopId)
                                 ->where('telegram_user_id', $tgUser->telegram_id)
-                                ->whereIn('id', $products)
+                                ->whereIn('product_id', $products)
                                 ->get();
         $data = [];
 
