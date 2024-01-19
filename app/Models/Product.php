@@ -33,7 +33,7 @@ class Product extends Model
 
     public function getShop(): Shop
     {
-        return $this->shop->first();
+        return $this->shop;
     }
 
     public function author(): BelongsTo

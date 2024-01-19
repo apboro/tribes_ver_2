@@ -107,7 +107,7 @@ Route::prefix('api/v3')->group(function () {
 
     Route::get('/subscriptions_list', [ApiSubscriptionController::class, 'index']);
 
-    Route::post('/market/product/buy', [MarketController::class, 'buy']);
+    Route::post('/market/product/buy', [MarketController::class, 'create']);
     Route::post('/market/product/order/create', [MarketController::class, 'create']);
     Route::get('/market/show/order/{id}', [MarketController::class, 'showOrder']);
     Route::get('/market/show/orders/history', [MarketController::class, 'shopOrdersHistory']);
