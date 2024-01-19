@@ -15,7 +15,7 @@ class AddQuantityToShopOrderProductList extends Migration
     {
         Schema::table('shop_order_product_list', function (Blueprint $table) {
             $table->smallInteger('quantity')->default(0);
-            $table->integer('price');
+            $table->integer('price')->default(0);
         });
     }
 
