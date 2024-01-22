@@ -134,7 +134,7 @@ class ShopOrder extends Model
         log::debug('get card product count:' . count($data) );
 
         $order->products()->attach($data);
-        $userCardLSql->delete();
+//        $userCardLSql->delete();
 
         return $order;
     }
