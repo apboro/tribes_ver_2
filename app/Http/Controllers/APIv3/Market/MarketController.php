@@ -16,6 +16,7 @@ use App\Models\Product;
 use App\Models\TelegramUser;
 use App\Services\Pay\PayService;
 use App\Services\Telegram\MainBotCollection;
+use Log;
 
 class MarketController extends Controller
 {
@@ -85,19 +86,15 @@ class MarketController extends Controller
     public function showOrder(ApiShowOrderRequest $request, int $id): ApiResponse
     {
         $orderCard = ShopOrder::getOrder($id);
-//        dd($orderCard);
 
         return ApiResponse::common(ShopOrderResource::make($orderCard)->toArray($request));
     }
 
     public function shopOrdersHistory(ShopCardListRequest $request): ApiResponse
     {
-        $orderCard = ShopOrder::with('product')->where([
-            'shop_id'          => $request->getShopId(),
-            'telegram_user_id' => $request->getTgUserId()
-        ])->get()->toArray();
+        $orderCard = ShopOrder::getHistory($request->getShopId(), $request->getTgUserId());
 
-        return ApiResponse::common($orderCard);
+        return ApiResponse::common($orderCard->toArray());
     }
 
     public function deleteCardProduct(ShopCardDeleteRequest $request): ApiResponse
@@ -138,7 +135,10 @@ class MarketController extends Controller
         $messageOwner = ShopOrder::prepareMessageToOwner($order, $email);
         $messageBayer = ShopOrder::prepareMessageToBayer($order);
 
+        $clientTelegramId = $order->telegramMeta->telegram_id;
+        log::info('send  natify to telegram ids clent:' . $clientTelegramId . ' shop owner:' . $shopOwnerTgId);
+
         $mainBot->getExtentionApi()->sendMess($shopOwnerTgId, $messageOwner);
-        $mainBot->getExtentionApi()->sendMess($order->telegramMeta->telegram_id, $messageBayer);
+        $mainBot->getExtentionApi()->sendMess($clientTelegramId, $messageBayer);
     }
 }

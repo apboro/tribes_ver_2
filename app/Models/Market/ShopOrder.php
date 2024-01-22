@@ -9,11 +9,14 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Shop;
 use App\Models\TelegramUser;
+use Discord\Helpers\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Event;
+use Log;
 
 /**
  * @property string $token
@@ -63,7 +66,7 @@ class ShopOrder extends Model
         return $this->morphMany(Payment::class, 'payable');
     }
 
-    function telegramMeta()
+    public function telegramMeta(): HasOne
     {
         return $this->hasOne(TelegramUser::class, 'telegram_id', 'telegram_user_id');
     }
@@ -78,7 +81,7 @@ class ShopOrder extends Model
         return $this->products->first()->shop->user_id;
     }
 
-    public static function getOrder(int $id)
+    public static function getOrder(int $id): self
     {
         return self::where('id', $id)->with('products')->first();
     }
@@ -99,7 +102,7 @@ class ShopOrder extends Model
         return $this->getFirstProduct()->getShop();
     }
 
-    public function setStatus(string $status)
+    public function setStatus(string $status): void
     {
         $this->status = $status;
         $this->save();
@@ -116,21 +119,22 @@ class ShopOrder extends Model
         /** @var ShopOrder $order */
         $order = self::make($tgUser, $shopDelivery);
 
-        $userCardList = ShopCard::with('product')
+        $userCardLSql = ShopCard::with('product')
                                 ->where('shop_id', $shopId)
                                 ->where('telegram_user_id', $tgUser->telegram_id)
-                                ->whereIn('product_id', $products)
-                                ->get();
+                                ->whereIn('product_id', $products);
         $data = [];
 
-        foreach($userCardList as $card) {
+        foreach($userCardLSql->get() as $card) {
             $data[$card->product_id]  = [
                 'quantity' => $card->quantity,
                 'price'    => $card->product->price,
             ];
         }
+        log::debug('get card product count:' . count($data) );
 
         $order->products()->attach($data);
+        $userCardLSql->delete();
 
         return $order;
     }
@@ -174,7 +178,7 @@ class ShopOrder extends Model
         $messageForOwner = self::prepareMessageToOwner($self, null);
         $messageForBayer = self::prepareMessageToBayer($self);
 
-        Event::dispatch(new BuyProductEvent($messageForOwner, $self->products->first()->author->user));
+        Event::dispatch(new BuyProductEvent($messageForOwner, $self->products->first()->shop->user));
         Event::dispatch(new BuyProductEvent($messageForBayer, $bayerUser->user));
     }
 
@@ -241,5 +245,13 @@ class ShopOrder extends Model
             $orders .= $product->title . "\n";
         }
         return $orders;
+    }
+
+    public static function getHistory(int $shopId, int $tgUserId)
+    {
+        return self::with('product')->where([
+                    'shop_id'          => $shopId,
+                    'telegram_user_id' => $tgUserId
+                ])->get();
     }
 }
