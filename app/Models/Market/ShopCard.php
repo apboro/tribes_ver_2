@@ -4,6 +4,7 @@ namespace App\Models\Market;
 
 use App\Models\Product;
 use App\Models\Shop;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -40,5 +41,38 @@ class ShopCard extends Model
             'shop_id'          => $card['shop_id'],
             'product_id'       => $card['product_id'],
         ];
+    }
+
+    private static function getUserShopCard(int $shopId, int $telegramId, array $products): Builder
+    {
+        return self::with('product')
+                        ->where('shop_id', $shopId)
+                        ->where('telegram_user_id', $telegramId)
+                        ->whereIn('product_id', $products);
+    }
+
+    private static function prepareData(Builder $builder): array
+    {
+        $data = [];
+
+        foreach($builder->get() as $card) {
+            $data[$card->product_id]  = [
+                'quantity' => $card->quantity,
+                'price'    => $card->product->price,
+            ];
+        }
+
+        return $data;
+    }
+
+    public static function transferProductsToOrder(ShopOrder $shopOrder, $shopId, $telegramId, $products): ShopOrder
+    {
+        $userShopCardListSql = self::getUserShopCard($shopId, $telegramId, $products);
+
+        $data = self::prepareData($userShopCardListSql);
+        $shopOrder->products()->attach($data);
+        $userShopCardListSql->delete();
+
+        return $shopOrder;
     }
 }
