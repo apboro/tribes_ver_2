@@ -4,6 +4,7 @@ namespace App\Models\Market;
 
 use App\Events\BuyProductEvent;
 use App\Events\FeedBackAnswer;
+use App\Exceptions\Invalid;
 use App\Models\Author;
 use App\Models\Payment;
 use App\Models\Product;
@@ -94,7 +95,7 @@ class ShopOrder extends Model
 
     public function getFirstProduct(): Product
     {
-        return $this->products->first();
+       return $this->products->first() ?? Invalid::null('products null');
     }
 
     public function getShop(): Shop
@@ -113,42 +114,18 @@ class ShopOrder extends Model
         return $this->belongsTo(ShopDelivery::class, 'id');
     }
 
-    public static function makeByUser(TelegramUser $tgUser, array $products, string $address, string $phone, int $shopId): self
+    public static function makeByUser(TelegramUser $tgUser, ShopDelivery $shopDelivery): self
     {
-        $shopDelivery = ShopDelivery::makeByUser($tgUser, $address, $phone);
         /** @var ShopOrder $order */
-        $order = self::make($tgUser, $shopDelivery);
-
-        $userCardLSql = ShopCard::with('product')
-                                ->where('shop_id', $shopId)
-                                ->where('telegram_user_id', $tgUser->telegram_id)
-                                ->whereIn('product_id', $products);
-        $data = [];
-
-        foreach($userCardLSql->get() as $card) {
-            $data[$card->product_id]  = [
-                'quantity' => $card->quantity,
-                'price'    => $card->product->price,
-            ];
-        }
-        log::debug('get card product count:' . count($data) );
-
-        $order->products()->attach($data);
-//        $userCardLSql->delete();
-
-        return $order;
+        return self::make($tgUser, $shopDelivery);
     }
 
-    public function getPrice($shopId, $tgUserId): int
+    public function getPrice(): int
     {
-        $userCardList = ShopCard::with('product')->where([
-            'shop_id'          => $shopId,
-            'telegram_user_id' => $tgUserId
-        ])->get();
         $price = 0;
 
-        foreach ($userCardList as $userCardL) {
-            $price += $userCardL->product->price * $userCardL->quantity;
+        foreach ($this->products as $product) {
+            $price += $product->pivot->price * $product->pivot->quantity;
         }
 
         return $price;
@@ -193,7 +170,6 @@ class ShopOrder extends Model
         $phone = $self->delivery->phone;
         $phoneString = $phone ? '   - телефон: ' . $phone . "\n": '';
         $userName = $self->telegramMeta->user_name ?? '';
-        $shopId = $self->getShop()->id;
 
         $tagA = '<a href="http://t.me/'. $userName . '">'. $userName . '</a>';
         //TODO  <кол-во товара>
@@ -208,7 +184,7 @@ class ShopOrder extends Model
         . 'Содержимое заказа:' . "\n"
         .  $orders
         .  "\n"
-        . 'На сумму: ' . $self->getPrice($shopId, $self->telegram_user_id) . ' руб.';
+        . 'На сумму: ' . $self->getPrice() . ' руб.';
 
         return $message;
     }
@@ -217,17 +193,19 @@ class ShopOrder extends Model
     {
         $orders = self::getOrdersStringList($self);
         $shopId = $self->getShop()->id;
+        $marketName = config('telegram_bot.bot.marketName');
+        $botName = config('telegram_bot.bot.botName');
 
-        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '/?startapp=' . $shopId;
-        $a = '<a href="' . $link . '">' . $self->getShop()->name . '</a>';
+        $link = 'https://t.me/' . $botName . '/' . $marketName . '/?startapp=' . $shopId;
+        $tagA = '<a href="' . $link . '">' . $self->getShop()->name . '</a>';
 
         //TODO  <кол-во товара>
         $message = '<b> Вы оформили заказ № ' . $self->id . '</b>' . "\n"
-        . 'Магазин: ' . $a  . "\n"
+        . 'Магазин: ' . $tagA  . "\n"
         . 'Содержимое заказа:' . "\n"
         .  $orders
         .  "\n"
-        . 'На сумму: ' . $self->getPrice($shopId, $self->telegram_user_id) . ' руб.'
+        . 'На сумму: ' . $self->getPrice() . ' руб.'
         .  "\n"
         . 'Продавец скоро свяжется с Вами.';
 
@@ -242,8 +220,9 @@ class ShopOrder extends Model
     {
         $orders = '';
         foreach ($self->products as $product) {
-            $orders .= $product->title . "\n";
+            $orders .= $product->title .  ' - ' . $product->pivot->quantity . ' шт.' ."\n";
         }
+
         return $orders;
     }
 
