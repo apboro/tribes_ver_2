@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use App\Models\Traits\HasFilter;
 
@@ -48,4 +49,14 @@ class Shop extends Model
     {
         return self::addFilter($filter, self::getFilterRules())->count();
     }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public static function findWithUsersAndProducts(): Collection
+    {
+        return self::with(['user', 'products'])->orderBy('user_id')->get();
+    }   
 }

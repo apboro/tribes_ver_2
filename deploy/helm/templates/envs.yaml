@@ -71,6 +71,9 @@ data:
 
   # WEBCASTER_CLIENT_NAME: {{ quote .Values.config.webcaster.client.name }}
   # WEBCASTER_CLIENT_PASSWORD: {{ quote .Values.config.webcaster.client.password }}
+  GOOGLE_TABLE_EXPORT: {{ quote .Values.config.googleTable.export }}
+  GOOGLE_TABLE_SHEET_ID: {{ quote .Values.config.googleTable.sheetID }}
+  GOOGLE_TABLE_PAGE_NAME: {{ quote .Values.config.googleTable.pageName }}
 ---
 apiVersion: v1
 kind: Secret
