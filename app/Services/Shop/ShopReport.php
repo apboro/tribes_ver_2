@@ -31,9 +31,9 @@ class ShopReport
     private function prepareShopRow(Shop $shop, ?TelegramUser $ownerTg): array
     {
         return [
-            $shop->name,
+            $shop->name ?? '',
             $shop->products->count(),
-            $shop->created_at,
+            $shop->created_at ?? '',
             $shop->user->name,
             $shop->user->email,
             $shop->user->created_at->toDayDateTimeString(),
