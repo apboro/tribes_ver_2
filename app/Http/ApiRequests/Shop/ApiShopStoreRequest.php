@@ -37,7 +37,7 @@ class ApiShopStoreRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|string|max:100',
+            'name' => 'required|string|max:100',
             'about' => 'nullable|string|max:300',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
             'buyable' => 'string|in:true,false',
