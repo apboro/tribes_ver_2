@@ -38,6 +38,9 @@ class ApiShopController extends Controller
 
     public function store(ApiShopStoreRequest $request): ApiResponse
     {
+        if (Auth::user()->hasTelegramAccount() == 0) {
+            return ApiResponse::error('shop.create.no_telegram_account');
+        }
         $shop = Shop::create($this->prepareShop($request));
 
         return ApiResponse::common(ShopResourse::make($shop)->toArray($request));
