@@ -30,6 +30,7 @@ use App\Http\Controllers\APIv3\Knowledge\ApiQuestionController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
+use App\Http\Controllers\APIv3\Product\ApiCategoryController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\Payments\ApiPayoutController;
@@ -115,6 +116,9 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/market/card/list', [MarketController::class, 'getCard']);
     Route::post('/market/card/update', [MarketController::class, 'updateCard']);
     Route::delete('/market/card/delete', [MarketController::class, 'deleteCardProduct']);
+
+    Route::get('/products/category', [ApiCategoryController::class, 'list'])->name('api.products.category.list');
+    Route::get('/products/category/{id}', [ApiCategoryController::class, 'show'])->name('api.products.category.show')->where('id', '[0-9]+');
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () {
@@ -287,6 +291,10 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/shops/{id}', [ApiShopController::class, 'update'])->name('api.shop.update');
     Route::post('/shops', [ApiShopController::class, 'store'])->name('api.shop.create');
     Route::delete('/shops/{id}', [ApiShopController::class, 'destroy'])->name('api.shop.delete');
+
+    Route::post('/products/category', [ApiCategoryController::class, 'store'])->name('api.products.category.create');
+    Route::put('/products/category/{id}', [ApiCategoryController::class, 'update'])->name('api.products.category.update')->where('id', '[0-9]+');
+    Route::delete('/products/category/{id}', [ApiCategoryController::class, 'destroy'])->name('api.products.category.destroy')->where('id', '[0-9]+');
     
     Route::post('/products', [ApiProductController::class, 'store'])->name('api.products.create');
     Route::get('/products/{id}', [ApiProductController::class, 'show'])->name('api.products.show');

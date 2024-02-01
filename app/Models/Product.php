@@ -46,6 +46,7 @@ class Product extends Model
         // $options = [ 'Параметр запроса' => ['field' => 'поле в БД', 'sql' => 'операция'] ]
         $options = [
             'shop_id' => ['field' => 'shop_id', 'sql' => '='],
+            'category_id' => ['field' => 'category_id', 'sql' => '='],
             'title' => ['field' => 'title', 'sql' => 'ilike'],
             'description' => ['field' => 'description', 'sql' => 'ilike'],
         ];
@@ -127,5 +128,17 @@ class Product extends Model
                   array_filter($this->images, fn ($item) => $item['id'] !== $imageId);
         $this->images = array_values($images);
         $this->save();
+    }
+
+    public static function moveAllFromCategory(int $oldCategoryId, int $newCategoryId = 0): int
+    {
+        return self::where('category_id', $oldCategoryId)->update(['category_id' => $newCategoryId]);
+    }
+
+    public function canMoveToCategory(int $newCategoryId): bool
+    {
+        return ($newCategoryId != 0 && 
+                ProductCategory::isBelongsShop($newCategoryId, $this->shop_id) === false) ?
+                false : true;
     }
 }

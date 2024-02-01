@@ -3,6 +3,8 @@
 namespace App\Http\ApiRequests\Product;
 
 use App\Http\ApiRequests\ApiRequest;
+use App\Models\Product;
+use App\Models\ProductCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
@@ -29,6 +31,7 @@ use Illuminate\Validation\Rule;
  *                 @OA\Property(property="description",type="string"),
  *                 @OA\Property(property="price",type="integer"),
  *                 @OA\Property(property="buyable",type="string"),
+ *                 @OA\Property(property="category_id",type="integer"),
  *                 ),
  *             ),
  *         ),
@@ -37,6 +40,13 @@ use Illuminate\Validation\Rule;
  */
 class ApiProductUpdateRequest extends ApiRequest
 {
+    public function prepareForValidation(): void
+    {
+        $data = $this->all();
+        $data['category_id'] = $data['category_id'] ?? 0;            
+        $this->replace($data);
+    }
+
     public function all($keys = null)
     {
         return ['id' => $this->route('id'),
@@ -58,6 +68,15 @@ class ApiProductUpdateRequest extends ApiRequest
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:1',
             'buyable' => 'string|in:true,false',
+            'category_id' => [
+                'integer',
+                function ($attribute, $value, $fail) {
+                    $product = Product::find($this->id);
+                    if (!$product || $product->canMoveToCategory($value) === false) {
+                        return $fail('Категория не существует.');
+                    }
+                },
+            ],
         ];
     }
 }
