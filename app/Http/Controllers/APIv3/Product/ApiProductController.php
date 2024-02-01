@@ -39,6 +39,7 @@ class ApiProductController extends Controller
             'title' => $request->input('title'),
             'price' => $request->input('price'),
             'buyable' => $request->input('buyable') == 'false' ? false : true,
+            'category_id' => $request->input('category_id'),
         ];
 
         return $productArray;

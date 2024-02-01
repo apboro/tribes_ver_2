@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
  *  security={{"sanctum": {} }},
  *  tags={"Product"},
  *     @OA\Parameter(name="shop_id",in="query",description="Shop id",required=true,@OA\Schema(type="string",)),
+ *     @OA\Parameter(name="category_id",in="query",description="Category id",required=false,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="title",in="query",description="Search by product",required=false,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="offset",in="query",description="Begin records from number {offset}",required=false,@OA\Schema(type="integer",)),
  *     @OA\Parameter(name="limit",in="query",description="Total records to display",required=false,@OA\Schema(type="integer",)),
@@ -41,6 +42,7 @@ class ApiProductListRequest extends ApiRequest
             'limit' => 'nullable|integer',
             'offset' => 'nullable|integer',
             'title' => 'nullable|string',
+            'category_id' => 'nullable|integer',
         ];
     }
 }
