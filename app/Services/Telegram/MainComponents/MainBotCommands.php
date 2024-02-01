@@ -617,7 +617,7 @@ class MainBotCommands
                         ->inputMessageContent($message);
 
                 if ($shop->photo) {
-                    $article->thumbUrl(config('app.url') . '/' . $shop->photo);
+                    $article->thumbUrl(config('app.url') . '/storage/' . $shop->photo);
                 }
 
                 $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $shopId;
