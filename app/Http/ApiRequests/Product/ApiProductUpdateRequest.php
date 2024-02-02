@@ -32,6 +32,7 @@ use Illuminate\Validation\Rule;
  *                 @OA\Property(property="price",type="integer"),
  *                 @OA\Property(property="buyable",type="string"),
  *                 @OA\Property(property="category_id",type="integer"),
+ *                 @OA\Property(property="status",type="integer", example="active 1 , disabled 2, archived 3"),
  *                 ),
  *             ),
  *         ),
@@ -57,17 +58,18 @@ class ApiProductUpdateRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'userId' => 'required|integer',
-            'id' => [
-                'required', 'integer',
+            'userId'      => 'required|integer',
+            'id'          => [
+                'required',
+                'integer',
                 Rule::exists('products')->where(function ($query) {
                     return $query->whereIn('shop_id', Auth::user()->findShopsIds() ?? []);
                 }),
             ],
-            'title' => 'required|string',
+            'title'       => 'required|string',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:1',
-            'buyable' => 'string|in:true,false',
+            'price'       => 'required|numeric|min:1',
+            'buyable'     => 'string|in:true,false',
             'category_id' => [
                 'integer',
                 function ($attribute, $value, $fail) {
@@ -77,6 +79,7 @@ class ApiProductUpdateRequest extends ApiRequest
                     }
                 },
             ],
+            'status' => 'required|int'
         ];
     }
 }

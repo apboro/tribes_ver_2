@@ -35,11 +35,12 @@ class ApiProductController extends Controller
     private function prepareProduct($request): array
     {
         $productArray = [
-            'description' => $request->input('description') ?? null,
-            'title' => $request->input('title'),
-            'price' => $request->input('price'),
-            'buyable' => $request->input('buyable') == 'false' ? false : true,
+            'description' => $request->input('description'),
+            'title'       => $request->input('title'),
+            'price'       => $request->input('price'),
+            'buyable'     => !($request->input('buyable') === 'false'),
             'category_id' => $request->input('category_id'),
+            'status'      => Product::resolveStatus($request->input('status')),
         ];
 
         return $productArray;

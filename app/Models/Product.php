@@ -18,6 +18,16 @@ class Product extends Model
 {
     use HasFactory;
 
+    public const ACTIVE_TYPE = 1;
+    public const ARCHIVED_TYPE = 2;
+    public const DISABLED_TYPE = 3;
+
+    public const STATUS_NAMES_LIST = [
+        self::ACTIVE_TYPE   => 'active',
+        self::ARCHIVED_TYPE => 'archived',
+        self::DISABLED_TYPE => 'disabled',
+    ];
+
     protected $guarded = [];
 
     public const HOW_SHOW_DEFAULT = 10;
@@ -140,5 +150,10 @@ class Product extends Model
         return ($newCategoryId != 0 && 
                 ProductCategory::isBelongsShop($newCategoryId, $this->shop_id) === false) ?
                 false : true;
+    }
+
+    public static function resolveStatus(int $id): int
+    {
+        return self::STATUS_NAMES_LIST[$id] ? $id : self::ACTIVE_TYPE;
     }
 }
