@@ -26,6 +26,7 @@ use OpenApi\Annotations as OA;
  *                 @OA\Property(property="images",type="object", description="Array of images"),
  *                 @OA\Property(property="buyable",type="string"),
  *                 @OA\Property(property="category_id",type="integer"),
+ *                 @OA\Property(property="status",type="integer", example="active 1 , disabled 2, archived 3"),
  *                 ),
  *             ),
  *         ),
@@ -70,6 +71,7 @@ class ApiProductStoreRequest extends ApiRequest
                     }
                 },
             ],
+            'status' => 'required|int'
         ];
     }
 
