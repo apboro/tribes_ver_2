@@ -62,7 +62,7 @@ class MarketController extends Controller
         $shopDelivery = ShopDelivery::makeByUser($tgUser, $request->getDeliveryAddress(), $phone);
         $productsList = $request->getProductIdList();
 
-        $shopOrder = ShopOrder::makeByUser($tgUser, $shopDelivery);
+        $shopOrder = ShopOrder::makeByUser($tgUser, $shopDelivery, $shopId);
 
         return ShopCard::transferProductsToOrder($shopOrder, $shopId, $tgUser->telegram_id, $productsList);
     }

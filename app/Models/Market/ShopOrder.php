@@ -114,10 +114,10 @@ class ShopOrder extends Model
         return $this->belongsTo(ShopDelivery::class, 'id');
     }
 
-    public static function makeByUser(TelegramUser $tgUser, ShopDelivery $shopDelivery): self
+    public static function makeByUser(TelegramUser $tgUser, ShopDelivery $shopDelivery, int $shopId): self
     {
         /** @var ShopOrder $order */
-        return self::make($tgUser, $shopDelivery);
+        return self::make($tgUser, $shopDelivery, $shopId);
     }
 
     public function getPrice(): int
@@ -131,11 +131,12 @@ class ShopOrder extends Model
         return $price;
     }
 
-    public static function make(TelegramUser $user, ShopDelivery $shopDelivery): self
+    public static function make(TelegramUser $user, ShopDelivery $shopDelivery, int $shopId): self
     {
         return self::create([
             'telegram_user_id' => $user->telegram_id,
             'delivery_id'      => $shopDelivery->id,
+            'shop_id'          => $shopId
         ]);
     }
 
@@ -231,6 +232,6 @@ class ShopOrder extends Model
         return self::with('product')->where([
                     'shop_id'          => $shopId,
                     'telegram_user_id' => $tgUserId
-                ])->get();
+              ])->get();
     }
 }
