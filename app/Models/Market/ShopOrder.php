@@ -229,7 +229,7 @@ class ShopOrder extends Model
 
     public static function getHistory(int $shopId, int $tgUserId)
     {
-        return self::with('product')->where([
+        return self::with('products')->where([
                     'shop_id'          => $shopId,
                     'telegram_user_id' => $tgUserId
               ])->get();
