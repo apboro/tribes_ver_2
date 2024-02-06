@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Auth;
  */
 /**
  * @OA\Delete(
- * path="/products/category/{id}",
+ * path="/api/v3/products/category/{id}",
  * operationId="delete-category",
  * summary= "Delete category",
  * security= {{"sanctum": {} }},
