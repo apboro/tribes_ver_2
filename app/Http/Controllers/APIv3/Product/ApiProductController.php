@@ -40,7 +40,7 @@ class ApiProductController extends Controller
             'price'       => $request->input('price'),
             'buyable'     => !($request->input('buyable') === 'false'),
             'category_id' => $request->input('category_id'),
-            'status'      => Product::resolveStatus($request->input('status')),
+            'status'      => Product::resolveStatus($request->input('status', Product::ACTIVE_TYPE)),
         ];
 
         return $productArray;

@@ -29,7 +29,7 @@ class ShopOrderResource extends JsonResource
             'payments_id'      => $this->resource->payments_id,
             'telegram_user_id' => $this->resource->telegram_user_id,
             'delivery_id'      => $this->resource->delivery_id,
-            'shop_id'          => $this->resource->products->first()->shop_id,
+            'shop_id'          => $this->resource->shop_id,
         ];
     }
 }
