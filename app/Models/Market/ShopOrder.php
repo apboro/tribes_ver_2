@@ -60,6 +60,7 @@ class ShopOrder extends Model
     protected $fillable = [
         'telegram_user_id',
         'delivery_id',
+        'shop_id',
     ];
 
     public function payments()

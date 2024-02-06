@@ -50,19 +50,20 @@ class ApiProductStoreRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'userId' => 'required|integer',
-            'shop_id' => [
-                'required', 'integer',
+            'userId'      => 'required|integer',
+            'shop_id'     => [
+                'required',
+                'integer',
                 Rule::exists('shops', 'id')->where(function ($query) {
                     return $query->where('user_id', Auth::user()->id ?? null);
                 }),
             ],
-            'title' => 'required|string|min:1',
+            'title'       => 'required|string|min:1',
             'description' => 'nullable|string',
-            'images' => 'array',
-            'images.*' => 'image|mimes:jpg,jpeg,png,gif,webp',
-            'price' => 'required|integer|min:1',
-            'buyable' => 'string|in:true,false',
+            'images'      => 'array',
+            'images.*'    => 'image|mimes:jpg,jpeg,png,gif,webp',
+            'price'       => 'required|integer|min:1',
+            'buyable'     => 'string|in:true,false',
             'category_id' => [
                 'integer',
                 function ($attribute, $value, $fail) {
@@ -71,7 +72,7 @@ class ApiProductStoreRequest extends ApiRequest
                     }
                 },
             ],
-            'status' => 'required|int'
+            'status'      => 'nullable|int'
         ];
     }
 
