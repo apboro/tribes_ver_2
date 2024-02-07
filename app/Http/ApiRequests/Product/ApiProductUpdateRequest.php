@@ -79,7 +79,7 @@ class ApiProductUpdateRequest extends ApiRequest
                     }
                 },
             ],
-            'status' => 'required|int'
+            'status' => 'nullable|int'
         ];
     }
 }
