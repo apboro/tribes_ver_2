@@ -17,8 +17,6 @@ class ProductCategory extends Model
     use HasFactory,
         HasFilter;
 
-    public const LIMIT_SHOW_DEFAULT = 10;
-
     protected $guarded = [
         'id',
         'created_at',
@@ -57,8 +55,6 @@ class ProductCategory extends Model
     {
         return self::addFilter($filter, self::getFilterRules())
             ->orderBy('parent_id')
-            ->offset($filter['offset'] ?? 0)
-            ->limit($filter['limit'] ?? self::LIMIT_SHOW_DEFAULT)
             ->get();
     }
 
