@@ -59,7 +59,7 @@ class MarketController extends Controller
     private function makeOrder(ApiBuyProductRequest $request, string $phone, int $shopId)
     {
         $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
-        $shopDelivery = ShopDelivery::makeByUser($tgUser, $request->getDeliveryAddress(), $phone);
+        $shopDelivery = ShopDelivery::makeByUser($tgUser, $request->getDeliveryDTO(), $phone);
         $productsList = $request->getProductIdList();
 
         $shopOrder = ShopOrder::makeByUser($tgUser, $shopDelivery, $shopId);

@@ -3,6 +3,7 @@
 namespace App\Http\ApiRequests\Market;
 
 use App\Http\ApiRequests\ApiRequest;
+use App\Models\Market\ShopDelivery;
 
 /**
  * @OA\POST(
@@ -60,20 +61,16 @@ class ApiBuyProductRequest extends ApiRequest
         ];
     }
 
-    public function getDeliviryDTO()
+    public function getDeliveryDTO()
     {
         return [
-            'address' => $this->input('address'),
+            ShopDelivery::KEY_ADDRESS => $this->input('address'),
+            ShopDelivery::KEY_EMAIL   => $this->input('email', ''),
         ];
     }
 
     public function getProductIdList()
     {
         return $this->input('product_id_list', []);
-    }
-
-    public function getDeliveryAddress()
-    {
-        return $this->getDeliviryDTO()['address'];
     }
 }

@@ -11,6 +11,9 @@ class ShopDelivery extends Model
 {
     use HasFactory;
 
+    public const KEY_ADDRESS = 'address';
+    public const KEY_EMAIL = 'email';
+
     public $timestamps = false;
 
     protected $table = 'shop_deliveries';
@@ -22,12 +25,12 @@ class ShopDelivery extends Model
         'phone',
     ];
 
-    public static function makeByUser(TelegramUser $user, string $address, $phone): self
+    public static function makeByUser(TelegramUser $user, array $delivery, $phone): self
     {
         return self::create([
             'telegram_user_id' => $user->telegram_id,
-            'address'          => $address,
-            'email'            => $user->user->email,
+            'address'          => $delivery[ShopDelivery::KEY_ADDRESS],
+            'email'            => $delivery[ShopDelivery::KEY_EMAIL],
             'phone'            => $phone,
         ]);
     }
