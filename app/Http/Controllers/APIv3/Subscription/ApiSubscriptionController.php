@@ -37,7 +37,7 @@ class ApiSubscriptionController extends Controller
      */
     public function index(ApiListSubscriptionsRequest $request): ApiResponseList
     {
-        $subscriptions = Subscription::all();
+        $subscriptions = Subscription::all()->sortBy('id');
         return ApiResponse::list()->items($subscriptions);
     }
 
