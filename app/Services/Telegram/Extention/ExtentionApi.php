@@ -6,6 +6,7 @@ use App\Models\Community;
 use App\Models\TelegramUserCommunity;
 use App\Models\TelegramUserList;
 use App\Services\Telegram\BotInterface\ExtentionApiInterface;
+use App\Services\Telegram\MainComponents\MainBotCommands;
 use Askoldex\Teletant\Api;
 use Askoldex\Teletant\Exception\TeletantException;
 use Askoldex\Teletant\Settings;
@@ -343,5 +344,34 @@ class ExtentionApi extends Api implements ExtentionApiInterface
         $inviteLink = Http::post(self::TELEGRAM_BASE_URL . '/bot' . config('telegram_bot.bot.token') . '/createChatInviteLink', $params)['result']['invite_link'];  
        
         return $inviteLink;
+    }
+
+    public function getSendMessageResultBody(int $chatId, string $text, bool $preview = false, array $keyboard = [], bool $silent = false): array
+    {
+        try {
+            $params = [
+                'chat_id'                  => $chatId,
+                'text'                     => $text,
+                'parse_mode'               => 'HTML',
+                'disable_web_page_preview' => $preview,
+                'disable_notification'     => $silent,
+                'reply_markup'             => [
+                    "inline_keyboard" => $keyboard
+                ]
+            ];
+
+            Logg::debug('Lets send mess with return params', [$params]);
+            $url = self::TELEGRAM_BASE_URL . '/bot' . $this->token . '/sendMessage';
+
+            $result = Http::post($url, $params);
+
+            return $result->json();
+
+        } catch (\Exception $e) {
+            Logg::channel('telegram-bot-log')
+                ->alert('Error from ' . get_called_class() . ' text: ' . $e->getMessage() . PHP_EOL);
+
+            return [];
+        }
     }
 }

@@ -17,6 +17,7 @@ use App\Models\Product;
 use App\Models\TelegramUser;
 use App\Services\Pay\PayService;
 use App\Services\Telegram\MainBotCollection;
+use App\Services\Telegram\MainComponents\MainBotCommands;
 use Exception;
 use Log;
 
@@ -45,9 +46,9 @@ class MarketController extends Controller
                 return ApiResponse::error('common.create_error');
             }
 
-            $this->sendNotifications($order, $email);
+            $result = $this->sendNotifications($order, $email);
 
-            return ApiResponse::common(['order_id' => $order->id]);
+            return ApiResponse::common(['order_id' => $order->id, 'link' => $result]);
         } catch (Exception $e) {
             $message = $e->getMessage();
             log::error('Shop Card empty:' . $message);
@@ -148,7 +149,7 @@ class MarketController extends Controller
         return ApiResponse::success('common.success');
     }
 
-    private function sendNotifications(ShopOrder $order, string $email)
+    private function sendNotifications(ShopOrder $order, string $email): string
     {
         $shop = $order->getShop();
         $shopOwnerTgId = $shop->getOwnerTg()->telegram_id ?? self::SUPPORT_TELEGRAM_USER_ID;
@@ -162,6 +163,16 @@ class MarketController extends Controller
         log::info('send  natify to telegram ids clent:' . $clientTelegramId . ' shop owner:' . $shopOwnerTgId);
 
         $mainBot->getExtentionApi()->sendMess($shopOwnerTgId, $messageOwner);
-        $mainBot->getExtentionApi()->sendMess($clientTelegramId, $messageBayer);
+
+        $result = $mainBot->getExtentionApi()->getSendMessageResultBody($clientTelegramId,$messageBayer);
+
+        if ($result['ok'] === false) {
+            log::info('send notification to tg user: ' . $result['description']);
+            $url = $mainBot->createLinkToStartBotParam(MainBotCommands::GET_ORDER_COMMAND, $order->id);
+
+            return $url;
+        }
+
+        return '';
     }
 }
