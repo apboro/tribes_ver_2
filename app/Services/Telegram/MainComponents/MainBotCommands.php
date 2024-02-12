@@ -15,6 +15,7 @@ use App\Models\CommunityGptOption;
 use App\Models\Donate;
 use App\Models\Knowledge\Category;
 use App\Models\Knowledge\Question;
+use App\Models\Market\ShopOrder;
 use App\Models\Payment;
 use App\Models\Shop;
 use App\Models\Tariff;
@@ -51,6 +52,8 @@ use Illuminate\Support\Str;
 
 class MainBotCommands
 {
+    public const BOT_COMMAND_PARAM_VALUE = '_1';
+
     private const CABINET = 'Личный кабинет 🚀';
     private const CABINET_COMMAND = 'getspodial'; //🚀
     private const SUPPORT = 'Поддержка 🚀'; //
@@ -67,6 +70,7 @@ class MainBotCommands
     private const ADD_NEW_CHAT_COMMAND = 'new_chat';
 
     private const BOT_INVITE_TO_GROUP_SETTINGS = 'startgroup&admin=delete_messages+restrict_members+invite_users+pin_messages+manage_video_chats';
+    public const GET_ORDER_COMMAND = 'order';
 
     protected MainBot $bot;
     private CommunityRepositoryContract $communityRepo;
@@ -236,6 +240,16 @@ class MainBotCommands
 
            $this->bot->onText('/start themeOnOff-{chatId:string}_{value:string}', function (Context $ctx) {
                 $this->switchGptThemeActive($ctx);
+            });
+
+            $this->bot->onText('/start ' . self::GET_ORDER_COMMAND . '-{orderId:string}_{value:string}', function (Context $ctx) {
+                $orderId = $ctx->var('orderId');
+                $tgUserId = $ctx->getUserID();
+
+                log::info('order id:' . $orderId);
+                $message = ShopOrder::getNotificationToBayer($orderId, $tgUserId);
+                $this->bot->getExtentionApi()->sendMess($tgUserId, $message);
+//                $ctx->replyHTML($message);
             });
 
 //          $this->bot->onText('/start {paymentId?}', $start);

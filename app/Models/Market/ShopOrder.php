@@ -235,4 +235,21 @@ class ShopOrder extends Model
                     'telegram_user_id' => $tgUserId
               ])->get();
     }
+
+    public static function getNotificationToBayer(int $orderId, int $tgUserId): string
+    {
+        $order = self::getOrderByTgUserId($orderId, $tgUserId);
+
+        if(!$order){
+            log::error('not find order id: ' . $orderId . 'tg user:' . $tgUserId);
+            return  'Error';
+        }
+
+        return  self::prepareMessageToBayer($order);
+    }
+
+    public static function getOrderByTgUserId(int $orderId, int $tgUserId) :?self
+    {
+        return self::where(['id' => $orderId, 'telegram_user_id' => $tgUserId])->first();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services\Telegram;
 
+use App\Services\Telegram\MainComponents\MainBotCommands;
 use Askoldex\Teletant\Bot;
 use App\Services\Telegram\Extention\ExtentionApi;
 use App\Services\Telegram\BotInterface\BotContract;
@@ -11,6 +12,8 @@ use Exception;
 
 class MainBot extends Bot implements BotContract
 {
+    public const URL = "https://t.me/";
+
     private ExtentionApi $extentionApi;
     public string $botName;
     public string $botFullName;
@@ -46,5 +49,10 @@ class MainBot extends Bot implements BotContract
     protected function setExtentionApi(ExtentionApi $api): void
     {
         $this->extentionApi = $api;
+    }
+
+    public function createLinkToStartBotParam(string $name, int $value): string
+    {
+        return self::URL . $this->botName . "?start=" . $name . "-" . $value . MainBotCommands::BOT_COMMAND_PARAM_VALUE;
     }
 }
