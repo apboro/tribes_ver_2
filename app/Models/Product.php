@@ -22,6 +22,12 @@ class Product extends Model
     public const ARCHIVED_TYPE = 2;
     public const DISABLED_TYPE = 3;
 
+    public const NOT_SHOW_STATUS = [
+        self::DISABLED_TYPE
+    ];
+
+    public const HIDE_STATUS_LIST = [];
+
     public const STATUS_NAMES_LIST = [
         self::ACTIVE_TYPE   => 'active',
         self::ARCHIVED_TYPE => 'archived',
@@ -77,9 +83,10 @@ class Product extends Model
     /*
      * Метод возвращает коллекцию при поиске по массиву $filter
      */
-    public static function findByFilter(array $filter): Collection
+    public static function findByFilter(array $filter, array $statusList): Collection
     {
         return self::addFilter($filter)
+            ->whereNotIn('status', $statusList)
             ->with('category')
             ->offset($filter['offset'] ?? 0)
             ->limit($filter['limit'] ?? self::HOW_SHOW_DEFAULT)

@@ -77,10 +77,10 @@ class ApiProductController extends Controller
         return ApiResponse::common(ProductResource::make($product)->toArray($request));
     }
 
-    private function showList($request): ApiResponse
+    private function showList($request, array $statusList): ApiResponse
     {
         $filter = $request->validated();
-        $products = Product::findByFilter($filter);
+        $products = Product::findByFilter($filter, $statusList);
         $count = Product::countByFilter($filter);
 
         return ApiResponse::listPagination(
@@ -93,12 +93,12 @@ class ApiProductController extends Controller
 
     public function list(ApiProductListRequest $request): ApiResponse
     {
-        return $this->showList($request);
+        return $this->showList($request, Product::HIDE_STATUS_LIST);
     }
 
     public function publicList(ApiProductPublicListRequest $request): ApiResponse
     {
-        return $this->showList($request);
+        return $this->showList($request, Product::NOT_SHOW_STATUS);
     }
 
     public function destroy(ApiProductDeleteRequest $request, int $id): ApiResponse
