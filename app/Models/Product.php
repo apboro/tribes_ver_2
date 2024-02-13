@@ -80,6 +80,7 @@ class Product extends Model
     public static function findByFilter(array $filter): Collection
     {
         return self::addFilter($filter)
+            ->with('category')
             ->offset($filter['offset'] ?? 0)
             ->limit($filter['limit'] ?? self::HOW_SHOW_DEFAULT)
             ->get();
@@ -155,5 +156,10 @@ class Product extends Model
     public static function resolveStatus(int $id): int
     {
         return self::STATUS_NAMES_LIST[$id] ? $id : self::ACTIVE_TYPE;
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(ProductCategory::class);
     }
 }
