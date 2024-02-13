@@ -31,10 +31,11 @@ class ApiProductPublicListRequest extends ApiRequest
 
     public function rules(): array
     {
-        return ['shop_id' => 'required|integer|exists:shops,id',
-            'limit' => 'nullable|integer',
-            'offset' => 'nullable|integer',
-            'title' => 'nullable|string',
+        return [
+            'shop_id'     => 'required|integer|exists:shops,id',
+            'limit'       => 'nullable|integer',
+            'offset'      => 'nullable|integer',
+            'title'       => 'nullable|string',
             'category_id' => 'nullable|integer',
         ];
     }
