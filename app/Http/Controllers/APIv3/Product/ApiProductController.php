@@ -81,7 +81,7 @@ class ApiProductController extends Controller
     {
         $filter = $request->validated();
         $products = Product::findByFilter($filter, $statusList);
-        $count = Product::countByFilter($filter);
+        $count = Product::countByFilter($filter, $statusList);
 
         return ApiResponse::listPagination(
             [
@@ -93,7 +93,9 @@ class ApiProductController extends Controller
 
     public function list(ApiProductListRequest $request): ApiResponse
     {
-        return $this->showList($request, Product::HIDE_STATUS_LIST);
+        $list = $request->getVisibleProductsStatusList();
+
+        return $this->showList($request, $list);
     }
 
     public function publicList(ApiProductPublicListRequest $request): ApiResponse

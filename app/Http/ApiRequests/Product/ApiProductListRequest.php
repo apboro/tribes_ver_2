@@ -43,6 +43,12 @@ class ApiProductListRequest extends ApiRequest
             'offset' => 'nullable|integer',
             'title' => 'nullable|string',
             'category_id' => 'nullable|integer',
+            'status.*' => 'nullable|integer',
         ];
+    }
+
+    public function getVisibleProductsStatusList(): array
+    {
+        return $this->input('status', []);
     }
 }

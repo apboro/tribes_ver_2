@@ -93,9 +93,9 @@ class Product extends Model
             ->get();
     }
 
-    public static function countByFilter(array $filter): int
+    public static function countByFilter(array $filter, $statusList): int
     {
-        return self::addFilter($filter)->count();
+        return self::addFilter($filter)->whereNotIn('status', $statusList)->count();
     }
 
     public static function prepareImageRecord(int $id, string $path): array
