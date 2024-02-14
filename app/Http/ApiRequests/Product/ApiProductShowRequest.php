@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Auth;
  * )
  *
  * @OA\Get(
- *   path="/api/v3/products/change/status/{id}",
+ *   path="/api/v3/product/change/status/{id}",
  *   operationId="product-change-status",
  *   summary="change product status",
  *   security={{"sanctum": {} }},
