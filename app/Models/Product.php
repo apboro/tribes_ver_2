@@ -6,6 +6,7 @@ use App\Traits\Authorable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
@@ -23,7 +24,7 @@ class Product extends Model
     public const DISABLED_TYPE = 3;
 
     public const NOT_SHOW_STATUS = [
-        self::DISABLED_TYPE
+        self::ARCHIVED_TYPE
     ];
 
     public const HIDE_STATUS_LIST = [];
@@ -41,6 +42,11 @@ class Product extends Model
     protected $casts = [
         'images' => 'array'
     ];
+
+    public function changeStatus(int $status): void
+    {
+        $this->status = self::resolveStatus($status);
+    }
 
     public function shop(): HasOne
     {
@@ -162,11 +168,18 @@ class Product extends Model
 
     public static function resolveStatus(int $id): int
     {
-        return self::STATUS_NAMES_LIST[$id] ? $id : self::ACTIVE_TYPE;
+        return (isset(self::STATUS_NAMES_LIST[$id])) ? $id : self::DISABLED_TYPE;
     }
 
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class);
+    }
+
+    public static function updateStatus(int $id, int $status): void
+    {
+        $product = self::findOrFail($id);
+        $product->changeStatus($status);
+        $product->save();
     }
 }
