@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Auth;
  *     @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  * )
  *
- * @OA\Get(
+ * @OA\Post(
  *   path="/api/v3/product/change/status/{id}",
  *   operationId="product-change-status",
  *   summary="change product status",
