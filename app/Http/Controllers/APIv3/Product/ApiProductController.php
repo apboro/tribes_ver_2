@@ -118,6 +118,13 @@ class ApiProductController extends Controller
         return ApiResponse::common(ProductResource::make($product)->toArray($request));
     }
 
+    public function changeStatus(ApiProductShowRequest $request)
+    {
+        Product::updateStatus($request->getProductId(), $request->getStatusId());
+
+        return ApiResponse::success('common.success');
+    }
+
     public function publicShow(ApiProductPublicShowRequest $request, string $id)
     {
         $product = Product::find($id);
