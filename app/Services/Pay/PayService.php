@@ -3,7 +3,6 @@
 namespace App\Services\Pay;
 
 use App\Models\Market\ShopOrder;
-use App\Services\Tinkoff\Payment as Pay;
 use App\Models\DonateVariant;
 use App\Models\Publication;
 use App\Models\Webinar;
@@ -14,6 +13,8 @@ use App\Models\TelegramUser;
 use App\Models\User;
 use App\Models\Payment;
 use App\Helper\PseudoCrypt;
+use App\Services\Tinkoff\Bill;
+use App\Services\Tinkoff\Payment as Pay;
 use Illuminate\Support\Facades\Log;
 
 class PayService
@@ -92,7 +93,35 @@ class PayService
             ->setEmail($email)
             ->setPhone($phone)
             ->setQuantity($quantity)
-            ->pay();
+            ->run();
+    }
+    
+    public static function billSubscription(int $subscriptionId)
+    {
+        $payFor = Subscription::find($subscriptionId);
+        if (!$payFor) {
+            return false;
+        }
+
+        return self::createBill($payFor->price, $payFor, auth()->user());
+    }
+
+    public static function createBill(int $amount, $payFor, ?User $payer, ?int $telegramId = null)
+    {
+        $type = self::findType($payFor);
+        $payment = self::createPaymentRecord($type, $amount * 100, $payer, $telegramId, $payFor, null);
+        $orderId = $payment->id;
+        $serviceName = self::getDescriptionByType($type);
+        $quantity = 1; 
+
+        return Bill::create()
+            ->setOrderId($orderId)
+            ->setPayer($payer)
+            ->payFor($payFor)
+            ->setPayment($payment)
+            ->setServiceName($serviceName)
+            ->setQuantity($quantity)
+            ->run();
     }
 
     private static function createPaymentRelations(Payment $payment, $payFor, User $payer)

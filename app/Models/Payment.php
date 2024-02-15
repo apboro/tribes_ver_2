@@ -220,4 +220,16 @@ class Payment extends Model
             ->first();
     }
 
+    public function getPriceInRublesAttribute(): int
+    {
+        return $this->amount / 100;
+    }
+
+    public static function findUnpaidBills(string $startTime): Collection
+    {
+        return self::whereNotNull('bill_id')
+            ->where('created_at', '>', $startTime)
+            ->where('status', 'SUBMITTED')
+            ->get();
+    }
 }

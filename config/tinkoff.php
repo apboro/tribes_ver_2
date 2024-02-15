@@ -17,6 +17,7 @@ return [
         'test_url' => 'https://rest-api-test.tinkoff.ru/v2/',
         'test_e2c_url' => 'https://rest-api-test.tinkoff.ru/e2c/v2/',
     ],
-
+    'billBearerToken' => 't.wPA05wYLQXoolT61maehe1oSfzA0b4NAeAC2CT9SOBybKLSoYJ3p-QxLA3XSbrT_Q9Kr3Er8eTuu2AkfkYV0-w',
+    'billDaysActive' => 3,
     'test' => env('TINKOFF_TEST'),
 ];
