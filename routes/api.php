@@ -32,6 +32,7 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Product\ApiCategoryController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
+use App\Http\Controllers\APIv3\Payments\ApiBillController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
 use App\Http\Controllers\APIv3\Payments\ApiPayoutController;
 use App\Http\Controllers\APIv3\Product\ApiProductController;
@@ -344,6 +345,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/lms_feedback/{id}', [ApiLMSFeedbackController::class, 'store']);
     Route::get('/lms_recommendation', [ApiLmsRecommendationController::class, 'getRecommendation']);
     Route::get('/publication_and_webinar_list', [ApiLmsRecommendationController::class, 'getPublicationAndWebinarList']);
+
+    Route::post('/bill/subscription', [ApiBillController::class, 'makeBill'])->name('api.bill.subscription.makeBill');
 
 });
 

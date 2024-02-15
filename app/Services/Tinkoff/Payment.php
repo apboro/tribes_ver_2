@@ -9,23 +9,14 @@ use App\Services\Tinkoff\TinkoffApi;
 use App\Services\Pay\PayReceiveService;
 use Illuminate\Support\Facades\Log;
 
-class Payment
+class Payment extends Acquiring
 {
     private TinkoffService $tinkoff;
 
-    public $amount = 0; // Сумма в копейках
-    public $payer;
     public P $payment;
     public $accumulation;
-    public $type;
     public $charged;
-    public $payFor;
-    public $orderId;
     private $rebillId;
-    private $serviceName;
-    private $email;
-    private $phone;
-    private $quantity;
 
     private $callbackUrl;
     public bool $recurrent = false;
@@ -38,18 +29,6 @@ class Payment
         $this->callbackUrl = route('tinkoff.notify');
     }
 
-    public static function create(): Payment
-    {
-        return new self();
-    }
-
-    public function setAmount(?int $amount): Payment
-    {
-        $this->amount = $amount;
-
-        return $this;
-    }
-
     public function setSuccessUrl(?string $url): Payment
     {
         $this->successUrl = $url;
@@ -60,20 +39,6 @@ class Payment
     public function setRecurrent(bool $state = false): Payment
     {
         $this->recurrent = (bool)$state;
-
-        return $this;
-    }
-
-    public function setType(?string $type): Payment
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function payFor($payFor): Payment
-    {
-        $this->payFor = $payFor;
 
         return $this;
     }
@@ -95,13 +60,6 @@ class Payment
     public function setTelegramId(?int $telegramId): Payment
     {
         $this->telegram_id = $telegramId;
-
-        return $this;
-    }
-
-    public function setPayer($payer): Payment
-    {
-        $this->payer = $payer;
 
         return $this;
     }
@@ -132,42 +90,7 @@ class Payment
         return $this;
     }
 
-    public function setOrderId(?string $orderId): Payment
-    {
-        $this->orderId = $orderId;
-
-        return $this;
-    }
-
-    public function setServiceName(?string $serviceName): Payment
-    {
-        $this->serviceName = $serviceName;
-
-        return $this;
-    }
-
-    public function setEmail(?string $email): Payment
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function setPhone(?string $phone): Payment
-    {
-        $this->phone = $phone;
-
-        return $this;
-    }
-
-    public function setQuantity(?int $quantity): Payment
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    public function pay()
+    public function run()
     {
         log::info('Начало оплаты Тинькофф');
 
