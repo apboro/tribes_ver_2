@@ -3,6 +3,7 @@
 namespace App\Http\ApiRequests\Publication;
 
 use App\Http\ApiRequests\ApiRequest;
+use App\Models\Publication;
 use OpenApi\Annotations as OA;
 
 /**
@@ -36,7 +37,17 @@ class ApiPublicationShowForAllRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'uuid' => 'required|uuid|exists:publications,uuid'
+            'uuid' => [
+                'required',
+                'uuid',
+                function ($attribute, $value, $fail) {
+                    $publication = Publication::findByUUID($value);
+                    if (!$publication ||
+                        ($publication->price > 0 && (!$this->user('sanctum') || $publication->isPublicationBuyed($this->user('sanctum')->id) === false))) {
+                            $fail('Публикация ' . $value . ' не найдена.');
+                    }
+                },
+            ],
         ];
     }
 }

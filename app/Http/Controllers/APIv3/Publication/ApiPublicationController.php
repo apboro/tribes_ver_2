@@ -168,9 +168,6 @@ class ApiPublicationController extends Controller
     public function showByUuid(ApiPublicationShowForAllRequest $request, string $uuid)
     {
         $publication = Publication::where('uuid', $uuid)->first();
-        if ($publication == null) {
-            return ApiResponse::notFound('common.not_found');
-        }
         StatisticRepository::addViewPublication($publication->id);
 
         return ApiResponse::common(PublicationResource::make($publication)->toArray($request));
