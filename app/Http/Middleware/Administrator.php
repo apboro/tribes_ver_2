@@ -22,7 +22,8 @@ class Administrator
         /** @var User $user */
         $user = Auth::guard('sanctum')->user() ?? null;
         if(empty($user)) {
-            return response()->json(['message' => 'пользователь как администратор не авторизован'], 403);
+            return abort(404);
+//            return response()->json(['message' => 'пользователь как администратор не авторизован'], 403);
         }
 
         if ($user->isAdmin()) {
