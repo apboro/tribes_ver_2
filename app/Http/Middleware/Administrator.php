@@ -20,7 +20,8 @@ class Administrator
     public function handle(Request $request, Closure $next)
     {
         /** @var User $user */
-        $user = Auth::guard('sanctum')->user() ?? null;
+//        $user = Auth::guard('sanctum')->user() ?? null;
+        $user = Auth::User();
         if(empty($user)) {
             return abort(404);
 //            return response()->json(['message' => 'пользователь как администратор не авторизован'], 403);
