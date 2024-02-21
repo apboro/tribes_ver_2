@@ -10,6 +10,7 @@ use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiWebinarController;
 use App\Http\Controllers\APIv3\Market\MarketController;
+use App\Http\Controllers\APIv3\User\LegalInfoController;
 use App\Http\Controllers\APIv3\Webinar\ApiFavouriteWebinarController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityTagController;
@@ -146,6 +147,9 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/user/telegram/assign', [ApiAssignDetachTelegramController::class, 'assignTelegramAccount']);
     Route::delete('/user/telegram/detach', [ApiAssignDetachTelegramController::class, 'detachTelegramAccount']);
     Route::get('/user/telegram/list', [ApiMessengersController::class, 'list']);
+
+    Route::apiResource('/user/legal-info', LegalInfoController::class);
+
     Route::get('/projects', [ApiProjectController::class, 'index']);
     Route::post('/projects/create', [ApiProjectController::class, 'create']);
     Route::get('/projects/{id}', [ApiProjectController::class, 'show']);
