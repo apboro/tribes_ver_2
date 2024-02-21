@@ -35,7 +35,7 @@ class MarketController extends Controller
     public function create(ApiBuyProductRequest $request): ApiResponse
     {
         try {
-            $email = $request->input('email');
+            $email = $request->input('email', '');
             $phone = $request->input('phone');
             $shopId = $request->input('shop_id');
 
