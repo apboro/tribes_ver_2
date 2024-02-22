@@ -10,7 +10,6 @@ use App\Http\Controllers\TestBotController;
 use App\Http\Controllers\UserBotFormController;
 use App\Models\Subscription;
 use App\Models\UserSubscription;
-use App\Services\Tinkoff\TinkoffMockServer;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -356,10 +355,10 @@ Route::any('/manager{any}', function () {
 
 Route::any('/telegram', 'App\Http\Controllers\InterfaceComtroller@index')->name('telegram.interface');
 
-Route::get('/tinkoff_server/init', [TinkoffMockServer::class, 'InitResponse']);
+//Route::get('/tinkoff_server/init', [TinkoffMockServer::class, 'InitResponse']);
 Route::get('/tinkofftestdata', 'App\Http\Controllers\TariffController@testData');
-Route::get('/test', [App\Http\Controllers\TestController::class, 'test'])->name('test');
-Route::get('/testNot', [App\Http\Controllers\TestController::class, 'testNot'])->name('testNot');
+//Route::get('/test', [App\Http\Controllers\TestController::class, 'test'])->name('test');
+//Route::get('/testNot', [App\Http\Controllers\TestController::class, 'testNot'])->name('testNot');
 Route::get('/404', function () {
     return view('errors.404');
 })->name('404');

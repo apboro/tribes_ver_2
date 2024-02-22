@@ -3,13 +3,16 @@
 namespace App\Models;
 
 //use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Exceptions\Invalid;
 use App\Filters\QueryFilter;
 use App\Helper\QueryHelper;
+use App\Models\User\UserLegalInfo;
 use App\Services\SMTP\Mailer;
 use App\Services\Tinkoff\TinkoffE2C;
 use Carbon\Carbon;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,7 +24,6 @@ use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Event;
 use App\Events\ApiUserRegister;
-use Log;
 use Illuminate\Support\Str;
 
 /**
@@ -459,5 +461,19 @@ class User extends Authenticatable
         return $this->shops()->pluck('id')->toArray();
     }
 
+    public function legalInfo(): HasMany
+    {
+        return $this->hasMany(UserLegalInfo::class);
+    }
+
+    public function legalInfoList(): Collection
+    {
+       return $this->legalInfo()->orderBy('id')->get();
+    }
+
+    public function getLegalInfo(int $id): UserLegalInfo
+    {
+        return $this->legalInfo->where('id', $id)->first() ?? Invalid::null('getLegalInfo null');
+    }
 }
 
