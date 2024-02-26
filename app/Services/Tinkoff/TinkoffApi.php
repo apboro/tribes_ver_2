@@ -68,11 +68,9 @@ class TinkoffApi
         if (config('tinkoff.test') && !Str::contains($terminalKey, 'DEMO')) {
             $this->api_url = config('tinkoff.urls.test_url');
             $this->api_e2c_url = config('tinkoff.urls.test_e2c_url');
-            Log::info('Tinkoff use test urls');
         } else {
             $this->api_url = config('tinkoff.urls.real_url');
             $this->api_e2c_url = config('tinkoff.urls.real_e2c_url');
-            Log::info('Tinkoff use real urls');
         }
         $this->terminalKey = $terminalKey;
         $this->secretKey = $secretKey;

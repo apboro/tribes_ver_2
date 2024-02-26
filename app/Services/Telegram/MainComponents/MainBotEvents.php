@@ -136,6 +136,11 @@ class MainBotEvents
                         ['chat' => $chatId, 'tg' =>$this->data->message->from->id]);
 
                     $isBot = $this->data->message->from->is_bot;
+
+                    if (!isset($this->data->message->from->username)) {
+                        $this->data->message->from->username = '';
+                    }
+
                     $isAnonymousBot = $this->data->message->from->username === 'GroupAnonymousBot';
 
                     if($isBot && $isAnonymousBot) {
