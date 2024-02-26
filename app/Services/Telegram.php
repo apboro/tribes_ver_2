@@ -643,6 +643,8 @@ public static function botGetPermissionsEvent($telegram_user_id, $status, $chat_
             $telegramConnection->botStatus = $status;
             $telegramConnection->status = 'connected';
             $telegramConnection->save();
+
+            TelegramConnectionEntity::initCompleted($telegram_user_id);
         }
     } catch (Exception $e) {
         Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
