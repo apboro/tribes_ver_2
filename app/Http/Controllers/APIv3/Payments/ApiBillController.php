@@ -12,7 +12,7 @@ class ApiBillController extends Controller
 {
     public function makeBill(BillRequest $request): ApiResponse
     {
-        $payment = PayService::billSubscription($request->subscription_id);
+        $payment = PayService::billSubscription($request->subscription_id, $request->legal_id);
         if (!$payment) {     
             return ApiResponse::error('Ошибка при выставлении счета');
         }

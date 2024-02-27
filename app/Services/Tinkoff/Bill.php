@@ -3,12 +3,14 @@
 namespace App\Services\Tinkoff;
 
 use App\Models\Payment as P;
+use App\Models\User\UserLegalInfo;
 use Illuminate\Support\Facades\Log;
 
 class Bill extends Acquiring
 {
     public P $payment;
     protected $params;
+    protected $legal;
     protected const SECONDS_AT_DAY = 86400;
 
     protected const API_URL = 'https://business.tinkoff.ru/openapi/api/v1/invoice/send';
@@ -17,6 +19,13 @@ class Bill extends Acquiring
     protected const API_URL_GET_STATUS = 'https://business.tinkoff.ru/openapi/api/v1/openapi/invoice/{invoiceId}/info';
     //protected const API_URL_GET_STATUS = 'https://business.tinkoff.ru/openapi/sandbox/api/v1/openapi/invoice/{invoiceId}/info';
     
+    public function setLegal(UserLegalInfo $legal)
+    {
+        $this->legal = $legal;
+
+        return $this;
+    }
+
     public function getDate(int $addDays = 0)
     {
         return date('Y-m-d', time() + self::SECONDS_AT_DAY * $addDays);
@@ -32,16 +41,15 @@ class Bill extends Acquiring
         return $this->getDate( - config('tinkoff.billDaysActive') - 3);
     }
 
-    // WHERE WILL WE GET DETAILS FROM
     private function getLawerInformation()
     {
-        $info['payer']['name'] = request('name', 'Захаров Иван Владимирович');
-        $info['payer']['inn'] = request('inn', '910305513640');
-        if (request('kpp', false)) {
-            $info['payer']['kpp'] = request('kpp');
+        $info['payer']['name'] = $this->legal['name'] ?? '';
+        $info['payer']['inn'] = $this->legal['inn'] ?? '';
+        if ($this->legal['kpp']) {
+            $info['payer']['kpp'] = $this->legal['kpp'];
         }
-        $info['email'] = request('email', 'belka47@gmail.com');
-        $info['phone'] = '';
+        $info['email'] = $this->legal['email'] ?? '';
+        $info['phone'] = $this->legal['phone'] ?? '';
 
         return $info;
     }
