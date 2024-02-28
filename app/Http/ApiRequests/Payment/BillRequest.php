@@ -3,6 +3,7 @@
 namespace App\Http\ApiRequests\Payment;
 
 use App\Http\ApiRequests\ApiRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 /**
@@ -15,6 +16,13 @@ use Illuminate\Validation\Rule;
  *         name="subscription_id",
  *         in="query",
  *         description="Id of subscription",
+ *         required=true,
+ *         @OA\Schema(type="integer", format="int64")
+ *     ),
+ *     @OA\Parameter(
+ *         name="legal_id",
+ *         in="query",
+ *         description="Id of company (legal)",
  *         required=true,
  *         @OA\Schema(type="integer", format="int64")
  *     ),
@@ -37,6 +45,16 @@ class BillRequest extends ApiRequest
                 Rule::exists('subscriptions', 'id')->where(function ($query) {
                     return $query->where('price', '>', 0);
                 }),
+            ],
+            'legal_id' => [
+                'required', 'integer', 
+                function ($attribute, $value, $fail) {
+                    try {
+                        Auth::user()->getLegalInfo($value);
+                    } catch (\Throwable $e) {
+                        $fail('Компания не существует.');  
+                    }
+                },
             ],
         ];
     }

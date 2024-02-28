@@ -12,6 +12,7 @@ use App\Models\Accumulation;
 use App\Models\TelegramUser;
 use App\Models\User;
 use App\Models\Payment;
+use App\Models\User\UserLegalInfo;
 use App\Helper\PseudoCrypt;
 use App\Services\Tinkoff\Bill;
 use App\Services\Tinkoff\Payment as Pay;
@@ -96,28 +97,30 @@ class PayService
             ->run();
     }
     
-    public static function billSubscription(int $subscriptionId)
+    public static function billSubscription(int $subscriptionId, int $legalId)
     {
         $payFor = Subscription::find($subscriptionId);
         if (!$payFor) {
             return false;
         }
 
-        return self::createBill($payFor->price, $payFor, auth()->user());
+        return self::createBill($payFor->price, $payFor, auth()->user(), $legalId);
     }
 
-    public static function createBill(int $amount, $payFor, ?User $payer, ?int $telegramId = null)
+    public static function createBill(int $amount, $payFor, ?User $payer, int $legalId, ?int $telegramId = null)
     {
         $type = self::findType($payFor);
         $payment = self::createPaymentRecord($type, $amount * 100, $payer, $telegramId, $payFor, null);
         $orderId = $payment->id;
         $serviceName = self::getDescriptionByType($type);
+        $legal = UserLegalInfo::find($legalId);
         $quantity = 1; 
 
         return Bill::create()
             ->setOrderId($orderId)
             ->setPayer($payer)
             ->payFor($payFor)
+            ->setLegal($legal)
             ->setPayment($payment)
             ->setServiceName($serviceName)
             ->setQuantity($quantity)

@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('check:course')->everyMinute()->timezone('Europe/Moscow');
         $schedule->command('check:subscription')->hourly()->timezone('Europe/Moscow')->appendOutputTo(storage_path('logs/checksubscription.log'));
         $schedule->command('check:trial')->everyMinute()->timezone('Europe/Moscow');
+        $schedule->command('check:bills')->everyThreeHours()->timezone('Europe/Moscow')->runInBackground();
         $schedule->command('tariff:decrement')->dailyAt('23:59')->timezone('Europe/Moscow');
         $schedule->command('send:deactivated:tariff')->dailyAt('10:00')->timezone('Europe/Moscow');
         $schedule->command('send:subscription')->dailyAt('10:30')->timezone('Europe/Moscow');
