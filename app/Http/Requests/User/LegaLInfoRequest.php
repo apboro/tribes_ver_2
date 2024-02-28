@@ -3,18 +3,20 @@
 namespace App\Http\Requests\User;
 
 use App\Http\ApiRequests\ApiRequest;
+use OpenApi\Annotations as OA;
 
 /**
  *
  * @OA\POST(
- *  path="/api/v3/user/legal-info", operationId="store-user-legal-info", summary="store user legal-info"",
- *  security={{"sanctum": {} }}, tags={"user legal-info""},
+ *  path="/api/v3/user/legal-info", operationId="store-user-legal-info", summary="store user legal-info",
+ *  security={{"sanctum": {} }}, tags={"user legal-info"},
  *     @OA\Parameter(name="name", in="query", description="payer-s name",required=true,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="inn",in="query",description="INN",required=true,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="kpp",in="query",description="KPP",required=false,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="email",in="query",description="email address",required=true,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="phone",in="query",description="Delivery phone",required=false,@OA\Schema(type="string",)),
  * @OA\Response(response=200, description="OK")
+ * )
  *
  * @OA\Get(path="/api/v3/user/legal-info", operationId="index-legal-info", summary="index legal-info",
  *  security={{"sanctum": {} }}, tags={"user legal-info"},
