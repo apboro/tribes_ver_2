@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Collection;
 class Product extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     public const ACTIVE_TYPE = 1;
     public const ARCHIVED_TYPE = 2;
