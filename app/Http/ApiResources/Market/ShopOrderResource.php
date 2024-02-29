@@ -9,15 +9,19 @@ class ShopOrderResource extends JsonResource
     public function toArray($request)
     {
         $productList = [];
-
-        foreach($this->resource->products as $product) {
+        $total = 0;
+        foreach($this->resource->productsWithTrashed as $product) {
+            $trashed = $product->deleted_at !== null;
             $productList[] = [
                 'id'       => $product->id,
                 'quantity' => $product->pivot->quantity,
                 'price'    => $product->pivot->price,
                 'title'    => $product->title,
                 'image'    => $product->images[0]['file'],
+                'trashed'  => $trashed
             ];
+
+            $total += $product->pivot->quantity * $product->pivot->price;
         }
 
         return [
@@ -31,6 +35,7 @@ class ShopOrderResource extends JsonResource
             'delivery_id'      => $this->resource->delivery_id,
             'delivery'         => $this->resource->delivery,
             'shop_id'          => $this->resource->shop_id,
+            'total'            => $total,
             'created_at'       => $this->resource->created_at,
         ];
     }

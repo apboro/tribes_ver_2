@@ -94,6 +94,13 @@ class ShopOrder extends Model
             ->withPivot('quantity','price' );
     }
 
+    public function productsWithTrashed(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'shop_order_product_list', 'order_id')
+            ->withTrashed()
+            ->withPivot('quantity','price');
+    }
+
     public function getFirstProduct(): Product
     {
        return $this->products->first() ?? Invalid::null('products null');
@@ -230,10 +237,11 @@ class ShopOrder extends Model
 
     public static function getHistory(int $shopId, int $tgUserId)
     {
-        return self::with('products')->where([
+        /** @see productsWithTrashed */
+        return self::with('productsWithTrashed')->where([
                     'shop_id'          => $shopId,
-                    'telegram_user_id' => $tgUserId
-              ])->get();
+                    'telegram_user_id' => $tgUserId,
+              ])->orderBy('shop_orders.created_at', 'DESC')->get();
     }
 
     public static function getNotificationToBayer(int $orderId, int $tgUserId): string
