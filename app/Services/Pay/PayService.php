@@ -26,6 +26,9 @@ class PayService
     {
         $telegramUser = TelegramUser::where('telegram_id', $telegramUserId)->first();
         $payer = $telegramUser != null ? $telegramUser->user : null;
+        if (!$payer) {
+            $payer = User::easyRegister($telegramUserId . '@spodial.com');
+        }
 
         return self::doPayment($amount, $variant, $payer, $telegramUserId);
     }
