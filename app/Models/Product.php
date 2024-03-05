@@ -96,6 +96,7 @@ class Product extends Model
         return self::addFilter($filter)
             ->whereNotIn('status', $statusList)
             ->with('category')
+            ->orderByDesc('id')
             ->offset($filter['offset'] ?? 0)
             ->limit($filter['limit'] ?? self::HOW_SHOW_DEFAULT)
             ->get();
