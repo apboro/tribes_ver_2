@@ -145,11 +145,28 @@ class Bill extends Acquiring
             ]);
 
             return $this->payment;
-        } else {
-            Log::alert('Ошибка при выставлении счета', ['response' => $response, 'object' => $this]);
-
-            return false;
         }
+
+        $errorMessage = $this->buildErrorMessage($response);
+        Log::alert('Ошибка при выставлении счета', ['errorMessage' => $errorMessage, 'response' => $response, 'object' => $this]);
+        throw new \ValueError($errorMessage);
+    }
+
+    private function buildErrorMessage(object $response): string
+    {
+        $errors = ['payer.inn' => 'tinkoff.bill.badInn',
+                    'payer.kpp'=> 'tinkoff.bill.badKpp',
+                    'payer.name' => 'tinkoff.bill.badName',
+                    'payer.email' => 'tinkoff.bill.badEmail',
+                ];
+
+        $key = (isset($response->errorDetails) && is_object($response->errorDetails)) ? 
+                    array_key_first(get_object_vars($response->errorDetails)) : '';
+        if (!$key && isset($response->errorMessage) && (str_contains($response->errorMessage, 'некорректный email'))) {
+            $key = 'payer.email';
+        }
+
+        return $errors[$key] ?? 'tinkoff.bill.errorCreate';
     }
 
     public function getStatus($invoiceId): string
