@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed|string $botStatus
  * @property mixed $community
  * @property string $chat_id
+ * @property string $chat_invite_link
  */
 class TelegramConnection extends Model
 {
@@ -23,6 +24,16 @@ class TelegramConnection extends Model
      * @var mixed
      */
     protected $guarded = [];
+
+    public function getChatInviteLink(): string
+    {
+        return $this->chat_invite_link ?? 'not link';
+    }
+
+    public function hasInviteLink(): bool
+    {
+        return empty($this->chat_invite_link);
+    }
 
     public function community()
     {

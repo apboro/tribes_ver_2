@@ -31,6 +31,8 @@ class Invalid
      * @param string $message
      *
      * @return void
+     *
+     * @throw UnexpectedValueException
      */
     public static function null(string $message = ''): void
     {
