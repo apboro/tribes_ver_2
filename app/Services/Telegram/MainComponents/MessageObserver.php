@@ -29,8 +29,7 @@ class MessageObserver
 
     public function handleUserMessage($data)
     {
-        Log::debug('MessageObserver::handleUserMessage', $data);
-
+//        Log::debug('MessageObserver::handleUserMessage', $data);
         try {
             $dto = new MessageDTO();
             $dto->message_id = ArrayHelper::getValue($data,'message.message_id');
@@ -46,7 +45,7 @@ class MessageObserver
             $dto->reply_from_id = ArrayHelper::getValue($data,'message.reply_to_message.from.id');
             $dto->chat_type = ArrayHelper::getValue($data,'message.chat.type');
 
-            Log::debug('Message DTO ready', [$dto]);
+//            Log::debug('Message DTO ready', [$dto]);
             $this->messageRepository->saveChatMessageFromChatBot($dto, true);
 
         } catch (Throwable $exception)

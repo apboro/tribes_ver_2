@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Database\Factories\TariffFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\Auth;
 use App\Helper\PseudoCrypt;
+use Illuminate\Support\Facades\Log;
 
 /** @method TariffFactory factory()
  * @property mixed $main_image
@@ -37,6 +39,25 @@ class Tariff extends Model
     function variants()
     {
         return $this->hasMany(TariffVariant::class, 'tariff_id', 'id')->orderBy('id');
+    }
+
+    private function activeVariants(): HasMany
+    {
+        return $this->variants()->where('isActive', true)->where('isPersonal', false);
+    }
+
+    public function getActiveVariants(): Collection
+    {
+        return $this->activeVariants()->get();
+    }
+
+    /** @see spodial_backend/app/Services/Telegram/MainComponents/MainBotCommands.php:1311  */
+    public function findVariantsByTgUserId(int $tgUserId): Collection
+    {
+        $variantIdList = $this->variants()->pluck('id')->toArray();
+        log::info('find tariffvariant By tg user id '. json_encode($variantIdList, JSON_UNESCAPED_UNICODE));
+
+        return TelegramUserTariffVariant::findTariffVariantsByUser($variantIdList, $tgUserId);
     }
 
     public function variantTest()

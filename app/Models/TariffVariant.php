@@ -7,6 +7,7 @@ use Database\Factories\TariffVariantFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Event;
 use App\Events\TariffPayedEvent;
 
@@ -83,5 +84,10 @@ class TariffVariant extends Model
     public static function actionAfterPayment($payment)
     {
         Event::dispatch(new TariffPayedEvent($payment));
+    }
+
+    public static function findActiveByInviteLink(string $inviteLink): ?self
+    {
+        return self::where('inline_link', $inviteLink)->where('isActive', true)->first();
     }
 }

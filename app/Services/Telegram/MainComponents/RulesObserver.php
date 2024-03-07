@@ -28,10 +28,7 @@ class RulesObserver
 
     public function handleRules($data)
     {
-        Log::debug('RulesObserver::handleRules');
-
         try {
-//            Log::debug('Before Message DTO', [$data]);
             $dto = new MessageDTO();
             $dto->message_id = ArrayHelper::getValue($data,'message.message_id');
             $dto->telegram_user_id = ArrayHelper::getValue($data,'message.from.id');

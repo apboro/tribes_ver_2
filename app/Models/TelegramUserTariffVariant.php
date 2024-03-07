@@ -52,16 +52,25 @@ class TelegramUserTariffVariant extends Model
                             ->get();
     }
 
+    /**
+     * @return Collection|TelegramUserTariffVariant[]|null
+     */
     public static function findEndedTrials(): ?Collection
     {
         return self::findByDaysAndTime(0, true);
     }
-
+    /**
+     *
+     * @return Collection|TelegramUserTariffVariant[]|null
+     */
     public static function findEndingTrials(): ?Collection
     {
         return self::findByDaysAndTime(1, true);
-    }    
+    }
 
+    /**
+     * @return Collection|TelegramUserTariffVariant[]|null
+     */
     public static function findEndPaids(): ?Collection
     {
         return self::findByDaysAndTime(0, false);
@@ -73,5 +82,13 @@ class TelegramUserTariffVariant extends Model
             ->where('tarif_variants_id', $this->tariffVariant->tariff->getVariantByPaidType(true)->id)
             ->where('days', '>=', 0)
             ->first();
+    }
+
+    /**
+     * @return Collection|TelegramUserTariffVariant[]|null
+     */
+    public static function findTariffVariantsByUser(array $tariffId, int $tgUserId)
+    {
+        return self::where('telegram_user_id', $tgUserId)->whereIn('tarif_variants_id', $tariffId)->get();
     }
 }
