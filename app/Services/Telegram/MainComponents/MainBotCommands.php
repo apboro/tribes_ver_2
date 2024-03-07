@@ -1308,7 +1308,7 @@ class MainBotCommands
 
                     $menu = Menux::Create('links')->inline();
                     $menu->row()->uBtn('Перейти ', $link);
-                    $title = 'Ресурс бесплатный. ' . $link;
+                    $title = 'Ссылка на чат. ' . $link;
                     $ctx->reply($title, $menu);
 
                     return;
