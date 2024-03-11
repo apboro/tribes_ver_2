@@ -27,4 +27,13 @@ class UserLegalInfo extends Model
         $this->fill($properties);
         $this->save();
     }
+
+    public function getInfoAsTextAttribute(): string
+    {
+        return 'Название: ' . $this->name . ', ' . 
+                'ИНН: ' . $this->inn . ', ' . 
+                ($this->kpp ? 'КПП: ' . $this->kpp . ', ' : '') .
+                'E-mail: ' . $this->email . ', ' .
+                ($this->phone ? 'Телефон: ' . $this->phone : '') . '.';
+    }
 }

@@ -117,6 +117,7 @@ class PayService
         $orderId = $payment->id;
         $serviceName = self::getDescriptionByType($type);
         $legal = UserLegalInfo::find($legalId);
+        $payment->addComment($legal->infoAsText);
         $quantity = 1; 
 
         return Bill::create()

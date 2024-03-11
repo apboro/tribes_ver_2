@@ -232,4 +232,12 @@ class Payment extends Model
             ->where('status', 'SUBMITTED')
             ->get();
     }
+
+    public function addComment(string $comment): self
+    {
+        $this->comment = $comment;
+        $this->save();
+
+        return $this;
+    }
 }
