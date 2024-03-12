@@ -68,43 +68,43 @@ class MarketController extends Controller
         return ShopCard::transferProductsToOrder($shopOrder, $shopId, $tgUser->telegram_id, $productsList);
     }
 
-//    public function buy(ApiBuyProductRequest $request): ApiResponse
-//    {
-//        try {
-//            $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
-//
-//            $phone = $request->getUserDTO()['phone'];
-//            $shopId = $request->input('shop_id');
-//            $productIdList = $request->getProductIdList();
-//            $shopDelivery = ShopDelivery::makeByUser($tgUser, $request->getDeliveryAddress(), $phone);
-//
-//            $order = ShopOrder::makeByUser($tgUser, $shopDelivery);
-//            $order = $this->makeOrder($request, $phone, $shopId);
-//            $order->setStatus(ShopOrder::TYPE_BUYBLE);
-//
-//            if ($request->input('is_mobile')) {
-//                $successUrl = $order->id;
-//            } else {
-//                $successUrl = '/market/status/' . $order->id;
-//            }
-//
-//            $payment = PayService::buyProduct($order->getPrice($shopId, $this->input('telegram_user_id')),
-//                $order, $tgUser->user, $tgUser->telegram_id, $successUrl);
-//
-////        $this->sendNotifications($tgUser, $product, $order);
-//
-//            if ($payment === false) {
-//                return ApiResponse::error('common.error_while_pay');
-//            }
-//
-//            return ApiResponse::common(['redirect' => $payment->paymentUrl]);
-//        } catch (Exception $e) {
-//            $message = $e->getMessage();
-//            log::error('Shop Card empty:' . $message);
-//
-//            return ApiResponse::error('common.create_error');
-//        }
-//    }
+    public function buy(ApiBuyProductRequest $request): ApiResponse
+    {
+        try {
+            $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
+
+            $phone = $request->getUserDTO()['phone'];
+            $shopId = $request->input('shop_id');
+            $productIdList = $request->getProductIdList();
+            $shopDelivery = ShopDelivery::makeByUser($tgUser, $request->getDeliveryAddress(), $phone);
+
+            $order = ShopOrder::makeByUser($tgUser, $shopDelivery, $shopId);
+            $order = $this->makeOrder($request, $phone, $shopId);
+            $order->setStatus(ShopOrder::TYPE_BUYBLE);
+
+            if ($request->input('is_mobile')) {
+                $successUrl = $order->id;
+            } else {
+                $successUrl = '/market/status/' . $order->id;
+            }
+
+            $payment = PayService::buyProduct($order->getPrice($shopId, $this->input('telegram_user_id')),
+                $order, $tgUser->user, $tgUser->telegram_id, $successUrl);
+
+//        $this->sendNotifications($tgUser, $product, $order);
+
+            if ($payment->error) {
+                return ApiResponse::error('common.error_while_pay');
+            }
+
+            return ApiResponse::common(['redirect' => $payment->paymentUrl]);
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            log::error('Shop Card empty:' . $message);
+
+            return ApiResponse::error('common.create_error');
+        }
+    }
 
     public function showOrder(ApiShowOrderRequest $request, int $id): ApiResponse
     {

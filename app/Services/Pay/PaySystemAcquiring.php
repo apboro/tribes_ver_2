@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Tinkoff;
+namespace App\Services\Pay;
 
 use Illuminate\Support\Facades\Log;
 
-abstract class Acquiring
+abstract class PaySystemAcquiring
 {
     public $amount = 0; // Сумма в копейках
     public $payer;
@@ -17,6 +17,12 @@ abstract class Acquiring
     protected $email;
     protected $phone;
     protected $quantity;
+    protected $telegram_id;
+    protected $accumulation;
+    protected bool $recurrent = false;
+    protected $charged;
+    protected $successUrl;
+    protected $failUrl;
 
     abstract public function run();
 
@@ -87,4 +93,47 @@ abstract class Acquiring
 
         return $this;
     }
+
+    public function setTelegramId(?int $telegramId): self
+    {
+        $this->telegram_id = $telegramId;
+
+        return $this;
+    }
+
+    public function setAccumulation($accumulation): self
+    {
+        $this->accumulation = $accumulation;
+
+        return $this;
+    }
+
+    public function setRecurrent(bool $state = false): self
+    {
+        $this->recurrent = (bool)$state;
+
+        return $this;
+    }
+
+    public function setCharged(bool $charged = false): self
+    {
+        $this->charged = $charged;
+
+        return $this;
+    }
+
+    public function setSuccessUrl(?string $url): self
+    {
+        $this->successUrl = $url;
+
+        return $this;
+    }
+
+    public function setFailUrl(?string $url): self
+    {
+        $this->failUrl = $url;
+
+        return $this;
+    }
+
 }

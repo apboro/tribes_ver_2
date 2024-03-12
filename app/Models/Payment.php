@@ -240,4 +240,22 @@ class Payment extends Model
 
         return $this;
     }
+
+    public static function isExistsByPaymentIdAndAmount(int $paymentId, int $amount): bool
+    {
+        return self::where('paymentId', $paymentId)->where('amount', $amount)->exists();
+    }   
+
+    public static function findByPaymentIdAndAmount(int $paymentId, int $amount): self
+    {
+        return self::where('paymentId', $paymentId)->where('amount', $amount)->first();
+    }
+
+    public function setAsConfirmed(): self
+    {
+        $this->status = 'CONFIRMED';
+        $this->save();
+
+        return $this;
+    }  
 }
