@@ -4,9 +4,10 @@ namespace App\Services\Tinkoff;
 
 use App\Models\Payment as P;
 use App\Models\User\UserLegalInfo;
+use App\Services\Pay\PaySystemAcquiring;
 use Illuminate\Support\Facades\Log;
 
-class Bill extends Acquiring
+class Bill extends PaySystemAcquiring
 {
     public P $payment;
     protected $params;

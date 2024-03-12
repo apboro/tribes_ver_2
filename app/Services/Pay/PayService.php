@@ -15,7 +15,6 @@ use App\Models\Payment;
 use App\Models\User\UserLegalInfo;
 use App\Helper\PseudoCrypt;
 use App\Services\Tinkoff\Bill;
-use App\Services\Tinkoff\Payment as Pay;
 use Illuminate\Support\Facades\Log;
 
 class PayService
@@ -35,12 +34,12 @@ class PayService
 
     public static function buyTariff(int $amount, $payFor, User $payer, ?int $telegramId)
     {
-        return self::doPayment($amount, $payFor, $payer, $telegramId, '', true, false);
+        return self::doPayment($amount, $payFor, $payer, $telegramId, [], true, false);
     }
 
     public static function prolongTariff(int $amount, $payFor, User $payer, ?int $telegramId)
     {
-        return self::doPayment($amount, $payFor, $payer, $telegramId, '', true, true);
+        return self::doPayment($amount, $payFor, $payer, $telegramId, [], true, true);
     }
 
     public static function buyWebinar(int $amount, $payFor, User $payer)
@@ -50,30 +49,34 @@ class PayService
 
     public static function buyPublication(int $amount, $payFor, User $payer, string $successUrl)
     {
-        return self::doPayment($amount, $payFor, $payer, null,  $successUrl);
+        return self::doPayment($amount, $payFor, $payer, null,  ['success' => $successUrl]);
     }
 
     public static function buySubscription(int $amount, $payFor, User $payer, ?string $successUrl)
     {
-        return self::doPayment($amount, $payFor, $payer, null,  $successUrl, true);
+        return self::doPayment($amount, $payFor, $payer, null,  ['success' => $successUrl], true);
     }
 
     public static function prolongSubscription(int $amount, $payFor, User $payer)
     {
-        return self::doPayment($amount, $payFor, $payer, null,  '', true, true);
+        return self::doPayment($amount, $payFor, $payer, null,  [], true, true);
     }
 
     public static function buyProduct(int $amount, $payFor, User $payer, int $telegramId, string $successUrl)
     {
-        return self::doPayment($amount, $payFor, $payer, $telegramId, $successUrl);
+        $urls = ['success' => $successUrl];
+
+        return self::doPayment($amount, $payFor, $payer, $telegramId, $urls);
     }
 
-    public static function doPayment(int $amount, $payFor, ?User $payer, ?int $telegramId = null, ?string  $successUrl = '', ?bool $recurrent = false, ?bool $charged = false)
+    public static function doPayment(int $amount, $payFor, ?User $payer, ?int $telegramId = null, array $returnUrls = [], ?bool $recurrent = false, ?bool $charged = false)
     {
         $type = self::findType($payFor);
         $accumulation = self::findAccumulation($type, $payFor);
         $payment = self::createPaymentRecord($type, $amount * 100, $payer, $telegramId, $payFor, $accumulation, $charged);
         $orderId = $payment->id . date("_Ymd_His");
+        $successUrl = $returnUrls['success'] ?? '';
+        $failUrl = $returnUrls['fail'] ?? config('app.frontend_url', '');
 
         if ($amount == 0 && $type === 'tariff') {
             return self::saveFakeOrder($payment, $payFor, $payer, $orderId, $charged);
@@ -84,7 +87,9 @@ class PayService
         $phone = '89524365064';
         $quantity = 1;
 
-        return Pay::create()
+        $bank = self::getPaySystemClass($payFor);
+
+        return $bank::create()
             ->setPayment($payment)
             ->setOrderId($orderId)
             ->payFor($payFor)
@@ -93,6 +98,7 @@ class PayService
             ->setRecurrent($recurrent)
             ->setCharged($charged)
             ->setSuccessUrl($successUrl)
+            ->setFailUrl($failUrl)
             ->setServiceName($serviceName)
             ->setEmail($email)
             ->setPhone($phone)
@@ -269,5 +275,16 @@ class PayService
             default:
                 return false;
         }
+    }
+
+    private static function getPaySystemClass($payFor): string
+    {
+        $banks = config('payments.findBank');
+        $class = get_class($payFor);
+        if (isset($banks[$class])) {
+            return $banks[$class];
+        }
+
+        return $banks['default'];
     }
 }

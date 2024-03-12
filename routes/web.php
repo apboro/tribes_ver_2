@@ -13,6 +13,7 @@ use App\Models\UserSubscription;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -44,6 +45,8 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     Route::namespace('App\Http\Controllers')->group(function () {
         Route::any('/tinkoff/notify', 'PaymentController@notify')->name('tinkoff.notify');
     });
+
+    Route::get('/unitpay/notify', [PaymentController::class, 'unitpayNotify']);
 
     // Публичные ссылки на вопросы
     Route::namespace('App\Http\Controllers')->group(function () {

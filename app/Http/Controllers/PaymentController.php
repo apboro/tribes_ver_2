@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\ApiRequests\Payment\UnitpayRequest;
 use App\Exceptions\PaymentException;
 use App\Filters\PaymentFilter;
 use App\Models\Accumulation;
 use App\Models\Payment;
 use App\Repositories\Payment\PaymentRepository;
+use App\Services\Pay\PayReceiveService;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffService;
+use App\Services\Unitpay\Notify as UnitpayNotify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Services\Pay\PayReceiveService;
 
 class PaymentController extends Controller
 {
@@ -65,6 +67,18 @@ class PaymentController extends Controller
             ->withAccumulations($accumulations);
     }
 
+    public function unitpayNotify(UnitpayRequest $request)
+    {
+        if (UnitpayNotify::handle($request->all())){
+            $responce = ['result' => 
+                            ['message' => 'Запрос успешно обработан']];
+        } else {
+            $responce = ['error' => 
+                            ['message' => 'Ошибка']];
+        }
+
+        return response(\json_encode($responce), 200);
+    }
 
     public function notify(Request $request)
     {

@@ -7,61 +7,21 @@ use App\Models\Payment as P;
 use App\Services\TelegramLogService;
 use App\Services\Tinkoff\TinkoffApi;
 use App\Services\Pay\PayReceiveService;
+use App\Services\Pay\PaySystemAcquiring;
 use Illuminate\Support\Facades\Log;
 
-class Payment extends Acquiring
+class Payment extends PaySystemAcquiring
 {
     private TinkoffService $tinkoff;
 
     public P $payment;
-    public $accumulation;
-    public $charged;
     private $rebillId;
-
     private $callbackUrl;
-    public bool $recurrent = false;
-    public $telegram_id;
-    private $successUrl;
 
     public function __construct()
     {
         $this->tinkoff = new TinkoffService();
         $this->callbackUrl = route('tinkoff.notify');
-    }
-
-    public function setSuccessUrl(?string $url): Payment
-    {
-        $this->successUrl = $url;
-
-        return $this;
-    }
-
-    public function setRecurrent(bool $state = false): Payment
-    {
-        $this->recurrent = (bool)$state;
-
-        return $this;
-    }
-
-    public function setCharged(bool $charged = false): Payment
-    {
-        $this->charged = $charged;
-
-        return $this;
-    }
-
-    public function setAccumulation($accumulation): Payment
-    {
-        $this->accumulation = $accumulation;
-
-        return $this;
-    }
-
-    public function setTelegramId(?int $telegramId): Payment
-    {
-        $this->telegram_id = $telegramId;
-
-        return $this;
     }
 
     public function setRebillId(?int $rebillId): Payment

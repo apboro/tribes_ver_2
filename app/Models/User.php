@@ -7,6 +7,7 @@ use App\Exceptions\Invalid;
 use App\Filters\QueryFilter;
 use App\Helper\QueryHelper;
 use App\Models\User\UserLegalInfo;
+use App\Models\User\UserUnitpayKey;
 use App\Services\SMTP\Mailer;
 use App\Services\Tinkoff\TinkoffE2C;
 use Carbon\Carbon;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -474,6 +476,21 @@ class User extends Authenticatable
     public function getLegalInfo(int $id): UserLegalInfo
     {
         return $this->legalInfo->where('id', $id)->first() ?? Invalid::null('getLegalInfo null');
+    }
+
+    public function legalInfoFirst(): ?UserLegalInfo
+    {
+       return $this->legalInfo()->first();
+    }
+
+    public function unitpayKey(): HasOne
+    {
+        return $this->HasOne(UserUnitpayKey::class);
+    }
+
+    public function getUnitpayKey(): UserUnitpayKey
+    {
+       return $this->unitpayKey()->withDefault()->firstOrNew();
     }
 }
 

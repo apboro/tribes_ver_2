@@ -61,6 +61,7 @@ use App\Http\Controllers\APIv3\User\ApiRegisterController;
 use App\Http\Controllers\APIv3\User\ApiResetPasswordController;
 use App\Http\Controllers\APIv3\User\ApiUserAdditionalFieldsController;
 use App\Http\Controllers\APIv3\User\ApiUserController;
+use App\Http\Controllers\APIv3\User\ApiUnitpayKeysController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\TelegramUserBotController;
 use App\Http\Controllers\TelegramUserReputationController;
@@ -310,6 +311,10 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/products/image/{id}', [ApiProductController::class, 'storeImage'])->name('api.products.storeImage');
     Route::delete('/products/image/{id}', [ApiProductController::class, 'removeImage'])->name('api.products.removeImage');
     Route::put('/products/image/first/{id}', [ApiProductController::class, 'setFirstImage'])->name('api.products.setFirstImage');
+
+    Route::get('/user/unitpay-key', [ApiUnitpayKeysController::class, 'show'])->name('api.unitpay_key.show');
+    Route::post('/user/unitpay-key', [ApiUnitpayKeysController::class, 'save'])->name('api.unitpay_key.save');
+    Route::delete('/user/unitpay-key', [ApiUnitpayKeysController::class, 'destroy'])->name('api.unitpay_key.destroy');
 
     Route::get('/publications', [ApiPublicationController::class, 'list'])->name('api.publications.list');
     Route::post('/publications', [ApiPublicationController::class, 'store'])->name('api.publications.create');
