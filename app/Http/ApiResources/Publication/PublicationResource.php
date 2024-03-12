@@ -25,6 +25,11 @@ class PublicationResource extends JsonResource
             ];
         }
 
+        $price = $this->resource->price;
+        if ($price && $request->user('sanctum') && $this->resource->isPublicationBuyed($request->user('sanctum')->id)) {
+            $price = 0;
+        }
+
         return [
             'id' => $this->resource->id,
             'uuid' => $this->resource->uuid,
@@ -32,7 +37,7 @@ class PublicationResource extends JsonResource
             'description' => $this->resource->description,
             'is_active' => $this->resource->is_active,
             'background_image' => $this->resource->background_image,
-            'price' => $this->resource->price,
+            'price' => $price,
             'author_id' => $this->resource->author_id,
             'author_name' => $this->resource->author->name ?? '',
             ] + $addInfo;

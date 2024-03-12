@@ -90,5 +90,26 @@ class Publication extends Model
             'expired_at' => Carbon::now()->addDays(self::BUY_EXPIRATION),
         ]);
         Event::dispatch(new BuyPublicaionEvent($publication, $user));
+
+        VisitedPublication::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'publication_id' => $publication->id
+            ],
+            ['last_visited' => Carbon::now()]
+        );
+    }
+
+    public function isPublicationBuyed(int $userId): bool
+    {
+        return $this->belongsToMany(User::class, 'publication_user', 'publication_id', 'user_id')
+            ->wherePivot('user_id', $userId)
+            ->wherePivot('expired_at', '>', date('Y-m-d H:i:s'))
+            ->exists();
+    }
+
+    public static function findByUUID(string $uuid): ?self
+    {
+        return self::where('uuid', $uuid)->first();
     }
 }
