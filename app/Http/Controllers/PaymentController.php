@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\ApiRequests\Payment\UnitpayRequest;
+use App\Http\Requests\Payment\UnitpayRequest;
 use App\Exceptions\PaymentException;
 use App\Filters\PaymentFilter;
 use App\Models\Accumulation;
