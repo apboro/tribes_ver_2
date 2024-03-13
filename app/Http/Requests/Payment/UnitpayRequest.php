@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\ApiRequests\Payment;
+namespace App\Http\Requests\Payment;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UnitpayRequest extends FormRequest
 {
