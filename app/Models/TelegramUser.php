@@ -183,7 +183,7 @@ class TelegramUser extends Model
 
         if (!$tgUser->user) {
             /** @var User $user */
-            $user = User::easyRegister($userData['email'], null, $userData['phone']);
+            $user = User::easyRegister($userData['email'] ?? ($tgUserId . '@spodial.com'), null, $userData['phone']);
             $tgUser->user_id = $user->id;
             $tgUser->save();
             $tgUser->load('user');

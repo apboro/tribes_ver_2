@@ -170,7 +170,7 @@ class PayService
         if ($accumulation){
             $payment->SpAccumulationId = $accumulation->SpAccumulationId;
         }
-        Log::debug('Payment перед созранением', ['payment' => $payment]);
+        Log::debug('Payment перед созданием', ['payment' => $payment]);
         $payment->save();
 
         self::createPaymentRelations($payment, $payFor, $payer);
@@ -226,8 +226,6 @@ class PayService
             return Accumulation::findUsersAccumulation($payFor->getAuthor()->id);
         } elseif ($relation === 'publication' || $relation === 'webinar') {
             return Accumulation::findUsersAccumulation($payFor->author->user_id);
-        } elseif ($relation === self::SHOP_ORDER_TYPE_NAME) {
-            return Accumulation::findUsersAccumulation($payFor->getSellerId());
         }
 
         return null;

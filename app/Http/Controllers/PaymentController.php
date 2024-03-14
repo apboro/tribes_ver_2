@@ -69,6 +69,7 @@ class PaymentController extends Controller
 
     public function unitpayNotify(UnitpayRequest $request)
     {
+        Log::info('Нотификация Unitpay', ['request' => $request]);
         if (UnitpayNotify::handle($request->all())){
             $responce = ['result' => 
                             ['message' => 'Запрос успешно обработан']];

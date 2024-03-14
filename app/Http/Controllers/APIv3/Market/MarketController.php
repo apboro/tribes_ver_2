@@ -74,11 +74,10 @@ class MarketController extends Controller
             $tgUser = TelegramUser::provideOneUser($request->getTelegramUserDTO(), $request->getUserDTO());
 
             $phone = $request->getUserDTO()['phone'];
+            if (!$phone) {
+                return ApiResponse::error('common.create_error');
+            }
             $shopId = $request->input('shop_id');
-            $productIdList = $request->getProductIdList();
-            $shopDelivery = ShopDelivery::makeByUser($tgUser, $request->getDeliveryAddress(), $phone);
-
-            $order = ShopOrder::makeByUser($tgUser, $shopDelivery, $shopId);
             $order = $this->makeOrder($request, $phone, $shopId);
             $order->setStatus(ShopOrder::TYPE_BUYBLE);
 
@@ -88,7 +87,7 @@ class MarketController extends Controller
                 $successUrl = '/market/status/' . $order->id;
             }
 
-            $payment = PayService::buyProduct($order->getPrice($shopId, $this->input('telegram_user_id')),
+            $payment = PayService::buyProduct($order->getPrice(),
                 $order, $tgUser->user, $tgUser->telegram_id, $successUrl);
 
 //        $this->sendNotifications($tgUser, $product, $order);
