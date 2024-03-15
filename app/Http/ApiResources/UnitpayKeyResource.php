@@ -13,7 +13,7 @@ class UnitpayKeyResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'user_id' => $this->resource->user_id,
+            'shop_id' => $this->resource->shop_id,
             'project_id' => $this->resource->project_id,
             'secretKey' => $this->resource->secretKey,
         ];

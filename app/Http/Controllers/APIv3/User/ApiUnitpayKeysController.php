@@ -12,21 +12,21 @@ class ApiUnitpayKeysController extends Controller
 {
     public function show(UnitpayKeyRequest $request): ApiResponse
     {
-        $unitpayKey = Auth::user()->getUnitpayKey();
+        $unitpayKey = Auth::user()->getUnitpayKeyByShopId($request->shop_id);
 
         return ApiResponse::common(UnitpayKeyResource::make($unitpayKey)->toArray($request));
     }
 
     public function save(UnitpayKeyRequest $request): ApiResponse
     {
-        Auth::user()->getUnitpayKey()->updateOrCreate(['user_id' => Auth::user()->id], $request->validated());
+        Auth::user()->getUnitpayKeyByShopId($request->shop_id)->updateOrCreate(['shop_id' => $request->shop_id], $request->validated());
  
         return ApiResponse::success('common.success');
     }
 
     public function destroy(UnitpayKeyRequest $request): ApiResponse
     {
-        Auth::user()->getUnitpayKey()->delete();
+        Auth::user()->getUnitpayKeyByShopId($request->shop_id)->delete();
 
         return ApiResponse::success('common.success');
     }

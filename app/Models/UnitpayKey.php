@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Models\User;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserUnitpayKey extends Model
+class UnitpayKey extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
-    protected $primaryKey = 'user_id';
-    public $fillable = ['user_id', 
+    protected $primaryKey = 'shop_id';
+    public $fillable = ['shop_id', 
                         'project_id', 
                         'secretKey'];
 

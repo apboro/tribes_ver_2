@@ -6,8 +6,8 @@ namespace App\Models;
 use App\Exceptions\Invalid;
 use App\Filters\QueryFilter;
 use App\Helper\QueryHelper;
+use App\Models\UnitpayKey;
 use App\Models\User\UserLegalInfo;
-use App\Models\User\UserUnitpayKey;
 use App\Services\SMTP\Mailer;
 use App\Services\Tinkoff\TinkoffE2C;
 use Carbon\Carbon;
@@ -483,14 +483,14 @@ class User extends Authenticatable
        return $this->legalInfo()->first();
     }
 
-    public function unitpayKey(): HasOne
+    function hasShops(int $shopId): bool
     {
-        return $this->HasOne(UserUnitpayKey::class);
+        return $this->shops()->where('id', $shopId)->exists();
     }
 
-    public function getUnitpayKey(): UserUnitpayKey
+    public function getUnitpayKeyByShopId($shopId): UnitpayKey
     {
-       return $this->unitpayKey()->withDefault()->firstOrNew();
+       return $this->shops()->where('id', $shopId)->first()->unitpayKey()->withDefault()->firstOrNew();
     }
 }
 

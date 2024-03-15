@@ -120,6 +120,24 @@ class Payment extends PaySystemAcquiring
         return $this->payment->type == 'shopOrder';
     }
 
+    private function getAccessKeysForSeller(): array
+    {
+        $access = [];
+        if ($this->payment->type == 'shopOrder') {
+            $access = $this->seller->getUnitpayKeyByShopId($this->payFor->shop_id);
+        }
+
+        if (!empty($access['project_id']) && !empty($access['secretKey'])) {
+            return [
+                'projectId' => $access['project_id'],
+                'secretKey' => $access['secretKey'],
+            ];
+        }
+
+        Log::alert('Attempt to make a payment with client keys, but there are no keys.', ['object' => $this]);
+        throw new \Exception('Нет ключей платежной системы.');
+    }
+
     private function isTestPayment(): bool
     {
         return config('unitpay.test') === true;
@@ -149,12 +167,7 @@ class Payment extends PaySystemAcquiring
         }
 
         if ($this->isPaymentForSeller()) {
-            $access = $this->seller->getUnitpayKey();
-
-            return [
-                'projectId' => $access['project_id'],
-                'secretKey' => $access['secretKey'],
-            ];            
+            return $this->getAccessKeysForSeller();            
         }
 
         return [
