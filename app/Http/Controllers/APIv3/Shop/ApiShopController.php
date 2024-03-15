@@ -43,6 +43,10 @@ class ApiShopController extends Controller
         }
         $shop = Shop::create($this->prepareShop($request));
 
+        if ($request->unitpay_project_id || $request->unitpay_secretKey) {
+            $shop->insertUnitpayKey($request->unitpay_project_id,  $request->unitpay_secretKey);
+        }
+
         return ApiResponse::common(ShopResourse::make($shop)->toArray($request));
     }
 

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use App\Models\Traits\HasFilter;
 
@@ -58,5 +59,15 @@ class Shop extends Model
     public static function findWithUsersAndProducts(): Collection
     {
         return self::with(['user', 'products'])->orderBy('user_id')->get();
-    }   
+    }
+    
+    public function unitpayKey(): HasOne
+    {
+        return $this->hasOne(UnitpayKey::class);
+    }
+
+    public function insertUnitpayKey(?string $projectId, ?string $secretKey): bool
+    {
+        return $this->unitpayKey()->insert(['shop_id' => $this->id, 'project_id' => $projectId, 'secretKey' => $secretKey]);
+    }
 }
