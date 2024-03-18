@@ -20,6 +20,8 @@ class TelegramConnection extends Model
 {
     use HasFactory;
 
+    public const BOT_STATUS_KICKED = 'kicked';
+
     /**
      * @var mixed
      */

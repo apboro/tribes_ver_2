@@ -40,10 +40,6 @@ class InitCommunityConnectionJob implements ShouldQueue
      */
     public function handle()
     {
-        $user = ''; //  create new or find by tg id
-
-        Log::info('telegram connection init');
-        Log::info('context:' . $this->data[TelegramUser::TELEGRAM_ID]);
         $tgUserId = $this->data[TelegramUser::TELEGRAM_ID];
 
         $user = User::findByTelegramUserId($tgUserId);

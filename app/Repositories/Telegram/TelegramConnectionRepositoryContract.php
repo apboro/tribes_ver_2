@@ -7,5 +7,5 @@ use App\Models\TelegramConnection;
 
 interface TelegramConnectionRepositoryContract
 {
-    public function getConnectionById($id): ?TelegramConnection;
+    public function getConnectionById(int $id): TelegramConnection;
 }

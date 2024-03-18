@@ -43,6 +43,7 @@ use Askoldex\Teletant\Entities\Inline\InputTextMessageContent;
 use Askoldex\Teletant\Exception\TeletantException;
 use App\Repositories\Knowledge\KnowledgeRepositoryContract;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +53,8 @@ use Illuminate\Support\Str;
 
 class MainBotCommands
 {
+    public const SOMETHING_WENT_WRONG = "Что-то пошло не так.";
+
     public const BOT_COMMAND_PARAM_VALUE = '_1';
 
     private const CABINET = 'Личный кабинет 🚀';
@@ -134,7 +137,7 @@ class MainBotCommands
         'materialAid',
         'personalArea',
         'faq',
-        'mySubscriptions',
+        'mySubscriptions', /** @see mySubscriptions */
         'subscriptionSearch',
         'setTariffForUserByPayId',
         'knowledgeSearch',
@@ -259,7 +262,7 @@ class MainBotCommands
             log::info('/start bot commands end');
         } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -278,7 +281,7 @@ class MainBotCommands
             $community->communityGptOption->themesOnOff($isActive);
             $ctx->reply('Отправление тем для ' . ($community->title ?? 'чата') . ($isActive ? ' включено.' : ' отключено.'));
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -316,7 +319,7 @@ class MainBotCommands
                 $this->buildMessageManageGpt($ctx, true);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -328,7 +331,7 @@ class MainBotCommands
                 $ctx->reply($message);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -424,7 +427,7 @@ class MainBotCommands
                     $ctx);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -441,7 +444,7 @@ class MainBotCommands
                 }
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -485,7 +488,7 @@ class MainBotCommands
                     $ctx);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -503,7 +506,7 @@ class MainBotCommands
                 }
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -523,7 +526,7 @@ class MainBotCommands
                     $ctx);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -539,7 +542,7 @@ class MainBotCommands
                 $this->inlineQuery($donate);
             }
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -594,7 +597,7 @@ class MainBotCommands
             $this->bot->onCommand('support', $supportBase);
             $this->bot->onText(self::SUPPORT_MESSAGE . '{message}', $supportMessage);
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -610,7 +613,7 @@ class MainBotCommands
             });
 
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -642,7 +645,7 @@ class MainBotCommands
 
                 $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $shopId;
                 $menu = Menux::Create('link')->inline()->row()->uBtn('Открыть магазин', $link);
-                
+
                 $article->keyboard($menu->getAsObject());
                 $result->add($article);
 
@@ -654,7 +657,7 @@ class MainBotCommands
             });
         } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -712,7 +715,7 @@ class MainBotCommands
             });
         } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -769,7 +772,7 @@ class MainBotCommands
             });
         } catch (\Exception $e) {
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -783,7 +786,7 @@ class MainBotCommands
                 $ctx->ansCallback('', false, 't.me/' . $botName . '?start=' . $ctx->var('donate_hash') . '_' . $ctx->var('amount'));
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -834,8 +837,7 @@ class MainBotCommands
             $this->bot->onText(self::REPUTATION, $reputation);
             $this->bot->onAction('community_rep {id}', $reputationCommunities);
         } catch (\Exception $e) {
-            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -846,9 +848,9 @@ class MainBotCommands
                 log::info('____________addNewGroup in chat bot:');
                 // in private to bot
                 if ($this->isPrivateMessageToBot($ctx)) {
+                    log::info('tg user id: ' . $ctx->getChatID());
                     $link = 'https://t.me/' . trim($this->bot->botFullName, '@') . '?' . self::BOT_INVITE_TO_GROUP_SETTINGS;
 //                    $linkToChannel = 'https://t.me/' . trim($this->bot->botFullName, '@') . '?' . self::BOT_INVITE_TO_CHANNEL_SETTINGS;
-                    log::info('link:' . $link);
 
                     $menu = Menux::Create('links')->inline();
                     $menu->row()->uBtn('Добавить бота в чат', $link);
@@ -870,8 +872,7 @@ class MainBotCommands
             $this->bot->onText(self::ADD_NEW_CHAT_TEXT, $base);
 //            $this->bot->onCommand(self::ADD_NEW_CHAT_COMMAND, $base);
         } catch (\Exception $e) {
-            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-//            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -931,8 +932,7 @@ class MainBotCommands
             $this->bot->onText(self::KNOWLEDGE_BASE, $base);
             $this->bot->onCommand(self::KNOWLEDGE_BASE_BOT, $base);
         } catch (\Exception $e) {
-            Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -955,7 +955,7 @@ class MainBotCommands
                     $ctx);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1006,7 +1006,7 @@ class MainBotCommands
                 } else $ctx->reply('Сообщество не подключено.');
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1034,7 +1034,7 @@ class MainBotCommands
                 }
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1049,7 +1049,7 @@ class MainBotCommands
                     $ctx);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1109,7 +1109,7 @@ class MainBotCommands
                     $ctx);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1136,7 +1136,7 @@ class MainBotCommands
                     $ctx);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1155,7 +1155,7 @@ class MainBotCommands
             $this->bot->onText(self::CABINET, $cabinet);
             $this->bot->onCommand(self::CABINET_COMMAND, $cabinet);
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1172,15 +1172,15 @@ class MainBotCommands
                     $ctx);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
     protected function mySubscriptions()
     {
-        try {
             $this->bot->onHears(self::MY_SUBSRUPTION, function (Context $ctx) {
-                log::info('enter my chat');
+                try {
+                log::info('enter my chats');
                 $menu = Menux::Create('links')->inline();
                 $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
                 if ($communities->first()) {
@@ -1194,12 +1194,13 @@ class MainBotCommands
                     TelegramBotActionHandler::MY_SUBSCRIPTION,
                     TelegramBotActionHandler::ACTION_SEND_MY_SUBSCRIPTION,
                     $ctx);
+                } catch (Exception $e) {
+                    $ctx->reply(self::SOMETHING_WENT_WRONG);
+                    $this->sendErrorMessage($e);
+                }
             });
 
             $this->subscription();
-        } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
     }
 
     protected function knowledgeSearch()
@@ -1261,7 +1262,7 @@ class MainBotCommands
                     $ctx);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1285,20 +1286,27 @@ class MainBotCommands
 
             return $context;
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
         return $context;
     }
 
     private function subscription()
     {
-        try {
             $this->bot->onAction('subscription-{id:string}', function (Context $ctx) {
+                try {
                 $connectionId = $ctx->var('id');
                 log::info('subscription $connectionId var:' . $connectionId);
                 $menu = Menux::Create('links')->inline();
                 $connection = $this->connectionRepo->getConnectionById($connectionId);
 
+                if ($connection->botStatus === TelegramConnection::BOT_STATUS_KICKED) {
+                    $ctx->reply('Бот не активен в выбранном чате.');
+
+                    return;
+                }
+
+                log::info('connection $connectionId var:'. $connection->id);
                 if(!isset($connection->community->tariff)) {
                     if($connection->hasInviteLink()) {
                         $link = $this->createAndSaveInviteLink($connection);
@@ -1342,14 +1350,14 @@ class MainBotCommands
                 } else {
                     $ctx->reply("Подписка отсуствует.");
                 }
+                } catch (Exception $e) {
+                    $this->sendErrorMessage($e);
+                    $ctx->reply(self::SOMETHING_WENT_WRONG);
+                }
             });
             $this->access();
             $this->extend();
             $this->unsubscribe();
-        } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'),
-                'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
     }
 
     /**
@@ -1422,15 +1430,15 @@ class MainBotCommands
                 Cache::forget($key);
             });
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
     private function unsubscribe()
     {
-        try {
             $this->bot->onAction('unsubscribe-{id:string}', function (Context $ctx) {
                 $connectionId = $ctx->var('id');
+                try {
                 $connection = $this->connectionRepo->getConnectionById($connectionId);
                 $ty = TelegramUser::where('telegram_id', $ctx->getUserID())->with('tariffVariant')->first();
                 $tariffVariant = $connection->community->tariff->variants()->whereHas('payFollowers', function ($q) use ($ty) {
@@ -1457,17 +1465,18 @@ class MainBotCommands
                         TelegramBotActionHandler::ACTION_UNSUBSCRIBE,
                         $ctx);
                 }
+                } catch (\Exception $e) {
+                    $this->sendErrorMessage($e);
+                    $ctx->reply('Сообщество не найдено.');
+                }
             });
-        } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
     }
 
     private function access()
     {
-        try {
             $this->bot->onAction('access-{id:string}', function (Context $ctx) {
                 $connectionId = $ctx->var('id');
+                try {
                 $connection = $this->connectionRepo->getConnectionById($connectionId);
 
                 $invite = $this->createAndSaveInviteLink($connection);
@@ -1476,20 +1485,20 @@ class MainBotCommands
                     TelegramBotActionHandler::ACCESS,
                     TelegramBotActionHandler::ACTION_SEND_ACCESS,
                     $ctx);
+                } catch (\Exception $e) {
+                    $this->sendErrorMessage($e);
+                    $ctx->reply('Сообщество подключено неправильно');
+                }
             });
-        } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
     }
 
     private
     function extend()
     {
-        try {
             $this->bot->onAction('extend-{id:string}', function (Context $ctx) {
                 $connectionId = $ctx->var('id');
+                try {
                 $community = $this->connectionRepo->getConnectionById($connectionId)->community;
-                if ($community) {
                     if ($community->tariff) {
                         $menu = Menux::Create('links')->inline();
                         $text = 'Доступные тарифы';
@@ -1514,12 +1523,15 @@ class MainBotCommands
                                 TelegramBotActionHandler::ACTION_EXTEND,
                                 $ctx);
                         } else ($ctx->reply('Тарифы не установлены для сообщества'));
+                    } else {
+                        $ctx->reply('Сообщество подключено неправильно');
                     }
-                } else ($ctx->reply('Сообщество подключено неправильно'));
+
+                } catch (\Exception $e) {
+                    $this->sendErrorMessage($e);
+                    $ctx->reply('Сообщество не найденно');
+                }
             });
-        } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
-        }
     }
 
     private function connectionTariff(Context $ctx)
@@ -1599,7 +1611,7 @@ class MainBotCommands
                         }
                     }
                     if (!isset($variantName)) {
-                        $ctx->replyHTML('Тестовый тариф отключен.'); 
+                        $ctx->replyHTML('Тестовый тариф отключен.');
                         return false;
                     }
                     $defMassage = "\n\n" . 'Сообщество: ' . $community->title . "\n" . 'Выбранный тариф: ' . $variantName . "\n" . 'Cрок окончания действия: ' . $date . "\n";
@@ -1623,7 +1635,7 @@ class MainBotCommands
             $link = ($invite->object())->result->invite_link;
 
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
             log::info('createAndSaveInviteLink:' . json_encode($e->getLine() . $e->getMessage(), JSON_UNESCAPED_UNICODE));
 
             $link = 'private group';
@@ -1677,7 +1689,7 @@ class MainBotCommands
 //                ->row()->btn(self::MY_SUBSRUPTION);
 //                ->row()->btn(self::REPUTATION);
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1702,7 +1714,7 @@ class MainBotCommands
             }
             return [$text, $menu];
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1749,7 +1761,7 @@ class MainBotCommands
             $text = $desc . $image;
             isset($sumDonate) ? $this->bot->getExtentionApi()->sendMess($chatId, $text, false, $sumDonate) : NULL;
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1787,7 +1799,7 @@ class MainBotCommands
                 $this->bot->getExtentionApi()->sendMess($chatId, $text, false, $button);
             }
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1827,7 +1839,7 @@ class MainBotCommands
                 $this->bot->getExtentionApi()->sendMess($chatId, $text, false, $button);
             }
         } catch (\Exception $e) {
-            $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
+            $this->sendErrorMessage($e);
         }
     }
 
@@ -1841,19 +1853,21 @@ class MainBotCommands
         return $text;
     }
 
-    public
-    function save_log(
-        string  $event,
-        string  $action,
-        Context $context
-    )
+    public function sendErrorMessage(\Exception $e): void
+    {
+        $message = 'Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine();
+        Log::error($message);
+        $this->bot->getExtentionApi()->sendMess(env('TELEGRAM_LOG_CHAT'), $message);
+    }
+
+    public function save_log(string $event, string $action, Context $context): void
     {
         Log::channel('telegram_bot_action_log')->
         log('info', '', [
-            'event' => $event,
-            'action' => $action,
+            'event'       => $event,
+            'action'      => $action,
             'telegram_id' => $context->getUserID(),
-            'chat_id' => $context->getChatID(),
+            'chat_id'     => $context->getChatID(),
         ]);
     }
 }

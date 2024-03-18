@@ -34,7 +34,7 @@ class Invalid
      *
      * @throw UnexpectedValueException
      */
-    public static function null(string $message = ''): void
+    public static function NullException(string $message = ''): void
     {
         $message = 'Null Exception ' . $message;
         Log::error($message);
