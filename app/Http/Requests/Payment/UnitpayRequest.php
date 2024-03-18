@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Payment;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class UnitpayRequest extends FormRequest
 {
@@ -22,12 +23,15 @@ class UnitpayRequest extends FormRequest
     {
         $data = parent::all();
         if (!isset($data['method']) || !isset($data['params']['signature'])) {
+            Log::info('No Unitpay signature');
             return false;
         }
  
         if ($this->buildSignature($data) !== $data['params']['signature']) {
+            Log::info('Bad Unitpay signature');
             return false;
         }
+        Log::info('Unitpay signature is right');
 
         return config('unitpay.checkIP') ? array_search($this->ip(), config('unitpay.ips')) : true;
     }
