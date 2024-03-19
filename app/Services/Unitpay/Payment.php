@@ -145,11 +145,7 @@ class Payment extends PaySystemAcquiring
 
     private function getAccount(): string
     {
-        if ($this->isPaymentForSeller()) {
-            return $this->seller->id;
-        }
-
-        return config('unitpay.account');
+        return $this->payment->id;
     }
 
     private function getLogin(): string
