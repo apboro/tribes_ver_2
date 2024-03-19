@@ -161,7 +161,7 @@ class ShopOrder extends Model
 
         $bayerUser = TelegramUser::findByTelegramId($self->telegram_user_id);
 
-        $messageForOwner = self::prepareMessageToOwner($self, null);
+        $messageForOwner = self::prepareMessageToOwner($self, '');
         $messageForBayer = self::prepareMessageToBayer($self);
 
         Event::dispatch(new BuyProductEvent($messageForOwner, $self->products->first()->shop->user));
