@@ -241,9 +241,9 @@ class Payment extends Model
         return $this;
     }
 
-    public static function isExistsByPaymentIdAndAmount(int $paymentId, int $amount): bool
+    public static function isExistsByIdAndAmount(int $id, int $amount): bool
     {
-        return self::where('paymentId', $paymentId)->where('amount', $amount)->exists();
+        return self::where('id', $id)->where('amount', $amount)->exists();
     }   
 
     public static function findByPaymentIdAndAmount(int $paymentId, int $amount): self
@@ -258,4 +258,14 @@ class Payment extends Model
 
         return $this;
     }  
+    
+    public function setPaymentId(int $paymentId): self
+    {
+        if ($this->paymentId != $paymentId) {
+            $this->paymentId = $paymentId;
+            $this->save();
+        }
+
+        return $this;
+    } 
 }

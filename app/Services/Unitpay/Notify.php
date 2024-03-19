@@ -26,7 +26,15 @@ class Notify
      */
     private static function methodCheck(array $params = []): bool
     {
-        return Payment::isExistsByPaymentIdAndAmount($params['unitpayId'] ?? 0, ($params['orderSum'] ?? 0) * 100);
+        $payment = Payment::find($params['account']);
+        $amount = ($params['orderSum'] ?? 0) * 100;
+        $paymentId =  (int)($params['unitpayId'] ?? 0);      
+        if (!$payment || $payment->amount != $amount || ($payment->paymentId && $payment->paymentId != $paymentId)) {
+            return false;
+        }
+        $payment->setPaymentId($paymentId);
+
+        return true;
     }
 
     /**
