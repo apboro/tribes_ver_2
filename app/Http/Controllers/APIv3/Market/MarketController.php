@@ -84,7 +84,7 @@ class MarketController extends Controller
             if ($request->input('is_mobile')) {
                 $successUrl = $order->id;
             } else {
-                $successUrl = '/market/status/' . $order->id;
+                $successUrl = '/tg-shop/market/status/' . $order->id;
             }
 
             $payment = PayService::buyProduct($order->getPrice(),
