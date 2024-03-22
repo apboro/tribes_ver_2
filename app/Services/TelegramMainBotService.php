@@ -80,7 +80,9 @@ class TelegramMainBotService implements TelegramMainBotServiceContract
             //$this->botCollect->getBotByName($nameBot)->polling();
             $this->botCollect->getBotByName($nameBot)->listen($data);
         } catch (Exception|TelegramException $e) {
-            $this->telegramLogService->sendLogMessage('Ошибка:' . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine());
+            $message = 'Run - Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile() . $e->getLine();
+            Log::error($message);
+            $this->telegramLogService->sendLogMessage($message);
         }
     }
 

@@ -629,7 +629,7 @@ public static function botGetPermissionsEvent($telegram_user_id, $status, $chat_
             $telegramConnectionNew->botStatus = $status;
             $telegramConnectionNew->save();
 
-            if($telegramConnectionNew->chat_id === null && $data !== null) {
+            if ($telegramConnectionNew->chat_id === null && $data !== null) {
                 log::info('chat_id is null');
                 $telegramConnection = $telegramConnectionNew;
                 $telegramConnection->chat_id = $data->my_chat_member->chat->id ?? null;
