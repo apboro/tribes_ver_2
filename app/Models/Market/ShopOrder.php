@@ -55,6 +55,13 @@ class ShopOrder extends Model
         2 => self::NOT_BUYABLE_DESCRIPTION,
     ];
 
+    public const PAYMENT_STATUS_NAME_LIST = [
+        'CONFIRMED' => 'Оплачен',
+        'COMPLETED' => 'Оплачен',
+        'NEW' => 'В обработке',
+        'CANCELED' => 'Отменен'
+    ];
+
     protected $table = 'shop_orders';
 
     protected $fillable = [
@@ -85,7 +92,7 @@ class ShopOrder extends Model
 
     public static function getOrder(int $id): self
     {
-        return self::where('id', $id)->with('products')->first();
+        return self::where('id', $id)->with(['products', 'payments'])->first();
     }
 
     public function products(): BelongsToMany
@@ -238,7 +245,7 @@ class ShopOrder extends Model
     public static function getHistory(int $shopId, int $tgUserId)
     {
         /** @see productsWithTrashed */
-        return self::with('productsWithTrashed')->where([
+        return self::with(['productsWithTrashed', 'payments'])->where([
                     'shop_id'          => $shopId,
                     'telegram_user_id' => $tgUserId,
               ])->orderBy('shop_orders.created_at', 'DESC')->get();
@@ -259,5 +266,15 @@ class ShopOrder extends Model
     public static function getOrderByTgUserId(int $orderId, int $tgUserId) :?self
     {
         return self::where(['id' => $orderId, 'telegram_user_id' => $tgUserId])->first();
+    }
+
+    public function getPayStatusName(): string
+    {
+        if ($this->status == ShopOrder::TYPE_BUYBLE) {
+            return ShopOrder::PAYMENT_STATUS_NAME_LIST[$this->payments->last()->status ?? 'CANCELED'] ??
+                    ShopOrder::PAYMENT_STATUS_NAME_LIST['NEW'];
+         }
+
+         return ShopOrder::STATUS_NAME_LIST[$this->status];
     }
 }

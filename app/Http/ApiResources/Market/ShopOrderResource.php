@@ -27,7 +27,7 @@ class ShopOrderResource extends JsonResource
         return [
             'order_id'         => $this->resource->id,
             'product_list'     => $productList,
-            'status_name'      => ShopOrder::STATUS_NAME_LIST[$this->resource->status],
+            'status_name'      => $this->resource->getPayStatusName(),
             'type_title'       => ShopOrder::STATUS_TYPE_TITLE[$this->resource->status],
             'description'      => ShopOrder::STATUS_TYPE_DESCRIPTION[$this->resource->status],
             'payments_id'      => $this->resource->payments_id,
