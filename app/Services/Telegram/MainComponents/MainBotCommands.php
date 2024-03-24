@@ -58,6 +58,7 @@ class MainBotCommands
     public const BOT_COMMAND_PARAM_VALUE = '_1';
 
     private const CABINET = 'Личный кабинет 🚀';
+    private const PROMO_SHOP = 'Promo-shop 🛒';
     private const CABINET_COMMAND = 'getspodial'; //🚀
     private const SUPPORT = 'Поддержка 🚀'; //
     private const SUPPORT_MESSAGE = '/issue'; //🚀
@@ -149,6 +150,7 @@ class MainBotCommands
         'addNewGroup',
         'findThemes',
         'manageGpt',
+        'promoShop', /** @see promoShop */
     ])
     {
         foreach ($methods as $method) {
@@ -1159,6 +1161,18 @@ class MainBotCommands
         }
     }
 
+    protected function promoShop()
+    {
+        $promoShop = static function (Context $ctx) {
+            $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/'
+                . config('telegram_bot.bot.promoName');
+            $menu = Menux::Create('link')->inline();
+            $menu->row()->uBtn('Открыть магазин', $link);
+            $ctx->reply('Промо магазин', $menu);
+        };
+        $this->bot->onText(self::PROMO_SHOP, $promoShop);
+    }
+
     protected function faq()
     {
         try {
@@ -1662,7 +1676,8 @@ class MainBotCommands
             Menux::Create('menuCustom', 'custom')
                 ->row(
                     Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
-                    Keyboard::btn(self::CABINET))
+                    Keyboard::btn(self::CABINET),
+                    Keyboard::btn(self::PROMO_SHOP))
                 ->row(
                     Keyboard::btn(self::SUPPORT),
                     Keyboard::btn(self::KNOWLEDGE_BASE),
@@ -1677,7 +1692,8 @@ class MainBotCommands
 //                ->row(Keyboard::btn('menuOwner'), Keyboard::btn('Вт', 'calendar.ignore'));
                     ->row(
                         Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
-                        Keyboard::btn(self::CABINET))
+                        Keyboard::btn(self::CABINET),
+                    Keyboard::btn(self::PROMO_SHOP))
                     ->row(
                         Keyboard::btn(self::SUPPORT),
                         Keyboard::btn(self::KNOWLEDGE_BASE),
