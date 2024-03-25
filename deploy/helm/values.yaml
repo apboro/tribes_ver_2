@@ -230,6 +230,7 @@ config:
   debugTinkoff: "false"
   mqprotoHost: "http://host:3000"
   marketName: "placeholderMarket"
+  promoName: "promo_name"
   googleTable:
     export: "OFF"
     sheetID: "google_table_sheet_id"
