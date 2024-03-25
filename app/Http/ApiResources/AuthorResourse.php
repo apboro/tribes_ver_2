@@ -28,7 +28,7 @@ class AuthorResourse extends JsonResource
             'about' => $this->resource->about,
             'photo' => $this->resource->photo,
             'shop_inline' => config('telegram_bot.bot.botFullName') . ' s-' . PseudoCrypt::hash($this->resource->id),
-            'shop_link' => 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '/?startapp='. $this->resource->id,
+            'shop_link' => 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '?startapp='. $this->resource->id,
         ];
     }
 }

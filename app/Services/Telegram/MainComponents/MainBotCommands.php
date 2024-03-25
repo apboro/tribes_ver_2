@@ -346,7 +346,7 @@ class MainBotCommands
         }
 
         $description = ($shop->name ?? 'Магазин') . "\n" . ($shop->about ?? '');
-        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $shopId;
+        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '?startapp=' . $shopId;
         $menu = Menux::Create('link')->inline();
         $menu->row()->uBtn('Открыть магазин', $link);
         $ctx->reply($description . "\n\n", $menu);
@@ -645,7 +645,7 @@ class MainBotCommands
                     $article->thumbUrl(config('app.url') . '/storage/' . $shop->photo);
                 }
 
-                $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '/?startapp=' . $shopId;
+                $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '?startapp=' . $shopId;
                 $menu = Menux::Create('link')->inline()->row()->uBtn('Открыть магазин', $link);
 
                 $article->keyboard($menu->getAsObject());
