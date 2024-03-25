@@ -298,16 +298,16 @@ class MainBotEvents
     protected function newChatUser()
     {
         try {
-            $member = $this->data->message->new_chat_member ?? null;
-            if (!$member) {
-                $member = $this->data->chat_member->new_chat_member->user ?? null;
+            if (!isset($this->data->chat_member) || $this->data->chat_member->new_chat_member->status === 'left') {
+                return;
             }
 
+            $member = $this->data->chat_member->new_chat_member->user ?? null;
             $newMemberId = $member->id ?? null;
 
             if ($member && $newMemberId !== $this->bot->botId) {
                 $chatId = $this->data->message->chat->id ?? $this->data->chat_member->chat->id;
-                Log::info('Новый пользователь newChatUser()');
+                Log::info('newChatUser()');
                 Log::channel('telegram_bot_action_log')->log('info', '', [
                     'event' => TelegramBotActionHandler::EVENT_NEW_CHAT_USER,
                     'telegram_id' => $newMemberId,
