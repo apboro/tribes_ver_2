@@ -6,6 +6,7 @@ return [
         'botId' => env('TELEGRAM_BOT_ID'),
         'token' => env('TELEGRAM_BOT_TOKEN'),
         'marketName' => env('MARKET_NAME', ''),
+        'promoName' => env('PROMO_NAME', ''),
     ],
 
     'bot1' => [
