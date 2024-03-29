@@ -12,6 +12,7 @@ use App\Models\Accumulation;
 use App\Models\TelegramUser;
 use App\Models\User;
 use App\Models\Payment;
+use App\Models\TonbotPayment;
 use App\Models\User\UserLegalInfo;
 use App\Helper\PseudoCrypt;
 use App\Services\Tinkoff\Bill;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 class PayService
 {
     public const SHOP_ORDER_TYPE_NAME = 'shopOrder';
+    public const TON_BOT_TYPE_NAME = 'tonbot';
 
     public static function buyDonate(int $amount, $variant, ?int $telegramUserId)
     {
@@ -63,6 +65,13 @@ class PayService
     }
 
     public static function buyProduct(int $amount, $payFor, User $payer, int $telegramId, string $successUrl)
+    {
+        $urls = ['success' => $successUrl];
+
+        return self::doPayment($amount, $payFor, $payer, $telegramId, $urls);
+    }
+
+    public static function buyTonbot(int $amount, $payFor, User $payer, int $telegramId, string $successUrl = '')
     {
         $urls = ['success' => $successUrl];
 
@@ -207,6 +216,7 @@ class PayService
             'webinar'                  => 'Оплата медиатовара в системе Spodial',
             'subscription'             => 'Оплата за использование системы Spodial',
             self::SHOP_ORDER_TYPE_NAME => 'Оплата товара в системе Spodial',
+            self::TON_BOT_TYPE_NAME    => 'Перевод средств, как безвозмездное пожертвование',
             'default'                  => 'Оплата за использование системы Spodial',
         ];
 
@@ -222,7 +232,7 @@ class PayService
 
     private static function findAccumulation(string $relation, $payFor): ?Accumulation
     {
-        if ($relation === 'tariff' || $relation === 'donate' || $relation === 'course') {
+        if ($relation === 'tariff' || $relation === 'donate' || $relation === self::TON_BOT_TYPE_NAME) {
             return Accumulation::findUsersAccumulation($payFor->getAuthor()->id);
         } elseif ($relation === 'publication' || $relation === 'webinar') {
             return Accumulation::findUsersAccumulation($payFor->author->user_id);
@@ -233,7 +243,7 @@ class PayService
 
     private static function findAuthorId(string $relation, $payFor): ?int
     {
-        if ($relation == 'tariff' || $relation == 'donate' || $relation == 'course') {
+        if ($relation == 'tariff' || $relation == 'donate' || $relation == self::TON_BOT_TYPE_NAME) {
             return $payFor->getAuthor()->id;
         }
         if ($relation == 'publication' || $relation == 'webinar') {
@@ -248,7 +258,8 @@ class PayService
 
     private static function findCommunityId(string $relation, $payFor)
     {
-        if ($relation != 'subscription' && $relation != 'publication' && $relation != 'webinar' && $relation != self::SHOP_ORDER_TYPE_NAME) {
+        if ($relation != 'subscription' && $relation != 'publication' && $relation != 'webinar' &&
+                    $relation != self::SHOP_ORDER_TYPE_NAME && $relation != self::TON_BOT_TYPE_NAME) {
             return $payFor->$relation()->first()->community()->first()->id ?? null;
         }
 
@@ -268,6 +279,8 @@ class PayService
                 return 'webinar';
             case $payFor instanceof Subscription:
                 return 'subscription';
+            case $payFor instanceof TonbotPayment:
+                return self::TON_BOT_TYPE_NAME;
             case $payFor instanceof ShopOrder:
                 return self::SHOP_ORDER_TYPE_NAME;
             default:

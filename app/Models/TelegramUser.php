@@ -170,15 +170,38 @@ class TelegramUser extends Model
         return self::where('telegram_id', $telegramId)->first();
     }
 
+    public static function updateOrCreateUser(int $telegramId, ?int $phone = null, ?string $email = null): self
+    {
+        $tgUser = self::findOrCreateUser($telegramId);
+
+        if ($phone || $email) {
+            $tgUser->user->phone = $phone ?? $tgUser->user->phone;
+            $tgUser->user->email = $email ?? $tgUser->user->email;
+            $tgUser->user->save();
+        }
+        
+        return $tgUser;
+    }
+
+    public static function findOrCreateUser(int $telegram_id): self
+    {
+        return self::provideOneUser(['telegram_user_id' => $telegram_id,
+                                    self::FIRST_NAME  => '',
+                                    self::LAST_NAME   => '',
+                                    self::USER_NAME   => ''
+                                    ], ['email' => null, 
+                                        'phone' => null]);
+    }
+
     public static function provideOneUser(array $tgUserData, array $userData): self
     {
         $tgUserId = $tgUserData['telegram_user_id'];
 
         $tgUser = self::firstOrCreate([self::TELEGRAM_ID => $tgUserId], [
             self::TELEGRAM_ID => $tgUserId,
-            self::FIRST_NAME  => $tgUserData[self::FIRST_NAME],
-            self::LAST_NAME   => $tgUserData[self::LAST_NAME],
-            self::USER_NAME   => $tgUserData[self::USER_NAME]
+            self::FIRST_NAME  => $tgUserData[self::FIRST_NAME] ?? '',
+            self::LAST_NAME   => $tgUserData[self::LAST_NAME] ?? '',
+            self::USER_NAME   => $tgUserData[self::USER_NAME] ?? ''
         ]);
 
         if (!$tgUser->user) {
