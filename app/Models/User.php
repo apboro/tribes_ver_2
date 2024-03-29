@@ -492,5 +492,10 @@ class User extends Authenticatable
     {
        return $this->shops()->where('id', $shopId)->first()->unitpayKey()->withDefault()->firstOrNew();
     }
+
+    public function hasConfirmedPhone(): bool
+    {
+        return $this->phone && $this->phone_confirmed;
+    }
 }
 

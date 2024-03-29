@@ -54,6 +54,10 @@ class ApiTariffController extends Controller
 
     public function store(ApiTariffStoreRequest $request)
     {
+        if (!$request->user()->hasConfirmedPhone()) {
+            return ApiResponse::error('validation.need_phone');
+        }
+        
         $data = $request->all();
         $tariff = $this->tariffRepository->store($data);
         return ApiResponse::common(ApiTariffResource::make($tariff));
@@ -102,6 +106,10 @@ class ApiTariffController extends Controller
 
     public function update(ApiTariffUpdateRequest $request)
     {
+        if ($request->tariff_is_payable && !$request->user()->hasConfirmedPhone()) {
+            return ApiResponse::error('validation.need_phone');
+        }
+
         $tariffModel = $this->tariffRepository->update($request);
         return ApiResponse::common(ApiTariffResource::make($tariffModel));
     }
@@ -115,6 +123,10 @@ class ApiTariffController extends Controller
 
     public function setActivity(ApiTariffActivateRequest $request)
     {
+        if ($request->tariff_is_payable && !$request->user()->hasConfirmedPhone()) {
+            return ApiResponse::error('validation.need_phone');
+        }
+        
         $communities = Community::owned()->findMany($request->input('community_ids'));
         foreach ($communities as $community) {
             $tariff = $community->tariff()->first();
