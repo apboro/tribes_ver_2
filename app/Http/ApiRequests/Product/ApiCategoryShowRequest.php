@@ -64,6 +64,15 @@ use OpenApi\Annotations as OA;
  *             format="int64",
  *         )
  *     ),
+ *      @OA\Parameter(
+ *         name="hide_empty",
+ *         in="query",
+ *         description="Hide empty categories: 0 or 1",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string",
+ *         )
+ *     ),
  *     @OA\Response(response=200, description="OK"),
  * )
  */
@@ -89,6 +98,7 @@ class ApiCategoryShowRequest extends ApiRequest
                     }
                 },
             ],
+            'hide_empty' => 'nullable|bool'
         ];
     }
 }
