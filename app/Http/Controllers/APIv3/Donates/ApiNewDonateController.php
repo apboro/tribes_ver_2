@@ -44,6 +44,10 @@ class ApiNewDonateController extends Controller
 
     public function store(ApiNewDonateStoreRequest $request)
     {
+        if (!$request->user()->hasConfirmedPhone()) {
+            return ApiResponse::error('validation.need_phone');
+        }
+        
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
 
@@ -61,6 +65,10 @@ class ApiNewDonateController extends Controller
 
     public function update(ApiNewDonateUpdateRequest $request)
     {
+        if ($request->donate_is_active && !$request->user()->hasConfirmedPhone()) {
+            return ApiResponse::error('validation.need_phone');
+        }
+
         $data = $request->all();
         $data['id'] = $request->id;
         $donate = $this->donateRepo->updateModel($data);

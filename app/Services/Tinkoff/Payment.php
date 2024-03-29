@@ -164,14 +164,15 @@ class Payment extends PaySystemAcquiring
             'Amount' => $this->amount,
             'FailURL' => env('FRONTEND_URL') . '/app/subscriptions?payment_result=fail',
             'SuccessURL' => route('payment.success', $attaches),
-            'DATA' => [
-                'Email' => $this->payer ? $this->payer->email : '',
-            ],
         ];
         $params['Receipt'] = $receipt;
 
         if ($this->type !== 'subscription') {
             $params = array_merge_recursive($params, $this->checkAccumulation());
+        }
+
+        if (!isset($params['DATA']['Email'])) {
+            $params['DATA']['Email'] = $this->payer ? $this->payer->email : '';
         }
 
         return array_merge_recursive($params, $this->checkRecurrent());
@@ -186,6 +187,10 @@ class Payment extends PaySystemAcquiring
         } else {
             $params['DATA']['StartSpAccumulation'] = true;
         }
+
+        $phone = $this->payment->seller->code . $this->payment->seller->phone;
+        $params['DATA']['Phone'] = $phone ? '+' . $phone : '';
+        $params['DATA']['Email'] = $this->payment->seller->email;
 
         return $params;
     }

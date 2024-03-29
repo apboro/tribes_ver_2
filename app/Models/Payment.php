@@ -268,4 +268,9 @@ class Payment extends Model
 
         return $this;
     } 
+
+    public function seller()
+    {
+        return $this->belongsTo(User::class, 'author');
+    }
 }
