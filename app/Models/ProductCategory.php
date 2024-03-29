@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
@@ -53,16 +54,25 @@ class ProductCategory extends Model
 
     public static function findByFilter(array $filter): Collection
     {
-        return self::addFilter($filter, self::getFilterRules())
-            ->orderBy('parent_id')
-            ->get();
+        $query = self::addFilter($filter, self::getFilterRules());
+        if ($filter['hide_empty'] ?? false) {
+            $query = self::hideEmpty($query);
+        }
+        $query->orderBy('parent_id');
+
+        return  $query->get();
     }
 
     public static function countByFilter(array $filter): int
     {
-        return self::addFilter($filter, self::getFilterRules())->count();
-    }
+        $query = self::addFilter($filter, self::getFilterRules());
+        if ($filter['hide_empty'] ?? false) {
+            $query = self::hideEmpty($query);
+        }
 
+        return $query->count();
+    }
+   
     public function remove(): ?bool
     {
         if (self::where('parent_id', $this->id)->exists()) {
@@ -71,5 +81,17 @@ class ProductCategory extends Model
         Product::moveAllFromCategory($this->id);
 
         return $this->delete();
+    }
+
+    public function product(): HasMany
+    {
+        return $this->HasMany(Product::class, 'category_id');
+    }
+
+    private static function hideEmpty(Builder $query): Builder
+    {
+        return $query->whereHas('product', function ($query) {
+            $query->whereNotIn('status', Product::NOT_SHOW_STATUS);
+        });
     }
 }

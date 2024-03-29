@@ -6,9 +6,9 @@ use App\Http\ApiRequests\ApiRequest;
 
 /**
  * @OA\Post(
- *  path="/api/v3/tonbot/addCard",
- *  operationId="tonbot-addCard",
- *  summary="tonbot addCard",
+ *  path="/api/v3/tonbot/deleteCard",
+ *  operationId="tonbot-deleteCard",
+ *  summary="tonbot deleteCard",
  *  security={{"sanctum": {} }},
  *  tags={"Tonbot"},
  *     @OA\Parameter(name="telegram_id",in="query",
