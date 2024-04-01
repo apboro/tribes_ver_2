@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('send:subscription')->dailyAt('10:30')->timezone('Europe/Moscow');
         $schedule->command('run:gpt')->dailyAt('21:00')->timezone('Europe/Moscow')->runInBackground();
         $schedule->command('run:googleReport')->dailyAt('00:01')->timezone('Europe/Moscow')->runInBackground();
-        //$schedule->command('run:gpt')->hourly()->timezone('Europe/Moscow')->runInBackground();
+        $schedule->command('check:accumulations')->hourly()->timezone('Europe/Moscow');
 
         $schedule->command('check:admin')->dailyAt('23:59')->timezone('Europe/Moscow');
         $schedule->command('calculate:utility')->everyFiveMinutes()->timezone('Europe/Moscow');

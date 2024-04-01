@@ -6,9 +6,10 @@ use Carbon\Carbon;
 use Database\Factories\AccumulationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  *  @method AccumulationFactory factory()
@@ -20,6 +21,8 @@ class Accumulation extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public const OVERDUE_HOURS = 24;
 
     public function scopeOwned($query)
     {
@@ -124,15 +127,28 @@ class Accumulation extends Model
     /**
      * Проверка существования копилки SpAccumulationId без учета активности
      */
-    public static function newAccumulation(int $userId, int $SpAccumulationId): self
+    public static function newAccumulation(int $userId, int $SpAccumulationId, int $endedDays = 0): self
     {
+        if ($endedDays) {
+            $ended = Carbon::now()->addMonth();
+        } else {
+            $ended = Carbon::now()->addDays($endedDays); 
+        }
+
         return self::create([
             'user_id' => $userId,
             'SpAccumulationId' => $SpAccumulationId,
             'started_at' => Carbon::now(),
-            'ended_at' => Carbon::now()->addMonth(),
+            'ended_at' => $ended,
             'status' => 'active',
         ]);
     }
 
+    public static function findNeedClose(): Collection
+    {
+        return self::where('status', 'active')
+                    ->where('ended_at', '>=', Carbon::now()->subHours(self::OVERDUE_HOURS))
+                    ->where('ended_at', '<=', Carbon::now())
+                    ->get();
+    }
 }
