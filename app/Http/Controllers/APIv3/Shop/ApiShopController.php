@@ -95,4 +95,12 @@ class ApiShopController extends Controller
 
         return ApiResponse::common(ShopResourse::make($shop)->toArray($request));
     }
+
+    public function sellerConnect(ApiShopShowRequest $request, int $id): ApiResponse
+    {
+        $tgSeller = Shop::find($id)->getOwnerTg();
+        $link = ($tgSeller->user_name ?? false) ? 'https://t.me/' . $tgSeller->user_name : '';
+
+        return ApiResponse::common(['link' => $link]); 
+    }   
 }
