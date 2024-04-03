@@ -64,9 +64,10 @@ class PayService
         return self::doPayment($amount, $payFor, $payer, null,  [], true, true);
     }
 
-    public static function buyProduct(int $amount, $payFor, User $payer, int $telegramId, string $successUrl)
+    public static function buyProduct(int $amount, $payFor, User $payer, int $telegramId, string $successUrl, string $failUrl)
     {
-        $urls = ['success' => $successUrl];
+        $urls = ['success' => $successUrl,
+                'fail' => $failUrl];
 
         return self::doPayment($amount, $payFor, $payer, $telegramId, $urls);
     }

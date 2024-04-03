@@ -89,6 +89,7 @@ class Payment extends PaySystemAcquiring
             $params['test'] = 1; // Для теста
             $params['login'] = $this->getLogin(); // Для теста - Ваш регистрационный email в системе UnitPay
         }
+        Log::info('Params for sending to unitpay', ['params' => $params]);
 
         return $params;
     }
