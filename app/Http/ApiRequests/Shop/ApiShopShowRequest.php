@@ -24,6 +24,16 @@ use OpenApi\Annotations as OA;
  *     ),
  *     @OA\Response(response=200, description="OK"),
  * )
+ *  * @OA\Get(
+ *     path="/api/v3/show/seller_connect/{id}",
+ *     operationId="show-seller-connect",
+ *     summary= "Show link for seller connect",
+ *     security= {{"sanctum": {} }},
+ *     tags= {"Shop"},
+ *     @OA\Parameter(name="id", in="path", description="ID of shop in database",
+ *         required=true, @OA\Schema(type="integer", format="int64",)),
+ *     @OA\Response(response=200, description="OK"),
+ * )
  */
 class ApiShopShowRequest extends ApiRequest
 {
