@@ -76,7 +76,7 @@ class ApiShopController extends Controller
 
     public function show(ApiShopShowRequest $request, $id): ApiResponse
     {
-        $shop = Shop::find($id);
+        $shop = Shop::with('legalInfo')->find($id);
 
         return ApiResponse::common(ShopResourse::make($shop)->toArray($request));
     }
