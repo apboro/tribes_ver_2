@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\hasOneThrough;
 use Illuminate\Database\Query\Builder;
 use App\Models\Traits\HasFilter;
+use App\Models\User\UserLegalInfo;
 
 class Shop extends Model
 {
@@ -70,4 +72,9 @@ class Shop extends Model
     {
         return $this->unitpayKey()->insert(['shop_id' => $this->id, 'project_id' => $projectId, 'secretKey' => $secretKey]);
     }
+
+    public function legalInfo(): hasOneThrough
+    {
+        return $this->hasOneThrough(UserLegalInfo::class, User::class, 'id', 'user_id', 'user_id', 'id');
+    }    
 }
