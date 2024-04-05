@@ -13,8 +13,8 @@ use OpenApi\Annotations as OA;
  *  path="/api/v3/user/unitpay-key", operationId="save-users-unitpay-key", summary="save users unitpay-key",
  *  security={{"sanctum": {} }}, tags={"user unitpay-key"},
  *     @OA\Parameter(name="shop_id", in="query", description="shop_id",required=true,@OA\Schema(type="integer",)),
- *     @OA\Parameter(name="project_id", in="query", description="project_id",required=false,@OA\Schema(type="integer",)),
- *     @OA\Parameter(name="secretKey",in="query",description="secretKey",required=false,@OA\Schema(type="string",)),
+ *     @OA\Parameter(name="project_id", in="query", description="project_id",required=true,@OA\Schema(type="integer",)),
+ *     @OA\Parameter(name="secretKey",in="query",description="secretKey",required=true,@OA\Schema(type="string",)),
  * @OA\Response(response=200, description="OK")
  * )
  *
@@ -38,8 +38,8 @@ class UnitpayKeyRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'project_id' => 'nullable|int',
-            'secretKey'  => 'nullable|string',
+            'project_id' => 'required|int',
+            'secretKey'  => 'required|string',
             'shop_id' => [
                 'required', 'integer', 
                 function ($attribute, $value, $fail) {

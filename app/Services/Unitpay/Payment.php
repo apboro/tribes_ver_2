@@ -194,4 +194,49 @@ class Payment extends PaySystemAcquiring
         return route('payment.success', $attaches);
     }
 
+    public function testKeys(int $projectId, string $secretKey): array
+    {
+        $response = Http::get('https://unitpay.ru/api', $this->getTestKeysRequestParams($projectId, $secretKey))->json();
+
+        $message = $response['error']['message'] ?? '';
+        if ($message === 'Магазин отклонил платеж: Ошибка') {
+            $message = '';
+            $success = true;
+        } else {
+            $success = false;
+        }
+
+        return ['success' => $success,
+                'message' => $message];
+    }
+
+    private function getTestKeysParams(int $projectId, string $secretKey): array
+    {
+        $params = [
+            'paymentType' => 'card',
+            'sum' => 1,
+            'desc' => 'Проверка ключей',
+            'currency' => 'RUB',
+            'backUrl' => '/',
+            'account' => '-1',
+            'projectId' => $projectId, 
+            'secretKey' => $secretKey,
+            'resultUrl' => '/',
+        ];
+        $params['signature'] = $this->getFormSignature($params);
+
+        return $params;
+    }
+
+    private function getTestKeysRequestParams(int $projectId, string $secretKey): array
+    {
+        $params = $this->getTestKeysParams($projectId, $secretKey);
+        $requestParams = [];
+        $requestParams['method'] = 'initPayment'; 
+        foreach ($params as $key => $param) {
+            $requestParams['params['.$key.']'] = $param;
+        }
+
+        return $requestParams;
+    }
 }
