@@ -185,4 +185,9 @@ class Product extends Model
         $product->changeStatus($status);
         $product->save();
     }
+
+    public static function findByList(array $ids): Collection
+    {
+        return self::whereIn('id', $ids)->whereNotIn('status', self::NOT_SHOW_STATUS)->get();
+    }
 }

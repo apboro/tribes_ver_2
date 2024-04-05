@@ -19,6 +19,13 @@ use OpenApi\Annotations as OA;
  *             type="string",
  *         )
  *     ),
+ *    @OA\Parameter(name="telegram_id",in="query",
+ *         description="Users telegram_id",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
  *   @OA\Response(response=200, description="OK")
  *)
  */
@@ -33,7 +40,8 @@ class ApiProductPublicShowRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:products,id'
+            'id' => 'required|integer|exists:products,id',
+            'telegram_id' => 'nullable|integer',
         ];
     }
 }
