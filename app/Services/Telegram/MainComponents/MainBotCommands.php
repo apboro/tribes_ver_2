@@ -732,11 +732,13 @@ class MainBotCommands
                 $message = new InputTextMessageContent();
 
                 $image = $donate->image;
-                $description = trim(strip_tags($donate->description)) ? strip_tags($donate->description) : 'Донат';
+                $description = $this->prepareTextForMessage($donate->description);
+                $description = $description ? $description : 'Донат';
                 $message->text($description . '<a href="' . config('app.url') . '/' . $image . '">&#160</a>');
 
                 $message->parseMode('HTML');
                 $article->title(trim($donate->title) ? $donate->title : 'Донат');
+                $description = strip_tags(str_replace("\n", ' ', $description));
                 $article->description(mb_strlen($description)>55 ? mb_strimwidth($description, 0, 55, "...") : $description);
 
                 $article->inputMessageContent($message);
@@ -776,6 +778,14 @@ class MainBotCommands
             Log::error('Ошибка:' . $e->getLine() . ' : ' . $e->getMessage() . ' : ' . $e->getFile());
             $this->sendErrorMessage($e);
         }
+    }
+
+    private function prepareTextForMessage(string $text): string
+    {
+        $text = preg_replace(['/<br\s*\/?>/i', '/<p[^>]*>/', '/<\/p>/i'], ["\n", "\n", ""], $text);
+        $text = trim(strip_tags($text, ['b', 'strong', 'i', 'em', 'u', 's', 'a']));
+
+        return $text;
     }
 
     private function getDonateData()
