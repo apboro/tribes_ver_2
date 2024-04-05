@@ -129,6 +129,14 @@ class ApiProductController extends Controller
     {
         $product = Product::find($id);
 
+        if ($request->input('telegram_id', 0)) {
+            $visitedProduct = $product->getShop()->visitedProductsByTgUser($request->telegram_id);
+            $productsList = $visitedProduct->products ?? [];
+            $product->visited = Product::findByList(array_diff($productsList, [$id]));
+            
+            $visitedProduct->addProduct($id);
+        }
+
         return ApiResponse::common(ProductResource::make($product)->toArray($request));
     }
 

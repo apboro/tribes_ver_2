@@ -76,5 +76,10 @@ class Shop extends Model
     public function legalInfo(): hasOneThrough
     {
         return $this->hasOneThrough(UserLegalInfo::class, User::class, 'id', 'user_id', 'user_id', 'id');
-    }    
+    }
+        
+    public function visitedProductsByTgUser(int $telegramId): ?VisitedProduct
+    {
+        return $this->hasOne(VisitedProduct::class)->where('telegram_id', $telegramId)->withDefault()->firstOrNew(['telegram_id' => $telegramId]);
+    }
 }

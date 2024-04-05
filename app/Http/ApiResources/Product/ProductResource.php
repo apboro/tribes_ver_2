@@ -10,6 +10,11 @@ class ProductResource extends JsonResource
 
     public function toArray($request)
     {
+        $visited = [];
+        if (isset($this->resource->visited)) {
+            $visited['visited'] = $this->resource->visited;
+        }
+
         return [
             'id'            => $this->resource->id,
             'title'         => $this->resource->title,
@@ -21,6 +26,6 @@ class ProductResource extends JsonResource
             'category_id'   => $this->resource->category_id,
             'category_name' => $this->resource->category->name ?? 'Без категории',
             'status'        => $this->resource->status,
-        ];
+        ] + $visited;
     }
 }
