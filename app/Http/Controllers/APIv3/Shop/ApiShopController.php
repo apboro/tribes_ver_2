@@ -12,6 +12,8 @@ use App\Http\ApiResources\ShopResourse;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
+use App\Models\UnitpayKey;
+use App\Services\Unitpay\Payment as UnitpayPayment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -44,6 +46,14 @@ class ApiShopController extends Controller
         $shop = Shop::create($this->prepareShop($request));
 
         if ($request->unitpay_project_id || $request->unitpay_secretKey) {
+            if (UnitpayKey::isKeysUsed($request->unitpay_project_id, $request->unitpay_secretKey)) {
+                return ApiResponse::error('validation.unitpay.keys_used');
+            }
+
+            $testResult = app(UnitpayPayment::class)->testKeys($request->unitpay_project_id, $request->unitpay_secretKey);
+            if ($testResult['success'] === false) {
+                return ApiResponse::error($testResult['message']);
+            }
             $shop->insertUnitpayKey($request->unitpay_project_id,  $request->unitpay_secretKey);
         }
 
