@@ -21,6 +21,7 @@ class UnitpayRequest extends FormRequest
 
     public function authorize(): bool
     {
+        Log::info('X-Real-IP', ['X-Real-IP' => $this->header('X-Real-IP'), 'IP' => $this->ip()]);
         $data = parent::all();
         if (!isset($data['method']) || !isset($data['params']['signature'])) {
             Log::info('No Unitpay signature');
@@ -33,7 +34,7 @@ class UnitpayRequest extends FormRequest
         }
         Log::info('Unitpay signature is right');
 
-        return config('unitpay.checkIP') ? array_search($this->ip(), config('unitpay.ips')) : true;
+        return config('unitpay.checkIP') ? array_search($this->header('X-Real-IP'), config('unitpay.ips')) : true;
     }
 
     public function rules(): array
