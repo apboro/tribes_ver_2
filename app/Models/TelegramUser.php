@@ -174,11 +174,15 @@ class TelegramUser extends Model
     {
         $tgUser = self::findOrCreateUser($telegramId);
 
-        if ($phone || $email) {
-            $tgUser->user->phone = $phone ?? $tgUser->user->phone;
-            $tgUser->user->email = $email ?? $tgUser->user->email;
-            $tgUser->user->save();
+        if ($phone) {
+            $tgUser->user->phone = str_replace('+7', '', $phone);
+            $tgUser->user->code = 7;
+            $tgUser->user->phone_confirmed = true;
         }
+        if ($email) {
+            $tgUser->user->email = $email;
+        }           
+        $tgUser->user->save();
         
         return $tgUser;
     }
