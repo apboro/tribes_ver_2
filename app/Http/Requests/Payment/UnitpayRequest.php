@@ -34,7 +34,10 @@ class UnitpayRequest extends FormRequest
         }
         Log::info('Unitpay signature is right');
 
-        return config('unitpay.checkIP') ? array_search($this->header('X-Real-IP'), config('unitpay.ips')) : true;
+        $requestIP = trim(explode(',', ($this->header('X-Forwarded-For') ?? ''))[0]);
+        Log::info('requestIP is ' . $requestIP);
+
+        return config('unitpay.checkIP') ? array_search($requestIP, config('unitpay.ips')) : true;
     }
 
     public function rules(): array
