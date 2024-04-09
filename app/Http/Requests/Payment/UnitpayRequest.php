@@ -21,7 +21,7 @@ class UnitpayRequest extends FormRequest
 
     public function authorize(): bool
     {
-        Log::info('X-Real-IP', ['X-Real-IP' => $this->header('X-Real-IP'), 'IP' => $this->ip()]);
+        Log::info('X-Forwarded-For', ['X-Forwarded-For' => $this->header('X-Forwarded-For'), 'IP' => $this->ip()]);
         $data = parent::all();
         if (!isset($data['method']) || !isset($data['params']['signature'])) {
             Log::info('No Unitpay signature');
