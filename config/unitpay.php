@@ -5,7 +5,7 @@ return [
     'projectId' => '442407',
     'account' => 'contact@fabit.ru',
     'test' => env('UNITPAY_TEST', false),
-    'checkIP' => false,
+    'checkIP' => true,
     'ips' => ['31.186.100.49', '52.29.152.23', '52.19.56.234'],
     'referalLink' => 'https://unitpay.ru/signup/legal?ref_token=k2ZNSK_spodial',
 ];
