@@ -33,7 +33,7 @@ class ApiBuyProductRequest extends ApiRequest
             'telegram_user_id' => 'required|integer',
             'product_id_list'  => 'required|array',
             'shop_id'          => 'required|integer',
-            'address'          => 'required|string',
+            'address'          => 'nullable|string',
             'email'            => 'nullable|string',
             'phone'            => 'nullable|string',
             'first_name'       => 'nullable|string',
