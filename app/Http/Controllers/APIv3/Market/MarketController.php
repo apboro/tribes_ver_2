@@ -86,7 +86,7 @@ class MarketController extends Controller
             } else {
                 $successUrl = '/tg-shop/market/status/' . $order->id;
             }
-            $failUrl = config('app.frontend_url') . '/market/authors/' . $shopId;
+            $failUrl = config('app.frontend_url') . '/tg-shop/market/authors/' . $shopId;
 
             $payment = PayService::buyProduct($order->getPrice(),
                 $order, $tgUser->user, $tgUser->telegram_id, $successUrl, $failUrl);
