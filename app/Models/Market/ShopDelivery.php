@@ -13,6 +13,7 @@ class ShopDelivery extends Model
 
     public const KEY_ADDRESS = 'address';
     public const KEY_EMAIL = 'email';
+    public const KEY_FULL_NAME = 'full_name';
 
     public $timestamps = false;
 
@@ -23,6 +24,7 @@ class ShopDelivery extends Model
         'address',
         'email',
         'phone',
+        'full_name',
     ];
 
     public static function makeByUser(TelegramUser $user, array $delivery, $phone): self
@@ -31,6 +33,7 @@ class ShopDelivery extends Model
             'telegram_user_id' => $user->telegram_id,
             'address'          => $delivery[ShopDelivery::KEY_ADDRESS],
             'email'            => $delivery[ShopDelivery::KEY_EMAIL],
+            'full_name'        => $delivery[ShopDelivery::KEY_FULL_NAME],
             'phone'            => $phone,
         ]);
     }
