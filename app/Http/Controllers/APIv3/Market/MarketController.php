@@ -115,8 +115,8 @@ class MarketController extends Controller
 
     public function shopOrdersHistory(ShopCardListRequest $request): ApiResponse
     {
-        $orderCard = ShopOrder::getHistory($request->getShopId(), $request->getTgUserId());
-//        dd($orderCard->toArray());
+        $filter = $request->safe()->only(['limit', 'offset']);
+        $orderCard = ShopOrder::getHistory($request->getShopId(), $request->getTgUserId(), $filter);
 
         return ApiResponse::common(ShopOrderResource::collection($orderCard)->toArray($request));
     }

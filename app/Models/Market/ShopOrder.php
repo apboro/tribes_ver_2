@@ -36,6 +36,7 @@ class ShopOrder extends Model
     public const TYPE_NOT_BUYBLE = 2;
     public const TYPE_REJECT = 0;
 
+    public const LIMIT_SHOW_DEFAULT = 100;
 
     public const STATUS_NAME_LIST = [
         0 => 'Отменён',
@@ -242,13 +243,16 @@ class ShopOrder extends Model
         return $orders;
     }
 
-    public static function getHistory(int $shopId, int $tgUserId)
+    public static function getHistory(int $shopId, int $tgUserId, array $filter = [])
     {
         /** @see productsWithTrashed */
         return self::with(['productsWithTrashed', 'payments'])->where([
                     'shop_id'          => $shopId,
                     'telegram_user_id' => $tgUserId,
-              ])->orderBy('shop_orders.created_at', 'DESC')->get();
+              ])
+              ->offset($filter['offset'] ?? 0)
+              ->limit($filter['limit'] ?? self::LIMIT_SHOW_DEFAULT)
+              ->orderBy('shop_orders.created_at', 'DESC')->get();
     }
 
     public static function getNotificationToBayer(int $orderId, int $tgUserId): string
