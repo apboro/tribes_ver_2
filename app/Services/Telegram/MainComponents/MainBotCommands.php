@@ -215,9 +215,11 @@ class MainBotCommands
                 if ($this->isPrivateMessageToBot($ctx)) {
                     if (TelegramUser::where('telegram_id', $ctx->getUserID())->firstOrNew()->connections()->first()) {
 //                    $ctx->ansInlineQuery()
-                        $ctx->replyHTML($messageUserOwner, Menux::Get('owner'));
+                         $menu = Menux::Get('owner');
+                        $ctx->replyHTML($messageUserOwner, $menu);
                     } else {
-                        $ctx->replyHTML($messageForMember, Menux::Get('custom'));
+                        $menu = Menux::Get('custom');
+                        $ctx->replyHTML($messageForMember, $menu);
                     }
                 }
 
@@ -1677,33 +1679,25 @@ class MainBotCommands
                 ->row(
                     Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
                     Keyboard::btn(self::CABINET),
-                    Keyboard::btn(self::PROMO_SHOP))
+                    $this->buildMiniAppBtn())
                 ->row(
                     Keyboard::btn(self::SUPPORT),
                     Keyboard::btn(self::KNOWLEDGE_BASE),
                     Keyboard::btn(self::MY_SUBSRUPTION)
                 );
-//                ->row()->btn(self::CABINET)
-//                ->row()->btn(self::KNOWLEDGE_BASE)
-//                ->row()->btn(self::MY_SUBSRUPTION)
-//                ->row()->btn(self::SUPPORT);
 
             Menux::Create('menuOwner', 'owner')
 //                ->row(Keyboard::btn('menuOwner'), Keyboard::btn('Вт', 'calendar.ignore'));
-                    ->row(
-                        Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
-                        Keyboard::btn(self::CABINET),
-                    Keyboard::btn(self::PROMO_SHOP))
-                    ->row(
-                        Keyboard::btn(self::SUPPORT),
-                        Keyboard::btn(self::KNOWLEDGE_BASE),
-                        Keyboard::btn(self::MY_SUBSRUPTION)
-                    );
-//                ->row()->btn(self::CABINET)
-//                ->row()->btn(self::KNOWLEDGE_BASE)
-//                ->row()->btn(self::SUPPORT)
-//                ->row()->btn(self::MY_SUBSRUPTION);
-//                ->row()->btn(self::REPUTATION);
+                ->row(
+            Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
+                    Keyboard::btn(self::CABINET),
+                    $this->buildMiniAppBtn()
+                )
+                ->row(
+                    Keyboard::btn(self::SUPPORT),
+                    Keyboard::btn(self::KNOWLEDGE_BASE),
+                    Keyboard::btn(self::MY_SUBSRUPTION)
+                );
         } catch (\Exception $e) {
             $this->sendErrorMessage($e);
         }
@@ -1867,6 +1861,19 @@ class MainBotCommands
             $text .= $command . ' - ' . $description . "\n";
         }
         return $text;
+    }
+
+    private function buildMiniAppBtn()
+    {
+        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/'
+            . config('telegram_bot.bot.promoName');
+
+        return [
+            'text'    => self::PROMO_SHOP,
+            'web_app' => [
+                'url' => $link,
+            ]
+        ];
     }
 
     public function sendErrorMessage(\Exception $e): void
