@@ -21,4 +21,11 @@ class VisitedProduct extends Model
         
         return $this->save();
     }
+
+    public static function getVisitedProducts(int $shopId, int $telegramId): ?self
+    {
+        return self::where('shop_id', $shopId)
+                        ->where('telegram_id', $telegramId)
+                        ->first();
+    }
 }
