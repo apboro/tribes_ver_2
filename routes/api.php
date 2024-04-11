@@ -33,6 +33,7 @@ use App\Http\Controllers\APIv3\Manager\ApiAdminCommunityController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminFeedBackController;
 use App\Http\Controllers\APIv3\Manager\ApiAdminPaymentController;
 use App\Http\Controllers\APIv3\Product\ApiCategoryController;
+use App\Http\Controllers\APIv3\Product\ApiProductHistoryController;
 use App\Http\Controllers\APIv3\Manager\ApiManagerUserController;
 use App\Http\Controllers\APIv3\Payments\ApiBillController;
 use App\Http\Controllers\APIv3\Payments\ApiPaymentCardController;
@@ -112,6 +113,7 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/public/publications/{author}', [ApiPublicationController::class, 'publicList'])->name('api.public.publications.list');
     Route::get('/public/products/{shopId}', [ApiProductController::class, 'publicList'])->name('api.public.products.list');
     Route::get('/public/product/{id}', [ApiProductController::class, 'publicShow'])->name('api.products.show_by_uuid')->middleware('api');
+    Route::get('/public/product-history/{shopId}', [ApiProductHistoryController::class, 'list'])->name('api.products.history.list')->middleware('api');
     Route::get('/webinar/{uuid}', [ApiWebinarController::class, 'showByUuid'])
         ->name('api.webinar.show_by_uuid')->middleware('api');
     Route::post('/publication/pay/{uuid}', [ApiPublicationController::class, 'pay']);
