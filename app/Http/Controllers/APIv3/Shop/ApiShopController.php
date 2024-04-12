@@ -110,7 +110,8 @@ class ApiShopController extends Controller
     {
         $tgSeller = Shop::find($id)->getOwnerTg();
         $link = ($tgSeller->user_name ?? false) ? 'https://t.me/' . $tgSeller->user_name : '';
+        $userName = $tgSeller->user_name ?? '';
 
-        return ApiResponse::common(['link' => $link]); 
+        return ApiResponse::common(['link' => $link, 'user_name' => $userName]); 
     }   
 }
