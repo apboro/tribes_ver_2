@@ -27,9 +27,9 @@ class ShopOrder extends Model
 {
     use HasFactory;
 
-    private const BUYABLE_TITLE = 'Спасибо за покупку!';
-    private const BUYABLE_DESCRIPTION = 'Продавец получит ваш заказ и свяжется с вами в ближайшее время';
-    private const NOT_BUYABLE_TITLE = 'Вы оформили предзаказ';
+    private const BUYABLE_TITLE = 'Заказ оформлен и оплачен';
+    private const BUYABLE_DESCRIPTION = '';
+    private const NOT_BUYABLE_TITLE = 'Предзаказ оформлен';
     private const NOT_BUYABLE_DESCRIPTION = 'Продавец получит ваш заказ и свяжется с вами в ближайшее время';
 
     public const TYPE_BUYBLE = 1;
