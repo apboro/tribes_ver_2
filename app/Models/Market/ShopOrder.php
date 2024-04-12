@@ -60,7 +60,7 @@ class ShopOrder extends Model
         'CONFIRMED' => 'Оплачен',
         'COMPLETED' => 'Оплачен',
         'NEW' => 'В обработке',
-        'CANCELED' => 'Отменен'
+        'CANCELED' => 'Отменён'
     ];
 
     protected $table = 'shop_orders';
