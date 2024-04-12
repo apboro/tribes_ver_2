@@ -1689,7 +1689,9 @@ class MainBotCommands
                 ->row(
                     Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
                     Keyboard::btn(self::CABINET),
-                    $this->buildMiniAppBtn())
+                    Keyboard::btn(self::PROMO_SHOP)
+//                    $this->buildMiniAppBtn())
+                )
                 ->row(
                     Keyboard::btn(self::SUPPORT),
                     Keyboard::btn(self::KNOWLEDGE_BASE),
@@ -1701,7 +1703,8 @@ class MainBotCommands
                 ->row(
             Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
                     Keyboard::btn(self::CABINET),
-                    $this->buildMiniAppBtn()
+                    Keyboard::btn(self::PROMO_SHOP)
+//                    $this->buildMiniAppBtn()
                 )
                 ->row(
                     Keyboard::btn(self::SUPPORT),
