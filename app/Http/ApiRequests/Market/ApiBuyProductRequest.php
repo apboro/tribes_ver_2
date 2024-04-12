@@ -22,6 +22,7 @@ use App\Models\Market\ShopDelivery;
  *     @OA\Parameter(name="last_name",in="query",description="Telegram last_name",required=false,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="username",in="query",description="Telegram username",required=false,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="platform",in="query",description="Telegram platform",required=false,@OA\Schema(type="boolean",)),
+ *     @OA\Parameter(name="full_name",in="query",description="Full name for delivery",required=true,@OA\Schema(type="string",)),
  *   @OA\Response(response=200, description="OK")
  *)
  */
@@ -33,6 +34,7 @@ class ApiBuyProductRequest extends ApiRequest
             'telegram_user_id' => 'required|integer',
             'product_id_list'  => 'required|array',
             'shop_id'          => 'required|integer',
+            'full_name'        => 'required|string',
             'address'          => 'nullable|string',
             'email'            => 'nullable|string',
             'phone'            => 'nullable|string',
@@ -64,8 +66,9 @@ class ApiBuyProductRequest extends ApiRequest
     public function getDeliveryDTO()
     {
         return [
-            ShopDelivery::KEY_ADDRESS => $this->input('address'),
-            ShopDelivery::KEY_EMAIL   => $this->input('email', ''),
+            ShopDelivery::KEY_ADDRESS   => $this->input('address'),
+            ShopDelivery::KEY_EMAIL     => $this->input('email', ''),
+            ShopDelivery::KEY_FULL_NAME => $this->input('full_name', ''),
         ];
     }
 
