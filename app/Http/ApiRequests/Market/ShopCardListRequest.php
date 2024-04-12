@@ -25,6 +25,8 @@ use App\Models\Product;
  *   tags={"Market"},
  *      @OA\Parameter(name="telegram_user_id", in="query", description="telegram user id",required=true,@OA\Schema(type="integer",)),
  *      @OA\Parameter(name="shop_id",in="query",description="shop id",required=true,@OA\Schema(type="integer",)),
+ *      @OA\Parameter(name="limit",in="query",description="limit",required=false,@OA\Schema(type="integer",)),
+ *      @OA\Parameter(name="offset",in="query",description="offset",required=false,@OA\Schema(type="integer",)),
  *    @OA\Response(response=200, description="OK")
  * )
  */
@@ -42,9 +44,17 @@ class ShopCardListRequest extends ApiRequest
 
     public function rules(): array
     {
+        $rules = [];
+        if ($this->route()->getName() == 'market.orders.history') {
+            $rules = [
+                'limit' => 'nullable|integer',
+                'offset' => 'nullable|integer'
+            ];
+        }
+
         return [
             'telegram_user_id' => 'required|integer',
             'shop_id'          => 'required|integer|exists:shops,id',
-        ];
+        ] + $rules;
     }
 }
