@@ -190,4 +190,11 @@ class Product extends Model
     {
         return self::whereIn('id', $ids)->whereNotIn('status', self::NOT_SHOW_STATUS)->get();
     }
+
+    public static function isDefaultCategoryByShopId(int $shopId): bool
+    {
+        return self::where(['shop_id' => $shopId, 'category_id' => 0])
+                    ->whereNotIn('status', self::NOT_SHOW_STATUS)
+                    ->exists();
+    }
 }
