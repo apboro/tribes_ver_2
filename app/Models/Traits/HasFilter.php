@@ -14,7 +14,12 @@ trait HasFilter
                 if ($options[$name]['sql'] == 'ilike') {
                     $value = '%' . $value . '%';
                 }
-                $query->where($options[$name]['field'], $options[$name]['sql'], $value);
+
+                if ($options[$name]['sql'] == 'in') {
+                    $query->whereIn($options[$name]['field'], $value);
+                } else {
+                    $query->where($options[$name]['field'], $options[$name]['sql'], $value);
+                }
             }
         }
 

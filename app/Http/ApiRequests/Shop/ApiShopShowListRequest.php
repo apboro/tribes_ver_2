@@ -25,6 +25,7 @@ class ApiShopShowListRequest extends ApiRequest
             'limit' => 'nullable|integer',
             'offset' => 'nullable|integer',
             'name' => 'nullable|string',
+            'shop_ids.*'  => 'nullable|integer',
         ];
     }
 }
