@@ -35,7 +35,8 @@ class Shop extends Model
     {
         return [
             'name' => ['field' => 'name', 'sql' => 'ilike'],
-            'userId' => ['field' => 'user_id', 'sql' => '=']
+            'userId' => ['field' => 'user_id', 'sql' => '='],
+            'shop_ids' => ['field' => 'id', 'sql' => 'in'],
         ];
     }
 
