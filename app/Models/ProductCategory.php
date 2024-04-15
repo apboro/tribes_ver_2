@@ -24,6 +24,8 @@ class ProductCategory extends Model
         'updated_at'
     ];
 
+    public const DEFAULT_CATEGORY_NAME = 'Без категории';
+
     public static function isBelongsShop(int $categoryId, int $shopId): bool
     {
         return (bool) self::where('id', $categoryId)->where('shop_id', $shopId)->exists();
@@ -60,7 +62,10 @@ class ProductCategory extends Model
         }
         $query->orderBy('parent_id');
 
-        return  $query->get();
+        return $query->get()
+                ->when(self::isNeedDefaultCategory($filter), function($collection) use ($filter) {
+                    return $collection->push(self::getDefaultCategoryWithShopId($filter['shop_id']));
+                });
     }
 
     public static function countByFilter(array $filter): int
@@ -70,7 +75,27 @@ class ProductCategory extends Model
             $query = self::hideEmpty($query);
         }
 
-        return $query->count();
+        $count = $query->count() + (self::isNeedDefaultCategory($filter) ? 1 : 0);
+
+        return $count;
+    }
+
+    private static function isNeedDefaultCategory(array $filter): bool
+    {
+        return ((isset($filter['shop_id'])) &&
+                ((!isset($filter['hide_empty'])) || 
+                ($filter['hide_empty'] && Product::isDefaultCategoryByShopId($filter['shop_id']))));
+    }
+
+    private static function getDefaultCategoryWithShopId(int $shopId): self
+    {
+        $self = new self();
+        $self->id = 0;
+        $self->parent_id = 0;
+        $self->shop_id = $shopId;
+        $self->name = self::DEFAULT_CATEGORY_NAME;
+
+        return $self;
     }
    
     public function remove(): ?bool
