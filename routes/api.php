@@ -85,6 +85,7 @@ Route::prefix('api/v3')->group(function () {
 
     Route::post('/tonbot/addCard', [ApiTonbotController::class, 'addCard']);
     Route::post('/tonbot/deleteCard', [ApiTonbotController::class, 'deleteCard']);
+    Route::post('/tonbot/getCardNumber', [ApiTonbotController::class, 'getCardNumber']);
     Route::post('/tonbot/payment', [ApiTonbotController::class, 'payment']);
     Route::post('/tonbot/payment-history', [ApiTonbotController::class, 'paymentHistory']);
 

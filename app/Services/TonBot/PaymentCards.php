@@ -21,6 +21,11 @@ class PaymentCards
         return self::actionWithCard('delete', $telegramId);
     }
 
+    public static function getCardNumber(int $telegramId): array
+    {
+        return self::actionWithCard('number', $telegramId);
+    }
+
     private static function actionWithCard(string $action, int $telegramId, ?int $phone = null): array
     {
         $tinkoff = app(TinkoffE2C::class);
@@ -31,10 +36,13 @@ class PaymentCards
         }
 
         if ($action == 'add') {
-            self::addProcess($tinkoff, $user);
+            return self::addProcess($tinkoff, $user);
         }
         if ($action == 'delete') {
-            self::deleteProcess($tinkoff, $user);
+            return self::deleteProcess($tinkoff, $user);
+        }
+        if ($action == 'number') {
+            return self::getNumberProcess($tinkoff, $user);
         }
     }
 
@@ -66,5 +74,16 @@ class PaymentCards
         $status = $result['Success'] == true ? 'success' : 'error';
 
         return ['status' => $status];
+    }
+
+    private static function getNumberProcess(TinkoffE2C $tinkoff, User $user): array
+    {
+        $card = $tinkoff->getActiveCard($user);
+
+        if (!$card) {
+            return ['status' => 'error', 'message' => self::MESSAGE_NO_CARDS];
+        }
+
+        return ['status' => 'success', 'card' => $card];
     }
 }
