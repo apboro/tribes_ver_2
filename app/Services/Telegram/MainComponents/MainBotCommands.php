@@ -1689,8 +1689,8 @@ class MainBotCommands
                 ->row(
                     Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
                     Keyboard::btn(self::CABINET),
-                    Keyboard::btn(self::PROMO_SHOP)
-//                    $this->buildMiniAppBtn())
+//                    Keyboard::btn(self::PROMO_SHOP)
+                    $this->buildMiniAppBtn()
                 )
                 ->row(
                     Keyboard::btn(self::SUPPORT),
@@ -1703,8 +1703,8 @@ class MainBotCommands
                 ->row(
             Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
                     Keyboard::btn(self::CABINET),
-                    Keyboard::btn(self::PROMO_SHOP)
-//                    $this->buildMiniAppBtn()
+//                    Keyboard::btn(self::PROMO_SHOP)
+                    $this->buildMiniAppBtn()
                 )
                 ->row(
                     Keyboard::btn(self::SUPPORT),
@@ -1878,8 +1878,7 @@ class MainBotCommands
 
     private function buildMiniAppBtn()
     {
-        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/'
-            . config('telegram_bot.bot.promoName');
+        $link = config('app.frontend_url', 'spodial.com') . '/tg-shop/promo';
 
         return [
             'text'    => self::PROMO_SHOP,
