@@ -30,6 +30,7 @@ class TonbotWebhookJob implements ShouldQueue
 
         $response = Http::post(config('tonbot.webhook_url'), [
             'payment_id' => $this->payment->id,
+            'telegram_id' => $this->payment->telegram_user_id,
             'amount' => $this->payment->amount,
             'status' => $this->payment->status,
         ]);
