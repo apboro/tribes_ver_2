@@ -24,6 +24,11 @@ class ApiTonbotController extends Controller
         return ApiResponse::common(PaymentCards::deleteCard($request->telegram_id));
     }
 
+    public function getCardNumber(ApiTgUserRequest $request): ApiResponse
+    {
+        return ApiResponse::common(PaymentCards::getCardNumber($request->telegram_id));
+    }
+
     public function payment(ApiPaymentRequest $request): ApiResponse
     {
         $payment = TonbotPaymentsService::create($request->telegram_receiver_id, 

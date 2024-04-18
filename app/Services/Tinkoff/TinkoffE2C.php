@@ -205,4 +205,18 @@ class TinkoffE2C
         return $cardsList;
     }
 
+    public function getActiveCard(User $user): array
+    {
+        $result = [];
+        $cardsList = $this->getCardsList($user);
+        foreach ($cardsList as $card) {
+            if ($card['CardId'] && $card['Pan']) {
+                $result = $card;
+                break;
+            }
+        }
+
+        return $result;
+    }
+
 }
