@@ -189,10 +189,12 @@ class Product extends Model
     public static function findByList(array $ids): Collection
     {
         return self::whereIn('id', $ids)->whereNotIn('status', self::NOT_SHOW_STATUS)
-                    /*->orderByRaw('CASE id ' . collect($ids)->map(function($id, $index) {
-                        return 'WHEN ' . $id . ' THEN  ' . $index;
-                    })->implode(' ') . ' END')*/
-                    ->get();
+            ->when(count($ids) > 0, function ($query) use ($ids) {
+                return $query->orderByRaw('CASE id ' . collect($ids)->map(function ($id, $index) {
+                    return 'WHEN ' . $id . ' THEN  ' . $index;
+                })->implode(' ') . ' END');
+            })
+            ->get();
     }
 
     public static function isDefaultCategoryByShopId(int $shopId): bool
