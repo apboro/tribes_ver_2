@@ -90,11 +90,11 @@ class PaymentController extends Controller
             return response('OK', 200);
         }
 
-        if ($data['Status'] == 'REFUNDED') {
+        /*if ($data['Status'] == 'REFUNDED') {
             Log::log('Попытка вывода средств ' . json_encode($data));
             TelegramLogService::staticSendLogMessage("Попытка вывода средств " . json_encode($data));
             return response('OK', 200);
-        }
+        }*/
 
         Storage::disk('tinkoff_data')->put("notify_payment_{$data['OrderId']}_{$data['Status']}.json", json_encode($data, JSON_PRETTY_PRINT));
 
@@ -118,6 +118,10 @@ class PaymentController extends Controller
             $isSuccess = PayReceiveService::run($request, $payment, $previousStatus);
             if ($isSuccess) {
                 if ($payment->status == 'CONFIRMED') {
+                    PayReceiveService::actionAfterPayment($payment);
+                }
+
+                if (($payment->type === 'tonbot') && ($payment->status === 'COMPLETED' || $payment->status === 'REFUNDED')) {
                     PayReceiveService::actionAfterPayment($payment);
                 }
 
