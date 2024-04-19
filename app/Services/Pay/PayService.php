@@ -236,7 +236,7 @@ class PayService
         if ($relation === 'tariff' || $relation === 'donate') {
             return Accumulation::findUsersAccumulation($payFor->getAuthor()->id);
         } elseif ($relation === self::TON_BOT_TYPE_NAME) {
-            return Accumulation::findUsersAccumulation($payFor->author->user_id, self::TON_BOT_TYPE_NAME);
+            return Accumulation::findUsersAccumulation($payFor->getAuthor()->id, self::TON_BOT_TYPE_NAME);
         } elseif ($relation === 'publication' || $relation === 'webinar') {
             return Accumulation::findUsersAccumulation($payFor->author->user_id);
         }
