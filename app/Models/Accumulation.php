@@ -107,10 +107,11 @@ class Accumulation extends Model
     /**
      * Возвращает активную копилку пользователя
      */
-    public static function findUsersAccumulation(int $userId): ?self
+    public static function findUsersAccumulation(int $userId, ?string $type = null): ?self
     {
         return self::where('user_id', $userId)
                             ->where('status', 'active')
+                            ->where('type', $type)
                             ->where('ended_at', '>', Carbon::now()->toDateTimeString())
                             ->latest('created_at')
                             ->first();
@@ -127,7 +128,7 @@ class Accumulation extends Model
     /**
      * Проверка существования копилки SpAccumulationId без учета активности
      */
-    public static function newAccumulation(int $userId, int $SpAccumulationId, int $endedDays = 0): self
+    public static function newAccumulation(int $userId, int $SpAccumulationId, int $endedDays = 0, ?string $type = null): self
     {
         if ($endedDays) {
             $ended = Carbon::now()->addMonth();
@@ -141,6 +142,7 @@ class Accumulation extends Model
             'started_at' => Carbon::now(),
             'ended_at' => $ended,
             'status' => 'active',
+            'type' => $type,
         ]);
     }
 

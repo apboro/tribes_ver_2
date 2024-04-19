@@ -36,4 +36,11 @@ class TonbotPayment extends Model
     {
         TonbotWebhookJob::dispatch($payment, 0);
     }
+
+    public static function onChangePayment(Payment $payment): void
+    {
+        if ($payment->status === 'COMPLETED' || $payment->status === 'REFUNDED') {
+            TonbotWebhookJob::dispatch($payment, 0);
+        }
+    }
 }
