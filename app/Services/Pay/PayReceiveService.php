@@ -87,10 +87,12 @@ class PayReceiveService
 
             if ($needToCreateAccumulation) {
                 $endedDays = 30;
+                $accumulationType = null;
                 if ($payment->type === 'tonbot') {
                     $endedDays = 1;
+                    $accumulationType = $payment->type;
                 }
-                $accumulation = Accumulation::newAccumulation($payment->author, $SpAccumulationId, $endedDays);
+                $accumulation = Accumulation::newAccumulation($payment->author, $SpAccumulationId, $endedDays, $accumulationType);
                 Log::debug('Создана новая копилка', ['accumulation' => $accumulation]);
             }
 

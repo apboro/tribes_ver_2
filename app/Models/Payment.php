@@ -199,6 +199,10 @@ class Payment extends Model
         $payment->card_number = $cardNumber;
         $payment->save();
 
+        if ($accumulation->type === 'tonbot') {
+            TonbotPayment::onChangePayment($payment);
+         }
+
         return $payment;
     }
 

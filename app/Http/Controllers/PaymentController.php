@@ -7,6 +7,7 @@ use App\Exceptions\PaymentException;
 use App\Filters\PaymentFilter;
 use App\Models\Accumulation;
 use App\Models\Payment;
+use App\Models\TonbotPayment;
 use App\Repositories\Payment\PaymentRepository;
 use App\Services\Pay\PayReceiveService;
 use App\Services\TelegramLogService;
@@ -121,8 +122,8 @@ class PaymentController extends Controller
                     PayReceiveService::actionAfterPayment($payment);
                 }
 
-                if (($payment->type === 'tonbot') && ($payment->status === 'COMPLETED' || $payment->status === 'REFUNDED')) {
-                    PayReceiveService::actionAfterPayment($payment);
+                if ($payment->type === 'tonbot' &&  $payment->status === 'REFUNDED') {
+                    TonbotPayment::onChangePayment($payment);
                 }
 
                 return response('OK', 200);
