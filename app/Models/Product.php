@@ -96,7 +96,7 @@ class Product extends Model
         return self::addFilter($filter)
             ->whereNotIn('status', $statusList)
             ->with('category')
-            ->orderByDesc('id')
+            ->orderByRaw("category_id = 0, category_id ASC, id DESC")
             ->offset($filter['offset'] ?? 0)
             ->limit($filter['limit'] ?? self::HOW_SHOW_DEFAULT)
             ->get();

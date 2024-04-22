@@ -60,7 +60,7 @@ class ProductCategory extends Model
         if ($filter['hide_empty'] ?? false) {
             $query = self::hideEmpty($query);
         }
-        $query->orderBy('parent_id');
+        $query->orderBy('id');
 
         return $query->get()
                 ->when(self::isNeedDefaultCategory($filter), function($collection) use ($filter) {
