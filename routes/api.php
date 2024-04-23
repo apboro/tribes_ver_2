@@ -141,6 +141,8 @@ Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () 
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
     Route::post('/visited/publications', [ApiVisitedPublicationController::class, 'store'])->name('api.publications.visited.store');
     Route::post('/statistic/publication-time', [ApiPublicationStatistic::class, 'saveViewTime']);
+    Route::post('/bill/subscription', [ApiBillController::class, 'makeBill'])->name('api.bill.subscription.makeBill');
+    Route::apiResource('/user/legal-info', LegalInfoController::class);
 });
 /** TODO fastFIX  */
 //Route::get('/api/v3/question/{id}', [ApiQuestionController::class, 'show']);
@@ -159,8 +161,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/user/telegram/assign', [ApiAssignDetachTelegramController::class, 'assignTelegramAccount']);
     Route::delete('/user/telegram/detach', [ApiAssignDetachTelegramController::class, 'detachTelegramAccount']);
     Route::get('/user/telegram/list', [ApiMessengersController::class, 'list']);
-
-    Route::apiResource('/user/legal-info', LegalInfoController::class);
 
     Route::get('/projects', [ApiProjectController::class, 'index']);
     Route::post('/projects/create', [ApiProjectController::class, 'create']);
@@ -365,8 +365,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/lms_feedback/{id}', [ApiLMSFeedbackController::class, 'store']);
     Route::get('/lms_recommendation', [ApiLmsRecommendationController::class, 'getRecommendation']);
     Route::get('/publication_and_webinar_list', [ApiLmsRecommendationController::class, 'getPublicationAndWebinarList']);
-
-    Route::post('/bill/subscription', [ApiBillController::class, 'makeBill'])->name('api.bill.subscription.makeBill');
 
 });
 
