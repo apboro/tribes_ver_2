@@ -11,12 +11,12 @@ spec:
   selector:
     matchLabels:
       {{- include "..labels.matchLabels" . | nindent 6 }}
-      app: {{ include "..names.name" . }}
+      app: {{ include "..names.name" . }}-queue-worker
   template:
     metadata:
       labels:
         {{- include "..labels.standard" . | nindent 8 }}
-        app: {{ include "..names.name" . }}
+        app: {{ include "..names.name" . }}-queue-worker
       annotations:
         checksum/container-registry: {{ include (print $.Template.BasePath "/queue-worker/docker-secret.yaml") . | sha256sum }}
         checksum/envs: {{ include (print $.Template.BasePath "/envs.yaml") . | sha256sum }}
