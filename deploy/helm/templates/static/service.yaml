@@ -6,7 +6,7 @@ metadata:
   name: {{ include "..names.name" . }}-static
   labels:
     {{- include "..labels.standard" . | nindent 4 }}
-    app: {{ include "..names.name" . }}
+    app: {{ include "..names.name" . }}-static
 spec:
   type: ClusterIP
   ports:
