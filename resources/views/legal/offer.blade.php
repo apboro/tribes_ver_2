@@ -14,39 +14,38 @@
 	<thead>
 	<tr>
 	<td><span>Наименование:</span></td>
-	<td>{{ $legal['name'] }}</td>
+	<td style="word-break: break-all">{{ $legal['name'] }}</td>
 	</tr>
 	<tr>
 	<td><span>ИНН:</span></td>
-	<td >{{ $legal['inn'] }}</td>
+	<td  style="word-break: break-all">{{ $legal['inn'] }}</td>
 	</tr>
 	<tr>
 	<td ><span>ОГРН:</span></td>
-	<td >{{ $legal['ogrn'] }}</td>
+	<td  style="word-break: break-all">{{ $legal['ogrn'] }}</td>
 	</tr>
 	<tr>
 	<td ><span>Адрес:</span></td>
-	<td >{{ $legal['address'] }}</td>
+	<td  style="word-break: break-all">{{ $legal['address'] }}</td>
 	</tr>
 	<tr>
 	<td ><span>E-mail:</span></td>
-	<td >{{ $legal['email'] }}</td>
+	<td  style="word-break: break-all">{{ $legal['email'] }}</td>
 	</tr>
 	<tr>
 	<td ><span>Телефон:</span></td>
-	<td >{{ $legal['phone'] }}</td>
+	<td  style="word-break: break-all">{{ $legal['phone'] }}</td>
 	</tr>
 	<tr>
 	<td ><span>URL-ссылка на Онлайн-магазин:</span></td>
-	<td >{{ $url }}</td>
+	<td  style="word-break: break-all">{{ $url }}</td>
 	</tr>
 	<tr>
 	<td ><span>Иное:</span></td>
-	<td ></td>
+	<td style="word-break: break-all">{{ $legal['additionally'] }}</td>
 	</tr>
 	</thead>
 	</table>
-
 
 <ul>
  	<li><span>2. </span><strong><span>Оферта </span></strong><span>– настоящая Оферта о заключении договора купли-продажи Товаров, размещенная Продавцом в Онлайн-магазине.</span></li>
