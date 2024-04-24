@@ -480,7 +480,7 @@ class User extends Authenticatable
 
     public function legalInfoFirst(): ?UserLegalInfo
     {
-       return $this->legalInfo()->first();
+       return $this->legalInfo()->orderBy('id')->first();
     }
 
     function hasShops(int $shopId): bool

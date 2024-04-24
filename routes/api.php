@@ -44,6 +44,7 @@ use App\Http\Controllers\APIv3\Publication\ApiPublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationPartController;
 use App\Http\Controllers\APIv3\Publication\ApiVisitedPublicationController;
 use App\Http\Controllers\APIv3\Shop\ApiShopController;
+use App\Http\Controllers\APIv3\Shop\ApiShopLegalController;
 use App\Http\Controllers\APIv3\Statistic\ApiExportAllData;
 use App\Http\Controllers\APIv3\Statistic\ApiSemanticController;
 use App\Http\Controllers\APIv3\Statistic\ApiTelegramMessageStatistic;
@@ -133,6 +134,9 @@ Route::prefix('api/v3')->group(function () {
 
     Route::get('/products/category', [ApiCategoryController::class, 'list'])->name('api.products.category.list');
     Route::get('/products/category/{id}', [ApiCategoryController::class, 'show'])->name('api.products.category.show')->where('id', '[0-9]+');
+
+    Route::get('/shop/legal/privacy/{shopId}', [ApiShopLegalController::class, 'privacy']);
+    Route::get('/shop/legal/offer/{shopId}', [ApiShopLegalController::class, 'offer']);
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () {
@@ -147,7 +151,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () 
 /** TODO fastFIX  */
 //Route::get('/api/v3/question/{id}', [ApiQuestionController::class, 'show']);
 Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function () {
-
     Route::get('/user', [ApiUserController::class, 'show']);
     Route::delete('/users', [ApiUserController::class, 'delete'])->name('api.user.delete');
     Route::post('/user/logout', [ApiAuthController::class, 'logout']);
