@@ -15,6 +15,9 @@ use OpenApi\Annotations as OA;
  *     @OA\Parameter(name="kpp",in="query",description="KPP",required=false,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="email",in="query",description="email address",required=true,@OA\Schema(type="string",)),
  *     @OA\Parameter(name="phone",in="query",description="Delivery phone",required=false,@OA\Schema(type="string",)),
+ *     @OA\Parameter(name="address",in="query",description="address",required=true,@OA\Schema(type="string",)),
+ *     @OA\Parameter(name="ogrn",in="query",description="ogrn",required=true,@OA\Schema(type="string",)),
+ *     @OA\Parameter(name="additionally",in="query",description="additionally",required=false,@OA\Schema(type="string",)),
  * @OA\Response(response=200, description="OK")
  * )
  *
@@ -64,11 +67,14 @@ class LegaLInfoRequest extends ApiRequest
         }
 
         return [
-            'name'  => 'nullable|string',
+            'name'  => $required,
             'inn'   => $required,
             'kpp'   => 'nullable|string',
             'email' => $required . '|email',
             'phone' => 'nullable|string',
+            'address' => $required,
+            'ogrn' => $required,
+            'additionally' => 'nullable|string',
         ];
     }
 }

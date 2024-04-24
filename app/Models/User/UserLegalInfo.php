@@ -19,7 +19,10 @@ class UserLegalInfo extends Model
         'kpp',
         'email',
         'phone',
-        'user_id'
+        'user_id',
+        'address',
+        'ogrn',
+        'additionally',
     ];
 
     public function updateProps(array $properties)
