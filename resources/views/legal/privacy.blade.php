@@ -32,7 +32,7 @@
 </tr>
 <tr>
 <td ><span>Телефон:</span></td>
-<td  style="word-break: break-all">{{ $legal['phone'] }}</td>
+<td  style="word-break: break-all">+7{{ $legal['phone'] }}</td>
 </tr>
 <tr>
 <td ><span>URL-ссылка на Онлайн-магазин:</span></td>
