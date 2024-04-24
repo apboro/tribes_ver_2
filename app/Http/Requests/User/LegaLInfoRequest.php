@@ -72,8 +72,8 @@ class LegaLInfoRequest extends ApiRequest
             'kpp'   => 'nullable|string',
             'email' => $required . '|email',
             'phone' => 'nullable|string',
-            'address' => $required,
-            'ogrn' => $required,
+            'address' => 'nullable|string',
+            'ogrn' => 'nullable|string',
             'additionally' => 'nullable|string',
         ];
     }
