@@ -9,6 +9,7 @@ use App\Http\Controllers\APIv3\ApiProjectController;
 use App\Http\Controllers\APIv3\ApiTelegramBotActionController;
 use App\Http\Controllers\APIv3\ApiTelegramConnectionController;
 use App\Http\Controllers\APIv3\ApiWebinarController;
+use App\Http\Controllers\APIv3\Market\TgUserPassportController;
 use App\Http\Controllers\APIv3\TonBot\ApiTonbotController;
 use App\Http\Controllers\APIv3\Market\MarketController;
 use App\Http\Controllers\APIv3\User\LegalInfoController;
@@ -84,6 +85,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::prefix('api/v3')->group(function () {
 
+    Route::post('/getUserPassport', [TgUserPassportController::class, 'getBearerToken']);
     Route::post('/tonbot/addCard', [ApiTonbotController::class, 'addCard']);
     Route::post('/tonbot/deleteCard', [ApiTonbotController::class, 'deleteCard']);
     Route::post('/tonbot/getCardNumber', [ApiTonbotController::class, 'getCardNumber']);
