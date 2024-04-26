@@ -54,7 +54,10 @@ class ApiShopController extends Controller
             if ($testResult['success'] === false) {
                 return ApiResponse::error($testResult['message']);
             }
-            $shop->insertUnitpayKey($request->unitpay_project_id,  $request->unitpay_secretKey);
+            $addKey = $shop->insertUnitpayKey($request->unitpay_project_id,  $request->unitpay_secretKey);
+            if ($addKey) {
+                $shop->setBuyable(true);
+            }
         }
 
         return ApiResponse::common(ShopResourse::make($shop)->toArray($request));

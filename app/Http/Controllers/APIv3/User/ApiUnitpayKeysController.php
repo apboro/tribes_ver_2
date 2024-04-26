@@ -6,6 +6,7 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\ApiRequests\User\UnitpayKeyRequest;
 use App\Http\ApiResources\UnitpayKeyResource;
+use App\Models\Shop;
 use App\Models\UnitpayKey;
 use App\Services\Unitpay\Payment as UnitpayPayment;
 use Illuminate\Support\Facades\Auth;
@@ -30,14 +31,18 @@ class ApiUnitpayKeysController extends Controller
             return ApiResponse::error($resultOfTest['message']);
         }
          
-        Auth::user()->getUnitpayKeyByShopId($request->shop_id)->updateOrCreate(['shop_id' => $request->shop_id], $request->validated());
- 
+        $unitpayKey = Auth::user()->getUnitpayKeyByShopId($request->shop_id)->updateOrCreate(['shop_id' => $request->shop_id], $request->validated());
+        if ($unitpayKey) {
+            Shop::find($request->shop_id)->setBuyable(true);
+        }
+
         return ApiResponse::success('common.success');
     }
 
     public function destroy(UnitpayKeyRequest $request): ApiResponse
     {
         Auth::user()->getUnitpayKeyByShopId($request->shop_id)->delete();
+        Shop::find($request->shop_id)->setBuyable(false);
 
         return ApiResponse::success('common.success');
     }
