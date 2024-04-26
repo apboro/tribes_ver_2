@@ -1180,6 +1180,7 @@ class MainBotCommands
         $promoShop = static function (Context $ctx) {
             $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/'
                 . config('telegram_bot.bot.promoName');
+            log::info('link: ' . $link);
             $menu = Menux::Create('link')->inline();
             $menu->row()->uBtn('Открыть магазин', $link);
             $ctx->reply('Промо магазин', $menu);
@@ -1192,6 +1193,7 @@ class MainBotCommands
         $promoShop = static function (Context $ctx) {
             $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/'
                 . config('telegram_bot.bot.promoName') . '?startapp=my-shop';
+            log::info('link: ' . $link);
             $menu = Menux::Create('link')->inline();
             $menu->row()->uBtn('Открыть мой магазин', $link);
             $ctx->reply('Мой магазин', $menu);
