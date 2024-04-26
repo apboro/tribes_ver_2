@@ -17,7 +17,7 @@ class Shop extends Model
 {
     use HasFactory, HasFilter;
 
-    public $guarded = [];
+    public $guarded = ['buyable'];
 
     public const LIMIT_SHOW_DEFAULT = 10;
 
@@ -71,7 +71,7 @@ class Shop extends Model
 
     public function insertUnitpayKey(?string $projectId, ?string $secretKey): bool
     {
-        return $this->unitpayKey()->insert(['shop_id' => $this->id, 'project_id' => $projectId, 'secretKey' => $secretKey]);
+        return (bool) $this->unitpayKey()->insert(['shop_id' => $this->id, 'project_id' => $projectId, 'secretKey' => $secretKey]);
     }
 
     public function legalInfo(): hasOneThrough
@@ -82,5 +82,12 @@ class Shop extends Model
     public function visitedProductsByTgUser(int $telegramId): ?VisitedProduct
     {
         return $this->hasOne(VisitedProduct::class)->where('telegram_id', $telegramId)->withDefault()->firstOrNew(['telegram_id' => $telegramId]);
+    }
+
+    public function setBuyable(bool $value = false): bool
+    {
+        $this->buyable = $value;
+        
+        return $this->save();
     }
 }

@@ -37,9 +37,13 @@ class UnitpayKeyRequest extends ApiRequest
 {
     public function rules(): array
     {
+        $validateKeys = [];
+        if($this->getMethod() === 'POST') {
+            $validateKeys = ['project_id' => 'required|int',
+                             'secretKey'  => 'required|string'];
+        }
+
         return [
-            'project_id' => 'required|int',
-            'secretKey'  => 'required|string',
             'shop_id' => [
                 'required', 'integer', 
                 function ($attribute, $value, $fail) {
@@ -48,6 +52,6 @@ class UnitpayKeyRequest extends ApiRequest
                     }
                 },
             ],
-        ];
+        ] + $validateKeys;
     }
 }

@@ -20,7 +20,6 @@ use OpenApi\Annotations as OA;
  *              @OA\Property(property="name", type="string"),
  *              @OA\Property(property="about", type="string"),
  *              @OA\Property(property="photo", type="file", format="binary"),
- *              @OA\Property(property="buyable",type="string"),
  *              @OA\Property(property="unitpay_project_id",type="string"),
  *              @OA\Property(property="unitpay_secretKey",type="string"),
  *         )
@@ -42,7 +41,6 @@ class ApiShopStoreRequest extends ApiRequest
             'name' => 'required|string|max:100',
             'about' => 'nullable|string|max:300',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
-            'buyable' => 'string|in:true,false',
             'unitpay_project_id' => 'nullable|string',
             'unitpay_secretKey' => 'nullable|string',
         ];

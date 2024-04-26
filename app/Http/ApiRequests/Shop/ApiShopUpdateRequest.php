@@ -20,7 +20,6 @@ use Illuminate\Validation\Rule;
  *              @OA\Property(property="name", type="string"),
  *              @OA\Property(property="about", type="string"),
  *              @OA\Property(property="photo", type="file", format="binary"),
- *              @OA\Property(property="buyable",type="string"),
  *         )
  *      )
  *  ),
@@ -50,7 +49,6 @@ class ApiShopUpdateRequest extends ApiRequest
             'name' => 'nullable|required|string|max:200',
             'about' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
-            'buyable' => 'string|in:true,false',
         ];
     }
 
