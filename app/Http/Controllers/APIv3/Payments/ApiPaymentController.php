@@ -70,6 +70,8 @@ class ApiPaymentController extends Controller
             } else {
                 $redirectUrl = config('app.frontend_url') . $request->success_url;
             }
+        } elseif ($payment->type === PayService::TON_BOT_TYPE_NAME) {
+            $redirectUrl = $request->success_url;
         }
 
         if ($part) {
