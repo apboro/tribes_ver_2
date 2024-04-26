@@ -152,6 +152,7 @@ class MainBotCommands
         'findThemes',
         'manageGpt',
         'promoShop', /** @see promoShop */
+        'myShop', /** @see myShop */
     ])
     {
         foreach ($methods as $method) {
@@ -1186,6 +1187,18 @@ class MainBotCommands
         $this->bot->onText(self::PROMO_SHOP, $promoShop);
     }
 
+    protected function myShop()
+    {
+        $promoShop = static function (Context $ctx) {
+            $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/'
+                . config('telegram_bot.bot.promoName') . '?startapp=my-shop';
+            $menu = Menux::Create('link')->inline();
+            $menu->row()->uBtn('Открыть мой магазин', $link);
+            $ctx->reply('Мой магазин', $menu);
+        };
+        $this->bot->onText(self::MY_SHOP, $promoShop);
+    }
+
     protected function faq()
     {
         try {
@@ -1690,8 +1703,8 @@ class MainBotCommands
                 ->row(
                     Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
                     Keyboard::btn(self::CABINET),
-                    Keyboard::btn(self::PROMO_SHOP)
-//                    Keyboard::btn(self::MY_SHOP)
+                    Keyboard::btn(self::PROMO_SHOP),
+                    Keyboard::btn(self::MY_SHOP)
 //                    $this->buildMiniAppBtn()
                 )
                 ->row(
@@ -1705,8 +1718,8 @@ class MainBotCommands
                 ->row(
             Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
                     Keyboard::btn(self::CABINET),
-                    Keyboard::btn(self::PROMO_SHOP)
-//                    Keyboard::btn(self::MY_SHOP)
+                    Keyboard::btn(self::PROMO_SHOP),
+                    Keyboard::btn(self::MY_SHOP)
 //                    $this->buildMiniAppBtn()
                 )
                 ->row(
