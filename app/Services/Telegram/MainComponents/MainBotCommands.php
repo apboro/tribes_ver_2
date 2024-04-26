@@ -59,6 +59,7 @@ class MainBotCommands
 
     private const CABINET = 'Личный кабинет 🚀';
     private const PROMO_SHOP = 'Promo-shop 🛒';
+    private const MY_SHOP = 'Мой Магазин 🛒';
     private const CABINET_COMMAND = 'getspodial'; //🚀
     private const SUPPORT = 'Поддержка 🚀'; //
     private const SUPPORT_MESSAGE = '/issue'; //🚀
@@ -1689,8 +1690,9 @@ class MainBotCommands
                 ->row(
                     Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
                     Keyboard::btn(self::CABINET),
-//                    Keyboard::btn(self::PROMO_SHOP)
-                    $this->buildMiniAppBtn()
+                    Keyboard::btn(self::PROMO_SHOP)
+//                    Keyboard::btn(self::MY_SHOP)
+//                    $this->buildMiniAppBtn()
                 )
                 ->row(
                     Keyboard::btn(self::SUPPORT),
@@ -1703,8 +1705,9 @@ class MainBotCommands
                 ->row(
             Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
                     Keyboard::btn(self::CABINET),
-//                    Keyboard::btn(self::PROMO_SHOP)
-                    $this->buildMiniAppBtn()
+                    Keyboard::btn(self::PROMO_SHOP)
+//                    Keyboard::btn(self::MY_SHOP)
+//                    $this->buildMiniAppBtn()
                 )
                 ->row(
                     Keyboard::btn(self::SUPPORT),
