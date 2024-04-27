@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\Market;
 
+use App\Bundle\Telegram\MiniApp\InitDataDTO;
 use App\Bundle\Telegram\MiniApp\Validator\InitDataValidator;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -23,8 +24,7 @@ class TgUserPassportController extends Controller
     public function getBearerToken(Request $request): ApiResponse
     {
         try {
-            $rawData = $request->header('Authorization');
-            $initDataDTO = $this->validator->validate($rawData);
+            $initDataDTO = $this->validator->validate( $request->header('Authorization', ''));
             $token = '';
 
             $tgUser = TelegramUser::where('telegram_id', $initDataDTO->user->id)->first();
@@ -38,6 +38,21 @@ class TgUserPassportController extends Controller
         } catch (Exception $e) {
             $message = $e->getMessage();
             log::error('has shop error' . $message);
+
+            return ApiResponse::error('common.create_error');
+        }
+    }
+
+    public function attachTgUserToUser(Request $request): ApiResponse
+    {
+        try {
+            $initDataDTO = $this->validator->validate($request->header('Authorization', ''));
+            TelegramUser::attachMiniAppUser($request->user(), $initDataDTO->user);
+
+            return ApiResponse::success('common.success');
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            log::error('attachTgUserToUser error' . $message);
 
             return ApiResponse::error('common.create_error');
         }

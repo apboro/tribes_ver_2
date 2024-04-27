@@ -7,7 +7,7 @@ namespace App\Bundle\Telegram\MiniApp;
 use App\Bundle\Telegram\MiniApp\InitData\Chat;
 use App\Bundle\Telegram\MiniApp\InitData\Make;
 use App\Bundle\Telegram\MiniApp\InitData\Receiver;
-use App\Bundle\Telegram\MiniApp\InitData\User;
+use App\Bundle\Telegram\MiniApp\InitData\MiniAppUser;
 use Carbon\CarbonInterface;
 
 final class InitDataDTO extends Make
@@ -20,7 +20,7 @@ final class InitDataDTO extends Make
     /**
      * An object containing data about the current user.
      */
-    public ?User $user = null;
+    public ?MiniAppUser $user = null;
 
     /**
      * An object containing data about the chat partner of the current user in

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Bundle\Telegram\MiniApp\InitData\MiniAppUser;
 use App\Filters\QueryFilter;
 use danog\MadelineProto\stats;
 use Database\Factories\TelegramUserFactory;
@@ -189,12 +190,15 @@ class TelegramUser extends Model
 
     public static function findOrCreateUser(int $telegram_id): self
     {
-        return self::provideOneUser(['telegram_user_id' => $telegram_id,
-                                    self::FIRST_NAME  => '',
-                                    self::LAST_NAME   => '',
-                                    self::USER_NAME   => ''
-                                    ], ['email' => null, 
-                                        'phone' => null]);
+        return self::provideOneUser([
+            'telegram_user_id' => $telegram_id,
+            self::FIRST_NAME   => '',
+            self::LAST_NAME    => '',
+            self::USER_NAME    => ''
+        ], [
+            'email' => null,
+            'phone' => null
+        ]);
     }
 
     public static function provideOneUser(array $tgUserData, array $userData): self
@@ -217,5 +221,15 @@ class TelegramUser extends Model
         }
 
         return $tgUser;
+    }
+
+    public static function attachMiniAppUser(User $user, MiniAppUser $miniAppUser): void
+    {
+        self::firstOrCreate([
+            'user_id'        => $user->id,
+            self::FIRST_NAME => $miniAppUser->firstName,
+            self::LAST_NAME  => $miniAppUser->lastName,
+            self::USER_NAME  => $miniAppUser->username
+        ]);
     }
 }
