@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace App\Bundle\Telegram\MiniApp\InitData;
 
-final class User extends Make
+final class MiniAppUser extends Make
 {
     /**
      * A unique identifier for the user or bot.

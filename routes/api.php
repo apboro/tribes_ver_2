@@ -142,6 +142,7 @@ Route::prefix('api/v3')->group(function () {
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () {
+    Route::post('/tgUser/attach', [TgUserPassportController::class, 'attachTgUserToUser']);
     Route::get('/check/user/subscription', [ApiSubscriptionController::class, 'check']);
     Route::get('/show/user/subscription', [ApiSubscriptionController::class, 'userShowSubscription']);
     Route::post('/subscription/pay', [ApiUserSubscriptionController::class, 'payForSubscription']);
