@@ -85,7 +85,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::prefix('api/v3')->group(function () {
 
-    Route::post('/getUserPassport', [TgUserPassportController::class, 'getBearerToken']);
+    Route::post('/getUserPassport', [TgUserPassportController::class, 'getBearerTokenByTgUser']);
     Route::post('/tonbot/addCard', [ApiTonbotController::class, 'addCard']);
     Route::post('/tonbot/deleteCard', [ApiTonbotController::class, 'deleteCard']);
     Route::post('/tonbot/getCardNumber', [ApiTonbotController::class, 'getCardNumber']);

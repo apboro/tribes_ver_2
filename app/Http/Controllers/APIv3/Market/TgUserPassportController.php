@@ -21,23 +21,35 @@ class TgUserPassportController extends Controller
         $this->validator = $initDataValidator;
     }
 
-    public function getBearerToken(Request $request): ApiResponse
+    public function getBearerTokenByTgUser(Request $request): ApiResponse
     {
         try {
-            $initDataDTO = $this->validator->validate( $request->header('Authorization', ''));
-            $token = '';
-
+            $initDataDTO = $this->validator->validate($request->header('Authorization', ''));
             $tgUser = TelegramUser::where('telegram_id', $initDataDTO->user->id)->first();
-            if ($tgUser) {
+
+            $user = Auth::guard('sanctum')->user();
+            if ($user) {
+                log::info('Mini app User has token');
+                if ($user->id !== $tgUser->user_id) {
+                    $message = 'income by bearer user id:' . $user->id . ',by tg user: ' . $tgUser->user_id;
+                    log::debug('Tg relations error: ' . $message);
+                }
+
+                $userId = $user->id;
+                $token = $request->bearerToken();
+            } else {
                 $auth = Auth::loginUsingId($tgUser->user->id);
+
+                $userId = $auth->id;
                 $token = $auth->createToken($auth->id)->plainTextToken;
-                log::info('user token = ' . $token);
+
+                log::info('user token = ' . json_encode($this->userData['token']));
             }
 
-            return ApiResponse::common(['token' => $token]);
+            return ApiResponse::common(compact('userId', 'token'));
         } catch (Exception $e) {
             $message = $e->getMessage();
-            log::error('has shop error' . $message);
+            log::error('getBearerToken error' . $message);
 
             return ApiResponse::error('common.create_error');
         }
