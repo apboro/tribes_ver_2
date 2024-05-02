@@ -278,13 +278,14 @@ class TinkoffApi
 
         log::debug('args...',  ['args' => $args]);
         log::debug('Storage local disk: ' . Storage::disk('local')->path(''));
-        log::debug('allFiles: ', [ 'Storage' => Storage::allFiles(Storage::disk('local')->path(''))]);
-        log::debug('allFiles .. : ', [ 'Storage' => Storage::allFiles(Storage::disk('local')->path('..'))]);
-        log::debug('allFiles storage_path: ', [ 'Storage' => Storage::allFiles(Storage::disk('local')->path(storage_path('app')))]);
 
-        $certFile = Storage::disk('local')->get(storage_path('app/private.key'));
+        log::debug('local', ['dir' => scandir(Storage::disk('local')->path(''))]);
+        log::debug('storage_path', ['dir' => scandir(storage_path())]);
+        log::debug('storage_path app', ['dir' => scandir(storage_path('app'))]);
 
-        //$certFile = Storage::disk('local')->get('private.key');
+        //$certFile = Storage::disk('local')->get(storage_path('app/private.key'));
+
+        $certFile = Storage::disk('local')->get('private.key');
         log::debug('certFile...',  ['certFile' => $certFile]);
 
         $privateKey = openssl_pkey_get_private($certFile);
