@@ -24,7 +24,7 @@ class TgUserPassportController extends Controller
     public function getBearerTokenByTgUser(Request $request): ApiResponse
     {
         try {
-            $initDataDTO = $this->validator->validate($request->header('Authorization_tma', ''));
+            $initDataDTO = $this->validator->validate($request->header('Init-data', ''));
             $tgUser = TelegramUser::where('telegram_id', $initDataDTO->user->id)->first();
 
             $user = Auth::guard('sanctum')->user();
@@ -43,7 +43,7 @@ class TgUserPassportController extends Controller
                 $userId = $auth->id;
                 $token = $auth->createToken($auth->id)->plainTextToken;
 
-                log::info('user token = ' . json_encode($this->userData['token']));
+                log::info('user token = ' . json_encode($token));
             }
 
             return ApiResponse::common(compact('userId', 'token'));
