@@ -131,9 +131,9 @@ class Accumulation extends Model
     public static function newAccumulation(int $userId, int $SpAccumulationId, int $endedDays = 0, ?string $type = null): self
     {
         if ($endedDays) {
-            $ended = Carbon::now()->addMonth();
+            $ended = Carbon::now()->addDays($endedDays);
         } else {
-            $ended = Carbon::now()->addDays($endedDays); 
+            $ended = Carbon::now()->addMonth();
         }
 
         return self::create([

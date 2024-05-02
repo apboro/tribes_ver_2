@@ -276,7 +276,10 @@ class TinkoffApi
 
         $args['DigestValue'] = base64_encode($binary);
 
+        log::debug('args...',  ['args' => $args]);
+        log::debug('Storage local disk: ' . Storage::disk('local')->path(''));
         $certFile = Storage::disk('local')->get('private.key');
+        log::debug('certFile...',  ['certFile' => $certFile]);
 
         $privateKey = openssl_pkey_get_private($certFile);
 
