@@ -24,7 +24,7 @@ class TgUserPassportController extends Controller
     public function getBearerTokenByTgUser(Request $request): ApiResponse
     {
         try {
-            $initDataDTO = $this->validator->validate($request->header('Authorization', ''));
+            $initDataDTO = $this->validator->validate($request->header('Authorization_tma', ''));
             $tgUser = TelegramUser::where('telegram_id', $initDataDTO->user->id)->first();
 
             $user = Auth::guard('sanctum')->user();
@@ -58,7 +58,7 @@ class TgUserPassportController extends Controller
     public function attachTgUserToUser(Request $request): ApiResponse
     {
         try {
-            $initDataDTO = $this->validator->validate($request->header('Authorization', ''));
+            $initDataDTO = $this->validator->validate($request->header('Authorization_tma', ''));
             TelegramUser::attachMiniAppUser($request->user(), $initDataDTO->user);
 
             return ApiResponse::success('common.success');
