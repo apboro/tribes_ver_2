@@ -27,6 +27,8 @@ class TgUserPassportController extends Controller
             $initDataDTO = $this->validator->validate($request->header('Init-data', ''));
             $tgUser = TelegramUser::where('telegram_id', $initDataDTO->user->id)->first();
 
+
+
             $user = Auth::guard('sanctum')->user();
             if ($user) {
                 log::info('Mini app User has token');
@@ -38,12 +40,17 @@ class TgUserPassportController extends Controller
                 $userId = $user->id;
                 $token = $request->bearerToken();
             } else {
-                $auth = Auth::loginUsingId($tgUser->user->id);
+                if (!$tgUser) {
+                    $userId = '';
+                    $token = '';
+                } else {
+                    $auth = Auth::loginUsingId($tgUser->user->id);
 
-                $userId = $auth->id;
-                $token = $auth->createToken($auth->id)->plainTextToken;
+                    $userId = $auth->id;
+                    $token = $auth->createToken($auth->id)->plainTextToken;
 
-                log::info('user token = ' . json_encode($token));
+                    log::info('user token = ' . json_encode($token));
+                }
             }
 
             return ApiResponse::common(compact('userId', 'token'));
