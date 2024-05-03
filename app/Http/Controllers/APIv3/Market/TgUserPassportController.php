@@ -55,7 +55,8 @@ class TgUserPassportController extends Controller
             return ApiResponse::common(compact('userId', 'token'));
         } catch (Exception $e) {
             $message = $e->getMessage();
-            log::error('getBearerToken error' . $message);
+            $line = $e->getLine();
+            log::error('getBearerToken error' . $message . ' line: ' . $line);
 
             return ApiResponse::error('common.create_error');
         }
