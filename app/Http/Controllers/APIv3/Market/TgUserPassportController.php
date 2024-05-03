@@ -27,13 +27,12 @@ class TgUserPassportController extends Controller
             $initDataDTO = $this->validator->validate($request->header('Init-data', ''));
             $tgUser = TelegramUser::where('telegram_id', $initDataDTO->user->id)->first();
 
-
-
             $user = Auth::guard('sanctum')->user();
             if ($user) {
                 log::info('Mini app User has token');
-                if ($user->id !== $tgUser->user_id) {
-                    $message = 'income by bearer user id:' . $user->id . ',by tg user: ' . $tgUser->user_id;
+                $tgUserId =  $tgUser->user_id ?? null;
+                if ($user->id !== $tgUserId) {
+                    $message = 'income by bearer user id:' . $user->id . ',by tg user: ' . $tgUserId;
                     log::debug('Tg relations error: ' . $message);
                 }
 
