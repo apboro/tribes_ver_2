@@ -39,7 +39,7 @@ class TgUserPassportController extends Controller
                 $userId = $user->id;
                 $token = $request->bearerToken();
             } else {
-                if (!$tgUser) {
+                if (!$tgUser || $tgUser->user === null) {
                     $userId = '';
                     $token = '';
                 } else {
