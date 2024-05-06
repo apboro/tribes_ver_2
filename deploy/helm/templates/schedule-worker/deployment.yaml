@@ -32,6 +32,9 @@ spec:
       - name: fpm-config
         configMap: 
           name: {{ include "..names.name" . }}-fpm
+      - name: storage
+        persistentVolumeClaim:
+          claimName: {{ include "..names.name" . }}-storage
       - name: bank-x509-key
         secret:
           secretName: {{ include "..names.name" . }}-bank-x509-key
@@ -43,6 +46,12 @@ spec:
           imagePullPolicy: {{ .Values.scheduleWorker.image.pullPolicy }}
           args:
           - schedule
+          volumeMounts:
+          - mountPath: /app/storage
+            name: storage
+          - mountPath: /app/storage/app/private.key
+            name: bank-x509-key
+            subPath: private.key
           envFrom:
           - configMapRef:
               name: {{ include "..names.fullname" . }}-envs
