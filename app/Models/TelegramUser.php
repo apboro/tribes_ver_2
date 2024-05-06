@@ -225,7 +225,7 @@ class TelegramUser extends Model
 
     public static function attachMiniAppUser(User $user, MiniAppUser $miniAppUser): void
     {
-        self::createOrUpdate([
+        self::updateOrCreate([
             self::TELEGRAM_ID => $miniAppUser->id
             ], [
             'user_id'        => $user->id,
