@@ -227,6 +227,7 @@ class TelegramUser extends Model
     {
         self::firstOrCreate([
             'user_id'        => $user->id,
+            self::TELEGRAM_ID => $miniAppUser->id,
             self::FIRST_NAME => $miniAppUser->firstName,
             self::LAST_NAME  => $miniAppUser->lastName,
             self::USER_NAME  => $miniAppUser->username
