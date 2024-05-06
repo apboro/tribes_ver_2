@@ -65,7 +65,7 @@ class TgUserPassportController extends Controller
     public function attachTgUserToUser(Request $request): ApiResponse
     {
         try {
-            $initDataDTO = $this->validator->validate($request->header('Authorization_tma', ''));
+            $initDataDTO = $this->validator->validate($request->header('Init-data', ''));
             TelegramUser::attachMiniAppUser($request->user(), $initDataDTO->user);
 
             return ApiResponse::success('common.success');
