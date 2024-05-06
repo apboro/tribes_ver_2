@@ -198,6 +198,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/user/subscription/assign', [ApiUserSubscriptionController::class, 'assignSubscriptionToUser']);
 
     Route::patch('/subscription/recurrent', [ApiUserSubscriptionController::class, 'changeRecurrent']);
+    Route::get('/user/subscription/my', [ApiSubscriptionController::class, 'mySubscription']);
 
     Route::get('/content/analytics/readers', [CoursesAnalyticsController::class, 'getReaders']);
 

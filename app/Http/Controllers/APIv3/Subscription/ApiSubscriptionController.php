@@ -9,7 +9,9 @@ use App\Http\ApiRequests\Subscription\ApiListSubscriptionsRequest;
 use App\Http\ApiRequests\Subscription\ApiShowSubscriptionRequest;
 use App\Http\ApiRequests\Subscription\ApiStoreSubscriptionRequest;
 use App\Http\ApiRequests\Subscription\ApiUpdateSubscriptionRequest;
+use App\Http\ApiRequests\Subscription\ApiMySubscriptionRequest;
 use App\Http\ApiResources\SubscriptionResource;
+use App\Http\ApiResources\SubscriptionUserResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\ApiResponses\ApiResponseList;
 use App\Http\Controllers\Controller;
@@ -118,5 +120,17 @@ class ApiSubscriptionController extends Controller
     public function destroy(Subscription $subscription)
     {
         //
+    }
+
+    public function mySubscription(ApiMySubscriptionRequest $request): ApiResponse
+    {
+        $user = Auth::user();
+        $subscription = $user->subscription->subscription ?? null;
+
+        if (!$subscription) {
+            return ApiResponse::error('subscription.not_found');
+        }
+
+        return ApiResponse::common(SubscriptionUserResource::make($subscription)->toArray($request));
     }
 }
