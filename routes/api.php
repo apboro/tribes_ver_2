@@ -45,6 +45,7 @@ use App\Http\Controllers\APIv3\Publication\ApiPublicationController;
 use App\Http\Controllers\APIv3\Publication\ApiPublicationPartController;
 use App\Http\Controllers\APIv3\Publication\ApiVisitedPublicationController;
 use App\Http\Controllers\APIv3\Shop\ApiShopController;
+use App\Http\Controllers\APIv3\Shop\ApiStoriesController;
 use App\Http\Controllers\APIv3\Shop\ApiShopLegalController;
 use App\Http\Controllers\APIv3\Statistic\ApiExportAllData;
 use App\Http\Controllers\APIv3\Statistic\ApiSemanticController;
@@ -106,6 +107,8 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/public/author/{id}', [ApiAuthorController::class, 'showForFollowers']);
     Route::get('/shops/list', [ApiShopController::class, 'list'])->name('api.shops.list');
     Route::get('/shops/{id}', [ApiShopController::class, 'show'])->name('api.shop.show')->where('id', '[0-9]+');
+    Route::get('/story/list', [ApiStoriesController::class, 'list'])->name('api.story.list');
+    Route::get('/story/{id}', [ApiStoriesController::class, 'show'])->name('api.story.show')->where('id', '[0-9]+');
     Route::get('/show/seller_connect/{id}', [ApiShopController::class, 'sellerConnect'])->name('api.shop.sellerConnect');
     Route::post('/pay/donate', [ApiNewDonateController::class, 'processDonatePayment'])->name('pay.donate.not.fixed');
     Route::get('/publication/{uuid}', [ApiPublicationController::class, 'showByUuid'])

@@ -8,6 +8,7 @@ use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\TelegramUserBotController;
 use App\Http\Controllers\TestBotController;
 use App\Http\Controllers\UserBotFormController;
+use App\Http\Controllers\StoriesController;
 use App\Models\Subscription;
 use App\Models\UserSubscription;
 use Illuminate\Support\Carbon;
@@ -78,6 +79,11 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::get('profile/communities', 'ProjectController@listCommunities')->name('profile.communities.list');
         Route::any('profile/projects/add', 'ProjectController@add')->name('profile.project.add');
         Route::any('profile/projects/edit/{project}', 'ProjectController@edit')->name('profile.project.edit');
+
+        Route::get('/stories/create', [StoriesController::class, 'create'])->name('stories.create');       
+        Route::post('/stories/create', [StoriesController::class, 'store'])->name('stories.store');
+        Route::get('/stories/', [StoriesController::class, 'index'])->name('stories.index');
+        Route::delete('/stories/{id}', [StoriesController::class, 'destroy'])->name('stories.destroy');
 
         Route::group(['prefix' => 'profile'], function () {
 
