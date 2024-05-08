@@ -93,13 +93,27 @@ class Product extends Model
      */
     public static function findByFilter(array $filter, array $statusList): Collection
     {
-        return self::addFilter($filter)
+        $maxProducts = $filter['products_in_category'] ?? null;
+
+        $products = self::addFilter($filter)
             ->whereNotIn('status', $statusList)
             ->with('category')
+            ->when($maxProducts, function ($query) {
+                $query->select('products.*')
+                ->selectRaw('ROW_NUMBER() OVER(PARTITION BY category_id ORDER BY id DESC) AS product_number');
+            })
             ->orderByRaw("category_id = 0, category_id ASC, id DESC")
             ->offset($filter['offset'] ?? 0)
             ->limit($filter['limit'] ?? self::HOW_SHOW_DEFAULT)
             ->get();
+
+        if ($maxProducts) {
+            $products = $products->reject(function ($item) use ($maxProducts) {
+                return $item['product_number'] > $maxProducts;
+            });            
+        }
+
+        return $products;
     }
 
     public static function countByFilter(array $filter, $statusList): int
