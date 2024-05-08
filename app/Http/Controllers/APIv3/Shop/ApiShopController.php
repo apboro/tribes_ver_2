@@ -125,7 +125,7 @@ class ApiShopController extends Controller
     {
         $shop = Shop::find($shopId);
         if (!$shop){
-            abort(404);
+          //  abort(404);
         }
 
         if ($shop->photo) {
