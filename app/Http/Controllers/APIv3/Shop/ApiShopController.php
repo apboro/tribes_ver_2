@@ -14,7 +14,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Shop;
 use App\Models\UnitpayKey;
 use App\Services\Unitpay\Payment as UnitpayPayment;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 
 class ApiShopController extends Controller
@@ -116,5 +119,22 @@ class ApiShopController extends Controller
         $userName = $tgSeller->user_name ?? '';
 
         return ApiResponse::common(['link' => $link, 'user_name' => $userName]); 
-    }   
+    }
+
+    public function getRedirect(Request $request, int $shopId)
+    {
+        $shop = Shop::find($shopId);
+        if (!$shop){
+            return abort(404);
+        }
+
+        if ($shop->photo) {
+            $shop->photo = Storage::disk('public')->url($shop->photo);
+        }
+
+        log::info('get redirect');
+        $link = Shop::buildTgShopLink($shop->id);
+
+        return view('shop_og_info', compact('link', 'shop'));
+    }
 }

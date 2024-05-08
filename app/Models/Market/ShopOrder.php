@@ -210,10 +210,8 @@ class ShopOrder extends Model
     {
         $orders = self::getOrdersStringList($self);
         $shopId = $self->getShop()->id;
-        $marketName = config('telegram_bot.bot.marketName');
-        $botName = config('telegram_bot.bot.botName');
 
-        $link = 'https://t.me/' . $botName . '/' . $marketName . '?startapp=' . $shopId;
+        $link =  Shop::buildTgShopLink($shopId);
         $tagA = '<a href="' . $link . '">' . $self->getShop()->name . '</a>';
 
         //TODO  <кол-во товара>
