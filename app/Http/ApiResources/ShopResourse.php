@@ -4,6 +4,7 @@ namespace App\Http\ApiResources;
 
 use App\Helper\PseudoCrypt;
 use App\Models\Author;
+use App\Models\Shop;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ShopResourse extends JsonResource
@@ -25,7 +26,7 @@ class ShopResourse extends JsonResource
             'photo' => $this->resource->photo,
             'buyable' => $this->resource->buyable,
             'shop_inline' => config('telegram_bot.bot.botFullName') . ' s-' . PseudoCrypt::hash($this->resource->id),
-            'shop_link' => 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '?startapp='. $this->resource->id,
+            'shop_link' => Shop::buildTgShopLink($this->resource->id),
         ] + $legalInfo;
     }
 }

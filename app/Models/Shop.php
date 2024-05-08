@@ -90,4 +90,12 @@ class Shop extends Model
         
         return $this->save();
     }
+
+    public static function buildTgShopLink(int $shopId): string
+    {
+        $botName = config('telegram_bot.bot.botName');
+        $marketName = config('telegram_bot.bot.marketName');
+
+        return  'https://t.me/' . $botName . '/' . $marketName . '?startapp=' . $shopId;
+    }
 }
