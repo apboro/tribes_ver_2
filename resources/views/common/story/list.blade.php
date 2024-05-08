@@ -25,7 +25,7 @@
                         </form>
                     </div>
                     <div class="col-4">
-                        <img src="{{ $story->image }}" style="max-width:100%;">
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($story->image) }}" style="max-width:100%;">
                     </div>
                 </div>
             </li>
