@@ -39,8 +39,8 @@ class ApiSubscriptionController extends Controller
      */
     public function index(ApiListSubscriptionsRequest $request): ApiResponseList
     {
-        $subscriptions = Subscription::orderBy('id')->get();
-
+        $subscriptions = Subscription::getAvailableSubscriptions(User::authBySanctum());
+        
         return ApiResponse::list()->items($subscriptions);
     }
 

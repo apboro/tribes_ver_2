@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Event;
 use App\Events\ApiUserRegister;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 /**
@@ -336,6 +337,17 @@ class User extends Authenticatable
         return $this->hasOne(UserSubscription::class, 'user_id', 'id');
     }
 
+    public function isUsedTrialSubscription()
+    {
+        return $this->hasOne(UserSubscription::class, 'user_id', 'id')
+            ->where(function ($query) {
+                $query->where(['subscription_id' => UserSubscription::TRIAL_PLAN_ID,
+                                'isActive' => false])
+                ->orWhere('subscription_id', '!=', UserSubscription::TRIAL_PLAN_ID);
+            })
+            ->exists();
+    }
+
     public function actions(): HasMany
     {
         return $this->hasMany(Action::class, 'user_id', 'id');
@@ -496,6 +508,11 @@ class User extends Authenticatable
     public function hasConfirmedPhone(): bool
     {
         return $this->phone && $this->phone_confirmed;
+    }
+
+    static public function authBySanctum(): ?self
+    {
+        return Auth::guard('sanctum')->user();
     }
 }
 
