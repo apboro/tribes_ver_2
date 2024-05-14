@@ -17,7 +17,11 @@ class StoryResourse extends JsonResource
             'content' => $this->resource->content,
             'button' => $this->resource->button,
             'link' => $this->resource->link,
+            'sort' => $this->resource->sort,
+            'friends' => $this->resource->friends,
+            'gradient' => $this->resource->gradient,
             'image' => $this->resource->image ? Storage::disk('public')->url($this->resource->image) : null,
+            'ico' => $this->resource->ico ? Storage::disk('public')->url($this->resource->ico) : null,
         ];
     }
 }

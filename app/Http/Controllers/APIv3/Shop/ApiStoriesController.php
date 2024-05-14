@@ -14,7 +14,7 @@ class ApiStoriesController extends Controller
 
     public function list(Request $request): ApiResponse
     {
-        $story = Story::all();
+        $story = Story::getAll();
 
         return ApiResponse::listPagination(
             [
