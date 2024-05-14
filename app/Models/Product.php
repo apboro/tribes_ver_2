@@ -110,7 +110,7 @@ class Product extends Model
         if ($maxProducts) {
             $products = $products->reject(function ($item) use ($maxProducts) {
                 return $item['product_number'] > $maxProducts;
-            });            
+            })->values();    
         }
 
         return $products;
