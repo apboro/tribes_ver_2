@@ -80,10 +80,13 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::any('profile/projects/add', 'ProjectController@add')->name('profile.project.add');
         Route::any('profile/projects/edit/{project}', 'ProjectController@edit')->name('profile.project.edit');
 
+        Route::get('/stories/{id}/edit', [StoriesController::class, 'edit'])->name('stories.edit');       
         Route::get('/stories/create', [StoriesController::class, 'create'])->name('stories.create');       
         Route::post('/stories/create', [StoriesController::class, 'store'])->name('stories.store');
+        Route::post('/stories/update/{id}', [StoriesController::class, 'update'])->name('stories.update');
         Route::get('/stories/', [StoriesController::class, 'index'])->name('stories.index');
         Route::delete('/stories/{id}', [StoriesController::class, 'destroy'])->name('stories.destroy');
+        Route::delete('/stories/image/{type}/{id}', [StoriesController::class, 'imageDestroy'])->name('stories.image.destroy')->where('type', 'image|ico');
 
         Route::group(['prefix' => 'profile'], function () {
 
