@@ -91,6 +91,17 @@ class Shop extends Model
         return $this->save();
     }
 
+    public static function buildShortShopLink(int $shopId): string
+    {
+        $botName = config('telegram_bot.bot.botName');
+        $part = '';
+        if($botName !== 'SpodialBot' ) {
+            $part = 'd/';
+        }
+
+        return  'https://spdl.shop/' . $part  . $shopId;
+    }
+
     public static function buildTgShopLink(int $shopId): string
     {
         $botName = config('telegram_bot.bot.botName');
