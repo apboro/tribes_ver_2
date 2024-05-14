@@ -26,7 +26,7 @@ class ShopResourse extends JsonResource
             'photo' => $this->resource->photo,
             'buyable' => $this->resource->buyable,
             'shop_inline' => config('telegram_bot.bot.botFullName') . ' s-' . PseudoCrypt::hash($this->resource->id),
-            'shop_link' => Shop::buildTgShopLink($this->resource->id),
+            'shop_link' => Shop::buildShortShopLink($this->resource->id),
         ] + $legalInfo;
     }
 }
