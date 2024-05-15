@@ -26,6 +26,11 @@ class ApiUnitpayKeysController extends Controller
             return ApiResponse::error('validation.unitpay.keys_used');
         }
 
+        $nowKeys = Auth::user()->getUnitpayKeyByShopId($request->shop_id);
+        if ($nowKeys->project_id && $nowKeys->secretKey) {
+            return ApiResponse::error('validation.unitpay.no_change');
+        }
+
         $resultOfTest = app(UnitpayPayment::class)->testKeys($request->project_id, $request->secretKey);
         if ($resultOfTest['success'] === false) {
             return ApiResponse::error($resultOfTest['message']);
