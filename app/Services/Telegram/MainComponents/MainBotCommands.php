@@ -58,7 +58,7 @@ class MainBotCommands
     public const BOT_COMMAND_PARAM_VALUE = '_1';
 
     private const CABINET = 'Личный кабинет 🚀';
-    private const PROMO_SHOP = 'Promo-shop 🛒';
+    private const PROMO_SHOP = 'О проекте 🛒';
     private const MY_SHOP = 'Мой Магазин 🛒';
     private const CABINET_COMMAND = 'getspodial'; //🚀
     private const SUPPORT = 'Поддержка 🚀'; //
@@ -192,15 +192,15 @@ class MainBotCommands
             $this->createMenu();
             $start = function (Context $ctx) {
                 log::info('/start bot enter');
-                $messageUserOwner = 'Вы успешно запустили бота Spodial! ' . "\n\n"
-                    . 'Моя задача помогать комьюнити-менеджерам в управлении чатами. Мой основной функционал настраивается' . "\n"
-                    . 'в ЛК на платформе spodial.com, в диалоге я могу по вашему запросу вам помочь:' . "\n\n"
-                    . ' • Получить ссылку на личный кабинет и базу знаний' . "\n"
-                    . ' • Обратиться в службу поддержки' . "\n"
-                    . ' • Подключить новый чат к Spodial' . "\n"
-                    . ' • Получить информацию по ТОП-10 участникам вашего чата.' . "\n"
-                    . 'Также я могу выполнять команды /ban, /kick, /mute. ' . "\n"
-                    . 'Используйте встроенную клавиатуру ниже, чтобы начать.';
+                $messageUserOwner = 'Spodial - конструктор магазинов в Telegram.' . "\n\n"
+                    . 'Управляйте магазинами и продавайте не покидая привычный вам мессенджер.' . "\n"
+                    . 'Чтобы создать новый магазин или управлять существующими перейдите в раздел "Мой Магазин"' . "\n\n"
+                    . ' • Нужна помощь? @Spodial_Support' . "\n";
+//                    . ' • Обратиться в службу поддержки' . "\n"
+//                    . ' • Подключить новый чат к Spodial' . "\n"
+//                    . ' • Получить информацию по ТОП-10 участникам вашего чата.' . "\n"
+//                    . 'Также я могу выполнять команды /ban, /kick, /mute. ' . "\n"
+//                    . 'Используйте встроенную клавиатуру ниже, чтобы начать.';
 
                 $messageForMember = 'Вы успешно запустили бота Spodial!' . "\n\n"
                     . 'Моя задача помогать комьюнити-менеджерам в управлении чатами. Мой основной функционал настраивается' . "\n"
@@ -221,7 +221,7 @@ class MainBotCommands
                         $ctx->replyHTML($messageUserOwner, $menu);
                     } else {
                         $menu = Menux::Get('custom');
-                        $ctx->replyHTML($messageForMember, $menu);
+                        $ctx->replyHTML($messageUserOwner, $menu);
                     }
                 }
 
@@ -1703,14 +1703,14 @@ class MainBotCommands
                 ->row()->btn('Подключить чат к Spodial');
             Menux::Create('menuCustom', 'custom')
                 ->row(
-                    Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
-                    Keyboard::btn(self::CABINET),
+//                    Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
+//                    Keyboard::btn(self::CABINET),
                     Keyboard::btn(self::PROMO_SHOP),
                     Keyboard::btn(self::MY_SHOP)
 //                    $this->buildMiniAppBtn()
                 )
                 ->row(
-                    Keyboard::btn(self::SUPPORT),
+//                    Keyboard::btn(self::SUPPORT),
                     Keyboard::btn(self::KNOWLEDGE_BASE),
                     Keyboard::btn(self::MY_SUBSRUPTION)
                 );
@@ -1718,16 +1718,16 @@ class MainBotCommands
             Menux::Create('menuOwner', 'owner')
 //                ->row(Keyboard::btn('menuOwner'), Keyboard::btn('Вт', 'calendar.ignore'));
                 ->row(
-            Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
-                    Keyboard::btn(self::CABINET),
+//            Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
+//                    Keyboard::btn(self::CABINET),
                     Keyboard::btn(self::PROMO_SHOP),
                     Keyboard::btn(self::MY_SHOP)
 //                    $this->buildMiniAppBtn()
                 )
                 ->row(
-                    Keyboard::btn(self::SUPPORT),
-                    Keyboard::btn(self::KNOWLEDGE_BASE),
-                    Keyboard::btn(self::MY_SUBSRUPTION)
+//                    Keyboard::btn(self::SUPPORT),
+//                    Keyboard::btn(self::KNOWLEDGE_BASE),
+//                    Keyboard::btn(self::MY_SUBSRUPTION)
                 );
         } catch (\Exception $e) {
             $this->sendErrorMessage($e);
