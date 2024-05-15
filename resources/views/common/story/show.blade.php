@@ -63,7 +63,7 @@
                         </div>
                     </div>
 
-                    @if (!$story->ico)
+                    @if ($story && !$story->ico)
                     <div class="row mt-2">
                         <div class="col-md-12 col-xl-12 mt-12">
                             Иконка<br>
@@ -73,7 +73,7 @@
                     </div>
                     @endif
 
-                    @if (!$story->image)
+                    @if ($story && !$story->image)
                     <div class="row mt-2">
                         <div class="col-md-12 col-xl-12 mt-12">
                             Картинка<br>
@@ -95,7 +95,7 @@
 
         <div class=" col-2">
             <div class="card-body">
-                @if ($story->ico)
+                @if ($story && $story->ico)
                 <div class=" mt-2">
                     <div class="col-md-12 col-xl-12 mt-12">
                         Иконка<br>
@@ -112,7 +112,7 @@
                 </div>
                 @endif
 
-                @if ($story->image)
+                @if ($story && $story->image)
                 <div class="row mt-2">
                     <div class="col-md-12 col-xl-12 mt-12">
                         Картинка<br>
