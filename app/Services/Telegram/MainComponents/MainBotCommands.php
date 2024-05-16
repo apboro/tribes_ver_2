@@ -1695,12 +1695,12 @@ class MainBotCommands
     {
         try {
             $keybord = new Keyboard(Keyboard::INLINE);
-            Menux::Create('menu', 'main') //  в рамках группы
+//            Menux::Create('menu', 'main') //  в рамках группы
 //                ->row(Keyboard::btn('menu', 'calendar.ignore'), Keyboard::btn('Вт', 'calendar.ignore'));
-                ->row()->btn(self::CABINET) // +
-                ->row()->btn(self::KNOWLEDGE_BASE)
-                ->row()->btn(self::SUPPORT)
-                ->row()->btn('Подключить чат к Spodial');
+//                ->row()->btn(self::CABINET) // +
+//                ->row()->btn(self::KNOWLEDGE_BASE)
+//                ->row()->btn(self::SUPPORT)
+//                ->row()->btn('Подключить чат к Spodial');
             Menux::Create('menuCustom', 'custom')
                 ->row(
 //                    Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
