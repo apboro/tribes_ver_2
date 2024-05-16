@@ -1711,8 +1711,8 @@ class MainBotCommands
                 )
                 ->row(
 //                    Keyboard::btn(self::SUPPORT),
-                    Keyboard::btn(self::KNOWLEDGE_BASE),
-                    Keyboard::btn(self::MY_SUBSRUPTION)
+//                    Keyboard::btn(self::KNOWLEDGE_BASE),
+//                    Keyboard::btn(self::MY_SUBSRUPTION)
                 );
 
             Menux::Create('menuOwner', 'owner')
