@@ -13,7 +13,8 @@ class UnitpayKey extends Model
     protected $primaryKey = 'shop_id';
     public $fillable = ['shop_id', 
                         'project_id', 
-                        'secretKey'];
+                        'secretKey',
+                        'metatag'];
 
     public static function isKeysUsed(int $projectId, int $secretKey, ?int $shopIdExclude = null): bool
     {

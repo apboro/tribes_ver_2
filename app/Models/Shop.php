@@ -109,4 +109,9 @@ class Shop extends Model
 
         return  'https://t.me/' . $botName . '/' . $marketName . '?startapp=' . $shopId;
     }
+
+    public static function findUnitpayMetatag(int $shopId): string
+    {
+        return Shop::firstOrNew(['id' => $shopId])->unitpayKey()->first()->metatag ?? '';
+    }
 }
