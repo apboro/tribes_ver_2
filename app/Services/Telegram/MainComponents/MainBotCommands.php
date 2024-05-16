@@ -1695,7 +1695,7 @@ class MainBotCommands
     {
         try {
             $keybord = new Keyboard(Keyboard::INLINE);
-//            Menux::Create('menu', 'main') //  в рамках группы
+            Menux::Create('menu', 'main') ;//  в рамках группы
 //                ->row(Keyboard::btn('menu', 'calendar.ignore'), Keyboard::btn('Вт', 'calendar.ignore'));
 //                ->row()->btn(self::CABINET) // +
 //                ->row()->btn(self::KNOWLEDGE_BASE)
@@ -1708,12 +1708,12 @@ class MainBotCommands
                     Keyboard::btn(self::PROMO_SHOP),
                     Keyboard::btn(self::MY_SHOP)
 //                    $this->buildMiniAppBtn()
-                )
-                ->row(
-//                    Keyboard::btn(self::SUPPORT),
-//                    Keyboard::btn(self::KNOWLEDGE_BASE),
-//                    Keyboard::btn(self::MY_SUBSRUPTION)
                 );
+//                ->row(
+////                    Keyboard::btn(self::SUPPORT),
+////                    Keyboard::btn(self::KNOWLEDGE_BASE),
+////                    Keyboard::btn(self::MY_SUBSRUPTION)
+//                );
 
             Menux::Create('menuOwner', 'owner')
 //                ->row(Keyboard::btn('menuOwner'), Keyboard::btn('Вт', 'calendar.ignore'));
@@ -1723,12 +1723,12 @@ class MainBotCommands
                     Keyboard::btn(self::PROMO_SHOP),
                     Keyboard::btn(self::MY_SHOP)
 //                    $this->buildMiniAppBtn()
-                )
-                ->row(
-//                    Keyboard::btn(self::SUPPORT),
-//                    Keyboard::btn(self::KNOWLEDGE_BASE),
-//                    Keyboard::btn(self::MY_SUBSRUPTION)
                 );
+//                ->row(
+////                    Keyboard::btn(self::SUPPORT),
+////                    Keyboard::btn(self::KNOWLEDGE_BASE),
+////                    Keyboard::btn(self::MY_SUBSRUPTION)
+//                );
         } catch (\Exception $e) {
             $this->sendErrorMessage($e);
         }
