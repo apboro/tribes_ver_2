@@ -5,7 +5,9 @@ namespace App\Http\Controllers\APIv3\User;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\ApiRequests\User\UnitpayKeyRequest;
+use App\Http\ApiRequests\User\UnitpayMetatagRequest;
 use App\Http\ApiResources\UnitpayKeyResource;
+use App\Http\ApiResources\UnitpayMetatagResource;
 use App\Models\Shop;
 use App\Models\UnitpayKey;
 use App\Services\Unitpay\Payment as UnitpayPayment;
@@ -50,5 +52,24 @@ class ApiUnitpayKeysController extends Controller
         Shop::find($request->shop_id)->setBuyable(false);
 
         return ApiResponse::success('common.success');
+    }
+
+    public function saveMetatag(UnitpayMetatagRequest $request): ApiResponse
+    {
+        $nowKeys = Auth::user()->getUnitpayKeyByShopId($request->shop_id);
+        if ($nowKeys->project_id && $nowKeys->secretKey) {
+            return ApiResponse::error('common.error');
+        }
+
+        Shop::find($request->shop_id)->unitpayKey()->updateOrCreate(['shop_id' => $request->shop_id], $request->validated());
+        
+        return ApiResponse::success('common.success');
+    }
+
+    public function showMetatag(UnitpayMetatagRequest $request): ApiResponse
+    {
+        $metatag = Shop::findUnitpayMetatag($request->shop_id);
+
+        return ApiResponse::common(['metatag' => $metatag]);
     }
 }

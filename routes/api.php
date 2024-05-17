@@ -143,6 +143,7 @@ Route::prefix('api/v3')->group(function () {
 
     Route::get('/shop/legal/privacy/{shopId}', [ApiShopLegalController::class, 'privacy']);
     Route::get('/shop/legal/offer/{shopId}', [ApiShopLegalController::class, 'offer']);
+    Route::get('/shop/unitpay-metatag', [ApiUnitpayKeysController::class, 'showMetatag'])->name('api.unitpay_metatag.show');
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () {
@@ -337,6 +338,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/user/unitpay-key', [ApiUnitpayKeysController::class, 'show'])->name('api.unitpay_key.show');
     Route::post('/user/unitpay-key', [ApiUnitpayKeysController::class, 'save'])->name('api.unitpay_key.save');
     Route::delete('/user/unitpay-key', [ApiUnitpayKeysController::class, 'destroy'])->name('api.unitpay_key.destroy');
+    Route::post('/shop/unitpay-metatag', [ApiUnitpayKeysController::class, 'saveMetatag'])->name('api.unitpay_metatag.save');
 
     Route::get('/publications', [ApiPublicationController::class, 'list'])->name('api.publications.list');
     Route::post('/publications', [ApiPublicationController::class, 'store'])->name('api.publications.create');
