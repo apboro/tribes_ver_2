@@ -16,7 +16,7 @@ class UnitpayKey extends Model
                         'secretKey',
                         'metatag'];
 
-    public static function isKeysUsed(int $projectId, int $secretKey, ?int $shopIdExclude = null): bool
+    public static function isKeysUsed(int $projectId, string $secretKey, ?int $shopIdExclude = null): bool
     {
         return self::where([
                         ['shop_id', '!=', $shopIdExclude],
