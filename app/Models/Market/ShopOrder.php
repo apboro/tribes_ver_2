@@ -176,12 +176,20 @@ class ShopOrder extends Model
         Event::dispatch(new BuyProductEvent($messageForBayer, $bayerUser->user));
     }
 
-    public static function prepareMessageToOwner(self $self, string $email): string
+    public function getStatusLabel(): string
+    {
+       return $this->status === 1 ? 'Оплачен' : 'Оформлен';
+    }
+
+    public static function prepareMessageToOwner(ShopOrder $self, string $email): string
     {
         $orders = self::getOrdersStringList($self);
         $currentEmail = $self->delivery->email;
         if($currentEmail !== $email) {
             $currentEmail = $email;
+            if (str_contains($currentEmail, '@spodial.com')) {
+                $currentEmail = 'Без почты.';
+            }
         }
 
         $phone = $self->delivery->phone;
@@ -190,7 +198,8 @@ class ShopOrder extends Model
 
         $tagA = '<a href="http://t.me/'. $userName . '">'. $userName . '</a>';
         //TODO  <кол-во товара>
-       $message = '<b> Оформлен заказ № ' . $self->id . '</b>' . "\n"
+
+       $message = '<b>' . $self->getStatusLabel() . ' заказ № ' . $self->id . '</b>' . "\n"
         . 'Контакты покупателя:' . "\n"
         . '   - телеграм: ' . $tagA . "\n"
         .  $phoneString
@@ -215,7 +224,7 @@ class ShopOrder extends Model
         $tagA = '<a href="' . $link . '">' . $self->getShop()->name . '</a>';
 
         //TODO  <кол-во товара>
-        $message = '<b> Вы оформили заказ № ' . $self->id . '</b>' . "\n"
+        $message = '<b>'. $self->getStatusLabel() . ' заказ № ' . $self->id . '</b>' . "\n"
         . 'Магазин: ' . $tagA  . "\n"
         . 'Содержимое заказа:' . "\n"
         .  $orders
