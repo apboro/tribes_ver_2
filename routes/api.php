@@ -170,7 +170,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/user/phone/confirm', [ApiUserPhoneController::class, 'confirmPhone']);
 
     Route::post('/user/telegram/assign', [ApiAssignDetachTelegramController::class, 'assignTelegramAccount']);
-    Route::delete('/user/telegram/detach', [ApiAssignDetachTelegramController::class, 'detachTelegramAccount']);
+    // Route::delete('/user/telegram/detach', [ApiAssignDetachTelegramController::class, 'detachTelegramAccount']);
     Route::get('/user/telegram/list', [ApiMessengersController::class, 'list']);
 
     Route::get('/projects', [ApiProjectController::class, 'index']);
