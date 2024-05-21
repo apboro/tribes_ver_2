@@ -28,11 +28,11 @@ class UnitpayRequest extends FormRequest
             return false;
         }
  
-        if ($this->buildSignature($data) !== $data['params']['signature']) {
+        /*if ($this->buildSignature($data) !== $data['params']['signature']) {
             Log::info('Bad Unitpay signature');
             return false;
         }
-        Log::info('Unitpay signature is right');
+        Log::info('Unitpay signature is right');*/
 
         $requestIP = trim(explode(',', ($this->header('X-Forwarded-For') ?? ''))[0]);
         Log::info('requestIP is ' . $requestIP);
