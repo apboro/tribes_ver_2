@@ -15,6 +15,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -475,19 +476,19 @@ class User extends Authenticatable
         return $this->shops()->pluck('id')->toArray();
     }
 
-    public function legalInfo(): HasMany
+    public function legalInfo(): HasOne
     {
-        return $this->hasMany(UserLegalInfo::class);
+        return $this->hasOne(UserLegalInfo::class);
     }
 
-    public function legalInfoList(): Collection
+    public function legalUserInfo(): ?UserLegalInfo
     {
-       return $this->legalInfo()->orderBy('id')->get();
+       return $this->legalInfo()->first();
     }
 
     public function getLegalInfo(int $id): UserLegalInfo
     {
-        return $this->legalInfo->where('id', $id)->first() ?? Invalid::null('getLegalInfo null');
+        return $this->legalInfo()->where('id', $id)->first() ?? Invalid::NullException('getLegalInfo null');
     }
 
     public function legalInfoFirst(): ?UserLegalInfo
