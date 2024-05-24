@@ -43,16 +43,18 @@ class TgUserPassportController extends Controller
                     $userId = '';
                     $token = '';
                 } else {
-                    $auth = Auth::loginUsingId($tgUser->user->id);
+                    $user = Auth::loginUsingId($tgUser->user->id);
 
-                    $userId = $auth->id;
-                    $token = $auth->createToken($auth->id)->plainTextToken;
+                    $userId = $user->id;
+                    $token = $user->createToken($user->id)->plainTextToken;
 
                     log::info('user token = ' . json_encode($token));
                 }
             }
 
-            return ApiResponse::common(compact('userId', 'token'));
+            $hasSubscription = (bool)($user->subscription->subscription ?? null);
+
+            return ApiResponse::common(compact('userId', 'token', 'hasSubscription'));
         } catch (Exception $e) {
             $message = $e->getMessage();
             $line = $e->getLine();

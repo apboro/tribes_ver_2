@@ -334,7 +334,8 @@ class User extends Authenticatable
 
     public function subscription()
     {
-        return $this->hasOne(UserSubscription::class, 'user_id', 'id');
+        return $this->hasOne(UserSubscription::class, 'user_id', 'id')
+                    ->withDefault(UserSubscription::getDefaultData($this->id));
     }
 
     public function isUsedTrialSubscription()
@@ -454,7 +455,7 @@ class User extends Authenticatable
 
         if ($user->wasRecentlyCreated) {
             $user->tinkoffSync();
-            Event::dispatch(new ApiUserRegister($user, $password));
+            // Event::dispatch(new ApiUserRegister($user, $password));
         }
 
         return $user;
