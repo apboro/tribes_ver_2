@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Domain\Entity\User\Service\SubscriptionService;
 use App\Exceptions\ApiUnauthorizedException;
 use App\Http\ApiResponses\ApiResponse;
+use App\Models\UserSubscription;
 use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Contracts\Auth\Factory as Auth;
@@ -28,9 +29,15 @@ class AuthenticateApiV3 extends Middleware
     {
         $this->authenticate($request, $guards);
 
-        if ($this->subscriptionService->isExpiredDate($request->user())){
+        $userSubscription = UserSubscription::getByUser($request->user()->id);
+
+        if ($userSubscription->id === 0) {
+            log::info('No subscription');
+            return ApiResponse::forbidden('subscription.not_found');
+        }
+        if ($userSubscription->isExpiredDate()) {
             log::info('Expired Date');
-            return ApiResponse::forbidden('subscription.expired_data');
+            return ApiResponse::forbidden('subscription.expired_data');    
         }
 
         return $next($request);

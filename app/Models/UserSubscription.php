@@ -28,6 +28,20 @@ class UserSubscription extends Model
 
     protected $guarded =[];
 
+    public static function getDefaultData(int $userId): array
+    {
+        return [
+            'id' => 0,
+            'user_id' => $userId,
+            'subscription_id' => 0,
+            'created_at' => null,
+            'updated_at' => null,
+            'isRecurrent' => false,
+            'isActive' => true,
+            'expiration_date' => time() + 600,
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
@@ -45,7 +59,7 @@ class UserSubscription extends Model
 
     public static function getByUser(int $userId): self
     {
-        return UserSubscription::where('user_id', $userId)->first();
+        return UserSubscription::where('user_id', $userId)->firstOrNew(self::getDefaultData($userId));
     }
 
     public static function setPerioud(int $userId, string $type, $days = 30)

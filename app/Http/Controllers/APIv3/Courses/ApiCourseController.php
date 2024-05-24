@@ -252,7 +252,7 @@ class ApiCourseController extends Controller
 
         $user->tinkoffSync();
 
-        Event::dispatch(new ApiUserRegister($user, $password));
+        // Event::dispatch(new ApiUserRegister($user, $password));
 
         return $user;
     }

@@ -16,6 +16,7 @@ use OpenApi\Annotations as OA;
  *             mediaType="application/json",
  *             @OA\Schema(
  *                 @OA\Property(property="email", type="string", example="test-dev@webstyle.top"),
+ *  *              @OA\Property(property="phone", type="integer"),
  *                 @OA\Property(property="name", type="string"),
  *             ),
  *         )
@@ -48,6 +49,7 @@ class ApiUserRegisterRequest extends ApiRequest
         return [
             'email' => 'required|email|unique:users',
             'name' => 'max:100',
+            'phone' => 'required|integer|unique:users',
         ];
     }
 

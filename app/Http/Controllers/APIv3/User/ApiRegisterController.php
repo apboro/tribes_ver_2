@@ -26,6 +26,7 @@ class ApiRegisterController extends Controller
             'email' => strtolower($data['email']),
             'password' => Hash::make($password),
             'phone_confirmed' => false,
+            'phone' => $data['phone'] ?? null,
         ]);
 
         Event::dispatch(new ApiUserRegister($user, $password));
@@ -42,10 +43,24 @@ class ApiRegisterController extends Controller
      */
     public function register(ApiUserRegisterRequest $request): ApiResponse
     {
-        $user = $this->create($request->all());
+        $password = Str::random(8);
+        $user = User::authBySanctum();
 
+        if ($user && !$user->subscription->id) {
+            $user->update($this->getUserFields($request, $password));
+        } elseif ($user && $user->subscription->id) {
+            return ApiResponse::error('common.error');
+        } else {
+            $user = User::create($this->getUserFields($request, $password));
             $user->tinkoffSync();
+        }          
+        Event::dispatch(new ApiUserRegister($user, $password));
 
         return ApiResponse::common(['token' => $user->createToken('api-token')->plainTextToken]);
+    }
+
+    private function getUserFields($request, string $password): array
+    {
+        return $request->validated() + ['password' => Hash::make($password)];
     }
 }
