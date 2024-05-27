@@ -62,7 +62,7 @@ class LegaLInfoRequest extends ApiRequest
     public function rules(): array
     {
         $required = 'required|string';
-        if('PUT' === $this->getMethod()) {
+        if ('PUT' === $this->getMethod()) {
             $required = 'nullable|string';
         }
 

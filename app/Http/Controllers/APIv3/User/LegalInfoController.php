@@ -8,6 +8,7 @@ use App\Http\Requests\User\LegaLInfoRequest;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class LegalInfoController extends Controller
@@ -15,44 +16,49 @@ class LegalInfoController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request): ApiResponse
     {
+
         /** @var User $user */
         $user = $request->user();
-        $userLegalInfo = $user->legalInfoList();
+        $userLegalInfo = $user->legalUserInfo();
 
-        return ApiResponse::common($userLegalInfo->toArray());
+        if($userLegalInfo) {
+            return ApiResponse::common($userLegalInfo->toArray());
+        }
+
+        return ApiResponse::error('common.not_found');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param LegaLInfoRequest $request
+     *
+     * @return ApiResponse
      */
     public function store(LegaLInfoRequest $request): ApiResponse
     {
-        try {
-            /** @var User $user */
-            $user = $request->user();
+        /** @var User $user */
+        $user = $request->user();
+        if (!$user->legalUserInfo()) {
             $user->legalInfo()->create($request->validated());
 
             return ApiResponse::success('common.success');
-
-        } catch(Exception $e) {
-            log::error('store user legal info error:'.  $e);
-
-            return  ApiResponse::error('common.error');
         }
+
+        return ApiResponse::error('common.success');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     *
+     * @return ApiResponse
      */
     public function show(Request $request, int $id): ApiResponse
     {
@@ -73,9 +79,10 @@ class LegalInfoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param LegaLInfoRequest $request
+     * @param int $id
+     *
+     * @return ApiResponse
      */
     public function update(LegaLInfoRequest $request, int $id): ApiResponse
     {
@@ -97,8 +104,10 @@ class LegalInfoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     *
+     * @return ApiResponse
      */
     public function destroy(Request $request, int $id): ApiResponse
     {
