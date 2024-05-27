@@ -34,8 +34,8 @@ class UserSubscription extends Model
             'id' => 0,
             'user_id' => $userId,
             'subscription_id' => 0,
-            'created_at' => null,
-            'updated_at' => null,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
             'isRecurrent' => false,
             'isActive' => true,
             'expiration_date' => time() + 600,
@@ -59,7 +59,8 @@ class UserSubscription extends Model
 
     public static function getByUser(int $userId): self
     {
-        return UserSubscription::where('user_id', $userId)->firstOrNew(self::getDefaultData($userId));
+        return UserSubscription::where('user_id', $userId)->first() ?? 
+                UserSubscription::make(self::getDefaultData($userId));
     }
 
     public static function setPerioud(int $userId, string $type, $days = 30)
