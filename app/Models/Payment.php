@@ -250,7 +250,7 @@ class Payment extends Model
         return self::where('id', $id)->where('amount', $amount)->exists();
     }   
 
-    public static function findByPaymentIdAndAmount(int $paymentId, int $amount): self
+    public static function findByPaymentIdAndAmount($paymentId, int $amount): ?self
     {
         return self::where('paymentId', $paymentId)->where('amount', $amount)->first();
     }
@@ -263,6 +263,14 @@ class Payment extends Model
         return $this;
     }  
     
+    public function setAsCanceled(): self
+    {
+        $this->status = 'CANCELED';
+        $this->save();
+
+        return $this;
+    }  
+
     public function setPaymentId(int $paymentId): self
     {
         if ($this->paymentId != $paymentId) {

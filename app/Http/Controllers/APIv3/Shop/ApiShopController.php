@@ -6,6 +6,7 @@ use App\Http\ApiRequests\Shop\ApiShopDelete;
 use App\Http\ApiRequests\Shop\ApiShopShowRequest;
 use App\Http\ApiRequests\Shop\ApiShopShowListRequest;
 use App\Http\ApiRequests\Shop\ApiShopShowMyListRequest;
+use App\Http\ApiRequests\Shop\ApiShopSetPaymentSystemRequest;
 use App\Http\ApiRequests\Shop\ApiShopStoreRequest;
 use App\Http\ApiRequests\Shop\ApiShopUpdateRequest;
 use App\Http\ApiResources\ShopResourse;
@@ -136,5 +137,14 @@ class ApiShopController extends Controller
         $link = Shop::buildTgShopLink($shop->id);
 
         return view('shop_og_info', compact('link', 'shop'));
+    }
+
+    public function setPaymentSystem(ApiShopSetPaymentSystemRequest $request): ApiResponse
+    {
+        $shop = Shop::find($request->shopId);
+        $shop->payment_system = $request->payment_system;
+        $shop->save();
+
+        return ApiResponse::success();
     }
 }

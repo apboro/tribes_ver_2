@@ -293,8 +293,16 @@ class PayService
 
     private static function getPaySystemClass($payFor): string
     {
-        $banks = config('payments.findBank');
+        $banks = config('payments.modelUseBank');
         $class = get_class($payFor);
+        if ($class === 'App\Models\Market\ShopOrder') {
+            $paySystems = config('payments.banksList');
+            if (!$paySystems[$payFor->shop->payment_system]) {
+                throw new \Exception('Платежная система не найдена');
+            }
+            return $paySystems[$payFor->shop->payment_system];
+        }
+
         if (isset($banks[$class])) {
             return $banks[$class];
         }
