@@ -20,6 +20,7 @@ class VerifyCsrfToken extends Middleware
         '/webhook-user-bot',
         '/api/*',
         '/telegram-bot-integration/webhook',
-        '/wbnr/webhook'
+        '/wbnr/webhook',
+        '/yookassa/notify',
     ];
 }

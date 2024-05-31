@@ -14,6 +14,7 @@ use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffService;
 use App\Services\Unitpay\Notify as UnitpayNotify;
+use App\Services\Yookassa\Notify as YookassaNotify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -66,6 +67,18 @@ class PaymentController extends Controller
 
         return view('common.cash.outcome.list')
             ->withAccumulations($accumulations);
+    }
+
+    public function yookassaNotify(Request $request)
+    {
+        Log::info('Нотификация Yookassa', ['request' => $request]);
+        if (YookassaNotify::handle($request->getContent())){
+            $responce = ['result' => ['message' => 'Успешно обработано']];
+        } else {
+            $responce = ['error' => ['message' => 'Ошибка']];
+        }
+
+        return response(\json_encode($responce), 200);
     }
 
     public function unitpayNotify(UnitpayRequest $request)

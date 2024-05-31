@@ -10,6 +10,7 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Shop;
 use App\Models\TelegramUser;
+use App\Models\YookassaKey;
 use Discord\Helpers\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -287,5 +288,10 @@ class ShopOrder extends Model
          }
 
          return ShopOrder::STATUS_NAME_LIST[$this->status];
+    }
+
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(Shop::class);
     }
 }

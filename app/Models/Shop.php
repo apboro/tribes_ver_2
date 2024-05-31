@@ -114,4 +114,9 @@ class Shop extends Model
     {
         return Shop::firstOrNew(['id' => $shopId])->unitpayKey()->first()->metatag ?? '';
     }
+
+    public function yookassaKey(): HasOne
+    {
+        return $this->hasOne(YookassaKey::class);
+    }
 }
