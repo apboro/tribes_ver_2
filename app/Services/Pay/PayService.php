@@ -295,8 +295,12 @@ class PayService
     {
         $banks = config('payments.modelUseBank');
         $class = get_class($payFor);
+        
         if ($class === 'App\Models\Market\ShopOrder') {
             $paySystems = config('payments.banksList');
+            if (!$payFor->shop->payment_system) {
+                return $paySystems['unitpay'];
+            }
             if (!$paySystems[$payFor->shop->payment_system]) {
                 throw new \Exception('Платежная система не найдена');
             }
