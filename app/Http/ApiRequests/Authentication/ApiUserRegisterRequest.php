@@ -60,13 +60,18 @@ class ApiUserRegisterRequest extends ApiRequest
 
     public function prepareForValidation(): void
     {
-        $email = strtolower($this->request->get('email'));
-        $this->request->set('email', $email);
-        $name = $this->request->get('name');
+        $email = strtolower($this->get('email'));
+        $name = $this->get('name');
+
         if (empty($name)) {
             $name = explode('@', $email);
-            $this->request->set('name', $name[0] ?? 'No name yet');
+            $name = $name[0] ?? 'No name yet';
         }
+
+        $this->merge([
+            'email' => $email,
+            'name' => $name,
+        ]);
     }
 
     public function messages(): array
@@ -90,20 +95,5 @@ class ApiUserRegisterRequest extends ApiRequest
             'password.min' => $this->localizeValidation('register.password_min_length'),
             'password.confirmed' => $this->localizeValidation('register.password_confirm'),
         ];
-    }
-
-    public function passedValidation(): void
-    {
-        $email = $this->request->get('email');
-        $name = $this->request->get('name');
-
-        if (empty($name)) {
-            $name = explode('@', $email);
-        }
-
-        $this->merge([
-            'email' => strtolower($email),
-            'name' => $name,
-        ]);
     }
 }
