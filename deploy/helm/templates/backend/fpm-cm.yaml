@@ -26,6 +26,7 @@ data:
     pm.max_children = {{ .Values.fpm.maxChildren }}
     pm.start_servers = {{ .Values.fpm.startServers }}
     pm.min_spare_servers = {{ .Values.fpm.minSpareServers }}
+    pm.max_spare_servers = {{ .Values.fpm.maxSpareServers }}
     pm.max_requests = {{ .Values.fpm.maxRequests }}
 
 {{- end }}

@@ -123,6 +123,7 @@ fpm:
   maxChildren: 24
   startServers: 4
   minSpareServers: 4
+  maxSpareServers: 6
   maxRequests: 300
 
 config:
