@@ -21,7 +21,7 @@ server {
     location ~ \.php$ {
         fastcgi_pass unix://var/run/php/php-fpm.sock;
         fastcgi_param DOCUMENT_ROOT   /app/public;
-        fastcgi_param HTTPS on;
+        fastcgi_param HTTPS ${FPM_HTTPS};
         fastcgi_param SCRIPT_FILENAME /app/public/$fastcgi_script_name;
         include fastcgi_params;
     }

@@ -1,26 +1,67 @@
 version: "3.9"
 services:
+  migrator:
+    build: .
+    command: ["artisan", "migrate"]
+    environment:
+    - REDIS_HOST=redis
+    - REDIS_PASSWORD=null
+    - REDIS_PORT=6379
+    - DB_HOST_MAIN=postgresql
+    - DB_DATABASE_MAIN=tribes_community
+    - DB_USERNAME_MAIN=tribes
+    - DB_PASSWORD_MAIN=tribes1q2w3e4r
+    env_file:
+    - .env
+    depends_on:
+      postgresql:
+        condition: service_healthy
   frontend:
     build: .
     command: "frontend"
+    environment:
+    - REDIS_HOST=redis
+    - REDIS_PASSWORD=null
+    - REDIS_PORT=6379
+    - DB_HOST_MAIN=postgresql
+    - DB_DATABASE_MAIN=tribes_community
+    - DB_USERNAME_MAIN=tribes
+    - DB_PASSWORD_MAIN=tribes1q2w3e4r
+    env_file:
+    - .env      
   backend:
     build: .
     command: "php-fpm"
-    environment: 
-    - APP_URL=http://localhost
+    environment:
     - REDIS_HOST=redis
     - REDIS_PASSWORD=null
     - REDIS_PORT=6379
+    - APP_URL=http://localhost
     - DB_HOST_MAIN=postgresql
     - DB_DATABASE_MAIN=tribes_community
     - DB_USERNAME_MAIN=tribes
     - DB_PASSWORD_MAIN=tribes1q2w3e4r
+    env_file:
+    - .env
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+      #    environment: 
+      #    - APP_URL=http://localhost
+      #    - REDIS_HOST=redis
+      #    - REDIS_PASSWORD=null
+      #    - REDIS_PORT=6379
+      #    - DB_HOST_MAIN=postgresql
+      #    - DB_DATABASE_MAIN=tribes_community
+      #    - DB_USERNAME_MAIN=tribes
+      #    - DB_PASSWORD_MAIN=tribes1q2w3e4r
     volumes:
-      - php-fpm:/var/run/php
+    - storage:/app/storage
+    - php-fpm:/var/run/php
   queue-worker:
     build: .
     command: "queue"
-    environment: 
+    environment:
     - REDIS_HOST=redis
     - REDIS_PASSWORD=null
     - REDIS_PORT=6379
@@ -28,10 +69,22 @@ services:
     - DB_DATABASE_MAIN=tribes_community
     - DB_USERNAME_MAIN=tribes
     - DB_PASSWORD_MAIN=tribes1q2w3e4r
+    env_file:
+    - .env
+      #    environment: 
+      #    - REDIS_HOST=redis
+      #    - REDIS_PASSWORD=null
+      #    - REDIS_PORT=6379
+      #    - DB_HOST_MAIN=postgresql
+      #    - DB_DATABASE_MAIN=tribes_community
+      #    - DB_USERNAME_MAIN=tribes
+      #    - DB_PASSWORD_MAIN=tribes1q2w3e4r
+    volumes:
+    - storage:/app/storage
   schedule:
     build: .
     command: "schedule"
-    environment: 
+    environment:
     - REDIS_HOST=redis
     - REDIS_PASSWORD=null
     - REDIS_PORT=6379
@@ -39,10 +92,33 @@ services:
     - DB_DATABASE_MAIN=tribes_community
     - DB_USERNAME_MAIN=tribes
     - DB_PASSWORD_MAIN=tribes1q2w3e4r
+    env_file:
+    - .env
+      #    environment: 
+      #    - REDIS_HOST=redis
+      #    - REDIS_PASSWORD=null
+      #    - REDIS_PORT=6379
+      #    - DB_HOST_MAIN=postgresql
+      #    - DB_DATABASE_MAIN=tribes_community
+      #    - DB_USERNAME_MAIN=tribes
+      #    - DB_PASSWORD_MAIN=tribes1q2w3e4r
+    volumes:
+    - storage:/app/storage
   proxy:
     build: .
     command: "proxy"
+    environment:
+    - REDIS_HOST=redis
+    - REDIS_PASSWORD=null
+    - REDIS_PORT=6379
+    - DB_HOST_MAIN=postgresql
+    - DB_DATABASE_MAIN=tribes_community
+    - DB_USERNAME_MAIN=tribes
+    - DB_PASSWORD_MAIN=tribes1q2w3e4r
+    env_file:
+    - .env    
     volumes:
+      - storage:/app/storage
       - php-fpm:/var/run/php
   nginx:
     image: nginx
@@ -52,15 +128,30 @@ services:
       - "80:80"
   redis:
     image: "redis:alpine"
+    env_file:
+    - .env
+    environment:
+    - DB_HOST_MAIN=postgresql
+    - DB_DATABASE_MAIN=tribes_community
+    - DB_USERNAME_MAIN=tribes
+    - DB_PASSWORD_MAIN=tribes1q2w3e4r
   postgresql:
     image: 'bitnami/postgresql:14.5.0-debian-11-r6'
     environment: 
     - POSTGRESQL_USERNAME=tribes
     - POSTGRESQL_PASSWORD=tribes1q2w3e4r
     - POSTGRESQL_DATABASE=tribes_community
+    env_file:
+    - .env
     volumes:
       - postgres:/var/lib/postgres/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRESQL_USERNAME}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
 
 volumes:
   postgres:
   php-fpm:
+  storage:
