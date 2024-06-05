@@ -71,7 +71,7 @@ class PaymentCards
 
         $tinkoff->RemoveCard($user->getCustomerKey(), $cardId);
         $result = $tinkoff->response();
-        $status = $result['Success'] == true ? 'success' : 'error';
+        $status = (isset($result['Success']) && $result['Success']) ? 'success' : 'error';
 
         return ['status' => $status];
     }
