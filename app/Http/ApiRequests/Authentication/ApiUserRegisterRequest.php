@@ -49,7 +49,12 @@ class ApiUserRegisterRequest extends ApiRequest
         return [
             'email' => 'required|email|unique:users',
             'name' => 'max:100',
-            'phone' => 'required|integer|unique:users',
+            'phone' => [
+                'required',
+                'integer',
+                'unique:users',
+                'regex:/^(8|7)\d{10}$/'
+            ],
         ];
     }
 
@@ -77,6 +82,7 @@ class ApiUserRegisterRequest extends ApiRequest
 
             'phone.required' => $this->localizeValidation('register.phone_required'),
             'phone.integer' => $this->localizeValidation('register.incorrect_format'),
+            'phone.regex' => $this->localizeValidation('register.incorrect_format'),
             'phone.unique' => $this->localizeValidation('register.phone_already_use'),
 
             'password.required' => $this->localizeValidation('register.password_require'),
