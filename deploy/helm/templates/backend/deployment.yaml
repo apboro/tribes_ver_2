@@ -37,6 +37,9 @@ spec:
       - name: bank-x509-key
         secret:
           secretName: {{ include "..names.name" . }}-bank-x509-key
+      - name: fpm-config
+        configMap:
+          name: {{ include "..names.name" . }}-fpm
       containers:
         - name: proxy
           image: {{ include "..imageName" .Values.backend.image}}
@@ -100,6 +103,9 @@ spec:
           - mountPath: /app/storage/app/private.key
             name: bank-x509-key
             subPath: private.key
+          - mountPath: /usr/local/etc/php-fpm.conf
+            name: fpm-config
+            subPath: php-fpm.conf
           envFrom:
           - configMapRef:
               name: {{ include "..names.fullname" . }}-envs

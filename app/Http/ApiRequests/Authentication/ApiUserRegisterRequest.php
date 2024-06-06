@@ -49,19 +49,29 @@ class ApiUserRegisterRequest extends ApiRequest
         return [
             'email' => 'required|email|unique:users',
             'name' => 'max:100',
-            'phone' => 'required|integer|unique:users',
+            'phone' => [
+                'required',
+                'integer',
+                'unique:users',
+                'regex:/^(8|7)\d{10}$/'
+            ],
         ];
     }
 
     public function prepareForValidation(): void
     {
-        $email = strtolower($this->request->get('email'));
-        $this->request->set('email', $email);
-        $name = $this->request->get('name');
+        $email = strtolower($this->get('email'));
+        $name = $this->get('name');
+
         if (empty($name)) {
             $name = explode('@', $email);
-            $this->request->set('name', $name[0] ?? 'No name yet');
+            $name = $name[0] ?? 'No name yet';
         }
+
+        $this->merge([
+            'email' => $email,
+            'name' => $name,
+        ]);
     }
 
     public function messages(): array
@@ -77,6 +87,7 @@ class ApiUserRegisterRequest extends ApiRequest
 
             'phone.required' => $this->localizeValidation('register.phone_required'),
             'phone.integer' => $this->localizeValidation('register.incorrect_format'),
+            'phone.regex' => $this->localizeValidation('register.incorrect_format'),
             'phone.unique' => $this->localizeValidation('register.phone_already_use'),
 
             'password.required' => $this->localizeValidation('register.password_require'),
@@ -84,20 +95,5 @@ class ApiUserRegisterRequest extends ApiRequest
             'password.min' => $this->localizeValidation('register.password_min_length'),
             'password.confirmed' => $this->localizeValidation('register.password_confirm'),
         ];
-    }
-
-    public function passedValidation(): void
-    {
-        $email = $this->request->get('email');
-        $name = $this->request->get('name');
-
-        if (empty($name)) {
-            $name = explode('@', $email);
-        }
-
-        $this->merge([
-            'email' => strtolower($email),
-            'name' => $name,
-        ]);
     }
 }

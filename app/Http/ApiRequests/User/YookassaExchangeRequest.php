@@ -8,20 +8,23 @@ use Illuminate\Support\Facades\Auth;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Get(path="/api/v3/yookassa/get_oauth_link", operationId="yookassa-get_oauth_link", summary="get link for receive oauth",
+ * @OA\Get(path="/api/v3/yookassa/excange", operationId="yookassa-excange", summary="excange oauth",
  *  security={{"sanctum": {} }}, tags={"yookassa"},
- *  @OA\Parameter(name="shop_id", in="query", description="shop_id",required=true,@OA\Schema(type="integer",)),
+ *  @OA\Parameter(name="code", in="query", description="code",required=true,@OA\Schema(type="string",)),
+ *  @OA\Parameter(name="state", in="query", description="state",required=true,@OA\Schema(type="integer",)),
  *  @OA\Response(response=200, description="OK"),
  *  @OA\Response(response=419, description="Token mismatch", @OA\JsonContent(ref="#/components/schemas/api_response_token_mismatch")),
  * )
  */
 
-class YookassaKeyRequest extends ApiRequest
+class YookassaExchangeRequest extends ApiRequest
 {
     public function rules(): array
     {
         return [
-            'shop_id' => ['required', 'integer', new UserHasShopRule],
+            'code' => 'required',
+            'state' => [
+                'required', 'integer', new UserHasShopRule],
         ];
     }
 }

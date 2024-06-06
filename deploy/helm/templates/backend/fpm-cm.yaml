@@ -4,5 +4,29 @@ kind: ConfigMap
 metadata:
   name: {{ include "..names.name" . }}-fpm
 data:
-{{ (.Files.Glob "files/*").AsConfig | indent 2 }}
+  php-fpm.conf: |
+    [global]
+    error_log = /proc/self/fd/2
+    log_limit = 8192
+    daemonize = no 
+
+    [www]
+    access.log = /proc/self/fd/2
+    clear_env = no
+    catch_workers_output = yes
+    decorate_workers_output = no
+    user = root
+    group = root
+
+    listen = /var/run/php/php-fpm.sock
+    listen.owner = nginx
+    listen.group = nginx
+
+    pm = dynamic
+    pm.max_children = {{ .Values.fpm.maxChildren }}
+    pm.start_servers = {{ .Values.fpm.startServers }}
+    pm.min_spare_servers = {{ .Values.fpm.minSpareServers }}
+    pm.max_spare_servers = {{ .Values.fpm.maxSpareServers }}
+    pm.max_requests = {{ .Values.fpm.maxRequests }}
+
 {{- end }}

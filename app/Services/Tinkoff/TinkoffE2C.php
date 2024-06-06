@@ -195,9 +195,12 @@ class TinkoffE2C
         $cards = $this->response();
         if (isset($cards['data']) && is_array($cards['data'])) {
             foreach ($cards['data'] as $card){
+                if (!isset($card->Status) || $card->Status === 'D') {
+                    continue;
+                }
                 $cardsList[] = ['CardId' => $card->CardId ?? null,
                                 'Pan' => $card->Pan ?? null,
-                                'Status' => $card->Status ?? null 
+                                'Status' => $card->Status
                                 ];
             }
         }

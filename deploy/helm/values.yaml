@@ -119,6 +119,13 @@ migrations:
   activeDeadlineSeconds: 7200
   backoffLimit: 5
 
+fpm:
+  maxChildren: 24
+  startServers: 4
+  minSpareServers: 4
+  maxSpareServers: 6
+  maxRequests: 300
+
 config:
   tribesCommision: "0"
   apiRateLimit: "off"

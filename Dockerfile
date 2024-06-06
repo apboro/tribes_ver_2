@@ -4,7 +4,7 @@ ARG NODE_VERSION="14.20"
 ARG NGINX_VERSION="1.23.1"
 ARG WORKDIR="/app"
 
-FROM node:${NODE_VERSION} as frontend-builder
+FROM third-party-registry.fabit.ru/docker.io/library/node:${NODE_VERSION} as frontend-builder
 ARG WORKDIR
 WORKDIR ${WORKDIR}
 COPY package.json package-lock.json ${WORKDIR}/
@@ -15,9 +15,11 @@ COPY *.js artisan ${WORKDIR}/
 # COPY app ${WORKDIR}/app/
 RUN npm run prod
 
-FROM php:${PHP_VERSION}-fpm-alpine3.15
+FROM third-party-registry.fabit.ru/docker.io/library/php:${PHP_VERSION}-fpm-alpine3.15
 ARG WORKDIR
 WORKDIR ${WORKDIR}
+
+ENV FPM_HTTPS=on
 
 RUN apk add --no-cache nginx gettext tzdata ca-certificates && rm /etc/nginx/http.d/*
 
