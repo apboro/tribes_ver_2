@@ -46,15 +46,6 @@ services:
     depends_on:
       migrator:
         condition: service_completed_successfully
-      #    environment: 
-      #    - APP_URL=http://localhost
-      #    - REDIS_HOST=redis
-      #    - REDIS_PASSWORD=null
-      #    - REDIS_PORT=6379
-      #    - DB_HOST_MAIN=postgresql
-      #    - DB_DATABASE_MAIN=tribes_community
-      #    - DB_USERNAME_MAIN=tribes
-      #    - DB_PASSWORD_MAIN=tribes1q2w3e4r
     volumes:
     - storage:/app/storage
     - php-fpm:/var/run/php
@@ -71,14 +62,6 @@ services:
     - DB_PASSWORD_MAIN=tribes1q2w3e4r
     env_file:
     - .env
-      #    environment: 
-      #    - REDIS_HOST=redis
-      #    - REDIS_PASSWORD=null
-      #    - REDIS_PORT=6379
-      #    - DB_HOST_MAIN=postgresql
-      #    - DB_DATABASE_MAIN=tribes_community
-      #    - DB_USERNAME_MAIN=tribes
-      #    - DB_PASSWORD_MAIN=tribes1q2w3e4r
     volumes:
     - storage:/app/storage
   schedule:
@@ -94,14 +77,6 @@ services:
     - DB_PASSWORD_MAIN=tribes1q2w3e4r
     env_file:
     - .env
-      #    environment: 
-      #    - REDIS_HOST=redis
-      #    - REDIS_PASSWORD=null
-      #    - REDIS_PORT=6379
-      #    - DB_HOST_MAIN=postgresql
-      #    - DB_DATABASE_MAIN=tribes_community
-      #    - DB_USERNAME_MAIN=tribes
-      #    - DB_PASSWORD_MAIN=tribes1q2w3e4r
     volumes:
     - storage:/app/storage
   proxy:
