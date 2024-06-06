@@ -41,4 +41,12 @@ class Invalid
 
         throw new UnexpectedValueException($message);
     }
+
+    public static function NotFound(string $message = ''): void
+    {
+        $message = ' Not Found Model ' . $message;
+        Log::error($message);
+
+        throw new UnexpectedValueException($message);
+    }
 }

@@ -502,9 +502,21 @@ class User extends Authenticatable
         return $this->shops()->where('id', $shopId)->exists();
     }
 
-    public function getUnitpayKeyByShopId($shopId): UnitpayKey
+    public function getUnitpayKeyByShopId(int $shopId): UnitpayKey
     {
-       return $this->shops()->where('id', $shopId)->first()->unitpayKey()->withDefault()->firstOrNew();
+       return $this->getShopById($shopId)->unitpayKey()->withDefault()->firstOrNew();
+    }
+
+    /**
+     * @param int $shopId
+     *
+     * @return Shop|\Illuminate\Database\Eloquent\Model|HasMany|object
+     *
+     * @throw UnexpectedValueException
+     */
+    public function getShopById(int $shopId): Shop
+    {
+        return $this->shops()->where('id', $shopId)->first() ?? Invalid::NotFound();
     }
 
     public function hasConfirmedPhone(): bool

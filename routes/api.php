@@ -69,6 +69,7 @@ use App\Http\Controllers\APIv3\User\ApiUserController;
 use App\Http\Controllers\APIv3\User\ApiUnitpayKeysController;
 use App\Http\Controllers\APIv3\User\ApiUserPhoneController;
 use App\Http\Controllers\APIv3\User\ApiYookassaKeysController;
+use App\Http\Controllers\Shop\SafeRouteController;
 use App\Http\Controllers\TelegramUserBotController;
 use App\Http\Controllers\TelegramUserReputationController;
 use App\Services\SMTP\MailSender;
@@ -156,6 +157,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () 
     Route::post('/statistic/publication-time', [ApiPublicationStatistic::class, 'saveViewTime']);
     Route::post('/bill/subscription', [ApiBillController::class, 'makeBill'])->name('api.bill.subscription.makeBill');
     Route::apiResource('/user/legal-info', LegalInfoController::class);
+    Route::apiResource('/shop/safe-route', SafeRouteController::class);
 });
 /** TODO fastFIX  */
 //Route::get('/api/v3/question/{id}', [ApiQuestionController::class, 'show']);

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Exceptions\Invalid;
+use App\Models\Shop\ShopSafeRoute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -77,6 +79,23 @@ class Shop extends Model
     public function legalInfo(): hasOneThrough
     {
         return $this->hasOneThrough(UserLegalInfo::class, User::class, 'id', 'user_id', 'user_id', 'id');
+    }
+
+    public function safeRoute(): HasOne
+    {
+        return $this->hasOne(ShopSafeRoute::class);
+    }
+
+    /**
+     * @param int $shopId
+     *
+     * @return Shop|Model|HasMany|object
+     *
+     * @throw UnexpectedValueException
+     */
+    public function getSafeRoute(): ShopSafeRoute
+    {
+        return $this->safeRoute()->first() ?? Invalid::NotFound();
     }
         
     public function visitedProductsByTgUser(int $telegramId): ?VisitedProduct
