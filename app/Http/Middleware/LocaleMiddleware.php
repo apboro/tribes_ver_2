@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Auth;
-use Illuminate\Support\Facades\Log;
 
 class LocaleMiddleware
 {
@@ -17,7 +16,7 @@ class LocaleMiddleware
     public function handle(Request $request, Closure $next)
     {
 
-        Log::info($request->fullUrl());
+//        Log::info($request->fullUrl());
 
 //        $resp = $next($request);
 //        if(Auth::check()){
