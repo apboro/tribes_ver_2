@@ -6,6 +6,7 @@ use App\Http\ApiRequests\Shop\ApiShopDelete;
 use App\Http\ApiRequests\Shop\ApiShopShowRequest;
 use App\Http\ApiRequests\Shop\ApiShopShowListRequest;
 use App\Http\ApiRequests\Shop\ApiShopShowMyListRequest;
+use App\Http\ApiRequests\Shop\ApiShopGetPaymentSystemsRequest;
 use App\Http\ApiRequests\Shop\ApiShopSetPaymentSystemRequest;
 use App\Http\ApiRequests\Shop\ApiShopStoreRequest;
 use App\Http\ApiRequests\Shop\ApiShopUpdateRequest;
@@ -14,6 +15,7 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
 use App\Models\UnitpayKey;
+use App\Services\Shop\ShopPayments;
 use App\Services\Unitpay\Payment as UnitpayPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -146,5 +148,12 @@ class ApiShopController extends Controller
         $shop->save();
 
         return ApiResponse::success();
+    }
+
+    public function getPaymentSystems(ApiShopGetPaymentSystemsRequest $request): ApiResponse
+    {
+        $shop = Shop::find($request->shopId);
+        
+        return ApiResponse::common($shop->getPaymentSystems());
     }
 }
