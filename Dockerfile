@@ -49,9 +49,8 @@ STOPSIGNAL SIGQUIT
 # nginx and php-fpm
 EXPOSE 80 9000
 
-COPY composer.* .env.example artisan ${WORKDIR}/
-RUN cp -v .env.example .env && \
-    php composer.phar install --no-dev --no-autoloader --prefer-dist
+COPY composer.* .docker/.env artisan ${WORKDIR}/
+RUN php composer.phar install --no-dev --no-autoloader --prefer-dist
 
 COPY --chown=www-data:www-data . ${WORKDIR}/  
 RUN php composer.phar install --no-dev --optimize-autoloader --prefer-dist &&\
