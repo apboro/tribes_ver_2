@@ -23,6 +23,7 @@ use OpenApi\Annotations as OA;
  *         )
  *     ),
  *     @OA\Response(response=200, description="OK"),
+ *     @OA\Response(response=403, description="Shop is unavailable"),
  * )
  *  * @OA\Get(
  *     path="/api/v3/show/seller_connect/{id}",

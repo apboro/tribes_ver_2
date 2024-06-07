@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\Product;
 
+use App\Domain\Entity\Shop\CheckShopIsAvailable;
 use App\Http\ApiRequests\Product\ApiProductDeleteRequest;
 use App\Http\ApiRequests\Product\ApiProductListRequest;
 use App\Http\ApiRequests\Product\ApiProductPublicListRequest;
@@ -16,6 +17,7 @@ use App\Http\ApiResources\Product\ProductResource;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Shop;
 use Illuminate\Support\Facades\Storage;
 
 class ApiProductController extends Controller
@@ -100,6 +102,12 @@ class ApiProductController extends Controller
 
     public function publicList(ApiProductPublicListRequest $request): ApiResponse
     {
+        $shop = Shop::find($request->shop_id);
+
+        if (CheckShopIsAvailable::isUnavailable($shop)) {
+            return ApiResponse::forbidden('common.shop_unavailable');
+        }
+
         return $this->showList($request, Product::NOT_SHOW_STATUS);
     }
 

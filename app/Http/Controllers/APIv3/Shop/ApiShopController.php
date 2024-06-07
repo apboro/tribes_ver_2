@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\Shop;
 
+use App\Domain\Entity\Shop\CheckShopIsAvailable;
 use App\Http\ApiRequests\Shop\ApiShopDelete;
 use App\Http\ApiRequests\Shop\ApiShopShowRequest;
 use App\Http\ApiRequests\Shop\ApiShopShowListRequest;
@@ -17,6 +18,7 @@ use App\Models\Shop;
 use App\Models\UnitpayKey;
 use App\Services\Shop\ShopPayments;
 use App\Services\Unitpay\Payment as UnitpayPayment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -96,6 +98,10 @@ class ApiShopController extends Controller
     public function show(ApiShopShowRequest $request, $id): ApiResponse
     {
         $shop = Shop::with('legalInfo')->find($id);
+
+        if (CheckShopIsAvailable::isUnavailable($shop)) {
+            return ApiResponse::forbidden('common.shop_unavailable');
+        }
 
         return ApiResponse::common(ShopResourse::make($shop)->toArray($request));
     }
