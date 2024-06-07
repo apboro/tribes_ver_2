@@ -24,6 +24,7 @@ spec:
         args:
         - artisan
         - migrate
+        - --force
         image: {{ include "..imageName" .Values.backend.image}}
         imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
         envFrom:
