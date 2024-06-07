@@ -297,7 +297,7 @@ class PayService
         $class = get_class($payFor);
         
         if ($class === 'App\Models\Market\ShopOrder') {
-            $paySystems = config('payments.banksList');
+            $paySystems = config('payments.banksForShopOrder');
             if (!$payFor->shop->payment_system) {
                 return $paySystems['unitpay'];
             }

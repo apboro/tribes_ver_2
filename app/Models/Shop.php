@@ -138,4 +138,19 @@ class Shop extends Model
     {
         return $this->hasOne(YookassaKey::class);
     }
+
+    public function getPaymentSystems(): array
+    {
+        $paymentSystems = config('payments.banksForShopOrder');
+        $result = [];
+        
+        foreach ($paymentSystems as $name => $class) {
+            $isConnect = (method_exists($class, 'isWorkWithShop')) ? $class::isWorkWithShop($this) : false;
+            $result[] = ['name' => $name,
+                        'connect' => $isConnect,
+                        'active' => $this->payment_system  === $name];
+        }
+
+        return $result;
+    } 
 }

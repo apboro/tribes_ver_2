@@ -4,6 +4,7 @@ namespace App\Services\Unitpay;
 
 use App\Helper\PseudoCrypt;
 use App\Models\Payment as P;
+use App\Models\Shop;
 use App\Models\User;
 use App\Services\TelegramLogService;
 use App\Services\Pay\PayReceiveService;
@@ -239,5 +240,12 @@ class Payment extends PaySystemAcquiring
         }
 
         return $requestParams;
+    }
+
+    public static function isWorkWithShop(Shop $shop): bool
+    {
+        $keys = $shop->unitpayKey;
+
+        return $keys && $keys->project_id && $keys->secretKey;
     }
 }

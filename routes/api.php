@@ -323,6 +323,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/shops/{id}', [ApiShopController::class, 'update'])->name('api.shop.update');
     Route::post('/shops', [ApiShopController::class, 'store'])->name('api.shop.create');
     Route::delete('/shops/{id}', [ApiShopController::class, 'destroy'])->name('api.shop.delete');
+    Route::get('/shops/get_payment_systems/{id}', [ApiShopController::class, 'getPaymentSystems'])->name('api.shop.getPaymentSystems');
     Route::post('/shops/set_payment_system/{id}', [ApiShopController::class, 'setPaymentSystem'])->name('api.shop.setPaymentSystem');
 
     Route::post('/products/category', [ApiCategoryController::class, 'store'])->name('api.products.category.create');

@@ -4,6 +4,7 @@ namespace App\Services\Yookassa;
 
 use App\Helper\PseudoCrypt;
 use App\Models\Payment as P;
+use App\Models\Shop;
 use App\Models\User;
 use App\Services\Pay\PaySystemAcquiring;
 use App\Services\Yookassa\CashRegister;
@@ -133,5 +134,10 @@ class Payment extends PaySystemAcquiring
         }
 
         return route('payment.success', $attaches);
+    }
+
+    public static function isWorkWithShop(Shop $shop): bool 
+    {
+        return (bool)($shop->yookassaKey->oauth ?? false);
     }
 }

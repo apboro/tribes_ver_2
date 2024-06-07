@@ -4,12 +4,11 @@ namespace App\Http\ApiRequests\Shop;
 
 use App\Http\ApiRequests\ApiRequest;
 use App\Rules\UserHasShopRule;
-use Illuminate\Validation\Rule;
 use OpenApi\Annotations as OA;
 
 /**
  * @OA\Post(
- * path="/api/v3/shops/set_payment_system/{id}",
+ * path="/api/v3/shops/get_payment_systems/{id}",
  * operationId="set_payment_system-shops",
  * summary= "Set payment system",
  * security= {{"sanctum": {} }},
@@ -22,17 +21,10 @@ use OpenApi\Annotations as OA;
  *             format="int64",
  *         )
  *     ),
- *     @OA\Parameter(name="payment_system",in="query",
- *         description="Name of payment system",
- *         required=true,
- *         @OA\Schema(
- *             type="string"
- *         )
- *     ),
  *   @OA\Response(response=200, description="OK")
  *)
  */
-class ApiShopSetPaymentSystemRequest extends ApiRequest
+class ApiShopGetPaymentSystemsRequest extends ApiRequest
 {
     public function all($keys = null)
     {
@@ -43,9 +35,6 @@ class ApiShopSetPaymentSystemRequest extends ApiRequest
 
     public function rules(): array
     {
-        return [
-            'shopId' => ['required', 'integer', new UserHasShopRule],
-            'payment_system' => ['required', 'string',  Rule::in(array_keys(config('payments.banksForShopOrder')))],
-        ];
+        return ['shopId' => ['required', 'integer', new UserHasShopRule]];
     }
 }
