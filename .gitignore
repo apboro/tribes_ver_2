@@ -27,6 +27,7 @@ public/MadelineProto*
 /lib/Madeline/vendor
 /lib/Madeline/composer.lock
 .env
+!.docker/.env
 /*.testing
 .env.backup
 .idea
