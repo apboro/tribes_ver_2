@@ -17,7 +17,8 @@ use App\Http\ApiRequests\ApiRequest;
  *     @OA\Parameter(name="products_in_category",in="query",description="How much products will be show in category",required=false,@OA\Schema(type="integer",)),
  *     @OA\Parameter(name="offset",in="query",description="Begin records from number {offset}",required=false,@OA\Schema(type="integer",)),
  *     @OA\Parameter(name="limit",in="query",description="Total records to display",required=false,@OA\Schema(type="integer",)),
- *   @OA\Response(response=200, description="OK")
+ *   @OA\Response(response=200, description="OK"),
+ *   @OA\Response(response=403, description="Shop is unavailable")
  *)
  */
 class ApiProductPublicListRequest extends ApiRequest
