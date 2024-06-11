@@ -7,10 +7,10 @@ use App\Rules\UserHasShopRule;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Post(
+ * @OA\Get(
  * path="/api/v3/shops/get_payment_systems/{id}",
- * operationId="set_payment_system-shops",
- * summary= "Set payment system",
+ * operationId="get_payment_system_shops",
+ * summary= "Get payment system",
  * security= {{"sanctum": {} }},
  * tags= {"Shop"},
  *     @OA\Parameter(name="id",in="path",
