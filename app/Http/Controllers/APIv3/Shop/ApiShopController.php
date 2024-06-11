@@ -150,10 +150,13 @@ class ApiShopController extends Controller
     public function setPaymentSystem(ApiShopSetPaymentSystemRequest $request): ApiResponse
     {
         $shop = Shop::find($request->shopId);
+        if (!$shop->isWorkWithPaymentSysytem($request->payment_system)) {
+            return ApiResponse::error('shop.payment.not_connect');
+        }
         $shop->payment_system = $request->payment_system;
         $shop->save();
 
-        return ApiResponse::success();
+        return ApiResponse::success('shop.payment.success_selected');
     }
 
     public function getPaymentSystems(ApiShopGetPaymentSystemsRequest $request): ApiResponse

@@ -155,4 +155,16 @@ class Shop extends Model
 
         return $result;
     } 
+
+    public function isWorkWithPaymentSysytem(string $name): bool
+    {
+        $paymentSystems = $this->getPaymentSystems();
+        foreach ($paymentSystems as $paymentSystem) {
+            if ($paymentSystem['name'] === $name) {
+                return $paymentSystem['connect'];
+            }
+        }
+
+        return false;
+    } 
 }
