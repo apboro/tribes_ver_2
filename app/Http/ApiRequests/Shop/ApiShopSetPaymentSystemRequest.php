@@ -10,7 +10,7 @@ use OpenApi\Annotations as OA;
 /**
  * @OA\Post(
  * path="/api/v3/shops/set_payment_system/{id}",
- * operationId="set_payment_system-shops",
+ * operationId="set_payment_system_shops",
  * summary= "Set payment system",
  * security= {{"sanctum": {} }},
  * tags= {"Shop"},
