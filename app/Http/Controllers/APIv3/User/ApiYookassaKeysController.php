@@ -19,7 +19,10 @@ class ApiYookassaKeysController extends Controller
     public function exchangeKeyToOAuth(YookassaExchangeRequest $request)
     {
         $result = OAuth::exchangeKeyToOAuth($request->code, $request->state);
+        if ($result['status'] === 'error') {
+            return ApiResponse::error($result['message']);
+        }
 
-        return ApiResponse::success($result);
+        return ApiResponse::success($result['message']);
     }
 }

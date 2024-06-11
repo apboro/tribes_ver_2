@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Get(path="/api/v3/yookassa/excange", operationId="yookassa-excange", summary="excange oauth",
+ * @OA\Post(path="/api/v3/yookassa/exchange", operationId="yookassa-exchange", summary="exchange oauth",
  *  security={{"sanctum": {} }}, tags={"yookassa"},
  *  @OA\Parameter(name="code", in="query", description="code",required=true,@OA\Schema(type="string",)),
  *  @OA\Parameter(name="state", in="query", description="state",required=true,@OA\Schema(type="integer",)),
@@ -24,7 +24,7 @@ class YookassaExchangeRequest extends ApiRequest
         return [
             'code' => 'required',
             'state' => [
-                'required', 'integer', new UserHasShopRule],
+                'required', 'integer'],
         ];
     }
 }
