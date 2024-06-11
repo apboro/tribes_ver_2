@@ -96,13 +96,13 @@ services:
       - storage:/app/storage
       - php-fpm:/var/run/php
   nginx:
-    image: nginx
+    image: 'third-party-registry.fabit.ru/docker.io/library/nginx:1.27.0'
     volumes:
       - .docker/docker-compose-ingress-nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "80:80"
   redis:
-    image: "redis:alpine"
+    image: 'third-party-registry.fabit.ru/docker.io/library/redis:7.0.15-alpine'
     env_file:
     - .env
     environment:
@@ -111,7 +111,7 @@ services:
     - DB_USERNAME_MAIN=tribes
     - DB_PASSWORD_MAIN=tribes1q2w3e4r
   postgresql:
-    image: 'bitnami/postgresql:14.5.0-debian-11-r6'
+    image: 'third-party-registry.fabit.ru/docker.io/bitnami/postgresql:14.5.0-debian-11-r6'
     environment: 
     - POSTGRESQL_USERNAME=tribes
     - POSTGRESQL_PASSWORD=tribes1q2w3e4r

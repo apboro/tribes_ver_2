@@ -16,7 +16,7 @@ stages:
   - build
   - deploy
 
-image: docker-registry.fitdev.ru:15500/docker-io/docker:20.10.14
+image: third-party-registry.fabit.ru/docker.io/library/docker:20.10.14
 
 variables:
   APP_NAME: backend
