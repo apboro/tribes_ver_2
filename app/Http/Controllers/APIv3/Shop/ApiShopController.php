@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\APIv3\Shop;
 
 use App\Domain\Entity\Shop\CheckShopIsAvailable;
+use App\Http\ApiRequests\Shop\ApiShopChangeProductsBuyableRequest;
 use App\Http\ApiRequests\Shop\ApiShopDelete;
 use App\Http\ApiRequests\Shop\ApiShopShowRequest;
 use App\Http\ApiRequests\Shop\ApiShopShowListRequest;
@@ -164,5 +165,12 @@ class ApiShopController extends Controller
         $shop = Shop::find($request->shopId);
         
         return ApiResponse::common($shop->getPaymentSystems());
+    }
+
+    public function changeBuyable(ApiShopChangeProductsBuyableRequest $request): ApiResponse
+    {
+        Shop::find($request->shopId)->changeProductsBuyable($request->buyable);
+
+        return ApiResponse::success('common.success');
     }
 }

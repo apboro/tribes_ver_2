@@ -167,4 +167,9 @@ class Shop extends Model
 
         return false;
     } 
+
+    public function changeProductsBuyable(bool $buyable): void
+    {
+        $this->products()->update(['buyable' => $buyable]);
+    }
 }
