@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'oauth_application_id' => 'vu8vr301u6belipsusqjaulmvuik818d',
-    'oauth_secret' => 'dR-2dSB9IXyBbxxoQnEDuFK4uLzv9pOENcr-LHFw_9kKZ15W68zJxSHCPCfY92P9',
-    'client_id' => '395416',
-    'secret_key' => 'test_F7U0QV5nxsBQIZnJRNdkzzA06K9ygkPsmpz9hNJL0f8',
+    'oauth_application_id' => 'ct9jd4fjgr8is2vj1u8g7rf88k6k4u5d',
+    'oauth_secret' => 'xz8L3EifNbPyBp8R763ywaL8C1bQxARKavQeqq9gqudDlTB34SYgwE_zMSUQSgeC',
+    'client_id' => '393335',
+    'secret_key' => 'live_zvkAzYz9iEEMKcZUA8XY90XSdwOXfJ3-10wg2DOro6M',
 ];

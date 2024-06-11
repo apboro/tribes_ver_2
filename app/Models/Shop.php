@@ -142,11 +142,13 @@ class Shop extends Model
     public function getPaymentSystems(): array
     {
         $paymentSystems = config('payments.banksForShopOrder');
+        $paymentSystemNames = config('payments.banksNames');
         $result = [];
         
         foreach ($paymentSystems as $name => $class) {
             $isConnect = (method_exists($class, 'isWorkWithShop')) ? $class::isWorkWithShop($this) : false;
             $result[] = ['name' => $name,
+                        'brand' => $paymentSystemNames[$name] ?? $name,
                         'connect' => $isConnect,
                         'active' => $this->payment_system  === $name];
         }

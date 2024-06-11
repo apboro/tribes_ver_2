@@ -146,6 +146,8 @@ Route::prefix('api/v3')->group(function () {
     Route::get('/shop/legal/privacy/{shopId}', [ApiShopLegalController::class, 'privacy']);
     Route::get('/shop/legal/offer/{shopId}', [ApiShopLegalController::class, 'offer']);
     Route::get('/shop/unitpay-metatag', [ApiUnitpayKeysController::class, 'showMetatag'])->name('api.unitpay_metatag.show');
+
+    Route::post('/yookassa/exchange', [ApiYookassaKeysController::class, 'exchangeKeyToOAuth']);
 });
 
 Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () {
@@ -346,7 +348,6 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/shop/unitpay-metatag', [ApiUnitpayKeysController::class, 'saveMetatag'])->name('api.unitpay_metatag.save');
 
     Route::get('/yookassa/get_oauth_link', [ApiYookassaKeysController::class, 'getOAuthLink'])->name('api.yookassa.getOAuthLink');
-    Route::get('/yookassa/excange', [ApiYookassaKeysController::class, 'exchangeKeyToOAuth']);
 
     Route::get('/publications', [ApiPublicationController::class, 'list'])->name('api.publications.list');
     Route::post('/publications', [ApiPublicationController::class, 'store'])->name('api.publications.create');

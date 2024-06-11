@@ -21,15 +21,17 @@ class OAuth
                 '&response_type=code&state=' . $shopId;
     }
 
-    public static function exchangeKeyToOAuth(string $code, int $shopId): string
+    public static function exchangeKeyToOAuth(string $code, int $shopId): array
     {
         $result = self::receiveOauthKey($code); 
            
         if (isset($result['error'])) {
-            return $result['error'];
+            return ['status' => 'error', 
+                    'message' => $result['error']];
         }
-        if (!isset($result['access_token']) || !isset($result['access_token'])) {
-            return 'Невозможно получить OAuth-токен';
+        if (!isset($result['access_token'])) {
+            return ['status' => 'error', 
+                    'message' => 'Невозможно получить OAuth-токен'];
         }
         $expiresTimeStamp = time() + $result['expires_in'];
         $expiresAt = Carbon::createFromTimestamp($expiresTimeStamp);
@@ -40,9 +42,9 @@ class OAuth
 
         self::subscribeWebhook($bearerToken);
 
-        return 'OAuth-токен успешно сохранен';
+        return ['status' => 'success', 
+                'message' => 'OAuth-токен успешно сохранен'];
     }
-
 
     private static function subscribeWebhook(string $bearerToken)
     {
