@@ -49,7 +49,6 @@ class ApiUnitpayKeysController extends Controller
     public function destroy(UnitpayKeyRequest $request): ApiResponse
     {
         Auth::user()->getUnitpayKeyByShopId($request->shop_id)->delete();
-        Shop::find($request->shop_id)->setBuyable(false);
 
         return ApiResponse::success('common.success');
     }
