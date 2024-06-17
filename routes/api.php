@@ -12,6 +12,7 @@ use App\Http\Controllers\APIv3\ApiWebinarController;
 use App\Http\Controllers\APIv3\Market\TgUserPassportController;
 use App\Http\Controllers\APIv3\TonBot\ApiTonbotController;
 use App\Http\Controllers\APIv3\Market\MarketController;
+use App\Http\Controllers\APIv3\User\ApiRobokassaKeysController;
 use App\Http\Controllers\APIv3\User\LegalInfoController;
 use App\Http\Controllers\APIv3\Webinar\ApiFavouriteWebinarController;
 use App\Http\Controllers\APIv3\Community\ApiCommunityController;
@@ -349,6 +350,10 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::post('/shop/unitpay-metatag', [ApiUnitpayKeysController::class, 'saveMetatag'])->name('api.unitpay_metatag.save');
 
     Route::get('/yookassa/get_oauth_link', [ApiYookassaKeysController::class, 'getOAuthLink'])->name('api.yookassa.getOAuthLink');
+
+    Route::get('/robokassa-keys/{shopId}', [ApiRobokassaKeysController::class, 'show']);
+    Route::put('/robokassa-keys', [ApiRobokassaKeysController::class, 'update']);
+    Route::delete('/robokassa-keys/{shopId}', [ApiRobokassaKeysController::class, 'destroy']);
 
     Route::get('/publications', [ApiPublicationController::class, 'list'])->name('api.publications.list');
     Route::post('/publications', [ApiPublicationController::class, 'store'])->name('api.publications.create');

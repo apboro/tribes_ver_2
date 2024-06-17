@@ -8,6 +8,7 @@ return [
         // 'tinkoff' => 'App\Services\Tinkoff\Payment',
         'unitpay' => 'App\Services\Unitpay\Payment',
         'yookassa' => 'App\Services\Yookassa\Payment',
+        'robokassa' => 'App\Services\Robokassa\Payment',
     ],
     'banksNames' => [
         'tinkoff' => 'Тинькофф',

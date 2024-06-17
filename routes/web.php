@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\APIv3\Donates\ApiNewDonateController;
+use App\Http\Controllers\APIv3\Robokassa\ApiPaymentController;
 use App\Http\Controllers\APIv3\Webinar\WebinarAnalyticController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\System\AdminController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\StoriesController;
 use App\Models\Subscription;
 use App\Models\UserSubscription;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
@@ -24,7 +26,7 @@ Auth::routes();
 
 Route::post('/wbnr/webhook', [WebinarAnalyticController::class, 'handler']);
 
-Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], function () {
+Route::group(['prefix' => \App\Http\Middleware\LocaleMiddleware::getLocale()], function () {
 
     Route::namespace('App\Http\Controllers')->group(function () {
         //Payments
@@ -52,6 +54,9 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     Route::get('/verification-10266.txt', function() 
                                             {echo '1026681d98a3347b4b1ea292a702fa'; }
                                         );
+    Route::post('/robokassa/notify', [PaymentController::class, 'robokassaNotify']);
+    Route::post('/robokassa/success', [ApiPaymentController::class, 'handleSuccess']);
+    Route::post('/robokassa/fail', [ApiPaymentController::class, 'handleFail']);
 
     // Публичные ссылки на вопросы
     Route::namespace('App\Http\Controllers')->group(function () {

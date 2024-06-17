@@ -507,6 +507,11 @@ class User extends Authenticatable
        return $this->getShopById($shopId)->unitpayKey()->withDefault()->firstOrNew();
     }
 
+    public function getRobokassaKeyByShopId(int $shopId): RobokassaKey
+    {
+        return $this->getShopById($shopId)->robokassaKey()->withDefault()->firstOrNew();
+    }
+
     /**
      * @param int $shopId
      *

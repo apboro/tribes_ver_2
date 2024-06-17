@@ -10,6 +10,7 @@ use App\Models\Payment;
 use App\Models\TonbotPayment;
 use App\Repositories\Payment\PaymentRepository;
 use App\Services\Pay\PayReceiveService;
+use App\Services\Robokassa\Notify as RobokassaNotify;
 use App\Services\TelegramLogService;
 use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffService;
@@ -18,6 +19,7 @@ use App\Services\Yookassa\Notify as YookassaNotify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 class PaymentController extends Controller
 {
@@ -93,6 +95,16 @@ class PaymentController extends Controller
         }
 
         return response(\json_encode($responce), 200);
+    }
+
+    public function robokassaNotify(Request $request)
+    {
+        Log::info('Notification from Robokassa', ['request' => $request]);
+        if (RobokassaNotify::handle($request->all())) {
+            return response('OK' . $request->InvId, Response::HTTP_OK);
+        }
+
+        return response('ERR', Response::HTTP_BAD_REQUEST);
     }
 
     public function notify(Request $request)
