@@ -63,12 +63,13 @@ class OAuth
         $applicationSecret = config('yookassa.oauth_secret');
 
         try {
-            $response = Http::post('https://yookassa.ru/oauth/v2/token', [
-                'auth' => [$applicationId, $applicationSecret],
-                'form_params' => [
+           $response = Http::asForm()->withHeaders([
+                'Authorization' => 'Basic ' . base64_encode($applicationId . ':' . $applicationSecret),
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                ])->post('https://yookassa.ru/oauth/v2/token', [
                     'grant_type' => 'authorization_code',
-                    'code' => $code
-                ]]);        
+                    'code' => $code,
+                ]);      
         } catch (\Exception $e) {
             Log::debug('Yookassa в ответе передала ошибку');
             return ['error' => 'Ошибка получения ответа от Yookassa'];
