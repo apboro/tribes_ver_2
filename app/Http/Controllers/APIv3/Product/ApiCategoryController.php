@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIv3\Product;
 
+use App\Domain\Entity\Shop\CheckShopIsAvailable;
 use App\Http\ApiRequests\Product\ApiCategoryModify;
 use App\Http\ApiRequests\Product\ApiCategoryShowRequest;
 use App\Http\ApiRequests\Shop\ApiShopShowListRequest;
@@ -13,6 +14,7 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\ProductCategory;
 use App\Models\Product;
+use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -30,6 +32,12 @@ class ApiCategoryController extends Controller
 
     public function show(ApiCategoryShowRequest $request, int $id): ApiResponse
     {
+        $shop = Shop::find($request->input('shop_id'));
+
+        if (CheckShopIsAvailable::isUnavailable($shop)) {
+            return ApiResponse::forbidden('common.shop_unavailable');
+        }
+
         $category = ProductCategory::find($id);
 
         return ApiResponse::common(CategoryResource::make($category)->toArray($request));
@@ -38,6 +46,13 @@ class ApiCategoryController extends Controller
     public function list(ApiCategoryShowRequest $request): ApiResponse
     {
         $filter = $request->validated();
+
+        $shop = Shop::find($filter['shop_id']);
+
+        if (CheckShopIsAvailable::isUnavailable($shop)) {
+            return ApiResponse::forbidden('common.shop_unavailable');
+        }
+
         $categories = ProductCategory::findByFilter($filter);
         $count = ProductCategory::countByFilter($filter);
         

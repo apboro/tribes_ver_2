@@ -91,7 +91,9 @@ class ApiCategoryShowRequest extends ApiRequest
             'id' => 'nullable|integer|exists:product_categories,id',
             'name' => 'nullable|string',
             'shop_id' => [
-                'required', 'integer',
+                'required',
+                'integer',
+                'exists:shops,id',
                 function ($attribute, $value, $fail) {
                     if ($this->id && ProductCategory::isBelongsShop($this->id, $this->shop_id) === false) {
                         $fail('Категория не принадлежит магазину.');
