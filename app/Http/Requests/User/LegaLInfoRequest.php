@@ -3,6 +3,7 @@
 namespace App\Http\Requests\User;
 
 use App\Http\ApiRequests\ApiRequest;
+use App\Rules\ValidPhoneRule;
 use OpenApi\Annotations as OA;
 
 /**
@@ -71,7 +72,11 @@ class LegaLInfoRequest extends ApiRequest
             'inn'   => $required,
             'kpp'   => 'nullable|string',
             'email' => $required . '|email',
-            'phone' => 'nullable|string',
+            'phone' => [
+                'nullable',
+                'integer',
+                new ValidPhoneRule,
+            ],
             'address' => $required,
             'ogrn' => $required,
             'additionally' => 'nullable|string',
