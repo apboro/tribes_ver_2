@@ -169,7 +169,11 @@ class ApiShopController extends Controller
 
     public function changeBuyable(ApiShopChangeProductsBuyableRequest $request): ApiResponse
     {
-        Shop::find($request->shopId)->changeProductsBuyable($request->buyable);
+        $shop = Shop::find($request->shopId);
+        if ($shop->buyable === false) {
+            return ApiResponse::error('shop.payment.not_connect');
+        }
+        $shop->changeProductsBuyable($request->buyable);
 
         return ApiResponse::success('common.success');
     }
