@@ -3,8 +3,8 @@
 namespace App\Http\ApiRequests\Profile;
 
 
-
 use App\Http\ApiRequests\ApiRequest;
+use App\Rules\ValidPhoneRule;
 
 /**
  * @OA\Post(
@@ -39,7 +39,12 @@ class ApiSendConfirmCodeRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'phone' => 'required|integer|unique:users',
+            'phone' => [
+                'required',
+                'integer',
+                'unique:users',
+                new ValidPhoneRule,
+            ],
             'code' => 'required|integer',
         ];
     }

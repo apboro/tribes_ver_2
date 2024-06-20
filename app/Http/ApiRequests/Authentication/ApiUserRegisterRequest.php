@@ -3,6 +3,7 @@
 namespace App\Http\ApiRequests\Authentication;
 
 use App\Http\ApiRequests\ApiRequest;
+use App\Rules\ValidPhoneRule;
 use OpenApi\Annotations as OA;
 
 /**
@@ -53,7 +54,7 @@ class ApiUserRegisterRequest extends ApiRequest
                 'required',
                 'integer',
                 'unique:users',
-                'regex:/^(8|7)\d{10}$/'
+                new ValidPhoneRule
             ],
         ];
     }

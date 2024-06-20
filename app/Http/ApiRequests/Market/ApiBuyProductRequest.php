@@ -4,6 +4,7 @@ namespace App\Http\ApiRequests\Market;
 
 use App\Http\ApiRequests\ApiRequest;
 use App\Models\Market\ShopDelivery;
+use App\Rules\ValidPhoneRule;
 
 /**
  * @OA\POST(
@@ -32,16 +33,20 @@ class ApiBuyProductRequest extends ApiRequest
     {
         return [
             'telegram_user_id' => 'required|integer',
-            'product_id_list'  => 'required|array',
-            'shop_id'          => 'required|integer',
-            'full_name'        => 'required|string',
-            'address'          => 'nullable|string',
-            'email'            => 'nullable|string',
-            'phone'            => 'nullable|string',
-            'first_name'       => 'nullable|string',
-            'last_name'        => 'nullable|string',
-            'username'         => 'nullable|string',
-            'is_mobile'        => 'boolean',
+            'product_id_list' => 'required|array',
+            'shop_id' => 'required|integer',
+            'full_name' => 'required|string',
+            'address' => 'nullable|string',
+            'email' => 'nullable|string',
+            'phone' => [
+                'nullable',
+                'integer',
+                new ValidPhoneRule,
+            ],
+            'first_name' => 'nullable|string',
+            'last_name' => 'nullable|string',
+            'username' => 'nullable|string',
+            'is_mobile' => 'boolean',
         ];
     }
 
@@ -49,9 +54,9 @@ class ApiBuyProductRequest extends ApiRequest
     {
         return [
             'telegram_user_id' => $this->input('telegram_user_id'),
-            'user_name'        => $this->input('username'),
-            'last_name'        => $this->input('last_name'),
-            'first_name'       => $this->input('first_name'),
+            'user_name' => $this->input('username'),
+            'last_name' => $this->input('last_name'),
+            'first_name' => $this->input('first_name'),
         ];
     }
 
@@ -66,8 +71,8 @@ class ApiBuyProductRequest extends ApiRequest
     public function getDeliveryDTO()
     {
         return [
-            ShopDelivery::KEY_ADDRESS   => $this->input('address'),
-            ShopDelivery::KEY_EMAIL     => $this->input('email', ''),
+            ShopDelivery::KEY_ADDRESS => $this->input('address'),
+            ShopDelivery::KEY_EMAIL => $this->input('email', ''),
             ShopDelivery::KEY_FULL_NAME => $this->input('full_name', ''),
         ];
     }
