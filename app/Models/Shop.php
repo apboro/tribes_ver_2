@@ -139,6 +139,11 @@ class Shop extends Model
         return $this->hasOne(YookassaKey::class);
     }
 
+    public function robokassaKey(): HasOne
+    {
+        return $this->hasOne(RobokassaKey::class);
+    }
+
     public function getPaymentSystems(): array
     {
         $paymentSystems = config('payments.banksForShopOrder');
