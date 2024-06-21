@@ -105,5 +105,5 @@ data:
   TINKOFF_PREFIX: {{ quote .Values.config.tinkoff.terminalKey | b64enc }}
   TELEGRAM_BOT_TOKEN: {{ quote .Values.config.telegram.bot.token | b64enc }}
   WBNR_KEY: {{ quote .Values.config.webinar.key | b64enc }}
-  YOOKASSA_CLIENT_ID: {{ quote .Values.config.yookassa.clientID }}
-  YOOKASSA_CLIENT_SECRET: {{ quote .Values.config.yookassa.clientSecret }}
+  YOOKASSA_CLIENT_ID: {{ quote .Values.config.yookassa.clientID | b64enc }}
+  YOOKASSA_CLIENT_SECRET: {{ quote .Values.config.yookassa.clientSecret | b64enc }}
