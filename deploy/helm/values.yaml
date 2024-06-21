@@ -222,6 +222,9 @@ config:
     logChat: "507752964"
   smsRuCode: "sms_code"
   smsMaxAttempts: "5"
+  yookassa:
+    clientID: "to-be-filled"
+    clientSecret: "to-be-filled"
   webcaster:
     client:
       name: "webcaster_name"
