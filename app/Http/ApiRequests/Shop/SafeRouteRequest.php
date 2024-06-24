@@ -50,7 +50,9 @@ use App\Http\ApiRequests\ApiRequest;
 class SafeRouteRequest extends ApiRequest
 {
     public function rules(): array
-    {   $required = 'required|integer|exists:shops,id';
+    {
+        $required = 'required|integer|exists:shops,id';
+
         if ('PUT' === $this->getMethod()) {
             $required = 'nullable';
         }

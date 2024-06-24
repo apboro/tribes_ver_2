@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Shop;
 
+use App\Bundle\SafeRoute\SafeRouteService;
 use App\Http\ApiRequests\Shop\SafeRouteRequest;
 use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\LegaLInfoRequest;
+use App\Models\Shop\ShopSafeRoute;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -134,6 +136,20 @@ class SafeRouteController extends Controller
             log::error('destroy shop safe-route error:' . $e);
 
             return ApiResponse::error('common.error');
+        }
+    }
+
+    public function getWidget(Request $request, int $shop_id): string
+    {
+        try {
+            $safeRoute = ShopSafeRoute::where('shop_id', $shop_id)->first();
+
+            return SafeRouteService::build($safeRoute, $request->all());
+
+        } catch (Exception $e) {
+            log::error('shop_id safe-route error:' . $e);
+
+            return 'Not Found';
         }
     }
 }
