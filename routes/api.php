@@ -165,6 +165,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth:sanctum'])->group(function () 
     Route::post('/bill/subscription', [ApiBillController::class, 'makeBill'])->name('api.bill.subscription.makeBill');
     Route::apiResource('/user/legal-info', LegalInfoController::class);
     Route::apiResource('/shop/safe-route', SafeRouteController::class);
+    Route::get('/shop/safe-route/has/{shop_id}', [SafeRouteController::class, 'hasSafeRoute']);
 });
 /** TODO fastFIX  */
 //Route::get('/api/v3/question/{id}', [ApiQuestionController::class, 'show']);

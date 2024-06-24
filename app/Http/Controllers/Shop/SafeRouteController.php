@@ -152,4 +152,15 @@ class SafeRouteController extends Controller
             return 'Not Found';
         }
     }
+
+    public function hasSafeRoute(Request $request, int $shop_id): ApiResponse
+    {
+        $safeRoute = ShopSafeRoute::where('shop_id', $shop_id)->first();
+        $status = 0;
+        if ($safeRoute) {
+            $status = 1;
+        }
+
+        return ApiResponse::common(['has' => $status]);
+    }
 }
