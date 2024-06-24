@@ -103,12 +103,12 @@ class Payment extends PaySystemAcquiring
                 'MerchantLogin' => $this->payment->payable->shop->robokassaKey->merchant_login,
                 'FirstPassword' => $this->payment->payable->shop->robokassaKey->first_password,
             ];
+        } else {
+            $credentials = [
+                'MerchantLogin' => config('robokassa.default_merchant_login'),
+                'FirstPassword' => config('robokassa.default_first_password'),
+            ];
         }
-
-        $credentials = [
-            'MerchantLogin' => config('robokassa.default_merchant_login'),
-            'FirstPassword' => config('robokassa.default_first_password'),
-        ];
 
         if (empty($credentials['MerchantLogin']) || empty($credentials['FirstPassword'])) {
             Log::alert('Attempt to make a payment with client keys, but there are no keys.', ['object' => $this]);
@@ -133,5 +133,41 @@ class Payment extends PaySystemAcquiring
         $keys = $shop->robokassaKey;
 
         return $keys && $keys->merchant_login && $keys->first_password && $keys->second_password;
+    }
+
+    public function testKeys(string $login, string $firstPassword): bool
+    {
+        $url = config('robokassa.payment_creation_url');
+        $parameters = $this->getTestParams($login, $firstPassword);
+
+        $client = new Client();
+        $response = $client->post($url, ['form_params' => $parameters]);
+        $responseData = json_decode($response->getBody()->getContents(), true);
+
+        if ($responseData['errorCode'] !== 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function getTestParams(string $login, string $firstPassword): array
+    {
+        $parameters = [
+            'MerchantLogin' => $login,
+            'OutSum' => '1',
+            'Description' => 'Проверка ключей',
+            'Culture' => 'ru',
+            'IsTest' => (int) $this->isTest()
+        ];
+
+        $parameters['SignatureValue'] = $this->calculateSignature([
+            $parameters['MerchantLogin'],
+            $parameters['OutSum'],
+            '',
+            $firstPassword
+        ]);
+
+        return $parameters;
     }
 }

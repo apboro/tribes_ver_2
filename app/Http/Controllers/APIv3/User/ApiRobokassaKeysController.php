@@ -8,6 +8,7 @@ use App\Http\ApiResponses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\RobokassaKey;
 use App\Models\Shop;
+use App\Services\Robokassa\Payment;
 use Illuminate\Support\Facades\Auth;
 
 class ApiRobokassaKeysController extends Controller
@@ -15,10 +16,10 @@ class ApiRobokassaKeysController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  RobokassaKeyRequest  $request
+     * @param RobokassaKeyRequest $request
      * @return ApiResponse
      */
-    public function update(RobokassaKeyRequest $request): ApiResponse
+    public function update(RobokassaKeyRequest $request, Payment $robokassaPayment): ApiResponse
     {
         if (RobokassaKey::isKeysUsed(
             $request->merchant_login,
@@ -28,6 +29,10 @@ class ApiRobokassaKeysController extends Controller
         )
         ) {
             return ApiResponse::error('validation.robokassa.keys_used');
+        }
+
+        if (!$robokassaPayment->testKeys($request->merchant_login, $request->first_password)) {
+            return ApiResponse::error('validation.robokassa.wrong_keys');
         }
 
         $robokassaKey = Auth::user()
@@ -44,7 +49,7 @@ class ApiRobokassaKeysController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  RobokassaKeyRequest  $request
+     * @param RobokassaKeyRequest $request
      * @return ApiResponse
      */
     public function show(RobokassaKeyRequest $request): ApiResponse
@@ -57,7 +62,7 @@ class ApiRobokassaKeysController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  RobokassaKeyRequest  $request
+     * @param RobokassaKeyRequest $request
      * @return ApiResponse
      */
     public function destroy(RobokassaKeyRequest $request): ApiResponse
