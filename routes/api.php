@@ -89,6 +89,10 @@ use Illuminate\Support\Facades\Route;
 */
 Route::prefix('api/v3')->group(function () {
 
+    Route::match(array('GET', 'POST'), '/safe-route/widget/api/{shop_id}',[
+        SafeRouteController::class, 'getWidget'
+    ])->name('safe.route.widget.api');
+
     Route::get('/getRedirect/{shopId}', [ApiShopController::class, 'getRedirect']);
     Route::post('/getUserPassport', [TgUserPassportController::class, 'getBearerTokenByTgUser']);
     Route::post('/tonbot/addCard', [ApiTonbotController::class, 'addCard']);
