@@ -14,6 +14,8 @@ class ShopDelivery extends Model
     public const KEY_ADDRESS = 'address';
     public const KEY_EMAIL = 'email';
     public const KEY_FULL_NAME = 'full_name';
+    public const KEY_TRACK_ID = 'track_id';
+    public const DELIVERY_SUM = 'delivery_sum';
 
     public $timestamps = false;
 
@@ -25,15 +27,19 @@ class ShopDelivery extends Model
         'email',
         'phone',
         'full_name',
+        'track_id',
+        'delivery_sum',
     ];
 
     public static function makeByUser(TelegramUser $user, array $delivery, $phone): self
     {
         return self::create([
             'telegram_user_id' => $user->telegram_id,
-            'address'          => $delivery[ShopDelivery::KEY_ADDRESS],
-            'email'            => $delivery[ShopDelivery::KEY_EMAIL],
-            'full_name'        => $delivery[ShopDelivery::KEY_FULL_NAME],
+            'address'          => $delivery[self::KEY_ADDRESS],
+            'email'            => $delivery[self::KEY_EMAIL],
+            'full_name'        => $delivery[self::KEY_FULL_NAME],
+            'track_id'         => $delivery[self::KEY_TRACK_ID],
+            'delivery_sum'     => $delivery[self::DELIVERY_SUM],
             'phone'            => $phone,
         ]);
     }
