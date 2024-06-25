@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $delivery_sum
+ */
 class ShopDelivery extends Model
 {
     use HasFactory;
@@ -42,5 +45,10 @@ class ShopDelivery extends Model
             'delivery_sum'     => $delivery[self::DELIVERY_SUM],
             'phone'            => $phone,
         ]);
+    }
+
+    public function calcDelivery(): string
+    {
+        return $this->delivery_sum;
     }
 }

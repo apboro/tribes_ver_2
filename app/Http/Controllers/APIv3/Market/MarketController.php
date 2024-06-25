@@ -88,7 +88,13 @@ class MarketController extends Controller
             }
             $failUrl = config('app.frontend_url') . '/tg-shop/market/authors/' . $shopId . '?failpay';
 
-            $payment = PayService::buyProduct($order->getPrice(),
+            $price = $order->getPrice();
+
+            if ($deliverySum = $order->delivery->calcDelivery()) {
+                $price += (float) $deliverySum;
+            }
+
+            $payment = PayService::buyProduct($price,
                 $order, $tgUser->user, $tgUser->telegram_id, $successUrl, $failUrl);
 
 //            $this->sendNotifications($order, $tgUser->user->email);
