@@ -1182,7 +1182,7 @@ class MainBotCommands
                 . config('telegram_bot.bot.promoName');
             log::info('link: ' . $link);
             $menu = Menux::Create('link')->inline();
-            $menu->row()->uBtn('Открыть магазин', $link);
+            $menu->row()->uBtn('Узнать подробнее', $link);
             $ctx->reply('Промо магазин', $menu);
         };
         $this->bot->onText(self::PROMO_SHOP, $promoShop);
