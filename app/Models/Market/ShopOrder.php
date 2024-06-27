@@ -224,6 +224,12 @@ class ShopOrder extends Model
         $link =  Shop::buildTgShopLink($shopId);
         $tagA = '<a href="' . $link . '">' . $self->getShop()->name . '</a>';
 
+        $deliverySumText = '';
+
+        if ($deliverySum = $self->delivery->calcDelivery()){
+            $deliverySumText = 'Сумма доставки: ' . $deliverySum . ' руб.' . "\n";
+        }
+
         //TODO  <кол-во товара>
         $message = '<b>'. $self->getStatusLabel() . ' заказ № ' . $self->id . '</b>' . "\n"
         . 'Магазин: ' . $tagA  . "\n"
@@ -232,6 +238,7 @@ class ShopOrder extends Model
         .  "\n"
         . 'На сумму: ' . $self->getPrice() . ' руб.'
         .  "\n"
+        . $deliverySumText
         . 'Продавец скоро свяжется с Вами.';
 
         return $message;
