@@ -89,8 +89,9 @@ class MarketController extends Controller
             $failUrl = config('app.frontend_url') . '/tg-shop/market/authors/' . $shopId . '?failpay';
 
             $price = $order->getPrice();
+            $deliverySum = $order->delivery->calcDelivery();
 
-            if ($deliverySum = $order->delivery->calcDelivery()) {
+            if ($deliverySum !== '') {
                 $price += (float) $deliverySum;
             }
 

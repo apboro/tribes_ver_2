@@ -225,8 +225,9 @@ class ShopOrder extends Model
         $tagA = '<a href="' . $link . '">' . $self->getShop()->name . '</a>';
 
         $deliverySumText = '';
+        $deliverySum = $self->delivery->calcDelivery();
 
-        if ($deliverySum = $self->delivery->calcDelivery()){
+        if ($deliverySum !== ''){
             $deliverySumText = 'Сумма доставки: ' . $deliverySum . ' руб.' . "\n";
         }
 
