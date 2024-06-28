@@ -49,6 +49,6 @@ class ShopDelivery extends Model
 
     public function calcDelivery(): string
     {
-        return $this->delivery_sum;
+        return $this->delivery_sum ?? '';
     }
 }
