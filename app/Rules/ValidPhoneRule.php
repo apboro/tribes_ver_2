@@ -6,6 +6,13 @@ use Illuminate\Contracts\Validation\Rule;
 
 class ValidPhoneRule implements Rule
 {
+    private bool $isInternational;
+
+    public function __construct(bool $isInternational = true)
+    {
+        $this->isInternational = $isInternational;
+    }
+
     /**
      * Determine if the validation rule passes.
      *
@@ -15,6 +22,10 @@ class ValidPhoneRule implements Rule
      */
     public function passes($attribute, $value): bool
     {
+        if ($this->isInternational) {
+            return preg_match('/^[1-9]\d{1,14}$/', $value);
+        }
+
         return preg_match('/^7\d{10}$/', $value);
     }
 

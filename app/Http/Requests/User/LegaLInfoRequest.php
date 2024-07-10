@@ -75,7 +75,7 @@ class LegaLInfoRequest extends ApiRequest
             'phone' => [
                 'nullable',
                 'integer',
-                new ValidPhoneRule,
+                new ValidPhoneRule(false),
             ],
             'address' => $required,
             'ogrn' => $required,
