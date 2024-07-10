@@ -4,6 +4,7 @@ namespace App\Http\ApiRequests\Product;
 
 use App\Http\ApiRequests\ApiRequest;
 use App\Models\ProductCategory;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use OpenApi\Annotations as OA;
@@ -25,6 +26,8 @@ use OpenApi\Annotations as OA;
  *                 @OA\Property(property="price",type="integer"),
  *                 @OA\Property(property="images",type="object", description="Array of images"),
  *                 @OA\Property(property="buyable",type="string"),
+ *                 @OA\Property(property="type",type="string", example="product, link"),
+ *                 @OA\Property(property="link",type="string", description="URL for type=link"),
  *                 @OA\Property(property="category_id",type="integer"),
  *                 @OA\Property(property="status",type="integer", example="active 1 , disabled 2, archived 3"),
  *                 ),
@@ -39,6 +42,7 @@ class ApiProductStoreRequest extends ApiRequest
     {
         $data = $this->all();
         $data['category_id'] = $data['category_id'] ?? 0;            
+        $data['type'] = $this->input('type',  Product::TYPES['default']);
         $this->replace($data);
     }
 
@@ -62,7 +66,7 @@ class ApiProductStoreRequest extends ApiRequest
             'description' => 'nullable|string',
             'images'      => 'array',
             'images.*'    => 'image|mimes:jpg,jpeg,png,gif,webp',
-            'price'       => 'required|integer|min:1',
+            'price'       => 'required|integer|min:0',
             'buyable'     => 'string|in:true,false',
             'category_id' => [
                 'integer',
@@ -72,7 +76,9 @@ class ApiProductStoreRequest extends ApiRequest
                     }
                 },
             ],
-            'status'      => 'nullable|int'
+            'status'      => 'nullable|int',
+            'type'        => ['required', Rule::in(Product::TYPES)],
+            'link'        => 'nullable|string|url',
         ];
     }
 
