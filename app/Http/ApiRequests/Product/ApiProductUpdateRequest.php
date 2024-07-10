@@ -45,6 +45,9 @@ class ApiProductUpdateRequest extends ApiRequest
     {
         $data = $this->all();
         $data['category_id'] = $data['category_id'] ?? 0;            
+        if (isset($data['type'])) {
+            unset($data['type']);
+        }
         $this->replace($data);
     }
 
@@ -68,7 +71,7 @@ class ApiProductUpdateRequest extends ApiRequest
             ],
             'title'       => 'required|string',
             'description' => 'nullable|string',
-            'price'       => 'required|numeric|min:1',
+            'price'       => 'required|numeric|min:0',
             'buyable'     => 'string|in:true,false',
             'category_id' => [
                 'integer',

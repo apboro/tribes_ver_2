@@ -45,6 +45,8 @@ class Product extends Model
         'images' => 'array'
     ];
 
+    public const TYPES = ['default' => 'product', 0 => 'link'];
+
     public function changeStatus(int $status): void
     {
         $this->status = self::resolveStatus($status);
@@ -111,6 +113,13 @@ class Product extends Model
             $products = $products->reject(function ($item) use ($maxProducts) {
                 return $item['product_number'] > $maxProducts;
             })->values();    
+        }
+
+        $productIdsWithTypeLink = $products->where('type', 'link')->pluck('id');
+        if ($productIdsWithTypeLink->count()) {
+            $products->load(['link' => function ($query) use ($productIdsWithTypeLink) {
+                $query->whereIn('product_id', $productIdsWithTypeLink);
+            }]);
         }
 
         return $products;
@@ -217,4 +226,18 @@ class Product extends Model
                     ->whereNotIn('status', self::NOT_SHOW_STATUS)
                     ->exists();
     }
+
+    public function link(): HasOne
+    {
+        return $this->hasOne(ProductLink::class, 'product_id');
+    }
+
+    public function typeLinkResource(): array
+    {
+        if ($this->type === 'link') {
+            return ['link' => $this->link->link ?? ''];
+        }
+
+        return [];
+    }   
 }

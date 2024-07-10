@@ -2,6 +2,7 @@
 
 namespace App\Http\ApiResources\Product;
 
+use App\Models\Product;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +27,7 @@ class ProductResource extends JsonResource
             'category_id'   => $this->resource->category_id,
             'category_name' => $this->resource->category->name ?? 'Без категории',
             'status'        => $this->resource->status,
-        ] + $visited;
+            'type'          => $this->resource->type,
+        ] + $this->typeLinkResource() + $visited;
     }
 }

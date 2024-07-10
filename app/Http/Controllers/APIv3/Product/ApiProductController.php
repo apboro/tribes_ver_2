@@ -45,6 +45,10 @@ class ApiProductController extends Controller
             'status'      => Product::resolveStatus($request->input('status', Product::ACTIVE_TYPE)),
         ];
 
+        if ($request->input('type')) {
+            $productArray['type'] = $request->input('type');
+        }
+
         return $productArray;
     }
 
@@ -52,6 +56,10 @@ class ApiProductController extends Controller
     {
         $product = Product::create(['shop_id' => $request->shop_id] + $this->prepareProduct($request) + $this->prepareImages($request));
 
+        if ($request->has('link') && $request->input('type') === 'link' ) {
+            $product->link()->create(['link' => $request->link]);
+        }
+      
         return ApiResponse::common(ProductResource::make($product)->toArray($request));
     }
 
