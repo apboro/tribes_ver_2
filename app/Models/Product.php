@@ -75,6 +75,7 @@ class Product extends Model
             'category_id' => ['field' => 'category_id', 'sql' => '='],
             'title' => ['field' => 'title', 'sql' => 'ilike'],
             'description' => ['field' => 'description', 'sql' => 'ilike'],
+            'type' => ['field' => 'type', 'sql' => '='],
         ];
 
         $query = self::query();
