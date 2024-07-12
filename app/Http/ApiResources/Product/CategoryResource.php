@@ -15,7 +15,7 @@ class CategoryResource extends JsonResource
             'name' => $this->resource->name,
             'shop_id' => $this->resource->shop_id,
             'parent_id' => $this->resource->parent_id,
-            'product_count' => $this->resource->product_count ?? 0,
+            'product_count' => $this->resource->countProducts(),
             ];
     }
 }
