@@ -21,9 +21,9 @@ class ShopReport
                 'telegram.userName',
                 'telegram.firstName',
                 'telegram.lastName',
-                'product.title',
-                'product.price',
-                'product.created_at'
+                //'product.title',
+                //'product.price',
+                //'product.created_at'
             ]
         ];
     }
@@ -67,9 +67,9 @@ class ShopReport
 
             $tableCels[] = $this->prepareShopRow($shop, $ownerTg);
 
-            foreach ($shop->products as $product) {
-                $tableCels[] = $this->prepareProductRow($product);
-            }
+            //foreach ($shop->products as $product) {
+            //    $tableCels[] = $this->prepareProductRow($product);
+            //}
         }
 
         return $tableCels;
