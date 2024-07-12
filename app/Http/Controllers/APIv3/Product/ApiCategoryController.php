@@ -38,7 +38,11 @@ class ApiCategoryController extends Controller
             return ApiResponse::forbidden('common.shop_unavailable');
         }
 
-        $category = ProductCategory::find($id);
+        $category = ProductCategory::findWithProductCount($id);
+
+        if (!$category) {
+            return ApiResponse::error('common.not_found');
+        }
 
         return ApiResponse::common(CategoryResource::make($category)->toArray($request));
     }
