@@ -63,7 +63,7 @@ class Shop extends Model
 
     public static function findWithUsersAndProducts(): Collection
     {
-        return self::with(['user', 'products'])->orderBy('user_id')->get();
+        return self::with(['user', 'products'])->orderByDesc('shop_id')->get();
     }
     
     public function unitpayKey(): HasOne
