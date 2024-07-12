@@ -120,6 +120,15 @@ class ProductCategory extends Model
         return self::withCount('product')->find($id);
     }
 
+    public function countProducts(): int
+    {
+        if ($this->product_count) {
+            return $this->product_count;
+        }
+
+        return $this->product()->count();
+    }
+    
     private static function hideEmpty(Builder $query): Builder
     {
         return $query->whereHas('product', function ($query) {
