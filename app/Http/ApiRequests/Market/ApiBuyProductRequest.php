@@ -79,7 +79,7 @@ class ApiBuyProductRequest extends ApiRequest
         ];
     }
 
-    public function getProductIdList()
+    public function getProductIdList(): array
     {
         return $this->input('product_id_list', []);
     }

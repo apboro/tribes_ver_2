@@ -2,6 +2,7 @@
 
 namespace App\Models\Market;
 
+use App\Domain\Entity\Shop\DTO\ShopCartDTO;
 use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,11 @@ class ShopCard extends Model
         'shop_id',
         'product_id',
         'quantity',
+        'options',
+    ];
+
+    protected $casts = [
+        'options' => 'array'
     ];
 
     public $table = 'shop_cards';
@@ -27,19 +33,19 @@ class ShopCard extends Model
         return $this->hasOne(Product::class, 'id', 'product_id');
     }
 
-    public static function cardUpdateOrCreate(array $card): void
+    public static function cardUpdateOrCreate(ShopCartDTO $card): void
     {
         $shopCardCriteria = self::prepareCriteria($card);
 
-        parent::updateOrCreate($shopCardCriteria, $card);
+        parent::updateOrCreate($shopCardCriteria, $card->toArray());
     }
 
-    private static function prepareCriteria(array $card): array
+    private static function prepareCriteria(ShopCartDTO $card): array
     {
         return [
-            'telegram_user_id' => $card['telegram_user_id'],
-            'shop_id'          => $card['shop_id'],
-            'product_id'       => $card['product_id'],
+            'telegram_user_id' => $card->getTelegramUserId(),
+            'shop_id'          => $card->getShopId(),
+            'product_id'       => $card->getProductId(),
         ];
     }
 
@@ -70,6 +76,7 @@ class ShopCard extends Model
         $userShopCardListSql = self::getUserShopCard($shopId, $telegramId, $products);
 
         $data = self::prepareData($userShopCardListSql);
+
         $shopOrder->products()->attach($data);
         $userShopCardListSql->delete();
 

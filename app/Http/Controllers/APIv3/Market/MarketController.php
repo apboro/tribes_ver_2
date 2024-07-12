@@ -42,16 +42,13 @@ class MarketController extends Controller
             $order = $this->makeOrder($request, $phone, $shopId);
             $order->setStatus(ShopOrder::TYPE_NOT_BUYBLE);
 
-            if ($order === false) {
-                return ApiResponse::error('common.create_error');
-            }
-
             $result = $this->sendNotifications($order, $email);
 
             return ApiResponse::common(['order_id' => $order->id, 'link' => $result]);
+
         } catch (Exception $e) {
             $message = $e->getMessage();
-            log::error('Shop Card empty:' . $message);
+            log::error('Create order error: ' . $message);
 
             return ApiResponse::error('common.create_error');
         }
@@ -151,7 +148,7 @@ class MarketController extends Controller
 
     public function updateCard(ShopCardUpdateRequest $request): ApiResponse
     {
-        ShopCard::cardUpdateOrCreate($request->validated());
+        ShopCard::cardUpdateOrCreate($request->getCardDTO());
 
         return ApiResponse::success('common.success');
     }

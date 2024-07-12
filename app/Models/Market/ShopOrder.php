@@ -112,7 +112,7 @@ class ShopOrder extends Model
 
     public function getFirstProduct(): Product
     {
-       return $this->products->first() ?? Invalid::null('products null');
+       return $this->products->first() ?? Invalid::NotFound('products is null');
     }
 
     public function getShop(): Shop
