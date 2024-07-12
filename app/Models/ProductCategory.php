@@ -57,6 +57,8 @@ class ProductCategory extends Model
     public static function findByFilter(array $filter): Collection
     {
         $query = self::addFilter($filter, self::getFilterRules());
+        $query = $query->withCount('product');
+
         if ($filter['hide_empty'] ?? false) {
             $query = self::hideEmpty($query);
         }
@@ -111,6 +113,11 @@ class ProductCategory extends Model
     public function product(): HasMany
     {
         return $this->HasMany(Product::class, 'category_id');
+    }
+
+    public static function findWithProductCount(int $id): ?self
+    {
+        return self::withCount('product')->find($id);
     }
 
     private static function hideEmpty(Builder $query): Builder
