@@ -14,7 +14,7 @@ class AddRowOptionsToShopCards extends Migration
     public function up()
     {
         Schema::table('shop_cards', function (Blueprint $table) {
-            $table->json('options')->after('quantity')->nullable();
+            $table->json('options')->nullable();
         });
     }
 

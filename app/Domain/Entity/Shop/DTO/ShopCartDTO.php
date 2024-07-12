@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Entity\Shop\DTO;
 
 use App\Domain\DTO\BaseDTO;
-use App\Helper\Json;
-use Log;
 
 class ShopCartDTO extends BaseDTO
 {
