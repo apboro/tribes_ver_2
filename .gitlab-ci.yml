@@ -76,7 +76,6 @@ deploy_mozhno-dev:
   - .common_deploy
   variables: 
     DEPLOYMENT: mozhno-dev
-    CHART_REPOSITORY: spodial-backend-golang
 
 deploy_mozhno-prod:
   stage: deploy
@@ -86,5 +85,4 @@ deploy_mozhno-prod:
   - .production_deploy
   variables: 
     DEPLOYMENT: mozhno-prod
-    CHART_REPOSITORY: spodial-backend-golang
   when: manual
