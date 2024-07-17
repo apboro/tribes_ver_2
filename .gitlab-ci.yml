@@ -67,3 +67,22 @@ deploy_prod:
   variables: 
     DEPLOYMENT: prod-spodial
   when: manual
+
+deploy_mozhno-dev:
+  stage: deploy
+  extends:
+  - .base_template
+  - .commit_versions_template
+  - .common_deploy
+  variables: 
+    DEPLOYMENT: mozhno-dev
+
+deploy_mozhno-prod:
+  stage: deploy
+  extends:
+  - .base_template
+  - .commit_versions_template
+  - .production_deploy
+  variables: 
+    DEPLOYMENT: mozhno-prod
+  when: manual
