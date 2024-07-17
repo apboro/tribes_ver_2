@@ -339,6 +339,18 @@ class User extends Authenticatable
                     ->withDefault(UserSubscription::getDefaultData($this->id));
     }
 
+    public function subscriptionWithoutDefault(): HasOne
+    {
+        return $this->hasOne(UserSubscription::class, 'user_id', 'id');
+    }
+
+    public function getUsersHavingSubscription(): Collection
+    {
+        return self::whereHas('subscriptionWithoutDefault', function ($query) {
+            $query->where('subscription_id', '>', 0);
+            })->orderByDesc('id')->get();
+    }
+
     public function isUsedTrialSubscription()
     {
         return $this->hasOne(UserSubscription::class, 'user_id', 'id')
