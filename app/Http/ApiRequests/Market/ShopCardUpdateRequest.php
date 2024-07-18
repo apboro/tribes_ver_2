@@ -5,6 +5,7 @@ namespace App\Http\ApiRequests\Market;
 use App\Domain\Entity\Shop\DTO\ShopCartDTO;
 use App\Http\ApiRequests\ApiRequest;
 use App\Models\Product;
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\POST(
@@ -17,7 +18,7 @@ use App\Models\Product;
  *      @OA\Parameter(name="shop_id",in="query",description="shop id",required=true,@OA\Schema(type="integer",)),
  *      @OA\Parameter(name="product_id",in="query",description="product id",required=true,@OA\Schema(type="integer",)),
  *      @OA\Parameter(name="quantity",in="query",description="product id",required=true,@OA\Schema(type="integer",)),
- *      @OA\Parameter(name="options",in="query",description="product options",required=false,@OA\Schema(type="array",)),
+ *      @OA\Parameter(name="options",in="query",description="product options",required=false,@OA\Schema(type="array",@OA\Items(type="string"))),
  * @OA\Response(response=200, description="OK")
  * )
  */

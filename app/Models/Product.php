@@ -240,5 +240,14 @@ class Product extends Model
         }
 
         return [];
-    }   
+    }
+
+    public function getCategoryNameAttribute(): string
+    {
+        if ($this->category && $this->category->id != 0) {
+            return $this->category->name;
+        }
+
+        return ProductCategory::DEFAULT_CATEGORY_NAME;
+    }
 }

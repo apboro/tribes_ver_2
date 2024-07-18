@@ -9,13 +9,13 @@ use App\Models\Author;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Shop;
+use App\Models\ShopOrderProduct;
 use App\Models\TelegramUser;
-use App\Models\YookassaKey;
-use Discord\Helpers\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Event;
 use Log;
@@ -108,6 +108,11 @@ class ShopOrder extends Model
         return $this->belongsToMany(Product::class, 'shop_order_product_list', 'order_id')
             ->withTrashed()
             ->withPivot('quantity','price');
+    }
+
+    public function orderProducts(): HasMany
+    {
+        return $this->hasMany(ShopOrderProduct::class, 'order_id');
     }
 
     public function getFirstProduct(): Product

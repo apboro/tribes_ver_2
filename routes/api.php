@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiLMSFeedbackController;
+use App\Http\Controllers\APIv3\Export\ApiShopOrderExportController;
 use App\Http\Controllers\APIv3\Lms\ApiLmsRecommendationController;
 use App\Http\Controllers\ApiRulesTemplateController;
 use App\Http\Controllers\APIv3\Analytics\CoursesAnalyticsController;
@@ -399,6 +400,7 @@ Route::prefix('api/v3')->middleware(['api', 'auth_v3:sanctum'])->group(function 
     Route::get('/lms_recommendation', [ApiLmsRecommendationController::class, 'getRecommendation']);
     Route::get('/publication_and_webinar_list', [ApiLmsRecommendationController::class, 'getPublicationAndWebinarList']);
 
+    Route::get('/market/orders/export', [ApiShopOrderExportController::class, 'export']);
 });
 
 Route::prefix('api/v3/manager')->middleware(['auth:sanctum', 'admin'])->group(function () {
