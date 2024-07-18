@@ -14,5 +14,6 @@ return [
     "universe_domain" => "googleapis.com",
     "exportShops" => env('GOOGLE_TABLE_EXPORT', 'OFF'),
     "sheetId" => env('GOOGLE_TABLE_SHEET_ID', ''),
-    "pageName" => env('GOOGLE_TABLE_PAGE_NAME', ''),
+    "pageName" => ['shops' => env('GOOGLE_TABLE_PAGE_NAME', ''),
+                   'users' => env('GOOGLE_TABLE_PAGE_NAME_USERS', '')]
 ];

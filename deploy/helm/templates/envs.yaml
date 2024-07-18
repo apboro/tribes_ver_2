@@ -75,6 +75,7 @@ data:
   GOOGLE_TABLE_EXPORT: {{ quote .Values.config.googleTable.export }}
   GOOGLE_TABLE_SHEET_ID: {{ quote .Values.config.googleTable.sheetID }}
   GOOGLE_TABLE_PAGE_NAME: {{ quote .Values.config.googleTable.pageName }}
+  GOOGLE_TABLE_PAGE_NAME_USERS: {{ quote .Values.config.googleTable.pageNameUsers }}
 ---
 apiVersion: v1
 kind: Secret

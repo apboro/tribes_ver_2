@@ -51,22 +51,26 @@ class GoogleSheetsService
         return $this;
     }
 
-    public function clearPage(): self
+    public function clearPages(): self
     {
         $sheetId = $this->config['sheetId'];
-        $pageArea = $this->config['pageName'] . '!' . self::FIRST_CELL . ':' . self::LAST_CELL;
-        $this->service->spreadsheets_values->clear($sheetId, $pageArea, $this->clear);
+        foreach ($this->config['pageName'] as $pageName) {
+            $pageArea = $pageName . '!' . self::FIRST_CELL . ':' . self::LAST_CELL;
+            $this->service->spreadsheets_values->clear($sheetId, $pageArea, $this->clear);
+        }
 
         return $this;
     }
 
-    public function writePage(array $pageTable): self
+    public function writePages(array $pageTable): self
     {
-        $this->valueRange->setValues($pageTable);
         $options = ['valueInputOption' => self::USER_ENTERED];
         $sheetId = $this->config['sheetId'];
-        $startCell = $this->config['pageName'] . '!' . self::FIRST_CELL;
-        $this->service->spreadsheets_values->update($sheetId, $startCell, $this->valueRange, $options);
+        foreach ($this->config['pageName'] as $key => $pageName) {
+            $this->valueRange->setValues($pageTable[$key]);
+            $startCell = $pageName . '!' . self::FIRST_CELL;
+            $this->service->spreadsheets_values->update($sheetId, $startCell, $this->valueRange, $options);
+        }
 
         return $this;
     }
