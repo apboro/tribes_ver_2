@@ -4,7 +4,6 @@ namespace App\Models\Market;
 
 use App\Domain\Entity\Shop\DTO\ShopCartDTO;
 use App\Models\Product;
-use App\Models\Shop;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -62,9 +61,11 @@ class ShopCard extends Model
         $data = [];
 
         foreach($builder->get() as $card) {
-            $data[$card->product_id]  = [
+            $data[] = [
+                'product_id' => $card->product_id,
                 'quantity' => $card->quantity,
                 'price'    => $card->product->price,
+                'options' => $card->options,
             ];
         }
 
@@ -77,7 +78,7 @@ class ShopCard extends Model
 
         $data = self::prepareData($userShopCardListSql);
 
-        $shopOrder->products()->attach($data);
+        $shopOrder->orderProducts()->createMany($data);
         $userShopCardListSql->delete();
 
         return $shopOrder;
