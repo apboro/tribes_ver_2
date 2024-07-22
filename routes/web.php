@@ -51,6 +51,7 @@ Route::group(['prefix' => \App\Http\Middleware\LocaleMiddleware::getLocale()], f
 
     Route::get('/unitpay/notify', [PaymentController::class, 'unitpayNotify']);
     Route::post('/yookassa/notify', [PaymentController::class, 'yookassaNotify'])->name('yookassa.notify');
+    Route::post('/crypto_wallet/notify', [PaymentController::class, 'cryptoWallet']);
     Route::get('/verification-10266.txt', function() 
                                             {echo '1026681d98a3347b4b1ea292a702fa'; }
                                         );

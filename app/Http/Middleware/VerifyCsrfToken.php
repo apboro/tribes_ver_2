@@ -25,5 +25,6 @@ class VerifyCsrfToken extends Middleware
         '/robokassa/notify',
         '/robokassa/success',
         '/robokassa/fail',
+        '/crypto_wallet/notify',
     ];
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Payment\CryptoWalletRequest;
 use App\Http\Requests\Payment\UnitpayRequest;
 use App\Exceptions\PaymentException;
 use App\Filters\PaymentFilter;
@@ -16,6 +17,7 @@ use App\Services\TelegramMainBotService;
 use App\Services\Tinkoff\TinkoffService;
 use App\Services\Unitpay\Notify as UnitpayNotify;
 use App\Services\Yookassa\Notify as YookassaNotify;
+use App\Services\CryptoWallet\Notify as CryptoWallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -105,6 +107,18 @@ class PaymentController extends Controller
         }
 
         return response('ERR', Response::HTTP_BAD_REQUEST);
+    }
+   
+    public function cryptoWallet(CryptoWalletRequest $request)
+    {
+        Log::info('Нотификация cryptoWallet', ['request' => $request]);
+        if (CryptoWallet::handle($request->all())){
+            $responce = ['result' => ['message' => 'Запрос успешно обработан']];
+        } else {
+            $responce = ['error' => ['message' => 'Ошибка']];
+        }
+
+        return response(\json_encode($responce), 200);
     }
 
     public function notify(Request $request)
