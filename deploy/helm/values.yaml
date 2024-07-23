@@ -28,6 +28,7 @@ backend:
 
   replicaCount: 1
   tolerations: []
+  resources: {}
 
   livenessProbe:
     enabled: true
@@ -75,6 +76,7 @@ scheduleWorker:
       password: password
 
   tolerations: []
+  resources: {}
 
 static:
   image:
