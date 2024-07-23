@@ -41,11 +41,17 @@ class ShopCard extends Model
 
     private static function prepareCriteria(ShopCartDTO $card): array
     {
-        return [
+        $criteria = [
             'telegram_user_id' => $card->getTelegramUserId(),
             'shop_id'          => $card->getShopId(),
             'product_id'       => $card->getProductId(),
         ];
+
+        if (isset($card->options['size'])) {
+            $criteria['options->size'] = $card->options['size'];
+        }
+
+        return $criteria;
     }
 
     private static function getUserShopCard(int $shopId, int $telegramId, array $products): Builder

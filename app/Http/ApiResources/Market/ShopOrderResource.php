@@ -10,18 +10,19 @@ class ShopOrderResource extends JsonResource
     {
         $productList = [];
         $total = 0;
-        foreach($this->resource->productsWithTrashed as $product) {
-            $trashed = $product->deleted_at !== null;
+        foreach($this->orderProducts as $product) {
+            $trashed = $product->product->deleted_at !== null;
             $productList[] = [
-                'id'       => $product->id,
-                'quantity' => $product->pivot->quantity,
-                'price'    => $product->pivot->price,
-                'title'    => $product->title,
-                'image'    => $product->images[0]['file'],
-                'trashed'  => $trashed
+                'id'       => $product->product->id,
+                'quantity' => $product->quantity,
+                'price'    => $product->price,
+                'title'    => $product->product->title,
+                'image'    => $product->product->images[0]['file'],
+                'trashed'  => $trashed,
+                'options'  => $product->options,
             ];
 
-            $total += $product->pivot->quantity * $product->pivot->price;
+            $total += $product->quantity * $product->price;
         }
 
         return [
