@@ -142,7 +142,7 @@ class ShopOrder extends Model
         return self::make($tgUser, $shopDelivery, $shopId);
     }
 
-    public function getPrice(): int
+    public function getPrice(): float 
     {
         $price = 0;
 
