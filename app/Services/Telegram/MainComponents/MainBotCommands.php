@@ -57,9 +57,19 @@ class MainBotCommands
 
     public const BOT_COMMAND_PARAM_VALUE = '_1';
 
-    private const CABINET = 'Личный кабинет 🚀';
+
+    private const MENU_DEFAULT_KEY = 'main';
+    private const MENU_CUSTOMER_KEY = 'customer';
+    private const MENU_OWNER_KEY = 'owner';
+
+    private const ENV_MOZHNO = 'Mozhno';
+    private const MOZHNO_SHOP = 'Открыть магазин 🛒';
+
+    private const ENV_SPODIAL = 'Spodial';
     private const PROMO_SHOP = 'О проекте 🛒';
     private const MY_SHOP = 'Мой Магазин 🛒';
+
+    private const CABINET = 'Личный кабинет 🚀';
     private const CABINET_COMMAND = 'getspodial'; //🚀
     private const SUPPORT = 'Поддержка 🚀'; //
     private const SUPPORT_MESSAGE = '/issue'; //🚀
@@ -121,7 +131,7 @@ class MainBotCommands
     }
 
     public function initCommand(array $methods = [
-        'startBot',
+        'startBot', /** @see startBot */
         'onStartDonate',
         'startOnGroup',
         'getTelegramUserId',
@@ -181,6 +191,45 @@ class MainBotCommands
         return $ctx->getFrom()->id() === $ctx->getChatID();
     }
 
+    private function getWelcomeMessage(string $appName): string
+    {
+        switch ($appName) {
+            case self::ENV_MOZHNO:
+                $message = 'Скоро ...' . "\n\n";
+                break;
+            default:
+                $message = 'Spodial - конструктор магазинов в Telegram.' . "\n\n"
+                . 'Управляйте магазинами и продавайте не покидая привычный вам мессенджер.' . "\n"
+                . 'Чтобы создать новый магазин или управлять существующими перейдите в раздел "Мой Магазин"' . "\n\n"
+                . ' • Нужна помощь? @Spodial_Support' . "\n";
+                break;
+        }
+
+        return $message;
+    }
+
+    private function getKeyboard(string $appName): array
+    {
+        //$keybord = new Keyboard(Keyboard::INLINE);
+        $buttonsList = [
+            self::ENV_SPODIAL => [
+                Keyboard::btn(self::PROMO_SHOP),
+                Keyboard::btn(self::MY_SHOP)
+            ],
+            self::ENV_MOZHNO => [
+                Keyboard::btn(self::MOZHNO_SHOP),
+            ],
+        ];
+
+        return $buttonsList[$appName];
+    }
+
+    private function buildMenu(string $name, string $key, array $buttons = []): void
+    {
+        $menuOwner = Menux::Create($name, $key);
+        $menuOwner->arrayRow($buttons);
+    }
+
     /**
      *  /start
      * @return void
@@ -189,40 +238,27 @@ class MainBotCommands
     {
         log::info('/start bot');
         try {
-            $this->createMenu();
-            $start = function (Context $ctx) {
-                log::info('/start bot enter');
-                $messageUserOwner = 'Spodial - конструктор магазинов в Telegram.' . "\n\n"
-                    . 'Управляйте магазинами и продавайте не покидая привычный вам мессенджер.' . "\n"
-                    . 'Чтобы создать новый магазин или управлять существующими перейдите в раздел "Мой Магазин"' . "\n\n"
-                    . ' • Нужна помощь? @Spodial_Support' . "\n";
-//                    . ' • Обратиться в службу поддержки' . "\n"
-//                    . ' • Подключить новый чат к Spodial' . "\n"
-//                    . ' • Получить информацию по ТОП-10 участникам вашего чата.' . "\n"
-//                    . 'Также я могу выполнять команды /ban, /kick, /mute. ' . "\n"
-//                    . 'Используйте встроенную клавиатуру ниже, чтобы начать.';
+            $appName = config('app.name', self::ENV_SPODIAL);
 
-                $messageForMember = 'Вы успешно запустили бота Spodial!' . "\n\n"
-                    . 'Моя задача помогать комьюнити-менеджерам в управлении чатами. Мой основной функционал настраивается' . "\n"
-                    . 'в ЛК на платформе spodial.com, в диалоге я могу по вашему запросу вам помочь:' . "\n"
-                    . ' • Получить ссылку на личный кабинет и базу знаний' . "\n"
-                    . ' • Обратиться в службу поддержки' . "\n"
-                    . ' • Подключить новый чат к Spodial' . "\n"
-                    . 'Используйте встроенную клавиатуру ниже, чтобы начать.';
+            $this->buildMenu('menu', self::MENU_DEFAULT_KEY);
+            $this->buildMenu('menuCustom', self::MENU_CUSTOMER_KEY, $this->getKeyboard($appName));
+            $this->buildMenu('menuOwner', self::MENU_OWNER_KEY,  $this->getKeyboard($appName));
+
+            $start = function (Context $ctx) use ($appName) {
+                log::info('/start bot enter');
 
                 // in private to bot
-                $custoMenu = Menux::Get('main');
-                $custoMenu->default();
+                $defaultMenu = Menux::Get(self::MENU_DEFAULT_KEY);
+                $defaultMenu->default();
 
                 if ($this->isPrivateMessageToBot($ctx)) {
-                    if (TelegramUser::where('telegram_id', $ctx->getUserID())->firstOrNew()->connections()->first()) {
-//                    $ctx->ansInlineQuery()
-                         $menu = Menux::Get('owner');
-                        $ctx->replyHTML($messageUserOwner, $menu);
-                    } else {
-                        $menu = Menux::Get('custom');
-                        $ctx->replyHTML($messageUserOwner, $menu);
+                    $menuName = self::MENU_CUSTOMER_KEY;
+                    if (TelegramUser::isCommunityTelegramUserOwner($ctx->getUserID())) {
+                        $menuName = self::MENU_OWNER_KEY;
                     }
+
+                    $menu = Menux::Get($menuName);
+                    $ctx->replyHTML($this->getWelcomeMessage($appName), $menu);
                 }
 
                 $this->save_log(
@@ -811,7 +847,7 @@ class MainBotCommands
         try {
             $reputation = function (Context $ctx) {
                 if ($this->isPrivateMessageToBot($ctx)) {
-                    if (TelegramUser::isCommunityUserOwner($ctx->getUserID())) {
+                    if (TelegramUser::isCommunityTelegramUserOwner($ctx->getUserID())) {
                         $menu = Menux::Create('inline_keyboard')->inline();
                         $communities = $this->communityRepo->getCommunitiesForMemberByTeleUserId($ctx->getChatID());
                         if ($communities->first()) {
@@ -1182,10 +1218,22 @@ class MainBotCommands
                 . config('telegram_bot.bot.promoName');
             log::info('link: ' . $link);
             $menu = Menux::Create('link')->inline();
-            $menu->row()->uBtn('Узнать подробнее', $link);
-            $ctx->reply('Промо магазин', $menu);
+
+            $appName = config('app.name', self::ENV_SPODIAL);
+            $btnTitle = 'Промо магазин';
+            $btnText = 'Узнать подробнее';
+
+            if ($appName !== self::ENV_SPODIAL) {
+                $btnTitle = 'Магазин';
+                $btnText = 'Открыть';
+            }
+
+            $menu->row()->uBtn($btnText, $link);
+            $ctx->reply($btnTitle, $menu);
         };
+
         $this->bot->onText(self::PROMO_SHOP, $promoShop);
+        $this->bot->onText(self::MOZHNO_SHOP, $promoShop);
     }
 
     protected function myShop()
@@ -1198,6 +1246,7 @@ class MainBotCommands
             $menu->row()->uBtn('Открыть мой магазин', $link);
             $ctx->reply('Мой магазин', $menu);
         };
+
         $this->bot->onText(self::MY_SHOP, $promoShop);
     }
 
@@ -1688,50 +1737,6 @@ class MainBotCommands
         ]);
 
         return $link;
-    }
-
-    private
-    function createMenu()
-    {
-        try {
-            $keybord = new Keyboard(Keyboard::INLINE);
-            Menux::Create('menu', 'main') ;//  в рамках группы
-//                ->row(Keyboard::btn('menu', 'calendar.ignore'), Keyboard::btn('Вт', 'calendar.ignore'));
-//                ->row()->btn(self::CABINET) // +
-//                ->row()->btn(self::KNOWLEDGE_BASE)
-//                ->row()->btn(self::SUPPORT)
-//                ->row()->btn('Подключить чат к Spodial');
-            Menux::Create('menuCustom', 'custom')
-                ->row(
-//                    Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
-//                    Keyboard::btn(self::CABINET),
-                    Keyboard::btn(self::PROMO_SHOP),
-                    Keyboard::btn(self::MY_SHOP)
-//                    $this->buildMiniAppBtn()
-                );
-//                ->row(
-////                    Keyboard::btn(self::SUPPORT),
-////                    Keyboard::btn(self::KNOWLEDGE_BASE),
-////                    Keyboard::btn(self::MY_SUBSRUPTION)
-//                );
-
-            Menux::Create('menuOwner', 'owner')
-//                ->row(Keyboard::btn('menuOwner'), Keyboard::btn('Вт', 'calendar.ignore'));
-                ->row(
-//            Keyboard::btn(self::ADD_NEW_CHAT_TEXT, 'calendar.ignore'),
-//                    Keyboard::btn(self::CABINET),
-                    Keyboard::btn(self::PROMO_SHOP),
-                    Keyboard::btn(self::MY_SHOP)
-//                    $this->buildMiniAppBtn()
-                );
-//                ->row(
-////                    Keyboard::btn(self::SUPPORT),
-////                    Keyboard::btn(self::KNOWLEDGE_BASE),
-////                    Keyboard::btn(self::MY_SUBSRUPTION)
-//                );
-        } catch (\Exception $e) {
-            $this->sendErrorMessage($e);
-        }
     }
 
     private function tariffButton($community, $userId = NULL)

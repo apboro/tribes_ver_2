@@ -147,13 +147,13 @@ class TelegramUser extends Model
         });
     }
 
-    public static function isCommunityUserOwner($userId): bool
+    public static function isCommunityTelegramUserOwner($telegramId): bool
     {
-        if($userId === null) {
+        if($telegramId === null) {
             log::error('income user Context $ctx is null check this condition');
         }
 
-        return self::where('user_id', '!=', NULL)->where('telegram_id', $userId)->get()->first() !== null;
+        return self::where('user_id', '!=', NULL)->where('telegram_id', $telegramId)->get()->first() !== null;
     }
 
     public function getTelegramUserName()
