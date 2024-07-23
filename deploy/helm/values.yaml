@@ -22,14 +22,6 @@ backend:
       username: username
       password: password
 
-  resources:
-    limits:
-      cpu: 6
-      memory: 2Gi
-    requests:
-      cpu: 4
-      memory: 1Gi
-
   service:
     type: ClusterIP
     port: 80
@@ -81,14 +73,6 @@ scheduleWorker:
     credentials:
       username: username
       password: password
-
-  resources:
-    limits:
-      cpu: 500m
-      memory: 500Mi
-    requests:
-      cpu: 50m
-      memory: 50Mi
 
   tolerations: []
 
