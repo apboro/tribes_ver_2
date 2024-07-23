@@ -5,6 +5,7 @@ namespace App\Http\ApiRequests\Product;
 use App\Http\ApiRequests\ApiRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Rules\PriceRule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
@@ -71,7 +72,7 @@ class ApiProductUpdateRequest extends ApiRequest
             ],
             'title'       => 'required|string',
             'description' => 'nullable|string',
-            'price'       => 'required|numeric|min:0',
+            'price'       => ['required', new PriceRule],
             'buyable'     => 'string|in:true,false',
             'category_id' => [
                 'integer',
