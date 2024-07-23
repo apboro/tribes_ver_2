@@ -247,3 +247,4 @@ config:
     export: "OFF"
     sheetID: "google_table_sheet_id"
     pageName: "Some page name"
+    pageNameUsers: "some page name users"
