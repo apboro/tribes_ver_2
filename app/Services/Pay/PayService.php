@@ -64,7 +64,7 @@ class PayService
         return self::doPayment($amount, $payFor, $payer, null,  [], true, true);
     }
 
-    public static function buyProduct(int $amount, $payFor, User $payer, int $telegramId, string $successUrl, string $failUrl)
+    public static function buyProduct(float $amount, $payFor, User $payer, int $telegramId, string $successUrl, string $failUrl)
     {
         $urls = ['success' => $successUrl,
                 'fail' => $failUrl];
@@ -79,7 +79,7 @@ class PayService
         return self::doPayment($amount, $payFor, $payer, $telegramId, $urls);
     }
 
-    public static function doPayment(int $amount, $payFor, ?User $payer, ?int $telegramId = null, array $returnUrls = [], ?bool $recurrent = false, ?bool $charged = false)
+    public static function doPayment(float $amount, $payFor, ?User $payer, ?int $telegramId = null, array $returnUrls = [], ?bool $recurrent = false, ?bool $charged = false)
     {
         $type = self::findType($payFor);
         $accumulation = self::findAccumulation($type, $payFor);
