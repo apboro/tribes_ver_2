@@ -151,6 +151,9 @@ class Shop extends Model
         $result = [];
         
         foreach ($paymentSystems as $name => $class) {
+            if (!isset($paymentSystemNames[$name])) {
+                continue;
+            }
             $isConnect = (method_exists($class, 'isWorkWithShop')) ? $class::isWorkWithShop($this) : false;
             $result[] = ['name' => $name,
                         'brand' => $paymentSystemNames[$name] ?? $name,
