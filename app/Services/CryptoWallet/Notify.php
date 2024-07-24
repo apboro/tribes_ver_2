@@ -13,6 +13,17 @@ class Notify
 
     public static function handle(array $data): bool
     {
+        if (!self::verifyWebhook()) {
+            Log::error('Error webhook verification', 
+                [
+                    'headers' => request()->headers->all(),
+                    'body' => request()->getContent(),
+                    'url' => request()->fullUrl(),
+                    'method' => request()->method(),
+                ]);
+            return false;            
+        }
+        
         $payment = Payment::find($data['order_id']);
         if (!$payment) {
             Log::error('Error crypto payment - no payment', ['data' => $data]);
@@ -27,5 +38,21 @@ class Notify
         }
 
         return true;
+    }
+
+    private static function verifyWebhook(): bool
+    {
+        $timestamp = request()->header('X-Api-Timestamp');
+        $signature = request()->header('X-Api-Signature');
+        $body = request()->getContent();
+
+        $path = request()->getPathInfo();
+        $stringToEncrypt = $path . '.' . $timestamp . '.' . base64_encode($body);
+
+        $accessToken = config('crypto_wallet.token');
+
+        $hash = base64_encode(hash_hmac('sha256', $stringToEncrypt, $accessToken, true));
+
+        return $hash === $signature;
     }
 }
