@@ -39,6 +39,7 @@ class ApiPaymentController extends Controller
         $redirectUrl = '';
 
         if ($payment->status !== 'CONFIRMED') {
+            $redirectUrl = config('app.frontend_url') . '/status/' . $payment->id; 
             Log::debug('successPayment $redirectUrl - ' . $redirectUrl);
             return redirect($redirectUrl);
         }
