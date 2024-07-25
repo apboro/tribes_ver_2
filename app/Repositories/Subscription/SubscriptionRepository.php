@@ -8,11 +8,14 @@ use App\Models\UserSubscription;
 use App\Services\SMTP\Mailer;
 use App\Services\TelegramMainBotService;
 use Carbon\Carbon;
+use Log;
 
 class SubscriptionRepository
 {
     public function assignToUser(int $user_id, int $subscription_id)
     {
+        log::info('assignToUser user id:' . $user_id . 'sub_id: ' . $subscription_id);
+
         $subscription = Subscription::find($subscription_id);
         $recurrent = $this->isRecurrent($subscription);
         $expirationDate = $this->getExpirationDate($subscription);
