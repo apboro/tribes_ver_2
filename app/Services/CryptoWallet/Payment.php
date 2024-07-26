@@ -103,7 +103,7 @@ class Payment extends PaySystemAcquiring
 
     private function getResultUrl(): string
     {
-        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '?startapp=status-' . $this->payment->payable_id;
+        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '?startapp=status=' . $this->payment->payable_id;
 
         return $link;
     }
