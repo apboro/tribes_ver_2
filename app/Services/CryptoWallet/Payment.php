@@ -51,7 +51,7 @@ class Payment extends PaySystemAcquiring
             $this->payment->updateRecord([
                 'OrderId' => $this->orderId,
                 'paymentId' => $responseData['uuid'] ?? '',
-                'paymentUrl' => $responseData['direct_payment_link'],
+                'paymentUrl' => $responseData['direct_payment_link'] ?? '',
                 'status' => 'NEW',
                 'error' => '',
             ]);            
@@ -96,24 +96,16 @@ class Payment extends PaySystemAcquiring
 
     private function getBackUrl(): string
     {
-        return $this->failUrl;
+        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '?startapp=' . $this->payment->payable->shop_id;
+
+        return $link;
     }
 
     private function getResultUrl(): string
     {
-        $attaches = [];
+        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '?startapp=status-' . $this->payment->payable_id;
 
-        if ($this->payment) {
-            $attaches['hash'] = PseudoCrypt::hash($this->payment->id);
-        }
-        if ($this->telegram_id) {
-            $attaches['telegram_id'] = $this->telegram_id;
-        }
-        if ($this->successUrl) {
-            $attaches['success_url'] = $this->successUrl;
-        }
-
-        return route('payment.success', $attaches);
+        return $link;
     }
 
     public static function isWorkWithShop(Shop $shop): bool 
