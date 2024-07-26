@@ -65,7 +65,9 @@ abstract class ApiResponse implements Responsable
      */
     protected function localize(string $message): string
     {
-        return trans('responses/' . $message);
+        $key = 'responses/' . $message;
+
+        return trans()->has($key) ? trans($key) : $message;
     }
 
     /**
