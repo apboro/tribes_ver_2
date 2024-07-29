@@ -97,7 +97,7 @@ class Payment extends PaySystemAcquiring
     private function getBackUrl(): string
     {
         // $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '?startapp=' . $this->payment->payable->shop_id . '&startApp=' . $this->payment->payable->shop_id;
-        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '?startapp&startApp';
+        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '?startapp';
 
         return $link;
     }
@@ -105,7 +105,7 @@ class Payment extends PaySystemAcquiring
     private function getResultUrl(): string
     {
         // $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') .  '?startapp=status=' . $this->payment->payable_id . '&startApp=status=' . $this->payment->payable_id;
-        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '?startapp&startApp';
+        $link = 'https://t.me/' . config('telegram_bot.bot.botName') . '/' . config('telegram_bot.bot.marketName') . '?startapp';
 
         return $link;
     }
