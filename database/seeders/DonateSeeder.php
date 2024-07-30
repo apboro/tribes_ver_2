@@ -18,9 +18,7 @@ class DonateSeeder extends Seeder
         foreach(Community::all() as $community){
             Donate::factory()
                 ->count(5)
-                ->create([
-                    'community_id' => $community->id,
-                ]);
+                ->create();
         }
     }
 }

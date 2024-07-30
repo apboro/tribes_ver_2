@@ -18,21 +18,9 @@ class DonateFactory extends Factory
     {
         return [
         //'id' => null,
-        'community_id'	 => null,
-        'main_image_id'	 => "0",
-        'success_image_id'	 => "0",
         'description'	 => $this->faker->text(255),
-        'success_description'	 => $this->faker->text(255),
-        'isSendToCommunity'	 => array_rand([0,1]),
         'inline_link'	 => Str::random(8),
-        'prompt_description'	 => $this->faker->text(255),
-        'prompt_image_id'	 => "0",
-        'isAutoPrompt'	 => array_rand([0,1]),
-        'prompt_at_hours'	 => rand(1, 10),
-        'prompt_at_minutes'	 => rand(1, 60),
         'title'	 => $this->faker->text(100),
-        'index' => rand(1,10),
-
         ];
     }
 
