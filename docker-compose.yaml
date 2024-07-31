@@ -49,6 +49,7 @@ services:
     volumes:
     - storage:/app/storage
     - php-fpm:/var/run/php
+    - ".:/app"
   queue-worker:
     build: .
     command: "queue"
@@ -90,6 +91,7 @@ services:
     - DB_DATABASE_MAIN=tribes_community
     - DB_USERNAME_MAIN=tribes
     - DB_PASSWORD_MAIN=tribes1q2w3e4r
+    - FPM_HTTPS=off
     env_file:
     - .env    
     volumes:
@@ -116,6 +118,8 @@ services:
     - POSTGRESQL_USERNAME=tribes
     - POSTGRESQL_PASSWORD=tribes1q2w3e4r
     - POSTGRESQL_DATABASE=tribes_community
+    ports:
+      - "5432:5432"
     env_file:
     - .env
     volumes:
