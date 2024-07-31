@@ -37,10 +37,6 @@ class PaymentSeeder extends Seeder
                 return $query->where('community_id', $community->id);
             })->first();
 
-            $dv = DonateVariant::whereHas('donate', function ($query) use ($community) {
-                return $query->where('community_id', $community->id);
-            })->first();
-
             $cv = Course::where('community_id', $community->id)->first();
 
             foreach($this->getDateArray() as $date){
@@ -49,7 +45,6 @@ class PaymentSeeder extends Seeder
                     ->count(rand(2,4))
                     ->state(new Sequence(
                         ['payable_id' => $tv->id ?? 1, 'payable_type' => 'App\Models\TariffVariant'],
-                        ['payable_id' => $dv->id ?? 1, 'payable_type' => 'App\Models\DonateVariant'],
                         ['payable_id' => $cv->id ?? 1, 'payable_type' => 'App\Models\Course']
                     ))
 //                ->typeDonate()

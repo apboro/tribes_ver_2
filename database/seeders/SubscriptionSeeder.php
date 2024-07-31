@@ -15,59 +15,54 @@ class SubscriptionSeeder extends Seeder
     public function run()
     {
         Subscription::create([
-            'name' => 'Пробный период',
-            'slug' => 'trial_period',
-            'description' => '[{"name": "Управление сообществами","description" : null},{"name": "Создание курсов (LMS)","description": null},{"name": "Аналитика сообществ","description": null},{"name": "Комиссия с продаж","description":"15%"}]',
+            'name' => 'Доступ на 14 дней',
+            'slug' => 'trial_plan',
+            'description' => '[
+                {"name": "Создайте в своем магазине до 50 товаров","description" : null},
+                {"name": "Модули модерация, платный доступ, донаты включены в тариф ограничение до 3-х чатов", "description": null},
+                {"name": "Размещайте данные объёмом трафика для хранения медиа - 10 ГБ и 10 постов в мес.", "description":  null},
+                {"name": "Комиссия при выводе денежных средств: ","description":  "7%"}
+            ]',
             'is_active' => true,
             'price' => 0,
-            'period_days' => 30,
-            'sort_order' => 1,
-            'commission' => 15,
+            'period_days' => 14,
+            'sort_order' => 0,
             'file_id' => null,
+            'commission' => 7,
         ]);
         Subscription::create([
-            'name' => 'Платный период',
-            'slug' => 'pay_period',
-            'description' => '[{"name": "Управление сообществами","description" : null},{"name": "Создание курсов (LMS)","description": null},{"name": "Аналитика сообществ","description": null},{"name": "Комиссия с продаж","description":"15%"}]',
+            'name' => 'На месяц',
+            'slug' => 'pay_plan',
+            'description' => '[
+                {"name": "Создайте в своем магазине до 50 товаров", "description" : null},
+                {"name": "Модули модерация, платный доступ, донаты включены в тариф ограничение до 3-х чатов", "description": null},
+                {"name": "Размещайте данные объёмом трафика для хранения медиа - 10 ГБ и 10 постов в мес.", "description": null},
+                {"name": "Комиссия при выводе денежных средств: ", "description": "7%"}
+            ]',
             'is_active' => true,
-            'price' =>500,
+            'price' => 100,
             'period_days' => 30,
-            'sort_order' => 1,
-            'commission' => 10,
+            'sort_order' => 2,
             'file_id' => null,
+            'commission' => 7,
+            'badge' => 'акция до 1 июля',
         ]);
-//        Subscription::create([
-//            'name' => 'Старт',
-//            'slug' => 'start',
-//            'description' => '[{"name": "Управление сообществами","description" : null},{"name": "Создание курсов (LMS)","description": null},{"name": "Аналитика сообществ","description": null},{"name": "Комиссия с продаж","description":"15%"}]',
-//            'is_active' => true,
-//            'price' => 0,
-//            'period_days' => 0,
-//            'sort_order' => 1,
-//            'commission' => 15,
-//            'file_id' => null,
-//        ]);
-//        Subscription::create([
-//            'name' => 'Организатор',
-//            'slug' => 'organizer',
-//            'description' => '[{"name": "Улучшенное управление сообществами","description" : null},{"name": "Создание курсов (LMS)","description": null},{"name": "Расширенная аналитика сообществ","description": null},{"name": "Комиссия с продаж","description": "10%"}]',
-//            'is_active' => true,
-//            'price' => 500,
-//            'period_days' => 30,
-//            'sort_order' => 2,
-//            'commission' => 10,
-//            'file_id' => null,
-//        ]);
-//        Subscription::create([
-//            'name' => 'Инфобизнес',
-//            'slug' => 'info_business',
-//            'description' => '[{"name": "Улучшенное управление сообществами","description" : null},{"name": "Улучшенные возможности LMS","description": null},{"name": "Улучшенная аналитика авторского контента","description": null},{"name": "Комиссия с продаж","description": "8%"}]',
-//            'is_active' => true,
-//            'price' => 1000,
-//            'period_days' => 30,
-//            'sort_order' => 3,
-//            'commission' => 8,
-//            'file_id' => null,
-//        ]);
+        Subscription::create([
+            'name' => 'На месяц',
+            'slug' => 'pay_juri_plan',
+            'description' => '[
+                {"name": "Создайте в своем магазине до 50 товаров","description" : null},
+                {"name": "Модули модерация, платный доступ, донаты включены в тариф ограничение до 3-х чатов", "description": null},
+                {"name": "Размещайте данные объёмом трафика для хранения медиа - 10 ГБ и 10 постов в мес.","description": null},
+                {"name": "Комиссия при выводе денежных средств: ", "description": "7%"} 
+            ]',
+            'is_active' => true,
+            'price' => 2500,
+            'period_days' => 30,
+            'sort_order' => 3,
+            'file_id' => null,
+            'commission' => 7,
+            'badge' => 'акция до 1 июля',
+        ]);
     }
 }

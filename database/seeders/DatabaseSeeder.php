@@ -28,12 +28,13 @@ class DatabaseSeeder extends Seeder
     {
 
         $user = User::factory()->createItem([
-                'name' => 'Pyatak',
-                'email' => 'pyatak@gmail.com',
-                'phone' => 9155707971,
-            ]);
+            'name' => 'Pyatak',
+            'email' => 'pyatak@gmail.com',
+            'phone' => 9155707971,
+        ]);
         $user->createTempToken();
-/** @var User $userTest */
+
+        /** @var User $userTest */
         $userTest = User::factory()->createItem([
             'name' => 'Test Testov',
             'email' => 'test-dev@webstyle.top',
@@ -97,18 +98,18 @@ class DatabaseSeeder extends Seeder
             TelegramUserReputationSeeder::class,
             LMSFeedbackSeeder::class
         ],
-        [
-            'user' => $user,
-            'userTest' => $userTest,
-        ]);
+            [
+                'user' => $user,
+                'userTest' => $userTest,
+            ]);
 
         UserSubscription::create([
-            'user_id'=>$userTest->id,
+            'user_id' => $userTest->id,
             'subscription_id' => 1,
-            'created_at'=>now(),
+            'created_at' => now(),
             'isRecurrent' => true,
-            'isActive' =>true,
-            'expiration_date'=>now()->addDays(30)->timestamp,
+            'isActive' => true,
+            'expiration_date' => now()->addDays(30)->timestamp,
         ]);
 
 
