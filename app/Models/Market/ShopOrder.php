@@ -191,7 +191,7 @@ class ShopOrder extends Model
     {
         $orders = self::getOrdersStringList($self);
         $currentEmail = $self->delivery->email;
-        if($currentEmail !== $email) {
+        if ($currentEmail !== $email) {
             $currentEmail = $email;
             if (str_contains($currentEmail, '@spodial.com')) {
                 $currentEmail = 'Без почты.';
@@ -199,10 +199,10 @@ class ShopOrder extends Model
         }
 
         $phone = $self->delivery->phone;
-        $phoneString = $phone ? '   - телефон: ' . $phone . "\n": '';
+        $phoneString = $phone ? '   - телефон: ' . $phone . "\n" : '';
         $userName = $self->telegramMeta->user_name ?? '';
 
-        $tagA = '<a href="http://t.me/'. $userName . '">'. $userName . '</a>';
+        $tagA = '<a href="http://t.me/' . $userName . '">' . $userName . '</a>';
         //TODO  <кол-во товара>
 
        $message = '<b>' . $self->getStatusLabel() . ' заказ № ' . $self->id . '</b>' . "\n"
@@ -216,7 +216,7 @@ class ShopOrder extends Model
         . 'Содержимое заказа:' . "\n"
         .  $orders
         .  "\n"
-        . 'На сумму: ' . $self->getPrice() . ' руб.';
+        . 'На сумму: ' . $self->getPrice() . self::getCurLabel();
 
         return $message;
     }
@@ -242,12 +242,23 @@ class ShopOrder extends Model
         . 'Содержимое заказа:' . "\n"
         .  $orders
         .  "\n"
-        . 'На сумму: ' . $self->getPrice() . ' руб.'
+        . 'На сумму: ' . $self->getPrice() . self::getCurLabel()
         .  "\n"
         . $deliverySumText
         . 'Продавец скоро свяжется с Вами.';
 
         return $message;
+    }
+
+    private static function getCurLabel(): string
+    {
+        $appName = config('app.name');
+
+        if ($appName === 'Spodial') {
+            return 'руб.';
+        }
+
+        return 'USDT';
     }
 
     /**
