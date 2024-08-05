@@ -113,12 +113,20 @@ class Shop extends Model
     public static function buildShortShopLink(int $shopId): string
     {
         $botName = config('telegram_bot.bot.botName');
+        $appName = config('app.name');
+
         $part = '';
-        if($botName !== 'SpodialBot' ) {
+        if ($botName !== 'SpodialBot' ) {
             $part = 'd/';
         }
 
-        return  'https://spdl.shop/' . $part  . $shopId;
+        $shortLink = 'spdl.shop';
+
+        if ($appName === 'Mozhno') {
+            $shortLink = 'mzhn.store';
+        }
+
+        return  'https://'. $shortLink . '/' . $part  . $shopId;
     }
 
     public static function buildTgShopLink(int $shopId): string
